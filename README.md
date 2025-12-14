@@ -1,8 +1,8 @@
-# dittoVizModules
+# vizModules
 
-This package utilizes the [dittoViz](https://github.com/dtm2451/dittoViz) package to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
+This package utilizes the [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis) packages to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
 
-These modules will contain all possible functionality from **dittoViz** with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
+These modules will contain all possible functionality from **dittoViz** and **plotthis** with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
 
 The modules provide comprehensive plot control for app users, allowing for convenient aesthetic customizations and publication-quality images.
 They also provide developers a way to dramatically save time and reduce complexity of their plotting code or a flexible base to build more specialized Shiny modules upon.
@@ -14,18 +14,18 @@ Note that this package is in development and may break at any time.
 Currently, the package can be installed from Github:
 
 ```r
-devtools::install_github("j-andrews7/dittoVizModules")
+devtools::install_github("j-andrews7/vizModules")
 ```
 
-## Using **dittoVizModules** 
+## Using **vizModules** 
 
-Including a dittoVizModules module in your Shiny application is simple. 
+Including a vizModules module in your Shiny application is simple. 
 The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.
 
 As an example, we can look at the `createScatterPlotApp()` function:
 
 ```r
-library(dittoVizModules)
+library(vizModules)
 
 createScatterPlotApp <- function(data_list) {
     # Validate input
@@ -76,7 +76,7 @@ createScatterPlotApp(data_list)
 
 ## Modules Provided
 
-Currently, **dittoVizModules** contains a functional Shiny module for the following dittoViz visualization functions:
+Currently, **vizModules** contains a functional Shiny module for the following dittoViz visualization functions:
 
 * scatterPlot - x/y coordinate plots with additional color and shape encodings.
 
@@ -109,7 +109,7 @@ See the **scatterPlot** module for how these things can be easily accomplished.
 
 ### Superceded Functionality
 
-Certain dittoViz parameters are more easily adjusted via the interactive features of plotly, e.g. axis labels, plot title, etc.
+Certain **dittoViz** or **plotthis** parameters are more easily adjusted via the interactive features of plotly, e.g. axis labels, plot title, etc.
 
 As such, inputs for such features need not be provided so long as the reason for their exclusion is included in the documentation of the module inputs UI function.
 
