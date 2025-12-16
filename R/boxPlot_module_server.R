@@ -29,6 +29,8 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         min.y <- min(numeric.data, na.rm = TRUE)
         # Reset numeric inputs to defaults derived from data
 
+        #Data
+        updateSelectInput(session, "group.by", selected = "NULL")
         #Adjustments
         updateSelectInput(session, "sort_x", selected = "none")
         updateSwitchInput(session, "flip", value = FALSE)
@@ -52,6 +54,7 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         updateTextInput(session, "title", value = "title")
         updateTextInput(session, "y.lab", value = "y title")
         updateTextInput(session, "x.lab", value = "x title")
+        updateNumericInput(session, "add.line", value = NULL)
 
         # Trajectory
         updateSwitchInput(session, "add.trend", value = FALSE)
@@ -63,11 +66,30 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         updateNumericInput(session, "stat.size", value = 1)
         updateNumericInput(session, "stat.sroke", value = 1)
         updateNumericInput(session, "stat.shape", value = 25)
+
+        #Palette
+        updateSelectInput(session, "palette", selected = "Paired")
+        #Facet
+        updateSelectInput(session, "facet.by", selected = "NULL")
+        updateSelectInput(session, "facet.scale", selected = "fixed")
+        updateNumericInput(session, "facet.ncol", value = NULL)
+        updateNumericInput(session, "facet.nrow", value = NULL)
+        updateSwitchInput(session, "facet.by.row", value = TRUE)
         })
 
         
         output$boxPlot <- renderPlotly({
+            #Facet By Null option Upstream:
+            facet.by <- NULL
+            if (!input$facet.by == "NULL"){
+                facet.by <- input$facet.by
 
+            }
+            group.by <- NULL
+            if(!input$group.by == "NULL"){
+                group.by <- input$group.by
+            }
+            #Box Plot 
             p <- plotthis::BoxPlot(data = data(),
                                     x = input$x.data,
                                     y = input$y.data,
@@ -98,7 +120,13 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                                     palette = input$palette,
                                     add_bg = input$background.colour,
                                     bg_palette = input$background.palette,
-                                    add_line = input$add.line
+                                    add_line = input$add.line, 
+                                    facet_by = facet.by,
+                                    facet_scales = input$facet.scale,
+                                    facet_ncol = input$facet.ncol,
+                                    facet_nrow = input$facet.nrow,
+                                    facet_byrow = input$facet.by.row, 
+                                    group_by = group.by
                                     )
             plotlyOut <- ggplotly(p)
             return(plotlyOut)

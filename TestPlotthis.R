@@ -15,5 +15,6 @@ data <- data.frame(
     group2 = sample(c("h1", "h2", "h3", "h4"), 320, replace = TRUE)
 )
 
-p <- plotthis::BoxPlot(data, x = "x", y = "y", add_bg = TRUE, bg_palette = "Paired", add_line = 1)
+p <- plotthis::BoxPlot(data, x = "x", y = "y", add_bg = TRUE, bg_palette = "Paired", add_line = 1, group_by = "group1", box_width = 0.0000001)
 
+q <- ggplotly(p)

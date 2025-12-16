@@ -30,7 +30,8 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
-            selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2])
+            selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
+            selectInput(ns("group.by"), "Group by:", selected = "NULL", choices = c(char.choices, "NULL"))
         ),
         "Adjustments" = tagList(
             shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c("none", "mean_asc", "mean_desc", "mean", "median_asc", 
@@ -70,10 +71,13 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("palette"), "Plot Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
             switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
             selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
-
-            
-            
-
+        ),
+        "Facet" = tagList(
+            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20), 
+            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On")
         )
     )
 
@@ -101,3 +105,20 @@ boxPlotOutputUI <- function(id) {
     )
     
 }
+
+#background colour doesnt work with plotly = add_bg | bg_palette
+
+# facet_by
+# A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots
+
+# facet_scales
+# Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap
+
+# facet_ncol
+# A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.
+
+# facet_nrow
+# A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.
+
+# facet_byrow
+# A logical value indicating whether to fill the plots by row. Default is TRUE.
