@@ -2,8 +2,12 @@ Package: dittoVizModules
 Title: Flexible, Interactive Shiny Modules For dittoViz Plots
 Version: 0.99.0.9000
 Authors@R: 
-    person(given = "Jared", family = "Andrews", email = "jared.andrews07@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-0780-6248"))
+    c(person(given = "Jared", family = "Andrews", email = "jared.andrews07@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0780-6248")),
+        person(given = "Jacob",
+                family = "Martin",
+                role = c("aut"),
+                email = "Jacob.Martin@stjude.org"))
 Description: dittoVizModules offers a core selection of interactivity-first Shiny modules for dittoViz 
     plot types meant to serve as the base for more complex modules. These modules
     allow for the rapid and convenient construction of Shiny apps with very few lines
@@ -19,7 +23,8 @@ Imports:
     shinyjs,
     scales,
     esquisse,
-    shinyjqui
+    shinyjqui, 
+    colourpicker
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1

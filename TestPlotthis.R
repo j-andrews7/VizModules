@@ -9,12 +9,12 @@ library(shinyjqui)
 
 
 data <- data.frame(
-    x = rep(LETTERS[1:8], each = 40),
-    y = c(rnorm(160), rnorm(160, mean = 1)),  
-    group1 = sample(c("g1", "g2"), 320, replace = TRUE),
-    group2 = sample(c("h1", "h2", "h3", "h4"), 320, replace = TRUE)
+    x = c("A", "B", "C", "D", "E", "F", "G", "H"),
+    y = c(10, 8, 16, 4, 6, 12, 14, 2),
+    group = c("G1", "G1", "G2", "G2", "G3", "G3", "G4", "G4"),
+    facet = c("F1", "F2", "F3", "F4", "F1", "F2", "F3", "F4")
 )
 
-p <- plotthis::BoxPlot(data, x = "x", y = "y", add_bg = TRUE, bg_palette = "Paired", add_line = 1, group_by = "group1", box_width = 0.0000001)
+p <- plotthis::BarPlot(data, x = "x", y = "y", add_bg = TRUE, bg_palette = "stripe", palette = "Set2", palcolor =  c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3"))
 
 q <- ggplotly(p)

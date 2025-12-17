@@ -1,11 +1,16 @@
-#' @details The user inputs for this module are separated from the outputs to allow for 
+#' boxPlotInputsUI Shiny Module UI
+#'
+#' UI function for the interactive boxPlot Shiny module. Creates organized tabbed inputs
+#' for [plotthis::BoxPlot()] customization including data selection, adjustments, points,
+#' annotations, trajectory, stats, palette, and faceting controls.
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
-#'
+#' 
 #' @importFrom shiny tagList NS selectInput numericInput sliderInput
 #'   checkboxInput textInput actionButton br selectizeInput switchInput
 #' @importFrom shinyWidgets switchInput  
@@ -13,6 +18,7 @@
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom plotthis palette_list
 #' @export
+#' 
 #' @author Jacob Martin
 boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
@@ -48,17 +54,24 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("pt.alpha"), "Point Alpha:", min = 0, max = 1, value = 1),
             numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.5),
             numericInput(ns("jitter.height"), "Jitter Height: ", min = 0, max = 1, value = 0),
-            colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#4472C4")
+            colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#000000")
         ),
         "Annotations" = tagList(
-            textInput(ns("title"), "Title of plot:", value = "title"),
-            textInput(ns("y.lab"), "Title of Y:", value = "y title"),
-            textInput(ns("x.lab"), "Title of X:", value = "x title"),
-            numericInput(ns("add.line"), "Add Y interception line:", value = NULL, min = min.y, max = max.y)
+            numericInput(ns("add.line"), "Add Y interception line:", value = NULL, min = min.y, max = max.y),
+            textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
+            colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
+            numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
+            numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1),
+            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c("Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
+                                                                                "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana", 
+                                                                                "sans-serif", "serif", "monospace")),
+            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
         ),
         "Trajectory" = tagList(
             switchInput(ns("add.trend"), "Add Median Point", value = FALSE, onLabel = "Trend Added", offLabel = "Trend Not Added"),
-            numericInput(ns("trend.pt.size"), "Trend Point Size:", min = 0, max = 40, value = 2)
+            numericInput(ns("trend.pt.size"), "Trend Point Size:", min = 0, max = 40, value = 2),
+            colourpicker::colourInput(ns("trend.colour"), "Colour of trend:", value = "#000000"),
+            numericInput(ns("trend.line.width"), "Trend line width:", value = 1, min = 0)
         ),
         "Stats" = tagList(
             selectInput(ns("add.stat"), "Add Stats:", selected = "mean", choices = c("mean", "sd", "median", "var")),
@@ -70,14 +83,16 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "Palette" = tagList(
             selectInput(ns("palette"), "Plot Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
             switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
+            selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
         ),
         "Facet" = tagList(
             selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20), 
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On")
+            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
+            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
+
         )
     )
 
@@ -86,6 +101,7 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("scatterPlotTabsetPanel"),
         title = title,
         tack = tagList(actionButton(ns("reset"),  "Reset Defaults", class = "btn-secondary"), 
+                        selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
                         br()),
         columns = columns
     )
@@ -105,20 +121,3 @@ boxPlotOutputUI <- function(id) {
     )
     
 }
-
-#background colour doesnt work with plotly = add_bg | bg_palette
-
-# facet_by
-# A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots
-
-# facet_scales
-# Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap
-
-# facet_ncol
-# A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.
-
-# facet_nrow
-# A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.
-
-# facet_byrow
-# A logical value indicating whether to fill the plots by row. Default is TRUE.
