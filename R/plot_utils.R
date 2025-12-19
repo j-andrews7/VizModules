@@ -1,12 +1,5 @@
 library(plotly)
 library(rlang)
-data <- data.frame(
-    x = c("England", "USA", "France", "Canada"),
-    values = c(20, 30, 15, 35)
-)
-
-# pie.chart <- plot_ly(data, type = "pie", labels = ~x, values = ~values, hole = 0.6, marker = list(colors = plotthis::palette_list[["Set2"]]), textinfo = 'label+percent') 
-
 
 piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0, palette, col_palette = NULL, plot.text = 'label+percent'){
 
@@ -23,10 +16,21 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0, pale
 
 }
 
-input.x <- "x"
-input.values <- "values"
+# input.x <- "x"
+# input.values <- "values"
 
-x_values <- reformulate(input.x)
-input_values <- reformulate(input.values)
+# x_values <- reformulate(input.x)
+# input_values <- reformulate(input.values)
+# ~x and ~values
+# Line Plot: 
 
-p <- piePlot(data, plot.labels = x_values, plot.values = input_values, make.hole = 0, palette = plotthis::palette_list[["Set2"]], plot.text = 'label+percent')
+# Line type. 
+#points show or not 
+# colour of points 
+# colour of line 
+#line type 
+#line width 
+#line alpha 
+#points alpha 
+# points on line off 
+# theme 

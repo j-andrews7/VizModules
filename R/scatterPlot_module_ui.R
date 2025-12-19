@@ -530,6 +530,23 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["yline.color"]], "black"
                 )
             )
+        ),
+        "Lines" = tagList(
+            switchInput(ns("best.fit"), "Line of best fit:",
+                value = FALSE, 
+                offLabel = "Off",
+                onLabel = "On"
+            ),
+            numericInput(ns("line.best.smoothness"), "Line of best smoothness:",
+                value = 1,
+                min = 0, 
+                max = 10),
+            colourpicker::colourInput(ns("line.best.colour"), "Line of best colour:",
+                value = "#000000"),
+            switchInput(ns("linear.model"), "Linear model line",
+                value = FALSE,
+                onLabel = "On",
+                offLabel = "Off")
         )
     )
 
@@ -560,3 +577,5 @@ scatterPlotOutputUI <- function(id) {
     ns <- NS(id)
     plotlyOutput(ns("scatterPlot"))
 }
+
+

@@ -277,7 +277,111 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 fig <- fig %>% toWebGL()
             }
 
+
+            without.line <- fig
+            linear_model <- reactive({
+                req(input$x.by, input$y.by, input$linear.model)
+
+                df <- data()
+                if (identical(input$best.fit, FALSE)) {
+                x_col <- input$x.by
+                y_col <- input$y.by
+
+                model <- lm(df[[y_col]] ~ df[[x_col]], data = df)
+
+                x_min <- min(df[[x_col]], na.rm = TRUE)
+                x_max <- max(df[[x_col]], na.rm = TRUE)
+                x_grid <- seq(x_min, x_max, length.out = 100)
+
+
+                intercept <- coef(model)[1]
+                slope <- coef(model)[2]
+                
+                # Calculate y directly from equation y = mx + b
+                y_grid <- intercept + slope * x_grid
+                
+                predict_df <- data.frame(x = x_grid, y = y_grid)
+                predict_df
+                } else {
+                    NULL
+                }
+            })
+            colour.by.model <- reactive({
+                req(input$color.by, input$x.by, input$y.by, input$linear.model)
+                
+                df <- data()
+
+                if(!input$color.by == ""){
+                    x_col <- input$x.by
+                    y_col <- input$y.by
+                    color_col <- input$color.by
+
+                    models = list()
+                    color_levels <- colLevels(input$color.by, data())
+                    for (species in color_levels) {
+
+                        species_data <- df[df[[color_col]] == species, ]
+                        
+                        model <- lm(species_data[[y_col]] ~ species_data[[x_col]])
+
+                        x_min <- min(species_data[[x_col]], na.rm = TRUE)
+                        x_max <- max(species_data[[x_col]], na.rm = TRUE)
+                        x_grid <- seq(x_min, x_max, length.out = 100)
+
+                        intercept <- coef(model)[1]
+                        slope <- coef(model)[2]
+
+                        y_grid <- intercept + slope * x_grid
+
+                        models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid, group = species)
+                    }
+                    models
+
+                }else{
+                    NULL
+                }
+
+            })
+
+            colors_used <- color.panel()
+
+            if (identical(input$best.fit, TRUE) && identical(input$linear.model, FALSE)){
+                fig <- fig %>% 
+                    add_lines(y = ~ fitted(loess(.data[[input$y.by]] ~ -log10(.data[[input$x.by]]), span = input$line.best.smoothness)), line = list(color = input$line.best.colour, width = 3), name = "LBF")
+
+                fig
+            }
+            if (identical(input$linear.model, TRUE) & !input$color.by == ""){
+                for (i in seq_along(colour.by.model())) {
+                    species <- names(colour.by.model())[i]
+                    line_color <- colors_used[i %% length(colors_used) + 1]
+                    fig <- fig %>%
+                        add_lines(
+                            data = colour.by.model()[[species]],
+                            x = ~x, y = ~y,
+                            line = list(color = line_color, width = 3),
+                            name = paste("Linear", species)
+                        )
+                }
+
+            } else if (identical(input$linear.model, TRUE) & identical(input$best.fit, FALSE)) {
+                fig <- fig %>%
+                    add_lines(
+                        data = linear_model(),
+                        x = ~x,
+                        y = ~y,
+                        line = list(color = input$line.best.colour, width = 3),
+                                    name = "Linear Fit"
+                    )
+                fig
+            }
+            
+            
+               
             fig
+
+
+            
         })
     })
 }

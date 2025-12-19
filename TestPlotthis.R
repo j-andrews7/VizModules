@@ -18,3 +18,7 @@ data <- data.frame(
 p <- plotthis::BarPlot(data, x = "x", y = "y", add_bg = TRUE, bg_palette = "stripe", palette = "Set2", palcolor =  c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3"))
 
 q <- ggplotly(p)
+
+x <- data.frame(
+    species = c("hippo", "elephant", "rhino", "rhino")
+)

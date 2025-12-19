@@ -6,7 +6,10 @@ library(colourpicker)
 library(shinyjs)
 library(plotly)
 library(shinyjqui)
+library(esquisse)
+library(scales)
 
+library(dittoViz)
 
 # data_list <- list("mtcars" = mtcars, "iris" = iris)
 
@@ -43,16 +46,16 @@ library(shinyjqui)
 # app <- createareaPlotApp(data2)
 # runApp(app)
 
-#  data_list <- list("mtcars" = mtcars, "iris" = iris)
-#  app <- createScatterPlotApp(data_list)
-#  runApp(app)
+ data_list <- list("mtcars" = mtcars, "iris" = iris)
+ app <- createScatterPlotApp(data_list)
+ runApp(app)
 
+ 
+# data <- data.frame(
+#     x = c("England", "USA", "France", "Canada"),
+#     values = c(20, 30, 15, 35)
+# )
 
-data <- data.frame(
-    x = c("England", "USA", "France", "Canada"),
-    values = c(20, 30, 15, 35)
-)
-
-data_list <- list("hello" = data)
-app <- createpiePlotApp(data_list)
-runApp(app)
+# data_list <- list("hello" = data)
+# app <- createpiePlotApp(data_list)
+# runApp(app)
