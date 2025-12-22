@@ -205,6 +205,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             plot.data <- p$Target_data
+            
+            #COLOUR MAPPING FOR LINE
+            if (!is.null(input$color.by) && input$color.by != "") {
+                color_levels <- colLevels(input$color.by, data())
+                color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
+            } else {
+                color_mapping <- NULL
+            }
+
 
             fig <- p$plot %>% config(
                 edits = list(
@@ -317,8 +326,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     color_col <- input$color.by
 
                     models = list()
-                    color_levels <- colLevels(input$color.by, data())
-                    for (species in color_levels) {
+                    for (species in unique(df[[color_col]])) {
 
                         species_data <- df[df[[color_col]] == species, ]
                         
@@ -333,7 +341,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
                         y_grid <- intercept + slope * x_grid
 
-                        models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid, group = species)
+                        models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid)
                     }
                     models
 
@@ -342,19 +350,78 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 }
 
             })
+            #Smooth best fit line reactive: 
 
-            colors_used <- color.panel()
+            best_fit_by_group <- reactive({
+                req(input$color.by, input$x.by, input$y.by, input$best.fit)
+                
+                df <- data()
+                if (identical(input$best.fit, TRUE) && !identical(input$color.by, "")) {
+                    x_col <- input$x.by
+                    y_col <- input$y.by
+                    color_col <- input$color.by
+                    
+                    models <- list()
+                    for (species in unique(df[[color_col]])) {
+                        species_data <- df[df[[color_col]] == species, ]
+                        
+                        fit <- loess(
+                            formula = species_data[[y_col]] ~ -log10(species_data[[x_col]]),
+                            span    = input$line.best.smoothness
+                        )
+                        
+                        x_min  <- min(species_data[[x_col]], na.rm = TRUE)
+                        x_max  <- max(species_data[[x_col]], na.rm = TRUE)
+                        x_grid <- seq(x_min, x_max, length.out = 100)
 
-            if (identical(input$best.fit, TRUE) && identical(input$linear.model, FALSE)){
-                fig <- fig %>% 
-                    add_lines(y = ~ fitted(loess(.data[[input$y.by]] ~ -log10(.data[[input$x.by]]), span = input$line.best.smoothness)), line = list(color = input$line.best.colour, width = 3), name = "LBF")
+                        newdata <- data.frame(x_grid)
+                        names(newdata) <- x_col
 
-                fig
+                        y_grid <- predict(fit, newdata = newdata)
+                        
+                        models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid)
+                    }
+                    models
+                } else {
+                    NULL
+                }
+            })
+
+
+
+            
+            if (identical(input$best.fit, TRUE) && identical(input$linear.model, FALSE)) {
+
+                if (!identical(input$color.by, "")) {
+                    # grouped best-fit lines
+                    for (species in names(best_fit_by_group())) {
+                    line_color <- color_mapping[[species]]
+                    fig <- fig %>%
+                        add_lines(
+                        data = best_fit_by_group()[[species]],
+                        x = ~x,
+                        y = ~y,
+                        line = list(color = line_color, width = 3),
+                        name = paste("Best fit", species)
+                        )
+                    }
+                } else {
+                    # single global best-fit (your existing behaviour)
+                    fig <- fig %>% 
+                    add_lines(
+                        y    = ~ fitted(loess(.data[[input$y.by]] ~ -log10(.data[[input$x.by]]),
+                                            span = input$line.best.smoothness)),
+                        line = list(color = input$line.best.colour, width = 3),
+                        name = "LBF"
+                    )
+                }
             }
+
+             
+            
             if (identical(input$linear.model, TRUE) & !input$color.by == ""){
-                for (i in seq_along(colour.by.model())) {
-                    species <- names(colour.by.model())[i]
-                    line_color <- colors_used[i %% length(colors_used) + 1]
+                for (species in names(colour.by.model())) {
+                    line_color <- color_mapping[[species]]
                     fig <- fig %>%
                         add_lines(
                             data = colour.by.model()[[species]],

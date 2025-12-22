@@ -537,10 +537,10 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 offLabel = "Off",
                 onLabel = "On"
             ),
-            numericInput(ns("line.best.smoothness"), "Line of best smoothness:",
+            numericInput(ns("line.best.smoothness"), "Smoothness of line of best fit:",
                 value = 1,
                 min = 0, 
-                max = 10),
+                max = 10000),
             colourpicker::colourInput(ns("line.best.colour"), "Line of best colour:",
                 value = "#000000"),
             switchInput(ns("linear.model"), "Linear model line",
