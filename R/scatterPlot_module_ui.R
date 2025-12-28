@@ -541,7 +541,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 value = 1,
                 min = 0, 
                 max = 10000),
-            colourpicker::colourInput(ns("line.best.colour"), "Line of best colour:",
+            colourpicker::colourInput(ns("line.best.colour"), "Line of best fit colour:",
                 value = "#000000"),
             switchInput(ns("linear.model"), "Linear model line",
                 value = FALSE,
