@@ -46,7 +46,7 @@ areaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                                                                                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana", 
                                                                                 "sans-serif", "serif", "monospace")),
             numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Axis font size", value = 28, min = 1),
+            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
             colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000")
         )
     )
