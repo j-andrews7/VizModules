@@ -28,17 +28,15 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
-#' @importFrom shiny tagList NS selectInput numericInput sliderInput
-#'   checkboxInput textInput actionButton br selectizeInput
 #' @importFrom colourpicker colourInput
 #' @importFrom esquisse palettePicker
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [dittoViz::scatterPlot()], [dittoVizModules::organize_inputs()], 
-#' [dittoVizModules::scatterPlotOutputUI()], [dittoVizModules::scatterPlotServer()], [dittoVizModules::createScatterPlotApp()]
+#' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()], 
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
 #' @examples
-#' library(dittoVizModules)
+#' library(vizModules)
 #' data(mtcars)
 #' scatterPlotInputsUI("scatterPlot", mtcars)
 scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {

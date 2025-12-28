@@ -1,3 +1,35 @@
+#' Input UI components for the piePlot module
+#' 
+#' This should be placed in the UI where the inputs should be shown, with an `id` 
+#' that matches the `id` used in the `piePlotServer()` and `piePlotOutputUI()` functions.
+#' 
+#' @details The user inputs for this module are separated from the outputs to allow for 
+#' more flexible UI design. 
+#' 
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid. 
+#' 
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [vizModules::piePlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list. 
+#' 
+#' @param id The ID for the Shiny module.
+#' @param data The data frame used for plot generation.
+#' @param defaults A named list of default values for the inputs.
+#' @param title An optional title for the UI grid.
+#' @param columns Number of columns for the UI grid.
+#' @return A Shiny tagList containing the UI elements
+#'
+#' @importFrom colourpicker colourInput
+#'
+#' @export
+#' @author Jacob Martin
+#' @seealso [vizModules::piePlot()], [vizModules::organize_inputs()], 
+#' [vizModules::piePlotOutputUI()], [vizModules::piePlotServer()], [vizModules::createpiePlotApp()]
+#' @examples
+#' library(vizModules)
+#' data(mtcars)
+#' piePlotInputsUI("piePlot", mtcars)
 piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -43,6 +75,20 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 
 
 
+#' Output UI components for the piePlot module
+#' 
+#' This should be placed in the UI where the plot should be shown.
+#' 
+#' @param id The ID for the Shiny module.
+#'
+#' @return A Shiny plotlyOutput for the piePlot
+#'
+#' @importFrom shiny NS
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinyjqui jqui_resizable
+#'
+#' @export
+#' @author Jacob Martin
 piePlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(

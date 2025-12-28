@@ -11,7 +11,6 @@
 #' @return A Shiny tagList with inputs organized into a grid, optionally
 #'   nested inside a tabsetPanel.
 #'
-#' @importFrom shiny fluidRow column tagList tabsetPanel tabPanel
 #' @export
 #'
 #' @author Jared Andrews
@@ -106,9 +105,8 @@ organize_inputs <- function(
 
 #' Color palette options for palettePicker
 #' @importFrom scales hue_pal viridis_pal brewer_pal
-#' @importFrom dittoViz dittoColors
 #' @export
-#' @author Jared Andrews, based largely on [esquisse::default_pals()]
+#' @author Jared Andrews
 default_palettes <- function() {
   pals <- list(
     choices = list(

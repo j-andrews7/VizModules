@@ -45,7 +45,7 @@ There are also a handful that are specific to the Shiny module that additionally
 }
 }
 \examples{
-library(dittoVizModules)
+library(vizModules)
 data(mtcars)
 scatterPlotInputsUI("scatterPlot", mtcars)
 }

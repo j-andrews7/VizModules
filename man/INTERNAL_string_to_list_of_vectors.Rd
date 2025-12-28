@@ -7,7 +7,8 @@
 .string_to_list_of_vectors(x)
 }
 \arguments{
-\item{x}{A string indicating a set of vectors, e.g. "\link{a, b, c}, \link{d, e}".
+\item{x}{A string indicating a set of vectors.
+Supported formats include "(a, b), (c)", "<a, b>, \if{html}{\out{<c>}}", or brackets.
 Should not contain internal quotes around elements.}
 }
 \value{

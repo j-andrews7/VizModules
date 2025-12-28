@@ -18,9 +18,10 @@ This function generates a Shiny application with modular \code{\link[dittoViz:sc
 A module is created for each data frame provided in the named list of data frames.
 }
 \examples{
+library(vizModules)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- createScatterPlotApp(data_list)
-runApp(app)
+if(interactive()) runApp(app)
 }
 \author{
 Jared Andrews

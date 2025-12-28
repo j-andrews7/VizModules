@@ -1,24 +1,20 @@
-#' boxPlot Shiny Module Server
+#' Server logic for boxPlot module
 #'
-#' Server function for the interactive boxPlot Shiny module using [plotthis::BoxPlot()].
-#' Creates interactive box plots with extensive customization options including points,
-#' trends, statistics, facets, highlighting, and download capabilities.
+#' @param id The ID for the Shiny module.
+#' @param data A `reactive` containing the data frame to plot.
+#' @param hide.inputs A character vector of input IDs to hide.
+#'   These will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @param hide.tabs A character vector of tab names to hide.
+#'   Inputs in these tabs will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @return The `moduleServer` function for the boxPlot module.
 #'
-#' @param id Character ID for the module.
-#' @param data Reactive expression returning a data frame to plot.
-#' @param hide.inputs Character vector of input names to hide (e.g., c("add.points", "flip")).
-#' @param hide.tabs Character vector of tab names to hide from the input panel.
-#'
-#' @return Module server object with `boxPlot` plotly output.
-#' 
-#' @importFrom shiny moduleServer reactive renderPlotly updateSelectInput updateSwitchInput
-#'   updateNumericInput updateTextInput updateColourInput selectInput switchInput
-#'   numericInput textInput actionButton hide hideTab
+#' @importFrom plotly renderPlotly ggplotly layout config
+#' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateSwitchInput
-#' @importFrom colourpicker updateColourInput
-#' @importFrom plotly ggplotly layout config
+#'
 #' @export
-#' 
 #' @author Jacob Martin
 boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))

@@ -1,14 +1,18 @@
 #' Create an example Modular boxPlot Shiny Application
+#'
 #' This function generates a Shiny application with modular [plotthis::BoxPlot()] components.
 #' A module is created for each data frame provided in the named list of data frames.
+#'
 #' @param data_list A named list of data frames for which boxPlot modules will be created.
 #'   That is, UI inputs and a box plot will be generated for each.
 #' @return A Shiny app object.
-#' @importFrom shiny fluidPage titlePanel sidebarLayout sidebarPanel mainPanel shinyApp h3 reactive hr br
+#' 
 #' @importFrom shinyjs useShinyjs
 #' @export
+#' 
 #' @author Jacob Martin
 #' @examples
+#' library(vizModules)
 #' data <- data.frame(
 #'     x = rep(LETTERS[1:8], each = 40),
 #'     y = c(rnorm(160), rnorm(160, mean = 1)),  
@@ -17,7 +21,7 @@
 #' )
 #' data_list <- list("test_data" = data)
 #' app <- createBoxPlotApp(data_list)
-#' runApp(app)
+#' if (interactive()) runApp(app)
 createBoxPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))

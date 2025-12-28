@@ -1,3 +1,36 @@
+#' Input UI components for the barPlot module
+#' 
+#' This should be placed in the UI where the inputs should be shown, with an `id` 
+#' that matches the `id` used in the `barPlotServer()` and `barPlotOutputUI()` functions.
+#' 
+#' @details The user inputs for this module are separated from the outputs to allow for 
+#' more flexible UI design. 
+#' 
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid. 
+#' 
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [plotthis::BarPlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list. 
+#' 
+#' @param id The ID for the Shiny module.
+#' @param data The data frame used for plot generation.
+#' @param defaults A named list of default values for the inputs.
+#' @param title An optional title for the UI grid.
+#' @param columns Number of columns for the UI grid.
+#' @return A Shiny tagList containing the UI elements
+#'
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyWidgets switchInput
+#'
+#' @export
+#' @author Jacob Martin
+#' @seealso [plotthis::BarPlot()], [vizModules::organize_inputs()], 
+#' [vizModules::barPlotOutputUI()], [vizModules::barPlotServer()], [vizModules::createBarPlotApp()]
+#' @examples
+#' library(vizModules)
+#' data(mtcars)
+#' barPlotInputsUI("barPlot", mtcars)
 barPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -74,6 +107,20 @@ barPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 
 
 
+#' Output UI components for the barPlot module
+#' 
+#' This should be placed in the UI where the plot should be shown.
+#' 
+#' @param id The ID for the Shiny module.
+#'
+#' @return A Shiny plotlyOutput for the barPlot
+#'
+#' @importFrom shiny NS
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinyjqui jqui_resizable
+#'
+#' @export
+#' @author Jacob Martin
 barPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(

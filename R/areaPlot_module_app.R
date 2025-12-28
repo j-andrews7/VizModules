@@ -1,4 +1,22 @@
-createareaPlotApp <- function(data_list) {
+#' Create an example Modular areaPlot Shiny Application
+#'
+#' This function generates a Shiny application with modular [plotthis::AreaPlot()] components.
+#' A module is created for each data frame provided in the named list of data frames.
+#'
+#' @param data_list A named list of data frames for which areaPlot modules will be created.
+#'   That is, UI inputs and an area plot will be generated for each.
+#' @return A Shiny app object.
+#' 
+#' @importFrom shinyjs useShinyjs
+#' @export
+#' 
+#' @author Jacob Martin
+#'
+#' @examples
+#' data_list <- list("mtcars" = mtcars, "iris" = iris)
+#' app <- createAreaPlotApp(data_list)
+#' if(interactive()) runApp(app)
+createAreaPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -30,13 +48,11 @@ createareaPlotApp <- function(data_list) {
 
     # Server function
     server <- function(input, output, session) {
-
        # Add the module server for each data frame
         lapply(names(data_list), function(name) {
             areaPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 
-    # Return the Shiny app
     shinyApp(ui, server)
 }
