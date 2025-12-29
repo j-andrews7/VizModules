@@ -6,16 +6,16 @@
 #' @param data_list A named list of data frames for which barPlot modules will be created.
 #'   That is, UI inputs and a bar plot will be generated for each.
 #' @return A Shiny app object.
-#' 
+#'
 #' @importFrom shinyjs useShinyjs
 #' @export
-#' 
-#' @author Jacob Martin
 #'
+#' @author Jacob Martin
+#
 #' @examples
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- createBarPlotApp(data_list)
-#' if(interactive()) runApp(app)
+#' if (interactive()) runApp(app)
 createBarPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))

@@ -20,7 +20,7 @@ A module is created for each data frame provided in the named list of data frame
 \examples{
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- createBarPlotApp(data_list)
-if(interactive()) runApp(app)
+if (interactive()) runApp(app)
 }
 \author{
 Jacob Martin
