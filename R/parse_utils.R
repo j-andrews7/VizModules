@@ -62,3 +62,18 @@
 
     x
 }
+
+#' Negative log10 transformation
+#' 
+#' A helper function for -log10 transformation, useful for p-value visualization
+#' in volcano plots where `-log10(padj)` is commonly used on the y-axis.
+#' 
+#' @param x Numeric vector to transform.
+#' @return `-log10(x)`
+#' 
+#' @author Jared Andrews
+#' @rdname INTERNAL_neglog10
+#' @keywords internal
+neg_log10 <- function(x) {
+    -log10(x)
+}

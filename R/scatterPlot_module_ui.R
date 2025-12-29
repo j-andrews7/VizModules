@@ -57,7 +57,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
     # Various other choice vectors
     adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")

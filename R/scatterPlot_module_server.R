@@ -31,7 +31,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
+                hideTab(inputId = session$ns("scatterPlotTabsetPanel"), target = tab.name)
             })
         }
 
@@ -56,7 +56,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         selected.data <- reactiveVal()
 
         # Observer to add selected data to selected.data
-        observeEvent(event_data("plotly_selected"),
+        observeEvent(
+            event_data("plotly_selected"),
             # suspended = TRUE,
             {
                 selected <- event_data("plotly_selected")
@@ -205,8 +206,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             plot.data <- p$Target_data
-            
-            #COLOUR MAPPING FOR LINE
+
+            # COLOUR MAPPING FOR LINE
             if (!is.null(input$color.by) && input$color.by != "") {
                 color_levels <- colLevels(input$color.by, data())
                 color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
@@ -240,8 +241,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
-
-                anno.data <- plot.data[,c(isolate(input$x.by), isolate(input$y.by), null.na.inputs$annotate.by)]
+                anno.data <- plot.data[, c(isolate(input$x.by), isolate(input$y.by), null.na.inputs$annotate.by)]
                 colnames(anno.data) <- c("x", "y", "text")
 
                 # Filter to rows of anno.data where the x.by and y.by columns BOTH match selected.data()$x and selected.data()$y in the same row
@@ -293,43 +293,42 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
                 df <- data()
                 if (identical(input$best.fit, FALSE)) {
-                x_col <- input$x.by
-                y_col <- input$y.by
+                    x_col <- input$x.by
+                    y_col <- input$y.by
 
-                model <- lm(df[[y_col]] ~ df[[x_col]], data = df)
+                    model <- lm(df[[y_col]] ~ df[[x_col]], data = df)
 
-                x_min <- min(df[[x_col]], na.rm = TRUE)
-                x_max <- max(df[[x_col]], na.rm = TRUE)
-                x_grid <- seq(x_min, x_max, length.out = 100)
+                    x_min <- min(df[[x_col]], na.rm = TRUE)
+                    x_max <- max(df[[x_col]], na.rm = TRUE)
+                    x_grid <- seq(x_min, x_max, length.out = 100)
 
 
-                intercept <- coef(model)[1]
-                slope <- coef(model)[2]
-                
-                # Calculate y directly from equation y = mx + b
-                y_grid <- intercept + slope * x_grid
-                
-                predict_df <- data.frame(x = x_grid, y = y_grid)
-                predict_df
+                    intercept <- coef(model)[1]
+                    slope <- coef(model)[2]
+
+                    # Calculate y directly from equation y = mx + b
+                    y_grid <- intercept + slope * x_grid
+
+                    predict_df <- data.frame(x = x_grid, y = y_grid)
+                    predict_df
                 } else {
                     NULL
                 }
             })
             colour.by.model <- reactive({
                 req(input$color.by, input$x.by, input$y.by, input$linear.model)
-                
+
                 df <- data()
 
-                if(!input$color.by == ""){
+                if (!input$color.by == "") {
                     x_col <- input$x.by
                     y_col <- input$y.by
                     color_col <- input$color.by
 
-                    models = list()
+                    models <- list()
                     for (species in unique(df[[color_col]])) {
-
                         species_data <- df[df[[color_col]] == species, ]
-                        
+
                         model <- lm(species_data[[y_col]] ~ species_data[[x_col]])
 
                         x_min <- min(species_data[[x_col]], na.rm = TRUE)
@@ -344,41 +343,39 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid)
                     }
                     models
-
-                }else{
+                } else {
                     NULL
                 }
-
             })
-            #Smooth best fit line reactive: 
+            # Smooth best fit line reactive:
 
             best_fit_by_group <- reactive({
                 req(input$color.by, input$x.by, input$y.by, input$best.fit)
-                
+
                 df <- data()
                 if (identical(input$best.fit, TRUE) && !identical(input$color.by, "")) {
                     x_col <- input$x.by
                     y_col <- input$y.by
                     color_col <- input$color.by
-                    
+
                     models <- list()
                     for (species in unique(df[[color_col]])) {
                         species_data <- df[df[[color_col]] == species, ]
-                        
+
                         fit <- loess(
                             formula = species_data[[y_col]] ~ -log10(species_data[[x_col]]),
                             span    = input$line.best.smoothness
                         )
-                        
-                        x_min  <- min(species_data[[x_col]], na.rm = TRUE)
-                        x_max  <- max(species_data[[x_col]], na.rm = TRUE)
+
+                        x_min <- min(species_data[[x_col]], na.rm = TRUE)
+                        x_max <- max(species_data[[x_col]], na.rm = TRUE)
                         x_grid <- seq(x_min, x_max, length.out = 100)
 
                         newdata <- data.frame(x_grid)
                         names(newdata) <- x_col
 
                         y_grid <- predict(fit, newdata = newdata)
-                        
+
                         models[[as.character(species)]] <- data.frame(x = x_grid, y = y_grid)
                     }
                     models
@@ -388,38 +385,35 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
 
 
-
-            
             if (identical(input$best.fit, TRUE) && identical(input$linear.model, FALSE)) {
-
                 if (!identical(input$color.by, "")) {
                     # grouped best-fit lines
                     for (species in names(best_fit_by_group())) {
-                    line_color <- color_mapping[[species]]
-                    fig <- fig %>%
-                        add_lines(
-                        data = best_fit_by_group()[[species]],
-                        x = ~x,
-                        y = ~y,
-                        line = list(color = line_color, width = 3),
-                        name = paste("Best fit", species)
-                        )
+                        line_color <- color_mapping[[species]]
+                        fig <- fig %>%
+                            add_lines(
+                                data = best_fit_by_group()[[species]],
+                                x = ~x,
+                                y = ~y,
+                                line = list(color = line_color, width = 3),
+                                name = paste("Best fit", species)
+                            )
                     }
                 } else {
                     # single global best-fit (your existing behaviour)
-                    fig <- fig %>% 
-                    add_lines(
-                        y    = ~ fitted(loess(.data[[input$y.by]] ~ -log10(.data[[input$x.by]]),
-                                            span = input$line.best.smoothness)),
-                        line = list(color = input$line.best.colour, width = 3),
-                        name = "LBF"
-                    )
+                    fig <- fig %>%
+                        add_lines(
+                            y = ~ fitted(loess(.data[[input$y.by]] ~ -log10(.data[[input$x.by]]),
+                                span = input$line.best.smoothness
+                            )),
+                            line = list(color = input$line.best.colour, width = 3),
+                            name = "LBF"
+                        )
                 }
             }
 
-             
-            
-            if (identical(input$linear.model, TRUE) & !input$color.by == ""){
+
+            if (identical(input$linear.model, TRUE) & !input$color.by == "") {
                 for (species in names(colour.by.model())) {
                     line_color <- color_mapping[[species]]
                     fig <- fig %>%
@@ -430,7 +424,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                             name = paste("Linear", species)
                         )
                 }
-
             } else if (identical(input$linear.model, TRUE) & identical(input$best.fit, FALSE)) {
                 fig <- fig %>%
                     add_lines(
@@ -438,17 +431,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         x = ~x,
                         y = ~y,
                         line = list(color = input$line.best.colour, width = 3),
-                                    name = "Linear Fit"
+                        name = "Linear Fit"
                     )
                 fig
             }
-            
-            
-               
+
+
             fig
-
-
-            
         })
     })
 }
