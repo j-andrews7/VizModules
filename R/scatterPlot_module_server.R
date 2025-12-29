@@ -9,10 +9,8 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
-#' @importFrom shiny moduleServer isolate hideTab reactive req
-#' @importFrom dittoViz scatterPlot dittoColors
 #' @importFrom ggplot2 theme_bw waiver
-#' @importFrom plotly renderPlotly %>% config layout toWebGL
+#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data
 #' @importFrom shinyjs hide
 #'
 #' @export
