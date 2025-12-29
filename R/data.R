@@ -1,0 +1,27 @@
+#' Example DESeq2 results from airway dataset
+#'
+#' A dataset containing differential expression results from comparing treated vs untreated
+#' samples in the airway dataset using DESeq2.
+#'
+#' @format A data frame with 63677 rows and 7 columns:
+#' \describe{
+#'   \item{baseMean}{Mean of normalized counts for all samples}
+#'   \item{log2FoldChange}{Log2 fold change between treated and untreated conditions}
+#'   \item{lfcSE}{Standard error of the log2 fold change estimate}
+#'   \item{stat}{Wald statistic}
+#'   \item{pvalue}{Wald test p-value}
+#'   \item{padj}{Benjamini-Hochberg adjusted p-value}
+#'   \item{symbol}{Gene symbol}
+#'   \item{ensembl}{Ensembl gene ID}
+#' }
+#'
+#' @source Generated from the \code{airway} Bioconductor package using DESeq2.
+#' The contrast compares dexamethasone treatment ("trt") vs untreated ("untrt").
+#'
+#' @examples
+#' data(airway_deseq2)
+#' head(airway_deseq2)
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"airway_deseq2"
