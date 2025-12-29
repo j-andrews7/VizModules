@@ -1,5 +1,5 @@
 #' Create a standalone Shiny app for the volcanoPlot module
-#' 
+#'
 #' @param df A data frame to plot. Must contain `padj` and `log2FoldChange` columns.
 #' @return A Shiny app object.
 #'
@@ -7,7 +7,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [vizModules::volcanoPlotInputsUI()], [vizModules::volcanoPlotOutputUI()], 
+#' @seealso [vizModules::volcanoPlotInputsUI()], [vizModules::volcanoPlotOutputUI()],
 #' [vizModules::volcanoPlotServer()], [vizModules::airway_deseq2]
 #' @examples
 #' library(vizModules)
@@ -19,7 +19,6 @@ createVolcanoPlotApp <- function(df) {
     # Validate input
     stopifnot(is.data.frame(df))
 
-    # UI definition
     ui <- fluidPage(
         useShinyjs(),
         titlePanel("Modular Volcano Plot"),
@@ -35,12 +34,10 @@ createVolcanoPlotApp <- function(df) {
         )
     )
 
-    # Server function
     server <- function(input, output, session) {
         # Add the module server for each data frame
         volcanoPlotServer("volc", data = reactive(df))
     }
 
-    # Return the Shiny app
     shinyApp(ui, server)
 }

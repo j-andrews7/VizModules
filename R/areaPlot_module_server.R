@@ -54,7 +54,7 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
-            #Data
+            # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
 
             # Grouping
@@ -84,31 +84,32 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$areaPlot <- renderPlotly({
             # Null Values:
             facet.by <- NULL
-            if (!input$facet.by == "NULL"){
+            if (!input$facet.by == "NULL") {
                 facet.by <- input$facet.by
             }
+
             split.by <- NULL
-            if (!input$split.by == "NULL"){
+            if (!input$split.by == "NULL") {
                 split.by <- input$split.by
             }
-            design <- if(input$split.by == "NULL" || input$design == "NULL") NULL else input$design
-            # area Plot
-            
+
+            design <- if (input$split.by == "NULL" || input$design == "NULL") NULL else input$design
+
             p <- plotthis::AreaPlot(
                 data(),
-                x=input$x.data,
-                y=input$y.data,
-                split_by=split.by,
-                group_by=input$group.by,
-                theme=input$theme,
-                palette=input$palette,
-                palcolor=input$palette.colours,
-                alpha=input$alpha,
-                facet_by=facet.by,
-                facet_scales=input$facet.scale,
-                facet_ncol=input$facet.ncol,
-                facet_nrow=input$facet.nrow,
-                facet_byrow=input$facet.by.row,
+                x = input$x.data,
+                y = input$y.data,
+                split_by = split.by,
+                group_by = input$group.by,
+                theme = input$theme,
+                palette = input$palette,
+                palcolor = input$palette.colours,
+                alpha = input$alpha,
+                facet_by = facet.by,
+                facet_scales = input$facet.scale,
+                facet_ncol = input$facet.ncol,
+                facet_nrow = input$facet.nrow,
+                facet_byrow = input$facet.by.row,
                 combine = input$combine,
                 design = design
             )
@@ -116,15 +117,33 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             plotlyOut <- ggplotly(p) |>
                 layout(
-                    title = list(text = "Click To Edit Title", font = list(size = input$title.font.size, family = input$font.type, color = input$text.colour), x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"), # Editing the Plotly axis titles and download button
-                    xaxis = list(title = list(text = "X-axis", font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour))),
-                    yaxis = list(title = list(text = "Y-axis", font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)))
+                    title = list(
+                        text = "Click To Edit Title",
+                        font = list(
+                            size = input$title.font.size,
+                            family = input$font.type,
+                            color = input$text.colour
+                        ),
+                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                    ),
+                    xaxis = list(
+                        title = list(
+                            text = "X-axis",
+                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                        )
+                    ),
+                    yaxis = list(
+                        title = list(
+                            text = "Y-axis",
+                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                        )
+                    )
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
                     toImageButtonOptions = list(format = input$download.type, filename = "area_plot", height = 500, width = 700, scale = 1),
                     displaylogo = FALSE
-                ) # Hiding Plotly Logo
+                )
 
             return(plotlyOut)
         })

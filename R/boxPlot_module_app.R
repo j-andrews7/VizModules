@@ -6,16 +6,16 @@
 #' @param data_list A named list of data frames for which boxPlot modules will be created.
 #'   That is, UI inputs and a box plot will be generated for each.
 #' @return A Shiny app object.
-#' 
+#'
 #' @importFrom shinyjs useShinyjs
 #' @export
-#' 
+#'
 #' @author Jacob Martin
 #' @examples
 #' library(vizModules)
 #' data <- data.frame(
 #'     x = rep(LETTERS[1:8], each = 40),
-#'     y = c(rnorm(160), rnorm(160, mean = 1)),  
+#'     y = c(rnorm(160), rnorm(160, mean = 1)),
 #'     group1 = sample(c("g1", "g2"), 320, replace = TRUE),
 #'     group2 = sample(c("h1", "h2", "h3", "h4"), 320, replace = TRUE)
 #' )
@@ -29,7 +29,6 @@ createBoxPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    # UI definition
     ui <- fluidPage(
         useShinyjs(),
         titlePanel("Modular boxPlots"),
@@ -52,15 +51,12 @@ createBoxPlotApp <- function(data_list) {
         )
     )
 
-    # Server function
     server <- function(input, output, session) {
-
-       # Add the module server for each data frame
+        # Add the module server for each data frame
         lapply(names(data_list), function(name) {
             boxPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 
-    # Return the Shiny app
     shinyApp(ui, server)
 }

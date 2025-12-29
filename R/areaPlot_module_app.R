@@ -6,16 +6,16 @@
 #' @param data_list A named list of data frames for which areaPlot modules will be created.
 #'   That is, UI inputs and an area plot will be generated for each.
 #' @return A Shiny app object.
-#' 
+#'
 #' @importFrom shinyjs useShinyjs
 #' @export
-#' 
+#'
 #' @author Jacob Martin
 #'
 #' @examples
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- createAreaPlotApp(data_list)
-#' if(interactive()) runApp(app)
+#' if (interactive()) runApp(app)
 createAreaPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
@@ -23,7 +23,6 @@ createAreaPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    # UI definition
     ui <- fluidPage(
         useShinyjs(),
         titlePanel("Modular areaPlots"),
@@ -46,9 +45,8 @@ createAreaPlotApp <- function(data_list) {
         )
     )
 
-    # Server function
     server <- function(input, output, session) {
-       # Add the module server for each data frame
+        # Add the module server for each data frame
         lapply(names(data_list), function(name) {
             areaPlotServer(name, data = reactive(data_list[[name]]))
         })

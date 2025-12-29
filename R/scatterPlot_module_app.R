@@ -24,7 +24,6 @@ createScatterPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    # UI definition
     ui <- fluidPage(
         useShinyjs(),
         titlePanel("Modular scatterPlots"),
@@ -47,7 +46,6 @@ createScatterPlotApp <- function(data_list) {
         )
     )
 
-    # Server function
     server <- function(input, output, session) {
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
@@ -55,6 +53,5 @@ createScatterPlotApp <- function(data_list) {
         })
     }
 
-    # Return the Shiny app
     shinyApp(ui, server)
 }
