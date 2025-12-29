@@ -6,18 +6,17 @@
 #' @param data_list A named list of data frames for which scatterPlot modules will be created.
 #'   That is, UI inputs and a scatter plot will be generated for each.
 #' @return A Shiny app object.
-#' 
-#' @importFrom shiny fluidPage titlePanel sidebarLayout sidebarPanel mainPanel shinyApp h3 reactive hr
+#'
 #' @importFrom shinyjs useShinyjs
 #' @export
-#' 
+#'
 #' @author Jared Andrews
 #'
 #' @examples
 #' library(vizModules)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- createScatterPlotApp(data_list)
-#' if(interactive()) runApp(app)
+#' if (interactive()) runApp(app)
 createScatterPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
@@ -50,7 +49,6 @@ createScatterPlotApp <- function(data_list) {
 
     # Server function
     server <- function(input, output, session) {
-
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
             scatterPlotServer(name, data = reactive(data_list[[name]]))

@@ -239,10 +239,36 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
-                anno.data <- plot.data[, c(isolate(input$x.by), isolate(input$y.by), null.na.inputs$annotate.by)]
-                colnames(anno.data) <- c("x", "y", "text")
+                # Determine the column names for matching against plotly's event_data coordinates
+                # event_data returns the PLOTTED coordinates, which may be transformed via adj.fxn
+                x_col <- isolate(input$x.by)
+                y_col <- isolate(input$y.by)
 
-                # Filter to rows of anno.data where the x.by and y.by columns BOTH match selected.data()$x and selected.data()$y in the same row
+                # Check if adjustment functions are applied - if so, use the adjusted column
+                x_adj_col <- paste0(x_col, ".x.adj")
+                y_adj_col <- paste0(y_col, ".y.adj")
+
+                # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
+                if (x_adj_col %in% names(plot.data)) {
+                    x_match_col <- x_adj_col
+                } else {
+                    x_match_col <- x_col
+                }
+
+                if (y_adj_col %in% names(plot.data)) {
+                    y_match_col <- y_adj_col
+                } else {
+                    y_match_col <- y_col
+                }
+
+                # Extract data for annotation matching using the correctly transformed coordinates
+                anno.data <- data.frame(
+                    x = plot.data[[x_match_col]],
+                    y = plot.data[[y_match_col]],
+                    text = plot.data[[null.na.inputs$annotate.by]]
+                )
+
+                # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
                 anno.data$xy <- paste0(anno.data$x, "_", anno.data$y)
                 anno.data <- anno.data[anno.data$xy %in% paste0(selected.data()$x, "_", selected.data()$y), ]
 
