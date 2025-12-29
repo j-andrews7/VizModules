@@ -29,7 +29,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = session$ns("scatterPlotTabsetPanel"), target = tab.name)
+                hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
             })
         }
 
