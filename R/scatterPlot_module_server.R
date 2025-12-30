@@ -238,56 +238,84 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 displaylogo = FALSE
             )
 
-            # Check if split.by is used - annotations are not supported with faceted plots
-            # because plotly subplots use different axis references (x/y, x2/y2, x3/y3, etc.)
-            # and event_data doesn't provide subplot information
-            has_split_by <- !is.null(null.na.inputs$split.by) && length(null.na.inputs$split.by) > 0
-            
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
-                if (has_split_by) {
-                    # Annotations not supported with split.by - skip annotation creation
-                    # User will be warned in the UI
-                    annos <- NULL
+                # Determine the column names for matching against plotly's event_data coordinates
+                # event_data returns the PLOTTED coordinates, which may be transformed via adj.fxn
+                x_col <- isolate(input$x.by)
+                y_col <- isolate(input$y.by)
+
+                # Check if adjustment functions are applied - if so, use the adjusted column
+                x_adj_col <- paste0(x_col, ".x.adj")
+                y_adj_col <- paste0(y_col, ".y.adj")
+
+                # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
+                if (x_adj_col %in% names(plot.data)) {
+                    x_match_col <- x_adj_col
                 } else {
-                    # Determine the column names for matching against plotly's event_data coordinates
-                    # event_data returns the PLOTTED coordinates, which may be transformed via adj.fxn
-                    x_col <- isolate(input$x.by)
-                    y_col <- isolate(input$y.by)
+                    x_match_col <- x_col
+                }
 
-                    # Check if adjustment functions are applied - if so, use the adjusted column
-                    x_adj_col <- paste0(x_col, ".x.adj")
-                    y_adj_col <- paste0(y_col, ".y.adj")
+                if (y_adj_col %in% names(plot.data)) {
+                    y_match_col <- y_adj_col
+                } else {
+                    y_match_col <- y_col
+                }
 
-                    # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
-                    if (x_adj_col %in% names(plot.data)) {
-                        x_match_col <- x_adj_col
+                # Extract data for annotation matching using the correctly transformed coordinates
+                anno.data <- data.frame(
+                    x = plot.data[[x_match_col]],
+                    y = plot.data[[y_match_col]],
+                    text = plot.data[[null.na.inputs$annotate.by]]
+                )
+
+                # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
+                anno.data$xy <- paste0(anno.data$x, "_", anno.data$y)
+                selected_xy <- paste0(selected.data()$x, "_", selected.data()$y)
+                anno.data <- anno.data[anno.data$xy %in% selected_xy, ]
+
+                # Map curveNumber to xref/yref for subplots
+                # Extract axis references from the plotly figure for each trace
+                trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
+                    trace <- fig$x$data[[i]]
+                    # Get xaxis and yaxis references from trace
+                    # Default to "x" and "y" if not specified
+                    xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                    yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                    list(xaxis = xaxis, yaxis = yaxis)
+                })
+
+                # Create annotations list with correct xref/yref for each point
+                # Match selected points to their trace and use corresponding axis references
+                annos <- list()
+                for (i in seq_len(nrow(anno.data))) {
+                    # Find matching selected data point to get curveNumber
+                    xy_match <- paste0(anno.data$x[i], "_", anno.data$y[i])
+                    selected_idx <- which(selected_xy == xy_match)[1]
+                    
+                    if (!is.na(selected_idx) && "curveNumber" %in% names(selected.data())) {
+                        curve_num <- selected.data()$curveNumber[selected_idx] + 1  # R is 1-indexed
+                        
+                        # Get axis references for this trace
+                        if (curve_num <= length(trace_axis_map)) {
+                            xref <- trace_axis_map[[curve_num]]$xaxis
+                            yref <- trace_axis_map[[curve_num]]$yaxis
+                        } else {
+                            # Fallback to default
+                            xref <- "x"
+                            yref <- "y"
+                        }
                     } else {
-                        x_match_col <- x_col
+                        # Fallback to default if curveNumber not available
+                        xref <- "x"
+                        yref <- "y"
                     }
-
-                    if (y_adj_col %in% names(plot.data)) {
-                        y_match_col <- y_adj_col
-                    } else {
-                        y_match_col <- y_col
-                    }
-
-                    # Extract data for annotation matching using the correctly transformed coordinates
-                    anno.data <- data.frame(
-                        x = plot.data[[x_match_col]],
-                        y = plot.data[[y_match_col]],
-                        text = plot.data[[null.na.inputs$annotate.by]]
-                    )
-
-                    # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
-                    anno.data$xy <- paste0(anno.data$x, "_", anno.data$y)
-                    anno.data <- anno.data[anno.data$xy %in% paste0(selected.data()$x, "_", selected.data()$y), ]
-
-                    annos <- list(
-                        x = anno.data$x,
-                        y = anno.data$y,
-                        text = anno.data$text,
-                        xref = "x",
-                        yref = "y",
+                    
+                    annos[[i]] <- list(
+                        x = anno.data$x[i],
+                        y = anno.data$y[i],
+                        text = as.character(anno.data$text[i]),
+                        xref = xref,
+                        yref = yref,
                         ax = isolate(input$annotation.ax),
                         ay = isolate(input$annotation.ay),
                         showarrow = isolate(input$annotation.showarrow),
