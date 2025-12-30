@@ -287,46 +287,53 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 # Create annotations list with correct xref/yref for each point
                 # Match selected points to their trace and use corresponding axis references
                 annos <- list()
-                for (i in seq_len(nrow(anno.data))) {
-                    # Find matching selected data point to get curveNumber
-                    xy_match <- paste0(anno.data$x[i], "_", anno.data$y[i])
-                    selected_idx <- which(selected_xy == xy_match)[1]
-                    
-                    if (!is.na(selected_idx) && "curveNumber" %in% names(selected.data())) {
-                        curve_num <- selected.data()$curveNumber[selected_idx] + 1  # R is 1-indexed
+                if (nrow(anno.data) > 0) {
+                    for (i in seq_len(nrow(anno.data))) {
+                        # Find matching selected data point to get curveNumber
+                        xy_match <- paste0(anno.data$x[i], "_", anno.data$y[i])
+                        selected_idx <- which(selected_xy == xy_match)[1]
                         
-                        # Get axis references for this trace
-                        if (curve_num <= length(trace_axis_map)) {
-                            xref <- trace_axis_map[[curve_num]]$xaxis
-                            yref <- trace_axis_map[[curve_num]]$yaxis
+                        if (!is.na(selected_idx) && "curveNumber" %in% names(selected.data())) {
+                            curve_num <- selected.data()$curveNumber[selected_idx] + 1  # R is 1-indexed
+                            
+                            # Get axis references for this trace
+                            if (curve_num <= length(trace_axis_map)) {
+                                xref <- trace_axis_map[[curve_num]]$xaxis
+                                yref <- trace_axis_map[[curve_num]]$yaxis
+                            } else {
+                                # Fallback to default
+                                xref <- "x"
+                                yref <- "y"
+                            }
                         } else {
-                            # Fallback to default
+                            # Fallback to default if curveNumber not available
                             xref <- "x"
                             yref <- "y"
                         }
-                    } else {
-                        # Fallback to default if curveNumber not available
-                        xref <- "x"
-                        yref <- "y"
-                    }
-                    
-                    annos[[i]] <- list(
-                        x = anno.data$x[i],
-                        y = anno.data$y[i],
-                        text = as.character(anno.data$text[i]),
-                        xref = xref,
-                        yref = yref,
-                        ax = isolate(input$annotation.ax),
-                        ay = isolate(input$annotation.ay),
-                        showarrow = isolate(input$annotation.showarrow),
-                        arrowcolor = isolate(input$annotation.arrowcolor),
-                        arrowhead = isolate(input$annotation.arrowhead),
-                        arrowwidth = isolate(input$annotation.arrowwidth),
-                        font = list(
-                            size = isolate(input$annotation.size),
-                            color = isolate(input$annotation.color)
+                        
+                        annos[[i]] <- list(
+                            x = anno.data$x[i],
+                            y = anno.data$y[i],
+                            text = as.character(anno.data$text[i]),
+                            xref = xref,
+                            yref = yref,
+                            ax = isolate(input$annotation.ax),
+                            ay = isolate(input$annotation.ay),
+                            showarrow = isolate(input$annotation.showarrow),
+                            arrowcolor = isolate(input$annotation.arrowcolor),
+                            arrowhead = isolate(input$annotation.arrowhead),
+                            arrowwidth = isolate(input$annotation.arrowwidth),
+                            font = list(
+                                size = isolate(input$annotation.size),
+                                color = isolate(input$annotation.color)
+                            )
                         )
-                    )
+                    }
+                }
+                
+                # Set to NULL if empty list
+                if (length(annos) == 0) {
+                    annos <- NULL
                 }
             } else {
                 annos <- NULL
