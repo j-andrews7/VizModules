@@ -364,13 +364,16 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 annotations = annos
             )
 
+            # Apply WebGL conversion
+            # For subplots, use partial_bundle to preserve hover interactions
             if (isolate(input$webgl)) {
-                fig <- fig %>% toWebGL()
-            }
-
-            # Fix hover interactions for subplots with WebGL by explicitly setting hovermode
-            if (!is.null(null.na.inputs$split.by)) {
-                fig <- fig %>% layout(hovermode = "closest")
+                if (!is.null(null.na.inputs$split.by)) {
+                    # For subplots, use partial toWebGL to preserve hover
+                    fig <- fig %>% plotly::partial_bundle()
+                } else {
+                    # For regular plots, use full toWebGL
+                    fig <- fig %>% toWebGL()
+                }
             }
 
             # Add fit lines if requested
