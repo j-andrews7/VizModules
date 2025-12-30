@@ -241,10 +241,10 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Check if split.by is used - annotations are not supported with faceted plots
             # because plotly subplots use different axis references (x/y, x2/y2, x3/y3, etc.)
             # and event_data doesn't provide subplot information
-            has_split <- !is.null(null.na.inputs$split.by) && length(null.na.inputs$split.by) > 0
+            has_split_by <- !is.null(null.na.inputs$split.by) && length(null.na.inputs$split.by) > 0
             
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
-                if (has_split) {
+                if (has_split_by) {
                     # Annotations not supported with split.by - skip annotation creation
                     # User will be warned in the UI
                     annos <- NULL
