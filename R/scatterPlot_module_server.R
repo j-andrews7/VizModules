@@ -292,15 +292,21 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 # Match selected points to their trace and use corresponding axis references
                 annos <- list()
                 if (nrow(anno.data) > 0) {
+                    # Cache selected.data() to avoid repeated calls
+                    selected_data_cached <- selected.data()
+                    has_curve_number <- "curveNumber" %in% names(selected_data_cached) && 
+                                       !is.null(selected_data_cached$curveNumber) &&
+                                       is.numeric(selected_data_cached$curveNumber)
+                    
                     for (i in seq_len(nrow(anno.data))) {
                         # Find matching selected data point to get curveNumber
                         xy_match <- paste0(round(anno.data$x[i], 10), "_", round(anno.data$y[i], 10))
                         selected_idx <- match(xy_match, selected_xy)
                         
                         if (!is.na(selected_idx) && 
-                            "curveNumber" %in% names(selected.data()) &&
-                            selected_idx <= length(selected.data()$curveNumber)) {
-                            curve_num <- selected.data()$curveNumber[selected_idx] + 1  # R is 1-indexed
+                            has_curve_number &&
+                            selected_idx <= length(selected_data_cached$curveNumber)) {
+                            curve_num <- selected_data_cached$curveNumber[selected_idx] + 1  # R is 1-indexed
                             
                             # Get axis references for this trace
                             if (length(trace_axis_map) > 0 && curve_num <= length(trace_axis_map)) {
