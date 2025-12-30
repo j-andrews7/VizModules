@@ -352,7 +352,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             fig <- fig %>% layout(
-                hovermode = "closest",
                 newshape = list(
                     fillcolor = isolate(input$shape.fill),
                     line = list(
@@ -365,7 +364,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 annotations = annos
             )
 
-            if (isolate(input$webgl)) {
+            # Skip toWebGL() for subplots as it breaks hover interactions
+            if (isolate(input$webgl) && is.null(null.na.inputs$split.by)) {
                 fig <- fig %>% toWebGL()
             }
 
