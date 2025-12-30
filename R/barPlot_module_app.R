@@ -1,23 +1,22 @@
-#' Create an example Modular scatterPlot Shiny Application
+#' Create an example Modular barPlot Shiny Application
 #'
-#' This function generates a Shiny application with modular [dittoViz::scatterPlot()] components.
+#' This function generates a Shiny application with modular [plotthis::BarPlot()] components.
 #' A module is created for each data frame provided in the named list of data frames.
 #'
-#' @param data_list A named list of data frames for which scatterPlot modules will be created.
-#'   That is, UI inputs and a scatter plot will be generated for each.
+#' @param data_list A named list of data frames for which barPlot modules will be created.
+#'   That is, UI inputs and a bar plot will be generated for each.
 #' @return A Shiny app object.
 #'
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'
-#' @author Jared Andrews
-#'
+#' @author Jacob Martin
+#
 #' @examples
-#' library(vizModules)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
-#' app <- createScatterPlotApp(data_list)
+#' app <- createBarPlotApp(data_list)
 #' if (interactive()) runApp(app)
-createScatterPlotApp <- function(data_list) {
+createBarPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -26,30 +25,27 @@ createScatterPlotApp <- function(data_list) {
 
     ui <- fluidPage(
         useShinyjs(),
-        titlePanel("Modular scatterPlots"),
+        titlePanel("Modular barPlots"),
         sidebarLayout(
             sidebarPanel(
-                # Add the module inputs UI for each data frame
                 lapply(names(data_list), function(name) {
                     tagList(
-                        scatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                        barPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
                         hr()
                     )
                 })
             ),
             mainPanel(
-                # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(scatterPlotOutputUI(name), br())
+                    tagList(barPlotOutputUI(name), br())
                 })
             )
         )
     )
 
     server <- function(input, output, session) {
-        # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            scatterPlotServer(name, data = reactive(data_list[[name]]))
+            barPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 

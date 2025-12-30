@@ -1,26 +1,26 @@
 #' Input UI components for the scatterPlot module
-#' 
-#' This should be placed in the UI where the inputs should be shown, with an `id` 
+#'
+#' This should be placed in the UI where the inputs should be shown, with an `id`
 #' that matches the `id` used in the `scatterPlotServer()` and `scatterPlotOutputUI()` functions.
-#' 
-#' @details The user inputs for this module are separated from the outputs to allow for 
-#' more flexible UI design. 
-#' 
+#'
+#' @details The user inputs for this module are separated from the outputs to allow for
+#' more flexible UI design.
+#'
 #' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
-#' with `columns` controlling the number of columns in the grid. 
-#' 
+#' with `columns` controlling the number of columns in the grid.
+#'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Nearly all parameters for [dittoViz::scatterPlot()] can be set via these inputs, so see the help
-#' for that function for an exhaustive list. 
-#' 
+#' for that function for an exhaustive list.
+#'
 #' Note that some of the parameters may have input types that differ from the actual function, e.g. `shape.panel`
 #' is a text input for comma-separated integers, while the function expects a vector of integers.
-#' The module will parse such inputs into the appropriate format for [dittoViz::scatterPlot()] automatically. 
-#' 
+#' The module will parse such inputs into the appropriate format for [dittoViz::scatterPlot()] automatically.
+#'
 #' There are also a handful that are specific to the Shiny module that additionally modify the plotly output:
-#' 
+#'
 #' - `id`: The ID for the Shiny module.
-#' 
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs.
@@ -28,17 +28,15 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
-#' @importFrom shiny tagList NS selectInput numericInput sliderInput
-#'   checkboxInput textInput actionButton br selectizeInput
 #' @importFrom colourpicker colourInput
 #' @importFrom esquisse palettePicker
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [dittoViz::scatterPlot()], [dittoVizModules::organize_inputs()], 
-#' [dittoVizModules::scatterPlotOutputUI()], [dittoVizModules::scatterPlotServer()], [dittoVizModules::createScatterPlotApp()]
+#' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
 #' @examples
-#' library(dittoVizModules)
+#' library(vizModules)
 #' data(mtcars)
 #' scatterPlotInputsUI("scatterPlot", mtcars)
 scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
@@ -59,7 +57,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
     # Various other choice vectors
     adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")
@@ -530,6 +528,26 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["yline.color"]], "black"
                 )
             )
+        ),
+        "Lines" = tagList(
+            switchInput(ns("best.fit"), "Line of best fit:",
+                value = FALSE,
+                offLabel = "Off",
+                onLabel = "On"
+            ),
+            numericInput(ns("line.best.smoothness"), "Smoothness of line of best fit:",
+                value = 1,
+                min = 0,
+                max = 10000
+            ),
+            colourpicker::colourInput(ns("line.best.colour"), "Line of best fit colour:",
+                value = "#000000"
+            ),
+            switchInput(ns("linear.model"), "Linear model line",
+                value = FALSE,
+                onLabel = "On",
+                offLabel = "Off"
+            )
         )
     )
 
@@ -544,9 +562,9 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
 
 #' Output UI components for the scatterPlot module
-#' 
+#'
 #' This should be placed in the UI where the plot should be shown.
-#' 
+#'
 #' @param id The ID for the Shiny module.
 #'
 #' @return A Shiny plotlyOutput for the scatterplot

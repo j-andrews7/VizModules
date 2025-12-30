@@ -9,10 +9,8 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
-#' @importFrom shiny moduleServer isolate hideTab reactive req
-#' @importFrom dittoViz scatterPlot dittoColors
 #' @importFrom ggplot2 theme_bw waiver
-#' @importFrom plotly renderPlotly %>% config layout toWebGL
+#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data
 #' @importFrom shinyjs hide
 #'
 #' @export
@@ -56,7 +54,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         selected.data <- reactiveVal()
 
         # Observer to add selected data to selected.data
-        observeEvent(event_data("plotly_selected"),
+        observeEvent(
+            event_data("plotly_selected"),
             # suspended = TRUE,
             {
                 selected <- event_data("plotly_selected")
@@ -206,6 +205,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             plot.data <- p$Target_data
 
+            # COLOUR MAPPING FOR LINE
+            if (!is.null(input$color.by) && input$color.by != "") {
+                color_levels <- colLevels(input$color.by, data())
+                color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
+            } else {
+                color_mapping <- NULL
+            }
+
+
             fig <- p$plot %>% config(
                 edits = list(
                     axisTitleText = TRUE,
@@ -231,11 +239,36 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
+                # Determine the column names for matching against plotly's event_data coordinates
+                # event_data returns the PLOTTED coordinates, which may be transformed via adj.fxn
+                x_col <- isolate(input$x.by)
+                y_col <- isolate(input$y.by)
 
-                anno.data <- plot.data[,c(isolate(input$x.by), isolate(input$y.by), null.na.inputs$annotate.by)]
-                colnames(anno.data) <- c("x", "y", "text")
+                # Check if adjustment functions are applied - if so, use the adjusted column
+                x_adj_col <- paste0(x_col, ".x.adj")
+                y_adj_col <- paste0(y_col, ".y.adj")
 
-                # Filter to rows of anno.data where the x.by and y.by columns BOTH match selected.data()$x and selected.data()$y in the same row
+                # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
+                if (x_adj_col %in% names(plot.data)) {
+                    x_match_col <- x_adj_col
+                } else {
+                    x_match_col <- x_col
+                }
+
+                if (y_adj_col %in% names(plot.data)) {
+                    y_match_col <- y_adj_col
+                } else {
+                    y_match_col <- y_col
+                }
+
+                # Extract data for annotation matching using the correctly transformed coordinates
+                anno.data <- data.frame(
+                    x = plot.data[[x_match_col]],
+                    y = plot.data[[y_match_col]],
+                    text = plot.data[[null.na.inputs$annotate.by]]
+                )
+
+                # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
                 anno.data$xy <- paste0(anno.data$x, "_", anno.data$y)
                 anno.data <- anno.data[anno.data$xy %in% paste0(selected.data()$x, "_", selected.data()$y), ]
 
@@ -275,6 +308,87 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             if (isolate(input$webgl)) {
                 fig <- fig %>% toWebGL()
+            }
+
+            # Add fit lines if requested
+            # Determine grouping
+            group_col <- if (!is.null(input$color.by) && input$color.by != "") {
+                input$color.by
+            } else {
+                NULL
+            }
+
+            # Linear model fits
+            if (isTRUE(input$linear.model)) {
+                fit_data <- .compute_linear_fit(
+                    df = data(),
+                    x_col = isolate(input$x.by),
+                    y_col = isolate(input$y.by),
+                    group_col = group_col
+                )
+
+                if (!is.null(fit_data)) {
+                    if (is.data.frame(fit_data)) {
+                        # Single global fit line
+                        fig <- fig %>%
+                            add_lines(
+                                data = fit_data,
+                                x = ~x,
+                                y = ~y,
+                                line = list(color = input$line.best.colour, width = 3),
+                                name = "Linear Fit"
+                            )
+                    } else {
+                        # Grouped fit lines (fit_data is a list)
+                        for (group_name in names(fit_data)) {
+                            line_color <- color_mapping[[group_name]]
+                            fig <- fig %>%
+                                add_lines(
+                                    data = fit_data[[group_name]],
+                                    x = ~x,
+                                    y = ~y,
+                                    line = list(color = line_color, width = 3),
+                                    name = paste("Linear", group_name)
+                                )
+                        }
+                    }
+                }
+            } else if (isTRUE(input$best.fit)) {
+                # LOESS smooth fit lines (only if linear model not selected)
+                fit_data <- .compute_loess_fit(
+                    df = data(),
+                    x_col = isolate(input$x.by),
+                    y_col = isolate(input$y.by),
+                    group_col = group_col,
+                    span = input$line.best.smoothness
+                )
+
+                if (!is.null(fit_data)) {
+                    if (is.data.frame(fit_data)) {
+                        # Single global fit line
+                        fig <- fig %>%
+                            add_lines(
+                                data = fit_data,
+                                x = ~x,
+                                y = ~y,
+                                line = list(color = input$line.best.colour, width = 3),
+                                name = "Best Fit"
+                            )
+                    } else {
+                        # Grouped fit lines (fit_data is a list)
+                        for (group_name in names(fit_data)) {
+                            line_color <- color_mapping[[group_name]]
+                            fig <- fig %>%
+                                add_lines(
+                                    data = fit_data[[group_name]],
+                                    x = ~x,
+                                    y = ~y,
+                                    line = list(color = line_color, width = 3),
+                                    name = paste("Best fit", group_name)
+                                )
+                        }
+                    }
+                }
             }
 
             fig

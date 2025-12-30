@@ -74,6 +74,87 @@ data_list <- list("mtcars" = mtcars, "iris" = iris)
 createScatterPlotApp(data_list)
 ```
 
+## Building Custom Wrapper Modules
+
+The modules in **vizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
+
+Here's a minimal example of wrapping the `scatterPlot` module to add custom filtering logic:
+
+```r
+library(vizModules)
+
+# Define the wrapper UI
+minimalWrapperUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Minimal Wrapper Controls"),
+        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
+        hr(),
+        scatterPlotInputsUI(id, iris)
+    )
+}
+
+minimalWrapperOutput <- function(id) {
+    scatterPlotOutputUI(id)
+}
+
+# Define the wrapper server
+minimalWrapperServer <- function(id, data_reactive) {
+    # 1. Process data in a moduleServer block to access inputs namespaced to 'id'
+    # We return the reactive expression produced by this block.
+    # Note: moduleServer returns the return value of the function it runs.
+    filtered_data <- moduleServer(id, function(input, output, session) {
+        reactive({
+            req(data_reactive())
+            df <- data_reactive()
+
+            # Custom wrapper logic: filter based on a checkbox
+            if (isTRUE(input$filter_setosa)) {
+                if ("Species" %in% names(df)) {
+                    df <- df[df$Species == "setosa", ]
+                }
+            }
+            df
+        })
+    })
+
+    # 2. Call the base module server with the processed data.
+    # We call this OUTSIDE the first moduleServer closure so that
+    # scatterPlotServer attaches to 'id' relative to the parent,
+    # avoiding nested namespace issues (e.g. id-id-input).
+    scatterPlotServer(id, filtered_data)
+}
+
+# Create the app using the wrapper
+ui <- fluidPage(
+    titlePanel("Minimal Wrapper Example"),
+    sidebarLayout(
+        sidebarPanel(
+            minimalWrapperUI("demo")
+        ),
+        mainPanel(
+            minimalWrapperOutput("demo")
+        )
+    )
+)
+
+server <- function(input, output, session) {
+    minimalWrapperServer("demo", reactive({ iris }))
+}
+
+shinyApp(ui, server)
+```
+
+**Key points when building wrapper modules:**
+
+1. **Namespace handling**: Use `NS(id)` for your wrapper's custom inputs, and pass the bare `id` (not namespaced) to the base module's UI and server functions.
+
+2. **Data processing pattern**: Process your data inside a `moduleServer()` block to access your wrapper's namespaced inputs, then call the base module's server function *outside* that block to avoid double-namespacing.
+
+3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
+
+For more details, see `vignette("custom-modules", package = "vizModules")`.
+
 ## Modules Provided
 
 Currently, **vizModules** contains a functional Shiny module for the following dittoViz visualization functions:

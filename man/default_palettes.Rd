@@ -10,5 +10,5 @@ default_palettes()
 Color palette options for palettePicker
 }
 \author{
-Jared Andrews, based largely on \code{\link[esquisse:default_pals]{esquisse::default_pals()}}
+Jared Andrews
 }
