@@ -364,7 +364,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 annotations = annos
             )
 
-            # Skip toWebGL() for subplots as it breaks hover interactions
+            # Skip toWebGL() for subplots as WebGL breaks hover interactions on plotly faceted plots (known plotly limitation)
             if (isolate(input$webgl) && is.null(null.na.inputs$split.by)) {
                 fig <- fig %>% toWebGL()
             }
