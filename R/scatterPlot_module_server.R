@@ -203,7 +203,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 data.out = TRUE
             )
 
-            plot.data <- p$Target_data
+            plot_data <- p$Target_data
 
             # COLOUR MAPPING FOR LINE
             if (!is.null(input$color.by) && input$color.by != "") {
@@ -249,30 +249,30 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 y_adj_col <- paste0(y_col, ".y.adj")
 
                 # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
-                if (x_adj_col %in% names(plot.data)) {
+                if (x_adj_col %in% names(plot_data)) {
                     x_match_col <- x_adj_col
                 } else {
                     x_match_col <- x_col
                 }
 
-                if (y_adj_col %in% names(plot.data)) {
+                if (y_adj_col %in% names(plot_data)) {
                     y_match_col <- y_adj_col
                 } else {
                     y_match_col <- y_col
                 }
 
                 # Extract data for annotation matching using the correctly transformed coordinates
-                anno.data <- data.frame(
-                    x = plot.data[[x_match_col]],
-                    y = plot.data[[y_match_col]],
-                    text = plot.data[[null.na.inputs$annotate.by]]
+                anno_data <- data.frame(
+                    x = plot_data[[x_match_col]],
+                    y = plot_data[[y_match_col]],
+                    text = plot_data[[null.na.inputs$annotate.by]]
                 )
 
-                # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
+                # Filter to rows of anno_data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
                 # Round coordinates to avoid floating-point precision issues
-                anno.data$xy <- paste0(round(anno.data$x, 10), "_", round(anno.data$y, 10))
+                anno_data$xy <- paste0(round(anno_data$x, 10), "_", round(anno_data$y, 10))
                 selected_xy <- paste0(round(selected.data()$x, 10), "_", round(selected.data()$y, 10))
-                anno.data <- anno.data[anno.data$xy %in% selected_xy, ]
+                anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
 
                 # Map curveNumber to xref/yref for subplots
                 # Extract axis references from the plotly figure for each trace
@@ -291,23 +291,23 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 # Create annotations list with correct xref/yref for each point
                 # Match selected points to their trace and use corresponding axis references
                 annos <- list()
-                if (nrow(anno.data) > 0) {
+                if (nrow(anno_data) > 0) {
                     # Cache selected.data() to avoid repeated calls
                     selected_data_cached <- selected.data()
-                    has_curve_number <- "curveNumber" %in% names(selected_data_cached) && 
-                                       !is.null(selected_data_cached$curveNumber) &&
-                                       is.numeric(selected_data_cached$curveNumber)
-                    
-                    for (i in seq_len(nrow(anno.data))) {
+                    has_curve_number <- "curveNumber" %in% names(selected_data_cached) &&
+                        !is.null(selected_data_cached$curveNumber) &&
+                        is.numeric(selected_data_cached$curveNumber)
+
+                    for (i in seq_len(nrow(anno_data))) {
                         # Find matching selected data point to get curveNumber
-                        xy_match <- paste0(round(anno.data$x[i], 10), "_", round(anno.data$y[i], 10))
+                        xy_match <- paste0(round(anno_data$x[i], 10), "_", round(anno_data$y[i], 10))
                         selected_idx <- match(xy_match, selected_xy)
-                        
-                        if (!is.na(selected_idx) && 
+
+                        if (!is.na(selected_idx) &&
                             has_curve_number &&
                             selected_idx <= length(selected_data_cached$curveNumber)) {
-                            curve_num <- selected_data_cached$curveNumber[selected_idx] + 1  # R is 1-indexed
-                            
+                            curve_num <- selected_data_cached$curveNumber[selected_idx] + 1 # R is 1-indexed
+
                             # Get axis references for this trace
                             if (length(trace_axis_map) > 0 && curve_num <= length(trace_axis_map)) {
                                 xref <- trace_axis_map[[curve_num]]$xaxis
@@ -322,11 +322,11 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                             xref <- "x"
                             yref <- "y"
                         }
-                        
+
                         annos[[i]] <- list(
-                            x = anno.data$x[i],
-                            y = anno.data$y[i],
-                            text = as.character(anno.data$text[i]),
+                            x = anno_data$x[i],
+                            y = anno_data$y[i],
+                            text = as.character(anno_data$text[i]),
                             xref = xref,
                             yref = yref,
                             ax = isolate(input$annotation.ax),
@@ -342,7 +342,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         )
                     }
                 }
-                
+
                 # Set to NULL if empty list
                 if (length(annos) == 0) {
                     annos <- NULL
