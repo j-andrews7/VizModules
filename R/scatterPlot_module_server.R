@@ -352,6 +352,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             fig <- fig %>% layout(
+                hovermode = "closest",
                 newshape = list(
                     fillcolor = isolate(input$shape.fill),
                     line = list(
