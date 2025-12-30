@@ -10,7 +10,7 @@
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
-#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data
+#' @importFrom plotly renderPlotly %>% config layout toWebGL partial_bundle event_data
 #' @importFrom shinyjs hide
 #'
 #' @export
@@ -369,7 +369,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (isolate(input$webgl)) {
                 if (!is.null(null.na.inputs$split.by)) {
                     # For subplots, use partial toWebGL to preserve hover
-                    fig <- fig %>% plotly::partial_bundle()
+                    fig <- fig %>% partial_bundle()
                 } else {
                     # For regular plots, use full toWebGL
                     fig <- fig %>% toWebGL()
