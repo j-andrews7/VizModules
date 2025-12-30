@@ -9,7 +9,8 @@ Authors@R:
                 role = c("aut"),
                 email = "Jacob.Martin@stjude.org"))
 Description: vizModules offers a core selection of interactivity-first Shiny modules for many 
-    plot types meant to serve as the base for more complex modules. These modules
+    plot types meant to serve as flexible building blocks for applications and 
+    as the base for more complex modules. These modules
     allow for the rapid and convenient construction of Shiny apps with very few lines
     of code and decouple plotting from the underlying data. As is, these modules allow 
     for full plot aesthetic customization by the end user through UI inputs. Utility
