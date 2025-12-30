@@ -365,6 +365,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             if (isolate(input$webgl)) {
+                # Fix hover data issue with toWebGL() when there are layers without proper text attributes
+                # Check each layer and set hoverinfo = "skip" for layers where length of text is 1
+                if (!is.null(fig$x) && !is.null(fig$x$data) && length(fig$x$data) > 0) {
+                    for (i in seq_along(fig$x$data)) {
+                        if (!is.null(fig$x$data[[i]]$text) && length(fig$x$data[[i]]$text) == 1) {
+                            fig$x$data[[i]]$hoverinfo <- "skip"
+                        }
+                    }
+                }
                 fig <- fig %>% toWebGL()
             }
 
