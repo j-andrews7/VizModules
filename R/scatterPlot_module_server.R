@@ -269,20 +269,24 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
                 # Filter to rows of anno.data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
-                anno.data$xy <- paste0(anno.data$x, "_", anno.data$y)
-                selected_xy <- paste0(selected.data()$x, "_", selected.data()$y)
+                # Round coordinates to avoid floating-point precision issues
+                anno.data$xy <- paste0(round(anno.data$x, 10), "_", round(anno.data$y, 10))
+                selected_xy <- paste0(round(selected.data()$x, 10), "_", round(selected.data()$y, 10))
                 anno.data <- anno.data[anno.data$xy %in% selected_xy, ]
 
                 # Map curveNumber to xref/yref for subplots
                 # Extract axis references from the plotly figure for each trace
-                trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
-                    trace <- fig$x$data[[i]]
-                    # Get xaxis and yaxis references from trace
-                    # Default to "x" and "y" if not specified
-                    xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
-                    yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
-                    list(xaxis = xaxis, yaxis = yaxis)
-                })
+                trace_axis_map <- list()
+                if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$data) && length(fig$x$data) > 0) {
+                    trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
+                        trace <- fig$x$data[[i]]
+                        # Get xaxis and yaxis references from trace
+                        # Default to "x" and "y" if not specified
+                        xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                        yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                        list(xaxis = xaxis, yaxis = yaxis)
+                    })
+                }
 
                 # Create annotations list with correct xref/yref for each point
                 # Match selected points to their trace and use corresponding axis references
@@ -290,14 +294,16 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 if (nrow(anno.data) > 0) {
                     for (i in seq_len(nrow(anno.data))) {
                         # Find matching selected data point to get curveNumber
-                        xy_match <- paste0(anno.data$x[i], "_", anno.data$y[i])
-                        selected_idx <- which(selected_xy == xy_match)[1]
+                        xy_match <- paste0(round(anno.data$x[i], 10), "_", round(anno.data$y[i], 10))
+                        selected_idx <- match(xy_match, selected_xy)
                         
-                        if (!is.na(selected_idx) && "curveNumber" %in% names(selected.data())) {
+                        if (!is.na(selected_idx) && 
+                            "curveNumber" %in% names(selected.data()) &&
+                            selected_idx <= length(selected.data()$curveNumber)) {
                             curve_num <- selected.data()$curveNumber[selected_idx] + 1  # R is 1-indexed
                             
                             # Get axis references for this trace
-                            if (curve_num <= length(trace_axis_map)) {
+                            if (length(trace_axis_map) > 0 && curve_num <= length(trace_axis_map)) {
                                 xref <- trace_axis_map[[curve_num]]$xaxis
                                 yref <- trace_axis_map[[curve_num]]$yaxis
                             } else {
