@@ -18,19 +18,14 @@
             matches <- regmatches(x, gregexpr("\\[.*?\\]|\\(.*?\\)|<.*?>", x))[[1]]
 
             if (length(matches) > 0) {
-                # Process each matched group
+                # Remove brackets, split, trim
                 x <- lapply(matches, function(m) {
-                    # Remove the first and last characters (brackets)
                     content <- substr(m, 2, nchar(m) - 1)
-                    # Split by comma
                     items <- strsplit(content, ",")[[1]]
-                    # Trim whitespace from items
                     trimws(items)
                 })
             } else {
-                # Fallback: treat as a single vector if no brackets found
-                # This maintains some backward compatibility for non-bracketed simple lists
-                # while fixing the whitespace destruction of the previous version
+                # treat as a single vector if no brackets found
                 x <- list(trimws(strsplit(x, ",")[[1]]))
             }
         }
@@ -64,8 +59,7 @@
 
 #' Negative log10 transformation
 #'
-#' A helper function for -log10 transformation, useful for p-value visualization
-#' in volcano plots where `-log10(padj)` is commonly used on the y-axis.
+#' A helper function for -log10 transformation.
 #'
 #' @param x Numeric vector to transform.
 #' @return `-log10(x)`
