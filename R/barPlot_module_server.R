@@ -98,53 +98,55 @@ barPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$barPlot <- renderPlotly({
+            input$update
+
             # Null Values:
             facet.by <- NULL
-            if (!input$facet.by == "NULL") {
-                facet.by <- input$facet.by
+            if (!isolate(input$facet.by) == "NULL") {
+                facet.by <- isolate(input$facet.by)
             }
             line.name <- NULL
-            if (!input$line.name == "") {
-                line.name <- input$line.name
+            if (!isolate(input$line.name) == "") {
+                line.name <- isolate(input$line.name)
             }
             expand <- waiver()
-            if (!input$expand == "") {
-                expand <- as.numeric(strsplit(input$expand, ",\\s*")[[1]])
+            if (!isolate(input$expand) == "") {
+                expand <- as.numeric(strsplit(isolate(input$expand), ",\\s*")[[1]])
             }
-            if (!is.na(input$width)) {
-                width <- input$width
+            if (!is.na(isolate(input$width))) {
+                width <- isolate(input$width)
             } else {
                 width <- waiver()
             }
             split.by <- NULL
-            if (!input$split.by == "NULL") {
-                split.by <- input$split.by
+            if (!isolate(input$split.by) == "NULL") {
+                split.by <- isolate(input$split.by)
             }
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
-                x = input$x.data,
-                y = input$y.data,
-                flip = input$flip,
-                group_by = input$group.by,
+                x = isolate(input$x.data),
+                y = isolate(input$y.data),
+                flip = isolate(input$flip),
+                group_by = isolate(input$group.by),
                 facet_by = facet.by,
-                facet_scales = input$facet.scale,
-                facet_ncol = input$facet.ncol,
-                facet_nrow = input$facet.nrow,
-                facet_byrow = input$facet.by.row,
-                palette = input$palette,
-                palcolor = input$palette.colours,
-                add_bg = input$background.colour,
-                bg_palette = input$background.palette,
-                bg_alpha = input$background.alpha,
-                y_min = input$y.min,
-                y_max = input$y.max,
-                theme = input$theme,
-                alpha = input$alpha,
-                add_line = input$add.line,
-                line_color = input$line.colour,
-                line_width = input$line.width,
-                line_type = input$line.type,
+                facet_scales = isolate(input$facet.scale),
+                facet_ncol = isolate(input$facet.ncol),
+                facet_nrow = isolate(input$facet.nrow),
+                facet_byrow = isolate(input$facet.by.row),
+                palette = isolate(input$palette),
+                palcolor = isolate(input$palette.colours),
+                add_bg = isolate(input$background.colour),
+                bg_palette = isolate(input$background.palette),
+                bg_alpha = isolate(input$background.alpha),
+                y_min = isolate(input$y.min),
+                y_max = isolate(input$y.max),
+                theme = isolate(input$theme),
+                alpha = isolate(input$alpha),
+                add_line = isolate(input$add.line),
+                line_color = isolate(input$line.colour),
+                line_width = isolate(input$line.width),
+                line_type = isolate(input$line.type),
                 line_name = line.name,
                 fill_by_x_if_no_group = TRUE,
                 expand = expand,
@@ -155,26 +157,26 @@ barPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 layout(
                     title = list(
                         text = "Click To Edit Title",
-                        font = list(size = input$title.font.size, family = input$font.type, color = input$text.colour),
+                        font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     xaxis = list(
                         title = list(
                             text = "X-axis",
-                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                            font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         )
                     ),
                     yaxis = list(
                         title = list(
                             text = "Y-axis",
-                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                            font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         )
                     )
                 ) |>
                 config(
                     editable = TRUE,
                     edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = input$download.type, filename = "box_plot", height = 500, width = 700, scale = 1),
+                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "box_plot", height = 500, width = 700, scale = 1),
                     displaylogo = FALSE
                 )
 

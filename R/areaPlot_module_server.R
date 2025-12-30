@@ -82,35 +82,37 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$areaPlot <- renderPlotly({
+            input$update
+
             # Null Values:
             facet.by <- NULL
-            if (!input$facet.by == "NULL") {
-                facet.by <- input$facet.by
+            if (!isolate(input$facet.by) == "NULL") {
+                facet.by <- isolate(input$facet.by)
             }
 
             split.by <- NULL
-            if (!input$split.by == "NULL") {
-                split.by <- input$split.by
+            if (!isolate(input$split.by) == "NULL") {
+                split.by <- isolate(input$split.by)
             }
 
-            design <- if (input$split.by == "NULL" || input$design == "NULL") NULL else input$design
+            design <- if (isolate(input$split.by) == "NULL" || isolate(input$design) == "NULL") NULL else isolate(input$design)
 
             p <- plotthis::AreaPlot(
                 data(),
-                x = input$x.data,
-                y = input$y.data,
+                x = isolate(input$x.data),
+                y = isolate(input$y.data),
                 split_by = split.by,
-                group_by = input$group.by,
-                theme = input$theme,
-                palette = input$palette,
-                palcolor = input$palette.colours,
-                alpha = input$alpha,
+                group_by = isolate(input$group.by),
+                theme = isolate(input$theme),
+                palette = isolate(input$palette),
+                palcolor = isolate(input$palette.colours),
+                alpha = isolate(input$alpha),
                 facet_by = facet.by,
-                facet_scales = input$facet.scale,
-                facet_ncol = input$facet.ncol,
-                facet_nrow = input$facet.nrow,
-                facet_byrow = input$facet.by.row,
-                combine = input$combine,
+                facet_scales = isolate(input$facet.scale),
+                facet_ncol = isolate(input$facet.ncol),
+                facet_nrow = isolate(input$facet.nrow),
+                facet_byrow = isolate(input$facet.by.row),
+                combine = isolate(input$combine),
                 design = design
             )
 
@@ -120,28 +122,28 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     title = list(
                         text = "Click To Edit Title",
                         font = list(
-                            size = input$title.font.size,
-                            family = input$font.type,
-                            color = input$text.colour
+                            size = isolate(input$title.font.size),
+                            family = isolate(input$font.type),
+                            color = isolate(input$text.colour)
                         ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     xaxis = list(
                         title = list(
                             text = "X-axis",
-                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                            font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         )
                     ),
                     yaxis = list(
                         title = list(
                             text = "Y-axis",
-                            font = list(size = input$axis.font.size, family = input$font.type, color = input$text.colour)
+                            font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         )
                     )
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = input$download.type, filename = "area_plot", height = 500, width = 700, scale = 1),
+                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "area_plot", height = 500, width = 700, scale = 1),
                     displaylogo = FALSE
                 )
 

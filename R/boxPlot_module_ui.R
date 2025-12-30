@@ -115,6 +115,7 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("boxPlotTabsetPanel"),
         title = title,
         tack = tagList(
+            actionButton(ns("update"), "Update Plot"),
             actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
             selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
             br()

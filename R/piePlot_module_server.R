@@ -54,11 +54,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # max.y <- max(numeric.data, na.rm = TRUE)
             # min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
-            #Data
+            # Data
             updateSelectInput(session, "labels", selected = char.choices[2])
             updateSelectInput(session, "values", selected = numeric.data[2])
 
-            #Aesthetics
+            # Aesthetics
             updateNumericInput(session, "make.hole", value = 0)
             updateSelectInput(session, "palette", selected = "Paired")
             updateSelectInput(session, "palette.colours", selected = NULL)
@@ -66,35 +66,36 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "title.font.size", value = 28)
             updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-
         })
 
 
         output$piePlot <- renderPlotly({
+            input$update
+
             # Null Values:
-            
-            labels_formula <- reformulate(input$labels)
-            plot_values <- reformulate(input$values)
+            labels_formula <- reformulate(isolate(input$labels))
+            plot_values <- reformulate(isolate(input$values))
 
             # pie Plot
-            
-            p <- piePlot(reactive.data = data(), 
-                        plot.labels = labels_formula,
-                        plot.values = plot_values,
-                        make.hole = input$make.hole,
-                        palette = plotthis::palette_list[[input$palette]],
-                        col_palette = input$palette.colours,
-                        plot.text = input$plot.text
-                        )
+
+            p <- piePlot(
+                reactive.data = data(),
+                plot.labels = labels_formula,
+                plot.values = plot_values,
+                make.hole = isolate(input$make.hole),
+                palette = plotthis::palette_list[[isolate(input$palette)]],
+                col_palette = isolate(input$palette.colours),
+                plot.text = isolate(input$plot.text)
+            )
 
 
             plotlyOut <- ggplotly(p) |>
                 layout(
-                    title = list(text = "Click To Edit Title", font = list(size = input$title.font.size, family = input$font.type, color = input$text.colour), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE
+                    title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = input$download.type, filename = "pie_plot", height = 600, width = 700, scale = 1),
+                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "pie_plot", height = 600, width = 700, scale = 1),
                     displaylogo = FALSE
                 ) # Hiding Plotly Logo
 
