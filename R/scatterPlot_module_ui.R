@@ -257,6 +257,10 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             )
         ),
         "Annotations" = tagList(
+            helpText(
+                strong("Note:"), " Annotations are not supported when using 'Split by' due to Plotly subplot limitations. ",
+                "Annotations will only appear on single-panel plots."
+            ),
             selectInput(ns("annotate.by"), "Annotate by",
                 choices = choices,
                 selected = ifelse("annotate.by" %in% names(defaults),
