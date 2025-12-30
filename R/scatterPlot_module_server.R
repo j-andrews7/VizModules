@@ -364,9 +364,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 annotations = annos
             )
 
-            # Skip toWebGL() for subplots as WebGL breaks hover interactions on plotly faceted plots (known plotly limitation)
-            if (isolate(input$webgl) && is.null(null.na.inputs$split.by)) {
+            if (isolate(input$webgl)) {
                 fig <- fig %>% toWebGL()
+            }
+
+            # Fix hover interactions for subplots with WebGL by explicitly setting hovermode
+            if (!is.null(null.na.inputs$split.by)) {
+                fig <- fig %>% layout(hovermode = "closest")
             }
 
             # Add fit lines if requested
