@@ -40,6 +40,15 @@ with \code{columns} controlling the number of columns in the grid.
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
 Nearly all parameters for \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
+
+Additional inputs specific to volcano plots are added to control significance thresholds and colors:
+\itemize{
+\item \code{sig.thresh}: Significance threshold (default 0.05)
+\item \code{fc.thresh}: Log2 fold change threshold (default 0)
+\item \code{color.up}: Color for upregulated genes (default "red")
+\item \code{color.down}: Color for downregulated genes (default "blue")
+\item \code{color.ns}: Color for non-significant genes (default "lightgray")
+}
 }
 \examples{
 library(vizModules)

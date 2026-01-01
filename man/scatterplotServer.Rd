@@ -4,7 +4,13 @@
 \alias{scatterPlotServer}
 \title{Server logic for scatterPlot module}
 \usage{
-scatterPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+scatterPlotServer(
+  id,
+  data,
+  hide.inputs = NULL,
+  hide.tabs = NULL,
+  manual.colors = NULL
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,6 +24,9 @@ but the user will not be able to see/adjust them in the UI.}
 \item{hide.tabs}{A character vector of tab names to hide.
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
+
+\item{manual.colors}{A character vector of colors, a reactive returning a character vector of colors,
+or a function that takes the \code{input} list and returns a named character vector of colors.}
 }
 \value{
 The \code{moduleServer} function for the scatterPlot module.

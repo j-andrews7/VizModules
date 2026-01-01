@@ -7,6 +7,8 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param manual.colors A character vector of colors, a reactive returning a character vector of colors,
+#'   or a function that takes the `input` list and returns a named character vector of colors.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
@@ -15,7 +17,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -35,15 +37,28 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Get color panel
         color.panel <- reactive({
-            if (is.null(input$color.panel) || input$color.panel == "dittoColors") {
-                palette <- dittoColors()
-            } else if (!is.null(input$color.by)) {
-                if (input$color.panel %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
-                    palette <- viridis_pal(option = input$color.panel)(length(colLevels(input$color.by, data())))
-                } else if (input$color.panel == "ggplot2") {
-                    palette <- hue_pal()(length(colLevels(input$color.by, data())))
+            palette <- NULL
+            if (!is.null(manual.colors)) {
+                if (is.reactive(manual.colors)) {
+                    palette <- manual.colors()
+                } else if (is.function(manual.colors)) {
+                    palette <- manual.colors(input)
                 } else {
-                    palette <- brewer_pal(palette = input$color.panel)(length(colLevels(input$color.by, data())))
+                    palette <- manual.colors
+                }
+            }
+
+            if (is.null(palette)) {
+                if (is.null(input$color.panel) || input$color.panel == "dittoColors") {
+                    palette <- dittoColors()
+                } else if (!is.null(input$color.by)) {
+                    if (input$color.panel %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
+                        palette <- viridis_pal(option = input$color.panel)(length(colLevels(input$color.by, data())))
+                    } else if (input$color.panel == "ggplot2") {
+                        palette <- hue_pal()(length(colLevels(input$color.by, data())))
+                    } else {
+                        palette <- brewer_pal(palette = input$color.panel)(length(colLevels(input$color.by, data())))
+                    }
                 }
             }
 
