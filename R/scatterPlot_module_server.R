@@ -387,7 +387,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         color = isolate(input$axis.tickfont.color),
                         family = isolate(input$axis.tickfont.family)
                     ),
-                    tickangle = isolate(input$axis.tickangle),
+                    tickangle = isolate(input$axis.tickangle.x),
                     ticks = isolate(input$axis.ticks),
                     tickcolor = isolate(input$axis.tickcolor),
                     ticklen = isolate(input$axis.ticklen),
@@ -403,7 +403,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         color = isolate(input$axis.tickfont.color),
                         family = isolate(input$axis.tickfont.family)
                     ),
-                    tickangle = isolate(input$axis.tickangle),
+                    tickangle = isolate(input$axis.tickangle.y),
                     ticks = isolate(input$axis.ticks),
                     tickcolor = isolate(input$axis.tickcolor),
                     ticklen = isolate(input$axis.ticklen),

@@ -606,9 +606,18 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Arial"
                 )
             ),
-            numericInput(ns("axis.tickangle"), "Tick label angle",
-                value = ifelse("axis.tickangle" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickangle"]]), defaults[["axis.tickangle"]], 0),
+            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
+                value = ifelse("axis.tickangle.x" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
+                    0
+                ),
+                min = -180,
+                max = 180,
+                step = 15
+            ),
+            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
+                value = ifelse("axis.tickangle.y" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
                     0
                 ),
                 min = -180,
