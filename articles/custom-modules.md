@@ -1,0 +1,172 @@
+# Building Custom Modules
+
+## Introduction
+
+The modules in **vizModules** are designed to be composed and extended.
+You can build higher-level modules that add custom logic—such as data
+filtering, transformations, or additional UI controls—while reusing the
+full functionality of the base modules.
+
+This vignette demonstrates how to create a custom module by building on
+top of the `scatterPlot` module.
+
+## The Pattern
+
+When building a custom module, you need to handle Shiny’s namespacing
+correctly. The key insight is:
+
+1.  **Your module’s custom inputs** need to be namespaced with `NS(id)`.
+2.  **The base module’s UI and server functions** should receive the
+    bare `id`, not a namespaced version.
+3.  **Data processing** that requires access to your module’s inputs
+    must happen inside a
+    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+    block.
+4.  **The base module’s server** should be called *outside* that
+    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+    block to avoid double-namespacing issues.
+
+## A Minimal Example
+
+Let’s build a custom module that adds a simple filtering checkbox to the
+`scatterPlot` module.
+
+### The UI
+
+``` r
+library(vizModules)
+
+minimalModuleUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Minimal Module Controls"),
+        # Custom input - uses the module's namespace
+        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
+        hr(),
+        # Base module UI - pass the bare 'id', not ns(id)
+        scatterPlotInputsUI(id, iris)
+    )
+}
+
+minimalModuleOutput <- function(id) {
+    # Simply delegate to the base module's output UI
+    scatterPlotOutputUI(id)
+}
+```
+
+Notice that
+[`checkboxInput()`](https://rdrr.io/pkg/shiny/man/checkboxInput.html)
+uses `ns("filter_setosa")` to namespace the custom input, while
+[`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md)
+receives the bare `id`. This ensures the base module creates its inputs
+in the correct namespace.
+
+### The Server
+
+``` r
+minimalModuleServer <- function(id, data_reactive) {
+    # Step 1: Process data inside a moduleServer block
+    # This gives us access to inputs namespaced to 'id' (our module's inputs)
+    filtered_data <- moduleServer(id, function(input, output, session) {
+        reactive({
+            req(data_reactive())
+            df <- data_reactive()
+
+            # Input specific to this custom module
+            if (isTRUE(input$filter_setosa)) {
+                if ("Species" %in% names(df)) {
+                    df <- df[df$Species == "setosa", ]
+                }
+            }
+            df
+        })
+    })
+
+    # Step 2: Call the base module server OUTSIDE the moduleServer block
+    # This is critical! If we called this inside the moduleServer above,
+    # scatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
+    scatterPlotServer(id, filtered_data)
+}
+```
+
+**Why this pattern?**
+
+- `moduleServer(id, ...)` gives us access to `input$filter_setosa`,
+  which is namespaced to our wrapper’s `id`.
+- By calling `scatterPlotServer(id, filtered_data)` *outside* the
+  [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+  closure, the base module attaches to the same namespace as our UI, not
+  a nested one.
+- If we called
+  [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
+  inside the
+  [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+  block, it would create nested namespaces like `id-id-x_axis`, which
+  wouldn’t match the actual input IDs in the UI.
+
+### Putting It Together
+
+``` r
+ui <- fluidPage(
+    titlePanel("Minimal Module Example"),
+    sidebarLayout(
+        sidebarPanel(
+            minimalModuleUI("demo")
+        ),
+        mainPanel(
+            minimalModuleOutput("demo")
+        )
+    )
+)
+
+server <- function(input, output, session) {
+    # Pass a reactive data source to the module
+    minimalModuleServer("demo", reactive({
+        iris
+    }))
+}
+
+shinyApp(ui, server)
+```
+
+## Hiding Base Module Inputs
+
+If your module pre-sets certain parameters, you can hide those inputs
+from the user to keep them from being changed:
+
+``` r
+focusedModuleUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Simplified Scatter Plot"),
+        # Only show essential controls
+        scatterPlotInputsUI(id, iris,
+            hide.inputs = c("shape.by", "color.by")
+        )
+    )
+}
+```
+
+## Best Practices
+
+1.  **Keep wrapper logic focused**: Each wrapper should add a cohesive
+    set of related functionality.
+
+2.  **Document the data requirements**: If your wrapper expects certain
+    columns or data types, document this clearly.
+
+3.  **Use reactive expressions**: Use reactive data inputs.
+
+4.  **Test the namespace**: If inputs aren’t working, check that you’re
+    handling namespaces correctly. A common symptom of namespace issues
+    is that inputs seem to have no effect.
+
+5.  **Consider composability**: Design your wrappers so they could
+    potentially be wrapped by even higher-level modules.
+
+## See Also
+
+- The `minimal_wrapper.R` file in the package source contains a working
+  example.
+- The base modules (`scatterPlotInputsUI`, `scatterPlotOutputUI`,
+  `scatterPlotServer`) are documented in the package reference.

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Flexible, Interactive Shiny Modules For dittoViz Plots • dittoVizModules</title>
+<title>Flexible, Interactive Shiny Modules For Almost Any Plot • vizModules</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Flexible, Interactive Shiny Modules For dittoViz Plots">
-<meta name="description" content="dittoVizModules offers a core selection of interactivity-first Shiny modules for dittoViz plot types meant to serve as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
-<meta property="og:description" content="dittoVizModules offers a core selection of interactivity-first Shiny modules for dittoViz plot types meant to serve as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Flexible, Interactive Shiny Modules For Almost Any Plot">
+<meta name="description" content="vizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
+<meta property="og:description" content="vizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">dittoVizModules</a>
+    <a class="navbar-brand me-2" href="index.html">vizModules</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0.9000</small>
 
@@ -32,13 +32,19 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/custom-modules.html">Building Custom Modules</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/dittoVizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/vizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
@@ -55,10 +61,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="dittovizmodules">dittoVizModules<a class="anchor" aria-label="anchor" href="#dittovizmodules"></a>
+<div class="page-header"><h1 id="vizmodules">vizModules<a class="anchor" aria-label="anchor" href="#vizmodules"></a>
 </h1></div>
-<p>This package utilizes the <a href="https://github.com/dtm2451/dittoViz" class="external-link">dittoViz</a> package to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.</p>
-<p>These modules will contain all possible functionality from <strong>dittoViz</strong> with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.</p>
+<p>This package utilizes the <a href="https://github.com/dtm2451/dittoViz" class="external-link">dittoViz</a> and <a href="https://github.com/pwwang/plotthis" class="external-link">plotthis</a> packages to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.</p>
+<p>These modules will contain all possible functionality from <strong>dittoViz</strong> and <strong>plotthis</strong> with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.</p>
 <p>The modules provide comprehensive plot control for app users, allowing for convenient aesthetic customizations and publication-quality images. They also provide developers a way to dramatically save time and reduce complexity of their plotting code or a flexible base to build more specialized Shiny modules upon.</p>
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
@@ -66,16 +72,16 @@
 <p>Note that this package is in development and may break at any time.</p>
 <p>Currently, the package can be installed from Github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"j-andrews7/dittoVizModules"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"j-andrews7/vizModules"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="using-dittovizmodules">Using <strong>dittoVizModules</strong>
-<a class="anchor" aria-label="anchor" href="#using-dittovizmodules"></a>
+<h2 id="using-vizmodules">Using <strong>vizModules</strong>
+<a class="anchor" aria-label="anchor" href="#using-vizmodules"></a>
 </h2>
-<p>Including a dittoVizModules module in your Shiny application is simple. The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.</p>
+<p>Including a vizModules module in your Shiny application is simple. The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.</p>
 <p>As an example, we can look at the <code><a href="reference/createScatterplotApp.html">createScatterPlotApp()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/dittoVizModules/">dittoVizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">createScatterPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Validate input</span></span>
@@ -85,23 +91,23 @@
 <span>    <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>    <span class="co"># UI definition</span></span>
-<span>    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fluidPage</span><span class="op">(</span></span>
+<span>    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>        <span class="fu">useShinyjs</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        <span class="fu">titlePanel</span><span class="op">(</span><span class="st">"Modular scatterPlots"</span><span class="op">)</span>,</span>
-<span>        <span class="fu">sidebarLayout</span><span class="op">(</span></span>
-<span>            <span class="fu">sidebarPanel</span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/titlePanel.html" class="external-link">titlePanel</a></span><span class="op">(</span><span class="st">"Modular scatterPlots"</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
 <span>                <span class="co"># Add the module inputs UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                    <span class="fu">tagList</span><span class="op">(</span></span>
-<span>                        <span class="fu"><a href="reference/scatterplotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu">h3</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                        <span class="fu">hr</span><span class="op">(</span><span class="op">)</span></span>
+<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
+<span>                        <span class="fu"><a href="reference/scatterplotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h3</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>                    <span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
 <span>            <span class="op">)</span>,</span>
-<span>            <span class="fu">mainPanel</span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span></span>
 <span>                <span class="co"># Add the module output UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                    <span class="fu">tagList</span><span class="op">(</span><span class="fu"><a href="reference/scatterplotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu">br</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span><span class="fu"><a href="reference/scatterplotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
@@ -112,21 +118,97 @@
 <span></span>
 <span>        <span class="co"># Add the module server for each data frame</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="fu"><a href="reference/scatterplotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="fu"><a href="reference/scatterplotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span></span>
 <span>    <span class="co"># Return the Shiny app</span></span>
-<span>    <span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mtcars"</span> <span class="op">=</span> <span class="va">mtcars</span>, <span class="st">"iris"</span> <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/createScatterplotApp.html">createScatterPlotApp</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="building-custom-wrapper-modules">Building Custom Wrapper Modules<a class="anchor" aria-label="anchor" href="#building-custom-wrapper-modules"></a>
+</h2>
+<p>The modules in <strong>vizModules</strong> are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.</p>
+<p>Here’s a minimal example of wrapping the <code>scatterPlot</code> module to add custom filtering logic:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define the wrapper UI</span></span>
+<span><span class="va">minimalWrapperUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Minimal Wrapper Controls"</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"filter_setosa"</span><span class="op">)</span>, <span class="st">"Start with Setosa Only"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="reference/scatterplotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">minimalWrapperOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="reference/scatterplotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Define the wrapper server</span></span>
+<span><span class="va">minimalWrapperServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># 1. Process data in a moduleServer block to access inputs namespaced to 'id'</span></span>
+<span>    <span class="co"># We return the reactive expression produced by this block.</span></span>
+<span>    <span class="co"># Note: moduleServer returns the return value of the function it runs.</span></span>
+<span>    <span class="va">filtered_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="fu">data_reactive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">data_reactive</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>            <span class="co"># Custom wrapper logic: filter based on a checkbox</span></span>
+<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">filter_setosa</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                <span class="kw">if</span> <span class="op">(</span><span class="st">"Species"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>                    <span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">[</span><span class="va">df</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="st">"setosa"</span>, <span class="op">]</span></span>
+<span>                <span class="op">}</span></span>
+<span>            <span class="op">}</span></span>
+<span>            <span class="va">df</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="co"># 2. Call the base module server with the processed data.</span></span>
+<span>    <span class="co"># We call this OUTSIDE the first moduleServer closure so that</span></span>
+<span>    <span class="co"># scatterPlotServer attaches to 'id' relative to the parent,</span></span>
+<span>    <span class="co"># avoiding nested namespace issues (e.g. id-id-input).</span></span>
+<span>    <span class="fu"><a href="reference/scatterplotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Create the app using the wrapper</span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/titlePanel.html" class="external-link">titlePanel</a></span><span class="op">(</span><span class="st">"Minimal Wrapper Example"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
+<span>            <span class="fu">minimalWrapperUI</span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span></span>
+<span>            <span class="fu">minimalWrapperOutput</span><span class="op">(</span><span class="st">"demo"</span><span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">minimalWrapperServer</span><span class="op">(</span><span class="st">"demo"</span>, <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span> <span class="va">iris</span> <span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Key points when building wrapper modules:</strong></p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Namespace handling</strong>: Use <code>NS(id)</code> for your wrapper’s custom inputs, and pass the bare <code>id</code> (not namespaced) to the base module’s UI and server functions.</p></li>
+<li><p><strong>Data processing pattern</strong>: Process your data inside a <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> block to access your wrapper’s namespaced inputs, then call the base module’s server function <em>outside</em> that block to avoid double-namespacing.</p></li>
+<li><p><strong>Reactive data</strong>: Always pass reactive expressions to both your wrapper and the underlying module servers.</p></li>
+</ol>
+<p>For more details, see <code><a href="articles/custom-modules.html">vignette("custom-modules", package = "vizModules")</a></code>.</p>
+</div>
+<div class="section level2">
 <h2 id="modules-provided">Modules Provided<a class="anchor" aria-label="anchor" href="#modules-provided"></a>
 </h2>
-<p>Currently, <strong>dittoVizModules</strong> contains a functional Shiny module for the following dittoViz visualization functions:</p>
+<p>Currently, <strong>vizModules</strong> contains a functional Shiny module for the following dittoViz visualization functions:</p>
 <ul>
 <li>scatterPlot - x/y coordinate plots with additional color and shape encodings.</li>
 </ul>
@@ -162,7 +244,7 @@
 <div class="section level3">
 <h3 id="superceded-functionality">Superceded Functionality<a class="anchor" aria-label="anchor" href="#superceded-functionality"></a>
 </h3>
-<p>Certain dittoViz parameters are more easily adjusted via the interactive features of plotly, e.g. axis labels, plot title, etc.</p>
+<p>Certain <strong>dittoViz</strong> or <strong>plotthis</strong> parameters are more easily adjusted via the interactive features of plotly, e.g. axis labels, plot title, etc.</p>
 <p>As such, inputs for such features need not be provided so long as the reason for their exclusion is included in the documentation of the module inputs UI function.</p>
 </div>
 <div class="section level3">
@@ -176,7 +258,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/j-andrews7/dittoVizModules/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/j-andrews7/vizModules/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
 
@@ -193,14 +275,15 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing dittoVizModules</a></li>
+<li><a href="authors.html#citation">Citing vizModules</a></li>
 </ul>
 </div>
 
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Jared Andrews <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0780-6248" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Jared Andrews <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0780-6248" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Jacob Martin <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -211,11 +294,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jared Andrews.</p>
+  <p>Developed by Jared Andrews, Jacob Martin.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

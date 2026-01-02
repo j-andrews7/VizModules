@@ -1,0 +1,325 @@
+# vizModules
+
+This package utilizes the
+[dittoViz](https://github.com/dtm2451/dittoViz) and
+[plotthis](https://github.com/pwwang/plotthis) packages to create
+interactivity-first Shiny modules for common plot types, designed to
+serve as building blocks for Shiny apps and as the basis for more
+complex/specialized modules.
+
+These modules will contain all possible functionality from **dittoViz**
+and **plotthis** with some additional parameters that make use of the
+interactive features of plotly, e.g. interactive text annotations,
+arbitrary shape annotations, multiple download formats, etc.
+
+The modules provide comprehensive plot control for app users, allowing
+for convenient aesthetic customizations and publication-quality images.
+They also provide developers a way to dramatically save time and reduce
+complexity of their plotting code or a flexible base to build more
+specialized Shiny modules upon.
+
+## Install
+
+Note that this package is in development and may break at any time.
+
+Currently, the package can be installed from Github:
+
+``` r
+devtools::install_github("j-andrews7/vizModules")
+```
+
+## Using **vizModules**
+
+Including a vizModules module in your Shiny application is simple. The
+package provides a function returning an example Shiny application for
+each module that showcases their functionality and how they can be used.
+
+As an example, we can look at the
+[`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
+function:
+
+``` r
+library(vizModules)
+
+createScatterPlotApp <- function(data_list) {
+    # Validate input
+    stopifnot(is.list(data_list))
+    lapply(data_list, function(data) {
+        stopifnot(is.data.frame(data))
+    })
+
+    # UI definition
+    ui <- fluidPage(
+        useShinyjs(),
+        titlePanel("Modular scatterPlots"),
+        sidebarLayout(
+            sidebarPanel(
+                # Add the module inputs UI for each data frame
+                lapply(names(data_list), function(name) {
+                    tagList(
+                        scatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                        hr()
+                    )
+                })
+            ),
+            mainPanel(
+                # Add the module output UI for each data frame
+                lapply(names(data_list), function(name) {
+                    tagList(scatterPlotOutputUI(name), br())
+                })
+            )
+        )
+    )
+
+    # Server function
+    server <- function(input, output, session) {
+
+        # Add the module server for each data frame
+        lapply(names(data_list), function(name) {
+            scatterPlotServer(name, data = reactive(data_list[[name]]))
+        })
+    }
+
+    # Return the Shiny app
+    shinyApp(ui, server)
+}
+
+data_list <- list("mtcars" = mtcars, "iris" = iris)
+createScatterPlotApp(data_list)
+```
+
+## Building Custom Wrapper Modules
+
+The modules in **vizModules** are designed to be composed and extended.
+You can build higher-level modules that add custom logic while reusing
+the full functionality of the base modules.
+
+Here’s a minimal example of wrapping the `scatterPlot` module to add
+custom filtering logic:
+
+``` r
+library(vizModules)
+
+# Define the wrapper UI
+minimalWrapperUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Minimal Wrapper Controls"),
+        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
+        hr(),
+        scatterPlotInputsUI(id, iris)
+    )
+}
+
+minimalWrapperOutput <- function(id) {
+    scatterPlotOutputUI(id)
+}
+
+# Define the wrapper server
+minimalWrapperServer <- function(id, data_reactive) {
+    # 1. Process data in a moduleServer block to access inputs namespaced to 'id'
+    # We return the reactive expression produced by this block.
+    # Note: moduleServer returns the return value of the function it runs.
+    filtered_data <- moduleServer(id, function(input, output, session) {
+        reactive({
+            req(data_reactive())
+            df <- data_reactive()
+
+            # Custom wrapper logic: filter based on a checkbox
+            if (isTRUE(input$filter_setosa)) {
+                if ("Species" %in% names(df)) {
+                    df <- df[df$Species == "setosa", ]
+                }
+            }
+            df
+        })
+    })
+
+    # 2. Call the base module server with the processed data.
+    # We call this OUTSIDE the first moduleServer closure so that
+    # scatterPlotServer attaches to 'id' relative to the parent,
+    # avoiding nested namespace issues (e.g. id-id-input).
+    scatterPlotServer(id, filtered_data)
+}
+
+# Create the app using the wrapper
+ui <- fluidPage(
+    titlePanel("Minimal Wrapper Example"),
+    sidebarLayout(
+        sidebarPanel(
+            minimalWrapperUI("demo")
+        ),
+        mainPanel(
+            minimalWrapperOutput("demo")
+        )
+    )
+)
+
+server <- function(input, output, session) {
+    minimalWrapperServer("demo", reactive({ iris }))
+}
+
+shinyApp(ui, server)
+```
+
+**Key points when building wrapper modules:**
+
+1.  **Namespace handling**: Use `NS(id)` for your wrapper’s custom
+    inputs, and pass the bare `id` (not namespaced) to the base module’s
+    UI and server functions.
+
+2.  **Data processing pattern**: Process your data inside a
+    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+    block to access your wrapper’s namespaced inputs, then call the base
+    module’s server function *outside* that block to avoid
+    double-namespacing.
+
+3.  **Reactive data**: Always pass reactive expressions to both your
+    wrapper and the underlying module servers.
+
+For more details, see
+[`vignette("custom-modules", package = "vizModules")`](https://j-andrews7.github.io/vizModules/articles/custom-modules.md).
+
+## Modules Provided
+
+Currently, **vizModules** contains a functional Shiny module for the
+following dittoViz visualization functions:
+
+- scatterPlot - x/y coordinate plots with additional color and shape
+  encodings.
+
+## Modules Planned
+
+This package is based on [dittoViz](https://github.com/dtm2451/dittoViz)
+and modules will be developed for all plot types generated by that
+package, including:
+
+- **yPlot** - box/violin/jitter plots.
+- **scatterHex** - hexbin plots encoding density/frequency information
+  along x/y coordinates.
+- **barPlot** - compositional barplots.
+- **freqPlot** - box/jitter plots for discrete observation frequencies
+  per sample/group.
+
+dittoViz is under active development, so additional modules will be
+created as more visualization functions are added.
+
+## Contributing a New Module
+
+To contribute a new module to the package, three files detailing the
+components & usage of the module must be added. Using the `scatterPlot`
+module as an example:
+
+- The module UI - where all inputs and outputs will be defined. The
+  inputs and outputs should each be defined in their own function
+  (`scatterPlot_module_UI.R`).
+- The module server function - where all server logic will be defined
+  (`scatterPlot_module_server.R`).
+- A function to generate a basic example application using the module
+  (`scatterPlot_module_app.R`).
+
+Each function should be fully documented, all outputs should be plotly
+plots, default values for the UI inputs should be able to be provided
+via a named list, and UI inputs should be hideable.
+
+In addition, tooltips matching the dittoViz parameter documentation
+(with any necessary associated edits to account for the input type)
+should be used for each input. Inputs supporting new functionality
+should also have descriptive tooltips indicating how they modify the
+plot.
+
+See the **scatterPlot** module for how these things can be easily
+accomplished.
+
+### Superceded Functionality
+
+Certain **dittoViz** or **plotthis** parameters are more easily adjusted
+via the interactive features of plotly, e.g. axis labels, plot title,
+etc.
+
+As such, inputs for such features need not be provided so long as the
+reason for their exclusion is included in the documentation of the
+module inputs UI function.
+
+### Missing/Broken Functionality
+
+At times, there will be functionality or geoms that just can’t be done
+in plotly, e.g. interactive ridgeplots that are available from
+[`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html).
+
+Such missing or broken functionality should be clearly indicated in the
+module inputs UI function documentation. Inputs should not be generated
+for non-functional/broken parameters.
+
+# Package index
+
+## All functions
+
+- [`.string_to_list_of_vectors()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_list_of_vectors.md)
+  : Parse a string indicating a set of vectors to a list of vectors.
+- [`.string_to_vector()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_vector.md)
+  : Parse a string delimited by commas, whitespace, or new lines to a
+  vector.
+- [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
+  : Example DESeq2 results from airway dataset
+- [`areaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
+  : Input UI components for the areaPlot module
+- [`areaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
+  : Output UI components for the areaPlot module
+- [`areaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/areaPlotServer.md)
+  : Server logic for areaPlot module
+- [`barPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotInputsUI.md)
+  : Input UI components for the barPlot module
+- [`barPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
+  : Output UI components for the barPlot module
+- [`barPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
+  : Server logic for barPlot module
+- [`boxPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotInputsUI.md)
+  : Input UI components for the boxPlot module
+- [`boxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
+  : Output UI components for the boxPlot module
+- [`boxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
+  : Server logic for boxPlot module
+- [`createAreaPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createAreaPlotApp.md)
+  : Create an example Modular areaPlot Shiny Application
+- [`createBarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBarPlotApp.md)
+  : Create an example Modular barPlot Shiny Application
+- [`createBoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBoxPlotApp.md)
+  : Create an example Modular boxPlot Shiny Application
+- [`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
+  : Create an example Modular scatterPlot Shiny Application
+- [`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
+  : Create a standalone Shiny app for the volcanoPlot module
+- [`createpiePlotApp()`](https://j-andrews7.github.io/vizModules/reference/createpiePlotApp.md)
+  : Create an example Modular piePlot Shiny Application
+- [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
+  : Color palette options for palettePicker
+- [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
+  : Organize arbitrary Shiny inputs into a grid layout
+- [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)
+  : Create a plotly pie chart
+- [`piePlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/piePlotInputsUI.md)
+  : Input UI components for the piePlot module
+- [`piePlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/piePlotOutputUI.md)
+  : Output UI components for the piePlot module
+- [`piePlotServer()`](https://j-andrews7.github.io/vizModules/reference/piePlotServer.md)
+  : Server logic for piePlot module
+- [`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md)
+  : Input UI components for the scatterPlot module
+- [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md)
+  : Output UI components for the scatterPlot module
+- [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
+  : Server logic for scatterPlot module
+- [`volcanoPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotInputsUI.md)
+  : Input UI components for the volcanoPlot module
+- [`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md)
+  : Output UI components for the volcanoPlot module
+- [`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md)
+  : Server logic for volcanoPlot module
+
+# Articles
+
+### All vignettes
+
+- [Building Custom
+  Modules](https://j-andrews7.github.io/vizModules/articles/custom-modules.md):
