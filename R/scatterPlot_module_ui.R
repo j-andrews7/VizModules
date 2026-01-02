@@ -478,7 +478,9 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 ),
                 step = 1,
                 min = 1
-            ),
+            )
+        ),
+        "Lines" = tagList(
             textInput(ns("add.xline"), "Add xlines",
                 placeholder = "e.g. 2, -2",
                 value = ifelse("add.xline" %in% names(defaults),
@@ -528,9 +530,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 value = ifelse("yline.color" %in% names(defaults),
                     defaults[["yline.color"]], "black"
                 )
-            )
-        ),
-        "Lines" = tagList(
+            ),
             switchInput(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
                 offLabel = "Off",
