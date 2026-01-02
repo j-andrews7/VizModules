@@ -7,12 +7,11 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @param manual.colors A character vector of colors, a reactive returning a character vector of colors,
-#'   or a function that takes the `input` list and returns a named character vector of colors.
+#' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
-#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data
+#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data add_lines
 #' @importFrom shinyjs hide
 #'
 #' @export
@@ -221,7 +220,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             plot_data <- p$Target_data
 
             # COLOUR MAPPING FOR LINE
-            if (!is.null(input$color.by) && input$color.by != "") {
+            if (!is.null(manual.colors)) {
+                if (is.reactive(manual.colors)) {
+                    color_mapping <- manual.colors()
+                } else {
+                    color_mapping <- manual.colors
+                }
+            } else if (!is.null(input$color.by) && input$color.by != "") {
                 color_levels <- colLevels(input$color.by, data())
                 color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
             } else {
@@ -376,7 +381,39 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     ),
                     opacity = isolate(input$shape.opacity)
                 ),
-                annotations = annos
+                annotations = annos,
+                xaxis = list(
+                    showline = isolate(input$axis.showline),
+                    mirror = isolate(input$axis.mirror),
+                    linecolor = isolate(input$axis.linecolor),
+                    linewidth = isolate(input$axis.linewidth),
+                    tickfont = list(
+                        size = isolate(input$axis.tickfont.size),
+                        color = isolate(input$axis.tickfont.color),
+                        family = isolate(input$axis.tickfont.family)
+                    ),
+                    tickangle = isolate(input$axis.tickangle.x),
+                    ticks = isolate(input$axis.ticks),
+                    tickcolor = isolate(input$axis.tickcolor),
+                    ticklen = isolate(input$axis.ticklen),
+                    tickwidth = isolate(input$axis.tickwidth)
+                ),
+                yaxis = list(
+                    showline = isolate(input$axis.showline),
+                    mirror = isolate(input$axis.mirror),
+                    linecolor = isolate(input$axis.linecolor),
+                    linewidth = isolate(input$axis.linewidth),
+                    tickfont = list(
+                        size = isolate(input$axis.tickfont.size),
+                        color = isolate(input$axis.tickfont.color),
+                        family = isolate(input$axis.tickfont.family)
+                    ),
+                    tickangle = isolate(input$axis.tickangle.y),
+                    ticks = isolate(input$axis.ticks),
+                    tickcolor = isolate(input$axis.tickcolor),
+                    ticklen = isolate(input$axis.ticklen),
+                    tickwidth = isolate(input$axis.tickwidth)
+                )
             )
 
             if (isolate(input$webgl)) {
