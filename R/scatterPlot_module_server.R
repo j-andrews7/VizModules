@@ -381,13 +381,33 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     showline = isolate(input$axis.showline),
                     mirror = isolate(input$axis.mirror),
                     linecolor = isolate(input$axis.linecolor),
-                    linewidth = isolate(input$axis.linewidth)
+                    linewidth = isolate(input$axis.linewidth),
+                    tickfont = list(
+                        size = isolate(input$axis.tickfont.size),
+                        color = isolate(input$axis.tickfont.color),
+                        family = isolate(input$axis.tickfont.family)
+                    ),
+                    tickangle = isolate(input$axis.tickangle),
+                    ticks = isolate(input$axis.ticks),
+                    tickcolor = isolate(input$axis.tickcolor),
+                    ticklen = isolate(input$axis.ticklen),
+                    tickwidth = isolate(input$axis.tickwidth)
                 ),
                 yaxis = list(
                     showline = isolate(input$axis.showline),
                     mirror = isolate(input$axis.mirror),
                     linecolor = isolate(input$axis.linecolor),
-                    linewidth = isolate(input$axis.linewidth)
+                    linewidth = isolate(input$axis.linewidth),
+                    tickfont = list(
+                        size = isolate(input$axis.tickfont.size),
+                        color = isolate(input$axis.tickfont.color),
+                        family = isolate(input$axis.tickfont.family)
+                    ),
+                    tickangle = isolate(input$axis.tickangle),
+                    ticks = isolate(input$axis.ticks),
+                    tickcolor = isolate(input$axis.tickcolor),
+                    ticklen = isolate(input$axis.ticklen),
+                    tickwidth = isolate(input$axis.tickwidth)
                 )
             )
 

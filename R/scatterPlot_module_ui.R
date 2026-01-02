@@ -575,6 +575,75 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 ),
                 min = 0,
                 step = 0.1
+            ),
+            numericInput(ns("axis.tickfont.size"), "Tick label size",
+                value = ifelse("axis.tickfont.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
+                    12
+                ),
+                min = 1,
+                step = 1
+            ),
+            colourInput(ns("axis.tickfont.color"), "Tick label color",
+                value = ifelse("axis.tickfont.color" %in% names(defaults),
+                    defaults[["axis.tickfont.color"]], "black"
+                )
+            ),
+            selectInput(ns("axis.tickfont.family"), "Tick label font",
+                choices = c(
+                    "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+                    "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+                    "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+                    "Verdana", "sans-serif", "serif", "monospace"
+                ),
+                selected = ifelse("axis.tickfont.family" %in% names(defaults),
+                    ifelse(defaults[["axis.tickfont.family"]] %in% c(
+                        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+                        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+                        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+                        "Verdana", "sans-serif", "serif", "monospace"
+                    ), defaults[["axis.tickfont.family"]], "Arial"),
+                    "Arial"
+                )
+            ),
+            numericInput(ns("axis.tickangle"), "Tick label angle",
+                value = ifelse("axis.tickangle" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.tickangle"]]), defaults[["axis.tickangle"]], 0),
+                    0
+                ),
+                min = -180,
+                max = 180,
+                step = 15
+            ),
+            selectInput(ns("axis.ticks"), "Tick position",
+                choices = c("outside", "inside", ""),
+                selected = ifelse("axis.ticks" %in% names(defaults),
+                    ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
+                        defaults[["axis.ticks"]], "outside"
+                    ),
+                    "outside"
+                )
+            ),
+            colourInput(ns("axis.tickcolor"), "Tick mark color",
+                value = ifelse("axis.tickcolor" %in% names(defaults),
+                    defaults[["axis.tickcolor"]], "black"
+                )
+            ),
+            numericInput(ns("axis.ticklen"), "Tick mark length",
+                value = ifelse("axis.ticklen" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
+                    5
+                ),
+                min = 0,
+                step = 1
+            ),
+            numericInput(ns("axis.tickwidth"), "Tick mark width",
+                value = ifelse("axis.tickwidth" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
+                    1
+                ),
+                min = 0,
+                step = 0.1
             )
         )
     )
