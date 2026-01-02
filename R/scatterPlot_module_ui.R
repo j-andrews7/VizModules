@@ -616,7 +616,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 step = 15
             ),
             selectInput(ns("axis.ticks"), "Tick position",
-                choices = c("outside", "inside", ""),
+                choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
                 selected = ifelse("axis.ticks" %in% names(defaults),
                     ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
                         defaults[["axis.ticks"]], "outside"
