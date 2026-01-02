@@ -30,6 +30,7 @@
 #'
 #' @importFrom colourpicker colourInput
 #' @importFrom esquisse palettePicker
+#' @importFrom shinyWidgets switchInput
 #'
 #' @export
 #' @author Jared Andrews
@@ -547,6 +548,33 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 value = FALSE,
                 onLabel = "On",
                 offLabel = "Off"
+            )
+        ),
+        "Axes" = tagList(
+            checkboxInput(ns("axis.showline"), "Show axis lines",
+                value = ifelse("axis.showline" %in% names(defaults),
+                    ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
+                    TRUE
+                )
+            ),
+            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
+                value = ifelse("axis.mirror" %in% names(defaults),
+                    ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
+                    TRUE
+                )
+            ),
+            colourInput(ns("axis.linecolor"), "Axis line color",
+                value = ifelse("axis.linecolor" %in% names(defaults),
+                    defaults[["axis.linecolor"]], "black"
+                )
+            ),
+            numericInput(ns("axis.linewidth"), "Axis line width",
+                value = ifelse("axis.linewidth" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
+                    0.5
+                ),
+                min = 0,
+                step = 0.1
             )
         )
     )

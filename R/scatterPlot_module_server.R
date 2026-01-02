@@ -376,7 +376,19 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     ),
                     opacity = isolate(input$shape.opacity)
                 ),
-                annotations = annos
+                annotations = annos,
+                xaxis = list(
+                    showline = isolate(input$axis.showline),
+                    mirror = isolate(input$axis.mirror),
+                    linecolor = isolate(input$axis.linecolor),
+                    linewidth = isolate(input$axis.linewidth)
+                ),
+                yaxis = list(
+                    showline = isolate(input$axis.showline),
+                    mirror = isolate(input$axis.mirror),
+                    linecolor = isolate(input$axis.linecolor),
+                    linewidth = isolate(input$axis.linewidth)
+                )
             )
 
             if (isolate(input$webgl)) {
