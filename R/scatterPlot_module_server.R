@@ -14,6 +14,9 @@
 #' @importFrom plotly renderPlotly %>% config layout toWebGL event_data add_lines
 #' @importFrom shinyjs hide
 #'
+#' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
+#' 
 #' @export
 #' @author Jared Andrews
 scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
@@ -48,15 +51,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
             if (is.null(palette)) {
-                if (is.null(input$color.panel) || input$color.panel == "dittoColors") {
+                if (is.null(isolate(input$color.panel)) || isolate(input$color.panel) == "dittoColors") {
                     palette <- dittoColors()
-                } else if (!is.null(input$color.by)) {
-                    if (input$color.panel %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
-                        palette <- viridis_pal(option = input$color.panel)(length(colLevels(input$color.by, data())))
-                    } else if (input$color.panel == "ggplot2") {
-                        palette <- hue_pal()(length(colLevels(input$color.by, data())))
+                } else if (!is.null(isolate(input$color.by))) {
+                    if (isolate(input$color.panel) %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
+                        palette <- viridis_pal(option = isolate(input$color.panel))(length(colLevels(isolate(input$color.by), data())))
+                    } else if (isolate(input$color.panel) == "ggplot2") {
+                        palette <- hue_pal()(length(colLevels(isolate(input$color.by), data())))
                     } else {
-                        palette <- brewer_pal(palette = input$color.panel)(length(colLevels(input$color.by, data())))
+                        palette <- brewer_pal(palette = isolate(input$color.panel))(length(colLevels(isolate(input$color.by), data())))
                     }
                 }
             }
@@ -157,7 +160,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 hover.data <- null.na.inputs$hover.data
             }
 
-            p <- scatterPlot(
+            p <- dittoViz::scatterPlot(
                 data(),
                 x.by = isolate(input$x.by),
                 y.by = isolate(input$y.by),
@@ -226,8 +229,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 } else {
                     color_mapping <- manual.colors
                 }
-            } else if (!is.null(input$color.by) && input$color.by != "") {
-                color_levels <- colLevels(input$color.by, data())
+            } else if (!is.null(isolate(input$color.by)) && isolate(input$color.by) != "") {
+                color_levels <- colLevels(isolate(input$color.by), data())
                 color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
             } else {
                 color_mapping <- NULL

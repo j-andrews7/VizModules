@@ -78,7 +78,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # pie Plot
 
-            p <- piePlot(
+            p <- plotthis::piePlot(
                 reactive.data = data(),
                 plot.labels = labels_formula,
                 plot.values = plot_values,
