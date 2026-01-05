@@ -132,13 +132,41 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         title = list(
                             text = "X-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
-                        )
+                        ),
+                        showline = isolate(input$axis.showline),
+                        mirror = isolate(input$axis.mirror),
+                        linecolor = isolate(input$axis.linecolor),
+                        linewidth = isolate(input$axis.linewidth),
+                        tickfont = list(
+                            size = isolate(input$axis.tickfont.size),
+                            color = isolate(input$axis.tickfont.color),
+                            family = isolate(input$axis.tickfont.family)
+                        ),
+                        tickangle = isolate(input$axis.tickangle.x),
+                        ticks = isolate(input$axis.ticks),
+                        tickcolor = isolate(input$axis.tickcolor),
+                        ticklen = isolate(input$axis.ticklen),
+                        tickwidth = isolate(input$axis.tickwidth)
                     ),
                     yaxis = list(
                         title = list(
                             text = "Y-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
-                        )
+                        ),
+                        showline = isolate(input$axis.showline),
+                        mirror = isolate(input$axis.mirror),
+                        linecolor = isolate(input$axis.linecolor),
+                        linewidth = isolate(input$axis.linewidth),
+                        tickfont = list(
+                            size = isolate(input$axis.tickfont.size),
+                            color = isolate(input$axis.tickfont.color),
+                            family = isolate(input$axis.tickfont.family)
+                        ),
+                        tickangle = isolate(input$axis.tickangle.y),
+                        ticks = isolate(input$axis.ticks),
+                        tickcolor = isolate(input$axis.tickcolor),
+                        ticklen = isolate(input$axis.ticklen),
+                        tickwidth = isolate(input$axis.tickwidth)
                     )
                 ) |>
                 config(
