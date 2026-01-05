@@ -37,8 +37,8 @@ for that function for an exhaustive list.
 }
 \examples{
 library(vizModules)
-data(mtcars)
-piePlotInputsUI("piePlot", mtcars)
+data(iris)
+piePlotInputsUI("piePlot", iris)
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

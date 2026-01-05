@@ -25,14 +25,17 @@ but the user will not be able to see/adjust them in the UI.}
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
 
-\item{manual.colors}{A character vector of colors, a reactive returning a character vector of colors,
-or a function that takes the \code{input} list and returns a named character vector of colors.}
+\item{manual.colors}{A named character vector of colors or a reactive returning a named character vector of colors.}
 }
 \value{
 The \code{moduleServer} function for the scatterPlot module.
 }
 \description{
 Server logic for scatterPlot module
+}
+\seealso{
+\code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=createScatterPlotApp]{createScatterPlotApp()}}
 }
 \author{
 Jared Andrews

@@ -15,7 +15,7 @@
 #' @importFrom shinyWidgets updateSwitchInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
@@ -49,8 +49,8 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), is.character), use.names = FALSE)])
+            numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
+            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
@@ -132,13 +132,41 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         title = list(
                             text = "X-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
-                        )
+                        ),
+                        showline = isolate(input$axis.showline),
+                        mirror = isolate(input$axis.mirror),
+                        linecolor = isolate(input$axis.linecolor),
+                        linewidth = isolate(input$axis.linewidth),
+                        tickfont = list(
+                            size = isolate(input$axis.tickfont.size),
+                            color = isolate(input$axis.tickfont.color),
+                            family = isolate(input$axis.tickfont.family)
+                        ),
+                        tickangle = isolate(input$axis.tickangle.x),
+                        ticks = isolate(input$axis.ticks),
+                        tickcolor = isolate(input$axis.tickcolor),
+                        ticklen = isolate(input$axis.ticklen),
+                        tickwidth = isolate(input$axis.tickwidth)
                     ),
                     yaxis = list(
                         title = list(
                             text = "Y-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
-                        )
+                        ),
+                        showline = isolate(input$axis.showline),
+                        mirror = isolate(input$axis.mirror),
+                        linecolor = isolate(input$axis.linecolor),
+                        linewidth = isolate(input$axis.linewidth),
+                        tickfont = list(
+                            size = isolate(input$axis.tickfont.size),
+                            color = isolate(input$axis.tickfont.color),
+                            family = isolate(input$axis.tickfont.family)
+                        ),
+                        tickangle = isolate(input$axis.tickangle.y),
+                        ticks = isolate(input$axis.ticks),
+                        tickcolor = isolate(input$axis.tickcolor),
+                        ticklen = isolate(input$axis.ticklen),
+                        tickwidth = isolate(input$axis.tickwidth)
                     )
                 ) |>
                 config(
