@@ -4,8 +4,8 @@
 #' @param plot.labels A formula for the labels.
 #' @param plot.values A formula for the values.
 #' @param make.hole A numeric value between 0 and 1 for the hole size (0 for pie, >0 for donut).
-#' @param palette A character vector of colors to use if `col,palette` is NULL.
-#' @param col,palette A character vector of colors to use.
+#' @param palette A character vector of colors to use if `col.palette` is NULL.
+#' @param col.palette A character vector of colors to use.
 #' @param plot.text A character string for the text info to show.
 #' @return A plotly object.
 #'
@@ -14,8 +14,8 @@
 #' @export
 #' @author Jacob Martin
 piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
-                    palette, col,palette = NULL, plot.text = "label+percent") {
-    colours <- if (is.null(col,palette)) palette else col,palette
+                    palette, col.palette = NULL, plot.text = "label+percent") {
+    colours <- if (is.null(col.palette)) palette else col.palette
 
     pie.chart <- plot_ly(
         data = reactive.data,
