@@ -26,5 +26,5 @@ The \code{moduleServer} function for the areaPlot module.
 Server logic for areaPlot module
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
