@@ -28,8 +28,8 @@
 #' [vizModules::piePlotOutputUI()], [vizModules::piePlotServer()], [vizModules::createpiePlotApp()]
 #' @examples
 #' library(vizModules)
-#' data(mtcars)
-#' piePlotInputsUI("piePlot", mtcars)
+#' data(iris)
+#' piePlotInputsUI("piePlot", iris)
 piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -38,8 +38,8 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, is.character), use.names = FALSE)])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 

@@ -13,6 +13,11 @@
 #' @author Jacob Martin
 #'
 #' @examples
+#' library(vizModules)
+#' # Needs at least 2 categorical variables for grouping and x-axis
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#' mtcars$gear <- as.factor(mtcars$gear)
+#' iris$group <- rep(c("A", "B"), each = 75)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- createAreaPlotApp(data_list)
 #' if (interactive()) runApp(app)

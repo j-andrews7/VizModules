@@ -50,7 +50,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
-            char.choices <- c("", names(data())[unlist(lapply(data(), is.character), use.names = FALSE)])
+            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
             # max.y <- max(numeric.data, na.rm = TRUE)
             # min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data

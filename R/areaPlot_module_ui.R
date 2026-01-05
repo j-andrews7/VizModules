@@ -29,7 +29,9 @@
 #' [vizModules::areaPlotOutputUI()], [vizModules::areaPlotServer()], [vizModules::createAreaPlotApp()]
 #' @examples
 #' library(vizModules)
-#' data(mtcars)
+#' # Needs at least 2 categorical variables for grouping and x-axis
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#' mtcars$gear <- as.factor(mtcars$gear)
 #' areaPlotInputsUI("areaPlot", mtcars)
 areaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
@@ -39,8 +41,8 @@ areaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, is.character), use.names = FALSE)])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
