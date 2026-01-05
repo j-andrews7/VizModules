@@ -37,7 +37,9 @@ for that function for an exhaustive list.
 }
 \examples{
 library(vizModules)
-data(mtcars)
+# Needs at least 2 categorical variables for grouping and x-axis
+mtcars$cyl <- as.factor(mtcars$cyl)
+mtcars$gear <- as.factor(mtcars$gear)
 areaPlotInputsUI("areaPlot", mtcars)
 }
 \seealso{
