@@ -1,3 +1,3 @@
-# dittoVizModules (development version)
+# vizModules 0.99.0
 
-* Initial CRAN submission.
+* Submitted to Bioconductor.

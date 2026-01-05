@@ -446,9 +446,9 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             if (isTRUE(input$linear.model)) {
                 fit_data <- .compute_linear_fit(
                     df = data(),
-                    x_col = isolate(input$x.by),
-                    y_col = isolate(input$y.by),
-                    group_col = group_col
+                    x.col = isolate(input$x.by),
+                    y.col = isolate(input$y.by),
+                    group.col = group_col
                 )
 
                 if (!is.null(fit_data)) {
@@ -481,9 +481,9 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 # LOESS smooth fit lines (only if linear model not selected)
                 fit_data <- .compute_loess_fit(
                     df = data(),
-                    x_col = isolate(input$x.by),
-                    y_col = isolate(input$y.by),
-                    group_col = group_col,
+                    x.col = isolate(input$x.by),
+                    y.col = isolate(input$y.by),
+                    group.col = group_col,
                     span = input$line.best.smoothness
                 )
 

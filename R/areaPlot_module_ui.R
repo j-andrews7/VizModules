@@ -40,7 +40,7 @@ areaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     char.choices <- c("", names(data)[unlist(lapply(data, is.character), use.names = FALSE)])
-    numeric.data <- data[, sapply(data, is.numeric), drop = FALSE]
+    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 

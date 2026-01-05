@@ -49,7 +49,7 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, sapply(data(), is.numeric), drop = FALSE]
+            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[unlist(lapply(data(), is.character), use.names = FALSE)])
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
