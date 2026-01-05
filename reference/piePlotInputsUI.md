@@ -70,25 +70,29 @@ Jacob Martin
 
 ``` r
 library(vizModules)
-data(mtcars)
-piePlotInputsUI("piePlot", mtcars)
+data(iris)
+piePlotInputsUI("piePlot", iris)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="4135">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="4327">
 #>     <li class="active">
-#>       <a href="#tab-4135-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4327-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4135-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-4327-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-4327-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="4135">
-#>     <div class="tab-pane active" data-value="Data" id="tab-4135-1">
+#>   <div class="tab-content" data-tabsetid="4327">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4327-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="piePlot-labels-label" for="piePlot-labels">Select categories</label>
 #>             <div>
-#>               <select id="piePlot-labels" class="shiny-input-select"><option value=""></option></select>
+#>               <select id="piePlot-labels" class="shiny-input-select"><option value=""></option>
+#> <option value="Species" selected>Species</option></select>
 #>               <script type="application/json" data-for="piePlot-labels">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
@@ -98,24 +102,17 @@ piePlotInputsUI("piePlot", mtcars)
 #>             <label class="control-label" id="piePlot-values-label" for="piePlot-values">Select numeric data:</label>
 #>             <div>
 #>               <select id="piePlot-values" class="shiny-input-select"><option value=""></option>
-#> <option value="mpg" selected>mpg</option>
-#> <option value="cyl">cyl</option>
-#> <option value="disp">disp</option>
-#> <option value="hp">hp</option>
-#> <option value="drat">drat</option>
-#> <option value="wt">wt</option>
-#> <option value="qsec">qsec</option>
-#> <option value="vs">vs</option>
-#> <option value="am">am</option>
-#> <option value="gear">gear</option>
-#> <option value="carb">carb</option></select>
+#> <option value="Sepal.Length" selected>Sepal.Length</option>
+#> <option value="Sepal.Width">Sepal.Width</option>
+#> <option value="Petal.Length">Petal.Length</option>
+#> <option value="Petal.Width">Petal.Width</option></select>
 #>               <script type="application/json" data-for="piePlot-values">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4135-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4327-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -424,6 +421,132 @@ piePlotInputsUI("piePlot", mtcars)
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="piePlot-text.colour">Colour of title:</label>
 #>             <input id="piePlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Axes" id="tab-4327-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="piePlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show axis lines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="piePlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Mirror axis lines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="piePlot-axis.linecolor">Axis line color</label>
+#>             <input id="piePlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.linewidth-label" for="piePlot-axis.linewidth">Axis line width</label>
+#>             <input id="piePlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.tickfont.size-label" for="piePlot-axis.tickfont.size">Tick label size</label>
+#>             <input id="piePlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="piePlot-axis.tickfont.color">Tick label color</label>
+#>             <input id="piePlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.tickfont.family-label" for="piePlot-axis.tickfont.family">Tick label font</label>
+#>             <div>
+#>               <select id="piePlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="piePlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.tickangle.x-label" for="piePlot-axis.tickangle.x">X-axis tick label angle</label>
+#>             <input id="piePlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.tickangle.y-label" for="piePlot-axis.tickangle.y">Y-axis tick label angle</label>
+#>             <input id="piePlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.ticks-label" for="piePlot-axis.ticks">Tick position</label>
+#>             <div>
+#>               <select id="piePlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#> <option value="inside">Inside</option>
+#> <option value="">None</option></select>
+#>               <script type="application/json" data-for="piePlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="piePlot-axis.tickcolor">Tick mark color</label>
+#>             <input id="piePlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.ticklen-label" for="piePlot-axis.ticklen">Tick mark length</label>
+#>             <input id="piePlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-axis.tickwidth-label" for="piePlot-axis.tickwidth">Tick mark width</label>
+#>             <input id="piePlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>       </div>

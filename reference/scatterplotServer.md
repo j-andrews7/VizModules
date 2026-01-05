@@ -38,13 +38,20 @@ scatterPlotServer(
 
 - manual.colors:
 
-  A character vector of colors, a reactive returning a character vector
-  of colors, or a function that takes the `input` list and returns a
-  named character vector of colors.
+  A named character vector of colors or a reactive returning a named
+  character vector of colors.
 
 ## Value
 
 The `moduleServer` function for the scatterPlot module.
+
+## See also
+
+[`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
+[`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
+[`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md),
+`scatterPlotServer()`,
+[`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
 
 ## Author
 

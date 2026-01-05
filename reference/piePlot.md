@@ -11,7 +11,7 @@ piePlot(
   plot.values,
   make.hole = 0,
   palette,
-  col_palette = NULL,
+  col.palette = NULL,
   plot.text = "label+percent"
 )
 ```
@@ -37,9 +37,9 @@ piePlot(
 
 - palette:
 
-  A character vector of colors to use if `col_palette` is NULL.
+  A character vector of colors to use if `col.palette` is NULL.
 
-- col_palette:
+- col.palette:
 
   A character vector of colors to use.
 
