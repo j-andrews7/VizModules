@@ -1,7 +1,7 @@
-#' Input UI components for the boxPlot module
+#' Input UI components for the BoxPlot module
 #'
 #' This should be placed in the UI where the inputs should be shown, with an `id`
-#' that matches the `id` used in the `boxPlotServer()` and `boxPlotOutputUI()` functions.
+#' that matches the `id` used in the `BoxPlotServer()` and `BoxPlotOutputUI()` functions.
 #'
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
@@ -26,12 +26,12 @@
 #' @export
 #' @author Jacob Martin
 #' @seealso [plotthis::BoxPlot()], [vizModules::organize_inputs()],
-#' [vizModules::boxPlotOutputUI()], [vizModules::boxPlotServer()], [vizModules::createBoxPlotApp()]
+#' [vizModules::BoxPlotOutputUI()], [vizModules::BoxPlotServer()], [vizModules::createBoxPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)
-#' boxPlotInputsUI("boxPlot", mtcars)
-boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+#' BoxPlotInputsUI("BoxPlot", mtcars)
+BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -230,7 +230,7 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 }
 
 
-#' Output UI components for the boxPlot module
+#' Output UI components for the BoxPlot module
 #'
 #' This should be placed in the UI where the plot should be shown.
 #'
@@ -244,10 +244,10 @@ boxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @export
 #' @author Jacob Martin
-boxPlotOutputUI <- function(id) {
+BoxPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("boxPlot"), width = "100%", height = "400px"),
+        plotlyOutput(ns("BoxPlot"), width = "100%", height = "400px"),
         options = list(
             minWidth = 300,
             minHeight = 300,

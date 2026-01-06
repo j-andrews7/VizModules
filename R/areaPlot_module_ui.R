@@ -1,7 +1,7 @@
-#' Input UI components for the areaPlot module
+#' Input UI components for the AreaPlot module
 #'
 #' This should be placed in the UI where the inputs should be shown, with an `id`
-#' that matches the `id` used in the `areaPlotServer()` and `areaPlotOutputUI()` functions.
+#' that matches the `id` used in the `AreaPlotServer()` and `AreaPlotOutputUI()` functions.
 #'
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
@@ -26,14 +26,14 @@
 #' @export
 #' @author Jacob Martin
 #' @seealso [plotthis::AreaPlot()], [vizModules::organize_inputs()],
-#' [vizModules::areaPlotOutputUI()], [vizModules::areaPlotServer()], [vizModules::createAreaPlotApp()]
+#' [vizModules::AreaPlotOutputUI()], [vizModules::AreaPlotServer()], [vizModules::createAreaPlotApp()]
 #' @examples
 #' library(vizModules)
 #' # Needs at least 2 categorical variables for grouping and x-axis
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #' mtcars$gear <- as.factor(mtcars$gear)
-#' areaPlotInputsUI("areaPlot", mtcars)
-areaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+#' AreaPlotInputsUI("areaPlot", mtcars)
+AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.

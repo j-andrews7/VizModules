@@ -51,8 +51,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         observeEvent(input$reset, {
             numeric.data <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            # max.y <- max(numeric.data, na.rm = TRUE)
-            # min.y <- min(numeric.data, na.rm = TRUE)
+
             # Reset numeric inputs to defaults derived from data
             # Data
             updateSelectInput(session, "labels", selected = char.choices[2])
@@ -127,7 +126,10 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "pie_plot", height = 600, width = 700, scale = 1),
+                    toImageButtonOptions = list(
+                        format = isolate(input$download.type),
+                        filename = "pie_plot", height = 600, width = 700, scale = 1
+                    ),
                     displaylogo = FALSE
                 ) # Hiding Plotly Logo
 

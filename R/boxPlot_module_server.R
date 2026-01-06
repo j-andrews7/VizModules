@@ -1,4 +1,4 @@
-#' Server logic for boxPlot module
+#' Server logic for BoxPlot module
 #'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
@@ -8,7 +8,7 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @return The `moduleServer` function for the boxPlot module.
+#' @return The `moduleServer` function for the BoxPlot module.
 #'
 #' @importFrom plotly renderPlotly ggplotly layout config
 #' @importFrom shinyjs hide
@@ -16,7 +16,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -30,7 +30,7 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "boxPlotTabsetPanel", target = tab.name)
+                hideTab(inputId = "BoxPlotTabsetPanel", target = tab.name)
             })
         }
 
@@ -165,13 +165,11 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             plotlyOut <- ggplotly(p) |>
                 layout(
                     title = list(
-                        text = "Click To Edit Title",
                         font = list(size = 28, family = isolate(input$font.type), color = isolate(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     xaxis = list(
                         title = list(
-                            text = "X-axis",
                             font = list(size = 18, family = isolate(input$font.type), color = isolate(input$text.colour))
                         ),
                         showline = isolate(input$axis.showline),
@@ -191,7 +189,6 @@ boxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     ),
                     yaxis = list(
                         title = list(
-                            text = "Y-axis",
                             font = list(size = 18, family = isolate(input$font.type), color = isolate(input$text.colour))
                         ),
                         showline = isolate(input$axis.showline),

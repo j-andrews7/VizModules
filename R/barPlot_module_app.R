@@ -14,9 +14,9 @@
 #
 #' @examples
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
-#' app <- createBarPlotApp(data_list)
+#' app <- BarPlotApp(data_list)
 #' if (interactive()) runApp(app)
-createBarPlotApp <- function(data_list) {
+BarPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -30,14 +30,14 @@ createBarPlotApp <- function(data_list) {
             sidebarPanel(
                 lapply(names(data_list), function(name) {
                     tagList(
-                        barPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                        BarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
                         hr()
                     )
                 })
             ),
             mainPanel(
                 lapply(names(data_list), function(name) {
-                    tagList(barPlotOutputUI(name), br())
+                    tagList(BarPlotOutputUI(name), br())
                 })
             )
         )
@@ -45,7 +45,7 @@ createBarPlotApp <- function(data_list) {
 
     server <- function(input, output, session) {
         lapply(names(data_list), function(name) {
-            barPlotServer(name, data = reactive(data_list[[name]]))
+            BarPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 

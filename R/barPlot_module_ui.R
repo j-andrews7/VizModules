@@ -1,7 +1,7 @@
-#' Input UI components for the barPlot module
+#' Input UI components for the BarPlot module
 #'
 #' This should be placed in the UI where the inputs should be shown, with an `id`
-#' that matches the `id` used in the `barPlotServer()` and `barPlotOutputUI()` functions.
+#' that matches the `id` used in the `BarPlotServer()` and `BarPlotOutputUI()` functions.
 #'
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
@@ -26,12 +26,12 @@
 #' @export
 #' @author Jacob Martin
 #' @seealso [plotthis::BarPlot()], [vizModules::organize_inputs()],
-#' [vizModules::barPlotOutputUI()], [vizModules::barPlotServer()], [vizModules::createBarPlotApp()]
+#' [vizModules::BarPlotOutputUI()], [vizModules::BarPlotServer()], [vizModules::BarPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)
-#' barPlotInputsUI("barPlot", mtcars)
-barPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+#' BarPlotInputsUI("barPlot", mtcars)
+BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -215,13 +215,13 @@ barPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 }
 
 
-#' Output UI components for the barPlot module
+#' Output UI components for the BarPlot module
 #'
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
 #'
-#' @return A Shiny plotlyOutput for the barPlot
+#' @return A Shiny plotlyOutput for the BarPlot
 #'
 #' @importFrom shiny NS
 #' @importFrom plotly plotlyOutput
@@ -229,10 +229,10 @@ barPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @export
 #' @author Jacob Martin
-barPlotOutputUI <- function(id) {
+BarPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("barPlot"), width = "100%", height = "400px"),
+        plotlyOutput(ns("BarPlot"), width = "100%", height = "400px"),
         options = list(
             minWidth = 300,
             minHeight = 300,

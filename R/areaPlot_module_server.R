@@ -1,4 +1,4 @@
-#' Server logic for areaPlot module
+#' Server logic for AreaPlot module
 #'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
@@ -8,7 +8,7 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @return The `moduleServer` function for the areaPlot module.
+#' @return The `moduleServer` function for the AreaPlot module.
 #'
 #' @importFrom plotly renderPlotly ggplotly layout config
 #' @importFrom shinyjs hide
@@ -16,7 +16,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -30,7 +30,7 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "areaPlotTabsetPanel", target = tab.name)
+                hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
             })
         }
         ns <- session$ns
@@ -120,7 +120,6 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             plotlyOut <- ggplotly(p) |>
                 layout(
                     title = list(
-                        text = "Click To Edit Title",
                         font = list(
                             size = isolate(input$title.font.size),
                             family = isolate(input$font.type),
@@ -130,7 +129,6 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     ),
                     xaxis = list(
                         title = list(
-                            text = "X-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         ),
                         showline = isolate(input$axis.showline),
@@ -150,7 +148,6 @@ areaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     ),
                     yaxis = list(
                         title = list(
-                            text = "Y-axis",
                             font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
                         ),
                         showline = isolate(input$axis.showline),

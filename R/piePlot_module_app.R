@@ -14,9 +14,9 @@
 #'
 #' @examples
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
-#' app <- createpiePlotApp(data_list)
+#' app <- piePlotApp(data_list)
 #' if (interactive()) runApp(app)
-createpiePlotApp <- function(data_list) {
+piePlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
