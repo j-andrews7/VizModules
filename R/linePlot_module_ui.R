@@ -17,7 +17,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data)),
             selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
             switchInput(ns("mean.values.y"), "Mean Y:", value = FALSE, offLabel = "Off", onLabel = "On"),
-            switchInput(ns("mean.values.x"), "Mean X:", value = FALSE, offLabel = "Off", onLabel = "On")
+            switchInput(ns("mean.values.x"), "Mean X:", value = FALSE, offLabel = "Off", onLabel = "On"), 
+            selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"))
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",

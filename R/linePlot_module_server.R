@@ -42,6 +42,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "plot.type", selected = "lines")
             updateSwitchInput(session, "mean.values.y", value = FALSE)
             updateSwitchInput(session, "mean.values.x", value = FALSE)
+            updateSelectInput(session, "line.type", selected = "solid")
             d <- data_reactive() 
 
         })
@@ -51,37 +52,45 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             input$update
 
             d <- data_reactive()
+
+            #Mean switchButton functionality. 
+        
+            #Determining which axes is the catergorical column. e.g species 
+            x_col <- input$x.value
+            y_col <- input$y.value
+            if (!is.numeric(d[[x_col]]) && is.numeric(d[[y_col]])) {
+                category_col <- x_col
+            } else if (!is.numeric(d[[y_col]]) && is.numeric(d[[x_col]])) {
+                category_col <- y_col
+            } else {
+                category_col <- x_col  # fallback
+            }
+
+            # Mean Y within each category
+            #Making numeric columns have an average depending on their category
+            if (isTRUE(input$mean.values.y) && is.numeric(d[[y_col]])) {
+                d <- d |>
+                dplyr::group_by(.data[[category_col]]) |>
+                dplyr::mutate(
+                    !!y_col := mean(.data[[y_col]], na.rm = TRUE)
+                ) |>
+                dplyr::ungroup()
+            }
+
+            # Mean X within each category
+            if (isTRUE(input$mean.values.x) && is.numeric(d[[x_col]])) {
+                d <- d |>
+                dplyr::group_by(.data[[category_col]]) |>
+                dplyr::mutate(
+                    !!x_col := mean(.data[[x_col]], na.rm = TRUE)
+                ) |>
+                dplyr::ungroup()
+            }
+
             # Null Values:
             x_values <- reformulate(isolate(input$x.value))
             y_values <- reformulate(isolate(input$y.value))
 
-            
-            #Mean switch functionality. 
-            #Making all y values a mean based on x category
-            #Mean Y values  
-            category <- input$x.value   
-            y.column <- input$y.value  
-
-            if (isTRUE(input$mean.values.y) && is.numeric(d[[y.column]])) {
-            d <- d |>
-                group_by(.data[[category]]) |>
-                mutate(
-                    !!y.column := mean(.data[[y.column]], na.rm = TRUE)
-                ) |>
-                ungroup()
-            }
-            #Mean X values: 
-            category <- input$y.value   
-            x.column <- input$x.value  
-
-            if (isTRUE(input$mean.values.x) && is.numeric(d[[x.column]])) {
-            d <- d |>
-                group_by(.data[[category]]) |>
-                mutate(
-                    !!x.column := mean(.data[[x.column]], na.rm = TRUE)
-                ) |>
-                ungroup()
-            }
 
 
             # line Plot
@@ -89,7 +98,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 reactive.data = d,
                 x.value = x_values,
                 y.value = y_values,
-                plot.mode = input$plot.type
+                plot.mode = input$plot.type,
+                line.type = input$line.type
             )
 
 
