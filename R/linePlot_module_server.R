@@ -1,5 +1,6 @@
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
+    data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
@@ -28,6 +29,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 choices  = c(colour_selection)
             )
         })
+        #Defining reactive data before reset button 
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -38,20 +40,53 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "x.value", selected = names(data())[1])
             updateSelectInput(session, "y.value", selected = names(data())[2])
             updateSelectInput(session, "plot.type", selected = "lines")
+            updateSwitchInput(session, "mean.values.y", value = FALSE)
+            updateSwitchInput(session, "mean.values.x", value = FALSE)
+            d <- data_reactive() 
+
         })
 
 
         output$linePlot <- renderPlotly({
             input$update
 
+            d <- data_reactive()
             # Null Values:
             x_values <- reformulate(isolate(input$x.value))
             y_values <- reformulate(isolate(input$y.value))
 
-            # line Plot
+            
+            #Mean switch functionality. 
+            #Making all y values a mean based on x category
+            #Mean Y values  
+            category <- input$x.value   
+            y.column <- input$y.value  
 
+            if (isTRUE(input$mean.values.y) && is.numeric(d[[y.column]])) {
+            d <- d |>
+                group_by(.data[[category]]) |>
+                mutate(
+                    !!y.column := mean(.data[[y.column]], na.rm = TRUE)
+                ) |>
+                ungroup()
+            }
+            #Mean X values: 
+            category <- input$y.value   
+            x.column <- input$x.value  
+
+            if (isTRUE(input$mean.values.x) && is.numeric(d[[x.column]])) {
+            d <- d |>
+                group_by(.data[[category]]) |>
+                mutate(
+                    !!x.column := mean(.data[[x.column]], na.rm = TRUE)
+                ) |>
+                ungroup()
+            }
+
+
+            # line Plot
             p <- linePlot(
-                reactive.data = data(),
+                reactive.data = d,
                 x.value = x_values,
                 y.value = y_values,
                 plot.mode = input$plot.type

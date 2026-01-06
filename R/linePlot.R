@@ -9,6 +9,9 @@
 #' 
 # Line plot with mode "lines" or "lines+markers" or "markers"
 
+#If data wants a mean value: 
+
+
 linePlot <- function(reactive.data, x.value, y.value, plot.mode){
     fig <- plot_ly(
         data = reactive.data,
