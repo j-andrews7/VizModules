@@ -2,6 +2,12 @@
 
 ## All functions
 
+- [`AreaPlotApp()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotApp.md)
+  : Create an example Modular AreaPlot Shiny Application
+- [`BarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BarPlotApp.md)
+  : Create an example Modular barPlot Shiny Application
+- [`BoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotApp.md)
+  : Create an example Modular BoxPlot Shiny Application
 - [`.string_to_list_of_vectors()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_list_of_vectors.md)
   : Parse a string indicating a set of vectors to a list of vectors.
 - [`.string_to_vector()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_vector.md)
@@ -9,42 +15,36 @@
   vector.
 - [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
   : Example DESeq2 results from airway dataset
-- [`areaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
-  : Input UI components for the areaPlot module
+- [`AreaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
+  : Input UI components for the AreaPlot module
 - [`areaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
   : Output UI components for the areaPlot module
-- [`areaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/areaPlotServer.md)
-  : Server logic for areaPlot module
-- [`barPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotInputsUI.md)
-  : Input UI components for the barPlot module
-- [`barPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
-  : Output UI components for the barPlot module
-- [`barPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
-  : Server logic for barPlot module
-- [`boxPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotInputsUI.md)
-  : Input UI components for the boxPlot module
-- [`boxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
-  : Output UI components for the boxPlot module
-- [`boxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
-  : Server logic for boxPlot module
-- [`createAreaPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createAreaPlotApp.md)
-  : Create an example Modular areaPlot Shiny Application
-- [`createBarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBarPlotApp.md)
-  : Create an example Modular barPlot Shiny Application
-- [`createBoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBoxPlotApp.md)
-  : Create an example Modular boxPlot Shiny Application
+- [`AreaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/areaPlotServer.md)
+  : Server logic for AreaPlot module
+- [`BarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotInputsUI.md)
+  : Input UI components for the BarPlot module
+- [`BarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
+  : Output UI components for the BarPlot module
+- [`BarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
+  : Server logic for BarPlot module
+- [`BoxPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotInputsUI.md)
+  : Input UI components for the BoxPlot module
+- [`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
+  : Output UI components for the BoxPlot module
+- [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
+  : Server logic for BoxPlot module
 - [`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
   : Create an example Modular scatterPlot Shiny Application
 - [`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
   : Create a standalone Shiny app for the volcanoPlot module
-- [`createpiePlotApp()`](https://j-andrews7.github.io/vizModules/reference/createpiePlotApp.md)
-  : Create an example Modular piePlot Shiny Application
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
 - [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
 - [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)
   : Create a plotly pie chart
+- [`piePlotApp()`](https://j-andrews7.github.io/vizModules/reference/piePlotApp.md)
+  : Create an example Modular piePlot Shiny Application
 - [`piePlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/piePlotInputsUI.md)
   : Input UI components for the piePlot module
 - [`piePlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/piePlotOutputUI.md)

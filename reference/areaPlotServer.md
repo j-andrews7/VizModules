@@ -1,11 +1,11 @@
-# Server logic for areaPlot module
+# Server logic for AreaPlot module
 
-Server logic for areaPlot module
+Server logic for AreaPlot module
 
 ## Usage
 
 ``` r
-areaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+AreaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 ```
 
 ## Arguments
@@ -32,7 +32,7 @@ areaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 ## Value
 
-The `moduleServer` function for the areaPlot module.
+The `moduleServer` function for the AreaPlot module.
 
 ## Author
 

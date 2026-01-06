@@ -1,16 +1,16 @@
-# Input UI components for the boxPlot module
+# Input UI components for the BoxPlot module
 
 This should be placed in the UI where the inputs should be shown, with
 an `id` that matches the `id` used in the
-[`boxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
+[`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
 and
-[`boxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
+[`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
 functions.
 
 ## Usage
 
 ``` r
-boxPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
+BoxPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 ```
 
 ## Arguments
@@ -58,9 +58,9 @@ exhaustive list.
 
 [`plotthis::BoxPlot()`](https://pwwang.github.io/plotthis/reference/boxviolinplot.html),
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
-[`boxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md),
-[`boxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md),
-[`createBoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBoxPlotApp.md)
+[`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md),
+[`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md),
+`createBoxPlotApp()`
 
 ## Author
 
@@ -71,54 +71,54 @@ Jacob Martin
 ``` r
 library(vizModules)
 data(mtcars)
-boxPlotInputsUI("boxPlot", mtcars)
+BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="boxPlot-boxPlotTabsetPanel" data-tabsetid="8652">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-boxPlotTabsetPanel" data-tabsetid="9263">
 #>     <li class="active">
-#>       <a href="#tab-8652-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9263-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-9263-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-9263-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-9263-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-9263-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-9263-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
+#>       <a href="#tab-9263-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9263-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8652-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9263-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8652">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8652-1">
+#>   <div class="tab-content" data-tabsetid="9263">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9263-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-x.data-label" for="boxPlot-x.data">Select X data:</label>
+#>             <label class="control-label" id="BoxPlot-x.data-label" for="BoxPlot-x.data">Select X data:</label>
 #>             <div>
-#>               <select id="boxPlot-x.data" class="shiny-input-select"><option value=""></option></select>
-#>               <script type="application/json" data-for="boxPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <select id="BoxPlot-x.data" class="shiny-input-select"><option value=""></option></select>
+#>               <script type="application/json" data-for="BoxPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-y.data-label" for="boxPlot-y.data">Select Y data:</label>
+#>             <label class="control-label" id="BoxPlot-y.data-label" for="BoxPlot-y.data">Select Y data:</label>
 #>             <div>
-#>               <select id="boxPlot-y.data" class="shiny-input-select"><option value=""></option>
+#>               <select id="BoxPlot-y.data" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
 #> <option value="cyl">cyl</option>
 #> <option value="disp">disp</option>
@@ -130,7 +130,7 @@ boxPlotInputsUI("boxPlot", mtcars)
 #> <option value="am">am</option>
 #> <option value="gear">gear</option>
 #> <option value="carb">carb</option></select>
-#>               <script type="application/json" data-for="boxPlot-y.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-y.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -138,151 +138,151 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-group.by-label" for="boxPlot-group.by">Group by:</label>
+#>             <label class="control-label" id="BoxPlot-group.by-label" for="BoxPlot-group.by">Group by:</label>
 #>             <div>
-#>               <select id="boxPlot-group.by" class="shiny-input-select"><option value=""></option>
+#>               <select id="BoxPlot-group.by" class="shiny-input-select"><option value=""></option>
 #> <option value="NULL" selected>NULL</option></select>
-#>               <script type="application/json" data-for="boxPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-8652-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9263-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-sort_x-label" for="boxPlot-sort_x">Sort the X axis by: </label>
+#>             <label class="control-label" id="BoxPlot-sort_x-label" for="BoxPlot-sort_x">Sort the X axis by: </label>
 #>             <div>
-#>               <select id="boxPlot-sort_x" class="shiny-input-select"><option value="none" selected>none</option>
+#>               <select id="BoxPlot-sort_x" class="shiny-input-select"><option value="none" selected>none</option>
 #> <option value="mean_asc">mean_asc</option>
 #> <option value="mean_desc">mean_desc</option>
 #> <option value="mean">mean</option>
 #> <option value="median_asc">median_asc</option>
 #> <option value="median_desc">median_desc</option>
 #> <option value="median">median</option></select>
-#>               <script type="application/json" data-for="boxPlot-sort_x" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-sort_x" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-flip" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-flip" data-on-text="Flipped" data-off-text="Not Flipped" data-label-text="Flip the Plot: " data-label-width="auto" data-handle-width="auto" data-size=""/>
+#>             <input id="BoxPlot-flip" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-flip" data-on-text="Flipped" data-off-text="Not Flipped" data-label-text="Flip the Plot: " data-label-width="auto" data-handle-width="auto" data-size=""/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-stack" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-stack" data-on-text="Stacked" data-off-text="Not Stacked" data-label-text="Stack Plot: " data-label-width="auto" data-handle-width="auto" data-size=""/>
+#>             <input id="BoxPlot-stack" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-stack" data-on-text="Stacked" data-off-text="Not Stacked" data-label-text="Stack Plot: " data-label-width="auto" data-handle-width="auto" data-size=""/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-y.max-label" for="boxPlot-y.max">Max Value of Y Axis:</label>
-#>             <input id="boxPlot-y.max" type="number" class="shiny-input-number form-control" value="472" data-update-on="change" min="-1000" max="1000"/>
+#>             <label class="control-label" id="BoxPlot-y.max-label" for="BoxPlot-y.max">Max Value of Y Axis:</label>
+#>             <input id="BoxPlot-y.max" type="number" class="shiny-input-number form-control" value="472" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-y.min-label" for="boxPlot-y.min">Min Value of Y Axis:</label>
-#>             <input id="boxPlot-y.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-1000" max="1000"/>
+#>             <label class="control-label" id="BoxPlot-y.min-label" for="BoxPlot-y.min">Min Value of Y Axis:</label>
+#>             <input id="BoxPlot-y.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-aspect.ratio-label" for="boxPlot-aspect.ratio">Aspect Ratio:</label>
-#>             <input id="boxPlot-aspect.ratio" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="100"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-8652-3">
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-add.points" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-add.points" data-on-text="Points" data-off-text="No Points" data-label-text="Add Jitter Points: " data-label-width="auto" data-handle-width="auto" data-size=""/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-pt.size-label" for="boxPlot-pt.size">Point Size:</label>
-#>             <input id="boxPlot-pt.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="100"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-pt.alpha-label" for="boxPlot-pt.alpha">Point Alpha:</label>
-#>             <input id="boxPlot-pt.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-jitter.width-label" for="boxPlot-jitter.width">Jitter Width:</label>
-#>             <input id="boxPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-jitter.height-label" for="boxPlot-jitter.height">Jitter Height: </label>
-#>             <input id="boxPlot-jitter.height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-pt.color">Point outline colour</label>
-#>             <input id="boxPlot-pt.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" id="BoxPlot-aspect.ratio-label" for="BoxPlot-aspect.ratio">Aspect Ratio:</label>
+#>             <input id="BoxPlot-aspect.ratio" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="100"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-8652-4">
+#>     <div class="tab-pane" data-value="Points" id="tab-9263-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-add.line-label" for="boxPlot-add.line">Add Y interception line:</label>
-#>             <input id="boxPlot-add.line" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="472"/>
+#>             <input id="BoxPlot-add.points" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-add.points" data-on-text="Points" data-off-text="No Points" data-label-text="Add Jitter Points: " data-label-width="auto" data-handle-width="auto" data-size=""/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-highlight-label" for="boxPlot-highlight">Highlight:</label>
-#>             <input id="boxPlot-highlight" type="text" class="shiny-input-text form-control" value="" placeholder="E.g. y &gt; 0" data-update-on="change"/>
+#>             <label class="control-label" id="BoxPlot-pt.size-label" for="BoxPlot-pt.size">Point Size:</label>
+#>             <input id="BoxPlot-pt.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="100"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-pt.alpha-label" for="BoxPlot-pt.alpha">Point Alpha:</label>
+#>             <input id="BoxPlot-pt.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-jitter.width-label" for="BoxPlot-jitter.width">Jitter Width:</label>
+#>             <input id="BoxPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-jitter.height-label" for="BoxPlot-jitter.height">Jitter Height: </label>
+#>             <input id="BoxPlot-jitter.height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-pt.color">Point outline colour</label>
+#>             <input id="BoxPlot-pt.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Annotations" id="tab-9263-4">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-add.line-label" for="BoxPlot-add.line">Add Y interception line:</label>
+#>             <input id="BoxPlot-add.line" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="472"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-highlight-label" for="BoxPlot-highlight">Highlight:</label>
+#>             <input id="BoxPlot-highlight" type="text" class="shiny-input-text form-control" value="" placeholder="E.g. y &gt; 0" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-highlight.colour">Highlight colour:</label>
-#>             <input id="boxPlot-highlight.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-highlight.colour">Highlight colour:</label>
+#>             <input id="BoxPlot-highlight.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-highlight.size-label" for="boxPlot-highlight.size">Highlight size:</label>
-#>             <input id="boxPlot-highlight.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
+#>             <label class="control-label" id="BoxPlot-highlight.size-label" for="BoxPlot-highlight.size">Highlight size:</label>
+#>             <input id="BoxPlot-highlight.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-highlight.alpha-label" for="boxPlot-highlight.alpha">Highlight alpha</label>
-#>             <input id="boxPlot-highlight.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
+#>             <label class="control-label" id="BoxPlot-highlight.alpha-label" for="BoxPlot-highlight.alpha">Highlight alpha</label>
+#>             <input id="BoxPlot-highlight.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-font.type-label" for="boxPlot-font.type">Font type:</label>
+#>             <label class="control-label" id="BoxPlot-font.type-label" for="BoxPlot-font.type">Font type:</label>
 #>             <div>
-#>               <select id="boxPlot-font.type" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select id="BoxPlot-font.type" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -299,7 +299,7 @@ boxPlotInputsUI("boxPlot", mtcars)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="boxPlot-font.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-font.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -307,92 +307,92 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-text.colour">Axis title colour:</label>
-#>             <input id="boxPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-text.colour">Axis title colour:</label>
+#>             <input id="BoxPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-8652-5">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-9263-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-add.trend" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-add.trend" data-on-text="Trend Added" data-off-text="Trend Not Added" data-label-text="Add Median Point" data-label-width="auto" data-handle-width="auto" data-size=""/>
+#>             <input id="BoxPlot-add.trend" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-add.trend" data-on-text="Trend Added" data-off-text="Trend Not Added" data-label-text="Add Median Point" data-label-width="auto" data-handle-width="auto" data-size=""/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-trend.pt.size-label" for="boxPlot-trend.pt.size">Trend Point Size:</label>
-#>             <input id="boxPlot-trend.pt.size" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" max="40"/>
+#>             <label class="control-label" id="BoxPlot-trend.pt.size-label" for="BoxPlot-trend.pt.size">Trend Point Size:</label>
+#>             <input id="BoxPlot-trend.pt.size" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" max="40"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-trend.colour">Colour of trend:</label>
-#>             <input id="boxPlot-trend.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-trend.colour">Colour of trend:</label>
+#>             <input id="BoxPlot-trend.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-trend.line.width-label" for="boxPlot-trend.line.width">Trend line width:</label>
-#>             <input id="boxPlot-trend.line.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
+#>             <label class="control-label" id="BoxPlot-trend.line.width-label" for="BoxPlot-trend.line.width">Trend line width:</label>
+#>             <input id="BoxPlot-trend.line.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-8652-6">
+#>     <div class="tab-pane" data-value="Stats" id="tab-9263-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-add.stat-label" for="boxPlot-add.stat">Add Stats:</label>
+#>             <label class="control-label" id="BoxPlot-add.stat-label" for="BoxPlot-add.stat">Add Stats:</label>
 #>             <div>
-#>               <select id="boxPlot-add.stat" class="shiny-input-select"><option value="mean" selected>mean</option>
+#>               <select id="BoxPlot-add.stat" class="shiny-input-select"><option value="mean" selected>mean</option>
 #> <option value="sd">sd</option>
 #> <option value="median">median</option>
 #> <option value="var">var</option></select>
-#>               <script type="application/json" data-for="boxPlot-add.stat" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-add.stat" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-stat.color">Stats Colour:</label>
-#>             <input id="boxPlot-stat.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-stat.color">Stats Colour:</label>
+#>             <input id="BoxPlot-stat.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-stat.size-label" for="boxPlot-stat.size">Stat Size:</label>
-#>             <input id="boxPlot-stat.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
+#>             <label class="control-label" id="BoxPlot-stat.size-label" for="BoxPlot-stat.size">Stat Size:</label>
+#>             <input id="BoxPlot-stat.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-stat.stroke-label" for="boxPlot-stat.stroke">Stat Stroke:</label>
-#>             <input id="boxPlot-stat.stroke" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
+#>             <label class="control-label" id="BoxPlot-stat.stroke-label" for="BoxPlot-stat.stroke">Stat Stroke:</label>
+#>             <input id="BoxPlot-stat.stroke" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-stat.shape-label" for="boxPlot-stat.shape">Stat Shape:</label>
-#>             <input id="boxPlot-stat.shape" type="number" class="shiny-input-number form-control" value="25" data-update-on="change" min="0" max="100"/>
+#>             <label class="control-label" id="BoxPlot-stat.shape-label" for="BoxPlot-stat.shape">Stat Shape:</label>
+#>             <input id="BoxPlot-stat.shape" type="number" class="shiny-input-number form-control" value="25" data-update-on="change" min="0" max="100"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Palette" id="tab-8652-7">
+#>     <div class="tab-pane" data-value="Palette" id="tab-9263-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-palette-label" for="boxPlot-palette">Plot Palette:</label>
+#>             <label class="control-label" id="BoxPlot-palette-label" for="BoxPlot-palette">Plot Palette:</label>
 #>             <div>
-#>               <select id="boxPlot-palette" class="shiny-input-select"><option value="BrBG">BrBG</option>
+#>               <select id="BoxPlot-palette" class="shiny-input-select"><option value="BrBG">BrBG</option>
 #> <option value="PiYG">PiYG</option>
 #> <option value="PRGn">PRGn</option>
 #> <option value="PuOr">PuOr</option>
@@ -635,22 +635,22 @@ boxPlotInputsUI("boxPlot", mtcars)
 #> <option value="stripe.16">stripe.16</option>
 #> <option value="stripe.32">stripe.32</option>
 #> <option value="stripe.64">stripe.64</option></select>
-#>               <script type="application/json" data-for="boxPlot-palette" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-palette" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-background.colour" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-background.colour" data-on-text="On" data-off-text="Off" data-label-text="Background colour:" data-label-width="auto" data-handle-width="auto" data-size=""/>
+#>             <input id="BoxPlot-background.colour" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-background.colour" data-on-text="On" data-off-text="Off" data-label-text="Background colour:" data-label-width="auto" data-handle-width="auto" data-size=""/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-background.palette-label" for="boxPlot-background.palette">Background Palette:</label>
+#>             <label class="control-label" id="BoxPlot-background.palette-label" for="BoxPlot-background.palette">Background Palette:</label>
 #>             <div>
-#>               <select id="boxPlot-background.palette" class="shiny-input-select"><option value="BrBG">BrBG</option>
+#>               <select id="BoxPlot-background.palette" class="shiny-input-select"><option value="BrBG">BrBG</option>
 #> <option value="PiYG">PiYG</option>
 #> <option value="PRGn">PRGn</option>
 #> <option value="PuOr">PuOr</option>
@@ -893,33 +893,33 @@ boxPlotInputsUI("boxPlot", mtcars)
 #> <option value="stripe.16">stripe.16</option>
 #> <option value="stripe.32">stripe.32</option>
 #> <option value="stripe.64">stripe.64</option></select>
-#>               <script type="application/json" data-for="boxPlot-background.palette" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-background.palette" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-8652-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9263-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-facet.by-label" for="boxPlot-facet.by">Facet by:</label>
+#>             <label class="control-label" id="BoxPlot-facet.by-label" for="BoxPlot-facet.by">Facet by:</label>
 #>             <div>
-#>               <select id="boxPlot-facet.by" class="shiny-input-select"><option value=""></option>
+#>               <select id="BoxPlot-facet.by" class="shiny-input-select"><option value=""></option>
 #> <option value="NULL" selected>NULL</option></select>
-#>               <script type="application/json" data-for="boxPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-facet.scale-label" for="boxPlot-facet.scale">Facet scale:</label>
+#>             <label class="control-label" id="BoxPlot-facet.scale-label" for="BoxPlot-facet.scale">Facet scale:</label>
 #>             <div>
-#>               <select id="boxPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#>               <select id="BoxPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
 #> <option value="free">free</option>
 #> <option value="free_x">free_x</option>
 #> <option value="free_y">free_y</option></select>
-#>               <script type="application/json" data-for="boxPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -927,37 +927,37 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-facet.ncol-label" for="boxPlot-facet.ncol">Facet number of columns:</label>
-#>             <input id="boxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="BoxPlot-facet.ncol-label" for="BoxPlot-facet.ncol">Facet number of columns:</label>
+#>             <input id="BoxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-facet.nrow-label" for="boxPlot-facet.nrow">Facet number of rows:</label>
-#>             <input id="boxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="BoxPlot-facet.nrow-label" for="BoxPlot-facet.nrow">Facet number of rows:</label>
+#>             <input id="BoxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-facet.by.row" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-facet.by.row" data-on-text="On" data-off-text="Off" data-label-text="Facet by row:" data-label-width="auto" data-handle-width="auto" data-size="" checked="checked"/>
+#>             <input id="BoxPlot-facet.by.row" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-facet.by.row" data-on-text="On" data-off-text="Off" data-label-text="Facet by row:" data-label-width="auto" data-handle-width="auto" data-size="" checked="checked"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <input id="boxPlot-combine" type="checkbox" class="sw-switchInput" data-input-id="boxPlot-combine" data-on-text="On" data-off-text="Off" data-label-text="Combine plots:" data-label-width="auto" data-handle-width="auto" data-size="" checked="checked"/>
+#>             <input id="BoxPlot-combine" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-combine" data-on-text="On" data-off-text="Off" data-label-text="Combine plots:" data-label-width="auto" data-handle-width="auto" data-size="" checked="checked"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-8652-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9263-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="boxPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="BoxPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show axis lines</span>
 #>               </label>
 #>             </div>
@@ -967,7 +967,7 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="boxPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="BoxPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Mirror axis lines</span>
 #>               </label>
 #>             </div>
@@ -977,37 +977,37 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-axis.linecolor">Axis line color</label>
-#>             <input id="boxPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-axis.linecolor">Axis line color</label>
+#>             <input id="BoxPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.linewidth-label" for="boxPlot-axis.linewidth">Axis line width</label>
-#>             <input id="boxPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
+#>             <label class="control-label" id="BoxPlot-axis.linewidth-label" for="BoxPlot-axis.linewidth">Axis line width</label>
+#>             <input id="BoxPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.tickfont.size-label" for="boxPlot-axis.tickfont.size">Tick label size</label>
-#>             <input id="boxPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>             <label class="control-label" id="BoxPlot-axis.tickfont.size-label" for="BoxPlot-axis.tickfont.size">Tick label size</label>
+#>             <input id="BoxPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-axis.tickfont.color">Tick label color</label>
-#>             <input id="boxPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-axis.tickfont.color">Tick label color</label>
+#>             <input id="BoxPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.tickfont.family-label" for="boxPlot-axis.tickfont.family">Tick label font</label>
+#>             <label class="control-label" id="BoxPlot-axis.tickfont.family-label" for="BoxPlot-axis.tickfont.family">Tick label font</label>
 #>             <div>
-#>               <select id="boxPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select id="BoxPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -1024,32 +1024,32 @@ boxPlotInputsUI("boxPlot", mtcars)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="boxPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.tickangle.x-label" for="boxPlot-axis.tickangle.x">X-axis tick label angle</label>
-#>             <input id="boxPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>             <label class="control-label" id="BoxPlot-axis.tickangle.x-label" for="BoxPlot-axis.tickangle.x">X-axis tick label angle</label>
+#>             <input id="BoxPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.tickangle.y-label" for="boxPlot-axis.tickangle.y">Y-axis tick label angle</label>
-#>             <input id="boxPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>             <label class="control-label" id="BoxPlot-axis.tickangle.y-label" for="BoxPlot-axis.tickangle.y">Y-axis tick label angle</label>
+#>             <input id="BoxPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.ticks-label" for="boxPlot-axis.ticks">Tick position</label>
+#>             <label class="control-label" id="BoxPlot-axis.ticks-label" for="BoxPlot-axis.ticks">Tick position</label>
 #>             <div>
-#>               <select id="boxPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#>               <select id="BoxPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
 #> <option value="inside">Inside</option>
 #> <option value="">None</option></select>
-#>               <script type="application/json" data-for="boxPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -1057,40 +1057,40 @@ boxPlotInputsUI("boxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="boxPlot-axis.tickcolor">Tick mark color</label>
-#>             <input id="boxPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="BoxPlot-axis.tickcolor">Tick mark color</label>
+#>             <input id="BoxPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.ticklen-label" for="boxPlot-axis.ticklen">Tick mark length</label>
-#>             <input id="boxPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
+#>             <label class="control-label" id="BoxPlot-axis.ticklen-label" for="BoxPlot-axis.ticklen">Tick mark length</label>
+#>             <input id="BoxPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="boxPlot-axis.tickwidth-label" for="boxPlot-axis.tickwidth">Tick mark width</label>
-#>             <input id="boxPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
+#>             <label class="control-label" id="BoxPlot-axis.tickwidth-label" for="BoxPlot-axis.tickwidth">Tick mark width</label>
+#>             <input id="BoxPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
 #>   </div>
 #> </div>
-#> <button id="boxPlot-update" type="button" class="btn btn-default action-button">
+#> <button id="BoxPlot-update" type="button" class="btn btn-default action-button">
 #>   <span class="action-label">Update Plot</span>
 #> </button>
-#> <button class="btn btn-default action-button btn-secondary" id="boxPlot-reset" type="button">
+#> <button class="btn btn-default action-button btn-secondary" id="BoxPlot-reset" type="button">
 #>   <span class="action-label">Reset Defaults</span>
 #> </button>
 #> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="boxPlot-download.type-label" for="boxPlot-download.type">Download Format:</label>
+#>   <label class="control-label" id="BoxPlot-download.type-label" for="BoxPlot-download.type">Download Format:</label>
 #>   <div>
-#>     <select id="boxPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
+#>     <select id="BoxPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
 #> <option value="svg">svg</option></select>
-#>     <script type="application/json" data-for="boxPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>     <script type="application/json" data-for="BoxPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>   </div>
 #> </div>
 #> <br/>

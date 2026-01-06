@@ -1,16 +1,16 @@
-# Input UI components for the barPlot module
+# Input UI components for the BarPlot module
 
 This should be placed in the UI where the inputs should be shown, with
 an `id` that matches the `id` used in the
-[`barPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
+[`BarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
 and
-[`barPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
+[`BarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
 functions.
 
 ## Usage
 
 ``` r
-barPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
+BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 ```
 
 ## Arguments
@@ -58,9 +58,9 @@ exhaustive list.
 
 [`plotthis::BarPlot()`](https://pwwang.github.io/plotthis/reference/barplot.html),
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
-[`barPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md),
-[`barPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md),
-[`createBarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createBarPlotApp.md)
+[`BarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md),
+[`BarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md),
+[`BarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BarPlotApp.md)
 
 ## Author
 
@@ -71,30 +71,30 @@ Jacob Martin
 ``` r
 library(vizModules)
 data(mtcars)
-barPlotInputsUI("barPlot", mtcars)
+BarPlotInputsUI("barPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="barPlot-barPlotTabsetPanel" data-tabsetid="1838">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="barPlot-barPlotTabsetPanel" data-tabsetid="4858">
 #>     <li class="active">
-#>       <a href="#tab-1838-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4858-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1838-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
+#>       <a href="#tab-4858-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1838-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
+#>       <a href="#tab-4858-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1838-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
+#>       <a href="#tab-4858-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1838-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-4858-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1838-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4858-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1838">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1838-1">
+#>   <div class="tab-content" data-tabsetid="4858">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4858-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ barPlotInputsUI("barPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Grouping" id="tab-1838-2">
+#>     <div class="tab-pane" data-value="Grouping" id="tab-4858-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -216,7 +216,7 @@ barPlotInputsUI("barPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetic" id="tab-1838-3">
+#>     <div class="tab-pane" data-value="Aesthetic" id="tab-4858-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -780,7 +780,7 @@ barPlotInputsUI("barPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Line" id="tab-1838-4">
+#>     <div class="tab-pane" data-value="Line" id="tab-4858-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -818,7 +818,7 @@ barPlotInputsUI("barPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-1838-5">
+#>     <div class="tab-pane" data-value="Labels" id="tab-4858-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -867,7 +867,7 @@ barPlotInputsUI("barPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1838-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4858-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

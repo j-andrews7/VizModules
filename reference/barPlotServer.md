@@ -1,11 +1,11 @@
-# Server logic for barPlot module
+# Server logic for BarPlot module
 
-Server logic for barPlot module
+Server logic for BarPlot module
 
 ## Usage
 
 ``` r
-barPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+BarPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 ```
 
 ## Arguments
@@ -32,7 +32,7 @@ barPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 ## Value
 
-The `moduleServer` function for the barPlot module.
+The `moduleServer` function for the BarPlot module.
 
 ## Author
 

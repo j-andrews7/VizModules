@@ -1,11 +1,11 @@
-# Server logic for boxPlot module
+# Server logic for BoxPlot module
 
-Server logic for boxPlot module
+Server logic for BoxPlot module
 
 ## Usage
 
 ``` r
-boxPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+BoxPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 ```
 
 ## Arguments
@@ -32,7 +32,7 @@ boxPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 ## Value
 
-The `moduleServer` function for the boxPlot module.
+The `moduleServer` function for the BoxPlot module.
 
 ## Author
 

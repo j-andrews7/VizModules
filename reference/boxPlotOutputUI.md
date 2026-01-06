@@ -1,11 +1,11 @@
-# Output UI components for the boxPlot module
+# Output UI components for the BoxPlot module
 
 This should be placed in the UI where the plot should be shown.
 
 ## Usage
 
 ``` r
-boxPlotOutputUI(id)
+BoxPlotOutputUI(id)
 ```
 
 ## Arguments
