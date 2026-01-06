@@ -103,7 +103,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 y.value = y_values,
                 plot.mode = input$plot.type,
                 line.type = input$line.type, 
-                colour.group.by = group.by
+                colour.group.by = group.by,
+                palette.selection = plotthis::palette_list[[input$palette]]
             )
 
 
