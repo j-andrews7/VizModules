@@ -91,7 +91,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             x_values <- reformulate(isolate(input$x.value))
             y_values <- reformulate(isolate(input$y.value))
 
-
+            group.by <- "blue"
+            if (!input$group.by == ""){
+                group.by <- reformulate(isolate(input$group.by))
+            }
 
             # line Plot
             p <- linePlot(
@@ -99,10 +102,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.value = x_values,
                 y.value = y_values,
                 plot.mode = input$plot.type,
-                line.type = input$line.type
+                line.type = input$line.type, 
+                colour.group.by = group.by
             )
 
 
+        
             plotlyOut <- ggplotly(p) |>
                 layout(
                     title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE,

@@ -12,14 +12,15 @@
 #If data wants a mean value: 
 
 
-linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type){
+linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colour.group.by){
     fig <- plot_ly(
         data = reactive.data,
         x = x.value,
         y = y.value,
         type = "scatter",
         mode = plot.mode,
-        line = list(dash = line.type)
+        line = list(dash = line.type),
+        color = colour.group.by
     )
     return(fig)
 }
