@@ -40,9 +40,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "x.value", selected = names(data())[1])
             updateSelectInput(session, "y.value", selected = names(data())[2])
             updateSelectInput(session, "plot.type", selected = "lines")
-            updateSwitchInput(session, "mean.values.y", value = FALSE)
-            updateSwitchInput(session, "mean.values.x", value = FALSE)
             updateSelectInput(session, "line.type", selected = "solid")
+            updateSwitchInput(session, "order.by", value = FALSE)
+            updateSwitchInput(session, "flip.x", value = FALSE)
+            updateSwitchInput(session, "flip.y", value = FALSE)
+            updateSelectInput(session, "palette", selected = "Paired")
+            updateSelectInput(session, "group.by", selected = "")
 
 
         })
@@ -55,41 +58,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             x_input <- input$x.value
             y_input <- input$y.value
             #Multiple data points on 
-
-
-            #Mean switchButton functionality. 
-        
-            #Determining which axes is the catergorical column. e.g species 
-            x_col <- x_input[1]
-            y_col <- y_input[1]
-            if (!is.numeric(d[[x_col]]) && is.numeric(d[[y_col]])) {
-                category_col <- x_col
-            } else if (!is.numeric(d[[y_col]]) && is.numeric(d[[x_col]])) {
-                category_col <- y_col
-            } else {
-                category_col <- x_col  # fallback
-            }
-
-            # Mean Y within each category
-            #Making numeric columns have an average depending on their category
-            if (isTRUE(input$mean.values.y) && is.numeric(d[[y_col]])) {
-                d <- d |>
-                dplyr::group_by(.data[[category_col]]) |>
-                dplyr::mutate(
-                    !!y_col := mean(.data[[y_col]], na.rm = TRUE)
-                ) |>
-                dplyr::ungroup()
-            }
-
-            # Mean X within each category
-            if (isTRUE(input$mean.values.x) && is.numeric(d[[x_col]])) {
-                d <- d |>
-                dplyr::group_by(.data[[category_col]]) |>
-                dplyr::mutate(
-                    !!x_col := mean(.data[[x_col]], na.rm = TRUE)
-                ) |>
-                dplyr::ungroup()
-            }
 
             # Null Values:
             x_values <- reformulate(isolate(input$x.value))
@@ -280,4 +248,4 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             return(plotlyOut)
         })
     })
-}
+} 
