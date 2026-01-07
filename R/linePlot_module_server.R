@@ -111,10 +111,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             axis_min_x <- NULL
             axis_max_x <- NULL
 
+            #Choosing which axis to order by: 
+            order_by <- x_input
+            if (input$order.by == TRUE){
+                order_by <- y_input
+            }
+
             if (is.numeric(d[[x_input[1]]])){
                 axis_min_x <- min(d[[x_input[1]]])
                 axis_max_x <- max(d[[x_input[1]]])
-                d_sorted <- d[order(d[[x_input[1]]]), ]
+                d_sorted <- d[order(d[[order_by[1]]]), ]
             }
             axis_min_y <- NULL
             axis_max_y <- NULL
@@ -122,7 +128,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (is.numeric(d[[y_input[1]]])){
                 axis_min_y <- min(d[[y_input[1]]])
                 axis_max_y <- max(d[[y_input[1]]])
-                d_sorted <- d[order(d[[x_input[1]]]), ]
+                d_sorted <- d[order(d[[order_by[1]]]), ]
             }
 
             
@@ -153,8 +159,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         name = x_input[1],
                         showlegend = TRUE
                     )
+                    updateSwitchInput(session, "order.by", value = FALSE)  # So that the graph is ordered by the axis that has multiple data sets / columns 
                     for (i in 2:length(x_input)){
-                        d_sorted <- d[order(d[[x_input[i]]]), ]
+                        d_sorted <- d[order(d[[order_by[i]]]), ]
                         p <- p |> add_trace(
                             x = d_sorted[[x_input[i]]],
                             y = d_sorted[[y_input[1]]],
@@ -178,8 +185,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         name = y_input[1],
                         showlegend = TRUE
                     ) 
+                    updateSwitchInput(session, "order.by", value = TRUE) # So that the graph is ordered by the axis that has multiple data sets / columns 
                     for (i in 2:length(y_input)){
-                        d_sorted <- d[order(d[[x_input[i]]]), ]
+                        d_sorted <- d[order(d[[order_by[i]]]), ]
                         p <- p |> add_trace(
                             x = d_sorted[[x_input[1]]],
                             y = d_sorted[[y_input[i]]],
@@ -206,6 +214,17 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 y_title <- "Value"
             }
 
+            #Axis flipped: 
+
+            flip_x <- NULL
+            if (input$flip.x == TRUE){
+                flip_x <- "reversed"
+            }
+            flip_y <- NULL
+            if (input$flip.y == TRUE){
+                flip_y <- "reversed"
+            }
+
             plotlyOut <- ggplotly(p) |>
                 layout(
                     title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE,
@@ -225,7 +244,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         ticklen = isolate(input$axis.ticklen),
                         tickwidth = isolate(input$axis.tickwidth),
                         range = c(axis_min_x, axis_max_x),
-                        title = x_title
+                        title = x_title,
+                        autorange = flip_x
                     ),
                     yaxis = list(
                         showline = isolate(input$axis.showline),
@@ -243,7 +263,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         ticklen = isolate(input$axis.ticklen),
                         tickwidth = isolate(input$axis.tickwidth),
                         range = c(axis_min_y, axis_max_y),
-                        title = y_title
+                        title = y_title,
+                        autorange = flip_y
     
                     )
                 ) |>
