@@ -12,7 +12,8 @@
 #If data wants a mean value: 
 
 
-linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colour.group.by, palette.selection){
+linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colour.group.by, palette.selection, show.legend){
+
     fig <- plot_ly(
         data = reactive.data,
         x = x.value,
@@ -21,7 +22,8 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
         mode = plot.mode,
         line = list(dash = line.type),
         color = colour.group.by,
-        colors = palette.selection
+        colors = palette.selection,
+        showlegend = show.legend
     )
     return(fig)
 }

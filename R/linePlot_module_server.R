@@ -43,7 +43,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSwitchInput(session, "mean.values.y", value = FALSE)
             updateSwitchInput(session, "mean.values.x", value = FALSE)
             updateSelectInput(session, "line.type", selected = "solid")
-            d <- data_reactive() 
+
 
         })
 
@@ -52,12 +52,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             input$update
 
             d <- data_reactive()
+            x_input <- input$x.value
+            y_input <- input$y.value
+            #Multiple data points on 
+
 
             #Mean switchButton functionality. 
         
             #Determining which axes is the catergorical column. e.g species 
-            x_col <- input$x.value
-            y_col <- input$y.value
+            x_col <- x_input[1]
+            y_col <- y_input[1]
             if (!is.numeric(d[[x_col]]) && is.numeric(d[[y_col]])) {
                 category_col <- x_col
             } else if (!is.numeric(d[[y_col]]) && is.numeric(d[[x_col]])) {
@@ -91,24 +95,117 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             x_values <- reformulate(isolate(input$x.value))
             y_values <- reformulate(isolate(input$y.value))
 
-            group.by <- "blue"
-            if (!input$group.by == ""){
-                group.by <- reformulate(isolate(input$group.by))
+
+
+
+            # Sets the colouring to the first item in the selected palette unless group.by is selected
+            group.by <- plotthis::palette_list[[input$palette]][1]
+            if (!input$group.by == "" && length(x_input) == 1 && length(y_input) == 1) {
+                group.by <- reformulate(input$group.by)
             }
 
+            #Making multiple lines on the axis. e.g 3x and 1y 
+            #Determining axis min and max
+            #Checking if the axis is a category and non continious 
+            #And axis ordering 
+            axis_min_x <- NULL
+            axis_max_x <- NULL
+
+            if (is.numeric(d[[x_input[1]]])){
+                axis_min_x <- min(d[[x_input[1]]])
+                axis_max_x <- max(d[[x_input[1]]])
+                d_sorted <- d[order(d[[x_input[1]]]), ]
+            }
+            axis_min_y <- NULL
+            axis_max_y <- NULL
+
+            if (is.numeric(d[[y_input[1]]])){
+                axis_min_y <- min(d[[y_input[1]]])
+                axis_max_y <- max(d[[y_input[1]]])
+                d_sorted <- d[order(d[[x_input[1]]]), ]
+            }
+
+            
+
             # line Plot
+
             p <- linePlot(
-                reactive.data = d,
-                x.value = x_values,
-                y.value = y_values,
+                reactive.data = d_sorted,
+                x.value = reformulate(isolate(x_input[1])),
+                y.value = reformulate(isolate(y_input[1])),
                 plot.mode = input$plot.type,
                 line.type = input$line.type, 
                 colour.group.by = group.by,
-                palette.selection = plotthis::palette_list[[input$palette]]
+                palette.selection = plotthis::palette_list[[input$palette]],
+                show.legend = FALSE
+                
             )
+            
+            # If multiple X and Y variables are selected: 
+            #ADDs lines to the plot 
+            if (xor(length(x_input) > 1, length(y_input) > 1)) {
+                if (length(x_input) > 1){
+                    p <- p |> add_trace(
+                        x = reformulate(isolate(x_input[1])),
+                        y = reformulate(isolate(y_input[1])),
+                        mode = input$plot.type,
+                        line = list(dash = input$line.type),
+                        name = x_input[1],
+                        showlegend = TRUE
+                    )
+                    for (i in 2:length(x_input)){
+                        d_sorted <- d[order(d[[x_input[i]]]), ]
+                        p <- p |> add_trace(
+                            x = d_sorted[[x_input[i]]],
+                            y = d_sorted[[y_input[1]]],
+                            type = 'scatter',
+                            mode = input$plot.type,
+                            line = list(dash = input$line.type),
+                            color = plotthis::palette_list[[input$palette]][i],
+                            name = x_input[i],
+                            showlegend = TRUE
+                        )
+                    axis_max_x <- max(d[,x_input])
+                    axis_min_x <- min(d[,x_input])
+                    }
+                }
+                if (length(y_input) > 1){
+                    p <- p |> add_trace(
+                        x = reformulate(isolate(x_input[1])),
+                        y = reformulate(isolate(y_input[1])),
+                        mode = input$plot.type,
+                        line = list(dash = input$line.type),
+                        name = y_input[1],
+                        showlegend = TRUE
+                    ) 
+                    for (i in 2:length(y_input)){
+                        d_sorted <- d[order(d[[x_input[i]]]), ]
+                        p <- p |> add_trace(
+                            x = d_sorted[[x_input[1]]],
+                            y = d_sorted[[y_input[i]]],
+                            type = 'scatter',
+                            mode = input$plot.type,
+                            line = list(dash = input$line.type),
+                            color = plotthis::palette_list[[input$palette]][i],
+                            name = y_input[i],
+                            showlegend = TRUE
+                        )
+                    axis_max_y <- max(d[,y_input])
+                    axis_min_y <- min(d[,y_input])
+                    }
+                }
+            }
 
+            #Axis title: 
+            x_title <- x_input[1]
+            if (length(x_input) > 1){
+                x_title <- "Value"
+            }
+            y_title <- y_input[1]
+            if (length(y_input) > 1){
+                y_title <- "Value"
+            }
 
-        
             plotlyOut <- ggplotly(p) |>
                 layout(
                     title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE,
@@ -126,7 +223,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         ticks = isolate(input$axis.ticks),
                         tickcolor = isolate(input$axis.tickcolor),
                         ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth)
+                        tickwidth = isolate(input$axis.tickwidth),
+                        range = c(axis_min_x, axis_max_x),
+                        title = x_title
                     ),
                     yaxis = list(
                         showline = isolate(input$axis.showline),
@@ -142,7 +241,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         ticks = isolate(input$axis.ticks),
                         tickcolor = isolate(input$axis.tickcolor),
                         ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth)
+                        tickwidth = isolate(input$axis.tickwidth),
+                        range = c(axis_min_y, axis_max_y),
+                        title = y_title
+    
                     )
                 ) |>
                 config(

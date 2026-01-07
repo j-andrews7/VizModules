@@ -13,8 +13,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data)),
-            selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data)),
+            selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data), multiple = TRUE),
+            selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
             selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
             switchInput(ns("mean.values.y"), "Mean Y:", value = FALSE, offLabel = "Off", onLabel = "On"),
             switchInput(ns("mean.values.x"), "Mean X:", value = FALSE, offLabel = "Off", onLabel = "On"), 
