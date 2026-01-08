@@ -34,9 +34,7 @@ Including a vizModules module in your Shiny application is simple. The
 package provides a function returning an example Shiny application for
 each module that showcases their functionality and how they can be used.
 
-As an example, we can look at the
-[`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
-function:
+As an example, we can look at the `createScatterPlotApp()` function:
 
 ``` r
 library(vizModules)

@@ -33,8 +33,6 @@
   : Output UI components for the BoxPlot module
 - [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
   : Server logic for BoxPlot module
-- [`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
-  : Create an example Modular scatterPlot Shiny Application
 - [`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
   : Create a standalone Shiny app for the volcanoPlot module
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
@@ -51,6 +49,8 @@
   : Output UI components for the piePlot module
 - [`piePlotServer()`](https://j-andrews7.github.io/vizModules/reference/piePlotServer.md)
   : Server logic for piePlot module
+- [`scatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotApp.md)
+  : Create an example Modular scatterPlot Shiny Application
 - [`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md)
   : Input UI components for the scatterPlot module
 - [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md)

@@ -73,7 +73,7 @@ additionally modify the plotly output:
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
 [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md),
 [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md),
-[`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
+`createScatterPlotApp()`
 
 ## Author
 
@@ -86,46 +86,46 @@ library(vizModules)
 data(mtcars)
 scatterPlotInputsUI("scatterPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="5297">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="2365">
 #>     <li class="active">
-#>       <a href="#tab-5297-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2365-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-2365-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-2365-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-2365-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-2365-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-2365-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-2365-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-2365-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-2365-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-2365-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-2365-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5297-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-2365-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5297">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5297-1">
+#>   <div class="tab-content" data-tabsetid="2365">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2365-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -217,7 +217,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5297-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-2365-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -309,7 +309,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-5297-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-2365-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -367,7 +367,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-5297-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-2365-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -466,7 +466,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-5297-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-2365-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -494,7 +494,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-5297-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-2365-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -517,33 +517,69 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
+#>           <div class="shiny-input-textarea form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-highlight.points-label" for="scatterPlot-highlight.points">Points to highlight</label>
+#>             <textarea id="scatterPlot-highlight.points" class="form-control" placeholder="Values from &#39;Annotate by&#39; column&#10;(comma, space, or newline delimited)" rows="3" data-update-on="change"></textarea>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="scatterPlot-highlight.color">Highlight color</label>
+#>             <input id="scatterPlot-highlight.color" type="text" class="form-control shiny-colour-input" data-init-value="" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-highlight.size-label" for="scatterPlot-highlight.size">Highlight size</label>
+#>             <input id="scatterPlot-highlight.size" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0.1" step="0.5"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="scatterPlot-highlight.border.color">Highlight border color</label>
+#>             <input id="scatterPlot-highlight.border.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-highlight.border.width-label" for="scatterPlot-highlight.border.width">Highlight border width</label>
+#>             <input id="scatterPlot-highlight.border.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.5"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="scatterPlot-annotation.color">Annotation color</label>
 #>             <input id="scatterPlot-annotation.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-annotation.ax-label" for="scatterPlot-annotation.ax">Annotation x-axis offset</label>
 #>             <input id="scatterPlot-annotation.ax" type="number" class="shiny-input-number form-control" value="20" data-update-on="change" step="1"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-annotation.ay-label" for="scatterPlot-annotation.ay">Annotation y-axis offset</label>
 #>             <input id="scatterPlot-annotation.ay" type="number" class="shiny-input-number form-control" value="-20" data-update-on="change" step="1"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-annotation.size-label" for="scatterPlot-annotation.size">Annotation size</label>
 #>             <input id="scatterPlot-annotation.size" type="number" class="shiny-input-number form-control" value="10" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
@@ -554,28 +590,28 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="scatterPlot-annotation.arrowcolor">Arrow color</label>
 #>             <input id="scatterPlot-annotation.arrowcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-annotation.arrowhead-label" for="scatterPlot-annotation.arrowhead">Arrowhead style</label>
 #>             <input id="scatterPlot-annotation.arrowhead" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" max="7" step="1"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-annotation.arrowwidth-label" for="scatterPlot-annotation.arrowwidth">Arrow linewidth</label>
 #>             <input id="scatterPlot-annotation.arrowwidth" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change" min="0.1" step="0.25"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <button id="scatterPlot-annotation.clear" type="button" class="btn btn-default action-button">
 #>             <span class="action-label">Clear annotations</span>
@@ -583,7 +619,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-5297-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-2365-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -639,7 +675,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-5297-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-2365-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -666,7 +702,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5297-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-2365-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -734,7 +770,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-5297-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-2365-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -798,7 +834,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5297-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-2365-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -884,7 +920,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5297-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-2365-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

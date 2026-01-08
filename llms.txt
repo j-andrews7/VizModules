@@ -34,9 +34,7 @@ Including a vizModules module in your Shiny application is simple. The
 package provides a function returning an example Shiny application for
 each module that showcases their functionality and how they can be used.
 
-As an example, we can look at the
-[`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
-function:
+As an example, we can look at the `createScatterPlotApp()` function:
 
 ``` r
 library(vizModules)
@@ -285,8 +283,6 @@ for non-functional/broken parameters.
   : Output UI components for the BoxPlot module
 - [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
   : Server logic for BoxPlot module
-- [`createScatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createScatterplotApp.md)
-  : Create an example Modular scatterPlot Shiny Application
 - [`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
   : Create a standalone Shiny app for the volcanoPlot module
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
@@ -303,6 +299,8 @@ for non-functional/broken parameters.
   : Output UI components for the piePlot module
 - [`piePlotServer()`](https://j-andrews7.github.io/vizModules/reference/piePlotServer.md)
   : Server logic for piePlot module
+- [`scatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotApp.md)
+  : Create an example Modular scatterPlot Shiny Application
 - [`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md)
   : Input UI components for the scatterPlot module
 - [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md)
