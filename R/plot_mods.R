@@ -21,14 +21,23 @@
     }
 
     layout_names <- names(fig$x$layout)
+    
+    # Handle empty layout
+    if (is.null(layout_names) || length(layout_names) == 0) {
+        return(fig)
+    }
 
     # Find all xaxis and yaxis entries (xaxis, xaxis2, xaxis3, etc.)
     xaxis_names <- grep("^xaxis[0-9]*$", layout_names, value = TRUE)
     yaxis_names <- grep("^yaxis[0-9]*$", layout_names, value = TRUE)
 
-    # If no subplots detected, just apply to the main axes
-    if (length(xaxis_names) == 0 && length(yaxis_names) == 0) {
+    # If no subplot x-axes detected, apply to main xaxis
+    if (length(xaxis_names) == 0) {
         xaxis_names <- "xaxis"
+    }
+    
+    # If no subplot y-axes detected, apply to main yaxis
+    if (length(yaxis_names) == 0) {
         yaxis_names <- "yaxis"
     }
 

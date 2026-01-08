@@ -206,7 +206,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 config(
                     editable = TRUE,
                     edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "box_plot", height = 500, width = 700, scale = 1),
+                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "bar_plot", height = 500, width = 700, scale = 1),
                     displaylogo = FALSE
                 )
 
