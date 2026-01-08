@@ -297,6 +297,12 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     1
                 )
             ),
+            checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate highlighted points",
+                value = ifelse("highlight.auto.annotate" %in% names(defaults),
+                    ifelse(is.logical(defaults[["highlight.auto.annotate"]]), defaults[["highlight.auto.annotate"]], TRUE),
+                    TRUE
+                )
+            ),
             colourInput(ns("annotation.color"), "Annotation color",
                 value = ifelse("annotation.color" %in% names(defaults),
                     defaults[["annotation.color"]], "black"
