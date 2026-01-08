@@ -64,6 +64,23 @@
         } else {
             layout_updates[[yaxis_name]] <- yaxis_style
         }
+        
+        # For subplots with matched axes (yaxis2, yaxis3, etc.), explicitly ensure
+        # showline and mirror properties are set even if matches="y" is present.
+        # This forces plotly to render the axis lines on all subplot borders.
+        if (yaxis_name != "yaxis" && !is.null(layout_updates[[yaxis_name]]$matches)) {
+            # Force showline for matched axes
+            layout_updates[[yaxis_name]]$showline <- yaxis_style$showline
+            if (!is.null(yaxis_style$mirror)) {
+                layout_updates[[yaxis_name]]$mirror <- yaxis_style$mirror
+            }
+            if (!is.null(yaxis_style$linecolor)) {
+                layout_updates[[yaxis_name]]$linecolor <- yaxis_style$linecolor
+            }
+            if (!is.null(yaxis_style$linewidth)) {
+                layout_updates[[yaxis_name]]$linewidth <- yaxis_style$linewidth
+            }
+        }
     }
 
     # Apply all updates at once using do.call
