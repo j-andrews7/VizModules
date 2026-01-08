@@ -476,7 +476,72 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 annos <- NULL
             }
 
-            # Apply layout for shapes and annotations
+            # Auto-annotate highlighted points if enabled
+            if (isTRUE(isolate(input$highlight.auto.annotate)) &&
+                !is.null(null.na.inputs$annotate.by) &&
+                !is.null(highlight_points_raw) &&
+                highlight_points_raw != "") {
+                highlight_vals <- .string_to_vector(highlight_points_raw)
+                highlight_vals <- highlight_vals[highlight_vals != ""]
+
+                if (length(highlight_vals) > 0) {
+                    annotate_col <- null.na.inputs$annotate.by
+                    if (annotate_col %in% names(plot_data)) {
+                        # Get coordinate columns (same logic as manual annotations)
+                        x_col <- isolate(input$x.by)
+                        y_col <- isolate(input$y.by)
+                        x_adj_col <- paste0(x_col, ".x.adj")
+                        y_adj_col <- paste0(y_col, ".y.adj")
+                        x_match_col <- if (x_adj_col %in% names(plot_data)) x_adj_col else x_col
+                        y_match_col <- if (y_adj_col %in% names(plot_data)) y_adj_col else y_col
+
+                        # Find highlighted point indices
+                        highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
+
+                        if (length(highlight_idx) > 0) {
+                            # Create annotations for highlighted points
+                            highlight_annos <- lapply(highlight_idx, function(idx) {
+                                list(
+                                    x = plot_data[[x_match_col]][idx],
+                                    y = plot_data[[y_match_col]][idx],
+                                    text = as.character(plot_data[[annotate_col]][idx]),
+                                    xref = "x",
+                                    yref = "y",
+                                    ax = isolate(input$annotation.ax),
+                                    ay = isolate(input$annotation.ay),
+                                    showarrow = isolate(input$annotation.showarrow),
+                                    arrowcolor = isolate(input$annotation.arrowcolor),
+                                    arrowhead = isolate(input$annotation.arrowhead),
+                                    arrowwidth = isolate(input$annotation.arrowwidth),
+                                    font = list(
+                                        size = isolate(input$annotation.size),
+                                        color = isolate(input$annotation.color)
+                                    )
+                                )
+                            })
+
+                            # Combine with existing annotations (avoiding duplicates by coordinate)
+                            if (is.null(annos)) {
+                                annos <- highlight_annos
+                            } else {
+                                # Get existing annotation coordinates
+                                existing_coords <- sapply(annos, function(a) {
+                                    paste0(round(a$x, 10), "_", round(a$y, 10))
+                                })
+                                # Add only highlight annotations that don't already exist
+                                for (ha in highlight_annos) {
+                                    ha_coord <- paste0(round(ha$x, 10), "_", round(ha$y, 10))
+                                    if (!ha_coord %in% existing_coords) {
+                                        annos <- c(annos, list(ha))
+                                        existing_coords <- c(existing_coords, ha_coord)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             fig <- fig %>% layout(
                 newshape = list(
                     fillcolor = isolate(input$shape.fill),
