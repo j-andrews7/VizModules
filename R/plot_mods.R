@@ -70,7 +70,9 @@
         # This forces plotly to render the axis lines on all subplot borders.
         if (yaxis_name != "yaxis" && !is.null(layout_updates[[yaxis_name]]$matches)) {
             # Force showline for matched axes
-            layout_updates[[yaxis_name]]$showline <- yaxis_style$showline
+            if (!is.null(yaxis_style$showline)) {
+                layout_updates[[yaxis_name]]$showline <- yaxis_style$showline
+            }
             if (!is.null(yaxis_style$mirror)) {
                 layout_updates[[yaxis_name]]$mirror <- yaxis_style$mirror
             }
