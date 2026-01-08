@@ -46,6 +46,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSwitchInput(session, "flip.y", value = FALSE)
             updateSelectInput(session, "palette", selected = "Paired")
             updateSelectInput(session, "group.by", selected = "")
+            updateSelectInput(session, "facet.by", selected = "")
 
 
         })
@@ -99,7 +100,33 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 d_sorted <- d[order(d[[order_by[1]]]), ]
             }
 
+            #Facet By default
+            input.facet.by <- NULL
+            if (!input$facet.by == ""){
+                input.facet.by <- input$facet.by
+            }
+
             
+            #Axis title: 
+            x_title <- x_input[1]
+            if (length(x_input) > 1){
+                x_title <- "Value"
+            }
+            y_title <- y_input[1]
+            if (length(y_input) > 1){
+                y_title <- "Value"
+            }
+
+            #Axis flipped: 
+
+            flip_x <- NULL
+            if (input$flip.x == TRUE){
+                flip_x <- "reversed"
+            }
+            flip_y <- NULL
+            if (input$flip.y == TRUE){
+                flip_y <- "reversed"
+            }
 
             # line Plot
 
@@ -111,9 +138,32 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 line.type = input$line.type, 
                 colour.group.by = group.by,
                 palette.selection = plotthis::palette_list[[input$palette]],
-                show.legend = FALSE
-                
+                show.legend = FALSE,
+                facet.by = input.facet.by,
+                axis.showline = isolate(input$axis.showline),
+                axis.mirror = isolate(input$axis.mirror),
+                axis.linecolor = isolate(input$axis.linecolor),
+                axis.linewidth = isolate(input$axis.linewidth),
+                axis.tickfont.size = isolate(input$axis.tickfont.size),
+                axis.tickfont.color = isolate(input$axis.tickfont.color),
+                axis.tickfont.family = isolate(input$axis.tickfont.family),
+                axis.tickangle.x = isolate(input$axis.tickangle.x),
+                axis.tickangle.y = isolate(input$axis.tickangle.y),
+                axis.ticks = isolate(input$axis.ticks),
+                axis.tickcolor = isolate(input$axis.tickcolor),
+                axis.ticklen = isolate(input$axis.ticklen),
+                axis.tickwidth = isolate(input$axis.tickwidth),
+                title.font.size = isolate(input$title.font.size),
+                title.font.family = isolate(input$font.type),
+                title.text.color = isolate(input$text.colour),
+                axis.range.x = c(axis_min_x, axis_max_x),
+                axis.range.y = c(axis_min_y, axis_max_y),
+                x.title = x_title,
+                y.title = y_title,
+                flip.x = flip_x,
+                flip.y = flip_y
             )
+
             
             # If multiple X and Y variables are selected: 
             #ADDs lines to the plot 
@@ -172,72 +222,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 }
             }
 
-            #Axis title: 
-            x_title <- x_input[1]
-            if (length(x_input) > 1){
-                x_title <- "Value"
-            }
-            y_title <- y_input[1]
-            if (length(y_input) > 1){
-                y_title <- "Value"
-            }
 
-            #Axis flipped: 
-
-            flip_x <- NULL
-            if (input$flip.x == TRUE){
-                flip_x <- "reversed"
-            }
-            flip_y <- NULL
-            if (input$flip.y == TRUE){
-                flip_y <- "reversed"
-            }
-
-            plotlyOut <- ggplotly(p) |>
-                layout(
-                    title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE,
-                    xaxis = list(
-                        showline = isolate(input$axis.showline),
-                        mirror = isolate(input$axis.mirror),
-                        linecolor = isolate(input$axis.linecolor),
-                        linewidth = isolate(input$axis.linewidth),
-                        tickfont = list(
-                            size = isolate(input$axis.tickfont.size),
-                            color = isolate(input$axis.tickfont.color),
-                            family = isolate(input$axis.tickfont.family)
-                        ),
-                        tickangle = isolate(input$axis.tickangle.x),
-                        ticks = isolate(input$axis.ticks),
-                        tickcolor = isolate(input$axis.tickcolor),
-                        ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth),
-                        range = c(axis_min_x, axis_max_x),
-                        title = x_title,
-                        autorange = flip_x
-                    ),
-                    yaxis = list(
-                        showline = isolate(input$axis.showline),
-                        mirror = isolate(input$axis.mirror),
-                        linecolor = isolate(input$axis.linecolor),
-                        linewidth = isolate(input$axis.linewidth),
-                        tickfont = list(
-                            size = isolate(input$axis.tickfont.size),
-                            color = isolate(input$axis.tickfont.color),
-                            family = isolate(input$axis.tickfont.family)
-                        ),
-                        tickangle = isolate(input$axis.tickangle.y),
-                        ticks = isolate(input$axis.ticks),
-                        tickcolor = isolate(input$axis.tickcolor),
-                        ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth),
-                        range = c(axis_min_y, axis_max_y),
-                        title = y_title,
-                        autorange = flip_y
-    
-                    )
-                ) |>
+            plotlyOut <- p |>
                 config(
-                    editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
+                    editable = TRUE, 
+                    edits = list(titleText = TRUE, 
+                    axisTitleText = TRUE),
                     toImageButtonOptions = list(
                         format = isolate(input$download.type),
                         filename = "line_plot", height = 600, width = 700, scale = 1

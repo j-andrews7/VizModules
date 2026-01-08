@@ -21,7 +21,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)), 
             switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
-            switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis")
+            switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
+            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = char.choices)
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",
