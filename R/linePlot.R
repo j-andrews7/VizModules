@@ -128,62 +128,62 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
             )) |>
             pull(p)
         
-        fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
-        fig <- .apply_subplot_axis_styling(fig, xaxis_style = xaxis_style, yaxis_style = yaxis_style)
+        fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = FALSE, titleX = TRUE, titleY = TRUE)
+
 
     } else {
 
-    fig <- plot_ly(
-        data = reactive.data,
-        x = x.value,
-        y = y.value,
-        type = "scatter",
-        mode = plot.mode,
-        line = list(dash = line.type),
-        color = colour.group.by,
-        colors = palette.selection,
-        showlegend = show.legend
-    )
+        fig <- plot_ly(
+            data = reactive.data,
+            x = x.value,
+            y = y.value,
+            type = "scatter",
+            mode = plot.mode,
+            line = list(dash = line.type),
+            color = colour.group.by,
+            colors = palette.selection,
+            showlegend = show.legend
+        )
     
     }
-    fig <- fig |> layout(
-        title = list(
-            text = title.text, 
-            font = list(size = title.font.size, family = title.font.family, color = title.text.color),
-            x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
-        ),
-        margin = list(t = 80),
-        showlegend = TRUE,
-        xaxis = list(  # ← KEY: Always works here
-            showline = axis.showline,
-            mirror = axis.mirror,
-            linecolor = axis.linecolor,
-            linewidth = axis.linewidth,
-            tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
-            tickangle = axis.tickangle.x,
-            ticks = axis.ticks,
-            tickcolor = axis.tickcolor,
-            ticklen = axis.ticklen,
-            tickwidth = axis.tickwidth,
-            range = axis.range.x,
-            title = x.title,
-            autorange = flip.x
-        ),
-        yaxis = list(
-            showline = axis.showline,
-            mirror = axis.mirror,
-            linecolor = axis.linecolor,
-            linewidth = axis.linewidth,
-            tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
-            tickangle = axis.tickangle.y,
-            ticks = axis.ticks,
-            tickcolor = axis.tickcolor,
-            ticklen = axis.ticklen,
-            tickwidth = axis.tickwidth,
-            range = axis.range.y,
-            title = y.title,
-            autorange = flip.y
-        )
-    )
+    # fig <- fig |> layout(
+    #     title = list(
+    #         text = title.text, 
+    #         font = list(size = title.font.size, family = title.font.family, color = title.text.color),
+    #         x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
+    #     ),
+    #     margin = list(t = 80),
+    #     showlegend = TRUE,
+    #     xaxis = list(  # ← KEY: Always works here
+    #         showline = axis.showline,
+    #         mirror = axis.mirror,
+    #         linecolor = axis.linecolor,
+    #         linewidth = axis.linewidth,
+    #         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
+    #         tickangle = axis.tickangle.x,
+    #         ticks = axis.ticks,
+    #         tickcolor = axis.tickcolor,
+    #         ticklen = axis.ticklen,
+    #         tickwidth = axis.tickwidth,
+    #         range = axis.range.x,
+    #         title = x.title,
+    #         autorange = flip.x
+    #     ),
+    #     yaxis = list(
+    #         showline = axis.showline,
+    #         mirror = axis.mirror,
+    #         linecolor = axis.linecolor,
+    #         linewidth = axis.linewidth,
+    #         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
+    #         tickangle = axis.tickangle.y,
+    #         ticks = axis.ticks,
+    #         tickcolor = axis.tickcolor,
+    #         ticklen = axis.ticklen,
+    #         tickwidth = axis.tickwidth,
+    #         range = axis.range.y,
+    #         title = y.title,
+    #         autorange = flip.y
+    #     )
+    # )
     return(fig)
 }
