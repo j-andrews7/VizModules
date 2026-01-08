@@ -7,7 +7,7 @@ Authors@R:
         person(given = "Jacob",
                 family = "Martin",
                 role = c("aut"),
-                email = "Jacob.Martin@stjude.org"))
+                email = "jacob@martin-email.com"))
 Description: vizModules offers a core selection of interactivity-first Shiny modules for many 
     plot types meant to serve as flexible building blocks for applications and 
     as the base for more complex modules. These modules
@@ -19,14 +19,15 @@ License: MIT + file LICENSE
 Depends:
     shiny,
     plotthis,
-    dittoViz
+    dittoViz,
+    dplyr
 Imports:
     colourpicker,
     plotly,
     shinyjs,
     scales,
     esquisse,
-    shinyjqui
+    shinyjqui,
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
