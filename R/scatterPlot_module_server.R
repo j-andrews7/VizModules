@@ -16,7 +16,7 @@
 #'
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
 #' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
-#' 
+#'
 #' @export
 #' @author Jared Andrews
 scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
@@ -260,6 +260,108 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 ),
                 displaylogo = FALSE
             )
+
+            # Apply highlight styling to specified points
+            highlight_points_raw <- isolate(input$highlight.points)
+            if (!is.null(null.na.inputs$annotate.by) &&
+                !is.null(highlight_points_raw) &&
+                highlight_points_raw != "") {
+                highlight_vals <- .string_to_vector(highlight_points_raw)
+                # Remove empty strings that may result from parsing
+                highlight_vals <- highlight_vals[highlight_vals != ""]
+
+                if (length(highlight_vals) > 0) {
+                    # Get styling parameters
+                    hl_color <- isolate(input$highlight.color)
+                    hl_size <- isolate(input$highlight.size)
+                    hl_border_color <- isolate(input$highlight.border.color)
+                    hl_border_width <- isolate(input$highlight.border.width)
+
+                    # Find indices of points to highlight in plot_data
+                    annotate_col <- null.na.inputs$annotate.by
+                    if (annotate_col %in% names(plot_data)) {
+                        highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
+
+                        if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
+                            # Iterate through traces and modify marker properties
+                            for (i in seq_along(fig$x$data)) {
+                                trace <- fig$x$data[[i]]
+
+                                # Skip traces without x/y data or non-scatter traces
+                                if (is.null(trace$x) || is.null(trace$y)) next
+                                if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
+
+                                # Match trace points to plot_data by coordinates
+                                trace_n <- length(trace$x)
+
+                                # Initialize marker properties if not present
+                                if (is.null(trace$marker)) {
+                                    fig$x$data[[i]]$marker <- list()
+                                }
+
+                                # Get current marker properties (may be single value or vector)
+                                cur_color <- trace$marker$color
+                                cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate(input$size)
+                                cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
+                                cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
+
+                                # Expand to vectors if single values
+                                if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
+                                if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
+                                if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
+                                if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
+
+                                # Match trace points to highlight indices
+                                # Use coordinate matching since trace order may differ
+                                # Skip if trace$x or trace$y are not numeric (e.g., factors)
+                                if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+
+                                trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+                                plot_coords <- paste0(
+                                    round(plot_data[[if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
+                                        paste0(isolate(input$x.by), ".x.adj")
+                                    } else {
+                                        isolate(input$x.by)
+                                    }]], 10),
+                                    "_",
+                                    round(plot_data[[if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
+                                        paste0(isolate(input$y.by), ".y.adj")
+                                    } else {
+                                        isolate(input$y.by)
+                                    }]], 10)
+                                )
+                                highlight_coords <- plot_coords[highlight_idx]
+
+                                trace_highlight_mask <- trace_coords %in% highlight_coords
+
+                                if (any(trace_highlight_mask)) {
+                                    # Apply highlight styling
+                                    if (!is.null(hl_color) && hl_color != "" && hl_color != "transparent") {
+                                        cur_color[trace_highlight_mask] <- hl_color
+                                    }
+                                    if (!is.null(hl_size) && !is.na(hl_size)) {
+                                        cur_size[trace_highlight_mask] <- hl_size
+                                    }
+                                    if (!is.null(hl_border_color) && hl_border_color != "") {
+                                        cur_line_color[trace_highlight_mask] <- hl_border_color
+                                    }
+                                    if (!is.null(hl_border_width) && !is.na(hl_border_width)) {
+                                        cur_line_width[trace_highlight_mask] <- hl_border_width
+                                    }
+
+                                    # Update trace marker properties
+                                    fig$x$data[[i]]$marker$color <- cur_color
+                                    fig$x$data[[i]]$marker$size <- cur_size
+                                    fig$x$data[[i]]$marker$line <- list(
+                                        color = cur_line_color,
+                                        width = cur_line_width
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
                 # Determine the column names for matching against plotly's event_data coordinates

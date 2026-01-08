@@ -15,9 +15,9 @@
 #' @examples
 #' library(vizModules)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
-#' app <- createScatterPlotApp(data_list)
+#' app <- scatterPlotApp(data_list)
 #' if (interactive()) runApp(app)
-createScatterPlotApp <- function(data_list) {
+scatterPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {

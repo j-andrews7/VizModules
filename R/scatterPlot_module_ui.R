@@ -265,6 +265,38 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     ""
                 )
             ),
+            textAreaInput(ns("highlight.points"), "Points to highlight",
+                placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
+                value = ifelse("highlight.points" %in% names(defaults),
+                    defaults[["highlight.points"]], ""
+                ),
+                rows = 3
+            ),
+            colourInput(ns("highlight.color"), "Highlight color",
+                value = ifelse("highlight.color" %in% names(defaults),
+                    defaults[["highlight.color"]], ""
+                ),
+                allowTransparent = TRUE
+            ),
+            numericInput(ns("highlight.size"), "Highlight size",
+                min = 0.1, step = 0.5,
+                value = ifelse("highlight.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], NA),
+                    NA
+                )
+            ),
+            colourInput(ns("highlight.border.color"), "Highlight border color",
+                value = ifelse("highlight.border.color" %in% names(defaults),
+                    defaults[["highlight.border.color"]], "#000000"
+                )
+            ),
+            numericInput(ns("highlight.border.width"), "Highlight border width",
+                min = 0, step = 0.5,
+                value = ifelse("highlight.border.width" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["highlight.border.width"]]), defaults[["highlight.border.width"]], 1),
+                    1
+                )
+            ),
             colourInput(ns("annotation.color"), "Annotation color",
                 value = ifelse("annotation.color" %in% names(defaults),
                     defaults[["annotation.color"]], "black"
