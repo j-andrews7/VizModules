@@ -69,18 +69,13 @@
         # showline and mirror properties are set even if matches="y" is present.
         # This forces plotly to render the axis lines on all subplot borders.
         if (yaxis_name != "yaxis" && !is.null(layout_updates[[yaxis_name]]$matches)) {
-            # Force showline for matched axes
-            if (!is.null(yaxis_style$showline)) {
-                layout_updates[[yaxis_name]]$showline <- yaxis_style$showline
-            }
-            if (!is.null(yaxis_style$mirror)) {
-                layout_updates[[yaxis_name]]$mirror <- yaxis_style$mirror
-            }
-            if (!is.null(yaxis_style$linecolor)) {
-                layout_updates[[yaxis_name]]$linecolor <- yaxis_style$linecolor
-            }
-            if (!is.null(yaxis_style$linewidth)) {
-                layout_updates[[yaxis_name]]$linewidth <- yaxis_style$linewidth
+            # Force border styling properties for matched axes
+            # This overrides plotly's default behavior of hiding borders on matched axes
+            style_props <- c("showline", "mirror", "linecolor", "linewidth")
+            for (prop in style_props) {
+                if (!is.null(yaxis_style[[prop]])) {
+                    layout_updates[[yaxis_name]][[prop]] <- yaxis_style[[prop]]
+                }
             }
         }
     }
