@@ -37,7 +37,11 @@ linePlot(
   y.title = NULL,
   x.title = NULL,
   flip.x = NULL,
-  flip.y = NULL
+  flip.y = NULL,
+  x.adjustment = NULL,
+  y.adjustment = NULL,
+  x.input = NULL,
+  y.input = NULL
 )
 ```
 

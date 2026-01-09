@@ -1,4 +1,4 @@
-# Create an example Modular barPlot Shiny Application
+# Create an example Modular BarPlot Shiny Application
 
 This function generates a Shiny application with modular
 [`plotthis::BarPlot()`](https://pwwang.github.io/plotthis/reference/barplot.html)
@@ -15,7 +15,7 @@ BarPlotApp(data_list)
 
 - data_list:
 
-  A named list of data frames for which barPlot modules will be created.
+  A named list of data frames for which BarPlot modules will be created.
   That is, UI inputs and a bar plot will be generated for each.
 
 ## Value

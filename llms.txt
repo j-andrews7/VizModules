@@ -255,7 +255,7 @@ for non-functional/broken parameters.
 - [`AreaPlotApp()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotApp.md)
   : Create an example Modular AreaPlot Shiny Application
 - [`BarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BarPlotApp.md)
-  : Create an example Modular barPlot Shiny Application
+  : Create an example Modular BarPlot Shiny Application
 - [`BoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotApp.md)
   : Create an example Modular BoxPlot Shiny Application
 - [`.string_to_list_of_vectors()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_list_of_vectors.md)
