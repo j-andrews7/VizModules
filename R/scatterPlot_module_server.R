@@ -182,7 +182,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 colors = seq_along(isolate(color.panel())),
                 split.nrow = null.na.inputs$split.nrow,
                 split.ncol = null.na.inputs$split.ncol,
-                split.adjust = list(),
+                split.adjust = list(scales = isolate(input$split.adjust.scales)),
                 multivar.split.dir = isolate(input$multivar.split.dir),
                 shape.panel = as.numeric(.string_to_vector(isolate(input$shape.panel))),
                 rename.color.groups = NULL,

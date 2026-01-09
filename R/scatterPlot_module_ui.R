@@ -255,6 +255,15 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     ),
                     "col"
                 )
+            ),
+            selectInput(ns("split.adjust.scales"), "Facet scales",
+                choices = c("fixed", "free", "free_x", "free_y"),
+                selected = ifelse("split.adjust.scales" %in% names(defaults),
+                    ifelse(defaults[["split.adjust.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
+                        defaults[["split.adjust.scales"]], "fixed"
+                    ),
+                    "fixed"
+                )
             )
         ),
         "Annotations" = tagList(
