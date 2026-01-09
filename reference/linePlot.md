@@ -41,7 +41,8 @@ linePlot(
   x.adjustment = NULL,
   y.adjustment = NULL,
   x.input = NULL,
-  y.input = NULL
+  y.input = NULL,
+  order.by = NULL
 )
 ```
 
