@@ -64,13 +64,13 @@
 #' when the input field is empty.
 #'
 #' @param x A value that may be NA.
-#' @return NULL if x is NA, otherwise x unchanged.
+#' @return NULL if x is a single NA value, otherwise x unchanged.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_na_to_null
 #' @keywords internal
 .na_to_null <- function(x) {
-    if (is.na(x)) {
+    if (length(x) == 1 && is.na(x)) {
         return(NULL)
     }
     x
