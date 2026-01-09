@@ -80,7 +80,7 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
             )) |>
             pull(p)
 
-        fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = FALSE, titleX = TRUE, titleY = TRUE)
+        fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
     } else {
         fig <- plot_ly(
             data = plot_data,
