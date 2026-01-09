@@ -1,11 +1,11 @@
-# Output UI components for the AreaPlot module
+# Output UI components for the linePlot module
 
 This should be placed in the UI where the plot should be shown.
 
 ## Usage
 
 ``` r
-AreaPlotOutputUI(id)
+linePlotOutputUI(id)
 ```
 
 ## Arguments
@@ -16,7 +16,7 @@ AreaPlotOutputUI(id)
 
 ## Value
 
-A Shiny plotlyOutput for the AreaPlot
+A Shiny plotlyOutput for the linePlot
 
 ## Author
 

@@ -37,6 +37,5 @@ mtcars$gear <- as.factor(mtcars$gear)
 iris$group <- rep(c("A", "B"), each = 75)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- AreaPlotApp(data_list)
-#> Error in AreaPlotOutputUI(name): could not find function "AreaPlotOutputUI"
 if (interactive()) runApp(app)
 ```

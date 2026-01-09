@@ -17,8 +17,8 @@
   : Example DESeq2 results from airway dataset
 - [`AreaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
   : Input UI components for the AreaPlot module
-- [`areaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
-  : Output UI components for the areaPlot module
+- [`AreaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
+  : Output UI components for the AreaPlot module
 - [`AreaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/areaPlotServer.md)
   : Server logic for AreaPlot module
 - [`BarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotInputsUI.md)
@@ -37,6 +37,10 @@
   : Create a standalone Shiny app for the volcanoPlot module
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
+- [`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
+  : Create a plotly line plot
+- [`linePlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/linePlotOutputUI.md)
+  : Output UI components for the linePlot module
 - [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
 - [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)
