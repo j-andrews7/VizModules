@@ -38,7 +38,7 @@ for that function for an exhaustive list.
 \examples{
 library(vizModules)
 data(mtcars)
-BarPlotInputsUI("barPlot", mtcars)
+BarPlotInputsUI("BarPlot", mtcars)
 }
 \seealso{
 \code{\link[plotthis:barplot]{plotthis::BarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

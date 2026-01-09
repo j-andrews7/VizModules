@@ -153,7 +153,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 width = width,
                 split_by = split.by
             )
-            plotlyOut <- ggplotly(p) |>
+            fig <- ggplotly(p) |>
                 layout(
                     title = list(
                         font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)),
@@ -202,7 +202,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 tickwidth = isolate(input$axis.tickwidth)
             )
 
-            plotlyOut <- .apply_subplot_axis_styling(plotlyOut, xaxis_style, yaxis_style) |>
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) |>
                 config(
                     editable = TRUE,
                     edits = list(titleText = TRUE, axisTitleText = TRUE),
@@ -210,7 +210,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     displaylogo = FALSE
                 )
 
-            return(plotlyOut)
+            return(fig)
         })
     })
 }

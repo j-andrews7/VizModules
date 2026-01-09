@@ -30,7 +30,7 @@
 #' @examples
 #' library(vizModules)
 #' data(mtcars)
-#' BarPlotInputsUI("barPlot", mtcars)
+#' BarPlotInputsUI("BarPlot", mtcars)
 BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 

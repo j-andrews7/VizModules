@@ -1,9 +1,9 @@
-#' Create an example Modular barPlot Shiny Application
+#' Create an example Modular BarPlot Shiny Application
 #'
 #' This function generates a Shiny application with modular [plotthis::BarPlot()] components.
 #' A module is created for each data frame provided in the named list of data frames.
 #'
-#' @param data_list A named list of data frames for which barPlot modules will be created.
+#' @param data_list A named list of data frames for which BarPlot modules will be created.
 #'   That is, UI inputs and a bar plot will be generated for each.
 #' @return A Shiny app object.
 #'
@@ -25,7 +25,7 @@ BarPlotApp <- function(data_list) {
 
     ui <- fluidPage(
         useShinyjs(),
-        titlePanel("Modular barPlots"),
+        titlePanel("Modular BarPlots"),
         sidebarLayout(
             sidebarPanel(
                 lapply(names(data_list), function(name) {

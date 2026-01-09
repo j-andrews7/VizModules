@@ -2,12 +2,12 @@
 % Please edit documentation in R/BarPlot_module_app.R
 \name{BarPlotApp}
 \alias{BarPlotApp}
-\title{Create an example Modular barPlot Shiny Application}
+\title{Create an example Modular BarPlot Shiny Application}
 \usage{
 BarPlotApp(data_list)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which barPlot modules will be created.
+\item{data_list}{A named list of data frames for which BarPlot modules will be created.
 That is, UI inputs and a bar plot will be generated for each.}
 }
 \value{
