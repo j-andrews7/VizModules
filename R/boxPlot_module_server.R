@@ -101,7 +101,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
 
-        output$boxPlot <- renderPlotly({
+        output$BoxPlot <- renderPlotly({
             input$update
 
             # Facet By Null option Upstream:
@@ -162,7 +162,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 combine = isolate(input$combine)
             )
 
-            plotlyOut <- ggplotly(p) |>
+            fig <- ggplotly(p) |>
                 layout(
                     title = list(
                         font = list(size = 28, family = isolate(input$font.type), color = isolate(input$text.colour)),
@@ -211,14 +211,14 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 tickwidth = isolate(input$axis.tickwidth)
             )
 
-            plotlyOut <- .apply_subplot_axis_styling(plotlyOut, xaxis_style, yaxis_style) |>
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
                     toImageButtonOptions = list(format = isolate(input$download.type), filename = "box_plot", height = 500, width = 700, scale = 1),
                     displaylogo = FALSE
                 )
 
-            return(plotlyOut)
+            return(fig)
         })
     })
 }

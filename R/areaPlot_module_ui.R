@@ -26,7 +26,7 @@
 #' @export
 #' @author Jacob Martin
 #' @seealso [plotthis::AreaPlot()], [vizModules::organize_inputs()],
-#' [vizModules::AreaPlotOutputUI()], [vizModules::AreaPlotServer()], [vizModules::createAreaPlotApp()]
+#' [vizModules::AreaPlotOutputUI()], [vizModules::AreaPlotServer()], [vizModules::AreaPlotApp()]
 #' @examples
 #' library(vizModules)
 #' # Needs at least 2 categorical variables for grouping and x-axis
@@ -194,7 +194,7 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     organize_inputs(
         inputs,
-        id = ns("areaPlotTabsetPanel"),
+        id = ns("AreaPlotTabsetPanel"),
         title = title,
         tack = tagList(
             actionButton(ns("update"), "Update Plot"),
@@ -206,13 +206,13 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     )
 }
 
-#' Output UI components for the areaPlot module
+#' Output UI components for the AreaPlot module
 #'
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
 #'
-#' @return A Shiny plotlyOutput for the areaPlot
+#' @return A Shiny plotlyOutput for the AreaPlot
 #'
 #' @importFrom shiny NS
 #' @importFrom plotly plotlyOutput
@@ -220,10 +220,10 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #'
 #' @export
 #' @author Jacob Martin
-areaPlotOutputUI <- function(id) {
+AreaPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("areaPlot"), width = "100%", height = "400px"),
+        plotlyOutput(ns("AreaPlot"), width = "100%", height = "400px"),
         options = list(
             minWidth = 300,
             minHeight = 300,

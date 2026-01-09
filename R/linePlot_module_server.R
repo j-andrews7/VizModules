@@ -29,14 +29,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 choices  = c(colour_selection)
             )
         })
-        #Defining reactive data before reset button 
+        # Defining reactive data before reset button
 
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
 
-            #Reset Data columns to default. First and second index of data named list 
+            # Reset Data columns to default. First and second index of data named list
             updateSelectInput(session, "x.value", selected = names(data())[1])
             updateSelectInput(session, "y.value", selected = names(data())[2])
             updateSelectInput(session, "plot.type", selected = "lines")
@@ -47,8 +47,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "palette", selected = "Paired")
             updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "facet.by", selected = "")
-
-
         })
 
 
@@ -58,13 +56,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             d <- data_reactive()
             x_input <- input$x.value
             y_input <- input$y.value
-            #Multiple data points on 
+            # Multiple data points on
 
             # Null Values:
             x_values <- reformulate(isolate(input$x.value))
             y_values <- reformulate(isolate(input$y.value))
-
-
 
 
             # Sets the colouring to the first item in the selected palette unless group.by is selected
@@ -73,20 +69,20 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 group.by <- reformulate(input$group.by)
             }
 
-            #Making multiple lines on the axis. e.g 3x and 1y 
-            #Determining axis min and max
-            #Checking if the axis is a category and non continious 
-            #And axis ordering 
+            # Making multiple lines on the axis. e.g 3x and 1y
+            # Determining axis min and max
+            # Checking if the axis is a category and non continious
+            # And axis ordering
             axis_min_x <- NULL
             axis_max_x <- NULL
 
-            #Choosing which axis to order by: 
+            # Choosing which axis to order by:
             order_by <- x_input
-            if (input$order.by == TRUE){
+            if (input$order.by == TRUE) {
                 order_by <- y_input
             }
 
-            if (is.numeric(d[[x_input[1]]])){
+            if (is.numeric(d[[x_input[1]]])) {
                 axis_min_x <- min(d[[x_input[1]]])
                 axis_max_x <- max(d[[x_input[1]]])
                 d_sorted <- d[order(d[[order_by[1]]]), ]
@@ -94,48 +90,48 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             axis_min_y <- NULL
             axis_max_y <- NULL
 
-            if (is.numeric(d[[y_input[1]]])){
+            if (is.numeric(d[[y_input[1]]])) {
                 axis_min_y <- min(d[[y_input[1]]])
                 axis_max_y <- max(d[[y_input[1]]])
                 d_sorted <- d[order(d[[order_by[1]]]), ]
             }
 
-            #Facet By default
+            # Facet By default
             input.facet.by <- NULL
-            if (!input$facet.by == ""){
+            if (!input$facet.by == "") {
                 input.facet.by <- input$facet.by
             }
 
-            
-            #Axis title: 
+
+            # Axis title:
             x_title <- x_input[1]
-            if (length(x_input) > 1){
+            if (length(x_input) > 1) {
                 x_title <- "Value"
             }
             y_title <- y_input[1]
-            if (length(y_input) > 1){
+            if (length(y_input) > 1) {
                 y_title <- "Value"
             }
 
-            #Axis flipped: 
+            # Axis flipped:
 
             flip_x <- NULL
-            if (input$flip.x == TRUE){
+            if (input$flip.x == TRUE) {
                 flip_x <- "reversed"
             }
             flip_y <- NULL
-            if (input$flip.y == TRUE){
+            if (input$flip.y == TRUE) {
                 flip_y <- "reversed"
             }
 
             # line Plot
 
-            p <- linePlot(
+            fig <- linePlot(
                 reactive.data = d_sorted,
                 x.value = reformulate(isolate(x_input[1])),
                 y.value = reformulate(isolate(y_input[1])),
                 plot.mode = input$plot.type,
-                line.type = input$line.type, 
+                line.type = input$line.type,
                 colour.group.by = group.by,
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
@@ -164,12 +160,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 flip.y = flip_y
             )
 
-            
-            # If multiple X and Y variables are selected: 
-            #ADDs lines to the plot 
+
+            # If multiple X and Y variables are selected:
+            # ADDs lines to the plot
             if (xor(length(x_input) > 1, length(y_input) > 1)) {
-                if (length(x_input) > 1){
-                    p <- p |> add_trace(
+                if (length(x_input) > 1) {
+                    fig <- fig |> add_trace(
                         x = reformulate(isolate(x_input[1])),
                         y = reformulate(isolate(y_input[1])),
                         mode = input$plot.type,
@@ -177,57 +173,59 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                         name = x_input[1],
                         showlegend = TRUE
                     )
-                    updateSwitchInput(session, "order.by", value = FALSE)  # So that the graph is ordered by the axis that has multiple data sets / columns 
-                    for (i in 2:length(x_input)){
+                    updateSwitchInput(session, "order.by", value = FALSE) # So that the graph is ordered by the axis that has multiple data sets / columns
+                    for (i in 2:length(x_input)) {
                         d_sorted <- d[order(d[[order_by[i]]]), ]
-                        p <- p |> add_trace(
+                        fig <- fig |> add_trace(
                             x = d_sorted[[x_input[i]]],
                             y = d_sorted[[y_input[1]]],
-                            type = 'scatter',
+                            type = "scatter",
                             mode = input$plot.type,
                             line = list(dash = input$line.type),
                             color = plotthis::palette_list[[input$palette]][i],
                             name = x_input[i],
                             showlegend = TRUE
                         )
-                    axis_max_x <- max(d[,x_input])
-                    axis_min_x <- min(d[,x_input])
+                        axis_max_x <- max(d[, x_input])
+                        axis_min_x <- min(d[, x_input])
                     }
                 }
-                if (length(y_input) > 1){
-                    p <- p |> add_trace(
+                if (length(y_input) > 1) {
+                    fig <- fig |> add_trace(
                         x = reformulate(isolate(x_input[1])),
                         y = reformulate(isolate(y_input[1])),
                         mode = input$plot.type,
                         line = list(dash = input$line.type),
                         name = y_input[1],
                         showlegend = TRUE
-                    ) 
-                    updateSwitchInput(session, "order.by", value = TRUE) # So that the graph is ordered by the axis that has multiple data sets / columns 
-                    for (i in 2:length(y_input)){
+                    )
+                    updateSwitchInput(session, "order.by", value = TRUE) # So that the graph is ordered by the axis that has multiple data sets / columns
+                    for (i in 2:length(y_input)) {
                         d_sorted <- d[order(d[[order_by[i]]]), ]
-                        p <- p |> add_trace(
+                        fig <- fig |> add_trace(
                             x = d_sorted[[x_input[1]]],
                             y = d_sorted[[y_input[i]]],
-                            type = 'scatter',
+                            type = "scatter",
                             mode = input$plot.type,
                             line = list(dash = input$line.type),
                             color = plotthis::palette_list[[input$palette]][i],
                             name = y_input[i],
                             showlegend = TRUE
                         )
-                    axis_max_y <- max(d[,y_input])
-                    axis_min_y <- min(d[,y_input])
+                        axis_max_y <- max(d[, y_input])
+                        axis_min_y <- min(d[, y_input])
                     }
                 }
             }
 
 
-            plotlyOut <- p |>
+            fig <- fig |>
                 config(
-                    editable = TRUE, 
-                    edits = list(titleText = TRUE, 
-                    axisTitleText = TRUE),
+                    editable = TRUE,
+                    edits = list(
+                        titleText = TRUE,
+                        axisTitleText = TRUE
+                    ),
                     toImageButtonOptions = list(
                         format = isolate(input$download.type),
                         filename = "line_plot", height = 600, width = 700, scale = 1
@@ -235,7 +233,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     displaylogo = FALSE
                 ) # Hiding Plotly Logo
 
-            return(plotlyOut)
+            return(fig)
         })
     })
-} 
+}
