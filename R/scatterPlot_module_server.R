@@ -330,9 +330,21 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                                     # Get current marker properties (may be single value or vector)
                                     cur_color <- trace$marker$color
-                                    cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate(input$size)
-                                    cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
-                                    cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
+                                    cur_size <- if (!is.null(trace$marker$size)) {
+                                        trace$marker$size
+                                    } else {
+                                        isolate(input$size)
+                                    }
+                                    cur_line_color <- if (!is.null(trace$marker$line$color)) {
+                                        trace$marker$line$color
+                                    } else {
+                                        "transparent"
+                                    }
+                                    cur_line_width <- if (!is.null(trace$marker$line$width)) {
+                                        trace$marker$line$width
+                                    } else {
+                                        0
+                                    }
 
                                     # Expand to vectors if single values
                                     if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
