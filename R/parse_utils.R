@@ -57,6 +57,25 @@
     x
 }
 
+#' Convert NA or empty string to NULL
+#'
+#' A helper function to convert NA values or empty strings to NULL.
+#' Used to handle Shiny input default values which return NA or "" instead of NULL
+#' when the input field is empty. numericInput returns NA, textInput returns "".
+#'
+#' @param x A value that may be NA or an empty string.
+#' @return NULL if x is a single NA value or empty string, otherwise x unchanged.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_na_to_null
+#' @keywords internal
+.na_to_null <- function(x) {
+    if (length(x) == 1 && (is.na(x) || identical(x, ""))) {
+        return(NULL)
+    }
+    x
+}
+
 #' Negative log10 transformation
 #'
 #' A helper function for -log10 transformation.

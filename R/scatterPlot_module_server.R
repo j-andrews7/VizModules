@@ -100,34 +100,24 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
-                "trajectory.group.by" = isolate(input$trajectory.group.by),
-                "add.trajectory.by.groups" = isolate(input$add.trajectory.by.groups),
-                "add.xline" = isolate(input$add.xline),
-                "add.yline" = isolate(input$add.yline),
-                "color.by" = isolate(input$color.by),
-                "shape.by" = isolate(input$shape.by),
-                "split.by" = isolate(input$split.by),
-                "x.adjustment" = isolate(input$x.adjustment),
-                "y.adjustment" = isolate(input$y.adjustment),
-                "color.adjustment" = isolate(input$color.adjustment),
-                "x.adj.fxn" = isolate(input$x.adj.fxn),
-                "y.adj.fxn" = isolate(input$y.adj.fxn),
-                "color.adj.fxn" = isolate(input$color.adj.fxn),
-                "split.nrow" = isolate(input$split.nrow),
-                "split.ncol" = isolate(input$split.ncol),
-                "hover.data" = isolate(input$hover.data),
-                "annotate.by" = isolate(input$annotate.by)
+                "trajectory.group.by" = .na_to_null(isolate(input$trajectory.group.by)),
+                "add.trajectory.by.groups" = .na_to_null(isolate(input$add.trajectory.by.groups)),
+                "add.xline" = .na_to_null(isolate(input$add.xline)),
+                "add.yline" = .na_to_null(isolate(input$add.yline)),
+                "color.by" = .na_to_null(isolate(input$color.by)),
+                "shape.by" = .na_to_null(isolate(input$shape.by)),
+                "split.by" = .na_to_null(isolate(input$split.by)),
+                "x.adjustment" = .na_to_null(isolate(input$x.adjustment)),
+                "y.adjustment" = .na_to_null(isolate(input$y.adjustment)),
+                "color.adjustment" = .na_to_null(isolate(input$color.adjustment)),
+                "x.adj.fxn" = .na_to_null(isolate(input$x.adj.fxn)),
+                "y.adj.fxn" = .na_to_null(isolate(input$y.adj.fxn)),
+                "color.adj.fxn" = .na_to_null(isolate(input$color.adj.fxn)),
+                "split.nrow" = .na_to_null(isolate(input$split.nrow)),
+                "split.ncol" = .na_to_null(isolate(input$split.ncol)),
+                "hover.data" = .na_to_null(isolate(input$hover.data)),
+                "annotate.by" = .na_to_null(isolate(input$annotate.by))
             )
-
-            for (input.name in names(null.na.inputs)) {
-                if (!is.null(null.na.inputs[[input.name]])) {
-                    if (identical(null.na.inputs[[input.name]], NA)) {
-                        null.na.inputs[[input.name]] <- NULL
-                    } else if (identical(null.na.inputs[[input.name]], "")) {
-                        null.na.inputs[[input.name]] <- NULL
-                    }
-                }
-            }
 
             # Waiver inputs
             waiver.inputs <- list(

@@ -113,10 +113,12 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!isolate(input$group.by) == "NULL") {
                 group.by <- isolate(input$group.by)
             }
-            highlight <- NULL
-            if (!isolate(input$highlight) == "") {
-                highlight <- isolate(input$highlight)
-            }
+            highlight <- .na_to_null(isolate(input$highlight))
+
+            # Convert NA to NULL for facet.ncol and facet.nrow
+            facet.ncol <- .na_to_null(isolate(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate(input$facet.nrow))
+
             # Box Plot
             p <- plotthis::BoxPlot(
                 data = data(),
@@ -151,8 +153,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add_line = isolate(input$add.line),
                 facet_by = facet.by,
                 facet_scales = isolate(input$facet.scale),
-                facet_ncol = isolate(input$facet.ncol),
-                facet_nrow = isolate(input$facet.nrow),
+                facet_ncol = facet.ncol,
+                facet_nrow = facet.nrow,
                 facet_byrow = isolate(input$facet.by.row),
                 group_by = group.by,
                 highlight = highlight,
