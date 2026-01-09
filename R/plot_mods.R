@@ -200,6 +200,122 @@
     }
 }
 
+#' Determine which points belong to which subplot facet
+#'
+#' When using split.by with show.others = TRUE, each subplot contains both "real"
+#' points (matching the facet's split.by values) and "others" points (not matching).
+#' This function creates a mapping to identify which data points belong to which facet.
+#'
+#' @param plot_data Data frame from dittoViz with all plot data
+#' @param split.by Character vector of column name(s) used for faceting (NULL if no faceting)
+#' @param fig Plotly figure object containing the layout information
+#'
+#' @return A list with two elements:
+#'   - facet_map: A list where each element corresponds to a subplot and contains
+#'                the indices of plot_data rows that are "real" data for that facet
+#'   - axis_to_facet: A named list mapping axis references (e.g., "x", "x2") to facet indices
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_get_facet_membership
+#' @keywords internal
+.get_facet_membership <- function(plot_data, split.by, fig) {
+    # If no faceting, all points belong to the single plot
+    if (is.null(split.by) || length(split.by) == 0 || all(split.by == "")) {
+        return(list(
+            facet_map = list(seq_len(nrow(plot_data))),
+            axis_to_facet = list("x" = 1, "y" = 1)
+        ))
+    }
+
+    # Get unique combinations of split.by values (these define the facets)
+    split_data <- plot_data[, split.by, drop = FALSE]
+    unique_combinations <- unique(split_data)
+
+    # Create a mapping of each row to its facet
+    facet_map <- list()
+    for (i in seq_len(nrow(unique_combinations))) {
+        # Find all rows that match this combination
+        matches <- rep(TRUE, nrow(plot_data))
+        for (col in split.by) {
+            matches <- matches & (plot_data[[col]] == unique_combinations[[col]][i])
+        }
+        facet_map[[i]] <- which(matches)
+    }
+
+    # Create axis-to-facet mapping based on plotly layout
+    # Plotly uses x, x2, x3... for multiple subplots
+    axis_to_facet <- list()
+    n_facets <- length(facet_map)
+
+    # Map xaxis/yaxis references to facet indices
+    # Default subplot uses "x" and "y", subsequent ones use "x2"/"y2", "x3"/"y3", etc.
+    for (i in seq_len(n_facets)) {
+        if (i == 1) {
+            axis_to_facet[["x"]] <- 1
+            axis_to_facet[["y"]] <- 1
+        } else {
+            axis_to_facet[[paste0("x", i)]] <- i
+            axis_to_facet[[paste0("y", i)]] <- i
+        }
+    }
+
+    list(
+        facet_map = facet_map,
+        axis_to_facet = axis_to_facet
+    )
+}
+
+#' Filter highlight indices to only include "real" points in each trace's facet
+#'
+#' When highlighting points in a faceted plot with show.others = TRUE, we only want
+#' to highlight points that are "real" data in each facet, not "others" points.
+#'
+#' @param plot_data Data frame from dittoViz with all plot data
+#' @param highlight_idx Integer vector of indices in plot_data to highlight
+#' @param trace Plotly trace object
+#' @param trace_coords Character vector of coordinate strings for the trace
+#' @param plot_coords Character vector of coordinate strings for plot_data
+#' @param facet_membership List returned by .get_facet_membership()
+#'
+#' @return Logical vector indicating which points in the trace should be highlighted
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_filter_highlight_by_facet
+#' @keywords internal
+.filter_highlight_by_facet <- function(plot_data, highlight_idx, trace, trace_coords, 
+                                        plot_coords, facet_membership) {
+    # Start with coordinate-based matching
+    trace_highlight_mask <- trace_coords %in% plot_coords[highlight_idx]
+
+    # If no faceting, return as-is
+    if (length(facet_membership$facet_map) == 1) {
+        return(trace_highlight_mask)
+    }
+
+    # Determine which facet this trace belongs to
+    trace_xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+    trace_facet_idx <- facet_membership$axis_to_facet[[trace_xaxis]]
+
+    # If we can't determine the facet, return as-is (shouldn't happen)
+    if (is.null(trace_facet_idx)) {
+        return(trace_highlight_mask)
+    }
+
+    # Get the plot_data indices that are "real" for this facet
+    facet_real_idx <- facet_membership$facet_map[[trace_facet_idx]]
+
+    # Filter highlight_idx to only include points that are "real" in this facet
+    facet_highlight_idx <- intersect(highlight_idx, facet_real_idx)
+
+    # Update the mask to only highlight points that are both:
+    # 1. In the highlight list
+    # 2. "Real" data for this facet
+    facet_highlight_coords <- plot_coords[facet_highlight_idx]
+    trace_highlight_mask <- trace_coords %in% facet_highlight_coords
+
+    trace_highlight_mask
+}
+
 #' Adjust numeric column values in a data frame using mathematical transformations
 #'
 #' Applies common mathematical transformations (logarithmic, absolute value, square root) 

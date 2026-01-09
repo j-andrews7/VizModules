@@ -273,6 +273,26 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
+                            # Get facet membership if faceting is active
+                            facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
+
+                            # Prepare coordinate strings for matching
+                            x_col_name <- if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
+                                paste0(isolate(input$x.by), ".x.adj")
+                            } else {
+                                isolate(input$x.by)
+                            }
+                            y_col_name <- if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
+                                paste0(isolate(input$y.by), ".y.adj")
+                            } else {
+                                isolate(input$y.by)
+                            }
+                            plot_coords <- paste0(
+                                round(plot_data[[x_col_name]], 10),
+                                "_",
+                                round(plot_data[[y_col_name]], 10)
+                            )
+
                             # Iterate through traces and modify marker properties
                             for (i in seq_along(fig$x$data)) {
                                 trace <- fig$x$data[[i]]
@@ -280,51 +300,42 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Skip traces without x/y data or non-scatter traces
                                 if (is.null(trace$x) || is.null(trace$y)) next
                                 if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
+                                if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
                                 # Match trace points to plot_data by coordinates
                                 trace_n <- length(trace$x)
+                                trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
 
-                                # Initialize marker properties if not present
-                                if (is.null(trace$marker)) {
-                                    fig$x$data[[i]]$marker <- list()
+                                # Determine which points to highlight in this trace
+                                # If faceting with show.others, filter to only "real" points in this facet
+                                if (isolate(input$show.others) && !is.null(null.na.inputs$split.by)) {
+                                    trace_highlight_mask <- .filter_highlight_by_facet(
+                                        plot_data, highlight_idx, trace, trace_coords,
+                                        plot_coords, facet_membership
+                                    )
+                                } else {
+                                    # No faceting or show.others is FALSE - highlight by coordinates only
+                                    trace_highlight_mask <- trace_coords %in% plot_coords[highlight_idx]
                                 }
 
-                                # Get current marker properties (may be single value or vector)
-                                cur_color <- trace$marker$color
-                                cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate(input$size)
-                                cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
-                                cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
-
-                                # Expand to vectors if single values
-                                if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
-                                if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
-                                if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
-                                if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
-
-                                # Match trace points to highlight indices
-                                # Use coordinate matching since trace order may differ
-                                # Skip if trace$x or trace$y are not numeric (e.g., factors)
-                                if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
-
-                                trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
-                                plot_coords <- paste0(
-                                    round(plot_data[[if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
-                                        paste0(isolate(input$x.by), ".x.adj")
-                                    } else {
-                                        isolate(input$x.by)
-                                    }]], 10),
-                                    "_",
-                                    round(plot_data[[if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
-                                        paste0(isolate(input$y.by), ".y.adj")
-                                    } else {
-                                        isolate(input$y.by)
-                                    }]], 10)
-                                )
-                                highlight_coords <- plot_coords[highlight_idx]
-
-                                trace_highlight_mask <- trace_coords %in% highlight_coords
-
                                 if (any(trace_highlight_mask)) {
+                                    # Initialize marker properties if not present
+                                    if (is.null(trace$marker)) {
+                                        fig$x$data[[i]]$marker <- list()
+                                    }
+
+                                    # Get current marker properties (may be single value or vector)
+                                    cur_color <- trace$marker$color
+                                    cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate(input$size)
+                                    cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
+                                    cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
+
+                                    # Expand to vectors if single values
+                                    if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
+                                    if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
+                                    if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
+                                    if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
+
                                     # Apply highlight styling
                                     if (!is.null(hl_color) && hl_color != "" && hl_color != "transparent") {
                                         cur_color[trace_highlight_mask] <- hl_color
@@ -489,14 +500,38 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
+                            # Get facet membership for determining correct xref/yref
+                            facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
+
                             # Create annotations for highlighted points
                             highlight_annos <- lapply(highlight_idx, function(idx) {
+                                # Determine which facet this point belongs to
+                                xref <- "x"
+                                yref <- "y"
+
+                                if (!is.null(null.na.inputs$split.by) && length(facet_membership$facet_map) > 1) {
+                                    # Find which facet contains this point
+                                    for (facet_idx in seq_along(facet_membership$facet_map)) {
+                                        if (idx %in% facet_membership$facet_map[[facet_idx]]) {
+                                            # Found the facet - get corresponding axis references
+                                            if (facet_idx == 1) {
+                                                xref <- "x"
+                                                yref <- "y"
+                                            } else {
+                                                xref <- paste0("x", facet_idx)
+                                                yref <- paste0("y", facet_idx)
+                                            }
+                                            break
+                                        }
+                                    }
+                                }
+
                                 list(
                                     x = plot_data[[x_match_col]][idx],
                                     y = plot_data[[y_match_col]][idx],
                                     text = as.character(plot_data[[annotate_col]][idx]),
-                                    xref = "x",
-                                    yref = "y",
+                                    xref = xref,
+                                    yref = yref,
                                     ax = isolate(input$annotation.ax),
                                     ay = isolate(input$annotation.ay),
                                     showarrow = isolate(input$annotation.showarrow),
