@@ -73,28 +73,28 @@ library(vizModules)
 data(mtcars)
 BarPlotInputsUI("BarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="5851">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="8211">
 #>     <li class="active">
-#>       <a href="#tab-5851-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8211-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5851-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
+#>       <a href="#tab-8211-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5851-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
+#>       <a href="#tab-8211-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5851-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
+#>       <a href="#tab-8211-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5851-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-8211-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5851-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8211-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5851">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5851-1">
+#>   <div class="tab-content" data-tabsetid="8211">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8211-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Grouping" id="tab-5851-2">
+#>     <div class="tab-pane" data-value="Grouping" id="tab-8211-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -216,7 +216,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetic" id="tab-5851-3">
+#>     <div class="tab-pane" data-value="Aesthetic" id="tab-8211-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -780,7 +780,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Line" id="tab-5851-4">
+#>     <div class="tab-pane" data-value="Line" id="tab-8211-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -818,7 +818,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-5851-5">
+#>     <div class="tab-pane" data-value="Labels" id="tab-8211-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -867,7 +867,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5851-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8211-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
