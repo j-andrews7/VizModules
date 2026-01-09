@@ -54,6 +54,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             input$update
 
             d <- data_reactive()
+            d_sorted <- d
             x_input <- input$x.value
             y_input <- input$y.value
             # Multiple data points on
@@ -153,6 +154,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
                 facet.by = input.facet.by,
+                order.by = order_by,
                 axis.showline = isolate(input$axis.showline),
                 axis.mirror = isolate(input$axis.mirror),
                 axis.linecolor = isolate(input$axis.linecolor),
@@ -180,64 +182,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.input = x_input,
                 y.input = y_input
             )
-
-
-            # If multiple X and Y variables are selected:
-            # ADDs lines to the plot
-            if (xor(length(x_input) > 1, length(y_input) > 1)) {
-                if (length(x_input) > 1) {
-                    fig <- fig |> add_trace(
-                        x = reformulate(isolate(x_input[1])),
-                        y = reformulate(isolate(y_input[1])),
-                        mode = input$plot.type,
-                        line = list(dash = input$line.type),
-                        name = x_input[1],
-                        showlegend = TRUE
-                    )
-                    updateSwitchInput(session, "order.by", value = FALSE) # So that the graph is ordered by the axis that has multiple data sets / columns
-                    for (i in 2:length(x_input)) {
-                        d_sorted <- d[order(d[[order_by[i]]]), ]
-                        fig <- fig |> add_trace(
-                            x = d_sorted[[x_input[i]]],
-                            y = d_sorted[[y_input[1]]],
-                            type = "scatter",
-                            mode = input$plot.type,
-                            line = list(dash = input$line.type),
-                            color = plotthis::palette_list[[input$palette]][i],
-                            name = x_input[i],
-                            showlegend = TRUE
-                        )
-                        axis_max_x <- max(d[, x_input])
-                        axis_min_x <- min(d[, x_input])
-                    }
-                }
-                if (length(y_input) > 1) {
-                    fig <- fig |> add_trace(
-                        x = reformulate(isolate(x_input[1])),
-                        y = reformulate(isolate(y_input[1])),
-                        mode = input$plot.type,
-                        line = list(dash = input$line.type),
-                        name = y_input[1],
-                        showlegend = TRUE
-                    )
-                    updateSwitchInput(session, "order.by", value = TRUE) # So that the graph is ordered by the axis that has multiple data sets / columns
-                    for (i in 2:length(y_input)) {
-                        d_sorted <- d[order(d[[order_by[i]]]), ]
-                        fig <- fig |> add_trace(
-                            x = d_sorted[[x_input[1]]],
-                            y = d_sorted[[y_input[i]]],
-                            type = "scatter",
-                            mode = input$plot.type,
-                            line = list(dash = input$line.type),
-                            color = plotthis::palette_list[[input$palette]][i],
-                            name = y_input[i],
-                            showlegend = TRUE
-                        )
-                        axis_max_y <- max(d[, y_input])
-                        axis_min_y <- min(d[, y_input])
-                    }
-                }
-            }
 
 
             fig <- fig |>
