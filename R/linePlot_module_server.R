@@ -124,9 +124,26 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 flip_y <- "reversed"
             }
 
+            y.adjustment <- NULL 
+            if (!input$y.adjustment == ""){
+                y.adjustment <- input$y.adjustment
+            }
+            x.adjustment <- NULL 
+            if (!input$x.adjustment == ""){
+                x.adjustment <- input$x.adjustment
+            }
             # line Plot
 
-            fig <- linePlot(
+            #Checking that all columns are numeric for x and y adjustment to be available
+            if (!all(sapply(d[x_input], is.numeric))){
+                updateSelectInput(session, "x.adjustment", selected = "")
+                x.adjustment <- NULL
+            }
+            if (!all(sapply(d[y_input], is.numeric))){
+                updateSelectInput(session, "y.adjustment", selected = "")
+                y.adjustment <- NULL
+            }
+            p <- linePlot(
                 reactive.data = d_sorted,
                 x.value = reformulate(isolate(x_input[1])),
                 y.value = reformulate(isolate(y_input[1])),
@@ -157,7 +174,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.title = x_title,
                 y.title = y_title,
                 flip.x = flip_x,
-                flip.y = flip_y
+                flip.y = flip_y,
+                x.adjustment = x.adjustment,
+                y.adjustment = y.adjustment,
+                x.input = x_input,
+                y.input = y_input
             )
 
 

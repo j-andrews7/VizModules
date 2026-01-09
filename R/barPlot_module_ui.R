@@ -202,7 +202,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 
     organize_inputs(
         inputs,
-        id = ns("barPlotTabsetPanel"),
+        id = ns("BarPlotTabsetPanel"),
         title = title,
         tack = tagList(
             actionButton(ns("update"), "Update Plot"),

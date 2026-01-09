@@ -22,7 +22,9 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
-            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = char.choices)
+            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = char.choices),
+            selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
+            selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",

@@ -94,7 +94,8 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
                     axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                     axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside", 
                     axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "Click To Edit Title", title.font.size = 14, title.font.family = "Arial",
-                    title.text.color = "black", axis.range.x = NULL, axis.range.y = NULL, y.title = NULL, x.title = NULL, flip.x = NULL, flip.y = NULL){
+                    title.text.color = "black", axis.range.x = NULL, axis.range.y = NULL, y.title = NULL, x.title = NULL, flip.x = NULL, flip.y = NULL,
+                    x.adjustment = NULL, y.adjustment = NULL, x.input = NULL, y.input = NULL){
     
     #Unique x axis styling for linePlot:
     xaxis_style <- list(
@@ -110,13 +111,38 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
     yaxis_style$range <- axis.range.y
     yaxis_style$title <- y.title
 
+    #Making axis adjustments if the parameters are not NULL
+    if (!is.null(x.adjustment)){
+        reactive.data <- .adjust_column_values(df = reactive.data, col_names = x.input, transformation = x.adjustment)
+    }
+    if(!is.null(y.adjustment)){
+        reactive.data <- .adjust_column_values(df = reactive.data, col_names = y.input, transformation = y.adjustment)
+    }
+     #Finding Axis min and max if all columns are numeric
+     #X values
+    if (all(sapply(reactive.data[x.input], is.numeric))) {
+        min_vals_x <- sapply(reactive.data[x.input], min, na.rm = TRUE)
+        max_vals_x <- sapply(reactive.data[x.input], max, na.rm = TRUE)
 
+    } else {
+        min_vals_x <- NULL
+        max_vals_x <- NULL
+    }
+    #Y values: 
+    if (all(sapply(reactive.data[y.input], is.numeric))) {
+        min_vals_y <- sapply(reactive.data[y.input], min, na.rm = TRUE)
+        max_vals_y <- sapply(reactive.data[y.input], max, na.rm = TRUE)
+
+    } else {
+        min_vals_y <- NULL
+        max_vals_y <- NULL
+    }
 
     if (!is.null(facet.by) && facet.by != ""){
         plots <- reactive.data |>
             group_by(!!sym(facet.by)) |>
             do(p = plot_ly(
-                data = .data,
+                data = reactive.data,
                 x = x.value,
                 y = y.value,
                 type = "scatter",
@@ -146,44 +172,44 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
         )
     
     }
-    # fig <- fig |> layout(
-    #     title = list(
-    #         text = title.text, 
-    #         font = list(size = title.font.size, family = title.font.family, color = title.text.color),
-    #         x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
-    #     ),
-    #     margin = list(t = 80),
-    #     showlegend = TRUE,
-    #     xaxis = list(  # ← KEY: Always works here
-    #         showline = axis.showline,
-    #         mirror = axis.mirror,
-    #         linecolor = axis.linecolor,
-    #         linewidth = axis.linewidth,
-    #         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
-    #         tickangle = axis.tickangle.x,
-    #         ticks = axis.ticks,
-    #         tickcolor = axis.tickcolor,
-    #         ticklen = axis.ticklen,
-    #         tickwidth = axis.tickwidth,
-    #         range = axis.range.x,
-    #         title = x.title,
-    #         autorange = flip.x
-    #     ),
-    #     yaxis = list(
-    #         showline = axis.showline,
-    #         mirror = axis.mirror,
-    #         linecolor = axis.linecolor,
-    #         linewidth = axis.linewidth,
-    #         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
-    #         tickangle = axis.tickangle.y,
-    #         ticks = axis.ticks,
-    #         tickcolor = axis.tickcolor,
-    #         ticklen = axis.ticklen,
-    #         tickwidth = axis.tickwidth,
-    #         range = axis.range.y,
-    #         title = y.title,
-    #         autorange = flip.y
-    #     )
-    # )
+    fig <- fig |> layout(
+        title = list(
+            text = title.text, 
+            font = list(size = title.font.size, family = title.font.family, color = title.text.color),
+            x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
+        ),
+        margin = list(t = 80),
+        showlegend = TRUE,
+        xaxis = list(  # ← KEY: Always works here
+            showline = axis.showline,
+            mirror = axis.mirror,
+            linecolor = axis.linecolor,
+            linewidth = axis.linewidth,
+            tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
+            tickangle = axis.tickangle.x,
+            ticks = axis.ticks,
+            tickcolor = axis.tickcolor,
+            ticklen = axis.ticklen,
+            tickwidth = axis.tickwidth,
+            range = c(min_vals_x, max_vals_x),
+            title = x.title,
+            autorange = flip.x
+        ),
+        yaxis = list(
+            showline = axis.showline,
+            mirror = axis.mirror,
+            linecolor = axis.linecolor,
+            linewidth = axis.linewidth,
+            tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
+            tickangle = axis.tickangle.y,
+            ticks = axis.ticks,
+            tickcolor = axis.tickcolor,
+            ticklen = axis.ticklen,
+            tickwidth = axis.tickwidth,
+            range = c(min_vals_y, max_vals_y),
+            title = y.title,
+            autorange = flip.y
+        )
+    )
     return(fig)
 }
