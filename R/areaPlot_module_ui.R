@@ -220,7 +220,7 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #'
 #' @export
 #' @author Jacob Martin
-areaPlotOutputUI <- function(id) {
+AreaPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
         plotlyOutput(ns("areaPlot"), width = "100%", height = "400px"),

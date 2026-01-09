@@ -77,13 +77,13 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # pie Plot
 
-            p <- plotthis::piePlot(
+            p <- piePlot(
                 reactive.data = data(),
                 plot.labels = labels_formula,
                 plot.values = plot_values,
                 make.hole = isolate(input$make.hole),
                 palette = plotthis::palette_list[[isolate(input$palette)]],
-                col_palette = isolate(input$palette.colours),
+                col.palette = isolate(input$palette.colours),
                 plot.text = isolate(input$plot.text)
             )
 

@@ -97,7 +97,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
 
-        output$barPlot <- renderPlotly({
+        output$BarPlot <- renderPlotly({
             input$update
 
             # Null Values:

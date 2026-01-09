@@ -101,7 +101,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
 
-        output$boxPlot <- renderPlotly({
+        output$BoxPlot <- renderPlotly({
             input$update
 
             # Facet By Null option Upstream:
