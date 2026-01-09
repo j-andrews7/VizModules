@@ -228,6 +228,7 @@
     }
 
     # Get unique combinations of split.by values (these define the facets)
+    # Handle both single and multiple split.by variables
     split_data <- plot_data[, split.by, drop = FALSE]
     unique_combinations <- unique(split_data)
 
@@ -237,18 +238,18 @@
         # Find all rows that match this combination
         matches <- rep(TRUE, nrow(plot_data))
         for (col in split.by) {
-            matches <- matches & (plot_data[[col]] == unique_combinations[[col]][i])
+            matches <- matches & (as.character(plot_data[[col]]) == as.character(unique_combinations[[col]][i]))
         }
         facet_map[[i]] <- which(matches)
     }
 
     # Create axis-to-facet mapping based on plotly layout
-    # Plotly uses x, x2, x3... for multiple subplots
+    # Inspect the actual layout to find which axes exist
     axis_to_facet <- list()
     n_facets <- length(facet_map)
 
-    # Map xaxis/yaxis references to facet indices
-    # Default subplot uses "x" and "y", subsequent ones use "x2"/"y2", "x3"/"y3", etc.
+    # Default mapping: x/y for first subplot, x2/y2 for second, etc.
+    # This is how dittoViz/plotly typically structures faceted plots
     for (i in seq_len(n_facets)) {
         if (i == 1) {
             axis_to_facet[["x"]] <- 1
