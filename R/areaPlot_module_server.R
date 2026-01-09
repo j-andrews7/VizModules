@@ -97,6 +97,16 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             design <- if (isolate(input$split.by) == "NULL" || isolate(input$design) == "NULL") NULL else isolate(input$design)
 
+            # Convert NA to NULL for facet.ncol and facet.nrow
+            facet.ncol <- isolate(input$facet.ncol)
+            if (is.na(facet.ncol)) {
+                facet.ncol <- NULL
+            }
+            facet.nrow <- isolate(input$facet.nrow)
+            if (is.na(facet.nrow)) {
+                facet.nrow <- NULL
+            }
+
             p <- plotthis::AreaPlot(
                 data(),
                 x = isolate(input$x.data),
@@ -109,8 +119,8 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 alpha = isolate(input$alpha),
                 facet_by = facet.by,
                 facet_scales = isolate(input$facet.scale),
-                facet_ncol = isolate(input$facet.ncol),
-                facet_nrow = isolate(input$facet.nrow),
+                facet_ncol = facet.ncol,
+                facet_nrow = facet.nrow,
                 facet_byrow = isolate(input$facet.by.row),
                 combine = isolate(input$combine),
                 design = design

@@ -122,6 +122,17 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!isolate(input$split.by) == "NULL") {
                 split.by <- isolate(input$split.by)
             }
+
+            # Convert NA to NULL for facet.ncol and facet.nrow
+            facet.ncol <- isolate(input$facet.ncol)
+            if (is.na(facet.ncol)) {
+                facet.ncol <- NULL
+            }
+            facet.nrow <- isolate(input$facet.nrow)
+            if (is.na(facet.nrow)) {
+                facet.nrow <- NULL
+            }
+
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -131,8 +142,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 group_by = isolate(input$group.by),
                 facet_by = facet.by,
                 facet_scales = isolate(input$facet.scale),
-                facet_ncol = isolate(input$facet.ncol),
-                facet_nrow = isolate(input$facet.nrow),
+                facet_ncol = facet.ncol,
+                facet_nrow = facet.nrow,
                 facet_byrow = isolate(input$facet.by.row),
                 palette = isolate(input$palette),
                 palcolor = isolate(input$palette.colours),
