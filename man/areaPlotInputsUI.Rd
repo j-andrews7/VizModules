@@ -44,7 +44,7 @@ AreaPlotInputsUI("areaPlot", mtcars)
 }
 \seealso{
 \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=AreaPlotOutputUI]{AreaPlotOutputUI()}}, \code{\link[=AreaPlotServer]{AreaPlotServer()}}, \code{\link[=createAreaPlotApp]{createAreaPlotApp()}}
+\code{\link[=AreaPlotOutputUI]{AreaPlotOutputUI()}}, \code{\link[=AreaPlotServer]{AreaPlotServer()}}, \code{\link[=AreaPlotApp]{AreaPlotApp()}}
 }
 \author{
 Jacob Martin
