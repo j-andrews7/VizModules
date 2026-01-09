@@ -251,6 +251,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 displaylogo = FALSE
             )
 
+            # Compute facet membership once for use in both highlighting and auto-annotation
+            # This is only needed if we have annotation capability and either faceting or highlighting
+            facet_membership <- NULL
+            if (!is.null(null.na.inputs$annotate.by)) {
+                facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
+            }
+
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate(input$highlight.points)
             if (!is.null(null.na.inputs$annotate.by) &&
@@ -273,9 +280,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
-                            # Get facet membership if faceting is active
-                            facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
-
                             # Prepare coordinate strings for matching
                             x_col_name <- if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
                                 paste0(isolate(input$x.by), ".x.adj")
@@ -500,8 +504,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
-                            # Get facet membership for determining correct xref/yref
-                            facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
+                            # Use cached facet_membership for determining correct xref/yref
 
                             # Create annotations for highlighted points
                             highlight_annos <- lapply(highlight_idx, function(idx) {

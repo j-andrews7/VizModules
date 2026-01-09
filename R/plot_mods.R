@@ -227,6 +227,19 @@
         ))
     }
 
+    # Validate that split.by columns exist in plot_data
+    missing_cols <- setdiff(split.by, names(plot_data))
+    if (length(missing_cols) > 0) {
+        warning(sprintf(
+            "split.by columns not found in plot_data: %s. Treating as no faceting.",
+            paste(missing_cols, collapse = ", ")
+        ))
+        return(list(
+            facet_map = list(seq_len(nrow(plot_data))),
+            axis_to_facet = list("x" = 1, "y" = 1)
+        ))
+    }
+
     # Get unique combinations of split.by values (these define the facets)
     # Handle both single and multiple split.by variables
     split_data <- plot_data[, split.by, drop = FALSE]
