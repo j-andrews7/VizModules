@@ -113,10 +113,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!isolate(input$group.by) == "NULL") {
                 group.by <- isolate(input$group.by)
             }
-            highlight <- NULL
-            if (!isolate(input$highlight) == "") {
-                highlight <- isolate(input$highlight)
-            }
+            highlight <- .na_to_null(isolate(input$highlight))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate(input$facet.ncol))

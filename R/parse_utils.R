@@ -57,20 +57,20 @@
     x
 }
 
-#' Convert NA to NULL
+#' Convert NA or empty string to NULL
 #'
-#' A helper function to convert NA values to NULL.
-#' Used to handle Shiny numericInput default values which return NA instead of NULL
-#' when the input field is empty.
+#' A helper function to convert NA values or empty strings to NULL.
+#' Used to handle Shiny input default values which return NA or "" instead of NULL
+#' when the input field is empty. numericInput returns NA, textInput returns "".
 #'
-#' @param x A value that may be NA.
-#' @return NULL if x is a single NA value, otherwise x unchanged.
+#' @param x A value that may be NA or an empty string.
+#' @return NULL if x is a single NA value or empty string, otherwise x unchanged.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_na_to_null
 #' @keywords internal
 .na_to_null <- function(x) {
-    if (length(x) == 1 && is.na(x)) {
+    if (length(x) == 1 && (is.na(x) || identical(x, ""))) {
         return(NULL)
     }
     x

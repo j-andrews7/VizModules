@@ -105,13 +105,11 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!isolate(input$facet.by) == "NULL") {
                 facet.by <- isolate(input$facet.by)
             }
-            line.name <- NULL
-            if (!isolate(input$line.name) == "") {
-                line.name <- isolate(input$line.name)
-            }
+            line.name <- .na_to_null(isolate(input$line.name))
             expand <- waiver()
-            if (!isolate(input$expand) == "") {
-                expand <- as.numeric(strsplit(isolate(input$expand), ",\\s*")[[1]])
+            expand.input <- .na_to_null(isolate(input$expand))
+            if (!is.null(expand.input)) {
+                expand <- as.numeric(strsplit(expand.input, ",\\s*")[[1]])
             }
             if (!is.na(isolate(input$width))) {
                 width <- isolate(input$width)
