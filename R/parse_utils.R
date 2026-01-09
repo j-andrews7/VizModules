@@ -57,6 +57,25 @@
     x
 }
 
+#' Convert NA to NULL
+#'
+#' A helper function to convert NA values to NULL.
+#' Used to handle Shiny numericInput default values which return NA instead of NULL
+#' when the input field is empty.
+#'
+#' @param x A value that may be NA.
+#' @return NULL if x is NA, otherwise x unchanged.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_na_to_null
+#' @keywords internal
+.na_to_null <- function(x) {
+    if (is.na(x)) {
+        return(NULL)
+    }
+    x
+}
+
 #' Negative log10 transformation
 #'
 #' A helper function for -log10 transformation.

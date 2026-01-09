@@ -119,14 +119,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- isolate(input$facet.ncol)
-            if (is.na(facet.ncol)) {
-                facet.ncol <- NULL
-            }
-            facet.nrow <- isolate(input$facet.nrow)
-            if (is.na(facet.nrow)) {
-                facet.nrow <- NULL
-            }
+            facet.ncol <- .na_to_null(isolate(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate(input$facet.nrow))
 
             # Box Plot
             p <- plotthis::BoxPlot(
