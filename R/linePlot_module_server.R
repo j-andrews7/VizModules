@@ -134,14 +134,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
             # line Plot
 
-            # Checking that all columns are numeric for x and y adjustment to be available
+            # Update UI to clear adjustment selection if columns are not numeric
+            # The actual validation is now handled inside linePlot function
             if (!all(sapply(d[x_input], is.numeric))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
-                x.adjustment <- NULL
             }
             if (!all(sapply(d[y_input], is.numeric))) {
                 updateSelectInput(session, "y.adjustment", selected = "")
-                y.adjustment <- NULL
             }
             fig <- linePlot(
                 reactive.data = d_sorted,

@@ -111,6 +111,15 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
     yaxis_style$range <- axis.range.y
     yaxis_style$title <- y.title
 
+    # Validate that columns are numeric before applying adjustments
+    # If columns are not numeric, set adjustment to NULL to skip transformation
+    if (!is.null(x.adjustment) && !all(sapply(reactive.data[x.input], is.numeric))) {
+        x.adjustment <- NULL
+    }
+    if (!is.null(y.adjustment) && !all(sapply(reactive.data[y.input], is.numeric))) {
+        y.adjustment <- NULL
+    }
+    
     #Making axis adjustments if the parameters are not NULL
     if (!is.null(x.adjustment)){
         reactive.data <- .adjust_column_values(df = reactive.data, col_names = x.input, transformation = x.adjustment)
