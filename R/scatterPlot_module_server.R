@@ -323,7 +323,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Match trace points to data points considering panel membership
                                 matches <- .match_trace_to_data_with_panel(
                                     trace, plot_data, x_match_col, y_match_col,
-                                    null.na.inputs$split.by, trace_panel_idx
+                                    null.na.inputs$split.by, panel_filter
                                 )
 
                                 # Find which matched data points should be highlighted
@@ -332,19 +332,10 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     data_idx <- matches$data_indices[j]
                                     trace_idx <- matches$trace_indices[j]
 
-                                    # Check if this data point should be highlighted AND belongs to this panel
+                                    # Check if this data point should be highlighted
+                                    # The panel membership check is already done in .match_trace_to_data_with_panel
                                     if (data_idx %in% highlight_idx) {
-                                        # Additional check: ensure point actually belongs to this panel
-                                        # (not just shown due to show.others or split.show.all.others)
-                                        point_belongs <- .check_point_panel_membership(
-                                            plot_data[data_idx, , drop = FALSE],
-                                            null.na.inputs$split.by,
-                                            panel_filter
-                                        )
-
-                                        if (point_belongs) {
-                                            highlight_mask_in_trace[trace_idx] <- TRUE
-                                        }
+                                        highlight_mask_in_trace[trace_idx] <- TRUE
                                     }
                                 }
 

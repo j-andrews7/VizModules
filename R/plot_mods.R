@@ -275,7 +275,7 @@
 #' @param x_match_col Name of the column in plot_data for x coordinates.
 #' @param y_match_col Name of the column in plot_data for y coordinates.
 #' @param split.by Character vector of split.by variable names (length 0-2).
-#' @param trace_panel_idx The panel index this trace belongs to (1-based).
+#' @param panel_filter Named list of filter values for the panel this trace belongs to.
 #'
 #' @return A list with:
 #'   - `data_indices`: Indices in plot_data that match this trace AND belong to same panel
@@ -285,7 +285,7 @@
 #' @rdname INTERNAL_match_trace_to_data_with_panel
 #' @keywords internal
 .match_trace_to_data_with_panel <- function(trace, plot_data, x_match_col, y_match_col,
-                                             split.by, trace_panel_idx) {
+                                             split.by, panel_filter) {
     # If no coordinates in trace, return empty
     if (is.null(trace$x) || is.null(trace$y) || !is.numeric(trace$x) || !is.numeric(trace$y)) {
         return(list(data_indices = integer(0), trace_indices = integer(0)))
@@ -308,10 +308,7 @@
         ))
     }
 
-    # With faceting, we need to determine panel membership
-    # Extract the panel's filter values from trace name or customdata
-    trace_panel_filter <- .infer_panel_filter_from_trace(trace, split.by)
-
+    # With faceting, we need to check panel membership
     # Find points that match BOTH coordinates AND panel membership
     data_indices <- integer(0)
     trace_indices <- integer(0)
@@ -327,7 +324,7 @@
                 point_matches_panel <- .check_point_panel_membership(
                     plot_data[data_idx, , drop = FALSE],
                     split.by,
-                    trace_panel_filter
+                    panel_filter
                 )
 
                 if (point_matches_panel) {
@@ -340,25 +337,6 @@
     }
 
     list(data_indices = data_indices, trace_indices = trace_indices)
-}
-
-#' Infer panel filter from trace properties
-#'
-#' Attempts to determine which panel a trace belongs to by examining its name
-#' and other properties.
-#'
-#' @param trace A plotly trace object.
-#' @param split.by Character vector of split.by variable names.
-#'
-#' @return A named list of filter values, or NULL if cannot determine.
-#'
-#' @author Jared Andrews
-#' @rdname INTERNAL_infer_panel_filter_from_trace
-#' @keywords internal
-.infer_panel_filter_from_trace <- function(trace, split.by) {
-    # For now, return NULL and rely on coordinate + customdata matching
-    # The trace name might contain group info but it's not reliable for panel detection
-    NULL
 }
 
 #' Check if a data point belongs to a panel
