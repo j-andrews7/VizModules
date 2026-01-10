@@ -315,7 +315,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 if (isolate(input$show.others) && !is.null(null.na.inputs$split.by)) {
                                     trace_highlight_mask <- .filter_highlight_by_facet(
                                         plot_data, highlight_idx, trace, trace_coords,
-                                        plot_coords, facet_membership
+                                        plot_coords, null.na.inputs$split.by, x_col_name, y_col_name
                                     )
                                 } else {
                                     # No faceting or show.others is FALSE - highlight by coordinates only
@@ -546,49 +546,51 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 point_y <- plot_data[[y_match_col]][idx]
                                 point_coord <- paste0(round(point_x, 10), "_", round(point_y, 10))
 
-                                # Find which trace contains this point as "real" data
-                                # by checking if it matches coordinates in the trace and belongs to the right facet
-                                if (!is.null(facet_membership) && 
-                                    !is.null(null.na.inputs$split.by) &&
-                                    length(facet_membership$facet_map) > 1) {
-                                    
-                                    # Determine which facet this point belongs to
-                                    point_facet_idx <- NULL
-                                    for (facet_idx in seq_along(facet_membership$facet_map)) {
-                                        if (idx %in% facet_membership$facet_map[[facet_idx]]) {
-                                            point_facet_idx <- facet_idx
-                                            break
-                                        }
+                                # Get the split.by values for this point
+                                point_facet_values <- NULL
+                                if (!is.null(null.na.inputs$split.by)) {
+                                    point_facet_values <- list()
+                                    for (col in null.na.inputs$split.by) {
+                                        point_facet_values[[col]] <- as.character(plot_data[[col]][idx])
                                     }
+                                }
 
-                                    # If we found the facet, look for a trace in that facet
-                                    if (!is.null(point_facet_idx) && length(trace_axis_map) > 0) {
-                                        # Try to find a trace that contains this point's coordinates
-                                        # and belongs to the same facet (by axis reference)
-                                        for (trace_idx in seq_along(fig$x$data)) {
-                                            trace <- fig$x$data[[trace_idx]]
-                                            if (is.null(trace$x) || is.null(trace$y)) next
-                                            if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+                                # Find which trace contains this point as "real" data
+                                # by matching both coordinates and facet values
+                                if (!is.null(point_facet_values) && length(trace_axis_map) > 0) {
+                                    for (trace_idx in seq_along(fig$x$data)) {
+                                        trace <- fig$x$data[[trace_idx]]
+                                        if (is.null(trace$x) || is.null(trace$y)) next
+                                        if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
-                                            # Check if this trace has the point
-                                            trace_coords <- paste0(
-                                                round(trace$x, 10), "_", round(trace$y, 10)
-                                            )
-                                            if (point_coord %in% trace_coords) {
-                                                # Check if trace belongs to the right facet
-                                                trace_xaxis <- trace_axis_map[[trace_idx]]$xaxis
-                                                expected_xaxis <- if (point_facet_idx == 1) {
-                                                    "x"
-                                                } else {
-                                                    paste0("x", point_facet_idx)
-                                                }
-                                                
-                                                if (trace_xaxis == expected_xaxis) {
-                                                    # Found the right trace
-                                                    xref <- trace_axis_map[[trace_idx]]$xaxis
-                                                    yref <- trace_axis_map[[trace_idx]]$yaxis
+                                        # Check if this trace has the point's coordinates
+                                        trace_coords <- paste0(
+                                            round(trace$x, 10), "_", round(trace$y, 10)
+                                        )
+                                        if (!(point_coord %in% trace_coords)) next
+
+                                        # Check if trace represents the same facet as this point
+                                        trace_facet_values <- .get_trace_facet_values(
+                                            trace, plot_data, null.na.inputs$split.by,
+                                            x_match_col, y_match_col
+                                        )
+                                        
+                                        if (!is.null(trace_facet_values)) {
+                                            # Check if all facet values match
+                                            facet_match <- TRUE
+                                            for (col in names(point_facet_values)) {
+                                                if (is.null(trace_facet_values[[col]]) ||
+                                                    trace_facet_values[[col]] != point_facet_values[[col]]) {
+                                                    facet_match <- FALSE
                                                     break
                                                 }
+                                            }
+                                            
+                                            if (facet_match) {
+                                                # Found the right trace
+                                                xref <- trace_axis_map[[trace_idx]]$xaxis
+                                                yref <- trace_axis_map[[trace_idx]]$yaxis
+                                                break
                                             }
                                         }
                                     }

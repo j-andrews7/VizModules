@@ -279,6 +279,69 @@
     )
 }
 
+#' Determine which split.by values a trace represents
+#'
+#' For a faceted plot, each trace represents data for specific split.by value(s).
+#' This function examines the trace's coordinates and determines which split.by
+#' combination the trace represents by matching coordinates back to plot_data.
+#'
+#' @param trace Plotly trace object
+#' @param plot_data Data frame from dittoViz with all plot data
+#' @param split.by Character vector of column name(s) used for faceting
+#' @param x_col Column name for x coordinates in plot_data
+#' @param y_col Column name for y coordinates in plot_data
+#'
+#' @return A named list with split.by values for this trace, or NULL if can't determine
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_get_trace_facet_values
+#' @keywords internal
+.get_trace_facet_values <- function(trace, plot_data, split.by, x_col, y_col) {
+    # If no faceting or no valid trace data, return NULL
+    if (is.null(split.by) || length(split.by) == 0 || 
+        is.null(trace$x) || is.null(trace$y) ||
+        !is.numeric(trace$x) || !is.numeric(trace$y)) {
+        return(NULL)
+    }
+
+    # Get a sample of coordinates from the trace (use first few points)
+    sample_size <- min(5, length(trace$x))
+    trace_coords <- paste0(
+        round(trace$x[1:sample_size], 10), "_", 
+        round(trace$y[1:sample_size], 10)
+    )
+
+    # Create plot_data coordinates
+    plot_coords <- paste0(
+        round(plot_data[[x_col]], 10), "_", 
+        round(plot_data[[y_col]], 10)
+    )
+
+    # Find matching rows in plot_data
+    matching_rows <- which(plot_coords %in% trace_coords)
+    
+    if (length(matching_rows) == 0) {
+        return(NULL)
+    }
+
+    # Get the split.by values for these matching rows
+    # If all matching rows have the same split.by values, that's our facet
+    facet_values <- list()
+    for (col in split.by) {
+        unique_vals <- unique(as.character(plot_data[[col]][matching_rows]))
+        # If there's only one unique value, this trace represents that value
+        if (length(unique_vals) == 1) {
+            facet_values[[col]] <- unique_vals[1]
+        } else {
+            # Multiple values - this trace might contain "others" data
+            # We can't reliably determine the facet
+            return(NULL)
+        }
+    }
+
+    facet_values
+}
+
 #' Filter highlight indices to only include "real" points in each trace's facet
 #'
 #' When highlighting points in a faceted plot with show.others = TRUE, we only want
@@ -289,7 +352,9 @@
 #' @param trace Plotly trace object
 #' @param trace_coords Character vector of coordinate strings for the trace
 #' @param plot_coords Character vector of coordinate strings for plot_data
-#' @param facet_membership List returned by .get_facet_membership()
+#' @param split.by Character vector of column name(s) used for faceting
+#' @param x_col Column name for x coordinates in plot_data
+#' @param y_col Column name for y coordinates in plot_data
 #'
 #' @return Logical vector indicating which points in the trace should be highlighted
 #'
@@ -297,34 +362,40 @@
 #' @rdname INTERNAL_filter_highlight_by_facet
 #' @keywords internal
 .filter_highlight_by_facet <- function(plot_data, highlight_idx, trace, trace_coords, 
-                                        plot_coords, facet_membership) {
+                                        plot_coords, split.by, x_col, y_col) {
     # Start with coordinate-based matching
     trace_highlight_mask <- trace_coords %in% plot_coords[highlight_idx]
-
-    # If no faceting, return as-is
-    if (length(facet_membership$facet_map) == 1) {
+    
+    # If no highlighting matches or no faceting, return as-is
+    if (!any(trace_highlight_mask) || is.null(split.by) || length(split.by) == 0) {
         return(trace_highlight_mask)
     }
 
-    # Determine which facet this trace belongs to
-    trace_xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
-    trace_facet_idx <- facet_membership$axis_to_facet[[trace_xaxis]]
-
-    # If we can't determine the facet, return as-is (shouldn't happen)
-    if (is.null(trace_facet_idx)) {
+    # Determine which split.by values this trace represents
+    trace_facet_values <- .get_trace_facet_values(trace, plot_data, split.by, x_col, y_col)
+    
+    # If we can't determine the facet, return coordinate-based matching
+    # (this might happen for "others" traces that mix multiple facets)
+    if (is.null(trace_facet_values)) {
         return(trace_highlight_mask)
     }
 
-    # Get the plot_data indices that are "real" for this facet
-    facet_real_idx <- facet_membership$facet_map[[trace_facet_idx]]
-
-    # Filter highlight_idx to only include points that are "real" in this facet
-    facet_highlight_idx <- intersect(highlight_idx, facet_real_idx)
+    # Filter highlight_idx to only include points that match this trace's facet values
+    facet_match_idx <- highlight_idx
+    for (col in names(trace_facet_values)) {
+        facet_match_idx <- facet_match_idx[
+            as.character(plot_data[[col]][facet_match_idx]) == trace_facet_values[[col]]
+        ]
+    }
 
     # Update the mask to only highlight points that are both:
     # 1. In the highlight list
-    # 2. "Real" data for this facet
-    facet_highlight_coords <- plot_coords[facet_highlight_idx]
+    # 2. Match the split.by values for this trace's facet
+    if (length(facet_match_idx) == 0) {
+        return(rep(FALSE, length(trace_highlight_mask)))
+    }
+
+    facet_highlight_coords <- plot_coords[facet_match_idx]
     trace_highlight_mask <- trace_coords %in% facet_highlight_coords
 
     trace_highlight_mask
