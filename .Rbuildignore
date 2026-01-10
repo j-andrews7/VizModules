@@ -7,3 +7,4 @@
 ^\.github$
 ^Test\.R$
 ^test_.*\.R$
+^SOLUTION\.md$
