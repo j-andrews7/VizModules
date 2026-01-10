@@ -516,34 +516,87 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
-                            # Use cached facet_membership for determining correct xref/yref
+                            # Build trace axis map (same as manual annotations)
+                            trace_axis_map <- list()
+                            if (!is.null(fig) && !is.null(fig$x) && 
+                                !is.null(fig$x$data) && length(fig$x$data) > 0) {
+                                trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
+                                    trace <- fig$x$data[[i]]
+                                    xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                                    yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                                    list(xaxis = xaxis, yaxis = yaxis)
+                                })
+                            }
+
+                            # Prepare coordinate strings for matching
+                            plot_coords <- paste0(
+                                round(plot_data[[x_match_col]], 10),
+                                "_",
+                                round(plot_data[[y_match_col]], 10)
+                            )
 
                             # Create annotations for highlighted points
                             highlight_annos <- lapply(highlight_idx, function(idx) {
-                                # Determine which facet this point belongs to
+                                # Default to first subplot axes
                                 xref <- "x"
                                 yref <- "y"
 
-                                if (!is.null(null.na.inputs$split.by) && length(facet_membership$facet_map) > 1) {
-                                    # Find which facet contains this point
+                                # Get coordinates for this point
+                                point_x <- plot_data[[x_match_col]][idx]
+                                point_y <- plot_data[[y_match_col]][idx]
+                                point_coord <- paste0(round(point_x, 10), "_", round(point_y, 10))
+
+                                # Find which trace contains this point as "real" data
+                                # by checking if it matches coordinates in the trace and belongs to the right facet
+                                if (!is.null(facet_membership) && 
+                                    !is.null(null.na.inputs$split.by) &&
+                                    length(facet_membership$facet_map) > 1) {
+                                    
+                                    # Determine which facet this point belongs to
+                                    point_facet_idx <- NULL
                                     for (facet_idx in seq_along(facet_membership$facet_map)) {
                                         if (idx %in% facet_membership$facet_map[[facet_idx]]) {
-                                            # Found the facet - get corresponding axis references
-                                            if (facet_idx == 1) {
-                                                xref <- "x"
-                                                yref <- "y"
-                                            } else {
-                                                xref <- paste0("x", facet_idx)
-                                                yref <- paste0("y", facet_idx)
-                                            }
+                                            point_facet_idx <- facet_idx
                                             break
+                                        }
+                                    }
+
+                                    # If we found the facet, look for a trace in that facet
+                                    if (!is.null(point_facet_idx) && length(trace_axis_map) > 0) {
+                                        # Try to find a trace that contains this point's coordinates
+                                        # and belongs to the same facet (by axis reference)
+                                        for (trace_idx in seq_along(fig$x$data)) {
+                                            trace <- fig$x$data[[trace_idx]]
+                                            if (is.null(trace$x) || is.null(trace$y)) next
+                                            if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+
+                                            # Check if this trace has the point
+                                            trace_coords <- paste0(
+                                                round(trace$x, 10), "_", round(trace$y, 10)
+                                            )
+                                            if (point_coord %in% trace_coords) {
+                                                # Check if trace belongs to the right facet
+                                                trace_xaxis <- trace_axis_map[[trace_idx]]$xaxis
+                                                expected_xaxis <- if (point_facet_idx == 1) {
+                                                    "x"
+                                                } else {
+                                                    paste0("x", point_facet_idx)
+                                                }
+                                                
+                                                if (trace_xaxis == expected_xaxis) {
+                                                    # Found the right trace
+                                                    xref <- trace_axis_map[[trace_idx]]$xaxis
+                                                    yref <- trace_axis_map[[trace_idx]]$yaxis
+                                                    break
+                                                }
+                                            }
                                         }
                                     }
                                 }
 
                                 list(
-                                    x = plot_data[[x_match_col]][idx],
-                                    y = plot_data[[y_match_col]][idx],
+                                    x = point_x,
+                                    y = point_y,
                                     text = as.character(plot_data[[annotate_col]][idx]),
                                     xref = xref,
                                     yref = yref,
