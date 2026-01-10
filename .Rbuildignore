@@ -8,3 +8,4 @@
 ^Test\.R$
 ^test_.*\.R$
 ^SOLUTION\.md$
+^TESTING_CHECKLIST\.md$
