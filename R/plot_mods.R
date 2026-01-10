@@ -304,11 +304,18 @@
         return(NULL)
     }
 
-    # Get a sample of coordinates from the trace (use first few points)
-    sample_size <- min(5, length(trace$x))
+    # Sample more points for better accuracy (up to 20 points spread across the trace)
+    trace_len <- length(trace$x)
+    if (trace_len <= 20) {
+        sample_indices <- seq_len(trace_len)
+    } else {
+        # Sample evenly across the trace
+        sample_indices <- round(seq(1, trace_len, length.out = 20))
+    }
+    
     trace_coords <- paste0(
-        round(trace$x[1:sample_size], 10), "_", 
-        round(trace$y[1:sample_size], 10)
+        round(trace$x[sample_indices], 10), "_", 
+        round(trace$y[sample_indices], 10)
     )
 
     # Create plot_data coordinates
@@ -333,8 +340,8 @@
         if (length(unique_vals) == 1) {
             facet_values[[col]] <- unique_vals[1]
         } else {
-            # Multiple values - this trace might contain "others" data
-            # We can't reliably determine the facet
+            # Multiple values - this trace contains mixed data (likely "others")
+            # We can't reliably determine a single facet
             return(NULL)
         }
     }
@@ -363,19 +370,19 @@
 #' @keywords internal
 .filter_highlight_by_facet <- function(plot_data, highlight_idx, trace, trace_coords, 
                                         plot_coords, split.by, x_col, y_col) {
-    # Start with coordinate-based matching
-    trace_highlight_mask <- trace_coords %in% plot_coords[highlight_idx]
+    # Start with coordinate-based matching against ALL highlight indices
+    trace_highlight_mask <- rep(FALSE, length(trace_coords))
     
-    # If no highlighting matches or no faceting, return as-is
-    if (!any(trace_highlight_mask) || is.null(split.by) || length(split.by) == 0) {
-        return(trace_highlight_mask)
+    # If no highlighting or no faceting, use simple coordinate matching
+    if (length(highlight_idx) == 0 || is.null(split.by) || length(split.by) == 0) {
+        return(trace_coords %in% plot_coords[highlight_idx])
     }
 
     # Determine which split.by values this trace represents
     trace_facet_values <- .get_trace_facet_values(trace, plot_data, split.by, x_col, y_col)
     
-    # If we can't determine the facet, return coordinate-based matching
-    # (this might happen for "others" traces that mix multiple facets)
+    # If we can't determine the facet (e.g., "others" trace with mixed data),
+    # don't highlight anything in this trace to be safe
     if (is.null(trace_facet_values)) {
         return(trace_highlight_mask)
     }
@@ -388,15 +395,21 @@
         ]
     }
 
-    # Update the mask to only highlight points that are both:
-    # 1. In the highlight list
-    # 2. Match the split.by values for this trace's facet
+    # If no highlights match this facet, return all FALSE
     if (length(facet_match_idx) == 0) {
-        return(rep(FALSE, length(trace_highlight_mask)))
+        return(trace_highlight_mask)
     }
 
-    facet_highlight_coords <- plot_coords[facet_match_idx]
-    trace_highlight_mask <- trace_coords %in% facet_highlight_coords
+    # For each point in the trace, check if it should be highlighted
+    # by matching coordinates to the filtered highlight indices
+    for (j in seq_along(trace_coords)) {
+        trace_coord <- trace_coords[j]
+        # Check if this coordinate matches any of the facet-filtered highlight points
+        matching_idx <- facet_match_idx[plot_coords[facet_match_idx] == trace_coord]
+        if (length(matching_idx) > 0) {
+            trace_highlight_mask[j] <- TRUE
+        }
+    }
 
     trace_highlight_mask
 }
