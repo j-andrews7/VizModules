@@ -5,3 +5,5 @@
 ^pkgdown$
 .lintr
 ^\.github$
+^Test\.R$
+^test_.*\.R$

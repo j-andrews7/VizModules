@@ -319,6 +319,14 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Determine which panel this trace belongs to
                                 trace_panel_idx <- panel_map$trace_to_panel[i]
                                 panel_filter <- panel_map$panel_to_filter[[trace_panel_idx]]
+                                
+                                # If we couldn't determine panel filter, skip panel-aware filtering
+                                # (this shouldn't happen but is a safeguard)
+                                if (is.null(panel_filter) && !is.null(null.na.inputs$split.by) && 
+                                    length(null.na.inputs$split.by) > 0) {
+                                    # Fallback to empty filter (will match all points)
+                                    panel_filter <- list()
+                                }
 
                                 # Match trace points to data points considering panel membership
                                 matches <- .match_trace_to_data_with_panel(
