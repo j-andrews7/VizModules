@@ -251,13 +251,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 displaylogo = FALSE
             )
 
-            # Compute facet membership once for use in both highlighting and auto-annotation
-            # This is only needed if we have annotation capability and either faceting or highlighting
-            facet_membership <- NULL
-            if (!is.null(null.na.inputs$annotate.by)) {
-                facet_membership <- .get_facet_membership(plot_data, null.na.inputs$split.by, fig)
-            }
-
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate(input$highlight.points)
             if (!is.null(null.na.inputs$annotate.by) &&
@@ -280,7 +273,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
-                            # Prepare coordinate strings for matching
+                            # Get coordinate column names
                             x_col_name <- if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
                                 paste0(isolate(input$x.by), ".x.adj")
                             } else {
@@ -291,6 +284,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                             } else {
                                 isolate(input$y.by)
                             }
+
+                            # Create coordinate strings for all plot_data
                             plot_coords <- paste0(
                                 round(plot_data[[x_col_name]], 10),
                                 "_",
@@ -310,16 +305,61 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 trace_n <- length(trace$x)
                                 trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
 
-                                # Determine which points to highlight in this trace
-                                # If faceting with show.others, filter to only "real" points in this facet
-                                if (isolate(input$show.others) && !is.null(null.na.inputs$split.by)) {
-                                    trace_highlight_mask <- .filter_highlight_by_facet(
-                                        plot_data, highlight_idx, trace, trace_coords,
-                                        plot_coords, null.na.inputs$split.by, x_col_name, y_col_name
-                                    )
-                                } else {
-                                    # No faceting or show.others is FALSE - highlight by coordinates only
-                                    trace_highlight_mask <- trace_coords %in% plot_coords[highlight_idx]
+                                # Determine which plot_data rows to highlight in this trace
+                                # If faceting with show.others, need to filter by split.by values
+                                trace_highlight_idx <- highlight_idx
+                                
+                                if (isolate(input$show.others) && 
+                                    !is.null(null.na.inputs$split.by) && 
+                                    length(null.na.inputs$split.by) > 0) {
+                                    
+                                    # Determine which split.by values this trace represents
+                                    # by matching a sample of trace coords to plot_data
+                                    sample_size <- min(10, trace_n)
+                                    sample_indices <- if (trace_n <= 10) {
+                                        seq_len(trace_n)
+                                    } else {
+                                        round(seq(1, trace_n, length.out = 10))
+                                    }
+                                    sample_coords <- trace_coords[sample_indices]
+                                    matching_rows <- which(plot_coords %in% sample_coords)
+                                    
+                                    if (length(matching_rows) > 0) {
+                                        # Check if all matching rows have same split.by values
+                                        trace_split_values <- list()
+                                        all_same <- TRUE
+                                        
+                                        for (split_col in null.na.inputs$split.by) {
+                                            unique_vals <- unique(as.character(plot_data[[split_col]][matching_rows]))
+                                            if (length(unique_vals) == 1) {
+                                                trace_split_values[[split_col]] <- unique_vals[1]
+                                            } else {
+                                                # Mixed values - likely an "others" trace
+                                                all_same <- FALSE
+                                                break
+                                            }
+                                        }
+                                        
+                                        # Filter highlight indices to only those matching this trace's facet
+                                        if (all_same && length(trace_split_values) > 0) {
+                                            for (split_col in names(trace_split_values)) {
+                                                trace_highlight_idx <- trace_highlight_idx[
+                                                    as.character(plot_data[[split_col]][trace_highlight_idx]) ==
+                                                        trace_split_values[[split_col]]
+                                                ]
+                                            }
+                                        } else {
+                                            # Can't determine facet, don't highlight anything
+                                            trace_highlight_idx <- integer(0)
+                                        }
+                                    }
+                                }
+
+                                # Create mask for which points in THIS trace to highlight
+                                trace_highlight_mask <- rep(FALSE, trace_n)
+                                if (length(trace_highlight_idx) > 0) {
+                                    highlight_trace_coords <- plot_coords[trace_highlight_idx]
+                                    trace_highlight_mask <- trace_coords %in% highlight_trace_coords
                                 }
 
                                 if (any(trace_highlight_mask)) {
@@ -516,24 +556,19 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
-                            # Build trace axis map (same as manual annotations)
-                            trace_axis_map <- list()
-                            if (!is.null(fig) && !is.null(fig$x) && 
-                                !is.null(fig$x$data) && length(fig$x$data) > 0) {
-                                trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
-                                    trace <- fig$x$data[[i]]
-                                    xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
-                                    yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
-                                    list(xaxis = xaxis, yaxis = yaxis)
-                                })
+                            # Build trace axis map if not already done
+                            if (!exists("trace_axis_map") || is.null(trace_axis_map)) {
+                                trace_axis_map <- list()
+                                if (!is.null(fig) && !is.null(fig$x) && 
+                                    !is.null(fig$x$data) && length(fig$x$data) > 0) {
+                                    trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
+                                        trace <- fig$x$data[[i]]
+                                        xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                                        yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                                        list(xaxis = xaxis, yaxis = yaxis)
+                                    })
+                                }
                             }
-
-                            # Prepare coordinate strings for matching
-                            plot_coords <- paste0(
-                                round(plot_data[[x_match_col]], 10),
-                                "_",
-                                round(plot_data[[y_match_col]], 10)
-                            )
 
                             # Create annotations for highlighted points
                             highlight_annos <- lapply(highlight_idx, function(idx) {
@@ -541,73 +576,90 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 xref <- "x"
                                 yref <- "y"
 
-                                # Get coordinates for this point
+                                # Get point coordinates and split.by values
                                 point_x <- plot_data[[x_match_col]][idx]
                                 point_y <- plot_data[[y_match_col]][idx]
                                 point_coord <- paste0(round(point_x, 10), "_", round(point_y, 10))
 
-                                # Get the split.by values for this point
-                                point_facet_values <- NULL
-                                if (!is.null(null.na.inputs$split.by)) {
-                                    point_facet_values <- list()
-                                    for (col in null.na.inputs$split.by) {
-                                        point_facet_values[[col]] <- as.character(plot_data[[col]][idx])
-                                    }
-                                }
-
-                                # Find which trace contains this point as "real" data
-                                # by matching both coordinates and facet values
-                                if (!is.null(point_facet_values) && length(trace_axis_map) > 0) {
-                                    # Track potential matches
-                                    best_match_trace_idx <- NULL
+                                # If faceting, find the correct trace for this point
+                                if (!is.null(null.na.inputs$split.by) && 
+                                    length(null.na.inputs$split.by) > 0 &&
+                                    length(trace_axis_map) > 0) {
                                     
+                                    # Get this point's split.by values
+                                    point_split_values <- list()
+                                    for (split_col in null.na.inputs$split.by) {
+                                        point_split_values[[split_col]] <- 
+                                            as.character(plot_data[[split_col]][idx])
+                                    }
+
+                                    # Find a trace that contains this point's coordinates
+                                    # and matches its split.by values
                                     for (trace_idx in seq_along(fig$x$data)) {
                                         trace <- fig$x$data[[trace_idx]]
                                         if (is.null(trace$x) || is.null(trace$y)) next
                                         if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
-                                        # Check if this trace has the point's coordinates
+                                        # Check if trace contains this coordinate
                                         trace_coords <- paste0(
                                             round(trace$x, 10), "_", round(trace$y, 10)
                                         )
                                         if (!(point_coord %in% trace_coords)) next
 
-                                        # This trace has the point - check if it's the "real" facet
-                                        trace_facet_values <- .get_trace_facet_values(
-                                            trace, plot_data, null.na.inputs$split.by,
-                                            x_match_col, y_match_col
-                                        )
+                                        # Determine trace's split.by values
+                                        sample_size <- min(10, length(trace$x))
+                                        sample_indices <- if (length(trace$x) <= 10) {
+                                            seq_len(length(trace$x))
+                                        } else {
+                                            round(seq(1, length(trace$x), length.out = 10))
+                                        }
+                                        sample_coords <- trace_coords[sample_indices]
                                         
-                                        if (!is.null(trace_facet_values)) {
-                                            # Check if all facet values match
-                                            facet_match <- TRUE
-                                            for (col in names(point_facet_values)) {
-                                                if (is.null(trace_facet_values[[col]]) ||
-                                                    trace_facet_values[[col]] != point_facet_values[[col]]) {
-                                                    facet_match <- FALSE
+                                        plot_coords_all <- paste0(
+                                            round(plot_data[[x_match_col]], 10), "_",
+                                            round(plot_data[[y_match_col]], 10)
+                                        )
+                                        matching_rows <- which(plot_coords_all %in% sample_coords)
+                                        
+                                        if (length(matching_rows) > 0) {
+                                            trace_split_values <- list()
+                                            all_match <- TRUE
+                                            
+                                            for (split_col in null.na.inputs$split.by) {
+                                                unique_vals <- unique(
+                                                    as.character(plot_data[[split_col]][matching_rows])
+                                                )
+                                                if (length(unique_vals) == 1) {
+                                                    trace_split_values[[split_col]] <- unique_vals[1]
+                                                } else {
+                                                    all_match <- FALSE
                                                     break
                                                 }
                                             }
                                             
-                                            if (facet_match) {
-                                                # Found a matching trace
-                                                best_match_trace_idx <- trace_idx
-                                                break
+                                            # Check if trace's values match point's values
+                                            if (all_match && length(trace_split_values) > 0) {
+                                                values_match <- TRUE
+                                                for (split_col in names(point_split_values)) {
+                                                    if (is.null(trace_split_values[[split_col]]) ||
+                                                        trace_split_values[[split_col]] != 
+                                                        point_split_values[[split_col]]) {
+                                                        values_match <- FALSE
+                                                        break
+                                                    }
+                                                }
+                                                
+                                                if (values_match) {
+                                                    # Found the right trace
+                                                    xref <- trace_axis_map[[trace_idx]]$xaxis
+                                                    yref <- trace_axis_map[[trace_idx]]$yaxis
+                                                    break
+                                                }
                                             }
-                                        } else if (is.null(best_match_trace_idx)) {
-                                            # Couldn't determine facet values (maybe mixed trace)
-                                            # Keep this as a fallback option
-                                            best_match_trace_idx <- trace_idx
                                         }
                                     }
-                                    
-                                    # Use the best match we found
-                                    if (!is.null(best_match_trace_idx)) {
-                                        xref <- trace_axis_map[[best_match_trace_idx]]$xaxis
-                                        yref <- trace_axis_map[[best_match_trace_idx]]$yaxis
-                                    }
                                 } else if (length(trace_axis_map) > 0) {
-                                    # No faceting, but we still need to find the right trace
+                                    # No faceting - find any trace with this coordinate
                                     for (trace_idx in seq_along(fig$x$data)) {
                                         trace <- fig$x$data[[trace_idx]]
                                         if (is.null(trace$x) || is.null(trace$y)) next
