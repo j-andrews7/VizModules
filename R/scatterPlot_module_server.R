@@ -558,6 +558,9 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Find which trace contains this point as "real" data
                                 # by matching both coordinates and facet values
                                 if (!is.null(point_facet_values) && length(trace_axis_map) > 0) {
+                                    # Track potential matches
+                                    best_match_trace_idx <- NULL
+                                    
                                     for (trace_idx in seq_along(fig$x$data)) {
                                         trace <- fig$x$data[[trace_idx]]
                                         if (is.null(trace$x) || is.null(trace$y)) next
@@ -569,7 +572,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                         )
                                         if (!(point_coord %in% trace_coords)) next
 
-                                        # Check if trace represents the same facet as this point
+                                        # This trace has the point - check if it's the "real" facet
                                         trace_facet_values <- .get_trace_facet_values(
                                             trace, plot_data, null.na.inputs$split.by,
                                             x_match_col, y_match_col
@@ -587,11 +590,36 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                             }
                                             
                                             if (facet_match) {
-                                                # Found the right trace
-                                                xref <- trace_axis_map[[trace_idx]]$xaxis
-                                                yref <- trace_axis_map[[trace_idx]]$yaxis
+                                                # Found a matching trace
+                                                best_match_trace_idx <- trace_idx
                                                 break
                                             }
+                                        } else if (is.null(best_match_trace_idx)) {
+                                            # Couldn't determine facet values (maybe mixed trace)
+                                            # Keep this as a fallback option
+                                            best_match_trace_idx <- trace_idx
+                                        }
+                                    }
+                                    
+                                    # Use the best match we found
+                                    if (!is.null(best_match_trace_idx)) {
+                                        xref <- trace_axis_map[[best_match_trace_idx]]$xaxis
+                                        yref <- trace_axis_map[[best_match_trace_idx]]$yaxis
+                                    }
+                                } else if (length(trace_axis_map) > 0) {
+                                    # No faceting, but we still need to find the right trace
+                                    for (trace_idx in seq_along(fig$x$data)) {
+                                        trace <- fig$x$data[[trace_idx]]
+                                        if (is.null(trace$x) || is.null(trace$y)) next
+                                        if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+
+                                        trace_coords <- paste0(
+                                            round(trace$x, 10), "_", round(trace$y, 10)
+                                        )
+                                        if (point_coord %in% trace_coords) {
+                                            xref <- trace_axis_map[[trace_idx]]$xaxis
+                                            yref <- trace_axis_map[[trace_idx]]$yaxis
+                                            break
                                         }
                                     }
                                 }
