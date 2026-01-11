@@ -460,7 +460,11 @@
                 anno_xref <- if (!is.null(anno$xref)) gsub(" domain", "", anno$xref) else "x"
                 anno_yref <- if (!is.null(anno$yref)) gsub(" domain", "", anno$yref) else "y"
 
-                if (anno_xref == xaxis_ref || anno_yref == yaxis_ref) {
+                # Handle NA values in comparisons
+                xref_match <- !is.na(anno_xref) && !is.na(xaxis_ref) && anno_xref == xaxis_ref
+                yref_match <- !is.na(anno_yref) && !is.na(yaxis_ref) && anno_yref == yaxis_ref
+
+                if (xref_match || yref_match) {
                     # Parse the title text to extract filter values
                     filter_values <- .parse_panel_title(anno$text, split.by)
                     result$panel_to_filter[[panel_idx]] <- filter_values
