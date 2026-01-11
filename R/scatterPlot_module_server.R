@@ -273,21 +273,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
-                            # Determine coordinate column names (accounting for adjustments)
-                            x_match_col <- if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
-                                paste0(isolate(input$x.by), ".x.adj")
-                            } else {
-                                isolate(input$x.by)
-                            }
-                            y_match_col <- if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
-                                paste0(isolate(input$y.by), ".y.adj")
-                            } else {
-                                isolate(input$y.by)
-                            }
-
-                            # Build panel filter map to handle faceting correctly
-                            panel_map <- .build_panel_filter_map(fig, null.na.inputs$split.by, plot_data)
-
                             # Iterate through traces and modify marker properties
                             for (i in seq_along(fig$x$data)) {
                                 trace <- fig$x$data[[i]]
@@ -295,8 +280,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Skip traces without x/y data or non-scatter traces
                                 if (is.null(trace$x) || is.null(trace$y)) next
                                 if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
-                                if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
+                                # Match trace points to plot_data by coordinates
                                 trace_n <- length(trace$x)
 
                                 # Initialize marker properties if not present
@@ -316,50 +301,104 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
                                 if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
 
-                                # Determine which panel this trace belongs to
-                                trace_panel_idx <- panel_map$trace_to_panel[i]
-                                panel_filter <- panel_map$panel_to_filter[[trace_panel_idx]]
-                                
-                                # If we couldn't determine panel filter, skip panel-aware filtering
-                                # (this shouldn't happen but is a safeguard)
-                                if (is.null(panel_filter) && !is.null(null.na.inputs$split.by) && 
-                                    length(null.na.inputs$split.by) > 0) {
-                                    # Fallback to empty filter (will match all points)
-                                    panel_filter <- list()
-                                }
+                                # Match trace points to highlight indices
+                                # Use coordinate matching since trace order may differ
+                                # Skip if trace$x or trace$y are not numeric (e.g., factors)
+                                if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
-                                # Match trace points to data points considering panel membership
-                                matches <- .match_trace_to_data_with_panel(
-                                    trace, plot_data, x_match_col, y_match_col,
-                                    null.na.inputs$split.by, panel_filter
+                                trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+                                plot_coords <- paste0(
+                                    round(plot_data[[if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
+                                        paste0(isolate(input$x.by), ".x.adj")
+                                    } else {
+                                        isolate(input$x.by)
+                                    }]], 10),
+                                    "_",
+                                    round(plot_data[[if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
+                                        paste0(isolate(input$y.by), ".y.adj")
+                                    } else {
+                                        isolate(input$y.by)
+                                    }]], 10)
                                 )
+                                highlight_coords <- plot_coords[highlight_idx]
 
-                                # Find which matched data points should be highlighted
-                                highlight_mask_in_trace <- rep(FALSE, trace_n)
-                                for (j in seq_along(matches$data_indices)) {
-                                    data_idx <- matches$data_indices[j]
-                                    trace_idx <- matches$trace_indices[j]
-
-                                    # Check if this data point should be highlighted
-                                    # The panel membership check is already done in .match_trace_to_data_with_panel
-                                    if (data_idx %in% highlight_idx) {
-                                        highlight_mask_in_trace[trace_idx] <- TRUE
+                                trace_highlight_mask <- trace_coords %in% highlight_coords
+                                
+                                # Additional check: If split.by is used and customdata exists,
+                                # verify that the annotate.by value matches for this trace
+                                # This prevents highlighting "show.others" points in wrong panels
+                                if (any(trace_highlight_mask) && !is.null(null.na.inputs$split.by) && 
+                                    length(null.na.inputs$split.by) > 0) {
+                                    
+                                    # Use customdata to verify point belongs to this trace's panel
+                                    # customdata is a matrix where each row is a point and columns are hover.data variables
+                                    if (!is.null(trace$customdata) && is.matrix(trace$customdata)) {
+                                        # Find which column has the annotate.by data
+                                        # The hover.data includes annotate.by if it's in the split.by or explicitly added
+                                        customdata_colnames <- colnames(trace$customdata)
+                                        
+                                        if (!is.null(customdata_colnames) && annotate_col %in% customdata_colnames) {
+                                            annotate_col_idx <- which(customdata_colnames == annotate_col)
+                                            
+                                            # For each highlighted point in this trace, check if its annotate.by value
+                                            # matches one of the highlight_vals
+                                            for (j in which(trace_highlight_mask)) {
+                                                point_annotate_val <- as.character(trace$customdata[j, annotate_col_idx])
+                                                # If this point's annotate value doesn't match highlight_vals, don't highlight it
+                                                # (it's a show.others point)
+                                                if (!point_annotate_val %in% highlight_vals) {
+                                                    trace_highlight_mask[j] <- FALSE
+                                                }
+                                            }
+                                        } else {
+                                            # Fallback: use split.by columns to verify
+                                            # Check if any split.by column exists in customdata
+                                            split_cols_in_customdata <- intersect(null.na.inputs$split.by, customdata_colnames)
+                                            
+                                            if (length(split_cols_in_customdata) > 0) {
+                                                # For each point, verify it matches the highlight criteria
+                                                # by checking the split.by columns match the data
+                                                for (j in which(trace_highlight_mask)) {
+                                                    # Find this point in plot_data by coordinates
+                                                    point_coord <- trace_coords[j]
+                                                    data_idx <- which(plot_coords == point_coord & 
+                                                                     as.character(plot_data[[annotate_col]]) %in% highlight_vals)
+                                                    
+                                                    if (length(data_idx) > 0) {
+                                                        # Check if split.by values match between trace and data
+                                                        all_match <- TRUE
+                                                        for (split_col in split_cols_in_customdata) {
+                                                            split_col_idx <- which(customdata_colnames == split_col)
+                                                            trace_val <- as.character(trace$customdata[j, split_col_idx])
+                                                            data_val <- as.character(plot_data[[split_col]][data_idx[1]])
+                                                            if (trace_val != data_val) {
+                                                                all_match <- FALSE
+                                                                break
+                                                            }
+                                                        }
+                                                        if (!all_match) {
+                                                            trace_highlight_mask[j] <- FALSE
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
-                                if (any(highlight_mask_in_trace)) {
+                                if (any(trace_highlight_mask)) {
                                     # Apply highlight styling
                                     if (!is.null(hl_color) && hl_color != "" && hl_color != "transparent") {
-                                        cur_color[highlight_mask_in_trace] <- hl_color
+                                        cur_color[trace_highlight_mask] <- hl_color
                                     }
                                     if (!is.null(hl_size) && !is.na(hl_size)) {
-                                        cur_size[highlight_mask_in_trace] <- hl_size
+                                        cur_size[trace_highlight_mask] <- hl_size
                                     }
                                     if (!is.null(hl_border_color) && hl_border_color != "") {
-                                        cur_line_color[highlight_mask_in_trace] <- hl_border_color
+                                        cur_line_color[trace_highlight_mask] <- hl_border_color
                                     }
                                     if (!is.null(hl_border_width) && !is.na(hl_border_width)) {
-                                        cur_line_width[highlight_mask_in_trace] <- hl_border_width
+                                        cur_line_width[trace_highlight_mask] <- hl_border_width
                                     }
 
                                     # Update trace marker properties
@@ -403,8 +442,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 anno_data <- data.frame(
                     x = plot_data[[x_match_col]],
                     y = plot_data[[y_match_col]],
-                    text = plot_data[[null.na.inputs$annotate.by]],
-                    row_idx = seq_len(nrow(plot_data))
+                    text = plot_data[[null.na.inputs$annotate.by]]
                 )
 
                 # Filter to rows of anno_data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
@@ -412,9 +450,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 anno_data$xy <- paste0(round(anno_data$x, 10), "_", round(anno_data$y, 10))
                 selected_xy <- paste0(round(selected.data()$x, 10), "_", round(selected.data()$y, 10))
                 anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
-
-                # Build panel filter map to check point membership
-                panel_map <- .build_panel_filter_map(fig, null.na.inputs$split.by, plot_data)
 
                 # Map curveNumber to xref/yref for subplots
                 # Extract axis references from the plotly figure for each trace
@@ -454,22 +489,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                             if (length(trace_axis_map) > 0 && curve_num <= length(trace_axis_map)) {
                                 xref <- trace_axis_map[[curve_num]]$xaxis
                                 yref <- trace_axis_map[[curve_num]]$yaxis
-
-                                # Check if this point actually belongs to this panel
-                                # (not just shown due to show.others)
-                                trace_panel_idx <- panel_map$trace_to_panel[curve_num]
-                                panel_filter <- panel_map$panel_to_filter[[trace_panel_idx]]
-
-                                point_belongs <- .check_point_panel_membership(
-                                    plot_data[anno_data$row_idx[i], , drop = FALSE],
-                                    null.na.inputs$split.by,
-                                    panel_filter
-                                )
-
-                                # Skip this annotation if point doesn't belong to panel
-                                if (!point_belongs) {
-                                    next
-                                }
                             } else {
                                 # Fallback to default
                                 xref <- "x"
@@ -481,7 +500,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                             yref <- "y"
                         }
 
-                        annos[[length(annos) + 1]] <- list(
+                        annos[[i]] <- list(
                             x = anno_data$x[i],
                             y = anno_data$y[i],
                             text = as.character(anno_data$text[i]),
@@ -532,47 +551,79 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
-                            # Build panel filter map to handle faceting correctly
-                            panel_map <- .build_panel_filter_map(fig, null.na.inputs$split.by, plot_data)
-
-                            # Create annotations for highlighted points, assigning to correct panels
+                            # For each highlighted point, find which trace it belongs to
+                            # This ensures annotations appear in the correct panel
                             highlight_annos <- list()
-
+                            
                             for (idx in highlight_idx) {
-                                # Determine which panel this point belongs to
-                                point_panel <- NA
-                                for (panel_idx in seq_along(panel_map$panel_to_filter)) {
-                                    panel_filter <- panel_map$panel_to_filter[[panel_idx]]
-                                    if (.check_point_panel_membership(
-                                        plot_data[idx, , drop = FALSE],
-                                        null.na.inputs$split.by,
-                                        panel_filter
-                                    )) {
-                                        point_panel <- panel_idx
-                                        break
+                                point_x <- plot_data[[x_match_col]][idx]
+                                point_y <- plot_data[[y_match_col]][idx]
+                                point_coord <- paste0(round(point_x, 10), "_", round(point_y, 10))
+                                
+                                # Find which trace this point belongs to
+                                # by matching coordinates AND checking customdata if split.by is used
+                                found_trace <- FALSE
+                                xref <- "x"
+                                yref <- "y"
+                                
+                                for (trace_idx in seq_along(fig$x$data)) {
+                                    trace <- fig$x$data[[trace_idx]]
+                                    
+                                    if (is.null(trace$x) || is.null(trace$y)) next
+                                    if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+                                    
+                                    # Check if this trace contains the point
+                                    trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+                                    point_in_trace <- which(trace_coords == point_coord)
+                                    
+                                    if (length(point_in_trace) > 0) {
+                                        # Verify this is the "real" point, not a show.others point
+                                        is_real_point <- TRUE
+                                        
+                                        if (!is.null(null.na.inputs$split.by) && length(null.na.inputs$split.by) > 0 &&
+                                            !is.null(trace$customdata) && is.matrix(trace$customdata)) {
+                                            
+                                            customdata_colnames <- colnames(trace$customdata)
+                                            
+                                            # Check annotate.by column if available
+                                            if (!is.null(customdata_colnames) && annotate_col %in% customdata_colnames) {
+                                                annotate_col_idx <- which(customdata_colnames == annotate_col)
+                                                trace_annotate_val <- as.character(trace$customdata[point_in_trace[1], annotate_col_idx])
+                                                data_annotate_val <- as.character(plot_data[[annotate_col]][idx])
+                                                
+                                                if (trace_annotate_val != data_annotate_val) {
+                                                    is_real_point <- FALSE
+                                                }
+                                            } else {
+                                                # Check split.by columns
+                                                for (split_col in null.na.inputs$split.by) {
+                                                    if (split_col %in% customdata_colnames) {
+                                                        split_col_idx <- which(customdata_colnames == split_col)
+                                                        trace_val <- as.character(trace$customdata[point_in_trace[1], split_col_idx])
+                                                        data_val <- as.character(plot_data[[split_col]][idx])
+                                                        if (trace_val != data_val) {
+                                                            is_real_point <- FALSE
+                                                            break
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        if (is_real_point) {
+                                            # This is the correct trace for this point
+                                            xref <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                                            yref <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                                            found_trace <- TRUE
+                                            break
+                                        }
                                     }
                                 }
-
-                                # Skip if we couldn't determine the panel
-                                if (is.na(point_panel)) next
-
-                                # Get the axis references for this panel
-                                # Find a trace belonging to this panel to get xref/yref
-                                panel_traces <- which(panel_map$trace_to_panel == point_panel)
-                                if (length(panel_traces) > 0) {
-                                    # Use the first trace in this panel to get axis references
-                                    trace <- fig$x$data[[panel_traces[1]]]
-                                    xref <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
-                                    yref <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
-                                } else {
-                                    # Fallback to default
-                                    xref <- "x"
-                                    yref <- "y"
-                                }
-
+                                
+                                # Add annotation with correct panel reference
                                 highlight_annos[[length(highlight_annos) + 1]] <- list(
-                                    x = plot_data[[x_match_col]][idx],
-                                    y = plot_data[[y_match_col]][idx],
+                                    x = point_x,
+                                    y = point_y,
                                     text = as.character(plot_data[[annotate_col]][idx]),
                                     xref = xref,
                                     yref = yref,
