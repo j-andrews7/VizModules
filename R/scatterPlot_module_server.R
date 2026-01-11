@@ -384,9 +384,22 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 )
 
                 # Filter to rows of anno_data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
-                # Round coordinates to avoid floating-point precision issues
-                anno_data$xy <- paste0(round(anno_data$x, 10), "_", round(anno_data$y, 10))
-                selected_xy <- paste0(round(selected.data()$x, 10), "_", round(selected.data()$y, 10))
+                # Convert to numeric for matching (handles plotly's numeric return for categoricals)
+                get_match_val <- function(v) {
+                    if (is.numeric(v)) {
+                        return(v)
+                    }
+                    as.numeric(as.factor(v))
+                }
+
+                # Create matching columns with rounding to handle floating point precision
+                anno_match_x <- round(get_match_val(anno_data$x), 10)
+                anno_match_y <- round(get_match_val(anno_data$y), 10)
+                selected_match_x <- round(get_match_val(selected.data()$x), 10)
+                selected_match_y <- round(get_match_val(selected.data()$y), 10)
+
+                anno_data$xy <- paste0(anno_match_x, "_", anno_match_y)
+                selected_xy <- paste0(selected_match_x, "_", selected_match_y)
                 anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
 
                 # Map curveNumber to xref/yref for subplots
@@ -414,9 +427,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         is.numeric(selected_data_cached$curveNumber)
 
                     for (i in seq_len(nrow(anno_data))) {
-                        # Find matching selected data point to get curveNumber
-                        xy_match <- paste0(round(anno_data$x[i], 10), "_", round(anno_data$y[i], 10))
-                        selected_idx <- match(xy_match, selected_xy)
+                        selected_idx <- match(anno_data$xy[i], selected_xy)
 
                         if (!is.na(selected_idx) &&
                             has_curve_number &&
@@ -439,8 +450,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         }
 
                         annos[[i]] <- list(
-                            x = anno_data$x[i],
-                            y = anno_data$y[i],
+                            x = as.numeric(strsplit(anno_data$xy[i], "_")[[1]][1]),
+                            y = as.numeric(strsplit(anno_data$xy[i], "_")[[1]][2]),
                             text = as.character(anno_data$text[i]),
                             xref = xref,
                             yref = yref,
@@ -515,12 +526,20 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 annos <- highlight_annos
                             } else {
                                 # Get existing annotation coordinates
+                                # Use same matching logic as above
+                                get_match_val <- function(v) {
+                                    if (is.numeric(v)) {
+                                        return(v)
+                                    }
+                                    as.numeric(as.factor(v))
+                                }
+
                                 existing_coords <- sapply(annos, function(a) {
-                                    paste0(round(a$x, 10), "_", round(a$y, 10))
+                                    paste0(round(get_match_val(a$x), 10), "_", round(get_match_val(a$y), 10))
                                 })
                                 # Add only highlight annotations that don't already exist
                                 for (ha in highlight_annos) {
-                                    ha_coord <- paste0(round(ha$x, 10), "_", round(ha$y, 10))
+                                    ha_coord <- paste0(round(get_match_val(ha$x), 10), "_", round(get_match_val(ha$y), 10))
                                     if (!ha_coord %in% existing_coords) {
                                         annos <- c(annos, list(ha))
                                         existing_coords <- c(existing_coords, ha_coord)
