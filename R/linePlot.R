@@ -3,7 +3,6 @@
 #' @return A plotly object.
 #'
 #' @importFrom plotly plot_ly subplot
-#' @importFrom dplyr group_by do pull sym
 #'
 #' @export
 #' @author Jacob Martin
@@ -65,10 +64,12 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
     multi_axis <- xor(length(x.input) > 1, length(y.input) > 1)
 
     if (!is.null(facet.by) && facet.by != "") {
-        plots <- plot_data |>
-            group_by(!!sym(facet.by)) |>
-            do(p = plot_ly(
-                data = plot_data,
+        # Split data by facet variable
+        facet_levels <- unique(plot_data[[facet.by]])
+        plots <- lapply(facet_levels, function(level) {
+            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
+            plot_ly(
+                data = facet_data,
                 x = x.value,
                 y = y.value,
                 type = "scatter",
@@ -77,8 +78,8 @@ linePlot <- function(reactive.data, x.value, y.value, plot.mode, line.type, colo
                 color = colour.group.by,
                 colors = palette.selection,
                 showlegend = show.legend
-            )) |>
-            pull(p)
+            )
+        })
 
         fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
     } else {
