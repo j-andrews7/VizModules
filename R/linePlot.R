@@ -152,6 +152,10 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 if (plot.mode %in% c("lines", "lines+markers")) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
                 }
+                # Add marker parameter with matching color for consistency
+                if (plot.mode %in% c("markers", "lines+markers")) {
+                    trace_params$marker <- list(color = palette.selection[i])
+                }
                 fig <- do.call(add_trace, c(list(fig), trace_params))
             }
         }
@@ -177,6 +181,10 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 # Only add line parameter if mode is "lines" or "lines+markers"
                 if (plot.mode %in% c("lines", "lines+markers")) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
+                }
+                # Add marker parameter with matching color for consistency
+                if (plot.mode %in% c("markers", "lines+markers")) {
+                    trace_params$marker <- list(color = palette.selection[i])
                 }
                 fig <- do.call(add_trace, c(list(fig), trace_params))
             }
