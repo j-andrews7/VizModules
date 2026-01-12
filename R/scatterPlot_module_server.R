@@ -327,21 +327,26 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                                 trace_highlight_mask <- trace_coords %in% highlight_coords
                                 
-                                # Additionally check that the annotate.by values match the highlighted values
-                                # Parse trace text to extract annotate.by values and verify they match
-                                if (any(trace_highlight_mask) && !is.null(trace$text) && length(trace$text) > 1) {
-                                    # Extract annotate.by values from trace text
-                                    # Text format is like "var1: val1<br />var2: val2<br />..."
-                                    trace_annotate_vals <- sapply(trace$text, function(txt) {
-                                        # Look for the annotate.by variable in the hover text
+                                # Additionally verify annotate.by values match in the trace
+                                # Check hover text for each matching point to ensure it has the correct group value
+                                if (any(trace_highlight_mask) && !is.null(trace$text) && length(trace$text) == trace_n) {
+                                    # For each point that matched coordinates, verify the annotate.by value
+                                    for (pt_idx in which(trace_highlight_mask)) {
+                                        # Extract the annotate.by value from hover text
+                                        txt <- trace$text[pt_idx]
+                                        # Look for pattern like "annotate_col: value<br" in hover text
                                         pattern <- paste0(annotate_col, ": ([^<]+)")
-                                        match <- regmatches(txt, regexec(pattern, txt))
-                                        if (length(match[[1]]) > 1) trimws(match[[1]][2]) else NA
-                                    })
-                                    
-                                    # Only highlight points where both coordinates AND annotate.by value match
-                                    trace_highlight_mask <- trace_highlight_mask & 
-                                        (trace_annotate_vals %in% highlight_vals)
+                                        matches <- regexec(pattern, txt)
+                                        extracted <- regmatches(txt, matches)
+                                        
+                                        if (length(extracted[[1]]) > 1) {
+                                            trace_val <- trimws(extracted[[1]][2])
+                                            # Only keep highlight if the value matches what we're highlighting
+                                            if (!(trace_val %in% highlight_vals)) {
+                                                trace_highlight_mask[pt_idx] <- FALSE
+                                            }
+                                        }
+                                    }
                                 }
 
                                 if (any(trace_highlight_mask)) {
@@ -562,34 +567,33 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
                                     
                                     if (h_coord %in% trace_coords) {
-                                        # Verify that the annotate.by value in the trace matches the highlighted value
-                                        # Parse trace text to extract annotate.by values
-                                        if (!is.null(trace$text) && length(trace$text) > 1) {
-                                            # Find which point(s) in the trace match this coordinate
-                                            coord_matches <- which(trace_coords == h_coord)
-                                            
-                                            # Check if any of these points have the correct annotate.by value
-                                            has_matching_value <- FALSE
-                                            for (cm_idx in coord_matches) {
-                                                if (cm_idx <= length(trace$text)) {
-                                                    txt <- trace$text[cm_idx]
-                                                    # Look for the annotate.by variable in the hover text
-                                                    pattern <- paste0(annotate_col, ": ([^<]+)")
-                                                    match <- regmatches(txt, regexec(pattern, txt))
-                                                    if (length(match[[1]]) > 1) {
-                                                        trace_val <- trimws(match[[1]][2])
-                                                        # Check if this value matches the highlighted point's value
-                                                        point_val <- as.character(plot_data[[annotate_col]][idx])
-                                                        if (trace_val == point_val && point_val %in% highlight_vals) {
-                                                            has_matching_value <- TRUE
-                                                            break
-                                                        }
+                                        # Verify the annotate.by value matches before annotating
+                                        # Find which point(s) in trace match this coordinate
+                                        matching_pts <- which(trace_coords == h_coord)
+                                        
+                                        # Check if any matching point has the correct annotate.by value
+                                        found_match <- FALSE
+                                        for (pt_idx in matching_pts) {
+                                            if (!is.null(trace$text) && pt_idx <= length(trace$text)) {
+                                                txt <- trace$text[pt_idx]
+                                                # Extract annotate.by value from hover text
+                                                pattern <- paste0(annotate_col, ": ([^<]+)")
+                                                matches <- regexec(pattern, txt)
+                                                extracted <- regmatches(txt, matches)
+                                                
+                                                if (length(extracted[[1]]) > 1) {
+                                                    trace_val <- trimws(extracted[[1]][2])
+                                                    point_val <- as.character(plot_data[[annotate_col]][idx])
+                                                    # Only annotate if the value matches
+                                                    if (trace_val == point_val && point_val %in% highlight_vals) {
+                                                        found_match <- TRUE
+                                                        break
                                                     }
                                                 }
                                             }
-                                            
-                                            if (!has_matching_value) next
                                         }
+                                        
+                                        if (!found_match) next
                                         
                                         # Found a matching trace - use its axis references
                                         xref <- if (length(trace_axis_map) >= i) trace_axis_map[[i]]$xaxis else "x"
