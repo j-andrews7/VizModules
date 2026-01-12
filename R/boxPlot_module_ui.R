@@ -89,7 +89,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("trend.line.width"), "Trend line width:", value = 1, min = 0)
         ),
         "Stats" = tagList(
-            selectInput(ns("add.stat"), "Add Stats:", selected = "mean", choices = c("mean", "sd", "median", "var")),
+            selectInput(ns("add.stat"), "Add Stats:", selected = "", choices = c("", "mean", "sd", "median", "var")),
             colourpicker::colourInput(ns("stat.color"), "Stats Colour:", value = "#000000"),
             numericInput(ns("stat.size"), "Stat Size:", value = 1, min = 0, max = 10),
             numericInput(ns("stat.stroke"), "Stat Stroke:", value = 1, min = 0, max = 10),

@@ -118,6 +118,13 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             facet.ncol <- .na_to_null(isolate(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate(input$facet.nrow))
 
+            #Stats Default: 
+            add.stat <- NULL
+            if (!input$add.stat == ""){
+                add.stat <- input$add.stat
+            }
+
+
             # Box Plot
             p <- plotthis::BoxPlot(
                 data = data(),
@@ -140,7 +147,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 trend_ptsize = isolate(input$trend.pt.size),
                 trend_color = isolate(input$trend.colour),
                 trend_linewidth = isolate(input$trend.line.width),
-                add_stat = match.fun(isolate(input$add.stat)),
+                add_stat = add.stat,
                 stat_color = isolate(input$stat.color),
                 stat_size = isolate(input$stat.size),
                 stat_stroke = isolate(input$stat.stroke),

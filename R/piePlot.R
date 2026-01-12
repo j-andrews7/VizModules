@@ -17,14 +17,23 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
                     palette, col.palette = NULL, plot.text = "label+percent") {
     colours <- if (is.null(col.palette)) palette else col.palette
 
-    pie.chart <- plot_ly(
+    df <- reactive.data
+    lab_var <- all.vars(plot.labels)[1]
+    val_var <- all.vars(plot.values)[1]
+
+    labs <- df[[lab_var]]
+    vals <- df[[val_var]]
+
+    fig <- plot_ly(
         data = reactive.data,
         type = "pie",
-        labels = plot.labels,
-        values = plot.values,
+        labels = labs,
+        values = vals,
         hole = make.hole,
         marker = list(colors = colours),
         textinfo = plot.text
     )
-    return(pie.chart)
+
+
+    return(fig)
 }
