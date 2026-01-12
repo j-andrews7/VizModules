@@ -22,8 +22,7 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
     
     # Get unique labels to determine how many colors we need
     if (length(label_col) > 0 && label_col[1] %in% names(reactive.data)) {
-        unique_labels <- unique(reactive.data[[label_col[1]]])
-        n_labels <- length(unique_labels)
+        n_labels <- length(unique(reactive.data[[label_col[1]]]))
         
         # Ensure we have enough colors by repeating the color palette if necessary
         if (length(colours) < n_labels) {
