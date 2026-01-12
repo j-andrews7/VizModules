@@ -10,6 +10,7 @@
 #' @return A plotly object.
 #'
 #' @importFrom plotly plot_ly
+#' @importFrom stats aggregate as.formula
 #'
 #' @export
 #' @author Jacob Martin
@@ -17,24 +18,31 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
                     palette, col.palette = NULL, plot.text = "label+percent") {
     colours <- if (is.null(col.palette)) palette else col.palette
 
-    # Extract the label column name from the formula
-    label_col <- all.vars(plot.labels)
+    # Extract column names from formulas
+    label_col <- all.vars(plot.labels)[1]
+    value_col <- all.vars(plot.values)[1]
     
-    # Get unique labels to determine how many colors we need
-    if (length(label_col) > 0 && label_col[1] %in% names(reactive.data)) {
-        n_labels <- length(unique(reactive.data[[label_col[1]]]))
-        
-        # Ensure we have enough colors by repeating the color palette if necessary
-        if (length(colours) < n_labels) {
-            colours <- rep(colours, length.out = n_labels)
-        }
+    # Aggregate data by label (sum values for each category)
+    agg_formula <- as.formula(paste(value_col, "~", label_col))
+    agg_data <- aggregate(agg_formula, data = reactive.data, FUN = sum)
+    
+    # Get labels and values as vectors
+    labels_vec <- agg_data[[label_col]]
+    values_vec <- agg_data[[value_col]]
+    
+    # Ensure we have enough colors by repeating the color palette if necessary
+    n_labels <- length(labels_vec)
+    if (length(colours) < n_labels) {
+        colours <- rep(colours, length.out = n_labels)
     }
 
+    # Create pie chart with vectors instead of formulas
+    # This is necessary because plot_ly() with formulas doesn't properly
+    # apply marker colors for pie charts
     pie.chart <- plot_ly(
-        data = reactive.data,
         type = "pie",
-        labels = plot.labels,
-        values = plot.values,
+        labels = labels_vec,
+        values = values_vec,
         hole = make.hole,
         marker = list(colors = colours),
         textinfo = plot.text
