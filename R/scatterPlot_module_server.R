@@ -336,7 +336,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                         # Look for the annotate.by variable in the hover text
                                         pattern <- paste0(annotate_col, ": ([^<]+)")
                                         match <- regmatches(txt, regexec(pattern, txt))
-                                        if (length(match[[1]]) > 1) match[[1]][2] else NA
+                                        if (length(match[[1]]) > 1) trimws(match[[1]][2]) else NA
                                     })
                                     
                                     # Only highlight points where both coordinates AND annotate.by value match
@@ -577,7 +577,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                                     pattern <- paste0(annotate_col, ": ([^<]+)")
                                                     match <- regmatches(txt, regexec(pattern, txt))
                                                     if (length(match[[1]]) > 1) {
-                                                        trace_val <- match[[1]][2]
+                                                        trace_val <- trimws(match[[1]][2])
                                                         # Check if this value matches the highlighted point's value
                                                         point_val <- as.character(plot_data[[annotate_col]][idx])
                                                         if (trace_val == point_val && point_val %in% highlight_vals) {
