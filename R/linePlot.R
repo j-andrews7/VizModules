@@ -7,6 +7,7 @@
 #' @export
 #' @author Jacob Martin
 linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
+                     facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
@@ -105,7 +106,21 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             do.call(plot_ly, plot_params)
         })
 
-        fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
+        # Determine shareX and shareY based on facet.scales
+        shareX <- TRUE
+        shareY <- TRUE
+        if (facet.scales == "free") {
+            shareX <- FALSE
+            shareY <- FALSE
+        } else if (facet.scales == "free_x") {
+            shareX <- FALSE
+            shareY <- TRUE
+        } else if (facet.scales == "free_y") {
+            shareX <- TRUE
+            shareY <- FALSE
+        }
+
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
@@ -202,6 +217,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         xaxis = xaxis_style,
         yaxis = yaxis_style
     )
+
+    # Apply axis styling to all subplot axes (handles faceting)
+    fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
 }
