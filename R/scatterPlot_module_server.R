@@ -279,6 +279,10 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Skip traces without x/y data or non-scatter traces
                                 if (is.null(trace$x) || is.null(trace$y)) next
                                 if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
+                                
+                                # Skip "show.others" traces (background points in faceted plots)
+                                # These have a single text element and shouldn't be highlighted
+                                if (!is.null(trace$text) && length(trace$text) == 1) next
 
                                 # Match trace points to plot_data by coordinates
                                 trace_n <- length(trace$x)
@@ -499,26 +503,75 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
 
                         if (length(highlight_idx) > 0) {
+                            # Map curveNumber to xref/yref for subplots (same as manual annotations)
+                            trace_axis_map <- list()
+                            if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$data) && length(fig$x$data) > 0) {
+                                trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
+                                    trace <- fig$x$data[[i]]
+                                    xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
+                                    yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
+                                    list(xaxis = xaxis, yaxis = yaxis)
+                                })
+                            }
+                            
+                            # Create coordinate lookup for matching points to traces
+                            highlight_coords <- paste0(
+                                round(plot_data[[x_match_col]][highlight_idx], 10),
+                                "_",
+                                round(plot_data[[y_match_col]][highlight_idx], 10)
+                            )
+                            
                             # Create annotations for highlighted points
-                            highlight_annos <- lapply(highlight_idx, function(idx) {
-                                list(
-                                    x = plot_data[[x_match_col]][idx],
-                                    y = plot_data[[y_match_col]][idx],
-                                    text = as.character(plot_data[[annotate_col]][idx]),
-                                    xref = "x",
-                                    yref = "y",
-                                    ax = isolate(input$annotation.ax),
-                                    ay = isolate(input$annotation.ay),
-                                    showarrow = isolate(input$annotation.showarrow),
-                                    arrowcolor = isolate(input$annotation.arrowcolor),
-                                    arrowhead = isolate(input$annotation.arrowhead),
-                                    arrowwidth = isolate(input$annotation.arrowwidth),
-                                    font = list(
-                                        size = isolate(input$annotation.size),
-                                        color = isolate(input$annotation.color)
-                                    )
-                                )
-                            })
+                            # Match each point to its trace to get correct xref/yref
+                            highlight_annos <- list()
+                            for (h_idx in seq_along(highlight_idx)) {
+                                idx <- highlight_idx[h_idx]
+                                h_coord <- highlight_coords[h_idx]
+                                
+                                # Find which trace(s) contain this point
+                                # Skip "show.others" traces (length(trace$text) == 1)
+                                found_trace <- FALSE
+                                for (i in seq_along(fig$x$data)) {
+                                    trace <- fig$x$data[[i]]
+                                    
+                                    # Skip non-scatter traces or traces without proper data
+                                    if (is.null(trace$x) || is.null(trace$y)) next
+                                    if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
+                                    
+                                    # Skip "show.others" traces (background points)
+                                    if (!is.null(trace$text) && length(trace$text) == 1) next
+                                    
+                                    # Match coordinates
+                                    if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
+                                    trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+                                    
+                                    if (h_coord %in% trace_coords) {
+                                        # Found a matching trace - use its axis references
+                                        xref <- if (length(trace_axis_map) >= i) trace_axis_map[[i]]$xaxis else "x"
+                                        yref <- if (length(trace_axis_map) >= i) trace_axis_map[[i]]$yaxis else "y"
+                                        
+                                        highlight_annos[[length(highlight_annos) + 1]] <- list(
+                                            x = plot_data[[x_match_col]][idx],
+                                            y = plot_data[[y_match_col]][idx],
+                                            text = as.character(plot_data[[annotate_col]][idx]),
+                                            xref = xref,
+                                            yref = yref,
+                                            ax = isolate(input$annotation.ax),
+                                            ay = isolate(input$annotation.ay),
+                                            showarrow = isolate(input$annotation.showarrow),
+                                            arrowcolor = isolate(input$annotation.arrowcolor),
+                                            arrowhead = isolate(input$annotation.arrowhead),
+                                            arrowwidth = isolate(input$annotation.arrowwidth),
+                                            font = list(
+                                                size = isolate(input$annotation.size),
+                                                color = isolate(input$annotation.color)
+                                            )
+                                        )
+                                        found_trace <- TRUE
+                                        break  # Only annotate once per point
+                                    }
+                                }
+                            }
 
                             # Combine with existing annotations (avoiding duplicates by coordinate)
                             if (is.null(annos)) {
