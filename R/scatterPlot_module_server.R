@@ -11,7 +11,6 @@
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
-#' @importFrom plotly renderPlotly %>% config layout toWebGL event_data add_lines
 #' @importFrom shinyjs hide
 #'
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],

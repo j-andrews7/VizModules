@@ -10,7 +10,6 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @return The `moduleServer` function for the piePlot module.
 #'
-#' @importFrom plotly renderPlotly ggplotly layout config
 #' @importFrom shinyjs hide
 #' @importFrom stats reformulate
 #'

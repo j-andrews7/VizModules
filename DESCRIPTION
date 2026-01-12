@@ -20,14 +20,14 @@ Depends:
     shiny,
     plotthis,
     dittoViz,
-    dplyr
+    plotly
 Imports:
     colourpicker,
-    plotly,
     shinyjs,
     scales,
     esquisse,
     shinyjqui,
+    ggplot2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

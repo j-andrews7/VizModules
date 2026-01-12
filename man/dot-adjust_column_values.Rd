@@ -4,38 +4,46 @@
 \alias{.adjust_column_values}
 \title{Adjust numeric column values in a data frame using mathematical transformations}
 \usage{
-.adjust_column_values(df, col_names, transformation = NULL)
+.adjust_column_values(
+  df,
+  x.col = NULL,
+  y.col = NULL,
+  color.col = NULL,
+  x.adj.fun = NULL,
+  y.adj.fun = NULL,
+  color.adj.fun = NULL
+)
 }
 \arguments{
 \item{df}{A data frame containing the column to be transformed}
 
-\item{col_names}{\code{character(1)} Name of the column to transform Must be a vector e.g. c("Species", "Region")}
+\item{x.col}{Character. Name of the column for x-axis values.}
 
-\item{transformation}{\code{character(1)} or \code{NULL}. One of \code{c("", "log2", 
-  "log", "log10", "neg_log10", "log1p", "abs", "sqrt")}. Use \code{""} or \code{NULL}
-for no transformation.}
+\item{y.col}{Character. Name of the column for y-axis values.}
+
+\item{color.col}{Character. Name of the column for color values.}
+
+\item{x.adj.fun}{Character. Transformation function to apply to x-axis values, interpretable by \code{eval}.}
+
+\item{y.adj.fun}{Character. Transformation function to apply to y-axis values, interpretable by \code{eval}.}
+
+\item{color.adj.fun}{Character. Transformation function to apply to color values, interpretable by \code{eval}.}
 }
 \value{
-A data frame identical to input \code{df} but with specified column transformed
+A data frame identical to input \code{df} but with transformed columns added.
 }
 \description{
-Applies common mathematical transformations (logarithmic, absolute value, square root)
-to a specified numeric column in a data frame. Returns original data frame unchanged
-when no transformation is specified or input is invalid.
+Applies supplied transformation
+to a specified numeric column in a data frame, adding the transformation as a new column.
+Returns original data frame unchanged when no transformation is specified or input is invalid.
 }
-\details{
-Supported transformations include:
-\describe{
-\item{\code{"log2"}}{\eqn{\log_2(x)} - base 2 logarithm}
-\item{\code{"log"}}{\eqn{\ln(x)} - natural logarithm (base \eqn{e \approx 2.718})}
-\item{\code{"log10"}}{\eqn{\log_{10}(x)} - base 10 logarithm}
-\item{\code{"neg_log10"}}{\eqn{-\log_{10}(x)} - negative base 10 logarithm (p-values)}
-\item{\code{"log1p"}}{\eqn{\ln(1+x)} - natural log of (1 + x), stable for values near 0}
-\item{\code{"abs"}}{\eqn{|x|} - absolute value}
-\item{\code{"sqrt"}}{\eqn{\sqrt{x}} - square root}
-}
+\examples{
+data(mtcars)
+mtcars_mod <- .adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2")
+head(mtcars_mod$mpg.adj)
+
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
 \keyword{internal}

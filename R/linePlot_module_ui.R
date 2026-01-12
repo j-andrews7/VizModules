@@ -1,3 +1,36 @@
+#' Input UI components for the linePlot module
+#'
+#' This should be placed in the UI where the inputs should be shown, with an `id`
+#' that matches the `id` used in the `linePlotServer()` and `linePlotOutputUI()` functions.
+#'
+#' @details The user inputs for this module are separated from the outputs to allow for
+#' more flexible UI design.
+#'
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid.
+#'
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [vizModules::linePlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list.
+#'
+#' @param id The ID for the Shiny module.
+#' @param data The data frame used for plot generation.
+#' @param defaults A named list of default values for the inputs.
+#' @param title An optional title for the UI grid.
+#' @param columns Number of columns for the UI grid.
+#' @return A Shiny tagList containing the UI elements
+#'
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyWidgets switchInput
+#'
+#' @export
+#' @author Jacob Martin
+#' @seealso [vizModules::linePlot()], [vizModules::organize_inputs()],
+#' [vizModules::linePlotOutputUI()], [vizModules::linePlotServer()], [vizModules::linePlotApp()]
+#' @examples
+#' library(vizModules)
+#' data(mtcars)
+#' linePlotInputsUI("linePlot", mtcars)
 linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -6,7 +39,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
@@ -17,12 +50,12 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
             selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
             selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")),
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[1], choices = char.choices), 
-            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)), 
+            selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
+            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)),
             switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
-            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = char.choices),
+            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = cat.choices),
             selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
             selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
         ),
