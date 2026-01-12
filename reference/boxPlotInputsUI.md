@@ -73,37 +73,37 @@ library(vizModules)
 data(mtcars)
 BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="7409">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="5544">
 #>     <li class="active">
-#>       <a href="#tab-7409-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5544-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-5544-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-5544-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-5544-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-5544-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-5544-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
+#>       <a href="#tab-5544-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-5544-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7409-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5544-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7409">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7409-1">
+#>   <div class="tab-content" data-tabsetid="5544">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5544-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7409-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-5544-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -199,7 +199,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-7409-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-5544-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -242,7 +242,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-7409-4">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-5544-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -313,7 +313,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-7409-5">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-5544-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -342,17 +342,18 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-7409-6">
+#>     <div class="tab-pane" data-value="Stats" id="tab-5544-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="BoxPlot-add.stat-label" for="BoxPlot-add.stat">Add Stats:</label>
 #>             <div>
-#>               <select id="BoxPlot-add.stat" class="shiny-input-select"><option value="mean" selected>mean</option>
+#>               <select id="BoxPlot-add.stat" class="shiny-input-select"><option value="" selected></option>
+#> <option value="mean">mean</option>
 #> <option value="sd">sd</option>
 #> <option value="median">median</option>
 #> <option value="var">var</option></select>
-#>               <script type="application/json" data-for="BoxPlot-add.stat" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BoxPlot-add.stat">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -386,7 +387,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Palette" id="tab-7409-7">
+#>     <div class="tab-pane" data-value="Palette" id="tab-5544-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -899,7 +900,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7409-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-5544-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -951,7 +952,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7409-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5544-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
