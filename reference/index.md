@@ -39,8 +39,14 @@
   : Color palette options for palettePicker
 - [`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
   : Create a plotly line plot
+- [`linePlotApp()`](https://j-andrews7.github.io/vizModules/reference/linePlotApp.md)
+  : Create an example Modular linePlot Shiny Application
+- [`linePlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/linePlotInputsUI.md)
+  : Input UI components for the linePlot module
 - [`linePlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/linePlotOutputUI.md)
   : Output UI components for the linePlot module
+- [`linePlotServer()`](https://j-andrews7.github.io/vizModules/reference/linePlotServer.md)
+  : Server logic for linePlot module
 - [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
 - [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)
