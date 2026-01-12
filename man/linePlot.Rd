@@ -14,6 +14,7 @@ linePlot(
   palette.selection,
   show.legend,
   facet.by = NULL,
+  facet.scales = "fixed",
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",

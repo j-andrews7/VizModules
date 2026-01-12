@@ -283,14 +283,14 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             ),
             colourInput(ns("highlight.color"), "Highlight color",
                 value = ifelse("highlight.color" %in% names(defaults),
-                    defaults[["highlight.color"]], ""
+                    defaults[["highlight.color"]], "#00FFF7"
                 ),
                 allowTransparent = TRUE
             ),
             numericInput(ns("highlight.size"), "Highlight size",
                 min = 0.1, step = 0.5,
                 value = ifelse("highlight.size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], NA),
+                    ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], 5),
                     NA
                 )
             ),
@@ -300,9 +300,9 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 )
             ),
             numericInput(ns("highlight.border.width"), "Highlight border width",
-                min = 0, step = 0.5,
+                min = 0, step = 0.25,
                 value = ifelse("highlight.border.width" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["highlight.border.width"]]), defaults[["highlight.border.width"]], 1),
+                    ifelse(is.numeric(defaults[["highlight.border.width"]]), defaults[["highlight.border.width"]], 0.5),
                     1
                 )
             ),

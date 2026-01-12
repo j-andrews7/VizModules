@@ -414,16 +414,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     as.numeric(as.factor(v))
                 }
 
-                # Create matching columns with rounding to handle floating point precision
-                anno_match_x <- round(get_match_val(anno_data$x), 10)
-                anno_match_y <- round(get_match_val(anno_data$y), 10)
-                selected_match_x <- round(get_match_val(selected.data()$x), 10)
-                selected_match_y <- round(get_match_val(selected.data()$y), 10)
-
-                anno_data$xy <- paste0(anno_match_x, "_", anno_match_y)
-                selected_xy <- paste0(selected_match_x, "_", selected_match_y)
-                anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
-
                 # Map curveNumber to xref/yref for subplots
                 # Extract axis references from the plotly figure for each trace
                 trace_axis_map <- list()
@@ -434,16 +424,28 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                         # Default to "x" and "y" if not specified
                         xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
                         yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
-                        list(xaxis = xaxis, yaxis = yaxis)
+                        list(xaxis = xaxis, yaxis = yaxis, keep = ifelse(length(trace$text) > 1, TRUE, FALSE))
                     })
                 }
+
+                # Filter selected.data() to points that are not from skipped traces
+                keep_idx <- unlist(lapply(trace_axis_map, function(x) x$keep))
+                selected_data_cached <- selected.data()[selected.data()$curveNumber %in% which(keep_idx), ]
+
+                # Create matching columns with rounding to handle floating point precision
+                anno_match_x <- round(get_match_val(anno_data$x), 10)
+                anno_match_y <- round(get_match_val(anno_data$y), 10)
+                selected_match_x <- round(get_match_val(selected_data_cached$x), 10)
+                selected_match_y <- round(get_match_val(selected_data_cached$y), 10)
+
+                anno_data$xy <- paste0(anno_match_x, "_", anno_match_y)
+                selected_xy <- paste0(selected_match_x, "_", selected_match_y)
+                anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
 
                 # Create annotations list with correct xref/yref for each point
                 # Match selected points to their trace and use corresponding axis references
                 annos <- list()
                 if (nrow(anno_data) > 0) {
-                    # Cache selected.data() to avoid repeated calls
-                    selected_data_cached <- selected.data()
                     has_curve_number <- "curveNumber" %in% names(selected_data_cached) &&
                         !is.null(selected_data_cached$curveNumber) &&
                         is.numeric(selected_data_cached$curveNumber)
