@@ -530,7 +530,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 
                                 # Find which trace(s) contain this point
                                 # Skip "show.others" traces (length(trace$text) == 1)
-                                found_trace <- FALSE
                                 for (i in seq_along(fig$x$data)) {
                                     trace <- fig$x$data[[i]]
                                     
@@ -567,7 +566,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                                 color = isolate(input$annotation.color)
                                             )
                                         )
-                                        found_trace <- TRUE
                                         break  # Only annotate once per point
                                     }
                                 }
