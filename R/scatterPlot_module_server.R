@@ -566,7 +566,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                                 color = isolate(input$annotation.color)
                                             )
                                         )
-                                        break  # Only annotate once per point
+                                        # Don't break - continue to check other traces for the same coordinates
+                                        # This handles cases where the same point appears in multiple panels
                                     }
                                 }
                             }
