@@ -187,7 +187,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             # Handle the case when combine = FALSE returns a list of plots
-            if (is.list(p) && !inherits(p, "gg")) {
+            if (is.list(p) && !inherits(p, c("gg", "ggplot"))) {
                 # Convert each plot in the list to plotly
                 plotly_list <- lapply(p, function(plot) {
                     ggplotly(plot)
