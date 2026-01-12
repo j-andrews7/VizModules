@@ -12,6 +12,7 @@
 #'
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom plotly subplot
 #'
 #' @export
 #' @author Jacob Martin
@@ -185,7 +186,21 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 combine = isolate(input$combine)
             )
 
-            fig <- ggplotly(p) |>
+            # Handle the case when combine = FALSE returns a list of plots
+            if (is.list(p) && !inherits(p, "gg")) {
+                # Convert each plot in the list to plotly
+                plotly_list <- lapply(p, function(plot) {
+                    ggplotly(plot)
+                })
+                # Combine the plotly objects using subplot
+                fig <- subplot(plotly_list, nrows = length(plotly_list), shareX = FALSE, shareY = FALSE, titleX = TRUE, titleY = TRUE)
+            } else {
+                # Single plot case (combine = TRUE or no faceting)
+                fig <- ggplotly(p)
+            }
+
+            # Apply title styling
+            fig <- fig |>
                 layout(
                     title = list(
                         font = list(size = 28, family = isolate(input$font.type), color = isolate(input$text.colour)),
