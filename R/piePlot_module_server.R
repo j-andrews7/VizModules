@@ -76,7 +76,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # pie Plot
 
-            p <- piePlot(
+            fig <- piePlot(
                 reactive.data = data(),
                 plot.labels = labels_formula,
                 plot.values = plot_values,
@@ -84,44 +84,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 palette = plotthis::palette_list[[isolate(input$palette)]],
                 col.palette = isolate(input$palette.colours),
                 plot.text = isolate(input$plot.text)
-            )
-
-
-            fig <- ggplotly(p) |>
+            ) |>
                 layout(
-                    title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE,
-                    xaxis = list(
-                        showline = isolate(input$axis.showline),
-                        mirror = isolate(input$axis.mirror),
-                        linecolor = isolate(input$axis.linecolor),
-                        linewidth = isolate(input$axis.linewidth),
-                        tickfont = list(
-                            size = isolate(input$axis.tickfont.size),
-                            color = isolate(input$axis.tickfont.color),
-                            family = isolate(input$axis.tickfont.family)
-                        ),
-                        tickangle = isolate(input$axis.tickangle.x),
-                        ticks = isolate(input$axis.ticks),
-                        tickcolor = isolate(input$axis.tickcolor),
-                        ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth)
-                    ),
-                    yaxis = list(
-                        showline = isolate(input$axis.showline),
-                        mirror = isolate(input$axis.mirror),
-                        linecolor = isolate(input$axis.linecolor),
-                        linewidth = isolate(input$axis.linewidth),
-                        tickfont = list(
-                            size = isolate(input$axis.tickfont.size),
-                            color = isolate(input$axis.tickfont.color),
-                            family = isolate(input$axis.tickfont.family)
-                        ),
-                        tickangle = isolate(input$axis.tickangle.y),
-                        ticks = isolate(input$axis.ticks),
-                        tickcolor = isolate(input$axis.tickcolor),
-                        ticklen = isolate(input$axis.ticklen),
-                        tickwidth = isolate(input$axis.tickwidth)
-                    )
+                    title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
