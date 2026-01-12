@@ -56,6 +56,15 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
             selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = cat.choices),
+            selectInput(ns("facet.scales"), "Facet scales",
+                choices = c("fixed", "free", "free_x", "free_y"),
+                selected = ifelse("facet.scales" %in% names(defaults),
+                    ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
+                        defaults[["facet.scales"]], "fixed"
+                    ),
+                    "fixed"
+                )
+            ),
             selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
             selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
         ),

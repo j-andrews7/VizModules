@@ -63,6 +63,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "palette", selected = "Paired")
             updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "facet.by", selected = "")
+            updateSelectInput(session, "facet.scales", selected = "fixed")
 
             # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
@@ -157,6 +158,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
                 facet.by = input$facet.by,
+                facet.scales = isolate(input$facet.scales),
                 order.by = order_by,
                 axis.showline = isolate(input$axis.showline),
                 axis.mirror = isolate(input$axis.mirror),
