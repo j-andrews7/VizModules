@@ -87,17 +87,22 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         facet_levels <- unique(plot_data[[facet.by]])
         plots <- lapply(facet_levels, function(level) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-            plot_ly(
+            # Build plot parameters conditionally
+            plot_params <- list(
                 data = facet_data,
                 x = reformulate(x),
                 y = reformulate(y),
                 type = "scatter",
                 mode = plot.mode,
-                line = list(dash = line.type),
                 color = colour.group.by,
                 colors = palette.selection,
                 showlegend = show.legend
             )
+            # Only add line parameter if mode includes "lines"
+            if (grepl("lines", plot.mode)) {
+                plot_params$line <- list(dash = line.type)
+            }
+            do.call(plot_ly, plot_params)
         })
 
         fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
@@ -105,17 +110,22 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
     } else {
-        fig <- plot_ly(
+        # Build plot parameters conditionally
+        plot_params <- list(
             data = plot_data,
             x = reformulate(x),
             y = reformulate(y),
             type = "scatter",
             mode = plot.mode,
-            line = list(dash = line.type),
             color = colour.group.by,
             colors = palette.selection,
             showlegend = show.legend
         )
+        # Only add line parameter if mode includes "lines"
+        if (grepl("lines", plot.mode)) {
+            plot_params$line <- list(dash = line.type)
+        }
+        fig <- do.call(plot_ly, plot_params)
     }
 
     if (multi_axis) {
@@ -129,15 +139,20 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
                     trace_data <- trace_data[order(trace_data[[sort_column]]), ]
                 }
-                fig <- fig |> add_trace(
+                # Build trace parameters conditionally
+                trace_params <- list(
                     x = trace_data[[x[i]]],
                     y = trace_data[[y[1]]],
                     type = "scatter",
                     mode = plot.mode,
-                    line = list(dash = line.type, color = palette.selection[i]),
                     name = x[i],
                     showlegend = TRUE
                 )
+                # Only add line parameter if mode includes "lines"
+                if (grepl("lines", plot.mode)) {
+                    trace_params$line <- list(dash = line.type, color = palette.selection[i])
+                }
+                fig <- fig |> do.call(add_trace, c(list(p = .), trace_params))
             }
         }
         if (length(y) > 1) {
@@ -150,15 +165,20 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
                     trace_data <- trace_data[order(trace_data[[sort_column]]), ]
                 }
-                fig <- fig |> add_trace(
+                # Build trace parameters conditionally
+                trace_params <- list(
                     x = trace_data[[x[1]]],
                     y = trace_data[[y[i]]],
                     type = "scatter",
                     mode = plot.mode,
-                    line = list(dash = line.type, color = palette.selection[i]),
                     name = y[i],
                     showlegend = TRUE
                 )
+                # Only add line parameter if mode includes "lines"
+                if (grepl("lines", plot.mode)) {
+                    trace_params$line <- list(dash = line.type, color = palette.selection[i])
+                }
+                fig <- fig |> do.call(add_trace, c(list(p = .), trace_params))
             }
         }
     }
