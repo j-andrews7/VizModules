@@ -17,6 +17,20 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
                     palette, col.palette = NULL, plot.text = "label+percent") {
     colours <- if (is.null(col.palette)) palette else col.palette
 
+    # Extract the label column name from the formula
+    label_col <- all.vars(plot.labels)
+    
+    # Get unique labels to determine how many colors we need
+    if (length(label_col) > 0 && label_col[1] %in% names(reactive.data)) {
+        unique_labels <- unique(reactive.data[[label_col[1]]])
+        n_labels <- length(unique_labels)
+        
+        # Ensure we have enough colors by repeating the color palette if necessary
+        if (length(colours) < n_labels) {
+            colours <- rep(colours, length.out = n_labels)
+        }
+    }
+
     pie.chart <- plot_ly(
         data = reactive.data,
         type = "pie",
