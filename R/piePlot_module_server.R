@@ -86,7 +86,21 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 plot.text = isolate(input$plot.text)
             ) |>
                 layout(
-                    title = list(text = "Click To Edit Title", font = list(size = isolate(input$title.font.size), family = isolate(input$font.type), color = isolate(input$text.colour)), x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)), margin = list(t = 80), showlegend = TRUE
+                    title = list(
+                        text = "Click To Edit Title",
+                        font = list(
+                            size = isolate(input$title.font.size),
+                            family = isolate(input$font.type),
+                            color = isolate(input$text.colour)
+                        ),
+                        x = 0.47,
+                        xanchor = "center",
+                        y = 0.95,
+                        yanchor = "top",
+                        pad = list(t = 20)
+                    ),
+                    margin = list(t = 80),
+                    showlegend = TRUE
                 ) |>
                 config(
                     editable = TRUE, edits = list(titleText = TRUE, axisTitleText = TRUE),
