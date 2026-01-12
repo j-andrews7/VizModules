@@ -93,6 +93,21 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
             # Action Button:
             updateSelectInput(session, "download.type", selected = "png")
+
+            #Axes: 
+            updateCheckboxInput(session, "axis.showline", value = TRUE)
+            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
+            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
+            updateNumericInput(session, "axis.linewidth", value = 0.5)
+            updateNumericInput(session, "axis.tickfont.size", value = 12)
+            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
+            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
+            updateNumericInput(session, "axis.tickangle.x", value = 0)
+            updateNumericInput(session, "axis.tickangle.y", value = 0)
+            updateSelectInput(session, "axis.ticks", selected = "outside")
+            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
+            updateNumericInput(session, "axis.ticklen", value = 5)
+            updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
 
