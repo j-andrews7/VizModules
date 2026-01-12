@@ -101,6 +101,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         })
 
         fig <- subplot(plots, nrows = 1, shareX = TRUE, shareY = TRUE, titleX = TRUE, titleY = TRUE)
+    } else if (multi_axis) {
+        # Initialize empty plot for multi-axis to avoid creating initial trace
+        fig <- plot_ly(data = plot_data, type = "scatter")
     } else {
         fig <- plot_ly(
             data = plot_data,
@@ -117,17 +120,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
 
     if (multi_axis) {
         if (length(x) > 1) {
-            fig <- fig |> add_trace(
-                data = plot_data,
-                x = plot_data[[x[1]]],
-                y = plot_data[[y[1]]],
-                type = "scatter",
-                mode = plot.mode,
-                line = list(dash = line.type),
-                name = x[1],
-                showlegend = TRUE
-            )
-            for (i in 2:length(x)) {
+            for (i in 1:length(x)) {
                 trace_data <- reactive.data
                 sort_column <- order.cols[1]
                 if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
@@ -148,17 +141,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             }
         }
         if (length(y) > 1) {
-            fig <- fig |> add_trace(
-                data = plot_data,
-                x = plot_data[[x[1]]],
-                y = plot_data[[y[1]]],
-                type = "scatter",
-                mode = plot.mode,
-                line = list(dash = line.type),
-                name = y[1],
-                showlegend = TRUE
-            )
-            for (i in 2:length(y)) {
+            for (i in 1:length(y)) {
                 trace_data <- reactive.data
                 sort_column <- order.cols[1]
                 if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
