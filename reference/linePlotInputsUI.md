@@ -73,16 +73,16 @@ library(vizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="7983">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="5514">
 #>     <li class="active">
-#>       <a href="#tab-7983-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5514-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7983-2" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5514-2" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7983">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7983-1">
+#>   <div class="tab-content" data-tabsetid="5514">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5514-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -443,6 +443,18 @@ linePlotInputsUI("linePlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="linePlot-facet.scales-label" for="linePlot-facet.scales">Facet scales</label>
+#>             <div>
+#>               <select id="linePlot-facet.scales" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#> <option value="free">free</option>
+#> <option value="free_x">free_x</option>
+#> <option value="free_y">free_y</option></select>
+#>               <script type="application/json" data-for="linePlot-facet.scales" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="linePlot-y.adjustment-label" for="linePlot-y.adjustment">Adjust the y axis:</label>
 #>             <div>
 #>               <select id="linePlot-y.adjustment" class="shiny-input-select"><option value="" selected></option>
@@ -457,6 +469,8 @@ linePlotInputsUI("linePlot", mtcars)
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="linePlot-x.adjustment-label" for="linePlot-x.adjustment">Adjust the x axis:</label>
@@ -475,7 +489,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7983-2">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5514-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
