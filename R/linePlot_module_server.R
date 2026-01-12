@@ -1,3 +1,21 @@
+#' Server logic for linePlot module
+#' @param id The ID for the Shiny module.
+#' @param data A `reactive` containing the data frame to plot.
+#' @param hide.inputs A character vector of input IDs to hide.
+#'   These will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @param hide.tabs A character vector of tab names to hide.
+#'   Inputs in these tabs will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @return The `moduleServer` function for the linePlot module.
+#'
+#' @importFrom shinyjs hide
+#'
+#' @seealso [vizModules::linePlot()], [vizModules::organize_inputs()],
+#' [vizModules::linePlotOutputUI()], [vizModules::linePlotServer()], [vizModules::linePlotApp()]
+#'
+#' @export
+#' @author Jacob Martin
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
