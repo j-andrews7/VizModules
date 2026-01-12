@@ -98,8 +98,8 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 colors = palette.selection,
                 showlegend = show.legend
             )
-            # Only add line parameter if mode includes "lines"
-            if (grepl("lines", plot.mode)) {
+            # Only add line parameter if mode is "lines" or "lines+markers"
+            if (plot.mode %in% c("lines", "lines+markers")) {
                 plot_params$line <- list(dash = line.type)
             }
             do.call(plot_ly, plot_params)
@@ -121,8 +121,8 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             colors = palette.selection,
             showlegend = show.legend
         )
-        # Only add line parameter if mode includes "lines"
-        if (grepl("lines", plot.mode)) {
+        # Only add line parameter if mode is "lines" or "lines+markers"
+        if (plot.mode %in% c("lines", "lines+markers")) {
             plot_params$line <- list(dash = line.type)
         }
         fig <- do.call(plot_ly, plot_params)
@@ -148,8 +148,8 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                     name = x[i],
                     showlegend = TRUE
                 )
-                # Only add line parameter if mode includes "lines"
-                if (grepl("lines", plot.mode)) {
+                # Only add line parameter if mode is "lines" or "lines+markers"
+                if (plot.mode %in% c("lines", "lines+markers")) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
                 }
                 fig <- do.call(add_trace, c(list(fig), trace_params))
@@ -174,8 +174,8 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                     name = y[i],
                     showlegend = TRUE
                 )
-                # Only add line parameter if mode includes "lines"
-                if (grepl("lines", plot.mode)) {
+                # Only add line parameter if mode is "lines" or "lines+markers"
+                if (plot.mode %in% c("lines", "lines+markers")) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
                 }
                 fig <- do.call(add_trace, c(list(fig), trace_params))
