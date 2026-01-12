@@ -152,7 +152,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 if (grepl("lines", plot.mode)) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
                 }
-                fig <- fig |> do.call(add_trace, c(list(p = .), trace_params))
+                fig <- do.call(add_trace, c(list(fig), trace_params))
             }
         }
         if (length(y) > 1) {
@@ -178,7 +178,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 if (grepl("lines", plot.mode)) {
                     trace_params$line <- list(dash = line.type, color = palette.selection[i])
                 }
-                fig <- fig |> do.call(add_trace, c(list(p = .), trace_params))
+                fig <- do.call(add_trace, c(list(fig), trace_params))
             }
         }
     }
