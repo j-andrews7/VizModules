@@ -121,6 +121,95 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         }
 
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+    } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
+        # Faceting with multi-axis: create subplots where each subplot contains all traces
+        facet_levels <- unique(plot_data[[facet.by]])
+        
+        # Determine shareX and shareY based on facet.scales
+        shareX <- TRUE
+        shareY <- TRUE
+        if (facet.scales == "free") {
+            shareX <- FALSE
+            shareY <- FALSE
+        } else if (facet.scales == "free_x") {
+            shareX <- FALSE
+            shareY <- TRUE
+        } else if (facet.scales == "free_y") {
+            shareX <- TRUE
+            shareY <- FALSE
+        }
+        
+        plots <- lapply(facet_levels, function(level) {
+            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
+            # Initialize empty plot for this facet
+            facet_fig <- plot_ly(data = facet_data, type = "scatter")
+            
+            # Add traces for multi-axis
+            if (length(x) > 1) {
+                for (i in 1:length(x)) {
+                    trace_data <- facet_data
+                    sort_column <- order.cols[1]
+                    if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
+                        sort_column <- order.cols[i]
+                    }
+                    if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
+                        trace_data <- trace_data[order(trace_data[[sort_column]]), ]
+                    }
+                    # Build trace parameters conditionally
+                    trace_params <- list(
+                        x = trace_data[[x[i]]],
+                        y = trace_data[[y[1]]],
+                        type = "scatter",
+                        mode = plot.mode,
+                        name = x[i],
+                        showlegend = TRUE
+                    )
+                    # Only add line parameter if mode is "lines" or "lines+markers"
+                    if (plot.mode %in% c("lines", "lines+markers")) {
+                        trace_params$line <- list(dash = line.type, color = palette.selection[i])
+                    }
+                    # Add marker parameter with matching color for consistency
+                    if (plot.mode %in% c("markers", "lines+markers")) {
+                        trace_params$marker <- list(color = palette.selection[i])
+                    }
+                    facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
+                }
+            }
+            if (length(y) > 1) {
+                for (i in 1:length(y)) {
+                    trace_data <- facet_data
+                    sort_column <- order.cols[1]
+                    if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
+                        sort_column <- order.cols[i]
+                    }
+                    if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
+                        trace_data <- trace_data[order(trace_data[[sort_column]]), ]
+                    }
+                    # Build trace parameters conditionally
+                    trace_params <- list(
+                        x = trace_data[[x[1]]],
+                        y = trace_data[[y[i]]],
+                        type = "scatter",
+                        mode = plot.mode,
+                        name = y[i],
+                        showlegend = TRUE
+                    )
+                    # Only add line parameter if mode is "lines" or "lines+markers"
+                    if (plot.mode %in% c("lines", "lines+markers")) {
+                        trace_params$line <- list(dash = line.type, color = palette.selection[i])
+                    }
+                    # Add marker parameter with matching color for consistency
+                    if (plot.mode %in% c("markers", "lines+markers")) {
+                        trace_params$marker <- list(color = palette.selection[i])
+                    }
+                    facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
+                }
+            }
+            
+            facet_fig
+        })
+        
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
@@ -143,7 +232,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         fig <- do.call(plot_ly, plot_params)
     }
 
-    if (multi_axis) {
+    if (multi_axis && (is.null(facet.by) || facet.by == "")) {
         if (length(x) > 1) {
             for (i in 1:length(x)) {
                 trace_data <- reactive.data
