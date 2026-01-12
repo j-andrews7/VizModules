@@ -2,7 +2,7 @@
 #'
 #' @return A plotly object.
 #'
-#' @importFrom plotly plot_ly subplot
+#' @importFrom plotly plot_ly subplot add_trace
 #'
 #' @export
 #' @author Jacob Martin
