@@ -7,6 +7,12 @@
 #' @param palette A character vector of colors to use if `col.palette` is NULL.
 #' @param col.palette A character vector of colors to use.
 #' @param plot.text A character string for the text info to show.
+#' 
+#' @details This function automatically aggregates data by summing values for each
+#'   unique label. If your data contains multiple rows with the same label, their
+#'   values will be summed to create a single pie slice per label. This aggregation
+#'   is necessary to ensure colors are correctly applied to pie chart slices.
+#' 
 #' @return A plotly object.
 #'
 #' @importFrom plotly plot_ly
@@ -19,10 +25,32 @@ piePlot <- function(reactive.data, plot.labels, plot.values, make.hole = 0,
     colours <- if (is.null(col.palette)) palette else col.palette
 
     # Extract column names from formulas
-    label_col <- all.vars(plot.labels)[1]
-    value_col <- all.vars(plot.values)[1]
+    label_col <- all.vars(plot.labels)
+    value_col <- all.vars(plot.values)
+    
+    # Validate that formulas contain variables
+    if (length(label_col) == 0 || length(value_col) == 0) {
+        stop("plot.labels and plot.values must be valid formulas containing variable names")
+    }
+    
+    label_col <- label_col[1]
+    value_col <- value_col[1]
+    
+    # Validate columns exist in data
+    if (!label_col %in% names(reactive.data)) {
+        stop(sprintf("Label column '%s' not found in data", label_col))
+    }
+    if (!value_col %in% names(reactive.data)) {
+        stop(sprintf("Value column '%s' not found in data", value_col))
+    }
+    
+    # Validate value column is numeric
+    if (!is.numeric(reactive.data[[value_col]])) {
+        stop(sprintf("Value column '%s' must be numeric", value_col))
+    }
     
     # Aggregate data by label (sum values for each category)
+    # This is necessary for pie charts to work correctly with colors
     agg_formula <- as.formula(paste(value_col, "~", label_col))
     agg_data <- aggregate(agg_formula, data = reactive.data, FUN = sum)
     
