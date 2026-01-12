@@ -94,11 +94,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             if (is.numeric(d[, x_input])) {
-                d <- d[order(d[, order_by]), ]
+                d <- d[do.call(order, d[, order_by, drop = FALSE]), ]
             }
 
             if (is.numeric(d[, y_input])) {
-                d <- d[order(d[, order_by]), ]
+                d <- d[do.call(order, d[, order_by, drop = FALSE]), ]
             }
 
             # Axis title:
