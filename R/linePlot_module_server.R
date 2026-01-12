@@ -167,7 +167,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 y.adjustment = y.adjustment
             )
 
-
             fig <- fig |>
                 config(
                     editable = TRUE,

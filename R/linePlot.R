@@ -17,7 +17,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
-        title = x.title, autorange = NULL
+        title = x.title, autorange = TRUE
     )
 
     # Y axis styling by editing unique aspects of the x axis styling
