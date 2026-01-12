@@ -6,8 +6,8 @@
 \usage{
 linePlot(
   reactive.data,
-  x.value,
-  y.value,
+  x,
+  y,
   plot.mode,
   line.type,
   colour.group.by,
@@ -27,20 +27,17 @@ linePlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
-  title.text = "Click To Edit Title",
+  title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
   title.text.color = "black",
-  axis.range.x = NULL,
-  axis.range.y = NULL,
   y.title = NULL,
   x.title = NULL,
-  flip.x = NULL,
-  flip.y = NULL,
+  flip.x = FALSE,
+  flip.y = FALSE,
   x.adjustment = NULL,
   y.adjustment = NULL,
-  x.input = NULL,
-  y.input = NULL,
+  color.adjustment = NULL,
   order.by = NULL
 )
 }
