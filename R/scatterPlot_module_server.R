@@ -106,6 +106,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 "color.by" = .na_to_null(isolate(input$color.by)),
                 "shape.by" = .na_to_null(isolate(input$shape.by)),
                 "split.by" = .na_to_null(isolate(input$split.by)),
+                "annotate.by" = .na_to_null(isolate(input$annotate.by)),
                 "x.adjustment" = .na_to_null(isolate(input$x.adjustment)),
                 "y.adjustment" = .na_to_null(isolate(input$y.adjustment)),
                 "color.adjustment" = .na_to_null(isolate(input$color.adjustment)),
@@ -135,6 +136,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             # Collect hover data
             if (identical(null.na.inputs$hover.data, NULL)) {
                 hover.data <- unique(c(
+                    null.na.inputs$annotate.by,
                     null.na.inputs$color.by,
                     paste0(null.na.inputs$color.by, ".color.adj"),
                     "color.multi", "color.which",
@@ -146,7 +148,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     null.na.inputs$split.by
                 ))
             } else {
-                hover.data <- null.na.inputs$hover.data
+                hover.data <- unique(c(null.na.inputs$hover.data, null.na.inputs$annotate.by))
             }
 
             p <- dittoViz::scatterPlot(
@@ -279,7 +281,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Skip traces without x/y data or non-scatter traces
                                 if (is.null(trace$x) || is.null(trace$y)) next
                                 if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
-                                
+
                                 # Skip "show.others" traces (background points in faceted plots)
                                 # These have a single text element and shouldn't be highlighted
                                 if (!is.null(trace$text) && length(trace$text) == 1) next
@@ -310,6 +312,23 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
 
                                 trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+
+                                # Parse trace text to get annotate.by value (will always be added to hover.data)
+                                if (!is.null(trace$text)) {
+                                    trace_anno <- strsplit(trace$text, "\\n")
+                                    trace_anno <- lapply(trace_anno, function(x) {
+                                        y <- grep(isolate(input$annotate.by), x, value = TRUE)
+                                        y <- strsplit(y, " ")[[1]][2]
+                                        y
+                                    })
+                                    trace_anno <- unlist(trace_anno)
+                                }
+
+                                trace_coords <- data.frame(
+                                    xy = trace_coords,
+                                    anno = trace_anno
+                                )
+
                                 plot_coords <- paste0(
                                     round(plot_data[[if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
                                         paste0(isolate(input$x.by), ".x.adj")
@@ -325,29 +344,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 )
                                 highlight_coords <- plot_coords[highlight_idx]
 
-                                trace_highlight_mask <- trace_coords %in% highlight_coords
-                                
-                                # Additionally verify annotate.by values match in the trace
-                                # Check hover text for each matching point to ensure it has the correct group value
-                                if (any(trace_highlight_mask) && !is.null(trace$text) && length(trace$text) == trace_n) {
-                                    # For each point that matched coordinates, verify the annotate.by value
-                                    for (pt_idx in which(trace_highlight_mask)) {
-                                        # Extract the annotate.by value from hover text
-                                        txt <- trace$text[pt_idx]
-                                        # Look for pattern like "annotate_col: value<br" in hover text
-                                        pattern <- paste0(annotate_col, ": ([^<]+)")
-                                        matches <- regexec(pattern, txt)
-                                        extracted <- regmatches(txt, matches)
-                                        
-                                        if (length(extracted[[1]]) > 1) {
-                                            trace_val <- trimws(extracted[[1]][2])
-                                            # Only keep highlight if the value matches what we're highlighting
-                                            if (!(trace_val %in% highlight_vals)) {
-                                                trace_highlight_mask[pt_idx] <- FALSE
-                                            }
-                                        }
-                                    }
-                                }
+                                trace_highlight_mask <- trace_coords$xy %in% highlight_coords & trace_coords$anno %in% highlight_vals
 
                                 if (any(trace_highlight_mask)) {
                                     # Apply highlight styling
@@ -535,70 +532,57 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     list(xaxis = xaxis, yaxis = yaxis)
                                 })
                             }
-                            
+
                             # Create coordinate lookup for matching points to traces
                             highlight_coords <- paste0(
                                 round(plot_data[[x_match_col]][highlight_idx], 10),
                                 "_",
                                 round(plot_data[[y_match_col]][highlight_idx], 10)
                             )
-                            
+
                             # Create annotations for highlighted points
                             # Match each point to its trace to get correct xref/yref
                             highlight_annos <- list()
                             for (h_idx in seq_along(highlight_idx)) {
                                 idx <- highlight_idx[h_idx]
                                 h_coord <- highlight_coords[h_idx]
-                                
+
                                 # Find which trace(s) contain this point
                                 # Skip "show.others" traces (length(trace$text) == 1)
                                 for (i in seq_along(fig$x$data)) {
                                     trace <- fig$x$data[[i]]
-                                    
+
                                     # Skip non-scatter traces or traces without proper data
                                     if (is.null(trace$x) || is.null(trace$y)) next
                                     if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) next
-                                    
+
                                     # Skip "show.others" traces (background points)
                                     if (!is.null(trace$text) && length(trace$text) == 1) next
-                                    
+
                                     # Match coordinates
                                     if (!is.numeric(trace$x) || !is.numeric(trace$y)) next
                                     trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
-                                    
-                                    if (h_coord %in% trace_coords) {
-                                        # Verify the annotate.by value matches before annotating
-                                        # Find which point(s) in trace match this coordinate
-                                        matching_pts <- which(trace_coords == h_coord)
-                                        
-                                        # Check if any matching point has the correct annotate.by value
-                                        found_match <- FALSE
-                                        for (pt_idx in matching_pts) {
-                                            if (!is.null(trace$text) && pt_idx <= length(trace$text)) {
-                                                txt <- trace$text[pt_idx]
-                                                # Extract annotate.by value from hover text
-                                                pattern <- paste0(annotate_col, ": ([^<]+)")
-                                                matches <- regexec(pattern, txt)
-                                                extracted <- regmatches(txt, matches)
-                                                
-                                                if (length(extracted[[1]]) > 1) {
-                                                    trace_val <- trimws(extracted[[1]][2])
-                                                    point_val <- as.character(plot_data[[annotate_col]][idx])
-                                                    # Only annotate if the value matches
-                                                    if (trace_val == point_val && point_val %in% highlight_vals) {
-                                                        found_match <- TRUE
-                                                        break
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                        if (!found_match) next
-                                        
+
+                                    # Check that trace coords and anno match highlight coords and vals
+                                    trace_anno <- strsplit(trace$text, "\\n")
+                                    trace_anno <- lapply(trace_anno, function(x) {
+                                        y <- grep(isolate(input$annotate.by), x, value = TRUE)
+                                        y <- strsplit(y, " ")[[1]][2]
+                                        y
+                                    })
+                                    trace_anno <- unlist(trace_anno)
+                                    trace_coords <- data.frame(
+                                        xy = trace_coords,
+                                        anno = trace_anno
+                                    )
+
+                                    trace_coords <- trace_coords[trace_coords$anno %in% highlight_vals, ]
+
+                                    if (h_coord %in% trace_coords$xy) {
                                         # Found a matching trace - use its axis references
                                         xref <- if (length(trace_axis_map) >= i) trace_axis_map[[i]]$xaxis else "x"
                                         yref <- if (length(trace_axis_map) >= i) trace_axis_map[[i]]$yaxis else "y"
-                                        
+
                                         highlight_annos[[length(highlight_annos) + 1]] <- list(
                                             x = plot_data[[x_match_col]][idx],
                                             y = plot_data[[y_match_col]][idx],
@@ -623,27 +607,23 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                             }
 
                             # Combine with existing annotations (avoiding duplicates by coordinate)
+                            # Check for duplicates using coordinates and annotation text
                             if (is.null(annos)) {
                                 annos <- highlight_annos
                             } else {
-                                # Get existing annotation coordinates
-                                # Use same matching logic as above
-                                get_match_val <- function(v) {
-                                    if (is.numeric(v)) {
-                                        return(v)
-                                    }
-                                    as.numeric(as.factor(v))
+                                # Helper to create unique key for an annotation
+                                get_anno_key <- function(a) {
+                                    paste0(round(a$x, 10), "_", round(a$y, 10), "_", a$text)
                                 }
 
-                                existing_coords <- sapply(annos, function(a) {
-                                    paste0(round(get_match_val(a$x), 10), "_", round(get_match_val(a$y), 10))
-                                })
+                                existing_keys <- vapply(annos, get_anno_key, character(1))
+
                                 # Add only highlight annotations that don't already exist
                                 for (ha in highlight_annos) {
-                                    ha_coord <- paste0(round(get_match_val(ha$x), 10), "_", round(get_match_val(ha$y), 10))
-                                    if (!ha_coord %in% existing_coords) {
+                                    ha_key <- get_anno_key(ha)
+                                    if (!ha_key %in% existing_keys) {
                                         annos <- c(annos, list(ha))
-                                        existing_coords <- c(existing_coords, ha_coord)
+                                        existing_keys <- c(existing_keys, ha_key)
                                     }
                                 }
                             }
