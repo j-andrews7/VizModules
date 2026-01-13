@@ -187,7 +187,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     x_col = isolate(input$x.data),
                     group_by = isolate(input$group.by),
                     bg_palette = isolate(input$background.palette),
-                    bg_alpha = isolate(input$background.alpha)
+                    bg_alpha = isolate(input$background.alpha),
+                    flip = isolate(input$flip)
                 )
             }
 

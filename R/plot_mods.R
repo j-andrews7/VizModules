@@ -9,13 +9,14 @@
 #' @param group_by Character or NULL. Name of the grouping column.
 #' @param bg_palette Character. Name of the palette to use for backgrounds.
 #' @param bg_alpha Numeric. Alpha transparency for backgrounds (0-1).
+#' @param flip Logical. Whether the bar chart is flipped (horizontal bars).
 #'
 #' @return The modified plotly figure with background shapes added.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_add_barplot_backgrounds
 #' @keywords internal
-.add_barplot_backgrounds <- function(fig, data, x_col, group_by = NULL, bg_palette = "Set2", bg_alpha = 0.5) {
+.add_barplot_backgrounds <- function(fig, data, x_col, group_by = NULL, bg_palette = "Set2", bg_alpha = 0.5, flip = FALSE) {
     # Return unchanged if no data or figure
     if (is.null(fig) || is.null(data) || is.null(x_col)) {
         return(fig)
@@ -85,18 +86,34 @@
         # Add background rectangle
         # Categories in ggplotly bar charts are at positions 0, 1, 2, ...
         # Each bar spans approximately -0.45 to +0.45 around its center
-        shapes[[length(shapes) + 1]] <- list(
-            type = "rect",
-            xref = "x",
-            yref = "paper",
-            x0 = i - 1 - 0.45,
-            x1 = i - 1 + 0.45,
-            y0 = 0,
-            y1 = 1,
-            fillcolor = hex_to_rgba(bg_color, bg_alpha),
-            line = list(width = 0),
-            layer = "below"
-        )
+        # If flip=TRUE, bars are horizontal so we swap x and y references
+        if (flip) {
+            shapes[[length(shapes) + 1]] <- list(
+                type = "rect",
+                xref = "paper",
+                yref = "y",
+                x0 = 0,
+                x1 = 1,
+                y0 = i - 1 - 0.45,
+                y1 = i - 1 + 0.45,
+                fillcolor = hex_to_rgba(bg_color, bg_alpha),
+                line = list(width = 0),
+                layer = "below"
+            )
+        } else {
+            shapes[[length(shapes) + 1]] <- list(
+                type = "rect",
+                xref = "x",
+                yref = "paper",
+                x0 = i - 1 - 0.45,
+                x1 = i - 1 + 0.45,
+                y0 = 0,
+                y1 = 1,
+                fillcolor = hex_to_rgba(bg_color, bg_alpha),
+                line = list(width = 0),
+                layer = "below"
+            )
+        }
     }
 
     # Add shapes to layout
