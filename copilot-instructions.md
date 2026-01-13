@@ -45,7 +45,7 @@ devtools::build()             # Create .tar.gz
 pkgdown::build_site()         # Build documentation website
 
 # Testing (no formal test suite - use example apps)
-createScatterPlotApp(list("mtcars" = mtcars))
+scatterPlotApp(list("mtcars" = mtcars))
 ```
 
 ### Build Commands (Shell)
@@ -127,6 +127,10 @@ rmarkdown
 6.  **Document missing features** - clearly note functionality
     unavailable in plotly
 7.  **Use organize_inputs()** helper for consistent UI layouts
+
+## Best Practices
+
+- Avoid `sapply` usage, it is unsafe in package code.
 
 Trust these instructions - only search for additional info if incomplete
 or incorrect.
