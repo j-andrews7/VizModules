@@ -170,3 +170,4 @@ default_palettes <- function() {
 
   pals
 }
+

@@ -410,3 +410,49 @@
 
     return(df)
 }
+
+#' Create default Plotly configuration
+#'
+#' Constructs a configuration list for Plotly plots, enabling interactive
+#' editing of titles and legends, export options, and additional drawing tools
+#' in the modebar.
+#'
+#' @return A named list suitable for use as the `config` argument in Plotly
+#'   calls, containing edit options, image download settings, extra modebar
+#'   buttons, and logo display preferences.
+#'
+#' @details The configuration enables interactive editing of axis titles,
+#'   plot title, legend text and position, colorbar position and title, and
+#'   annotation tails. It also adds drawing tools (lines, paths, circles,
+#'   rectangles, and an eraser) to the modebar, and sets the image download
+#'   format from `input$download.format` with the filename as the current date.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_add_plot_config
+.add_plot_config <- function(){
+    config <- c(
+        edits = list(
+            axisTitleText = TRUE,
+            titleText = TRUE,
+            legendText = TRUE,
+            legendPosition = TRUE,
+            colorbarPosition = TRUE,
+            colorbarTitleText = TRUE,
+            annotationTail = TRUE
+        ),
+        toImageButtonOptions = list(
+            format = isolate(input$download.format),
+            filename = Sys.Date()
+        ),
+        modeBarButtonsToAdd = list(
+            "drawline", 
+            "drawopenpath",
+            "drawclosedpath",
+            "drawcircle",
+            "drawrect",
+            "eraseshape"
+        ),
+        displaylogo = FALSE
+    )
+}
