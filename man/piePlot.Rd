@@ -5,29 +5,30 @@
 \title{Create a plotly pie chart}
 \usage{
 piePlot(
-  reactive.data,
-  plot.labels,
-  plot.values,
-  make.hole = 0,
+  df,
+  labels,
+  values,
+  hole = 0,
   palette,
   col.palette = NULL,
-  plot.text = "label+percent"
+  textinfo = "label+text+value+percent"
 )
 }
 \arguments{
-\item{reactive.data}{A data frame containing the data to plot.}
+\item{df}{A data frame containing the data to plot.}
 
-\item{plot.labels}{A formula for the labels.}
+\item{labels}{Name of the column to use for the labels.}
 
-\item{plot.values}{A formula for the values.}
+\item{values}{Name of the column to use for the values.}
 
-\item{make.hole}{A numeric value between 0 and 1 for the hole size (0 for pie, >0 for donut).}
+\item{hole}{A numeric value between 0 and 1 for the hole size (0 for pie, >0 for donut).}
 
 \item{palette}{A character vector of colors to use if \code{col.palette} is NULL.}
 
 \item{col.palette}{A character vector of colors to use.}
 
-\item{plot.text}{A character string for the text info to show.}
+\item{textinfo}{A character string for the text info to show.
+Any combination of "label", "text", "value", "percent" joined with a "+" OR "none".}
 }
 \value{
 A plotly object.
