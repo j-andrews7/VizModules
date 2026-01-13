@@ -275,24 +275,8 @@
 #' @keywords internal
 #' @rdname INTERNAL_add_plot_config
 .add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()), 
-                              include.modebar.buttons = TRUE, simple = FALSE) {
-    if (simple) {
-        config <- list(
-            editable = TRUE,
-            edits = list(
-                titleText = TRUE,
-                axisTitleText = TRUE
-            ),
-            toImageButtonOptions = list(
-                format = download.format,
-                filename = filename,
-                height = 500,
-                width = 700,
-                scale = 1
-            ),
-            displaylogo = FALSE
-        )
-    } else {
+                              include.modebar.buttons = TRUE, facet.by = NULL) {
+    if (is.null(facet.by)){
         config <- list(
             edits = list(
                 axisTitleText = TRUE,
@@ -309,7 +293,24 @@
             ),
             displaylogo = FALSE
         )
-        
+    } else {
+        config <- list(
+            edits = list(
+                axisTitleText = FALSE,
+                titleText = FALSE,
+                legendText = TRUE,
+                legendPosition = TRUE,
+                colorbarPosition = TRUE,
+                colorbarTitleText = TRUE,
+                annotationTail = TRUE
+            ),
+            toImageButtonOptions = list(
+                format = download.format,
+                filename = filename
+            ),
+            displaylogo = FALSE
+        )
+    }
         if (include.modebar.buttons) {
             config$modeBarButtonsToAdd <- list(
                 "drawline",
@@ -320,7 +321,7 @@
                 "eraseshape"
             )
         }
-    }
+    
     
     return(config)
 }
