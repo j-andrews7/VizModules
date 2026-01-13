@@ -13,28 +13,18 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL) {
-    # Create axis styling
-    axis_styles <- .create_axis_styles(
-        axis.showline = axis.showline,
-        axis.mirror = axis.mirror,
-        axis.linecolor = axis.linecolor,
-        axis.linewidth = axis.linewidth,
-        axis.tickfont.size = axis.tickfont.size,
-        axis.tickfont.color = axis.tickfont.color,
-        axis.tickfont.family = axis.tickfont.family,
-        axis.tickangle.x = axis.tickangle.x,
-        axis.tickangle.y = axis.tickangle.y,
-        axis.ticks = axis.ticks,
-        axis.tickcolor = axis.tickcolor,
-        axis.ticklen = axis.ticklen,
-        axis.tickwidth = axis.tickwidth,
-        x.title = x.title,
-        y.title = y.title,
-        autorange.x = TRUE
+    # Unique x axis styling for linePlot:
+    xaxis_style <- list(
+        showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
+        tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
+        tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
+        title = x.title, autorange = TRUE
     )
 
-    xaxis_style <- axis_styles$xaxis_style
-    yaxis_style <- axis_styles$yaxis_style
+    # Y axis styling by editing unique aspects of the x axis styling
+    yaxis_style <- xaxis_style
+    yaxis_style$tickangle <- axis.tickangle.y
+    yaxis_style$title <- y.title
 
     if (flip.x) {
         xaxis_style$autorange <- "reversed"
