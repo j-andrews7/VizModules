@@ -57,7 +57,9 @@
     # Build shapes list for backgrounds
     shapes <- list()
 
-    # For each x category, determine which group it belongs to and add a background rectangle
+    # When ggplotly converts a bar chart with categorical x-axis,
+    # the categories are positioned at indices 0, 1, 2, ...
+    # We'll create rectangles that span from -0.5 to +0.5 around each category
     for (i in seq_along(x_categories)) {
         x_cat <- x_categories[i]
 
@@ -81,13 +83,14 @@
         }
 
         # Add background rectangle
-        # x coordinates are 0-indexed in plotly for categorical axes
+        # Categories in ggplotly bar charts are at positions 0, 1, 2, ...
+        # Each bar spans approximately -0.45 to +0.45 around its center
         shapes[[length(shapes) + 1]] <- list(
             type = "rect",
             xref = "x",
             yref = "paper",
-            x0 = i - 1.5,
-            x1 = i - 0.5,
+            x0 = i - 1 - 0.45,
+            x1 = i - 1 + 0.45,
             y0 = 0,
             y1 = 1,
             fillcolor = hex_to_rgba(bg_color, bg_alpha),
