@@ -37,14 +37,19 @@
 
     # Get background colors from palette
     # Add safety check for plotthis::palette_list
-    if (is.null(plotthis::palette_list) || !bg_palette %in% names(plotthis::palette_list)) {
-        bg_palette <- "Set2"
+    bg_colors <- NULL
+    if (!is.null(plotthis::palette_list) && bg_palette %in% names(plotthis::palette_list)) {
+        bg_colors <- plotthis::palette_list[[bg_palette]]
     }
-    bg_colors <- plotthis::palette_list[[bg_palette]]
     
-    # Ensure we have valid colors
+    # If palette lookup failed, try the default Set2
+    if (is.null(bg_colors) && !is.null(plotthis::palette_list) && "Set2" %in% names(plotthis::palette_list)) {
+        bg_colors <- plotthis::palette_list[["Set2"]]
+    }
+    
+    # Ensure we have valid colors - use fallback if all else fails
     if (is.null(bg_colors) || length(bg_colors) == 0) {
-        # Fallback to a default color set
+        # Fallback to Set2 color set
         bg_colors <- c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
     }
 
@@ -57,14 +62,22 @@
     color_mapping <- setNames(bg_colors[seq_len(n_groups)], bg_groups)
 
     # Convert hex colors to rgba with alpha
+    # Includes validation to handle invalid colors
     hex_to_rgba <- function(hex, alpha) {
-        rgb_vals <- col2rgb(hex)
-        sprintf("rgba(%d, %d, %d, %g)", rgb_vals[1], rgb_vals[2], rgb_vals[3], alpha)
+        tryCatch({
+            rgb_vals <- col2rgb(hex)
+            sprintf("rgba(%d, %d, %d, %g)", rgb_vals[1], rgb_vals[2], rgb_vals[3], alpha)
+        }, error = function(e) {
+            # Fallback to a default gray color if conversion fails
+            sprintf("rgba(128, 128, 128, %g)", alpha)
+        })
     }
 
-    # Build shapes list for backgrounds
-    # Define bar width offset as a constant
+    # Bar width offset constant - determines how wide the background rectangles are
+    # Bars typically span ±0.45 units around their center position
     BAR_WIDTH_OFFSET <- 0.45
+    
+    # Build shapes list for backgrounds
     shapes <- vector("list", length(x_categories))
 
     # When ggplotly converts a bar chart with categorical x-axis,
