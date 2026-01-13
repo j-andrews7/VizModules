@@ -178,6 +178,19 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     )
                 )
 
+            # Add background rectangles if enabled
+            # ggplotly does not properly convert ggplot2 background geoms, so we add them manually
+            if (isolate(input$background.colour)) {
+                fig <- .add_barplot_backgrounds(
+                    fig,
+                    data = data(),
+                    x_col = isolate(input$x.data),
+                    group_by = isolate(input$group.by),
+                    bg_palette = isolate(input$background.palette),
+                    bg_alpha = isolate(input$background.alpha)
+                )
+            }
+
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- list(
                 title = list(

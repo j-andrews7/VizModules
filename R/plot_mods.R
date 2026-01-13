@@ -1,3 +1,109 @@
+#' Add background rectangles to plotly bar charts
+#'
+#' Since ggplotly does not properly convert ggplot2 background geoms (geom_rect)
+#' to plotly, this function manually adds background rectangles as plotly shapes.
+#'
+#' @param fig A plotly figure object.
+#' @param data The original data frame used for plotting.
+#' @param x_col Character. Name of the x-axis column.
+#' @param group_by Character or NULL. Name of the grouping column.
+#' @param bg_palette Character. Name of the palette to use for backgrounds.
+#' @param bg_alpha Numeric. Alpha transparency for backgrounds (0-1).
+#'
+#' @return The modified plotly figure with background shapes added.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_add_barplot_backgrounds
+#' @keywords internal
+.add_barplot_backgrounds <- function(fig, data, x_col, group_by = NULL, bg_palette = "Set2", bg_alpha = 0.5) {
+    # Return unchanged if no data or figure
+    if (is.null(fig) || is.null(data) || is.null(x_col)) {
+        return(fig)
+    }
+
+    # Get unique x categories
+    x_categories <- unique(data[[x_col]])
+    if (is.null(x_categories) || length(x_categories) == 0) {
+        return(fig)
+    }
+
+    # Determine the grouping column to use for background colors
+    bg_group_col <- if (!is.null(group_by) && group_by != "") group_by else x_col
+
+    # Get unique groups for coloring
+    bg_groups <- unique(data[[bg_group_col]])
+    n_groups <- length(bg_groups)
+
+    # Get background colors from palette
+    if (!bg_palette %in% names(plotthis::palette_list)) {
+        bg_palette <- "Set2"
+    }
+    bg_colors <- plotthis::palette_list[[bg_palette]]
+
+    # Ensure we have enough colors
+    if (length(bg_colors) < n_groups) {
+        bg_colors <- rep_len(bg_colors, n_groups)
+    }
+
+    # Create color mapping
+    color_mapping <- setNames(bg_colors[seq_len(n_groups)], bg_groups)
+
+    # Convert hex colors to rgba with alpha
+    hex_to_rgba <- function(hex, alpha) {
+        rgb_vals <- col2rgb(hex)
+        sprintf("rgba(%d, %d, %d, %g)", rgb_vals[1], rgb_vals[2], rgb_vals[3], alpha)
+    }
+
+    # Build shapes list for backgrounds
+    shapes <- list()
+
+    # For each x category, determine which group it belongs to and add a background rectangle
+    for (i in seq_along(x_categories)) {
+        x_cat <- x_categories[i]
+
+        # Find the group for this x category
+        if (bg_group_col == x_col) {
+            group_val <- x_cat
+        } else {
+            # Get the first matching group value for this x category
+            matching_rows <- data[[x_col]] == x_cat
+            if (any(matching_rows)) {
+                group_val <- data[[bg_group_col]][which(matching_rows)[1]]
+            } else {
+                next
+            }
+        }
+
+        # Get color for this group
+        bg_color <- color_mapping[as.character(group_val)]
+        if (is.na(bg_color)) {
+            bg_color <- bg_colors[1]
+        }
+
+        # Add background rectangle
+        # x coordinates are 0-indexed in plotly for categorical axes
+        shapes[[length(shapes) + 1]] <- list(
+            type = "rect",
+            xref = "x",
+            yref = "paper",
+            x0 = i - 1.5,
+            x1 = i - 0.5,
+            y0 = 0,
+            y1 = 1,
+            fillcolor = hex_to_rgba(bg_color, bg_alpha),
+            line = list(width = 0),
+            layer = "below"
+        )
+    }
+
+    # Add shapes to layout
+    if (length(shapes) > 0) {
+        fig <- plotly::layout(fig, shapes = shapes)
+    }
+
+    return(fig)
+}
+
 #' Apply axis styling to all subplot axes in a plotly figure
 #'
 #' When using plotly subplots (e.g., via split.by in dittoViz), axis styling
