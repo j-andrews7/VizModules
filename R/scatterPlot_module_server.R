@@ -228,29 +228,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
 
-            fig <- p$plot %>% config(
-                edits = list(
-                    axisTitleText = TRUE,
-                    titleText = TRUE,
-                    legendText = TRUE,
-                    legendPosition = TRUE,
-                    colorbarPosition = TRUE,
-                    colorbarTitleText = TRUE,
-                    annotationTail = TRUE
-                ),
-                toImageButtonOptions = list(
-                    format = isolate(input$download.format)
-                ),
-                modeBarButtonsToAdd = list(
-                    "drawline",
-                    "drawopenpath",
-                    "drawclosedpath",
-                    "drawcircle",
-                    "drawrect",
-                    "eraseshape"
-                ),
-                displaylogo = FALSE
-            )
+            config_list <- .add_plot_config(download.format = isolate(input$download.format), include.modebar.buttons = TRUE, simple = FALSE)
+            fig <- do.call(config, c(list(p = p$plot), config_list))
 
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate(input$highlight.points)
