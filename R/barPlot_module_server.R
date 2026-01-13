@@ -233,13 +233,15 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 tickwidth = isolate(input$axis.tickwidth)
             )
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) |>
-                config(
-                    editable = TRUE,
-                    edits = list(titleText = TRUE, axisTitleText = TRUE),
-                    toImageButtonOptions = list(format = isolate(input$download.type), filename = "bar_plot", height = 500, width = 700, scale = 1),
-                    displaylogo = FALSE
-                )
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            
+            config_list <- .add_plot_config(
+                download.format = isolate(input$download.type),
+                filename = "bar_plot",
+                include.modebar.buttons = FALSE,
+                simple = TRUE
+            )
+            fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
         })

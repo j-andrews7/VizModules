@@ -417,6 +417,12 @@
 #' editing of titles and legends, export options, and additional drawing tools
 #' in the modebar.
 #'
+#' @param download.format Character. The image format for downloads (e.g., "png", "svg", "jpeg").
+#' @param filename Character. The filename for downloaded images (default: current date).
+#' @param include.modebar.buttons Logical. Whether to include drawing tool buttons in the modebar (default: TRUE).
+#' @param simple Logical. If TRUE, returns a simplified config with only basic edits (titleText, axisTitleText).
+#'   If FALSE, includes all edit options and drawing tools (default: FALSE).
+#'
 #' @return A named list suitable for use as the `config` argument in Plotly
 #'   calls, containing edit options, image download settings, extra modebar
 #'   buttons, and logo display preferences.
@@ -424,35 +430,58 @@
 #' @details The configuration enables interactive editing of axis titles,
 #'   plot title, legend text and position, colorbar position and title, and
 #'   annotation tails. It also adds drawing tools (lines, paths, circles,
-#'   rectangles, and an eraser) to the modebar, and sets the image download
-#'   format from `input$download.format` with the filename as the current date.
+#'   rectangles, and an eraser) to the modebar.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_add_plot_config
-.add_plot_config <- function(){
-    config <- c(
-        edits = list(
-            axisTitleText = TRUE,
-            titleText = TRUE,
-            legendText = TRUE,
-            legendPosition = TRUE,
-            colorbarPosition = TRUE,
-            colorbarTitleText = TRUE,
-            annotationTail = TRUE
-        ),
-        toImageButtonOptions = list(
-            format = isolate(input$download.format),
-            filename = Sys.Date()
-        ),
-        modeBarButtonsToAdd = list(
-            "drawline", 
-            "drawopenpath",
-            "drawclosedpath",
-            "drawcircle",
-            "drawrect",
-            "eraseshape"
-        ),
-        displaylogo = FALSE
-    )
+.add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()), 
+                              include.modebar.buttons = TRUE, simple = FALSE) {
+    if (simple) {
+        config <- list(
+            editable = TRUE,
+            edits = list(
+                titleText = TRUE,
+                axisTitleText = TRUE
+            ),
+            toImageButtonOptions = list(
+                format = download.format,
+                filename = filename,
+                height = 500,
+                width = 700,
+                scale = 1
+            ),
+            displaylogo = FALSE
+        )
+    } else {
+        config <- list(
+            edits = list(
+                axisTitleText = TRUE,
+                titleText = TRUE,
+                legendText = TRUE,
+                legendPosition = TRUE,
+                colorbarPosition = TRUE,
+                colorbarTitleText = TRUE,
+                annotationTail = TRUE
+            ),
+            toImageButtonOptions = list(
+                format = download.format,
+                filename = filename
+            ),
+            displaylogo = FALSE
+        )
+        
+        if (include.modebar.buttons) {
+            config$modeBarButtonsToAdd <- list(
+                "drawline",
+                "drawopenpath",
+                "drawclosedpath",
+                "drawcircle",
+                "drawrect",
+                "eraseshape"
+            )
+        }
+    }
+    
+    return(config)
 }
