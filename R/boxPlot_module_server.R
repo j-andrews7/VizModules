@@ -194,45 +194,10 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- list(
-                title = list(
-                    font = list(size = 18, family = isolate(input$font.type), color = isolate(input$text.colour))
-                ),
-                showline = isolate(input$axis.showline),
-                mirror = isolate(input$axis.mirror),
-                linecolor = isolate(input$axis.linecolor),
-                linewidth = isolate(input$axis.linewidth),
-                tickfont = list(
-                    size = isolate(input$axis.tickfont.size),
-                    color = isolate(input$axis.tickfont.color),
-                    family = isolate(input$axis.tickfont.family)
-                ),
-                tickangle = isolate(input$axis.tickangle.x),
-                ticks = isolate(input$axis.ticks),
-                tickcolor = isolate(input$axis.tickcolor),
-                ticklen = isolate(input$axis.ticklen),
-                tickwidth = isolate(input$axis.tickwidth)
-            )
+            #Axis Styling: 
 
-            yaxis_style <- list(
-                title = list(
-                    font = list(size = 18, family = isolate(input$font.type), color = isolate(input$text.colour))
-                ),
-                showline = isolate(input$axis.showline),
-                mirror = isolate(input$axis.mirror),
-                linecolor = isolate(input$axis.linecolor),
-                linewidth = isolate(input$axis.linewidth),
-                tickfont = list(
-                    size = isolate(input$axis.tickfont.size),
-                    color = isolate(input$axis.tickfont.color),
-                    family = isolate(input$axis.tickfont.family)
-                ),
-                tickangle = isolate(input$axis.tickangle.y),
-                ticks = isolate(input$axis.ticks),
-                tickcolor = isolate(input$axis.tickcolor),
-                ticklen = isolate(input$axis.ticklen),
-                tickwidth = isolate(input$axis.tickwidth)
-            )
+            xaxis_style <- .create_axis_styles(input, axis_side = "x")
+            yaxis_style <- .create_axis_styles(input, axis_side = "y")
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) 
             config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, simple = TRUE)

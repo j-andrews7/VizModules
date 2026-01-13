@@ -324,3 +324,38 @@
     
     return(config)
 }
+
+
+.create_axis_styles <- function (input, axis_side = c("x", "y")){
+
+    axis_side <- match.arg(axis_side)
+
+    list(
+        title = list(
+            font = list(
+                size   = 18,
+                family = isolate(input$font.type),
+                color  = isolate(input$text.colour)
+            )
+        ),
+        showline  = isolate(input$axis.showline),
+        mirror    = isolate(input$axis.mirror),
+        linecolor = isolate(input$axis.linecolor),
+        linewidth = isolate(input$axis.linewidth),
+        tickfont  = list(
+            size   = isolate(input$axis.tickfont.size),
+            color  = isolate(input$axis.tickfont.color),
+            family = isolate(input$axis.tickfont.family)
+        ),
+        tickangle = if (axis_side == "x") {
+            isolate(input$axis.tickangle.x)
+        } else {
+            isolate(input$axis.tickangle.y)
+        },
+        ticks     = isolate(input$axis.ticks),
+        tickcolor = isolate(input$axis.tickcolor),
+        ticklen   = isolate(input$axis.ticklen),
+        tickwidth = isolate(input$axis.tickwidth)
+    )
+
+}
