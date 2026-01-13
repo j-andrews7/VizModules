@@ -376,44 +376,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
             if (!is.null(null.na.inputs$annotate.by) & !is.null(selected.data())) {
-                # Determine the column names for matching against plotly's event_data coordinates
-                # event_data returns the PLOTTED coordinates, which may be transformed via adj.fxn
-                x_col <- isolate(input$x.by)
-                y_col <- isolate(input$y.by)
-
-                # Check if adjustment functions are applied - if so, use the adjusted column
-                x_adj_col <- paste0(x_col, ".x.adj")
-                y_adj_col <- paste0(y_col, ".y.adj")
-
-                # Use adjusted columns if they exist (i.e., if an adjustment function was applied)
-                if (x_adj_col %in% names(plot_data)) {
-                    x_match_col <- x_adj_col
-                } else {
-                    x_match_col <- x_col
-                }
-
-                if (y_adj_col %in% names(plot_data)) {
-                    y_match_col <- y_adj_col
-                } else {
-                    y_match_col <- y_col
-                }
-
-                # Extract data for annotation matching using the correctly transformed coordinates
-                anno_data <- data.frame(
-                    x = plot_data[[x_match_col]],
-                    y = plot_data[[y_match_col]],
-                    text = plot_data[[null.na.inputs$annotate.by]]
-                )
-
-                # Filter to rows of anno_data where the x and y columns BOTH match selected.data()$x and selected.data()$y in the same row
-                # Convert to numeric for matching (handles plotly's numeric return for categoricals)
-                get_match_val <- function(v) {
-                    if (is.numeric(v)) {
-                        return(v)
-                    }
-                    as.numeric(as.factor(v))
-                }
-
                 # Map curveNumber to xref/yref for subplots
                 # Extract axis references from the plotly figure for each trace
                 trace_axis_map <- list()
@@ -432,31 +394,18 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 keep_idx <- unlist(lapply(trace_axis_map, function(x) x$keep))
                 selected_data_cached <- selected.data()[selected.data()$curveNumber %in% which(keep_idx), ]
 
-                # Create matching columns with rounding to handle floating point precision
-                anno_match_x <- round(get_match_val(anno_data$x), 10)
-                anno_match_y <- round(get_match_val(anno_data$y), 10)
-                selected_match_x <- round(get_match_val(selected_data_cached$x), 10)
-                selected_match_y <- round(get_match_val(selected_data_cached$y), 10)
-
-                anno_data$xy <- paste0(anno_match_x, "_", anno_match_y)
-                selected_xy <- paste0(selected_match_x, "_", selected_match_y)
-                anno_data <- anno_data[anno_data$xy %in% selected_xy, ]
-
                 # Create annotations list with correct xref/yref for each point
-                # Match selected points to their trace and use corresponding axis references
+                # Use curveNumber to extract annotation values from trace text for robust matching
                 annos <- list()
-                if (nrow(anno_data) > 0) {
+                if (nrow(selected_data_cached) > 0) {
                     has_curve_number <- "curveNumber" %in% names(selected_data_cached) &&
                         !is.null(selected_data_cached$curveNumber) &&
                         is.numeric(selected_data_cached$curveNumber)
 
-                    for (i in seq_len(nrow(anno_data))) {
-                        selected_idx <- match(anno_data$xy[i], selected_xy)
-
-                        if (!is.na(selected_idx) &&
-                            has_curve_number &&
-                            selected_idx <= length(selected_data_cached$curveNumber)) {
-                            curve_num <- selected_data_cached$curveNumber[selected_idx] + 1 # R is 1-indexed
+                    if (has_curve_number) {
+                        # Process each selected point by extracting annotation from its trace
+                        for (i in seq_len(nrow(selected_data_cached))) {
+                            curve_num <- selected_data_cached$curveNumber[i] + 1 # R is 1-indexed
 
                             # Get axis references for this trace
                             if (length(trace_axis_map) > 0 && curve_num <= length(trace_axis_map)) {
@@ -467,29 +416,61 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 xref <- "x"
                                 yref <- "y"
                             }
-                        } else {
-                            # Fallback to default if curveNumber not available
-                            xref <- "x"
-                            yref <- "y"
-                        }
 
-                        annos[[i]] <- list(
-                            x = as.numeric(strsplit(anno_data$xy[i], "_")[[1]][1]),
-                            y = as.numeric(strsplit(anno_data$xy[i], "_")[[1]][2]),
-                            text = as.character(anno_data$text[i]),
-                            xref = xref,
-                            yref = yref,
-                            ax = isolate(input$annotation.ax),
-                            ay = isolate(input$annotation.ay),
-                            showarrow = isolate(input$annotation.showarrow),
-                            arrowcolor = isolate(input$annotation.arrowcolor),
-                            arrowhead = isolate(input$annotation.arrowhead),
-                            arrowwidth = isolate(input$annotation.arrowwidth),
-                            font = list(
-                                size = isolate(input$annotation.size),
-                                color = isolate(input$annotation.color)
-                            )
-                        )
+                            # Extract annotation text from the trace data
+                            trace <- fig$x$data[[curve_num]]
+                            if (!is.null(trace$x) && !is.null(trace$y) && !is.null(trace$text)) {
+                                # Match selected point coordinates to trace coordinates
+                                trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
+                                selected_coord <- paste0(
+                                    round(selected_data_cached$x[i], 10),
+                                    "_",
+                                    round(selected_data_cached$y[i], 10)
+                                )
+
+                                # Find matching point in trace
+                                point_idx <- which(trace_coords == selected_coord)
+
+                                if (length(point_idx) > 0) {
+                                    # Extract annotation value from trace text
+                                    # Use the first match if multiple points share coordinates within same trace
+                                    point_text <- trace$text[point_idx[1]]
+
+                                    # Parse the text to extract annotate.by value
+                                    text_lines <- strsplit(point_text, "\\n")[[1]]
+                                    anno_line <- grep(isolate(input$annotate.by), text_lines, value = TRUE)
+
+                                    if (length(anno_line) > 0) {
+                                        # Extract the annotation value (format: "annotate.by: value")
+                                        anno_text <- strsplit(anno_line[1], ": ")[[1]]
+                                        if (length(anno_text) >= 2) {
+                                            anno_text <- anno_text[2]
+                                        } else {
+                                            # Fallback to splitting by space if colon not found
+                                            anno_text <- strsplit(anno_line[1], " ")[[1]][2]
+                                        }
+
+                                        annos[[length(annos) + 1]] <- list(
+                                            x = selected_data_cached$x[i],
+                                            y = selected_data_cached$y[i],
+                                            text = anno_text,
+                                            xref = xref,
+                                            yref = yref,
+                                            ax = isolate(input$annotation.ax),
+                                            ay = isolate(input$annotation.ay),
+                                            showarrow = isolate(input$annotation.showarrow),
+                                            arrowcolor = isolate(input$annotation.arrowcolor),
+                                            arrowhead = isolate(input$annotation.arrowhead),
+                                            arrowwidth = isolate(input$annotation.arrowwidth),
+                                            font = list(
+                                                size = isolate(input$annotation.size),
+                                                color = isolate(input$annotation.color)
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
