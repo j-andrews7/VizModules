@@ -11,6 +11,11 @@
 #' @param bg_alpha Numeric. Alpha transparency for backgrounds (0-1).
 #' @param flip Logical. Whether the bar chart is flipped (horizontal bars).
 #'
+#' @details
+#' Background rectangles are positioned at categorical axis indices (0, 1, 2, ...)
+#' and span ±0.45 units around each bar's center position. This value (BAR_WIDTH_OFFSET)
+#' provides optimal coverage for standard ggplot2 bar widths when converted to plotly.
+#'
 #' @return The modified plotly figure with background shapes added.
 #'
 #' @author Jared Andrews
@@ -36,20 +41,27 @@
     n_groups <- length(bg_groups)
 
     # Get background colors from palette
-    # Add safety check for plotthis::palette_list
+    # Safely access plotthis::palette_list with fallbacks
     bg_colors <- NULL
-    if (!is.null(plotthis::palette_list) && bg_palette %in% names(plotthis::palette_list)) {
-        bg_colors <- plotthis::palette_list[[bg_palette]]
-    }
     
-    # If palette lookup failed, try the default Set2
-    if (is.null(bg_colors) && !is.null(plotthis::palette_list) && "Set2" %in% names(plotthis::palette_list)) {
-        bg_colors <- plotthis::palette_list[["Set2"]]
+    # Check if plotthis package is available and has palette_list
+    if (requireNamespace("plotthis", quietly = TRUE)) {
+        palette_list <- tryCatch(
+            get("palette_list", envir = asNamespace("plotthis")),
+            error = function(e) NULL
+        )
+        
+        if (!is.null(palette_list) && bg_palette %in% names(palette_list)) {
+            bg_colors <- palette_list[[bg_palette]]
+        } else if (!is.null(palette_list) && "Set2" %in% names(palette_list)) {
+            # Try the default Set2 palette
+            bg_colors <- palette_list[["Set2"]]
+        }
     }
     
     # Ensure we have valid colors - use fallback if all else fails
     if (is.null(bg_colors) || length(bg_colors) == 0) {
-        # Fallback to Set2 color set
+        # Fallback to Set2 color set (ColorBrewer)
         bg_colors <- c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
     }
 
