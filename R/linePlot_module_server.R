@@ -184,12 +184,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 y.adjustment = y.adjustment
             )
 
-            config_list <- .add_plot_config(
-                download.format = isolate(input$download.type),
-                filename = "line_plot",
-                include.modebar.buttons = FALSE,
-                simple = TRUE
-            )
+            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, simple = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

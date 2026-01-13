@@ -228,12 +228,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
 
-            config_list <- .add_plot_config(
-                download.format = isolate(input$download.format),
-                filename = "scatter_plot",
-                include.modebar.buttons = TRUE,
-                simple = FALSE
-            )
+            config_list <- .add_plot_config(download.format = isolate(input$download.format), include.modebar.buttons = TRUE, simple = FALSE)
             fig <- do.call(config, c(list(p = p$plot), config_list))
 
             # Apply highlight styling to specified points

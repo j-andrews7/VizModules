@@ -236,12 +236,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
             
-            config_list <- .add_plot_config(
-                download.format = isolate(input$download.type),
-                filename = "box_plot",
-                include.modebar.buttons = FALSE,
-                simple = TRUE
-            )
+            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, simple = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
