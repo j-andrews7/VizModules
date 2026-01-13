@@ -36,10 +36,17 @@
     n_groups <- length(bg_groups)
 
     # Get background colors from palette
-    if (!bg_palette %in% names(plotthis::palette_list)) {
+    # Add safety check for plotthis::palette_list
+    if (is.null(plotthis::palette_list) || !bg_palette %in% names(plotthis::palette_list)) {
         bg_palette <- "Set2"
     }
     bg_colors <- plotthis::palette_list[[bg_palette]]
+    
+    # Ensure we have valid colors
+    if (is.null(bg_colors) || length(bg_colors) == 0) {
+        # Fallback to a default color set
+        bg_colors <- c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F")
+    }
 
     # Ensure we have enough colors
     if (length(bg_colors) < n_groups) {
@@ -56,11 +63,13 @@
     }
 
     # Build shapes list for backgrounds
-    shapes <- list()
+    # Define bar width offset as a constant
+    BAR_WIDTH_OFFSET <- 0.45
+    shapes <- vector("list", length(x_categories))
 
     # When ggplotly converts a bar chart with categorical x-axis,
     # the categories are positioned at indices 0, 1, 2, ...
-    # We'll create rectangles that span from -0.5 to +0.5 around each category
+    # We'll create rectangles that span from -BAR_WIDTH_OFFSET to +BAR_WIDTH_OFFSET around each category
     for (i in seq_along(x_categories)) {
         x_cat <- x_categories[i]
 
@@ -85,28 +94,28 @@
 
         # Add background rectangle
         # Categories in ggplotly bar charts are at positions 0, 1, 2, ...
-        # Each bar spans approximately -0.45 to +0.45 around its center
+        # Each bar spans approximately -BAR_WIDTH_OFFSET to +BAR_WIDTH_OFFSET around its center
         # If flip=TRUE, bars are horizontal so we swap x and y references
         if (flip) {
-            shapes[[length(shapes) + 1]] <- list(
+            shapes[[i]] <- list(
                 type = "rect",
                 xref = "paper",
                 yref = "y",
                 x0 = 0,
                 x1 = 1,
-                y0 = i - 1 - 0.45,
-                y1 = i - 1 + 0.45,
+                y0 = i - 1 - BAR_WIDTH_OFFSET,
+                y1 = i - 1 + BAR_WIDTH_OFFSET,
                 fillcolor = hex_to_rgba(bg_color, bg_alpha),
                 line = list(width = 0),
                 layer = "below"
             )
         } else {
-            shapes[[length(shapes) + 1]] <- list(
+            shapes[[i]] <- list(
                 type = "rect",
                 xref = "x",
                 yref = "paper",
-                x0 = i - 1 - 0.45,
-                x1 = i - 1 + 0.45,
+                x0 = i - 1 - BAR_WIDTH_OFFSET,
+                x1 = i - 1 + BAR_WIDTH_OFFSET,
                 y0 = 0,
                 y1 = 1,
                 fillcolor = hex_to_rgba(bg_color, bg_alpha),
@@ -116,7 +125,8 @@
         }
     }
 
-    # Add shapes to layout
+    # Remove NULL entries (from skipped categories) and add shapes to layout
+    shapes <- shapes[!vapply(shapes, is.null, logical(1))]
     if (length(shapes) > 0) {
         fig <- plotly::layout(fig, shapes = shapes)
     }
