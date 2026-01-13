@@ -179,26 +179,47 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            axis_styles <- .create_axis_styles(
-                axis.font.size = isolate(input$axis.font.size),
-                font.type = isolate(input$font.type),
-                text.colour = isolate(input$text.colour),
-                axis.showline = isolate(input$axis.showline),
-                axis.mirror = isolate(input$axis.mirror),
-                axis.linecolor = isolate(input$axis.linecolor),
-                axis.linewidth = isolate(input$axis.linewidth),
-                axis.tickfont.size = isolate(input$axis.tickfont.size),
-                axis.tickfont.color = isolate(input$axis.tickfont.color),
-                axis.tickfont.family = isolate(input$axis.tickfont.family),
-                axis.tickangle.x = isolate(input$axis.tickangle.x),
-                axis.tickangle.y = isolate(input$axis.tickangle.y),
-                axis.ticks = isolate(input$axis.ticks),
-                axis.tickcolor = isolate(input$axis.tickcolor),
-                axis.ticklen = isolate(input$axis.ticklen),
-                axis.tickwidth = isolate(input$axis.tickwidth)
+            xaxis_style <- list(
+                title = list(
+                    font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
+                ),
+                showline = isolate(input$axis.showline),
+                mirror = isolate(input$axis.mirror),
+                linecolor = isolate(input$axis.linecolor),
+                linewidth = isolate(input$axis.linewidth),
+                tickfont = list(
+                    size = isolate(input$axis.tickfont.size),
+                    color = isolate(input$axis.tickfont.color),
+                    family = isolate(input$axis.tickfont.family)
+                ),
+                tickangle = isolate(input$axis.tickangle.x),
+                ticks = isolate(input$axis.ticks),
+                tickcolor = isolate(input$axis.tickcolor),
+                ticklen = isolate(input$axis.ticklen),
+                tickwidth = isolate(input$axis.tickwidth)
             )
 
-            fig <- .apply_subplot_axis_styling(fig, axis_styles$xaxis_style, axis_styles$yaxis_style)
+            yaxis_style <- list(
+                title = list(
+                    font = list(size = isolate(input$axis.font.size), family = isolate(input$font.type), color = isolate(input$text.colour))
+                ),
+                showline = isolate(input$axis.showline),
+                mirror = isolate(input$axis.mirror),
+                linecolor = isolate(input$axis.linecolor),
+                linewidth = isolate(input$axis.linewidth),
+                tickfont = list(
+                    size = isolate(input$axis.tickfont.size),
+                    color = isolate(input$axis.tickfont.color),
+                    family = isolate(input$axis.tickfont.family)
+                ),
+                tickangle = isolate(input$axis.tickangle.y),
+                ticks = isolate(input$axis.ticks),
+                tickcolor = isolate(input$axis.tickcolor),
+                ticklen = isolate(input$axis.ticklen),
+                tickwidth = isolate(input$axis.tickwidth)
+            )
+
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
             
             config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, simple = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))

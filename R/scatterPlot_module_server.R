@@ -608,23 +608,41 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             )
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
-            axis_styles <- .create_axis_styles(
-                axis.showline = isolate(input$axis.showline),
-                axis.mirror = isolate(input$axis.mirror),
-                axis.linecolor = isolate(input$axis.linecolor),
-                axis.linewidth = isolate(input$axis.linewidth),
-                axis.tickfont.size = isolate(input$axis.tickfont.size),
-                axis.tickfont.color = isolate(input$axis.tickfont.color),
-                axis.tickfont.family = isolate(input$axis.tickfont.family),
-                axis.tickangle.x = isolate(input$axis.tickangle.x),
-                axis.tickangle.y = isolate(input$axis.tickangle.y),
-                axis.ticks = isolate(input$axis.ticks),
-                axis.tickcolor = isolate(input$axis.tickcolor),
-                axis.ticklen = isolate(input$axis.ticklen),
-                axis.tickwidth = isolate(input$axis.tickwidth)
+            xaxis_style <- list(
+                showline = isolate(input$axis.showline),
+                mirror = isolate(input$axis.mirror),
+                linecolor = isolate(input$axis.linecolor),
+                linewidth = isolate(input$axis.linewidth),
+                tickfont = list(
+                    size = isolate(input$axis.tickfont.size),
+                    color = isolate(input$axis.tickfont.color),
+                    family = isolate(input$axis.tickfont.family)
+                ),
+                tickangle = isolate(input$axis.tickangle.x),
+                ticks = isolate(input$axis.ticks),
+                tickcolor = isolate(input$axis.tickcolor),
+                ticklen = isolate(input$axis.ticklen),
+                tickwidth = isolate(input$axis.tickwidth)
             )
 
-            fig <- .apply_subplot_axis_styling(fig, axis_styles$xaxis_style, axis_styles$yaxis_style)
+            yaxis_style <- list(
+                showline = isolate(input$axis.showline),
+                mirror = isolate(input$axis.mirror),
+                linecolor = isolate(input$axis.linecolor),
+                linewidth = isolate(input$axis.linewidth),
+                tickfont = list(
+                    size = isolate(input$axis.tickfont.size),
+                    color = isolate(input$axis.tickfont.color),
+                    family = isolate(input$axis.tickfont.family)
+                ),
+                tickangle = isolate(input$axis.tickangle.y),
+                ticks = isolate(input$axis.ticks),
+                tickcolor = isolate(input$axis.tickcolor),
+                ticklen = isolate(input$axis.ticklen),
+                tickwidth = isolate(input$axis.tickwidth)
+            )
+
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             if (isolate(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
