@@ -281,6 +281,7 @@
             edits = list(
                 axisTitleText = TRUE,
                 titleText = TRUE,
+                annotationText = TRUE,
                 legendText = TRUE,
                 legendPosition = TRUE,
                 colorbarPosition = TRUE,
@@ -298,6 +299,7 @@
             edits = list(
                 axisTitleText = FALSE,
                 titleText = FALSE,
+                annotationText = TRUE,
                 legendText = TRUE,
                 legendPosition = TRUE,
                 colorbarPosition = TRUE,

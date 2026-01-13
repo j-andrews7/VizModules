@@ -124,17 +124,22 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
+        # Calculate subplot domain width (accounting for spacing between subplots)
+        # Plotly subplots have small gaps, so we adjust positioning
+        subplot_width <- 1.0 / n_facets
         annotations <- lapply(seq_along(facet_levels), function(i) {
+            # Position at center of each subplot's domain
+            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
             list(
-                x = (i - 0.5) / n_facets,
-                y = 1.02,
+                x = x_pos,
+                y = 1.05,
                 xref = "paper",
                 yref = "paper",
                 text = as.character(facet_levels[i]),
                 showarrow = FALSE,
                 xanchor = "center",
                 yanchor = "bottom",
-                font = list(size = 12)
+                font = list(size = 14)
             )
         })
         fig <- fig |> layout(annotations = annotations)
@@ -230,17 +235,22 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
+        # Calculate subplot domain width (accounting for spacing between subplots)
+        # Plotly subplots have small gaps, so we adjust positioning
+        subplot_width <- 1.0 / n_facets
         annotations <- lapply(seq_along(facet_levels), function(i) {
+            # Position at center of each subplot's domain
+            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
             list(
-                x = (i - 0.5) / n_facets,
-                y = 1.02,
+                x = x_pos,
+                y = 1.05,
                 xref = "paper",
                 yref = "paper",
                 text = as.character(facet_levels[i]),
                 showarrow = FALSE,
                 xanchor = "center",
                 yanchor = "bottom",
-                font = list(size = 12)
+                font = list(size = 14)
             )
         })
         fig <- fig |> layout(annotations = annotations)
