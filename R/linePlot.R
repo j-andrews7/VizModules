@@ -121,6 +121,23 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         }
 
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+        
+        # Add subplot titles as annotations
+        n_facets <- length(facet_levels)
+        annotations <- lapply(seq_along(facet_levels), function(i) {
+            list(
+                x = (i - 0.5) / n_facets,
+                y = 1.02,
+                xref = "paper",
+                yref = "paper",
+                text = as.character(facet_levels[i]),
+                showarrow = FALSE,
+                xanchor = "center",
+                yanchor = "bottom",
+                font = list(size = 12)
+            )
+        })
+        fig <- fig |> layout(annotations = annotations)
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
@@ -210,6 +227,23 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         })
         
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+        
+        # Add subplot titles as annotations
+        n_facets <- length(facet_levels)
+        annotations <- lapply(seq_along(facet_levels), function(i) {
+            list(
+                x = (i - 0.5) / n_facets,
+                y = 1.02,
+                xref = "paper",
+                yref = "paper",
+                text = as.character(facet_levels[i]),
+                showarrow = FALSE,
+                xanchor = "center",
+                yanchor = "bottom",
+                font = list(size = 12)
+            )
+        })
+        fig <- fig |> layout(annotations = annotations)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
