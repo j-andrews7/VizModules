@@ -73,19 +73,19 @@ library(vizModules)
 data(iris)
 piePlotInputsUI("piePlot", iris)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="5975">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="8111">
 #>     <li class="active">
-#>       <a href="#tab-5975-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8111-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5975-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-8111-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5975-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8111-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5975">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5975-1">
+#>   <div class="tab-content" data-tabsetid="8111">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8111-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -112,7 +112,7 @@ piePlotInputsUI("piePlot", iris)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5975-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-8111-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -425,7 +425,7 @@ piePlotInputsUI("piePlot", iris)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5975-3">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8111-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
