@@ -33,7 +33,7 @@
 #' library(vizModules)
 #' data(mtcars)
 #' BoxPlotInputsUI("BoxPlot", mtcars)
-BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2, update.button = TRUE) {
+BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -222,8 +222,9 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("BoxPlotTabsetPanel"),
         title = title,
         tack = tagList(
-            if (update.button) actionButton(ns("update"), "Update Plot"),
-            if (update.button) br(),
+            switchInput(ns("use.update.button"), "Require Update", value = TRUE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+            actionButton(ns("update"), "Update Plot"),
+            br(),
             actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
             selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
             br()

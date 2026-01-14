@@ -8,8 +8,6 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
-#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the BoxPlot module.
 #'
 #' @importFrom shinyjs hide
@@ -17,7 +15,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, update.button = TRUE) {
+BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -34,14 +32,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, update
                 hideTab(inputId = "BoxPlotTabsetPanel", target = tab.name)
             })
         }
-
-        # Hide update button if disabled
-        if (!update.button) {
-            hide("update")
-        }
-
-        # Set up wrapper function for isolate based on update.button parameter
-        isolate_fn <- if (update.button) isolate else identity
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -126,9 +116,16 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, update
 
 
         output$BoxPlot <- renderPlotly({
-            if (update.button) {
+            # Check if update button is required
+            use_update <- input$use.update.button
+            
+            # If update button is required, add dependency on it
+            if (use_update) {
                 input$update
             }
+            
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (use_update) isolate else identity
 
             # Facet By Null option Upstream:
             facet.by <- NULL

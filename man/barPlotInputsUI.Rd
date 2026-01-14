@@ -4,8 +4,7 @@
 \alias{BarPlotInputsUI}
 \title{Input UI components for the BarPlot module}
 \usage{
-BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2,
-  update.button = TRUE
+BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 )
 }
 \arguments{
@@ -19,8 +18,6 @@ BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2,
 
 \item{columns}{Number of columns for the UI grid.}
 }
-\item{update.button}{Logical; if \code{TRUE} (default), an "Update Plot" button is shown.
-If \code{FALSE}, the button is hidden and plot re-renders immediately when inputs change.}
 
 \value{
 A Shiny tagList containing the UI elements

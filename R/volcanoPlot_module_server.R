@@ -15,13 +15,22 @@
 #' @importFrom shiny moduleServer reactive isolate req
 #' @export
 #' @author Jared Andrews
-volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", update.button = TRUE))) {
+volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets")) {
     res <- moduleServer(id, function(input, output, session) {
         # Reactive data with group column based on thresholds
         data_reac <- reactive({
             req(data())
-            # Explicit dependency on the update button
-            input$update
+            
+            # Check if update button is required
+            use_update <- input$use.update.button
+            
+            # If update button is required, add dependency on it
+            if (use_update) {
+                input$update
+            }
+            
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (use_update) isolate else identity
 
             # Use isolate for threshold inputs so they don't trigger updates
             sig_thresh <- isolate_fn(input$sig.thresh)
@@ -55,7 +64,17 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
 
         # Use color inputs for manual colors - reactive so it updates on button click
         color_reac <- reactive({
-            input$update
+            # Check if update button is required
+            use_update <- input$use.update.button
+            
+            # If update button is required, add dependency on it
+            if (use_update) {
+                input$update
+            }
+            
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (use_update) isolate else identity
+            
             c(
                 "Up" = if (!is.null(isolate_fn(input$color.up))) isolate_fn(input$color.up) else "red",
                 "Down" = if (!is.null(isolate_fn(input$color.down))) isolate_fn(input$color.down) else "blue",
@@ -73,5 +92,5 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         hide.inputs <- c(hide.inputs, "color.panel")
     }
 
-    scatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors, update.button = update.button)
+    scatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors)
 }

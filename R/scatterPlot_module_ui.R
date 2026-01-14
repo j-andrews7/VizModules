@@ -26,8 +26,6 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown.
-#'   If `FALSE`, the button is hidden and plot re-renders immediately when inputs change.
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @importFrom colourpicker colourInput
@@ -42,7 +40,7 @@
 #' library(vizModules)
 #' data(mtcars)
 #' scatterPlotInputsUI("scatterPlot", mtcars)
-scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2, update.button = TRUE) {
+scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -710,7 +708,11 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         inputs,
         id = ns("scatterPlotTabsetPanel"),
         title = title,
-        tack = if (update.button) tagList(actionButton(ns("update"), "Update Plot"), br()) else NULL,
+        tack = tagList(
+            switchInput(ns("use.update.button"), "Require Update", value = TRUE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+            actionButton(ns("update"), "Update Plot"),
+            br()
+        ),
         columns = columns
     )
 }

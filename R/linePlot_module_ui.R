@@ -33,7 +33,7 @@
 #' library(vizModules)
 #' data(mtcars)
 #' linePlotInputsUI("linePlot", mtcars)
-linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2, update.button = TRUE) {
+linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -182,6 +182,9 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         id = ns("linePlotTabsetPanel"),
         title = title,
         tack = tagList(
+            switchInput(ns("use.update.button"), "Require Update", value = TRUE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+            actionButton(ns("update"), "Update Plot"),
+            br(),
             if (update.button) actionButton(ns("update"), "Update Plot"),
             if (update.button) br(),
             actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),

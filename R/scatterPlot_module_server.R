@@ -8,8 +8,6 @@
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
-#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
@@ -20,7 +18,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL, update.button = TRUE) {
+scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -38,16 +36,12 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             })
         }
 
-        # Hide update button if disabled
-        if (!update.button) {
-            hide("update")
-        }
-
-        # Set up wrapper function for isolate based on update.button parameter
-        isolate_fn <- if (update.button) isolate else identity
-
         # Get color panel
         color.panel <- reactive({
+            # Set up wrapper function based on switch state
+            use_update <- input$use.update.button
+            isolate_fn <- if (use_update) isolate else identity
+            
             palette <- NULL
             if (!is.null(manual.colors)) {
                 if (is.reactive(manual.colors)) {
@@ -105,9 +99,17 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
-            if (update.button) {
+            
+            # Check if update button is required
+            use_update <- input$use.update.button
+            
+            # If update button is required, add dependency on it
+            if (use_update) {
                 input$update
             }
+            
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (use_update) isolate else identity
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(

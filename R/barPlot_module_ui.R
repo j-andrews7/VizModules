@@ -33,7 +33,7 @@
 #' library(vizModules)
 #' data(mtcars)
 #' BarPlotInputsUI("BarPlot", mtcars)
-BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2, update.button = TRUE) {
+BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -207,6 +207,9 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("BarPlotTabsetPanel"),
         title = title,
         tack = tagList(
+            switchInput(ns("use.update.button"), "Require Update", value = TRUE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+            actionButton(ns("update"), "Update Plot"),
+            br(),
             if (update.button) actionButton(ns("update"), "Update Plot"),
             if (update.button) br(),
             actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),

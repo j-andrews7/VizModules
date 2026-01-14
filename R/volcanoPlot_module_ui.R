@@ -41,7 +41,7 @@
 #' data(mtcars)
 #' # Not a real volcano dataset, but demonstrates the UI
 #' volcanoPlotInputsUI("volcanoPlot", mtcars)
-volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2, update.button = TRUE) {
+volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2) {
     # Add a few extra inputs to control the DE thresholds
     ns <- NS(id)
 
@@ -111,7 +111,7 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
         data$group <- "dummy"
     }
 
-    outs <- scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns, update.button = update.button)
+    outs <- scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
 
     tagList(extras, outs)
 }

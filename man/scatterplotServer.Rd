@@ -10,8 +10,7 @@ scatterPlotServer(
   hide.inputs = NULL,
   hide.tabs = NULL,
   manual.colors = NULL
-,
-  update.button = TRUE
+
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ but the user will not be able to see/adjust them in the UI.}
 
 \item{manual.colors}{A named character vector of colors or a reactive returning a named character vector of colors.}
 }
-\item{update.button}{Logical; if \code{TRUE} (default), an "Update Plot" button is shown and plot only re-renders when clicked.
-If \code{FALSE}, plot re-renders immediately when inputs change.}
 
 \value{
 The \code{moduleServer} function for the scatterPlot module.
