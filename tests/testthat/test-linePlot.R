@@ -11,8 +11,8 @@ test_that("linePlot creates expected line trace", {
     y = "mpg",
     plot.mode = "lines+markers",
     line.type = "solid",
-    colour.group.by = plotthis::palette_list[["Set2"]][1],
-    palette = palette,
+    colour.group.by = "gear",
+    palette.selection = "Set2", 
     show.legend = TRUE,
                     #Defaults
                     facet.by = NULL,
@@ -34,5 +34,44 @@ test_that("linePlot creates expected line trace", {
   expect_identical(trace$type, "scatter")
   expect_equal(sort(trace$x), sort(mtcars$cyl))
   expect_equal(sort(trace$y), sort(mtcars$mpg))
-  expect_true(trace$name %in% palette)
+  expect_true(trace$name %in% names(mtcars))
+
 })
+
+# test_that("Test Incorrect Inputs", {
+#   fig <<- linePlot(
+#     reactive.data = mtcars,
+#     x = "-random_column",
+#     y = "mpg",
+#     plot.mode = "lines+markers",
+#     line.type = "solid",
+#     colour.group.by = "gear",
+#     palette.selection = "Set2", 
+#     show.legend = TRUE)
+  
+#   expect_error(fig)
+# })
+test_that("Test Incorrect Inputs", {
+
+  expect_error(linePlot(
+      reactive.data = mtcars,
+      x = "-random_column",
+      y = "mpg",
+      plot.mode = "lines+markers",
+      line.type = "solid",
+      colour.group.by = "gear",
+      palette.selection = "Set2", 
+      show.legend = TRUE), 
+      regexp = "object 'random_column' not found", 
+      fixed = TRUE)
+})
+
+
+
+
+
+
+
+
+
+
