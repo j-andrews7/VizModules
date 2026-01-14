@@ -10,7 +10,6 @@ scatterPlotServer(
   hide.inputs = NULL,
   hide.tabs = NULL,
   manual.colors = NULL
-
 )
 }
 \arguments{
@@ -28,7 +27,6 @@ but the user will not be able to see/adjust them in the UI.}
 
 \item{manual.colors}{A named character vector of colors or a reactive returning a named character vector of colors.}
 }
-
 \value{
 The \code{moduleServer} function for the scatterPlot module.
 }
@@ -37,7 +35,7 @@ Server logic for scatterPlot module
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=createScatterPlotApp]{createScatterPlotApp()}}
+\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=ScatterPlotApp]{ScatterPlotApp()}}
 }
 \author{
 Jared Andrews

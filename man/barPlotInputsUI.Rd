@@ -4,8 +4,7 @@
 \alias{BarPlotInputsUI}
 \title{Input UI components for the BarPlot module}
 \usage{
-BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
-)
+BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,7 +17,6 @@ BarPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -47,5 +45,5 @@ BarPlotInputsUI("BarPlot", mtcars)
 \code{\link[=BarPlotOutputUI]{BarPlotOutputUI()}}, \code{\link[=BarPlotServer]{BarPlotServer()}}, \code{\link[=BarPlotApp]{BarPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -27,15 +27,13 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown.
-#'   If `FALSE`, the button is hidden and plot re-renders immediately when inputs change.
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
 #' [vizModules::volcanoPlotOutputUI()], [vizModules::volcanoPlotServer()],
-#' [vizModules::createVolcanoPlotApp()]
+#' [vizModules::volcanoPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)

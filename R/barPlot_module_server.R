@@ -14,7 +14,7 @@
 #' @importFrom shinyWidgets updateSwitchInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
@@ -103,9 +103,9 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Action Button:
             updateSelectInput(session, "download.type", selected = "png")
 
-            #Axes: 
+            # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
+            updateCheckboxInput(session, "axis.mirror", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateNumericInput(session, "axis.tickfont.size", value = 12)
@@ -123,12 +123,12 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$BarPlot <- renderPlotly({
             # Check if update button is required
             use_update <- input$use.update.button
-            
+
             # If update button is required, add dependency on it
             if (use_update) {
                 input$update
             }
-            
+
             # Set up wrapper function based on switch state
             isolate_fn <- if (use_update) isolate else identity
 
@@ -201,7 +201,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             yaxis_style <- .create_axis_styles(input, axis_side = "y")
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-            
+
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 

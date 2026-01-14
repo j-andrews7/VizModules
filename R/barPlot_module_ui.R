@@ -18,15 +18,13 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown.
-#'   If `FALSE`, the button is hidden and plot re-renders immediately when inputs change.
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets switchInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::BarPlot()], [vizModules::organize_inputs()],
 #' [vizModules::BarPlotOutputUI()], [vizModules::BarPlotServer()], [vizModules::BarPlotApp()]
 #' @examples
@@ -207,13 +205,12 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("BarPlotTabsetPanel"),
         title = title,
         tack = tagList(
-            switchInput(ns("use.update.button"), "Require Update", value = TRUE, size = "mini", onLabel = "ON", offLabel = "OFF"),
-            actionButton(ns("update"), "Update Plot"),
-            br(),
-            if (update.button) actionButton(ns("update"), "Update Plot"),
-            if (update.button) br(),
-            actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
-            selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
+            fluidRow(
+                column(3, switchInput(ns("use.update.button"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+            ),
             br()
         ),
         columns = columns
@@ -229,8 +226,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @return A Shiny plotlyOutput for the BarPlot
 #'
-#' @importFrom shiny NS
-#' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export
@@ -238,12 +233,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 BarPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("BarPlot"), width = "100%", height = "400px"),
-        options = list(
-            minWidth = 300,
-            minHeight = 300,
-            maxWidth = 1200,
-            maxHeight = 800
-        )
+        plotlyOutput(ns("BarPlot"))
     )
 }

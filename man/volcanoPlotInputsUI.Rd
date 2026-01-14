@@ -10,7 +10,6 @@ volcanoPlotInputsUI(
   defaults = NULL,
   title = "Volcano Settings",
   columns = 2
-
 )
 }
 \arguments{
@@ -24,7 +23,6 @@ volcanoPlotInputsUI(
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -61,7 +59,7 @@ volcanoPlotInputsUI("volcanoPlot", mtcars)
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
 \code{\link[=volcanoPlotOutputUI]{volcanoPlotOutputUI()}}, \code{\link[=volcanoPlotServer]{volcanoPlotServer()}},
-\code{\link[=createVolcanoPlotApp]{createVolcanoPlotApp()}}
+\code{\link[=volcanoPlotApp]{volcanoPlotApp()}}
 }
 \author{
 Jared Andrews

@@ -4,8 +4,7 @@
 \alias{AreaPlotInputsUI}
 \title{Input UI components for the AreaPlot module}
 \usage{
-AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
-)
+AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,7 +17,6 @@ AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -49,5 +47,5 @@ AreaPlotInputsUI("areaPlot", mtcars)
 \code{\link[=AreaPlotOutputUI]{AreaPlotOutputUI()}}, \code{\link[=AreaPlotServer]{AreaPlotServer()}}, \code{\link[=AreaPlotApp]{AreaPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

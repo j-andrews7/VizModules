@@ -4,8 +4,7 @@
 \alias{linePlotInputsUI}
 \title{Input UI components for the linePlot module}
 \usage{
-linePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
-)
+linePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,7 +17,6 @@ linePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -47,5 +45,5 @@ linePlotInputsUI("linePlot", mtcars)
 \code{\link[=linePlotOutputUI]{linePlotOutputUI()}}, \code{\link[=linePlotServer]{linePlotServer()}}, \code{\link[=linePlotApp]{linePlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -4,8 +4,7 @@
 \alias{scatterPlotInputsUI}
 \title{Input UI components for the scatterPlot module}
 \usage{
-scatterPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
-)
+scatterPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,7 +17,6 @@ scatterPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -53,7 +51,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=createScatterPlotApp]{createScatterPlotApp()}}
+\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=ScatterPlotApp]{ScatterPlotApp()}}
 }
 \author{
 Jared Andrews

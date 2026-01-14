@@ -14,7 +14,7 @@
 #' @importFrom shinyjs hide
 #'
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
-#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::ScatterPlotApp()]
 #'
 #' @export
 #' @author Jared Andrews
@@ -41,7 +41,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             # Set up wrapper function based on switch state
             use_update <- input$use.update.button
             isolate_fn <- if (use_update) isolate else identity
-            
+
             palette <- NULL
             if (!is.null(manual.colors)) {
                 if (is.reactive(manual.colors)) {
@@ -99,15 +99,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
-            
+
             # Check if update button is required
             use_update <- input$use.update.button
-            
+
             # If update button is required, add dependency on it
             if (use_update) {
                 input$update
             }
-            
+
             # Set up wrapper function based on switch state
             isolate_fn <- if (use_update) isolate else identity
 

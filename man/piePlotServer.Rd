@@ -4,8 +4,7 @@
 \alias{piePlotServer}
 \title{Server logic for piePlot module}
 \usage{
-piePlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL
-)
+piePlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -21,7 +20,6 @@ but the user will not be able to see/adjust them in the UI.}
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
 }
-
 \value{
 The \code{moduleServer} function for the piePlot module.
 }

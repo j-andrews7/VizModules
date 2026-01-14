@@ -4,8 +4,7 @@
 \alias{piePlotInputsUI}
 \title{Input UI components for the piePlot module}
 \usage{
-piePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
-)
+piePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,7 +17,6 @@ piePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 
 \item{columns}{Number of columns for the UI grid.}
 }
-
 \value{
 A Shiny tagList containing the UI elements
 }
@@ -46,8 +44,8 @@ piePlotInputsUI("piePlot", pie_df)
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotServer]{piePlotServer()}}, \code{\link[=createpiePlotApp]{createpiePlotApp()}}
+\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotServer]{piePlotServer()}}, \code{\link[=piePlotApp]{piePlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

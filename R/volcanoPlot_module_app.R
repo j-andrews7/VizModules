@@ -13,9 +13,9 @@
 #' library(vizModules)
 #' data(airway_deseq2)
 #' if (interactive()) {
-#'     createVolcanoPlotApp(airway_deseq2)
+#'     volcanoPlotApp(airway_deseq2)
 #' }
-createVolcanoPlotApp <- function(df) {
+volcanoPlotApp <- function(df) {
     # Validate input
     stopifnot(is.data.frame(df))
 
