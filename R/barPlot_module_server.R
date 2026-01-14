@@ -33,14 +33,6 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
 
-        # Hide update button if disabled
-        if (!update.button) {
-            hide("update")
-        }
-
-        # Set up wrapper function for isolate based on update.button parameter
-        isolate_fn <- if (update.button) isolate else identity
-
         ns <- session$ns
         output$palette.selection <- renderUI({
             pal <- input$palette
@@ -121,16 +113,16 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$BarPlot <- renderPlotly({
-            # Check if update button is required
-            use_update <- input$use.update.button
+            # Check if auto update on
+            auto_update <- input$auto.update
 
             # If update button is required, add dependency on it
-            if (use_update) {
+            if (!auto_update) {
                 input$update
             }
 
             # Set up wrapper function based on switch state
-            isolate_fn <- if (use_update) isolate else identity
+            isolate_fn <- if (auto_update) identity else isolate
 
             # Null Values:
             facet.by <- NULL

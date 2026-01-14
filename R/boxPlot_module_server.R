@@ -116,16 +116,16 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$BoxPlot <- renderPlotly({
-            # Check if update button is required
-            use_update <- input$use.update.button
-            
+           # Check if auto update on
+            auto_update <- input$auto.update
+
             # If update button is required, add dependency on it
-            if (use_update) {
+            if (!auto_update) {
                 input$update
             }
-            
+
             # Set up wrapper function based on switch state
-            isolate_fn <- if (use_update) isolate else identity
+            isolate_fn <- if (auto_update) identity else isolate
 
             # Facet By Null option Upstream:
             facet.by <- NULL
@@ -148,8 +148,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add.stat <- input$add.stat
             }
 
-
-            # Box Plot
             p <- plotthis::BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),

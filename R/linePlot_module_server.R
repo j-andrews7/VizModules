@@ -35,14 +35,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
 
-        # Hide update button if disabled
-        if (!update.button) {
-            hide("update")
-        }
-
-        # Set up wrapper function for isolate based on update.button parameter
-        isolate_fn <- if (update.button) isolate else identity
-
         ns <- session$ns
 
         output$palette.selection <- renderUI({
@@ -75,7 +67,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
+            updateCheckboxInput(session, "axis.mirror", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateNumericInput(session, "axis.tickfont.size", value = 12)
@@ -91,26 +83,26 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$linePlot <- renderPlotly({
-            # Check if update button is required
-            use_update <- input$use.update.button
-            
+            # Check if auto update on
+            auto_update <- input$auto.update
+
             # If update button is required, add dependency on it
-            if (use_update) {
+            if (!auto_update) {
                 input$update
             }
-            
+
             # Set up wrapper function based on switch state
-            isolate_fn <- if (use_update) isolate else identity
+            isolate_fn <- if (auto_update) identity else isolate
 
             d <- data_reactive()
 
-            x_input <- input$x.value
-            y_input <- input$y.value
+            x_input <- isolate_fn(input$x.value)
+            y_input <- isolate_fn(input$y.value)
 
             # Sets the colouring to the first item in the selected palette unless group.by is selected
-            group.by <- plotthis::palette_list[[input$palette]][1]
-            if (!input$group.by == "" && length(x_input) == 1 && length(y_input) == 1) {
-                group.by <- reformulate(input$group.by)
+            group.by <- plotthis::palette_list[[isolate_fn(input$palette)]][1]
+            if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
+                group.by <- reformulate(isolate_fn(input$group.by))
             }
 
             # Making multiple lines on the axis. e.g 3x and 1y
@@ -122,7 +114,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Choosing which axis to order by:
             order_by <- x_input
-            if (input$order.by == TRUE) {
+            if (isolate_fn(input$order.by)) {
                 order_by <- y_input
             }
 
@@ -146,16 +138,17 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             y.adjustment <- NULL
-            if (!input$y.adjustment == "") {
-                y.adjustment <- input$y.adjustment
+            if (!isolate_fn(input$y.adjustment) == "") {
+                y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (!input$x.adjustment == "") {
-                x.adjustment <- input$x.adjustment
+            if (!isolate_fn(input$x.adjustment) == "") {
+                x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
             # Checking that all columns are numeric for x and y adjustment to be available
+            # TODO: remove sapply usage here
             if (!all(sapply(d[x_input], is.numeric))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
@@ -174,7 +167,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 colour.group.by = group.by,
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
-                facet.by = input$facet.by,
+                facet.by = isolate_fn(input$facet.by),
                 facet.scales = isolate_fn(input$facet.scales),
                 order.by = order_by,
                 axis.showline = isolate_fn(input$axis.showline),
