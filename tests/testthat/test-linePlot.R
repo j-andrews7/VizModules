@@ -3,9 +3,9 @@ library(devtools)
 library(plotthis)
 devtools::load_all()
 test_that("linePlot creates expected line trace", {
-  palette <- plotthis::palette_list[["Set2"]]
+  palette <<- plotthis::palette_list[["Set2"]]
 
-  fig <- linePlot(
+  fig <<- linePlot(
     reactive.data = mtcars,
     x = "cyl",
     y = "mpg",
@@ -27,8 +27,8 @@ test_that("linePlot creates expected line trace", {
 
   expect_s3_class(fig, "plotly")
 
-  built <- plotly::plotly_build(fig)
-  trace <- built$x$data[[1]]
+  built <<- plotly::plotly_build(fig)
+  trace <<- built$x$data[[1]]
   
   #General tests of data: 
   expect_identical(trace$type, "scatter")

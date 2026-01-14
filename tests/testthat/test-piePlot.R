@@ -1,11 +1,11 @@
 test_that("piePlot example creates expected pie trace", {
-  status_counts <- data.frame(
+  status_counts <<- data.frame(
     status = c("Upregulated", "Downregulated", "Not significant"),
     n = c(12, 7, 3)
   )
-  palette <- c("#1B9E77", "#D95F02", "#7570B3")
+  palette <<- c("#1B9E77", "#D95F02", "#7570B3")
 
-  fig <- piePlot(
+  fig <<- piePlot(
     df = status_counts,
     labels = "status",
     values = "n",
@@ -16,8 +16,8 @@ test_that("piePlot example creates expected pie trace", {
 
   expect_s3_class(fig, "plotly")
 
-  built <- plotly::plotly_build(fig)
-  trace <- built$x$data[[1]]
+  built <<- plotly::plotly_build(fig)
+  trace <<- built$x$data[[1]]
 
   expect_identical(trace$type, "pie")
   expect_equal(as.character(trace$labels), as.character(status_counts$status))
