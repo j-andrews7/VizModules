@@ -10,7 +10,7 @@
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #
 #' @examples
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)

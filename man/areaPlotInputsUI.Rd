@@ -47,5 +47,5 @@ AreaPlotInputsUI("areaPlot", mtcars)
 \code{\link[=AreaPlotOutputUI]{AreaPlotOutputUI()}}, \code{\link[=AreaPlotServer]{AreaPlotServer()}}, \code{\link[=AreaPlotApp]{AreaPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

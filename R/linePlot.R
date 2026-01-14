@@ -2,10 +2,8 @@
 #'
 #' @return A plotly object.
 #'
-#' @importFrom plotly plot_ly subplot add_trace
-#'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
                      facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
@@ -121,7 +119,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         }
 
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
-        
+
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)
@@ -146,7 +144,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
-        
+
         # Determine shareX and shareY based on facet.scales
         shareX <- TRUE
         shareY <- TRUE
@@ -160,12 +158,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             shareX <- TRUE
             shareY <- FALSE
         }
-        
+
         plots <- lapply(facet_levels, function(level) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
             # Initialize empty plot for this facet
             facet_fig <- plot_ly(data = facet_data, type = "scatter")
-            
+
             # Add traces for multi-axis
             if (length(x) > 1) {
                 for (i in 1:length(x)) {
@@ -227,12 +225,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                     facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
                 }
             }
-            
+
             facet_fig
         })
-        
+
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
-        
+
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)

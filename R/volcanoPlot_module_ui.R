@@ -33,7 +33,7 @@
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
 #' [vizModules::volcanoPlotOutputUI()], [vizModules::volcanoPlotServer()],
-#' [vizModules::createVolcanoPlotApp()]
+#' [vizModules::volcanoPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)

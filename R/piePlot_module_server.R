@@ -46,23 +46,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 return(NULL)
             }
 
-            # palette_source <- default_palettes()$choices
-            # selected_palette <- names(palette_source)[1]
-            # first_entry <- palette_source[[1]]
-            # if (is.list(first_entry) && !is.null(names(first_entry))) {
-            #     selected_palette <- names(first_entry)[1]
-            # }
-            # browser()
-
             multiColorPicker(
                 ns("slice.colors"),
                 label = "Slice colors",
                 groups = groups,
                 selected_palette = "dittoColors"
-                # palette_options = palette_source,
-                # selected_palette = selected_palette,
-                # # colors = isolate(input$slice.colors),
-                # width = "100%"
             )
         })
 
@@ -118,13 +106,22 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         }
 
         output$piePlot <- renderPlotly({
-            input$update
+            # Check if update button is required
+            use_update <- input$use.update.button
+
+            # If update button is required, add dependency on it
+            if (use_update) {
+                input$update
+            }
+
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (use_update) isolate else identity
 
             d <- data_reactive()
             req(nrow(d) > 0)
 
-            label_col <- isolate(input$labels)
-            value_col <- isolate(input$values)
+            label_col <- isolate_fn(input$labels)
+            value_col <- isolate_fn(input$values)
 
             validate(
                 need(!is.null(label_col) && label_col %in% names(d), "Select a label column for the slices."),
@@ -132,14 +129,14 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 need(is.numeric(d[[value_col]]), "The value column must contain numeric, aggregated data.")
             )
 
-            textinfo <- build_textinfo(isolate(input$textinfo))
-            textposition <- isolate(input$textposition)
+            textinfo <- build_textinfo(isolate_fn(input$textinfo))
+            textposition <- isolate_fn(input$textposition)
             if (identical(textinfo, "none")) {
                 textposition <- "none"
             }
 
             label_values <- as.character(d[[label_col]])
-            color_map <- isolate(input$slice.colors)
+            color_map <- isolate_fn(input$slice.colors)
 
             if (is.null(color_map) || length(color_map) == 0) {
                 default_cols <- default_palettes()$choices$Defaults$dittoColors
@@ -163,30 +160,30 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 labels = label_col,
                 values = value_col,
                 colors = colour_vector,
-                hole = isolate(input$hole),
+                hole = isolate_fn(input$hole),
                 textinfo = textinfo,
                 textposition = textposition,
-                insidetextorientation = isolate(input$insidetextorientation),
-                sort = isTRUE(isolate(input$sort.slices)),
-                direction = isolate(input$direction),
-                rotation = isolate(input$rotation),
-                show.legend = isTRUE(isolate(input$show.legend)),
-                legend.orientation = isolate(input$legend.orientation),
-                legend.font.family = isolate(input$legend.font.family),
-                legend.font.size = isolate(input$legend.font.size),
-                legend.font.color = isolate(input$legend.font.color),
-                title.font.family = isolate(input$title.font.family),
-                title.font.size = isolate(input$title.font.size),
-                title.font.color = isolate(input$title.font.color),
-                title.x = isolate(input$title.x),
-                text.font.family = isolate(input$text.font.family),
-                text.font.size = isolate(input$text.font.size),
-                text.font.color = isolate(input$text.font.color),
-                slice.line.color = isolate(input$slice.line.color),
-                slice.line.width = isolate(input$slice.line.width)
+                insidetextorientation = isolate_fn(input$insidetextorientation),
+                sort = isTRUE(isolate_fn(input$sort.slices)),
+                direction = isolate_fn(input$direction),
+                rotation = isolate_fn(input$rotation),
+                show.legend = isTRUE(isolate_fn(input$show.legend)),
+                legend.orientation = isolate_fn(input$legend.orientation),
+                legend.font.family = isolate_fn(input$legend.font.family),
+                legend.font.size = isolate_fn(input$legend.font.size),
+                legend.font.color = isolate_fn(input$legend.font.color),
+                title.font.family = isolate_fn(input$title.font.family),
+                title.font.size = isolate_fn(input$title.font.size),
+                title.font.color = isolate_fn(input$title.font.color),
+                title.x = isolate_fn(input$title.x),
+                text.font.family = isolate_fn(input$text.font.family),
+                text.font.size = isolate_fn(input$text.font.size),
+                text.font.color = isolate_fn(input$text.font.color),
+                slice.line.color = isolate_fn(input$slice.line.color),
+                slice.line.width = isolate_fn(input$slice.line.width)
             )
 
-            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = TRUE)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

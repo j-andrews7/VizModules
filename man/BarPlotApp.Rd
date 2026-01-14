@@ -23,5 +23,5 @@ app <- BarPlotApp(data_list)
 if (interactive()) runApp(app)
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
