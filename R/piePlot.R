@@ -31,6 +31,21 @@
 #' @param text.font.family,text.font.size,text.font.color Font settings for the slice labels.
 #' @param slice.line.color,slice.line.width Border styling for the slices.
 #'
+#' @examples
+#' status_counts <- data.frame(
+#'     status = c("Upregulated", "Downregulated", "Not significant"),
+#'     n = c(12, 7, 3)
+#' )
+#'
+#' piePlot(
+#'     df = status_counts,
+#'     labels = "status",
+#'     values = "n",
+#'     palette = c("#1B9E77", "#D95F02", "#7570B3"),
+#'     sort = FALSE,
+#'     title.text = "Genes by status"
+#' )
+#'
 #' @return A plotly object.
 #'
 #' @importFrom stats reformulate

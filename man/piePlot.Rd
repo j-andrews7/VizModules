@@ -94,6 +94,22 @@ A plotly object.
 \description{
 Create a plotly pie chart
 }
+\examples{
+status_counts <- data.frame(
+    status = c("Upregulated", "Downregulated", "Not significant"),
+    n = c(12, 7, 3)
+)
+
+piePlot(
+    df = status_counts,
+    labels = "status",
+    values = "n",
+    palette = c("#1B9E77", "#D95F02", "#7570B3"),
+    sort = FALSE,
+    title.text = "Genes by status"
+)
+
+}
 \author{
 Jacob Martin, Jared Andrews
 }
