@@ -18,6 +18,8 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown.
+#'   If `FALSE`, the button is hidden and plot re-renders immediately when inputs change.
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @importFrom colourpicker colourInput
@@ -31,7 +33,7 @@
 #' library(vizModules)
 #' data(mtcars)
 #' linePlotInputsUI("linePlot", mtcars)
-linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2, update.button = TRUE) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -180,7 +182,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         id = ns("linePlotTabsetPanel"),
         title = title,
         tack = tagList(
-            actionButton(ns("update"), "Update Plot"),
+            if (update.button) actionButton(ns("update"), "Update Plot"),
+            if (update.button) br(),
             actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
             selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
             br()

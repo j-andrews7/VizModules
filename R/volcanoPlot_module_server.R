@@ -8,12 +8,14 @@
 #'   Must contain `padj` and `log2FoldChange` columns.
 #' @param hide.inputs A character vector of input IDs to hide.
 #' @param hide.tabs A character vector of tab names to hide.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the volcanoPlot module.
 #'
 #' @importFrom shiny moduleServer reactive isolate req
 #' @export
 #' @author Jared Andrews
-volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets")) {
+volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", update.button = TRUE))) {
     res <- moduleServer(id, function(input, output, session) {
         # Reactive data with group column based on thresholds
         data_reac <- reactive({
@@ -22,13 +24,13 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
             input$update
 
             # Use isolate for threshold inputs so they don't trigger updates
-            sig_thresh <- isolate(input$sig.thresh)
-            fc_thresh <- isolate(input$fc.thresh)
+            sig_thresh <- isolate_fn(input$sig.thresh)
+            fc_thresh <- isolate_fn(input$fc.thresh)
 
             # Determine which columns to use for effect size (x) and significance (y)
             # We use the selected x and y inputs mostly likely, as those should be valid columns
-            x_col <- isolate(input$x.by)
-            y_col <- isolate(input$y.by)
+            x_col <- isolate_fn(input$x.by)
+            y_col <- isolate_fn(input$y.by)
 
             # Use !is.null() checks for threshold inputs since req(0) returns FALSE
             req(!is.null(sig_thresh), !is.null(fc_thresh), !is.null(x_col), !is.null(y_col))
@@ -55,9 +57,9 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         color_reac <- reactive({
             input$update
             c(
-                "Up" = if (!is.null(isolate(input$color.up))) isolate(input$color.up) else "red",
-                "Down" = if (!is.null(isolate(input$color.down))) isolate(input$color.down) else "blue",
-                "n.s." = if (!is.null(isolate(input$color.ns))) isolate(input$color.ns) else "lightgray"
+                "Up" = if (!is.null(isolate_fn(input$color.up))) isolate_fn(input$color.up) else "red",
+                "Down" = if (!is.null(isolate_fn(input$color.down))) isolate_fn(input$color.down) else "blue",
+                "n.s." = if (!is.null(isolate_fn(input$color.ns))) isolate_fn(input$color.ns) else "lightgray"
             )
         })
 
@@ -71,5 +73,5 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         hide.inputs <- c(hide.inputs, "color.panel")
     }
 
-    scatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors)
+    scatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors, update.button = update.button)
 }

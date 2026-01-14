@@ -7,6 +7,8 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the linePlot module.
 #'
 #' @importFrom shinyjs hide
@@ -16,7 +18,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, update.button = TRUE)) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -34,6 +36,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
             })
         }
+
+        # Hide update button if disabled
+        if (!update.button) {
+            hide("update")
+        }
+
+        # Set up wrapper function for isolate based on update.button parameter
+        isolate_fn <- if (update.button) isolate else identity
 
         ns <- session$ns
 
@@ -83,7 +93,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$linePlot <- renderPlotly({
-            input$update
+            if (update.button) {
+                input$update
+            }
 
             d <- data_reactive()
 
@@ -152,39 +164,39 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 reactive.data = d,
                 x = x_input,
                 y = y_input,
-                plot.mode = isolate(input$plot.type),
-                line.type = isolate(input$line.type),
+                plot.mode = isolate_fn(input$plot.type),
+                line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
                 facet.by = input$facet.by,
-                facet.scales = isolate(input$facet.scales),
+                facet.scales = isolate_fn(input$facet.scales),
                 order.by = order_by,
-                axis.showline = isolate(input$axis.showline),
-                axis.mirror = isolate(input$axis.mirror),
-                axis.linecolor = isolate(input$axis.linecolor),
-                axis.linewidth = isolate(input$axis.linewidth),
-                axis.tickfont.size = isolate(input$axis.tickfont.size),
-                axis.tickfont.color = isolate(input$axis.tickfont.color),
-                axis.tickfont.family = isolate(input$axis.tickfont.family),
-                axis.tickangle.x = isolate(input$axis.tickangle.x),
-                axis.tickangle.y = isolate(input$axis.tickangle.y),
-                axis.ticks = isolate(input$axis.ticks),
-                axis.tickcolor = isolate(input$axis.tickcolor),
-                axis.ticklen = isolate(input$axis.ticklen),
-                axis.tickwidth = isolate(input$axis.tickwidth),
-                title.font.size = isolate(input$title.font.size),
-                title.font.family = isolate(input$font.type),
-                title.text.color = isolate(input$text.colour),
+                axis.showline = isolate_fn(input$axis.showline),
+                axis.mirror = isolate_fn(input$axis.mirror),
+                axis.linecolor = isolate_fn(input$axis.linecolor),
+                axis.linewidth = isolate_fn(input$axis.linewidth),
+                axis.tickfont.size = isolate_fn(input$axis.tickfont.size),
+                axis.tickfont.color = isolate_fn(input$axis.tickfont.color),
+                axis.tickfont.family = isolate_fn(input$axis.tickfont.family),
+                axis.tickangle.x = isolate_fn(input$axis.tickangle.x),
+                axis.tickangle.y = isolate_fn(input$axis.tickangle.y),
+                axis.ticks = isolate_fn(input$axis.ticks),
+                axis.tickcolor = isolate_fn(input$axis.tickcolor),
+                axis.ticklen = isolate_fn(input$axis.ticklen),
+                axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                title.font.size = isolate_fn(input$title.font.size),
+                title.font.family = isolate_fn(input$font.type),
+                title.text.color = isolate_fn(input$text.colour),
                 x.title = x_title,
                 y.title = y_title,
-                flip.x = isolate(input$flip.x),
-                flip.y = isolate(input$flip.y),
+                flip.x = isolate_fn(input$flip.x),
+                flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
                 y.adjustment = y.adjustment
             )
 
-            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, facet.by = input$facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = FALSE, facet.by = input$facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

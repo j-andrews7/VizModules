@@ -27,6 +27,8 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown.
+#'   If `FALSE`, the button is hidden and plot re-renders immediately when inputs change.
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @export
@@ -39,7 +41,7 @@
 #' data(mtcars)
 #' # Not a real volcano dataset, but demonstrates the UI
 #' volcanoPlotInputsUI("volcanoPlot", mtcars)
-volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2) {
+volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2, update.button = TRUE) {
     # Add a few extra inputs to control the DE thresholds
     ns <- NS(id)
 
@@ -109,7 +111,7 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
         data$group <- "dummy"
     }
 
-    outs <- scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
+    outs <- scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns, update.button = update.button)
 
     tagList(extras, outs)
 }

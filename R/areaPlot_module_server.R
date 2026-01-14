@@ -8,6 +8,8 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the AreaPlot module.
 #'
 #' @importFrom shinyjs hide
@@ -15,7 +17,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, update.button = TRUE) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -32,6 +34,14 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
             })
         }
+
+        # Hide update button if disabled
+        if (!update.button) {
+            hide("update")
+        }
+
+        # Set up wrapper function for isolate based on update.button parameter
+        isolate_fn <- if (update.button) isolate else identity
         ns <- session$ns
         output$palette.selection <- renderUI({
             pal <- input$palette
@@ -96,41 +106,43 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$AreaPlot <- renderPlotly({
-            input$update
+            if (update.button) {
+                input$update
+            }
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate(input$facet.by) == "NULL") {
-                facet.by <- isolate(input$facet.by)
+            if (!isolate_fn(input$facet.by) == "NULL") {
+                facet.by <- isolate_fn(input$facet.by)
             }
 
             split.by <- NULL
-            if (!isolate(input$split.by) == "NULL") {
-                split.by <- isolate(input$split.by)
+            if (!isolate_fn(input$split.by) == "NULL") {
+                split.by <- isolate_fn(input$split.by)
             }
 
-            design <- if (isolate(input$split.by) == "NULL" || isolate(input$design) == "NULL") NULL else isolate(input$design)
+            design <- if (isolate_fn(input$split.by) == "NULL" || isolate_fn(input$design) == "NULL") NULL else isolate_fn(input$design)
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate(input$facet.nrow))
+            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             p <- plotthis::AreaPlot(
                 data(),
-                x = isolate(input$x.data),
-                y = isolate(input$y.data),
+                x = isolate_fn(input$x.data),
+                y = isolate_fn(input$y.data),
                 split_by = split.by,
-                group_by = isolate(input$group.by),
-                theme = isolate(input$theme),
-                palette = isolate(input$palette),
-                palcolor = isolate(input$palette.colours),
-                alpha = isolate(input$alpha),
+                group_by = isolate_fn(input$group.by),
+                theme = isolate_fn(input$theme),
+                palette = isolate_fn(input$palette),
+                palcolor = isolate_fn(input$palette.colours),
+                alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
-                facet_scales = isolate(input$facet.scale),
+                facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
-                facet_byrow = isolate(input$facet.by.row),
-                combine = isolate(input$combine),
+                facet_byrow = isolate_fn(input$facet.by.row),
+                combine = isolate_fn(input$combine),
                 design = design
             )
 
@@ -139,9 +151,9 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 layout(
                     title = list(
                         font = list(
-                            size = isolate(input$title.font.size),
-                            family = isolate(input$font.type),
-                            color = isolate(input$text.colour)
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$font.type),
+                            color = isolate_fn(input$text.colour)
                         ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
@@ -153,7 +165,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
             
-            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

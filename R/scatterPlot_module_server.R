@@ -8,6 +8,8 @@
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
+#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @importFrom ggplot2 theme_bw waiver
@@ -18,7 +20,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
+scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL, update.button = TRUE) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -36,6 +38,14 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             })
         }
 
+        # Hide update button if disabled
+        if (!update.button) {
+            hide("update")
+        }
+
+        # Set up wrapper function for isolate based on update.button parameter
+        isolate_fn <- if (update.button) isolate else identity
+
         # Get color panel
         color.panel <- reactive({
             palette <- NULL
@@ -50,15 +60,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
             if (is.null(palette)) {
-                if (is.null(isolate(input$color.panel)) || isolate(input$color.panel) == "dittoColors") {
+                if (is.null(isolate_fn(input$color.panel)) || isolate_fn(input$color.panel) == "dittoColors") {
                     palette <- dittoColors()
-                } else if (!is.null(isolate(input$color.by))) {
-                    if (isolate(input$color.panel) %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
-                        palette <- viridis_pal(option = isolate(input$color.panel))(length(colLevels(isolate(input$color.by), data())))
-                    } else if (isolate(input$color.panel) == "ggplot2") {
-                        palette <- hue_pal()(length(colLevels(isolate(input$color.by), data())))
+                } else if (!is.null(isolate_fn(input$color.by))) {
+                    if (isolate_fn(input$color.panel) %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
+                        palette <- viridis_pal(option = isolate_fn(input$color.panel))(length(colLevels(isolate_fn(input$color.by), data())))
+                    } else if (isolate_fn(input$color.panel) == "ggplot2") {
+                        palette <- hue_pal()(length(colLevels(isolate_fn(input$color.by), data())))
                     } else {
-                        palette <- brewer_pal(palette = isolate(input$color.panel))(length(colLevels(isolate(input$color.by), data())))
+                        palette <- brewer_pal(palette = isolate_fn(input$color.panel))(length(colLevels(isolate_fn(input$color.by), data())))
                     }
                 }
             }
@@ -95,33 +105,35 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
-            input$update
+            if (update.button) {
+                input$update
+            }
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
-                "trajectory.group.by" = .na_to_null(isolate(input$trajectory.group.by)),
-                "add.trajectory.by.groups" = .na_to_null(isolate(input$add.trajectory.by.groups)),
-                "add.xline" = .na_to_null(isolate(input$add.xline)),
-                "add.yline" = .na_to_null(isolate(input$add.yline)),
-                "color.by" = .na_to_null(isolate(input$color.by)),
-                "shape.by" = .na_to_null(isolate(input$shape.by)),
-                "split.by" = .na_to_null(isolate(input$split.by)),
-                "annotate.by" = .na_to_null(isolate(input$annotate.by)),
-                "x.adjustment" = .na_to_null(isolate(input$x.adjustment)),
-                "y.adjustment" = .na_to_null(isolate(input$y.adjustment)),
-                "color.adjustment" = .na_to_null(isolate(input$color.adjustment)),
-                "x.adj.fxn" = .na_to_null(isolate(input$x.adj.fxn)),
-                "y.adj.fxn" = .na_to_null(isolate(input$y.adj.fxn)),
-                "color.adj.fxn" = .na_to_null(isolate(input$color.adj.fxn)),
-                "split.nrow" = .na_to_null(isolate(input$split.nrow)),
-                "split.ncol" = .na_to_null(isolate(input$split.ncol)),
-                "hover.data" = .na_to_null(isolate(input$hover.data)),
-                "annotate.by" = .na_to_null(isolate(input$annotate.by))
+                "trajectory.group.by" = .na_to_null(isolate_fn(input$trajectory.group.by)),
+                "add.trajectory.by.groups" = .na_to_null(isolate_fn(input$add.trajectory.by.groups)),
+                "add.xline" = .na_to_null(isolate_fn(input$add.xline)),
+                "add.yline" = .na_to_null(isolate_fn(input$add.yline)),
+                "color.by" = .na_to_null(isolate_fn(input$color.by)),
+                "shape.by" = .na_to_null(isolate_fn(input$shape.by)),
+                "split.by" = .na_to_null(isolate_fn(input$split.by)),
+                "annotate.by" = .na_to_null(isolate_fn(input$annotate.by)),
+                "x.adjustment" = .na_to_null(isolate_fn(input$x.adjustment)),
+                "y.adjustment" = .na_to_null(isolate_fn(input$y.adjustment)),
+                "color.adjustment" = .na_to_null(isolate_fn(input$color.adjustment)),
+                "x.adj.fxn" = .na_to_null(isolate_fn(input$x.adj.fxn)),
+                "y.adj.fxn" = .na_to_null(isolate_fn(input$y.adj.fxn)),
+                "color.adj.fxn" = .na_to_null(isolate_fn(input$color.adj.fxn)),
+                "split.nrow" = .na_to_null(isolate_fn(input$split.nrow)),
+                "split.ncol" = .na_to_null(isolate_fn(input$split.ncol)),
+                "hover.data" = .na_to_null(isolate_fn(input$hover.data)),
+                "annotate.by" = .na_to_null(isolate_fn(input$annotate.by))
             )
 
             # Waiver inputs
             waiver.inputs <- list(
-                "legend.color.breaks" = isolate(input$legend.color.breaks)
+                "legend.color.breaks" = isolate_fn(input$legend.color.breaks)
             )
 
             # If input is empty, set to waiver()
@@ -140,10 +152,10 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     null.na.inputs$color.by,
                     paste0(null.na.inputs$color.by, ".color.adj"),
                     "color.multi", "color.which",
-                    isolate(input$x.by),
-                    paste0(isolate(input$x.by), ".x.adj"),
-                    isolate(input$y.by),
-                    paste0(isolate(input$y.by), ".y.adj"),
+                    isolate_fn(input$x.by),
+                    paste0(isolate_fn(input$x.by), ".x.adj"),
+                    isolate_fn(input$y.by),
+                    paste0(isolate_fn(input$y.by), ".y.adj"),
                     null.na.inputs$shape.by,
                     null.na.inputs$split.by
                 ))
@@ -153,61 +165,61 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
             p <- dittoViz::scatterPlot(
                 data(),
-                x.by = isolate(input$x.by),
-                y.by = isolate(input$y.by),
+                x.by = isolate_fn(input$x.by),
+                y.by = isolate_fn(input$y.by),
                 color.by = null.na.inputs$color.by,
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,
-                size = isolate(input$size),
-                rows.use = with(data(), eval(str2expression(isolate(input$rows.use)))),
-                show.others = isolate(input$show.others),
+                size = isolate_fn(input$size),
+                rows.use = with(data(), eval(str2expression(isolate_fn(input$rows.use)))),
+                show.others = isolate_fn(input$show.others),
                 x.adjustment = null.na.inputs$x.adjustment,
                 y.adjustment = null.na.inputs$y.adjustment,
                 color.adjustment = null.na.inputs$color.adjustment,
-                x.adj.fxn = eval(str2expression(isolate(input$x.adj.fxn))),
-                y.adj.fxn = eval(str2expression(isolate(input$y.adj.fxn))),
-                color.adj.fxn = eval(str2expression(isolate(input$color.adj.fxn))),
-                split.show.all.others = isolate(input$split.show.all.others),
-                opacity = isolate(input$opacity),
-                color.panel = isolate(color.panel()),
-                colors = seq_along(isolate(color.panel())),
+                x.adj.fxn = eval(str2expression(isolate_fn(input$x.adj.fxn))),
+                y.adj.fxn = eval(str2expression(isolate_fn(input$y.adj.fxn))),
+                color.adj.fxn = eval(str2expression(isolate_fn(input$color.adj.fxn))),
+                split.show.all.others = isolate_fn(input$split.show.all.others),
+                opacity = isolate_fn(input$opacity),
+                color.panel = isolate_fn(color.panel()),
+                colors = seq_along(isolate_fn(color.panel())),
                 split.nrow = null.na.inputs$split.nrow,
                 split.ncol = null.na.inputs$split.ncol,
-                split.adjust = list(scales = isolate(input$split.adjust.scales)),
-                multivar.split.dir = isolate(input$multivar.split.dir),
-                shape.panel = as.numeric(.string_to_vector(isolate(input$shape.panel))),
+                split.adjust = list(scales = isolate_fn(input$split.adjust.scales)),
+                multivar.split.dir = isolate_fn(input$multivar.split.dir),
+                shape.panel = as.numeric(.string_to_vector(isolate_fn(input$shape.panel))),
                 rename.color.groups = NULL,
                 rename.shape.groups = NULL,
-                min.color = isolate(input$min.color),
-                max.color = isolate(input$max.color),
-                min.value = isolate(input$min.value),
-                max.value = isolate(input$max.value),
-                plot.order = isolate(input$plot.order),
+                min.color = isolate_fn(input$min.color),
+                max.color = isolate_fn(input$max.color),
+                min.value = isolate_fn(input$min.value),
+                max.value = isolate_fn(input$max.value),
+                plot.order = isolate_fn(input$plot.order),
                 theme = theme_bw(),
                 do.hover = TRUE,
                 hover.data = hover.data,
-                hover.round.digits = isolate(input$hover.round.digits),
-                do.contour = isolate(input$do.contour),
-                contour.color = isolate(input$contour.color),
-                contour.linetype = isolate(input$contour.linetype),
+                hover.round.digits = isolate_fn(input$hover.round.digits),
+                do.contour = isolate_fn(input$do.contour),
+                contour.color = isolate_fn(input$contour.color),
+                contour.linetype = isolate_fn(input$contour.linetype),
                 add.trajectory.by.groups = .string_to_list_of_vectors(null.na.inputs$add.trajectory.by.groups),
                 trajectory.group.by = null.na.inputs$trajectory.group.by,
-                trajectory.arrow.size = isolate(input$trajectory.arrow.size),
+                trajectory.arrow.size = isolate_fn(input$trajectory.arrow.size),
                 add.xline = as.numeric(.string_to_vector(null.na.inputs$add.xline)),
-                xline.linetype = isolate(input$xline.linetype),
-                xline.color = isolate(input$xline.color),
+                xline.linetype = isolate_fn(input$xline.linetype),
+                xline.color = isolate_fn(input$xline.color),
                 add.yline = as.numeric(.string_to_vector(null.na.inputs$add.yline)),
-                yline.linetype = isolate(input$yline.linetype),
-                yline.color = isolate(input$yline.color),
-                do.ellipse = isolate(input$do.ellipse),
-                legend.show = isolate(input$legend.show),
-                legend.color.title = isolate(input$legend.color.title),
-                legend.color.size = isolate(input$legend.color.size),
+                yline.linetype = isolate_fn(input$yline.linetype),
+                yline.color = isolate_fn(input$yline.color),
+                do.ellipse = isolate_fn(input$do.ellipse),
+                legend.show = isolate_fn(input$legend.show),
+                legend.color.title = isolate_fn(input$legend.color.title),
+                legend.color.size = isolate_fn(input$legend.color.size),
                 legend.color.breaks = waiver.inputs$legend.color.breaks,
                 legend.color.breaks.labels = waiver(),
                 legend.shape.title = null.na.inputs$shape.by,
-                legend.shape.size = isolate(input$legend.shape.size),
-                show.grid.lines = isolate(input$show.grid.lines),
+                legend.shape.size = isolate_fn(input$legend.shape.size),
+                show.grid.lines = isolate_fn(input$show.grid.lines),
                 data.out = TRUE
             )
 
@@ -220,19 +232,19 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 } else {
                     color_mapping <- manual.colors
                 }
-            } else if (!is.null(isolate(input$color.by)) && isolate(input$color.by) != "") {
-                color_levels <- colLevels(isolate(input$color.by), data())
+            } else if (!is.null(isolate_fn(input$color.by)) && isolate_fn(input$color.by) != "") {
+                color_levels <- colLevels(isolate_fn(input$color.by), data())
                 color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
             } else {
                 color_mapping <- NULL
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate(input$download.format), include.modebar.buttons = TRUE)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = p$plot), config_list))
 
             # Apply highlight styling to specified points
-            highlight_points_raw <- isolate(input$highlight.points)
+            highlight_points_raw <- isolate_fn(input$highlight.points)
             if (!is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
@@ -242,10 +254,10 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                 if (length(highlight_vals) > 0) {
                     # Get styling parameters
-                    hl_color <- isolate(input$highlight.color)
-                    hl_size <- isolate(input$highlight.size)
-                    hl_border_color <- isolate(input$highlight.border.color)
-                    hl_border_width <- isolate(input$highlight.border.width)
+                    hl_color <- isolate_fn(input$highlight.color)
+                    hl_size <- isolate_fn(input$highlight.size)
+                    hl_border_color <- isolate_fn(input$highlight.border.color)
+                    hl_border_width <- isolate_fn(input$highlight.border.width)
 
                     # Find indices of points to highlight in plot_data
                     annotate_col <- null.na.inputs$annotate.by
@@ -275,7 +287,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                                 # Get current marker properties (may be single value or vector)
                                 cur_color <- trace$marker$color
-                                cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate(input$size)
+                                cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate_fn(input$size)
                                 cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
                                 cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
 
@@ -296,7 +308,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 if (!is.null(trace$text)) {
                                     trace_anno <- strsplit(trace$text, "\\n")
                                     trace_anno <- lapply(trace_anno, function(x) {
-                                        y <- grep(isolate(input$annotate.by), x, value = TRUE)
+                                        y <- grep(isolate_fn(input$annotate.by), x, value = TRUE)
                                         y <- strsplit(y, " ")[[1]][2]
                                         y
                                     })
@@ -309,16 +321,16 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 )
 
                                 plot_coords <- paste0(
-                                    round(plot_data[[if (paste0(isolate(input$x.by), ".x.adj") %in% names(plot_data)) {
-                                        paste0(isolate(input$x.by), ".x.adj")
+                                    round(plot_data[[if (paste0(isolate_fn(input$x.by), ".x.adj") %in% names(plot_data)) {
+                                        paste0(isolate_fn(input$x.by), ".x.adj")
                                     } else {
-                                        isolate(input$x.by)
+                                        isolate_fn(input$x.by)
                                     }]], 10),
                                     "_",
-                                    round(plot_data[[if (paste0(isolate(input$y.by), ".y.adj") %in% names(plot_data)) {
-                                        paste0(isolate(input$y.by), ".y.adj")
+                                    round(plot_data[[if (paste0(isolate_fn(input$y.by), ".y.adj") %in% names(plot_data)) {
+                                        paste0(isolate_fn(input$y.by), ".y.adj")
                                     } else {
-                                        isolate(input$y.by)
+                                        isolate_fn(input$y.by)
                                     }]], 10)
                                 )
                                 highlight_coords <- plot_coords[highlight_idx]
@@ -417,7 +429,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                                     # Parse the text to extract annotate.by value
                                     text_lines <- strsplit(point_text, "\\n")[[1]]
-                                    anno_line <- grep(isolate(input$annotate.by), text_lines, value = TRUE)
+                                    anno_line <- grep(isolate_fn(input$annotate.by), text_lines, value = TRUE)
 
                                     if (length(anno_line) > 0) {
                                         # Extract the annotation value (format: "annotate.by: value")
@@ -435,15 +447,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                             text = anno_text,
                                             xref = xref,
                                             yref = yref,
-                                            ax = isolate(input$annotation.ax),
-                                            ay = isolate(input$annotation.ay),
-                                            showarrow = isolate(input$annotation.showarrow),
-                                            arrowcolor = isolate(input$annotation.arrowcolor),
-                                            arrowhead = isolate(input$annotation.arrowhead),
-                                            arrowwidth = isolate(input$annotation.arrowwidth),
+                                            ax = isolate_fn(input$annotation.ax),
+                                            ay = isolate_fn(input$annotation.ay),
+                                            showarrow = isolate_fn(input$annotation.showarrow),
+                                            arrowcolor = isolate_fn(input$annotation.arrowcolor),
+                                            arrowhead = isolate_fn(input$annotation.arrowhead),
+                                            arrowwidth = isolate_fn(input$annotation.arrowwidth),
                                             font = list(
-                                                size = isolate(input$annotation.size),
-                                                color = isolate(input$annotation.color)
+                                                size = isolate_fn(input$annotation.size),
+                                                color = isolate_fn(input$annotation.color)
                                             )
                                         )
                                     }
@@ -462,7 +474,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             }
 
             # Auto-annotate highlighted points if enabled
-            if (isTRUE(isolate(input$highlight.auto.annotate)) &&
+            if (isTRUE(isolate_fn(input$highlight.auto.annotate)) &&
                 !is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
@@ -473,8 +485,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                     annotate_col <- null.na.inputs$annotate.by
                     if (annotate_col %in% names(plot_data)) {
                         # Get coordinate columns (same logic as manual annotations)
-                        x_col <- isolate(input$x.by)
-                        y_col <- isolate(input$y.by)
+                        x_col <- isolate_fn(input$x.by)
+                        y_col <- isolate_fn(input$y.by)
                         x_adj_col <- paste0(x_col, ".x.adj")
                         y_adj_col <- paste0(y_col, ".y.adj")
                         x_match_col <- if (x_adj_col %in% names(plot_data)) x_adj_col else x_col
@@ -528,7 +540,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     # Check that trace coords and anno match highlight coords and vals
                                     trace_anno <- strsplit(trace$text, "\\n")
                                     trace_anno <- lapply(trace_anno, function(x) {
-                                        y <- grep(isolate(input$annotate.by), x, value = TRUE)
+                                        y <- grep(isolate_fn(input$annotate.by), x, value = TRUE)
                                         y <- strsplit(y, " ")[[1]][2]
                                         y
                                     })
@@ -551,15 +563,15 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                             text = as.character(plot_data[[annotate_col]][idx]),
                                             xref = xref,
                                             yref = yref,
-                                            ax = isolate(input$annotation.ax),
-                                            ay = isolate(input$annotation.ay),
-                                            showarrow = isolate(input$annotation.showarrow),
-                                            arrowcolor = isolate(input$annotation.arrowcolor),
-                                            arrowhead = isolate(input$annotation.arrowhead),
-                                            arrowwidth = isolate(input$annotation.arrowwidth),
+                                            ax = isolate_fn(input$annotation.ax),
+                                            ay = isolate_fn(input$annotation.ay),
+                                            showarrow = isolate_fn(input$annotation.showarrow),
+                                            arrowcolor = isolate_fn(input$annotation.arrowcolor),
+                                            arrowhead = isolate_fn(input$annotation.arrowhead),
+                                            arrowwidth = isolate_fn(input$annotation.arrowwidth),
                                             font = list(
-                                                size = isolate(input$annotation.size),
-                                                color = isolate(input$annotation.color)
+                                                size = isolate_fn(input$annotation.size),
+                                                color = isolate_fn(input$annotation.color)
                                             )
                                         )
                                         # Don't break - continue to check other traces for the same coordinates
@@ -596,13 +608,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
             fig <- fig %>% layout(
                 newshape = list(
-                    fillcolor = isolate(input$shape.fill),
+                    fillcolor = isolate_fn(input$shape.fill),
                     line = list(
-                        color = isolate(input$shape.line.color),
-                        width = isolate(input$shape.line.width),
-                        dash = isolate(input$shape.linetype)
+                        color = isolate_fn(input$shape.line.color),
+                        width = isolate_fn(input$shape.line.width),
+                        dash = isolate_fn(input$shape.linetype)
                     ),
-                    opacity = isolate(input$shape.opacity)
+                    opacity = isolate_fn(input$shape.opacity)
                 ),
                 annotations = annos
             )
@@ -613,7 +625,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
-            if (isolate(input$webgl)) {
+            if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
                 # Layers with a single text element (length == 1) are typically background/other layers
                 # that don't have meaningful hover data. These interfere with hover functionality when
@@ -640,8 +652,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             if (isTRUE(input$linear.model)) {
                 fit_data <- .compute_linear_fit(
                     df = data(),
-                    x.col = isolate(input$x.by),
-                    y.col = isolate(input$y.by),
+                    x.col = isolate_fn(input$x.by),
+                    y.col = isolate_fn(input$y.by),
                     group.col = group_col
                 )
 
@@ -675,8 +687,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 # LOESS smooth fit lines (only if linear model not selected)
                 fit_data <- .compute_loess_fit(
                     df = data(),
-                    x.col = isolate(input$x.by),
-                    y.col = isolate(input$y.by),
+                    x.col = isolate_fn(input$x.by),
+                    y.col = isolate_fn(input$y.by),
                     group.col = group_col,
                     span = input$line.best.smoothness
                 )
