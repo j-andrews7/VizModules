@@ -4,7 +4,9 @@
 \alias{AreaPlotInputsUI}
 \title{Input UI components for the AreaPlot module}
 \usage{
-AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
+AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2,
+  update.button = TRUE
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -17,6 +19,9 @@ AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 \item{columns}{Number of columns for the UI grid.}
 }
+\item{update.button}{Logical; if \code{TRUE} (default), an "Update Plot" button is shown.
+If \code{FALSE}, the button is hidden and plot re-renders immediately when inputs change.}
+
 \value{
 A Shiny tagList containing the UI elements
 }

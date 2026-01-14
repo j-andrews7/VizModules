@@ -8,7 +8,9 @@ volcanoPlotServer(
   id,
   data,
   hide.inputs = NULL,
-  hide.tabs = c("Trajectory", "Facets")
+  hide.tabs = c("Trajectory", "Facets",
+  update.button = TRUE
+)
 )
 }
 \arguments{
@@ -21,6 +23,9 @@ Must contain \code{padj} and \code{log2FoldChange} columns.}
 
 \item{hide.tabs}{A character vector of tab names to hide.}
 }
+\item{update.button}{Logical; if \code{TRUE} (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+If \code{FALSE}, plot re-renders immediately when inputs change.}
+
 \value{
 The \code{moduleServer} function for the volcanoPlot module.
 }

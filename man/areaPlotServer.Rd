@@ -4,7 +4,9 @@
 \alias{AreaPlotServer}
 \title{Server logic for AreaPlot module}
 \usage{
-AreaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+AreaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL,
+  update.button = TRUE
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -19,6 +21,9 @@ but the user will not be able to see/adjust them in the UI.}
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
 }
+\item{update.button}{Logical; if \code{TRUE} (default), an "Update Plot" button is shown and plot only re-renders when clicked.
+If \code{FALSE}, plot re-renders immediately when inputs change.}
+
 \value{
 The \code{moduleServer} function for the AreaPlot module.
 }
