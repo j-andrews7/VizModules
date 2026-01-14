@@ -73,16 +73,16 @@ library(vizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="9768">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="8644">
 #>     <li class="active">
-#>       <a href="#tab-9768-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8644-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9768-2" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8644-2" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9768">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9768-1">
+#>   <div class="tab-content" data-tabsetid="8644">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8644-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -489,7 +489,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9768-2">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8644-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -620,7 +620,7 @@ linePlotInputsUI("linePlot", mtcars)
 #> <div class="row">
 #>   <div class="col-sm-3" style="margin-top: 25px;">
 #>     <div class="form-group shiny-input-container">
-#>       <input id="linePlot-use.update.button" type="checkbox" class="sw-switchInput" data-input-id="linePlot-use.update.button" data-on-text="ON" data-off-text="OFF" data-label-text="Auto Update" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+#>       <input id="linePlot-auto.update" type="checkbox" class="sw-switchInput" data-input-id="linePlot-auto.update" data-on-text="ON" data-off-text="OFF" data-label-text="Auto Update" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
 #>     </div>
 #>   </div>
 #>   <div class="col-sm-3" style="margin-top: 25px;">
