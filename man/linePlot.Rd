@@ -49,5 +49,5 @@ A plotly object.
 Create a plotly line plot
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
