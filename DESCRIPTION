@@ -27,12 +27,16 @@ Imports:
     scales,
     esquisse,
     shinyjqui,
-    ggplot2
+    ggplot2,
+    htmltools,
+    jsonlite
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3
 URL: https://j-andrews7.github.io/vizModules/, https://github.com/j-andrews7/vizModules

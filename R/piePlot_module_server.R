@@ -46,23 +46,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 return(NULL)
             }
 
-            # palette_source <- default_palettes()$choices
-            # selected_palette <- names(palette_source)[1]
-            # first_entry <- palette_source[[1]]
-            # if (is.list(first_entry) && !is.null(names(first_entry))) {
-            #     selected_palette <- names(first_entry)[1]
-            # }
-            # browser()
-
             multiColorPicker(
                 ns("slice.colors"),
                 label = "Slice colors",
                 groups = groups,
                 selected_palette = "dittoColors"
-                # palette_options = palette_source,
-                # selected_palette = selected_palette,
-                # # colors = isolate_fn(input$slice.colors),
-                # width = "100%"
             )
         })
 
@@ -120,12 +108,12 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$piePlot <- renderPlotly({
             # Check if update button is required
             use_update <- input$use.update.button
-            
+
             # If update button is required, add dependency on it
             if (use_update) {
                 input$update
             }
-            
+
             # Set up wrapper function based on switch state
             isolate_fn <- if (use_update) isolate else identity
 

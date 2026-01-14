@@ -10,7 +10,7 @@ piePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2
 \arguments{
 \item{id}{The ID for the Shiny module.}
 
-\item{data}{The data frame used for plot generation.}
+\item{data}{The data frame used for plot generation. Supply a summary table with one row per slice.}
 
 \item{defaults}{A named list of default values for the inputs.}
 
@@ -34,13 +34,15 @@ The inputs will automatically be organized into a grid layout via the \code{orga
 with \code{columns} controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
+Provide summarized data (one row per slice) with columns for labels and aggregated values.
 Nearly all parameters for \code{\link[=piePlot]{piePlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
 \examples{
 library(vizModules)
-data(iris)
-piePlotInputsUI("piePlot", iris)
+pie_df <- as.data.frame(table(iris$Species))
+names(pie_df) <- c("Species", "Count")
+piePlotInputsUI("piePlot", pie_df)
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
