@@ -8,27 +8,85 @@ piePlot(
   df,
   labels,
   values,
+  colors = NULL,
+  palette = NULL,
   hole = 0,
-  palette,
-  col.palette = NULL,
-  textinfo = "label+text+value+percent"
+  textinfo = "label+percent",
+  textposition = "auto",
+  insidetextorientation = "auto",
+  sort = TRUE,
+  direction = "counterclockwise",
+  rotation = 0,
+  show.legend = TRUE,
+  legend.orientation = "h",
+  legend.x = 0.5,
+  legend.y = -0.1,
+  legend.font.family = "Arial",
+  legend.font.size = 12,
+  legend.font.color = "#000000",
+  title.text = "",
+  title.font.family = "Arial",
+  title.font.size = 18,
+  title.font.color = "#000000",
+  title.x = 0.5,
+  text.font.family = "Arial",
+  text.font.size = 12,
+  text.font.color = "#000000",
+  slice.line.color = "#FFFFFF",
+  slice.line.width = 0
 )
 }
 \arguments{
-\item{df}{A data frame containing the data to plot.}
+\item{df}{A data frame where each row already represents a summarized slice
+(e.g., counts per category) with label and value columns.}
 
-\item{labels}{Name of the column to use for the labels.}
+\item{labels}{Name of the column to use for the slice labels.}
 
-\item{values}{Name of the column to use for the values.}
+\item{values}{Name of the column to use for the aggregated values.}
 
-\item{hole}{A numeric value between 0 and 1 for the hole size (0 for pie, >0 for donut).}
+\item{colors}{Optional character vector of hex colors for the slices.
+If named, values are matched to the values in \code{labels}; otherwise colours
+are recycled in data order.}
 
-\item{palette}{A character vector of colors to use if \code{col.palette} is NULL.}
+\item{palette}{Optional character vector of fallback colors used when
+\code{colors} is not supplied or missing values are present.}
 
-\item{col.palette}{A character vector of colors to use.}
+\item{hole}{A numeric value between 0 and 1 for the hole size
+(0 for pie, >0 for donut).}
 
 \item{textinfo}{A character string for the text info to show.
-Any combination of "label", "text", "value", "percent" joined with a "+" OR "none".}
+Any combination of "label", "text", "value", "percent" joined with a "+"
+or "none".}
+
+\item{textposition}{Position of the text relative to the slice: "auto",
+"inside", "outside", or "none".}
+
+\item{insidetextorientation}{Orientation for inside text: "auto", "horizontal",
+"radial", or "tangential".}
+
+\item{sort}{Logical, whether to sort slices by their values.}
+
+\item{direction}{Direction of slices: "counterclockwise" or "clockwise".}
+
+\item{rotation}{Starting angle of the first slice in degrees.}
+
+\item{show.legend}{Logical, whether to display the legend.}
+
+\item{legend.orientation}{Legend orientation, either "h" (horizontal) or "v" (vertical).}
+
+\item{legend.x, legend.y}{Numeric legend position offsets.}
+
+\item{legend.font.family, legend.font.size, legend.font.color}{Font settings for the legend text.}
+
+\item{title.text}{Plot title text.}
+
+\item{title.font.family, title.font.size, title.font.color}{Font settings for the title text.}
+
+\item{title.x}{Horizontal position for the plot title (0 = left, 1 = right).}
+
+\item{text.font.family, text.font.size, text.font.color}{Font settings for the slice labels.}
+
+\item{slice.line.color, slice.line.width}{Border styling for the slices.}
 }
 \value{
 A plotly object.
@@ -37,5 +95,5 @@ A plotly object.
 Create a plotly pie chart
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
