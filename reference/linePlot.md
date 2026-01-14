@@ -50,4 +50,4 @@ A plotly object.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

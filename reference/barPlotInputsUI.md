@@ -64,7 +64,7 @@ exhaustive list.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 
@@ -73,28 +73,28 @@ library(vizModules)
 data(mtcars)
 BarPlotInputsUI("BarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="6519">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="2154">
 #>     <li class="active">
-#>       <a href="#tab-6519-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2154-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6519-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
+#>       <a href="#tab-2154-2" data-toggle="tab" data-bs-toggle="tab" data-value="Grouping">Grouping</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6519-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
+#>       <a href="#tab-2154-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6519-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
+#>       <a href="#tab-2154-4" data-toggle="tab" data-bs-toggle="tab" data-value="Line">Line</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6519-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-2154-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6519-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-2154-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6519">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6519-1">
+#>   <div class="tab-content" data-tabsetid="2154">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2154-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Grouping" id="tab-6519-2">
+#>     <div class="tab-pane" data-value="Grouping" id="tab-2154-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -216,7 +216,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetic" id="tab-6519-3">
+#>     <div class="tab-pane" data-value="Aesthetic" id="tab-2154-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -780,7 +780,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Line" id="tab-6519-4">
+#>     <div class="tab-pane" data-value="Line" id="tab-2154-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -818,7 +818,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-6519-5">
+#>     <div class="tab-pane" data-value="Labels" id="tab-2154-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -867,7 +867,7 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6519-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-2154-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -995,18 +995,31 @@ BarPlotInputsUI("BarPlot", mtcars)
 #>     </div>
 #>   </div>
 #> </div>
-#> <button id="BarPlot-update" type="button" class="btn btn-default action-button">
-#>   <span class="action-label">Update Plot</span>
-#> </button>
-#> <button class="btn btn-default action-button btn-secondary" id="BarPlot-reset" type="button">
-#>   <span class="action-label">Reset Defaults</span>
-#> </button>
-#> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="BarPlot-download.type-label" for="BarPlot-download.type">Download Format:</label>
-#>   <div>
-#>     <select id="BarPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
+#> <div class="row">
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <input id="BarPlot-use.update.button" type="checkbox" class="sw-switchInput" data-input-id="BarPlot-use.update.button" data-on-text="ON" data-off-text="OFF" data-label-text="Auto Update" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button id="BarPlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
+#>       <span class="action-label">Update</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="BarPlot-reset" style="width:100%;" type="button">
+#>       <span class="action-label">Reset</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="BarPlot-download.type-label" for="BarPlot-download.type">Download Format</label>
+#>       <div>
+#>         <select id="BarPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
 #> <option value="svg">svg</option></select>
-#>     <script type="application/json" data-for="BarPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <script type="application/json" data-for="BarPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
 #>   </div>
 #> </div>
 #> <br/>

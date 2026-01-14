@@ -283,8 +283,6 @@ for non-functional/broken parameters.
   : Output UI components for the BoxPlot module
 - [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
   : Server logic for BoxPlot module
-- [`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
-  : Create a standalone Shiny app for the volcanoPlot module
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
 - [`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
@@ -319,6 +317,8 @@ for non-functional/broken parameters.
   : Output UI components for the scatterPlot module
 - [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
   : Server logic for scatterPlot module
+- [`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)
+  : Create a standalone Shiny app for the volcanoPlot module
 - [`volcanoPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotInputsUI.md)
   : Input UI components for the volcanoPlot module
 - [`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md)

@@ -60,11 +60,11 @@ exhaustive list.
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
 [`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md),
 [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md),
-`createBoxPlotApp()`
+[`BoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotApp.md)
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 
@@ -73,37 +73,37 @@ library(vizModules)
 data(mtcars)
 BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="1041">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="4401">
 #>     <li class="active">
-#>       <a href="#tab-1041-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4401-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-4401-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-4401-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-4401-4" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-4401-5" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-4401-6" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
+#>       <a href="#tab-4401-7" data-toggle="tab" data-bs-toggle="tab" data-value="Palette">Palette</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4401-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1041-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4401-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1041">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1041-1">
+#>   <div class="tab-content" data-tabsetid="4401">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4401-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-1041-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-4401-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -199,7 +199,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-1041-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-4401-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -242,7 +242,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-1041-4">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-4401-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -313,7 +313,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-1041-5">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-4401-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -342,7 +342,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-1041-6">
+#>     <div class="tab-pane" data-value="Stats" id="tab-4401-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -387,7 +387,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Palette" id="tab-1041-7">
+#>     <div class="tab-pane" data-value="Palette" id="tab-4401-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -900,7 +900,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1041-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4401-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -952,7 +952,7 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1041-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4401-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1080,18 +1080,31 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 #>     </div>
 #>   </div>
 #> </div>
-#> <button id="BoxPlot-update" type="button" class="btn btn-default action-button">
-#>   <span class="action-label">Update Plot</span>
-#> </button>
-#> <button class="btn btn-default action-button btn-secondary" id="BoxPlot-reset" type="button">
-#>   <span class="action-label">Reset Defaults</span>
-#> </button>
-#> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="BoxPlot-download.type-label" for="BoxPlot-download.type">Download Format:</label>
-#>   <div>
-#>     <select id="BoxPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
+#> <div class="row">
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <input id="BoxPlot-use.update.button" type="checkbox" class="sw-switchInput" data-input-id="BoxPlot-use.update.button" data-on-text="ON" data-off-text="OFF" data-label-text="Auto Update" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button id="BoxPlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
+#>       <span class="action-label">Update</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="BoxPlot-reset" style="width:100%;" type="button">
+#>       <span class="action-label">Reset</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="BoxPlot-download.type-label" for="BoxPlot-download.type">Download Format</label>
+#>       <div>
+#>         <select id="BoxPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
 #> <option value="svg">svg</option></select>
-#>     <script type="application/json" data-for="BoxPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <script type="application/json" data-for="BoxPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
 #>   </div>
 #> </div>
 #> <br/>

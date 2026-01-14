@@ -25,7 +25,7 @@ A Shiny app object.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 

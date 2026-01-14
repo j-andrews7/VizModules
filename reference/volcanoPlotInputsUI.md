@@ -79,7 +79,7 @@ significance thresholds and colors:
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
 [`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md),
 [`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md),
-[`createVolcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/createVolcanoPlotApp.md)
+[`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)
 
 ## Author
 
