@@ -20,4 +20,4 @@ A Shiny plotlyOutput for the piePlot
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

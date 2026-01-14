@@ -14,8 +14,10 @@ piePlotApp(data_list)
 
 - data_list:
 
-  A named list of data frames for which piePlot modules will be created.
-  That is, UI inputs and a pie plot will be generated for each.
+  A named list of summary data frames (one row per slice) for which
+  piePlot modules will be created. That is, UI inputs and a pie plot
+  will be generated for each. Each data frame should already contain a
+  label column and an aggregated numeric value column.
 
 ## Value
 
@@ -23,12 +25,17 @@ A Shiny app object.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 
 ``` r
-data_list <- list("mtcars" = mtcars, "iris" = iris)
+library(vizModules)
+iris_summary <- as.data.frame(table(iris$Species))
+names(iris_summary) <- c("Species", "Count")
+cyl_summary <- as.data.frame(table(mtcars$cyl))
+names(cyl_summary) <- c("Cylinders", "Count")
+data_list <- list("mtcars" = cyl_summary, "iris" = iris_summary)
 app <- piePlotApp(data_list)
 if (interactive()) runApp(app)
 ```

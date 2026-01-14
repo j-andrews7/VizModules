@@ -21,7 +21,8 @@ piePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 - data:
 
-  The data frame used for plot generation.
+  The data frame used for plot generation. Supply a summary table with
+  one row per slice.
 
 - defaults:
 
@@ -49,7 +50,8 @@ The inputs will automatically be organized into a grid layout via the
 function, with `columns` controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values
-to the `defaults` argument. Nearly all parameters for
+to the `defaults` argument. Provide summarized data (one row per slice)
+with columns for labels and aggregated values. Nearly all parameters for
 [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)
 can be set via these inputs, so see the help for that function for an
 exhaustive list.
@@ -70,26 +72,30 @@ Jacob Martin
 
 ``` r
 library(vizModules)
-data(iris)
-piePlotInputsUI("piePlot", iris)
+pie_df <- as.data.frame(table(iris$Species))
+names(pie_df) <- c("Species", "Count")
+piePlotInputsUI("piePlot", pie_df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="6233">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="8848">
 #>     <li class="active">
-#>       <a href="#tab-6233-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8848-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6233-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-8848-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6233-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8848-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-8848-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6233">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6233-1">
+#>   <div class="tab-content" data-tabsetid="8848">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8848-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-labels-label" for="piePlot-labels">Select categories</label>
+#>             <label class="control-label" id="piePlot-labels-label" for="piePlot-labels">Label column (summary data):</label>
 #>             <div>
 #>               <select id="piePlot-labels" class="shiny-input-select"><option value=""></option>
 #> <option value="Species" selected>Species</option></select>
@@ -99,302 +105,175 @@ piePlotInputsUI("piePlot", iris)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-values-label" for="piePlot-values">Select numeric data:</label>
+#>             <label class="control-label" id="piePlot-values-label" for="piePlot-values">Aggregated value column:</label>
 #>             <div>
 #>               <select id="piePlot-values" class="shiny-input-select"><option value=""></option>
-#> <option value="Sepal.Length" selected>Sepal.Length</option>
-#> <option value="Sepal.Width">Sepal.Width</option>
-#> <option value="Petal.Length">Petal.Length</option>
-#> <option value="Petal.Width">Petal.Width</option></select>
+#> <option value="Count" selected>Count</option></select>
 #>               <script type="application/json" data-for="piePlot-values">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6233-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-make.hole-label" for="piePlot-make.hole">Make into donut plot</label>
-#>             <input id="piePlot-make.hole" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1"/>
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="piePlot-sort.slices" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Sort slices by value</span>
+#>               </label>
+#>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-palette-label" for="piePlot-palette">Select palette:</label>
+#>             <label class="control-label" id="piePlot-direction-label" for="piePlot-direction">Slice direction:</label>
 #>             <div>
-#>               <select id="piePlot-palette" class="shiny-input-select"><option value="BrBG">BrBG</option>
-#> <option value="PiYG">PiYG</option>
-#> <option value="PRGn">PRGn</option>
-#> <option value="PuOr">PuOr</option>
-#> <option value="RdBu">RdBu</option>
-#> <option value="RdGy">RdGy</option>
-#> <option value="RdYlBu">RdYlBu</option>
-#> <option value="RdYlGn">RdYlGn</option>
-#> <option value="Spectral">Spectral</option>
-#> <option value="Accent">Accent</option>
-#> <option value="Dark2">Dark2</option>
-#> <option value="Paired" selected>Paired</option>
-#> <option value="Pastel1">Pastel1</option>
-#> <option value="Pastel2">Pastel2</option>
-#> <option value="Set1">Set1</option>
-#> <option value="Set2">Set2</option>
-#> <option value="Set3">Set3</option>
-#> <option value="Blues">Blues</option>
-#> <option value="BuGn">BuGn</option>
-#> <option value="BuPu">BuPu</option>
-#> <option value="GnBu">GnBu</option>
-#> <option value="Greens">Greens</option>
-#> <option value="Greys">Greys</option>
-#> <option value="Oranges">Oranges</option>
-#> <option value="OrRd">OrRd</option>
-#> <option value="PuBu">PuBu</option>
-#> <option value="PuBuGn">PuBuGn</option>
-#> <option value="PuRd">PuRd</option>
-#> <option value="Purples">Purples</option>
-#> <option value="RdPu">RdPu</option>
-#> <option value="Reds">Reds</option>
-#> <option value="YlGn">YlGn</option>
-#> <option value="YlGnBu">YlGnBu</option>
-#> <option value="YlOrBr">YlOrBr</option>
-#> <option value="YlOrRd">YlOrRd</option>
-#> <option value="npg">npg</option>
-#> <option value="aaas">aaas</option>
-#> <option value="nejm">nejm</option>
-#> <option value="lancet">lancet</option>
-#> <option value="jama">jama</option>
-#> <option value="jco">jco</option>
-#> <option value="ucscgb">ucscgb</option>
-#> <option value="d3-category10">d3-category10</option>
-#> <option value="d3-category20">d3-category20</option>
-#> <option value="d3-category20b">d3-category20b</option>
-#> <option value="d3-category20c">d3-category20c</option>
-#> <option value="igv">igv</option>
-#> <option value="locuszoom">locuszoom</option>
-#> <option value="uchicago-default">uchicago-default</option>
-#> <option value="uchicago-light">uchicago-light</option>
-#> <option value="uchicago-dark">uchicago-dark</option>
-#> <option value="cosmic">cosmic</option>
-#> <option value="simpsons">simpsons</option>
-#> <option value="futurama">futurama</option>
-#> <option value="rickandmorty">rickandmorty</option>
-#> <option value="startrek">startrek</option>
-#> <option value="tron">tron</option>
-#> <option value="frontiers">frontiers</option>
-#> <option value="flatui">flatui</option>
-#> <option value="gsea">gsea</option>
-#> <option value="material-red">material-red</option>
-#> <option value="material-pink">material-pink</option>
-#> <option value="material-purple">material-purple</option>
-#> <option value="material-deep-purple">material-deep-purple</option>
-#> <option value="material-indigo">material-indigo</option>
-#> <option value="material-blue">material-blue</option>
-#> <option value="material-light-blue">material-light-blue</option>
-#> <option value="material-cyan">material-cyan</option>
-#> <option value="material-teal">material-teal</option>
-#> <option value="material-green">material-green</option>
-#> <option value="material-light-green">material-light-green</option>
-#> <option value="material-lime">material-lime</option>
-#> <option value="material-yellow">material-yellow</option>
-#> <option value="material-amber">material-amber</option>
-#> <option value="material-orange">material-orange</option>
-#> <option value="material-deep-orange">material-deep-orange</option>
-#> <option value="material-brown">material-brown</option>
-#> <option value="material-grey">material-grey</option>
-#> <option value="material-blue-grey">material-blue-grey</option>
-#> <option value="dPBIYlBu">dPBIYlBu</option>
-#> <option value="dPBIYlPu">dPBIYlPu</option>
-#> <option value="dPBIPuGn">dPBIPuGn</option>
-#> <option value="dPBIPuOr">dPBIPuOr</option>
-#> <option value="dPBIRdBu">dPBIRdBu</option>
-#> <option value="dPBIRdGy">dPBIRdGy</option>
-#> <option value="dPBIRdGn">dPBIRdGn</option>
-#> <option value="qMSOStd">qMSOStd</option>
-#> <option value="qMSO12">qMSO12</option>
-#> <option value="qMSO15">qMSO15</option>
-#> <option value="qMSOBuWarm">qMSOBuWarm</option>
-#> <option value="qMSOBu">qMSOBu</option>
-#> <option value="qMSOBu2">qMSOBu2</option>
-#> <option value="qMSOBuGn">qMSOBuGn</option>
-#> <option value="qMSOGn">qMSOGn</option>
-#> <option value="qMSOGnYl">qMSOGnYl</option>
-#> <option value="qMSOYl">qMSOYl</option>
-#> <option value="qMSOYlOr">qMSOYlOr</option>
-#> <option value="qMSOOr">qMSOOr</option>
-#> <option value="qMSOOrRd">qMSOOrRd</option>
-#> <option value="qMSORdOr">qMSORdOr</option>
-#> <option value="qMSORd">qMSORd</option>
-#> <option value="qMSORdPu">qMSORdPu</option>
-#> <option value="qMSOPu">qMSOPu</option>
-#> <option value="qMSOPu2">qMSOPu2</option>
-#> <option value="qMSOMed">qMSOMed</option>
-#> <option value="qMSOPap">qMSOPap</option>
-#> <option value="qMSOMrq">qMSOMrq</option>
-#> <option value="qMSOSlp">qMSOSlp</option>
-#> <option value="qMSOAsp">qMSOAsp</option>
-#> <option value="qPBI">qPBI</option>
-#> <option value="sPBIGn">sPBIGn</option>
-#> <option value="sPBIGy1">sPBIGy1</option>
-#> <option value="sPBIRd">sPBIRd</option>
-#> <option value="sPBIYl">sPBIYl</option>
-#> <option value="sPBIGy2">sPBIGy2</option>
-#> <option value="sPBIBu">sPBIBu</option>
-#> <option value="sPBIOr">sPBIOr</option>
-#> <option value="sPBIPu">sPBIPu</option>
-#> <option value="sPBIYlGn">sPBIYlGn</option>
-#> <option value="sPBIRdPu">sPBIRdPu</option>
-#> <option value="ag_GrnYl">ag_GrnYl</option>
-#> <option value="ag_Sunset">ag_Sunset</option>
-#> <option value="ArmyRose">ArmyRose</option>
-#> <option value="Earth">Earth</option>
-#> <option value="Fall">Fall</option>
-#> <option value="Geyser">Geyser</option>
-#> <option value="TealRose">TealRose</option>
-#> <option value="Temps">Temps</option>
-#> <option value="Tropic">Tropic</option>
-#> <option value="Antique">Antique</option>
-#> <option value="Bold">Bold</option>
-#> <option value="Pastel">Pastel</option>
-#> <option value="Prism">Prism</option>
-#> <option value="Safe">Safe</option>
-#> <option value="Vivid">Vivid</option>
-#> <option value="BluGrn">BluGrn</option>
-#> <option value="BluYl">BluYl</option>
-#> <option value="BrwnYl">BrwnYl</option>
-#> <option value="Burg">Burg</option>
-#> <option value="BurgYl">BurgYl</option>
-#> <option value="DarkMint">DarkMint</option>
-#> <option value="Emrld">Emrld</option>
-#> <option value="Magenta">Magenta</option>
-#> <option value="Mint">Mint</option>
-#> <option value="OrYel">OrYel</option>
-#> <option value="Peach">Peach</option>
-#> <option value="PinkYl">PinkYl</option>
-#> <option value="Purp">Purp</option>
-#> <option value="PurpOr">PurpOr</option>
-#> <option value="RedOr">RedOr</option>
-#> <option value="Sunset">Sunset</option>
-#> <option value="SunsetDark">SunsetDark</option>
-#> <option value="Teal">Teal</option>
-#> <option value="TealGrn">TealGrn</option>
-#> <option value="polarnight">polarnight</option>
-#> <option value="snowstorm">snowstorm</option>
-#> <option value="frost">frost</option>
-#> <option value="aurora">aurora</option>
-#> <option value="lumina">lumina</option>
-#> <option value="mountain_forms">mountain_forms</option>
-#> <option value="silver_mine">silver_mine</option>
-#> <option value="lake_superior">lake_superior</option>
-#> <option value="victory_bonds">victory_bonds</option>
-#> <option value="halifax_harbor">halifax_harbor</option>
-#> <option value="moose_pond">moose_pond</option>
-#> <option value="algoma_forest">algoma_forest</option>
-#> <option value="rocky_mountain">rocky_mountain</option>
-#> <option value="red_mountain">red_mountain</option>
-#> <option value="baie_mouton">baie_mouton</option>
-#> <option value="afternoon_prarie">afternoon_prarie</option>
-#> <option value="magma">magma</option>
-#> <option value="inferno">inferno</option>
-#> <option value="plasma">plasma</option>
-#> <option value="viridis">viridis</option>
-#> <option value="cividis">cividis</option>
-#> <option value="rocket">rocket</option>
-#> <option value="mako">mako</option>
-#> <option value="turbo">turbo</option>
-#> <option value="ocean.algae">ocean.algae</option>
-#> <option value="ocean.deep">ocean.deep</option>
-#> <option value="ocean.dense">ocean.dense</option>
-#> <option value="ocean.gray">ocean.gray</option>
-#> <option value="ocean.haline">ocean.haline</option>
-#> <option value="ocean.ice">ocean.ice</option>
-#> <option value="ocean.matter">ocean.matter</option>
-#> <option value="ocean.oxy">ocean.oxy</option>
-#> <option value="ocean.phase">ocean.phase</option>
-#> <option value="ocean.solar">ocean.solar</option>
-#> <option value="ocean.thermal">ocean.thermal</option>
-#> <option value="ocean.turbid">ocean.turbid</option>
-#> <option value="ocean.balance">ocean.balance</option>
-#> <option value="ocean.curl">ocean.curl</option>
-#> <option value="ocean.delta">ocean.delta</option>
-#> <option value="ocean.amp">ocean.amp</option>
-#> <option value="ocean.speed">ocean.speed</option>
-#> <option value="ocean.tempo">ocean.tempo</option>
-#> <option value="BrowntoBlue.10">BrowntoBlue.10</option>
-#> <option value="BrowntoBlue.12">BrowntoBlue.12</option>
-#> <option value="BluetoDarkOrange.12">BluetoDarkOrange.12</option>
-#> <option value="BluetoDarkOrange.18">BluetoDarkOrange.18</option>
-#> <option value="DarkRedtoBlue.12">DarkRedtoBlue.12</option>
-#> <option value="DarkRedtoBlue.18">DarkRedtoBlue.18</option>
-#> <option value="BluetoGreen.14">BluetoGreen.14</option>
-#> <option value="BluetoGray.8">BluetoGray.8</option>
-#> <option value="BluetoOrangeRed.14">BluetoOrangeRed.14</option>
-#> <option value="BluetoOrange.10">BluetoOrange.10</option>
-#> <option value="BluetoOrange.12">BluetoOrange.12</option>
-#> <option value="BluetoOrange.8">BluetoOrange.8</option>
-#> <option value="LightBluetoDarkBlue.10">LightBluetoDarkBlue.10</option>
-#> <option value="LightBluetoDarkBlue.7">LightBluetoDarkBlue.7</option>
-#> <option value="Categorical.12">Categorical.12</option>
-#> <option value="GreentoMagenta.16">GreentoMagenta.16</option>
-#> <option value="SteppedSequential.5">SteppedSequential.5</option>
-#> <option value="jcolors-default">jcolors-default</option>
-#> <option value="jcolors-pal2">jcolors-pal2</option>
-#> <option value="jcolors-pal3">jcolors-pal3</option>
-#> <option value="jcolors-pal4">jcolors-pal4</option>
-#> <option value="jcolors-pal5">jcolors-pal5</option>
-#> <option value="jcolors-pal6">jcolors-pal6</option>
-#> <option value="jcolors-pal7">jcolors-pal7</option>
-#> <option value="jcolors-pal8">jcolors-pal8</option>
-#> <option value="jcolors-pal9">jcolors-pal9</option>
-#> <option value="jcolors-pal10">jcolors-pal10</option>
-#> <option value="jcolors-pal11">jcolors-pal11</option>
-#> <option value="jcolors-pal12">jcolors-pal12</option>
-#> <option value="jcolors-rainbow">jcolors-rainbow</option>
-#> <option value="jet">jet</option>
-#> <option value="simspec">simspec</option>
-#> <option value="GdRd">GdRd</option>
-#> <option value="alphabet">alphabet</option>
-#> <option value="alphabet2">alphabet2</option>
-#> <option value="glasbey">glasbey</option>
-#> <option value="polychrome">polychrome</option>
-#> <option value="stepped">stepped</option>
-#> <option value="parade">parade</option>
-#> <option value="seurat.16">seurat.16</option>
-#> <option value="seurat.32">seurat.32</option>
-#> <option value="seurat.64">seurat.64</option>
-#> <option value="seurat">seurat</option>
-#> <option value="stripe">stripe</option>
-#> <option value="stripe.16">stripe.16</option>
-#> <option value="stripe.32">stripe.32</option>
-#> <option value="stripe.64">stripe.64</option></select>
-#>               <script type="application/json" data-for="piePlot-palette" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <select id="piePlot-direction" class="shiny-input-select"><option value="counterclockwise" selected>Counterclockwise</option>
+#> <option value="clockwise">Clockwise</option></select>
+#>               <script type="application/json" data-for="piePlot-direction" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div id="piePlot-palette.selection" class="shiny-html-output"></div>
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-rotation-label" for="piePlot-rotation">Start angle (degrees):</label>
+#>             <input class="js-range-slider" id="piePlot-rotation" data-skin="shiny" data-min="0" data-max="360" data-from="0" data-step="5" data-grid="true" data-grid-num="9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-plot.text-label" for="piePlot-plot.text">Plot labels:</label>
-#>             <input id="piePlot-plot.text" type="text" class="shiny-input-text form-control" value="label+percent" placeholder="e.g. label+percent" data-update-on="change"/>
+#>             <label class="control-label" id="piePlot-hole-label" for="piePlot-hole">Center hole size:</label>
+#>             <input class="js-range-slider" id="piePlot-hole" data-skin="shiny" data-min="0" data-max="0.9" data-from="0" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Colors" id="tab-8848-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div id="piePlot-color.picker" class="shiny-html-output"></div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="piePlot-slice.line.color">Slice border color:</label>
+#>             <input id="piePlot-slice.line.color" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-slice.line.width-label" for="piePlot-slice.line.width">Slice border width:</label>
+#>             <input id="piePlot-slice.line.width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.5"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-8848-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-textinfo-label" for="piePlot-textinfo">Text to show on slices:</label>
+#>             <div>
+#>               <select id="piePlot-textinfo" class="shiny-input-select" multiple="multiple"><option value="label" selected>label</option>
+#> <option value="value">value</option>
+#> <option value="percent">percent</option>
+#> <option value="none">none</option></select>
+#>               <script type="application/json" data-for="piePlot-textinfo">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-textposition-label" for="piePlot-textposition">Text position:</label>
+#>             <div>
+#>               <select id="piePlot-textposition" class="shiny-input-select"><option value="auto" selected>Auto</option>
+#> <option value="inside">Inside</option>
+#> <option value="outside">Outside</option>
+#> <option value="none">Hide text</option></select>
+#>               <script type="application/json" data-for="piePlot-textposition" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-insidetextorientation-label" for="piePlot-insidetextorientation">Inside text orientation:</label>
+#>             <div>
+#>               <select id="piePlot-insidetextorientation" class="shiny-input-select"><option value="auto" selected>auto</option>
+#> <option value="horizontal">horizontal</option>
+#> <option value="radial">radial</option>
+#> <option value="tangential">tangential</option></select>
+#>               <script type="application/json" data-for="piePlot-insidetextorientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-text.font.size-label" for="piePlot-text.font.size">Slice text size:</label>
+#>             <input id="piePlot-text.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="6" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-text.font.family-label" for="piePlot-text.font.family">Slice text font:</label>
+#>             <div>
+#>               <select id="piePlot-text.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="piePlot-text.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="piePlot-text.font.color">Slice text color:</label>
+#>             <input id="piePlot-text.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-8848-4">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-title.x-label" for="piePlot-title.x">Title horizontal position:</label>
+#>             <input class="js-range-slider" id="piePlot-title.x" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="piePlot-title.font.size-label" for="piePlot-title.font.size">Title font size:</label>
 #>             <input id="piePlot-title.font.size" type="number" class="shiny-input-number form-control" value="28" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-font.type-label" for="piePlot-font.type">Font type:</label>
+#>             <label class="control-label" id="piePlot-title.font.family-label" for="piePlot-title.font.family">Title font:</label>
 #>             <div>
-#>               <select id="piePlot-font.type" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select id="piePlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -411,77 +290,45 @@ piePlotInputsUI("piePlot", iris)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="piePlot-font.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="piePlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="piePlot-text.colour">Colour of title:</label>
-#>             <input id="piePlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="piePlot-title.font.color">Title font color:</label>
+#>             <input id="piePlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6233-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="piePlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show axis lines</span>
+#>                 <input id="piePlot-show.legend" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show legend</span>
 #>               </label>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <div class="checkbox">
-#>               <label>
-#>                 <input id="piePlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Mirror axis lines</span>
-#>               </label>
-#>             </div>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="piePlot-axis.linecolor">Axis line color</label>
-#>             <input id="piePlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.linewidth-label" for="piePlot-axis.linewidth">Axis line width</label>
-#>             <input id="piePlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.tickfont.size-label" for="piePlot-axis.tickfont.size">Tick label size</label>
-#>             <input id="piePlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="piePlot-axis.tickfont.color">Tick label color</label>
-#>             <input id="piePlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.tickfont.family-label" for="piePlot-axis.tickfont.family">Tick label font</label>
+#>             <label class="control-label" id="piePlot-legend.orientation-label" for="piePlot-legend.orientation">Legend orientation:</label>
 #>             <div>
-#>               <select id="piePlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select id="piePlot-legend.orientation" class="shiny-input-select"><option value="h" selected>Horizontal</option>
+#> <option value="v">Vertical</option></select>
+#>               <script type="application/json" data-for="piePlot-legend.orientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="piePlot-legend.font.family-label" for="piePlot-legend.font.family">Legend font:</label>
+#>             <div>
+#>               <select id="piePlot-legend.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -498,73 +345,48 @@ piePlotInputsUI("piePlot", iris)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="piePlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="piePlot-legend.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.tickangle.x-label" for="piePlot-axis.tickangle.x">X-axis tick label angle</label>
-#>             <input id="piePlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.tickangle.y-label" for="piePlot-axis.tickangle.y">Y-axis tick label angle</label>
-#>             <input id="piePlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.ticks-label" for="piePlot-axis.ticks">Tick position</label>
-#>             <div>
-#>               <select id="piePlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
-#> <option value="inside">Inside</option>
-#> <option value="">None</option></select>
-#>               <script type="application/json" data-for="piePlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
+#>             <label class="control-label" id="piePlot-legend.font.size-label" for="piePlot-legend.font.size">Legend font size:</label>
+#>             <input id="piePlot-legend.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="piePlot-axis.tickcolor">Tick mark color</label>
-#>             <input id="piePlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.ticklen-label" for="piePlot-axis.ticklen">Tick mark length</label>
-#>             <input id="piePlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="piePlot-axis.tickwidth-label" for="piePlot-axis.tickwidth">Tick mark width</label>
-#>             <input id="piePlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
+#>             <label class="control-label" for="piePlot-legend.font.color">Legend font color:</label>
+#>             <input id="piePlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
 #>   </div>
 #> </div>
-#> <button id="piePlot-update" type="button" class="btn btn-default action-button">
-#>   <span class="action-label">Update Plot</span>
-#> </button>
-#> <button class="btn btn-default action-button btn-secondary" id="piePlot-reset" type="button">
-#>   <span class="action-label">Reset Defaults</span>
-#> </button>
-#> <div class="form-group shiny-input-container">
-#>   <label class="control-label" id="piePlot-download.type-label" for="piePlot-download.type">Download Format:</label>
-#>   <div>
-#>     <select id="piePlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
+#> <div class="row">
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button id="piePlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
+#>       <span class="action-label">Update Plot</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="piePlot-reset" style="width:100%;" type="button">
+#>       <span class="action-label">Reset Defaults</span>
+#>     </button>
+#>   </div>
+#>   <div class="col-sm-6">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="piePlot-download.type-label" for="piePlot-download.type">Download Format:</label>
+#>       <div>
+#>         <select id="piePlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
 #> <option value="svg">svg</option></select>
-#>     <script type="application/json" data-for="piePlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <script type="application/json" data-for="piePlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
 #>   </div>
 #> </div>
 #> <br/>

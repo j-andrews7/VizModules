@@ -47,6 +47,8 @@
   : Output UI components for the linePlot module
 - [`linePlotServer()`](https://j-andrews7.github.io/vizModules/reference/linePlotServer.md)
   : Server logic for linePlot module
+- [`multiColorPicker()`](https://j-andrews7.github.io/vizModules/reference/multiColorPicker.md)
+  : Compact multi-group color picker input
 - [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
 - [`piePlot()`](https://j-andrews7.github.io/vizModules/reference/piePlot.md)

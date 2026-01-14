@@ -16,7 +16,8 @@ piePlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 - data:
 
-  A `reactive` containing the data frame to plot.
+  A `reactive` containing the data frame to plot. Provide a summarized
+  table with columns for labels and aggregated values.
 
 - hide.inputs:
 
@@ -36,4 +37,4 @@ The `moduleServer` function for the piePlot module.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

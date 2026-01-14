@@ -64,7 +64,7 @@ that matches the <code>id</code> used in the <code><a href="piePlotServer.html">
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>The data frame used for plot generation.</p></dd>
+<dd><p>The data frame used for plot generation. Supply a summary table with one row per slice.</p></dd>
 
 
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
@@ -90,6 +90,7 @@ more flexible UI design.</p>
 <p>The inputs will automatically be organized into a grid layout via the <code><a href="organize_inputs.html">organize_inputs()</a></code> function,
 with <code>columns</code> controlling the number of columns in the grid.</p>
 <p>Defaults can be set for each input by providing a named list of values to the <code>defaults</code> argument.
+Provide summarized data (one row per slice) with columns for labels and aggregated values.
 Nearly all parameters for <code><a href="piePlot.html">piePlot()</a></code> can be set via these inputs, so see the help
 for that function for an exhaustive list.</p>
     </div>
@@ -106,26 +107,30 @@ for that function for an exhaustive list.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">piePlotInputsUI</span><span class="op">(</span><span class="st">"piePlot"</span>, <span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pie_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pie_df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Count"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">piePlotInputsUI</span><span class="op">(</span><span class="st">"piePlot"</span>, <span class="va">pie_df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="6233"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="8848"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6233-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8848-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6233-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8848-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors"&gt;Colors&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6233-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8848-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp;amp; Text"&gt;Labels &amp;amp; Text&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8848-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp;amp; Legend"&gt;Title &amp;amp; Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="6233"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-6233-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="8848"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-8848-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-labels-label" for="piePlot-labels"&gt;Select categories&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-labels-label" for="piePlot-labels"&gt;Label column (summary data):&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-labels" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Species" selected&gt;Species&lt;/option&gt;&lt;/select&gt;</span>
@@ -135,302 +140,175 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-values-label" for="piePlot-values"&gt;Select numeric data:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-values-label" for="piePlot-values"&gt;Aggregated value column:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-values" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Sepal.Length" selected&gt;Sepal.Length&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Sepal.Width"&gt;Sepal.Width&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Petal.Length"&gt;Petal.Length&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Petal.Width"&gt;Petal.Width&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Count" selected&gt;Count&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-values"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-6233-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-make.hole-label" for="piePlot-make.hole"&gt;Make into donut plot&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-make.hole" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="piePlot-sort.slices" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Sort slices by value&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-palette-label" for="piePlot-palette"&gt;Select palette:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-direction-label" for="piePlot-direction"&gt;Slice direction:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-palette" class="shiny-input-select"&gt;&lt;option value="BrBG"&gt;BrBG&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PiYG"&gt;PiYG&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PRGn"&gt;PRGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PuOr"&gt;PuOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RdBu"&gt;RdBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RdGy"&gt;RdGy&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RdYlBu"&gt;RdYlBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RdYlGn"&gt;RdYlGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Spectral"&gt;Spectral&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Accent"&gt;Accent&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Dark2"&gt;Dark2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Paired" selected&gt;Paired&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Pastel1"&gt;Pastel1&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Pastel2"&gt;Pastel2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Set1"&gt;Set1&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Set2"&gt;Set2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Set3"&gt;Set3&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Blues"&gt;Blues&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BuGn"&gt;BuGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BuPu"&gt;BuPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="GnBu"&gt;GnBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Greens"&gt;Greens&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Greys"&gt;Greys&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Oranges"&gt;Oranges&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="OrRd"&gt;OrRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PuBu"&gt;PuBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PuBuGn"&gt;PuBuGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PuRd"&gt;PuRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Purples"&gt;Purples&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RdPu"&gt;RdPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Reds"&gt;Reds&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="YlGn"&gt;YlGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="YlGnBu"&gt;YlGnBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="YlOrBr"&gt;YlOrBr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="YlOrRd"&gt;YlOrRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="npg"&gt;npg&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="aaas"&gt;aaas&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="nejm"&gt;nejm&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="lancet"&gt;lancet&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jama"&gt;jama&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jco"&gt;jco&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ucscgb"&gt;ucscgb&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="d3-category10"&gt;d3-category10&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="d3-category20"&gt;d3-category20&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="d3-category20b"&gt;d3-category20b&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="d3-category20c"&gt;d3-category20c&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="igv"&gt;igv&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="locuszoom"&gt;locuszoom&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="uchicago-default"&gt;uchicago-default&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="uchicago-light"&gt;uchicago-light&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="uchicago-dark"&gt;uchicago-dark&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="cosmic"&gt;cosmic&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="simpsons"&gt;simpsons&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="futurama"&gt;futurama&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="rickandmorty"&gt;rickandmorty&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="startrek"&gt;startrek&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="tron"&gt;tron&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="frontiers"&gt;frontiers&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="flatui"&gt;flatui&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="gsea"&gt;gsea&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-red"&gt;material-red&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-pink"&gt;material-pink&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-purple"&gt;material-purple&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-deep-purple"&gt;material-deep-purple&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-indigo"&gt;material-indigo&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-blue"&gt;material-blue&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-light-blue"&gt;material-light-blue&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-cyan"&gt;material-cyan&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-teal"&gt;material-teal&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-green"&gt;material-green&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-light-green"&gt;material-light-green&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-lime"&gt;material-lime&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-yellow"&gt;material-yellow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-amber"&gt;material-amber&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-orange"&gt;material-orange&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-deep-orange"&gt;material-deep-orange&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-brown"&gt;material-brown&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-grey"&gt;material-grey&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="material-blue-grey"&gt;material-blue-grey&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIYlBu"&gt;dPBIYlBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIYlPu"&gt;dPBIYlPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIPuGn"&gt;dPBIPuGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIPuOr"&gt;dPBIPuOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIRdBu"&gt;dPBIRdBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIRdGy"&gt;dPBIRdGy&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dPBIRdGn"&gt;dPBIRdGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOStd"&gt;qMSOStd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSO12"&gt;qMSO12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSO15"&gt;qMSO15&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOBuWarm"&gt;qMSOBuWarm&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOBu"&gt;qMSOBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOBu2"&gt;qMSOBu2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOBuGn"&gt;qMSOBuGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOGn"&gt;qMSOGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOGnYl"&gt;qMSOGnYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOYl"&gt;qMSOYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOYlOr"&gt;qMSOYlOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOOr"&gt;qMSOOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOOrRd"&gt;qMSOOrRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSORdOr"&gt;qMSORdOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSORd"&gt;qMSORd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSORdPu"&gt;qMSORdPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOPu"&gt;qMSOPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOPu2"&gt;qMSOPu2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOMed"&gt;qMSOMed&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOPap"&gt;qMSOPap&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOMrq"&gt;qMSOMrq&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOSlp"&gt;qMSOSlp&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qMSOAsp"&gt;qMSOAsp&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qPBI"&gt;qPBI&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIGn"&gt;sPBIGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIGy1"&gt;sPBIGy1&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIRd"&gt;sPBIRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIYl"&gt;sPBIYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIGy2"&gt;sPBIGy2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIBu"&gt;sPBIBu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIOr"&gt;sPBIOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIPu"&gt;sPBIPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIYlGn"&gt;sPBIYlGn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sPBIRdPu"&gt;sPBIRdPu&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ag_GrnYl"&gt;ag_GrnYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ag_Sunset"&gt;ag_Sunset&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ArmyRose"&gt;ArmyRose&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Earth"&gt;Earth&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Fall"&gt;Fall&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Geyser"&gt;Geyser&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="TealRose"&gt;TealRose&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Temps"&gt;Temps&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Tropic"&gt;Tropic&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Antique"&gt;Antique&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Bold"&gt;Bold&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Pastel"&gt;Pastel&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Prism"&gt;Prism&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Safe"&gt;Safe&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Vivid"&gt;Vivid&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluGrn"&gt;BluGrn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluYl"&gt;BluYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BrwnYl"&gt;BrwnYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Burg"&gt;Burg&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BurgYl"&gt;BurgYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="DarkMint"&gt;DarkMint&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Emrld"&gt;Emrld&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Magenta"&gt;Magenta&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Mint"&gt;Mint&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="OrYel"&gt;OrYel&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Peach"&gt;Peach&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PinkYl"&gt;PinkYl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Purp"&gt;Purp&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PurpOr"&gt;PurpOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="RedOr"&gt;RedOr&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Sunset"&gt;Sunset&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="SunsetDark"&gt;SunsetDark&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Teal"&gt;Teal&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="TealGrn"&gt;TealGrn&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="polarnight"&gt;polarnight&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="snowstorm"&gt;snowstorm&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="frost"&gt;frost&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="aurora"&gt;aurora&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="lumina"&gt;lumina&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="mountain_forms"&gt;mountain_forms&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="silver_mine"&gt;silver_mine&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="lake_superior"&gt;lake_superior&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="victory_bonds"&gt;victory_bonds&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="halifax_harbor"&gt;halifax_harbor&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="moose_pond"&gt;moose_pond&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="algoma_forest"&gt;algoma_forest&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="rocky_mountain"&gt;rocky_mountain&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="red_mountain"&gt;red_mountain&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="baie_mouton"&gt;baie_mouton&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="afternoon_prarie"&gt;afternoon_prarie&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="magma"&gt;magma&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inferno"&gt;inferno&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="plasma"&gt;plasma&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="viridis"&gt;viridis&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="cividis"&gt;cividis&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="rocket"&gt;rocket&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="mako"&gt;mako&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="turbo"&gt;turbo&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.algae"&gt;ocean.algae&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.deep"&gt;ocean.deep&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.dense"&gt;ocean.dense&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.gray"&gt;ocean.gray&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.haline"&gt;ocean.haline&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.ice"&gt;ocean.ice&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.matter"&gt;ocean.matter&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.oxy"&gt;ocean.oxy&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.phase"&gt;ocean.phase&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.solar"&gt;ocean.solar&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.thermal"&gt;ocean.thermal&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.turbid"&gt;ocean.turbid&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.balance"&gt;ocean.balance&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.curl"&gt;ocean.curl&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.delta"&gt;ocean.delta&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.amp"&gt;ocean.amp&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.speed"&gt;ocean.speed&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ocean.tempo"&gt;ocean.tempo&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BrowntoBlue.10"&gt;BrowntoBlue.10&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BrowntoBlue.12"&gt;BrowntoBlue.12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoDarkOrange.12"&gt;BluetoDarkOrange.12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoDarkOrange.18"&gt;BluetoDarkOrange.18&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="DarkRedtoBlue.12"&gt;DarkRedtoBlue.12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="DarkRedtoBlue.18"&gt;DarkRedtoBlue.18&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoGreen.14"&gt;BluetoGreen.14&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoGray.8"&gt;BluetoGray.8&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoOrangeRed.14"&gt;BluetoOrangeRed.14&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoOrange.10"&gt;BluetoOrange.10&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoOrange.12"&gt;BluetoOrange.12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="BluetoOrange.8"&gt;BluetoOrange.8&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="LightBluetoDarkBlue.10"&gt;LightBluetoDarkBlue.10&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="LightBluetoDarkBlue.7"&gt;LightBluetoDarkBlue.7&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Categorical.12"&gt;Categorical.12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="GreentoMagenta.16"&gt;GreentoMagenta.16&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="SteppedSequential.5"&gt;SteppedSequential.5&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-default"&gt;jcolors-default&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal2"&gt;jcolors-pal2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal3"&gt;jcolors-pal3&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal4"&gt;jcolors-pal4&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal5"&gt;jcolors-pal5&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal6"&gt;jcolors-pal6&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal7"&gt;jcolors-pal7&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal8"&gt;jcolors-pal8&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal9"&gt;jcolors-pal9&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal10"&gt;jcolors-pal10&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal11"&gt;jcolors-pal11&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-pal12"&gt;jcolors-pal12&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jcolors-rainbow"&gt;jcolors-rainbow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jet"&gt;jet&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="simspec"&gt;simspec&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="GdRd"&gt;GdRd&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="alphabet"&gt;alphabet&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="alphabet2"&gt;alphabet2&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="glasbey"&gt;glasbey&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="polychrome"&gt;polychrome&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="stepped"&gt;stepped&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="parade"&gt;parade&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="seurat.16"&gt;seurat.16&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="seurat.32"&gt;seurat.32&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="seurat.64"&gt;seurat.64&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="seurat"&gt;seurat&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="stripe"&gt;stripe&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="stripe.16"&gt;stripe.16&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="stripe.32"&gt;stripe.32&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="stripe.64"&gt;stripe.64&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-palette" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-direction" class="shiny-input-select"&gt;&lt;option value="counterclockwise" selected&gt;Counterclockwise&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="clockwise"&gt;Clockwise&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-direction" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="piePlot-palette.selection" class="shiny-html-output"&gt;&lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-rotation-label" for="piePlot-rotation"&gt;Start angle (degrees):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="piePlot-rotation" data-skin="shiny" data-min="0" data-max="360" data-from="0" data-step="5" data-grid="true" data-grid-num="9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-plot.text-label" for="piePlot-plot.text"&gt;Plot labels:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-plot.text" type="text" class="shiny-input-text form-control" value="label+percent" placeholder="e.g. label+percent" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-hole-label" for="piePlot-hole"&gt;Center hole size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="piePlot-hole" data-skin="shiny" data-min="0" data-max="0.9" data-from="0" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Colors" id="tab-8848-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="piePlot-color.picker" class="shiny-html-output"&gt;&lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-slice.line.color"&gt;Slice border color:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-slice.line.color" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-slice.line.width-label" for="piePlot-slice.line.width"&gt;Slice border width:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-slice.line.width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Labels &amp;amp; Text" id="tab-8848-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-textinfo-label" for="piePlot-textinfo"&gt;Text to show on slices:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-textinfo" class="shiny-input-select" multiple="multiple"&gt;&lt;option value="label" selected&gt;label&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="value"&gt;value&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="percent"&gt;percent&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="none"&gt;none&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-textinfo"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-textposition-label" for="piePlot-textposition"&gt;Text position:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-textposition" class="shiny-input-select"&gt;&lt;option value="auto" selected&gt;Auto&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inside"&gt;Inside&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="outside"&gt;Outside&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="none"&gt;Hide text&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-textposition" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-insidetextorientation-label" for="piePlot-insidetextorientation"&gt;Inside text orientation:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-insidetextorientation" class="shiny-input-select"&gt;&lt;option value="auto" selected&gt;auto&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="horizontal"&gt;horizontal&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="radial"&gt;radial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="tangential"&gt;tangential&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-insidetextorientation" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-text.font.size-label" for="piePlot-text.font.size"&gt;Slice text size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-text.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="6" step="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-text.font.family-label" for="piePlot-text.font.family"&gt;Slice text font:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-text.font.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-text.font.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-text.font.color"&gt;Slice text color:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-text.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Title &amp;amp; Legend" id="tab-8848-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-title.x-label" for="piePlot-title.x"&gt;Title horizontal position:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="piePlot-title.x" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-title.font.size-label" for="piePlot-title.font.size"&gt;Title font size:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-title.font.size" type="number" class="shiny-input-number form-control" value="28" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-font.type-label" for="piePlot-font.type"&gt;Font type:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-title.font.family-label" for="piePlot-title.font.family"&gt;Title font:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-font.type" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-title.font.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
@@ -447,77 +325,45 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-font.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-title.font.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-text.colour"&gt;Colour of title:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-title.font.color"&gt;Title font color:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-6233-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="piePlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Show axis lines&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="piePlot-show.legend" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Show legend&lt;/span&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="piePlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Mirror axis lines&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-axis.linecolor"&gt;Axis line color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.linewidth-label" for="piePlot-axis.linewidth"&gt;Axis line width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.tickfont.size-label" for="piePlot-axis.tickfont.size"&gt;Tick label size&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-axis.tickfont.color"&gt;Tick label color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.tickfont.family-label" for="piePlot-axis.tickfont.family"&gt;Tick label font&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-legend.orientation-label" for="piePlot-legend.orientation"&gt;Legend orientation:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-axis.tickfont.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-legend.orientation" class="shiny-input-select"&gt;&lt;option value="h" selected&gt;Horizontal&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="v"&gt;Vertical&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-legend.orientation" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-legend.font.family-label" for="piePlot-legend.font.family"&gt;Legend font:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-legend.font.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
@@ -534,73 +380,48 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-axis.tickfont.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-legend.font.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.tickangle.x-label" for="piePlot-axis.tickangle.x"&gt;X-axis tick label angle&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.tickangle.y-label" for="piePlot-axis.tickangle.y"&gt;Y-axis tick label angle&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.ticks-label" for="piePlot-axis.ticks"&gt;Tick position&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="piePlot-axis.ticks" class="shiny-input-select"&gt;&lt;option value="outside" selected&gt;Outside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inside"&gt;Inside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value=""&gt;None&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="piePlot-axis.ticks"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-legend.font.size-label" for="piePlot-legend.font.size"&gt;Legend font size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-legend.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-axis.tickcolor"&gt;Tick mark color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.ticklen-label" for="piePlot-axis.ticklen"&gt;Tick mark length&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="piePlot-axis.tickwidth-label" for="piePlot-axis.tickwidth"&gt;Tick mark width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="piePlot-legend.font.color"&gt;Legend font color:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="piePlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;button id="piePlot-update" type="button" class="btn btn-default action-button"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;span class="action-label"&gt;Update Plot&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;button class="btn btn-default action-button btn-secondary" id="piePlot-reset" type="button"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;span class="action-label"&gt;Reset Defaults&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="piePlot-download.type-label" for="piePlot-download.type"&gt;Download Format:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select id="piePlot-download.type" class="shiny-input-select"&gt;&lt;option value="png" selected&gt;png&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3" style="margin-top: 25px;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button id="piePlot-update" style="width:100%;" type="button" class="btn btn-default action-button"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span class="action-label"&gt;Update Plot&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3" style="margin-top: 25px;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button class="btn btn-default action-button btn-secondary" id="piePlot-reset" style="width:100%;" type="button"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span class="action-label"&gt;Reset Defaults&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="piePlot-download.type-label" for="piePlot-download.type"&gt;Download Format:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;select id="piePlot-download.type" class="shiny-input-select"&gt;&lt;option value="png" selected&gt;png&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="svg"&gt;svg&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="piePlot-download.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="piePlot-download.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;br/&gt;</span>
