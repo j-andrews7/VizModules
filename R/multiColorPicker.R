@@ -98,9 +98,9 @@ multiColorPicker <- function(inputId,
   initial_colors <- .normalize_hex(base_colors)
   names(initial_colors) <- groups
 
-  palette_json <- jsonlite::toJSON(palette_lookup, auto_unbox = TRUE)
-  initial_json <- jsonlite::toJSON(as.list(initial_colors), auto_unbox = TRUE)
-  groups_json <- jsonlite::toJSON(groups, auto_unbox = TRUE)
+  palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
+  initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
+  groups_json <- toJSON(groups, auto_unbox = TRUE)
 
   palette_select <- shiny::tags$select(
     id = paste0(inputId, "-palette"),
@@ -232,7 +232,7 @@ multiColorPicker <- function(inputId,
         lapply(names(entry), function(nm) {
           shiny::tags$option(
             value = nm,
-            selected = isTRUE(nm == selected_palette),
+            selected = if (nm == selected_palette) "selected" else NULL,
             nm
           )
         })
@@ -240,7 +240,7 @@ multiColorPicker <- function(inputId,
     } else {
       shiny::tags$option(
         value = cat,
-        selected = isTRUE(cat == selected_palette),
+        selected = if (cat == selected_palette) "selected" else NULL,
         cat
       )
     }
