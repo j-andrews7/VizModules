@@ -15,7 +15,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)) {
+piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL){
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
