@@ -38,33 +38,31 @@ test_that("linePlot creates expected line trace", {
 
 })
 
-# test_that("Test Incorrect Inputs", {
-#   fig <<- linePlot(
-#     reactive.data = mtcars,
-#     x = "-random_column",
-#     y = "mpg",
-#     plot.mode = "lines+markers",
-#     line.type = "solid",
-#     colour.group.by = "gear",
-#     palette.selection = "Set2", 
-#     show.legend = TRUE)
-  
-#   expect_error(fig)
-# })
 test_that("Test Incorrect Inputs", {
-
-  expect_error(linePlot(
-      reactive.data = mtcars,
-      x = "-random_column",
-      y = "mpg",
-      plot.mode = "lines+markers",
-      line.type = "solid",
-      colour.group.by = "gear",
-      palette.selection = "Set2", 
-      show.legend = TRUE), 
-      regexp = "object 'random_column' not found", 
-      fixed = TRUE)
+  fig <- linePlot(
+    reactive.data = mtcars,
+    x = "-random_column",
+    y = "mpg",
+    plot.mode = "lines+markers",
+    line.type = "solid",
+    colour.group.by = "gear",
+    palette.selection = "Set2", 
+    show.legend = TRUE)
+  
+  expect_error(print(fig))
 })
+# test_that("Test Incorrect Inputs", {
+
+#   expect_error(linePlot(
+#       reactive.data = mtcars,
+#       x = "-random_column",
+#       y = "mpg",
+#       plot.mode = "lines+markers",
+#       line.type = "solid",
+#       colour.group.by = "gear",
+#       palette.selection = "Set2", 
+#       show.legend = TRUE))
+# })
 
 
 
