@@ -35,7 +35,7 @@
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
-#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::createScatterPlotApp()]
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::ScatterPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)
@@ -708,7 +708,15 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         inputs,
         id = ns("scatterPlotTabsetPanel"),
         title = title,
-        tack = tagList(actionButton(ns("update"), "Update Plot"), br()),
+        tack = tagList(
+            fluidRow(
+                column(3, switchInput(ns("use.update.button"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+            ),
+            br()
+        ),
         columns = columns
     )
 }
@@ -722,12 +730,13 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #'
 #' @return A Shiny plotlyOutput for the scatterplot
 #'
-#' @importFrom shiny NS
-#' @importFrom plotly plotlyOutput
+#' @importFrom shinyjqui jqui_resizable
 #'
 #' @export
 #' @author Jared Andrews
 scatterPlotOutputUI <- function(id) {
     ns <- NS(id)
-    plotlyOutput(ns("scatterPlot"))
+    jqui_resizable(
+        plotlyOutput(ns("scatterPlot"))
+    )
 }

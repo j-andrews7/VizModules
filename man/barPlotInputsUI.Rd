@@ -45,5 +45,5 @@ BarPlotInputsUI("BarPlot", mtcars)
 \code{\link[=BarPlotOutputUI]{BarPlotOutputUI()}}, \code{\link[=BarPlotServer]{BarPlotServer()}}, \code{\link[=BarPlotApp]{BarPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

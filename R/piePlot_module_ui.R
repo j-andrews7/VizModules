@@ -24,9 +24,9 @@
 #' @importFrom colourpicker colourInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' @seealso [vizModules::piePlot()], [vizModules::organize_inputs()],
-#' [vizModules::piePlotOutputUI()], [vizModules::piePlotServer()], [vizModules::createpiePlotApp()]
+#' [vizModules::piePlotOutputUI()], [vizModules::piePlotServer()], [vizModules::piePlotApp()]
 #' @examples
 #' library(vizModules)
 #' pie_df <- as.data.frame(table(iris$Species))
@@ -213,9 +213,10 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, actionButton(ns("update"), "Update Plot", width = "100%"), style = "margin-top: 25px;"),
-                column(3, actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
-                column(6, selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg"), width = "100%"))
+                column(3, switchInput(ns("use.update.button"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
             ),
             br()
         ),

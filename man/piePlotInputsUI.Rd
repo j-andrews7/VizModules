@@ -44,8 +44,8 @@ piePlotInputsUI("piePlot", pie_df)
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotServer]{piePlotServer()}}, \code{\link[=createpiePlotApp]{createpiePlotApp()}}
+\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotServer]{piePlotServer()}}, \code{\link[=piePlotApp]{piePlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

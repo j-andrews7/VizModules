@@ -45,5 +45,5 @@ linePlotInputsUI("linePlot", mtcars)
 \code{\link[=linePlotOutputUI]{linePlotOutputUI()}}, \code{\link[=linePlotServer]{linePlotServer()}}, \code{\link[=linePlotApp]{linePlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

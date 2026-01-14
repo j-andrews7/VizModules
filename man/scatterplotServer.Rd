@@ -35,7 +35,7 @@ Server logic for scatterPlot module
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=createScatterPlotApp]{createScatterPlotApp()}}
+\code{\link[=scatterPlotOutputUI]{scatterPlotOutputUI()}}, \code{\link[=scatterPlotServer]{scatterPlotServer()}}, \code{\link[=ScatterPlotApp]{ScatterPlotApp()}}
 }
 \author{
 Jared Andrews
