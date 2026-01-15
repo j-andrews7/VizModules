@@ -66,7 +66,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("y.min"), "Min y value:", value = min.y)
         ),
         "Grouping" = tagList(
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
+            selectInput(ns("group.by"), "Group by:", selected = char.choices[1], choices = c("", char.choices)),
             selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
