@@ -282,8 +282,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 bg_alpha = isolate_fn(input$background.alpha),
-                y_min = isolate_fn(input$y.min),
-                y_max = isolate_fn(input$y.max),
+                y_min = input$y.min,  # Don't isolate - needs to be reactive for update button
+                y_max = input$y.max,  # Don't isolate - needs to be reactive for update button
                 theme = isolate_fn(input$theme),
                 alpha = isolate_fn(input$alpha),
                 add_line = isolate_fn(input$add.line),
