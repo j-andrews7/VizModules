@@ -186,7 +186,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Line
             updateNumericInput(session, "add.line", value = NA)
             colourpicker::updateColourInput(session, "line.colour", value = "#000000")
-            updateNumericInput(session, "line.type", value = 2)
+            updateNumericInput(session, "line.type", value = 1)
             updateNumericInput(session, "line.width", value = 0.6)
             updateTextInput(session, "line.name", value = "")
 
