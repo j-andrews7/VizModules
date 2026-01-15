@@ -144,6 +144,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!isolate_fn(input$split.by) == "NULL") {
                 split.by <- isolate_fn(input$split.by)
             }
+            group.by <- NULL
+            if (!isolate_fn(input$group.by) == ""){
+                group.by <- isolate_fn(input$group.by)
+            }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
@@ -155,7 +159,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$flip),
-                group_by = isolate_fn(input$group.by),
+                group_by = group.by,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
