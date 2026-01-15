@@ -87,14 +87,11 @@
     ],
     "mtcars-order.by": false,
     "mtcars-palette": "Paired",
-    "mtcars-plot.type": "lines+markers",
+    "mtcars-plot.type": "lines",
     "mtcars-reset": 0,
-    "mtcars-update": 3,
+    "mtcars-update": 0,
     "mtcars-x.adjustment": "",
-    "mtcars-x.value": [
-      "mpg",
-      "hp"
-    ],
+    "mtcars-x.value": "mpg",
     "mtcars-y.adjustment": "",
     "mtcars-y.value": "cyl",
     "plotly_afterplot-A": "\"mtcars-linePlot\""
@@ -198,7 +195,7 @@
           },
           "toImageButtonOptions": {
             "format": "png",
-            "filename": "2026-01-14"
+            "filename": "2026-01-15"
           },
           "displaylogo": false
         },
@@ -700,7 +697,7 @@
             "tickcolor": "#000000",
             "ticklen": 5,
             "tickwidth": 1,
-            "title": "Value",
+            "title": "mpg",
             "autorange": true
           },
           "yaxis": {
@@ -724,7 +721,14 @@
             "ticklen": 5,
             "tickwidth": 1,
             "title": "cyl",
-            "autorange": true
+            "autorange": true,
+            "type": "category",
+            "categoryorder": "array",
+            "categoryarray": [
+              "4",
+              "6",
+              "8"
+            ]
           },
           "hovermode": "closest"
         },
@@ -747,35 +751,12 @@
           },
           "toImageButtonOptions": {
             "format": "png",
-            "filename": "2026-01-14"
+            "filename": "2026-01-15"
           },
           "displaylogo": false
         },
         "data": [
           {
-            "type": "scatter",
-            "mode": "markers",
-            "marker": {
-              "color": "rgba(31,119,180,1)",
-              "line": {
-                "color": "rgba(31,119,180,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(31,119,180,1)"
-            },
-            "error_x": {
-              "color": "rgba(31,119,180,1)"
-            },
-            "line": {
-              "color": "rgba(31,119,180,1)"
-            },
-            "xaxis": "x",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
             "x": [
               10.4,
               10.4,
@@ -844,117 +825,28 @@
               "4",
               "4"
             ],
-            "mode": "lines+markers",
-            "name": "mpg",
-            "showlegend": true,
+            "mode": "lines",
+            "showlegend": false,
             "line": {
-              "color": "#A6CEE3",
+              "color": "rgba(255,140,92,1)",
               "dash": "solid"
             },
-            "marker": {
-              "color": "#A6CEE3",
-              "line": {
-                "color": "rgba(255,127,14,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(255,127,14,1)"
-            },
-            "error_x": {
-              "color": "rgba(255,127,14,1)"
-            },
-            "xaxis": "x",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
             "type": "scatter",
-            "x": [
-              52,
-              62,
-              65,
-              66,
-              66,
-              91,
-              93,
-              95,
-              97,
-              105,
-              109,
-              110,
-              110,
-              110,
-              113,
-              123,
-              123,
-              150,
-              150,
-              175,
-              175,
-              175,
-              180,
-              180,
-              180,
-              205,
-              215,
-              230,
-              245,
-              245,
-              264,
-              335
-            ],
-            "y": [
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "6",
-              "4",
-              "6",
-              "6",
-              "6",
-              "4",
-              "6",
-              "6",
-              "8",
-              "8",
-              "8",
-              "8",
-              "6",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8",
-              "8"
-            ],
-            "mode": "lines+markers",
-            "name": "hp",
-            "showlegend": true,
-            "line": {
-              "color": "#1F78B4",
-              "dash": "solid"
-            },
+            "name": "#A6CEE3",
             "marker": {
-              "color": "#1F78B4",
+              "color": "rgba(255,140,92,1)",
               "line": {
-                "color": "rgba(44,160,44,1)"
+                "color": "rgba(255,140,92,1)"
               }
             },
+            "textfont": {
+              "color": "rgba(255,140,92,1)"
+            },
             "error_y": {
-              "color": "rgba(44,160,44,1)"
+              "color": "rgba(255,140,92,1)"
             },
             "error_x": {
-              "color": "rgba(44,160,44,1)"
+              "color": "rgba(255,140,92,1)"
             },
             "xaxis": "x",
             "yaxis": "y",

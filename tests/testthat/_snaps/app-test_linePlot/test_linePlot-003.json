@@ -69,10 +69,10 @@
     "mtcars-axis.ticks": "outside",
     "mtcars-axis.tickwidth": 1,
     "mtcars-download.type": "png",
-    "mtcars-facet.by": "gear",
+    "mtcars-facet.by": "",
     "mtcars-facet.scales": "fixed",
-    "mtcars-flip.x": true,
-    "mtcars-flip.y": true,
+    "mtcars-flip.x": false,
+    "mtcars-flip.y": false,
     "mtcars-group.by": "",
     "mtcars-line.type": "dash",
     "mtcars-linePlotTabsetPanel": "Data",
@@ -86,14 +86,14 @@
       400
     ],
     "mtcars-order.by": false,
-    "mtcars-palette": "simpsons",
+    "mtcars-palette": "SunsetDark",
     "mtcars-plot.type": "lines+markers",
     "mtcars-reset": 0,
-    "mtcars-update": 4,
+    "mtcars-update": 2,
     "mtcars-x.adjustment": "",
     "mtcars-x.value": [
       "mpg",
-      "hp"
+      "disp"
     ],
     "mtcars-y.adjustment": "",
     "mtcars-y.value": "cyl",
@@ -199,7 +199,7 @@
           },
           "toImageButtonOptions": {
             "format": "png",
-            "filename": "2026-01-14"
+            "filename": "2026-01-15"
           },
           "displaylogo": false
         },
@@ -652,6 +652,106 @@
     },
     "mtcars-linePlot": {
       "x": {
+        "layout": {
+          "margin": {
+            "b": 40,
+            "l": 60,
+            "t": 80,
+            "r": 10
+          },
+          "title": {
+            "text": "",
+            "font": {
+              "size": [
+
+              ],
+              "family": [
+
+              ],
+              "color": [
+
+              ]
+            },
+            "x": 0.46999999999999997,
+            "xanchor": "center",
+            "y": 0.94999999999999996,
+            "yanchor": "top",
+            "pad": {
+              "t": 20
+            }
+          },
+          "showlegend": true,
+          "xaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "tickfont": {
+              "size": 12,
+              "color": "#000000",
+              "family": "Arial"
+            },
+            "tickangle": 0,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "title": "Value",
+            "autorange": true
+          },
+          "yaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "tickfont": {
+              "size": 12,
+              "color": "#000000",
+              "family": "Arial"
+            },
+            "tickangle": 0,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "title": "cyl",
+            "autorange": true
+          },
+          "hovermode": "closest"
+        },
+        "source": "A",
+        "config": {
+          "modeBarButtonsToAdd": [
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": false,
+            "titleText": false,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "png",
+            "filename": "2026-01-15"
+          },
+          "displaylogo": false
+        },
         "data": [
           {
             "type": "scatter",
@@ -683,16 +783,33 @@
               13.300000000000001,
               14.300000000000001,
               14.699999999999999,
+              15,
               15.199999999999999,
               15.199999999999999,
               15.5,
+              15.800000000000001,
               16.399999999999999,
               17.300000000000001,
+              17.800000000000001,
               18.100000000000001,
               18.699999999999999,
               19.199999999999999,
+              19.199999999999999,
+              19.699999999999999,
+              21,
+              21,
               21.399999999999999,
-              21.5
+              21.399999999999999,
+              21.5,
+              22.800000000000001,
+              22.800000000000001,
+              24.399999999999999,
+              26,
+              27.300000000000001,
+              30.399999999999999,
+              30.399999999999999,
+              32.399999999999999,
+              33.899999999999999
             ],
             "y": [
               "8",
@@ -705,21 +822,38 @@
               "8",
               "8",
               "8",
-              "6",
               "8",
               "8",
               "6",
+              "6",
+              "8",
+              "6",
+              "8",
+              "6",
+              "6",
+              "6",
+              "6",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
               "4"
             ],
             "mode": "lines+markers",
             "name": "mpg",
             "showlegend": true,
             "line": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "dash": "dash"
             },
             "marker": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "line": {
                 "color": "rgba(255,127,14,1)"
               }
@@ -737,26 +871,60 @@
           {
             "type": "scatter",
             "x": [
-              97,
-              105,
-              110,
-              150,
-              150,
-              175,
-              175,
-              180,
-              180,
-              180,
-              205,
-              215,
-              230,
-              245,
-              245
+              71.099999999999994,
+              75.700000000000003,
+              78.700000000000003,
+              79,
+              95.099999999999994,
+              108,
+              120.09999999999999,
+              120.3,
+              121,
+              140.80000000000001,
+              145,
+              146.69999999999999,
+              160,
+              160,
+              167.59999999999999,
+              167.59999999999999,
+              225,
+              258,
+              275.80000000000001,
+              275.80000000000001,
+              275.80000000000001,
+              301,
+              304,
+              318,
+              350,
+              351,
+              360,
+              360,
+              400,
+              440,
+              460,
+              472
             ],
             "y": [
               "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "6",
+              "4",
               "6",
               "6",
+              "6",
+              "6",
+              "6",
+              "6",
+              "8",
+              "8",
               "8",
               "8",
               "8",
@@ -771,14 +939,14 @@
               "8"
             ],
             "mode": "lines+markers",
-            "name": "hp",
+            "name": "disp",
             "showlegend": true,
             "line": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "dash": "dash"
             },
             "marker": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "line": {
                 "color": "rgba(44,160,44,1)"
               }
@@ -792,433 +960,8 @@
             "xaxis": "x",
             "yaxis": "y",
             "frame": null
-          },
-          {
-            "type": "scatter",
-            "mode": "markers",
-            "marker": {
-              "color": "rgba(214,39,40,1)",
-              "line": {
-                "color": "rgba(214,39,40,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(214,39,40,1)"
-            },
-            "error_x": {
-              "color": "rgba(214,39,40,1)"
-            },
-            "line": {
-              "color": "rgba(214,39,40,1)"
-            },
-            "xaxis": "x2",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
-            "x": [
-              15,
-              15.800000000000001,
-              19.699999999999999,
-              26,
-              30.399999999999999
-            ],
-            "y": [
-              "8",
-              "8",
-              "6",
-              "4",
-              "4"
-            ],
-            "mode": "lines+markers",
-            "name": "mpg",
-            "showlegend": true,
-            "line": {
-              "color": "#FED439",
-              "dash": "dash"
-            },
-            "marker": {
-              "color": "#FED439",
-              "line": {
-                "color": "rgba(148,103,189,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(148,103,189,1)"
-            },
-            "error_x": {
-              "color": "rgba(148,103,189,1)"
-            },
-            "xaxis": "x2",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
-            "x": [
-              91,
-              113,
-              175,
-              264,
-              335
-            ],
-            "y": [
-              "4",
-              "4",
-              "6",
-              "8",
-              "8"
-            ],
-            "mode": "lines+markers",
-            "name": "hp",
-            "showlegend": true,
-            "line": {
-              "color": "#709AE1",
-              "dash": "dash"
-            },
-            "marker": {
-              "color": "#709AE1",
-              "line": {
-                "color": "rgba(140,86,75,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(140,86,75,1)"
-            },
-            "error_x": {
-              "color": "rgba(140,86,75,1)"
-            },
-            "xaxis": "x2",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
-            "mode": "markers",
-            "marker": {
-              "color": "rgba(227,119,194,1)",
-              "line": {
-                "color": "rgba(227,119,194,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(227,119,194,1)"
-            },
-            "error_x": {
-              "color": "rgba(227,119,194,1)"
-            },
-            "line": {
-              "color": "rgba(227,119,194,1)"
-            },
-            "xaxis": "x3",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
-            "x": [
-              17.800000000000001,
-              19.199999999999999,
-              21,
-              21,
-              21.399999999999999,
-              22.800000000000001,
-              22.800000000000001,
-              24.399999999999999,
-              27.300000000000001,
-              30.399999999999999,
-              32.399999999999999,
-              33.899999999999999
-            ],
-            "y": [
-              "6",
-              "6",
-              "6",
-              "6",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4"
-            ],
-            "mode": "lines+markers",
-            "name": "mpg",
-            "showlegend": true,
-            "line": {
-              "color": "#FED439",
-              "dash": "dash"
-            },
-            "marker": {
-              "color": "#FED439",
-              "line": {
-                "color": "rgba(127,127,127,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(127,127,127,1)"
-            },
-            "error_x": {
-              "color": "rgba(127,127,127,1)"
-            },
-            "xaxis": "x3",
-            "yaxis": "y",
-            "frame": null
-          },
-          {
-            "type": "scatter",
-            "x": [
-              52,
-              62,
-              65,
-              66,
-              66,
-              93,
-              95,
-              109,
-              110,
-              110,
-              123,
-              123
-            ],
-            "y": [
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "4",
-              "6",
-              "6",
-              "6",
-              "6"
-            ],
-            "mode": "lines+markers",
-            "name": "hp",
-            "showlegend": true,
-            "line": {
-              "color": "#709AE1",
-              "dash": "dash"
-            },
-            "marker": {
-              "color": "#709AE1",
-              "line": {
-                "color": "rgba(188,189,34,1)"
-              }
-            },
-            "error_y": {
-              "color": "rgba(188,189,34,1)"
-            },
-            "error_x": {
-              "color": "rgba(188,189,34,1)"
-            },
-            "xaxis": "x3",
-            "yaxis": "y",
-            "frame": null
           }
         ],
-        "layout": {
-          "xaxis": {
-            "domain": [
-              0,
-              0.3133333333333333
-            ],
-            "automargin": true,
-            "title": "Value",
-            "anchor": "y",
-            "showline": true,
-            "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
-            "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
-            },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
-            "autorange": "reversed"
-          },
-          "xaxis2": {
-            "domain": [
-              0.35333333333333333,
-              0.64666666666666661
-            ],
-            "automargin": true,
-            "title": "Value",
-            "anchor": "y",
-            "showline": true,
-            "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
-            "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
-            },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
-            "autorange": "reversed"
-          },
-          "xaxis3": {
-            "domain": [
-              0.68666666666666665,
-              1
-            ],
-            "automargin": true,
-            "title": "Value",
-            "anchor": "y",
-            "showline": true,
-            "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
-            "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
-            },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
-            "autorange": "reversed"
-          },
-          "yaxis": {
-            "domain": [
-              0,
-              1
-            ],
-            "automargin": true,
-            "title": "cyl",
-            "anchor": "x",
-            "showline": true,
-            "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
-            "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
-            },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
-            "autorange": "reversed"
-          },
-          "annotations": [
-            {
-              "x": 0.16666666666666666,
-              "y": 1.05,
-              "xref": "paper",
-              "yref": "paper",
-              "text": "3",
-              "showarrow": false,
-              "xanchor": "center",
-              "yanchor": "bottom",
-              "font": {
-                "size": 14
-              }
-            },
-            {
-              "x": 0.5,
-              "y": 1.05,
-              "xref": "paper",
-              "yref": "paper",
-              "text": "5",
-              "showarrow": false,
-              "xanchor": "center",
-              "yanchor": "bottom",
-              "font": {
-                "size": 14
-              }
-            },
-            {
-              "x": 0.83333333333333326,
-              "y": 1.05,
-              "xref": "paper",
-              "yref": "paper",
-              "text": "4",
-              "showarrow": false,
-              "xanchor": "center",
-              "yanchor": "bottom",
-              "font": {
-                "size": 14
-              }
-            }
-          ],
-          "shapes": [
-
-          ],
-          "images": [
-
-          ],
-          "margin": {
-            "b": 40,
-            "l": 60,
-            "t": 80,
-            "r": 10
-          },
-          "hovermode": "closest",
-          "showlegend": true,
-          "title": {
-            "text": "",
-            "font": {
-              "size": [
-
-              ],
-              "family": [
-
-              ],
-              "color": [
-
-              ]
-            },
-            "x": 0.46999999999999997,
-            "xanchor": "center",
-            "y": 0.94999999999999996,
-            "yanchor": "top",
-            "pad": {
-              "t": 20
-            }
-          }
-        },
-        "source": "A",
-        "config": {
-          "modeBarButtonsToAdd": [
-            "hoverclosest",
-            "hovercompare"
-          ],
-          "showSendToCloud": false,
-          "edits": {
-            "axisTitleText": false,
-            "titleText": false,
-            "annotationText": true,
-            "legendText": true,
-            "legendPosition": true,
-            "colorbarPosition": true,
-            "colorbarTitleText": true,
-            "annotationTail": true
-          },
-          "toImageButtonOptions": {
-            "format": "png",
-            "filename": "2026-01-14"
-          },
-          "displaylogo": false
-        },
         "highlight": {
           "on": "plotly_click",
           "persistent": false,
@@ -1230,7 +973,6 @@
           },
           "debounce": 0
         },
-        "subplot": true,
         "shinyEvents": [
           "plotly_hover",
           "plotly_click",

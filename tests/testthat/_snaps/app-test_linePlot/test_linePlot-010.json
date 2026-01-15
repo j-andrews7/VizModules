@@ -55,27 +55,27 @@
     "iris-y.adjustment": "",
     "iris-y.value": "Sepal.Width",
     "mtcars-auto.update": false,
-    "mtcars-axis.linecolor": "#000000",
-    "mtcars-axis.linewidth": 0.5,
+    "mtcars-axis.linecolor": "#F01111",
+    "mtcars-axis.linewidth": 2,
     "mtcars-axis.mirror": true,
     "mtcars-axis.showline": true,
-    "mtcars-axis.tickangle.x": 0,
-    "mtcars-axis.tickangle.y": 0,
-    "mtcars-axis.tickcolor": "#000000",
-    "mtcars-axis.tickfont.color": "#000000",
-    "mtcars-axis.tickfont.family": "Arial",
-    "mtcars-axis.tickfont.size": 12,
-    "mtcars-axis.ticklen": 5,
-    "mtcars-axis.ticks": "outside",
-    "mtcars-axis.tickwidth": 1,
+    "mtcars-axis.tickangle.x": -45,
+    "mtcars-axis.tickangle.y": 45,
+    "mtcars-axis.tickcolor": "#0D00FF",
+    "mtcars-axis.tickfont.color": "#D200F7",
+    "mtcars-axis.tickfont.family": "Droid Sans",
+    "mtcars-axis.tickfont.size": 18,
+    "mtcars-axis.ticklen": 14,
+    "mtcars-axis.ticks": "inside",
+    "mtcars-axis.tickwidth": 3.5,
     "mtcars-download.type": "png",
     "mtcars-facet.by": "gear",
-    "mtcars-facet.scales": "fixed",
+    "mtcars-facet.scales": "free",
     "mtcars-flip.x": true,
     "mtcars-flip.y": true,
     "mtcars-group.by": "",
     "mtcars-line.type": "dash",
-    "mtcars-linePlotTabsetPanel": "Data",
+    "mtcars-linePlotTabsetPanel": "Axes",
     "mtcars-linePlot__shinyjquiBookmarkState__resizable": [
       1039.33,
       400
@@ -86,18 +86,19 @@
       400
     ],
     "mtcars-order.by": true,
-    "mtcars-palette": "simpsons",
+    "mtcars-palette": "SunsetDark",
     "mtcars-plot.type": "lines+markers",
     "mtcars-reset": 0,
-    "mtcars-update": 6,
+    "mtcars-update": 8,
     "mtcars-x.adjustment": "log2",
     "mtcars-x.value": [
       "mpg",
-      "hp"
+      "disp"
     ],
     "mtcars-y.adjustment": "",
     "mtcars-y.value": "cyl",
     "plotly_afterplot-A": "\"mtcars-linePlot\"",
+    "plotly_hover-A": null,
     "plotly_relayout-A": "{\"width\":1039.328125,\"height\":400}"
   },
   "output": {
@@ -199,7 +200,7 @@
           },
           "toImageButtonOptions": {
             "format": "png",
-            "filename": "2026-01-14"
+            "filename": "2026-01-15"
           },
           "displaylogo": false
         },
@@ -709,11 +710,11 @@
             "name": "mpg.adj",
             "showlegend": true,
             "line": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "dash": "dash"
             },
             "marker": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "line": {
                 "color": "rgba(255,127,14,1)"
               }
@@ -731,18 +732,18 @@
           {
             "type": "scatter",
             "x": [
-              6.539158811108031,
-              5.9541963103868749,
-              6.5698556083309478,
-              6.0443941193584534,
-              5.7004397181410917,
-              6.0223678130284544,
-              6.0443941193584534,
-              6.768184324776926,
-              6.7813597135246599,
-              6.7813597135246599,
-              6.9425145053392399,
-              6.9425145053392399
+              6.7548875021634682,
+              7.1967250607860276,
+              7.1375035237499347,
+              6.2982917306201243,
+              6.2422213950983689,
+              6.1517776547320526,
+              6.3037807481771031,
+              6.9188632372745946,
+              7.3219280948873626,
+              7.3219280948873626,
+              7.3888783388119892,
+              7.3888783388119892
             ],
             "y": [
               "4",
@@ -759,14 +760,14 @@
               "6"
             ],
             "mode": "lines+markers",
-            "name": "hp.adj",
+            "name": "disp.adj",
             "showlegend": true,
             "line": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "dash": "dash"
             },
             "marker": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "line": {
                 "color": "rgba(44,160,44,1)"
               }
@@ -800,7 +801,7 @@
               "color": "rgba(214,39,40,1)"
             },
             "xaxis": "x2",
-            "yaxis": "y",
+            "yaxis": "y2",
             "frame": null
           },
           {
@@ -843,11 +844,11 @@
             "name": "mpg.adj",
             "showlegend": true,
             "line": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "dash": "dash"
             },
             "marker": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "line": {
                 "color": "rgba(148,103,189,1)"
               }
@@ -859,27 +860,27 @@
               "color": "rgba(148,103,189,1)"
             },
             "xaxis": "x2",
-            "yaxis": "y",
+            "yaxis": "y2",
             "frame": null
           },
           {
             "type": "scatter",
             "x": [
-              6.5999128421871278,
-              6.7813597135246599,
-              6.7142455176661224,
-              7.451211111832329,
-              7.936637939002571,
-              7.4918530963296748,
-              7.4918530963296748,
-              7.4918530963296748,
-              7.6794800995054464,
-              7.7481928495894605,
-              7.8454900509443748,
-              7.2288186904958804,
-              7.2288186904958804,
-              7.936637939002571,
-              7.451211111832329
+              6.9080923408182713,
+              8.011227255423254,
+              7.8137811912170374,
+              8.4918530963296739,
+              8.4918530963296739,
+              8.1074786466266175,
+              8.1074786466266175,
+              8.1074786466266175,
+              8.8826430493618407,
+              8.8454900509443757,
+              8.7813597135246599,
+              8.3128829552843548,
+              8.2479275134435852,
+              8.451211111832329,
+              8.6438561897747253
             ],
             "y": [
               "4",
@@ -899,14 +900,14 @@
               "8"
             ],
             "mode": "lines+markers",
-            "name": "hp.adj",
+            "name": "disp.adj",
             "showlegend": true,
             "line": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "dash": "dash"
             },
             "marker": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "line": {
                 "color": "rgba(140,86,75,1)"
               }
@@ -918,7 +919,7 @@
               "color": "rgba(140,86,75,1)"
             },
             "xaxis": "x2",
-            "yaxis": "y",
+            "yaxis": "y2",
             "frame": null
           },
           {
@@ -940,7 +941,7 @@
               "color": "rgba(227,119,194,1)"
             },
             "xaxis": "x3",
-            "yaxis": "y",
+            "yaxis": "y3",
             "frame": null
           },
           {
@@ -963,11 +964,11 @@
             "name": "mpg.adj",
             "showlegend": true,
             "line": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "dash": "dash"
             },
             "marker": {
-              "color": "#FED439",
+              "color": "#FCDE9C",
               "line": {
                 "color": "rgba(127,127,127,1)"
               }
@@ -979,17 +980,17 @@
               "color": "rgba(127,127,127,1)"
             },
             "xaxis": "x3",
-            "yaxis": "y",
+            "yaxis": "y3",
             "frame": null
           },
           {
             "type": "scatter",
             "x": [
-              6.5077946401986964,
-              6.8201789624151878,
-              7.451211111832329,
-              8.0443941193584543,
-              8.3880172853451356
+              6.910492832288714,
+              6.571373435973201,
+              7.1799090900149345,
+              8.4553272203045609,
+              8.2336196767597016
             ],
             "y": [
               "4",
@@ -999,14 +1000,14 @@
               "8"
             ],
             "mode": "lines+markers",
-            "name": "hp.adj",
+            "name": "disp.adj",
             "showlegend": true,
             "line": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "dash": "dash"
             },
             "marker": {
-              "color": "#709AE1",
+              "color": "#FAA476",
               "line": {
                 "color": "rgba(188,189,34,1)"
               }
@@ -1018,7 +1019,7 @@
               "color": "rgba(188,189,34,1)"
             },
             "xaxis": "x3",
-            "yaxis": "y",
+            "yaxis": "y3",
             "frame": null
           }
         ],
@@ -1033,18 +1034,18 @@
             "anchor": "y",
             "showline": true,
             "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
+            "linecolor": "#F01111",
+            "linewidth": 2,
             "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
             },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
             "autorange": "reversed"
           },
           "xaxis2": {
@@ -1054,21 +1055,21 @@
             ],
             "automargin": true,
             "title": "Value",
-            "anchor": "y",
+            "anchor": "y2",
             "showline": true,
             "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
+            "linecolor": "#F01111",
+            "linewidth": 2,
             "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
             },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
             "autorange": "reversed"
           },
           "xaxis3": {
@@ -1078,21 +1079,69 @@
             ],
             "automargin": true,
             "title": "Value",
-            "anchor": "y",
+            "anchor": "y3",
             "showline": true,
             "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
+            "linecolor": "#F01111",
+            "linewidth": 2,
             "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
             },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "yaxis3": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "title": "cyl",
+            "anchor": "x3",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "yaxis2": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "title": "cyl",
+            "anchor": "x2",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
             "autorange": "reversed"
           },
           "yaxis": {
@@ -1105,18 +1154,18 @@
             "anchor": "x",
             "showline": true,
             "mirror": true,
-            "linecolor": "#000000",
-            "linewidth": 0.5,
+            "linecolor": "#F01111",
+            "linewidth": 2,
             "tickfont": {
-              "size": 12,
-              "color": "#000000",
-              "family": "Arial"
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
             },
-            "tickangle": 0,
-            "ticks": "outside",
-            "tickcolor": "#000000",
-            "ticklen": 5,
-            "tickwidth": 1,
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
             "autorange": "reversed"
           },
           "annotations": [
@@ -1215,7 +1264,7 @@
           },
           "toImageButtonOptions": {
             "format": "png",
-            "filename": "2026-01-14"
+            "filename": "2026-01-15"
           },
           "displaylogo": false
         },
