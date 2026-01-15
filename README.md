@@ -1,5 +1,7 @@
 # vizModules
 
+![check-app](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yml/badge.svg)
+
 This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis)) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
 
 These modules will contain all possible functionality for each plot with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
