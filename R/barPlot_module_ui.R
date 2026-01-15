@@ -33,9 +33,6 @@
 #' BarPlotInputsUI("BarPlot", mtcars)
 BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
-    
-    # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
-    Y_AXIS_SCALE_FACTOR <- 1.18
 
     # Get variables of data.
     choices <- c("", names(data))
@@ -43,19 +40,9 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
-    
-    # Calculate initial y.max and y.min from the default y.data column (second numeric column)
-    default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-    if (!is.null(default_y_col) && default_y_col != "") {
-        y_col_data <- data[[default_y_col]]
-        min.y <- min(y_col_data, na.rm = TRUE)
-        max.y <- max(y_col_data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
-    } else {
-        # Fallback to all numeric data if no default column
-        numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
-        min.y <- min(numeric.data, na.rm = TRUE)
-        max.y <- max(numeric.data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
-    }
+    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
+    max.y <- max(numeric.data, na.rm = TRUE)
+    min.y <- min(numeric.data, na.rm = TRUE)
 
     inputs <- list(
         "Data" = tagList(
@@ -66,7 +53,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("y.min"), "Min y value:", value = min.y)
         ),
         "Grouping" = tagList(
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[1], choices = c("", char.choices)),
+            selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
             selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),

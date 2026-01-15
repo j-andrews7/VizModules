@@ -22,17 +22,35 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         Y_AXIS_SCALE_FACTOR <- 1.18
         
-        # Helper function to calculate y-axis range from selected y.data column
-        calculate_y_range <- function(y_data_col) {
-            if (!is.null(y_data_col) && y_data_col != "") {
-                y_col_data <- data()[[y_data_col]]
-                if (is.numeric(y_col_data)) {
-                    min.y <- min(y_col_data, na.rm = TRUE)
-                    max.y <- max(y_col_data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
-                    return(list(min = min.y, max = max.y))
-                }
+        # Helper function to calculate y-axis range accounting for grouping/stacking
+        calculate_y_range <- function(y_data_col, x_data_col = NULL, group_data_col = NULL) {
+            if (is.null(y_data_col) || y_data_col == "") {
+                return(NULL)
             }
-            return(NULL)
+            
+            df <- data()
+            if (!y_data_col %in% names(df) || !is.numeric(df[[y_data_col]])) {
+                return(NULL)
+            }
+            
+            # Calculate min from raw data
+            min.y <- min(df[[y_data_col]], na.rm = TRUE)
+            
+            # For max, we need to consider if bars might be stacked
+            # If there's grouping by x and group_by, bars could be stacked
+            if (!is.null(x_data_col) && x_data_col != "" && x_data_col %in% names(df) &&
+                !is.null(group_data_col) && group_data_col != "" && group_data_col %in% names(df)) {
+                # Calculate sum of y values for each x group (worst case for stacked bars)
+                agg_data <- aggregate(df[[y_data_col]], 
+                                     by = list(x = df[[x_data_col]]), 
+                                     FUN = sum, na.rm = TRUE)
+                max.y <- max(agg_data$x, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+            } else {
+                # No grouping, just use max of y column
+                max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+            }
+            
+            return(list(min = min.y, max = max.y))
         }
         
         # Hide individual inputs if specified
@@ -50,6 +68,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         }
 
         ns <- session$ns
+        
+        # Track initialization
+        initialized <- reactiveVal(FALSE)
+        
         output$palette.selection <- renderUI({
             pal <- input$palette
             colour_selection <- plotthis::palette_list[[pal]]
@@ -63,17 +85,40 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
         })
 
-        # Auto-update y-axis range when y.data changes
-        observeEvent(input$y.data, {
+        # Initialize y-axis range on startup
+        observe({
+            # Only run once when inputs are first available
+            if (!initialized()) {
+                req(input$y.data, input$x.data, input$group.by)
+                
+                y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
+                if (!is.null(y_range)) {
+                    updateNumericInput(session, "y.max", value = y_range$max)
+                    updateNumericInput(session, "y.min", value = y_range$min)
+                    initialized(TRUE)
+                }
+            }
+        })
+
+        # Auto-update y-axis range when relevant inputs change
+        observe({
+            # Skip if not yet initialized
+            req(initialized())
+            
+            # Trigger on changes to y.data, x.data, or group.by
+            y_col <- input$y.data
+            x_col <- input$x.data
+            group_col <- input$group.by
+            
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                y_range <- calculate_y_range(input$y.data)
+                y_range <- calculate_y_range(y_col, x_col, group_col)
                 if (!is.null(y_range)) {
                     updateNumericInput(session, "y.max", value = y_range$max)
                     updateNumericInput(session, "y.min", value = y_range$min)
                 }
             }
-        }, ignoreInit = TRUE)
+        })
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -81,9 +126,12 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
-            # Calculate y.max and y.min from the default y.data column (second numeric column)
+            # Calculate y.max and y.min from the default selections
             default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-            y_range <- calculate_y_range(default_y_col)
+            default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
+            default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
+            
+            y_range <- calculate_y_range(default_y_col, default_x_col, default_group_col)
             if (!is.null(y_range)) {
                 min.y <- y_range$min
                 max.y <- y_range$max
@@ -153,7 +201,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Update y-axis range when update button is clicked (when auto-update is off)
         observeEvent(input$update, {
-            y_range <- calculate_y_range(input$y.data)
+            y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
