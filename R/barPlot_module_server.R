@@ -47,16 +47,49 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
         })
 
+        # Auto-update y-axis range when y.data changes
+        observeEvent(input$y.data, {
+            # Only auto-update if auto.update is enabled
+            if (!is.null(input$auto.update) && input$auto.update) {
+                if (!is.null(input$y.data) && input$y.data != "") {
+                    y_col_data <- data()[[input$y.data]]
+                    if (is.numeric(y_col_data)) {
+                        # Calculate min and max from the selected y column
+                        min.y <- min(y_col_data, na.rm = TRUE)
+                        max.y <- max(y_col_data, na.rm = TRUE)
+                        # Set max to 1.18x actual max so highest bar reaches ~85% of height
+                        max.y <- max.y * 1.18
+                        updateNumericInput(session, "y.max", value = max.y)
+                        updateNumericInput(session, "y.min", value = min.y)
+                    }
+                }
+            }
+        }, ignoreInit = TRUE)
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            max.y <- max(numeric.data, na.rm = TRUE)
-            min.y <- min(numeric.data, na.rm = TRUE)
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            
+            # Calculate y.max and y.min from the default y.data column (second numeric column)
+            default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
+            if (!is.null(default_y_col) && default_y_col != "") {
+                y_col_data <- data()[[default_y_col]]
+                min.y <- min(y_col_data, na.rm = TRUE)
+                max.y <- max(y_col_data, na.rm = TRUE)
+                # Set max to 1.18x actual max so highest bar reaches ~85% of height
+                max.y <- max.y * 1.18
+            } else {
+                # Fallback to all numeric data if no default column
+                min.y <- min(numeric.data, na.rm = TRUE)
+                max.y <- max(numeric.data, na.rm = TRUE) * 1.18
+            }
             # Reset numeric inputs to defaults derived from data
 
             # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
+            updateSelectInput(session, "y.data", selected = default_y_col)
             updateSwitchInput(session, "flip", value = FALSE)
             updateNumericInput(session, "y.max", value = max.y)
             updateNumericInput(session, "y.min", value = min.y)
@@ -109,6 +142,22 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+        })
+
+        # Update y-axis range when update button is clicked (when auto-update is off)
+        observeEvent(input$update, {
+            if (!is.null(input$y.data) && input$y.data != "") {
+                y_col_data <- data()[[input$y.data]]
+                if (is.numeric(y_col_data)) {
+                    # Calculate min and max from the selected y column
+                    min.y <- min(y_col_data, na.rm = TRUE)
+                    max.y <- max(y_col_data, na.rm = TRUE)
+                    # Set max to 1.18x actual max so highest bar reaches ~85% of height
+                    max.y <- max.y * 1.18
+                    updateNumericInput(session, "y.max", value = max.y)
+                    updateNumericInput(session, "y.min", value = min.y)
+                }
+            }
         })
 
 

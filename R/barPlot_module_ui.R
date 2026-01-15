@@ -40,9 +40,21 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
-    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
+    
+    # Calculate initial y.max and y.min from the default y.data column (second numeric column)
+    default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
+    if (!is.null(default_y_col) && default_y_col != "") {
+        y_col_data <- data[[default_y_col]]
+        min.y <- min(y_col_data, na.rm = TRUE)
+        max.y <- max(y_col_data, na.rm = TRUE)
+        # Set max to 1.18x actual max so highest bar reaches ~85% of height
+        max.y <- max.y * 1.18
+    } else {
+        # Fallback to all numeric data if no default column
+        numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
+        min.y <- min(numeric.data, na.rm = TRUE)
+        max.y <- max(numeric.data, na.rm = TRUE) * 1.18
+    }
 
     inputs <- list(
         "Data" = tagList(
