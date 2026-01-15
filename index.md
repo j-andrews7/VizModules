@@ -1,5 +1,9 @@
 # vizModules
 
+![check-app](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yml/badge.svg)
+
+check-app
+
 This package utilizes various viz packages (currently
 [dittoViz](https://github.com/dtm2451/dittoViz) and
 [plotthis](https://github.com/pwwang/plotthis)) to create
