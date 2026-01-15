@@ -33,6 +33,9 @@
 #' BarPlotInputsUI("BarPlot", mtcars)
 BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
+    
+    # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
+    Y_AXIS_SCALE_FACTOR <- 1.18
 
     # Get variables of data.
     choices <- c("", names(data))
@@ -46,14 +49,12 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     if (!is.null(default_y_col) && default_y_col != "") {
         y_col_data <- data[[default_y_col]]
         min.y <- min(y_col_data, na.rm = TRUE)
-        max.y <- max(y_col_data, na.rm = TRUE)
-        # Set max to 1.18x actual max so highest bar reaches ~85% of height
-        max.y <- max.y * 1.18
+        max.y <- max(y_col_data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
     } else {
         # Fallback to all numeric data if no default column
         numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
         min.y <- min(numeric.data, na.rm = TRUE)
-        max.y <- max(numeric.data, na.rm = TRUE) * 1.18
+        max.y <- max(numeric.data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
     }
 
     inputs <- list(

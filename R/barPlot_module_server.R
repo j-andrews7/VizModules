@@ -19,6 +19,22 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
+        Y_AXIS_SCALE_FACTOR <- 1.18
+        
+        # Helper function to calculate y-axis range from selected y.data column
+        calculate_y_range <- function(y_data_col) {
+            if (!is.null(y_data_col) && y_data_col != "") {
+                y_col_data <- data()[[y_data_col]]
+                if (is.numeric(y_col_data)) {
+                    min.y <- min(y_col_data, na.rm = TRUE)
+                    max.y <- max(y_col_data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                    return(list(min = min.y, max = max.y))
+                }
+            }
+            return(NULL)
+        }
+        
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
@@ -51,17 +67,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         observeEvent(input$y.data, {
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                if (!is.null(input$y.data) && input$y.data != "") {
-                    y_col_data <- data()[[input$y.data]]
-                    if (is.numeric(y_col_data)) {
-                        # Calculate min and max from the selected y column
-                        min.y <- min(y_col_data, na.rm = TRUE)
-                        max.y <- max(y_col_data, na.rm = TRUE)
-                        # Set max to 1.18x actual max so highest bar reaches ~85% of height
-                        max.y <- max.y * 1.18
-                        updateNumericInput(session, "y.max", value = max.y)
-                        updateNumericInput(session, "y.min", value = min.y)
-                    }
+                y_range <- calculate_y_range(input$y.data)
+                if (!is.null(y_range)) {
+                    updateNumericInput(session, "y.max", value = y_range$max)
+                    updateNumericInput(session, "y.min", value = y_range$min)
                 }
             }
         }, ignoreInit = TRUE)
@@ -74,16 +83,14 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             
             # Calculate y.max and y.min from the default y.data column (second numeric column)
             default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-            if (!is.null(default_y_col) && default_y_col != "") {
-                y_col_data <- data()[[default_y_col]]
-                min.y <- min(y_col_data, na.rm = TRUE)
-                max.y <- max(y_col_data, na.rm = TRUE)
-                # Set max to 1.18x actual max so highest bar reaches ~85% of height
-                max.y <- max.y * 1.18
+            y_range <- calculate_y_range(default_y_col)
+            if (!is.null(y_range)) {
+                min.y <- y_range$min
+                max.y <- y_range$max
             } else {
                 # Fallback to all numeric data if no default column
                 min.y <- min(numeric.data, na.rm = TRUE)
-                max.y <- max(numeric.data, na.rm = TRUE) * 1.18
+                max.y <- max(numeric.data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
             }
             # Reset numeric inputs to defaults derived from data
 
@@ -146,17 +153,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Update y-axis range when update button is clicked (when auto-update is off)
         observeEvent(input$update, {
-            if (!is.null(input$y.data) && input$y.data != "") {
-                y_col_data <- data()[[input$y.data]]
-                if (is.numeric(y_col_data)) {
-                    # Calculate min and max from the selected y column
-                    min.y <- min(y_col_data, na.rm = TRUE)
-                    max.y <- max(y_col_data, na.rm = TRUE)
-                    # Set max to 1.18x actual max so highest bar reaches ~85% of height
-                    max.y <- max.y * 1.18
-                    updateNumericInput(session, "y.max", value = max.y)
-                    updateNumericInput(session, "y.min", value = min.y)
-                }
+            y_range <- calculate_y_range(input$y.data)
+            if (!is.null(y_range)) {
+                updateNumericInput(session, "y.max", value = y_range$max)
+                updateNumericInput(session, "y.min", value = y_range$min)
             }
         })
 
