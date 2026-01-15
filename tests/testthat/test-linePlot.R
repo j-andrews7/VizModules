@@ -1,8 +1,3 @@
-library(testthat)
-library(devtools)
-library(plotthis)
-devtools::load_all()
-
 test_that("linePlot creates expected line trace", {
   palette <- plotthis::palette_list[["Set2"]]
 
@@ -13,7 +8,7 @@ test_that("linePlot creates expected line trace", {
     plot.mode = "lines+markers",
     line.type = "solid",
     colour.group.by = "gear",
-    palette.selection = "Set2", 
+    palette.selection = "Set2",
     show.legend = TRUE,
     facet.by = NULL,
     facet.scales = "fixed",
@@ -28,7 +23,7 @@ test_that("linePlot creates expected line trace", {
 
   built <- plotly::plotly_build(fig)
   trace <- built$x$data[[1]]
-  
+
   expect_identical(trace$type, "scatter")
   expect_true(trace$name %in% names(mtcars))
 })
@@ -41,9 +36,10 @@ test_that("Test Incorrect Inputs", {
     plot.mode = "lines+markers",
     line.type = "solid",
     colour.group.by = "gear",
-    palette.selection = "Set2", 
-    show.legend = TRUE)
-  
+    palette.selection = "Set2",
+    show.legend = TRUE
+  )
+
   expect_error(print(fig))
 })
 
@@ -58,7 +54,7 @@ test_that("linePlot returns plotly object", {
     palette.selection = "Set2",
     show.legend = TRUE
   )
-  
+
   expect_s3_class(fig, "plotly")
 })
 
@@ -75,7 +71,7 @@ test_that("linePlot handles different plot modes", {
     show.legend = FALSE
   )
   expect_s3_class(fig_lines, "plotly")
-  
+
   # Markers only
   fig_markers <- linePlot(
     reactive.data = mtcars,
@@ -101,7 +97,7 @@ test_that("linePlot handles different line types", {
     palette.selection = "Set2",
     show.legend = FALSE
   )
-  
+
   expect_s3_class(fig_dash, "plotly")
   built <- plotly::plotly_build(fig_dash)
   expect_equal(built$x$data[[1]]$line$dash, "dash")
@@ -118,7 +114,7 @@ test_that("linePlot handles legend visibility", {
     palette.selection = "Set2",
     show.legend = FALSE
   )
-  
+
   expect_s3_class(fig_no_legend, "plotly")
 })
 
@@ -136,7 +132,7 @@ test_that("linePlot handles custom titles", {
     x.title = "Weight (1000 lbs)",
     y.title = "Miles Per Gallon"
   )
-  
+
   expect_s3_class(fig, "plotly")
   built <- plotly::plotly_build(fig)
   expect_equal(built$x$layout$title$text, "My Custom Title")
@@ -155,7 +151,7 @@ test_that("linePlot handles axis flipping", {
     flip.x = TRUE,
     flip.y = TRUE
   )
-  
+
   expect_s3_class(fig, "plotly")
   built <- plotly::plotly_build(fig)
   expect_equal(built$x$layout$xaxis$autorange, "reversed")
@@ -174,7 +170,7 @@ test_that("linePlot handles faceting", {
     show.legend = FALSE,
     facet.by = "cyl"
   )
-  
+
   expect_s3_class(fig, "plotly")
 })
 
@@ -204,7 +200,7 @@ test_that("linePlot errors with invalid y column", {
     palette.selection = "Set2",
     show.legend = FALSE
   )
-  
+
   expect_error(print(fig))
 })
 
@@ -219,13 +215,6 @@ test_that("linePlot handles different datasets", {
     palette.selection = "Set1",
     show.legend = TRUE
   )
-  
+
   expect_s3_class(fig, "plotly")
 })
-
-
-
-
-
-
-
