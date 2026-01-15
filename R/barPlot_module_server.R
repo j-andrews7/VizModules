@@ -41,14 +41,23 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!is.null(x_data_col) && x_data_col != "" && x_data_col %in% names(df) &&
                 !is.null(group_data_col) && group_data_col != "" && group_data_col %in% names(df)) {
                 # Calculate sum of y values for each x group (worst case for stacked bars)
-                agg_data <- aggregate(df[[y_data_col]], 
-                                     by = list(x = df[[x_data_col]]), 
-                                     FUN = sum, na.rm = TRUE)
-                max.y <- max(agg_data$x, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                tryCatch({
+                    agg_data <- aggregate(df[[y_data_col]], 
+                                         by = list(x = df[[x_data_col]]), 
+                                         FUN = sum, na.rm = TRUE)
+                    max.y <- max(agg_data$x, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                }, error = function(e) {
+                    # If aggregation fails, fall back to simple max
+                    max.y <<- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                })
             } else {
                 # No grouping, just use max of y column
                 max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
             }
+            
+            # Handle edge cases
+            if (!is.finite(min.y)) min.y <- 0
+            if (!is.finite(max.y)) max.y <- 1
             
             return(list(min = min.y, max = max.y))
         }
@@ -89,26 +98,32 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         observe({
             # Only run once when inputs are first available
             if (!initialized()) {
-                req(input$y.data, input$x.data, input$group.by)
+                # Only require y.data, other inputs can be empty
+                req(input$y.data)
                 
-                y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
-                if (!is.null(y_range)) {
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
-                    initialized(TRUE)
+                # Wait a moment for other inputs to be available
+                if (!is.null(input$y.data) && input$y.data != "") {
+                    y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
+                    if (!is.null(y_range)) {
+                        updateNumericInput(session, "y.max", value = y_range$max)
+                        updateNumericInput(session, "y.min", value = y_range$min)
+                        initialized(TRUE)
+                    }
                 }
             }
         })
 
         # Auto-update y-axis range when relevant inputs change
         observe({
-            # Skip if not yet initialized
-            req(initialized())
-            
             # Trigger on changes to y.data, x.data, or group.by
             y_col <- input$y.data
             x_col <- input$x.data
             group_col <- input$group.by
+            
+            # Skip if we haven't initialized yet or y.data is not set
+            if (!initialized() || is.null(y_col) || y_col == "") {
+                return()
+            }
             
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
