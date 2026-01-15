@@ -1,4 +1,1 @@
-library(testthat)
-library(vizModules)
-
-test_check("vizModules")
+shinytest2::test_app()
