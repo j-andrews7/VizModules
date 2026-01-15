@@ -333,7 +333,7 @@
 
     axis_side <- match.arg(axis_side)
 
-    list(
+    style <- list(
         title = list(
             font = list(
                 size   = 18,
@@ -361,4 +361,5 @@
         tickwidth = isolate(input$axis.tickwidth)
     )
 
+    return(style)
 }

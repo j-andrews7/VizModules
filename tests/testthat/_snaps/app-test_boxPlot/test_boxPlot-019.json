@@ -1,0 +1,1584 @@
+{
+  "input": {
+    ".clientValue-default-plotlyCrosstalkOpts": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0,
+      "color": [
+
+      ]
+    },
+    "box-BoxPlotTabsetPanel": "Facet",
+    "box-BoxPlot__shinyjquiBookmarkState__resizable": {
+      "width": 1049.33,
+      "height": 400
+    },
+    "box-BoxPlot_is_resizing": false,
+    "box-BoxPlot_size": {
+      "width": 1049.33,
+      "height": 400
+    },
+    "box-add.line": 11.4,
+    "box-add.points": false,
+    "box-add.stat": "mean",
+    "box-add.trend": false,
+    "box-aspect.ratio": 1,
+    "box-auto.update": true,
+    "box-axis.linecolor": "#000000",
+    "box-axis.linewidth": 0.5,
+    "box-axis.mirror": true,
+    "box-axis.showline": true,
+    "box-axis.tickangle.x": 0,
+    "box-axis.tickangle.y": 0,
+    "box-axis.tickcolor": "#000000",
+    "box-axis.tickfont.color": "#000000",
+    "box-axis.tickfont.family": "Arial",
+    "box-axis.tickfont.size": 12,
+    "box-axis.ticklen": 5,
+    "box-axis.ticks": "outside",
+    "box-axis.tickwidth": 1,
+    "box-background.colour": true,
+    "box-background.palette": "RdYlGn",
+    "box-combine": true,
+    "box-download.type": "png",
+    "box-facet.by": "group1",
+    "box-facet.by.row": false,
+    "box-facet.ncol": 3,
+    "box-facet.nrow": null,
+    "box-facet.scale": "free",
+    "box-flip": false,
+    "box-font.type": "Arial",
+    "box-group.by": "NULL",
+    "box-highlight": "",
+    "box-highlight.alpha": 1,
+    "box-highlight.colour": "#000000",
+    "box-highlight.size": 1,
+    "box-jitter.height": 0,
+    "box-jitter.width": 0.5,
+    "box-palette": "Spectral",
+    "box-pt.alpha": 1,
+    "box-pt.color": "#4472C4",
+    "box-pt.size": 1,
+    "box-reset": 5,
+    "box-sort_x": "none",
+    "box-stack": false,
+    "box-stat.color": "#000000",
+    "box-stat.shape": 25,
+    "box-stat.size": 1,
+    "box-stat.stroke": 6,
+    "box-text.colour": "#000000",
+    "box-trend.colour": "#000000",
+    "box-trend.line.width": 1,
+    "box-trend.pt.size": 2,
+    "box-update": 4,
+    "box-x.data": "x",
+    "box-y.data": "y",
+    "box-y.max": 33.9,
+    "box-y.min": 10.4,
+    "plotly_afterplot-A": "\"box-BoxPlot\"",
+    "plotly_relayout-A": "{\"width\":1049.328125,\"height\":400}"
+  },
+  "output": {
+    "box-BoxPlot": {
+      "x": {
+        "data": [
+          {
+            "x": [
+              null,
+              null,
+              1.5,
+              1.5,
+              null
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(0,104,55,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              2.5,
+              2.5,
+              null,
+              null,
+              2.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(165,0,38,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1.5,
+              1.5,
+              2.5,
+              2.5,
+              1.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(255,255,191,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              null,
+              null,
+              1.5,
+              1.5,
+              null
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(0,104,55,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              2.5,
+              2.5,
+              null,
+              null,
+              2.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(165,0,38,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1.5,
+              1.5,
+              2.5,
+              2.5,
+              1.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(255,255,191,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              null,
+              null,
+              1.5,
+              1.5,
+              null
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(0,104,55,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              2.5,
+              2.5,
+              null,
+              null,
+              2.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(165,0,38,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1.5,
+              1.5,
+              2.5,
+              2.5,
+              1.5
+            ],
+            "y": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "text": "",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 1.8897637795275593,
+              "color": "transparent",
+              "dash": "solid"
+            },
+            "fill": "toself",
+            "fillcolor": "rgba(255,255,191,0.2)",
+            "hoveron": "fills",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": 1,
+            "y": 21.5,
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(94,79,162,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "4",
+            "legendgroup": "4",
+            "showlegend": true,
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "x": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "y": [
+              24.399999999999999,
+              22.800000000000001,
+              22.800000000000001,
+              33.899999999999999,
+              32.399999999999999,
+              30.399999999999999,
+              21.399999999999999,
+              27.300000000000001
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(94,79,162,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "4",
+            "legendgroup": "4",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "frame": null
+          },
+          {
+            "x": [
+              1,
+              1
+            ],
+            "y": [
+              26,
+              30.399999999999999
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(94,79,162,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "4",
+            "legendgroup": "4",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          },
+          {
+            "x": [
+              2,
+              2
+            ],
+            "y": [
+              21.399999999999999,
+              18.100000000000001
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(255,255,191,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "6",
+            "legendgroup": "6",
+            "showlegend": true,
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "x": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "y": [
+              21,
+              21,
+              17.800000000000001,
+              19.199999999999999
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(255,255,191,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "6",
+            "legendgroup": "6",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "frame": null
+          },
+          {
+            "x": 2,
+            "y": 19.699999999999999,
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(255,255,191,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "6",
+            "legendgroup": "6",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          },
+          {
+            "x": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3
+            ],
+            "y": [
+              18.699999999999999,
+              17.300000000000001,
+              14.300000000000001,
+              14.699999999999999,
+              10.4,
+              16.399999999999999,
+              19.199999999999999,
+              15.199999999999999,
+              15.199999999999999,
+              10.4,
+              15.5,
+              13.300000000000001
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(158,1,66,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "8",
+            "legendgroup": "8",
+            "showlegend": true,
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "x": [
+              3,
+              3
+            ],
+            "y": [
+              15.800000000000001,
+              15
+            ],
+            "hoverinfo": "y",
+            "type": "box",
+            "fillcolor": "rgba(158,1,66,1)",
+            "marker": {
+              "opacity": null,
+              "outliercolor": "rgba(0,0,0,1)",
+              "line": {
+                "width": 1.8897637795275593,
+                "color": "rgba(0,0,0,1)"
+              },
+              "size": 5.6692913385826778
+            },
+            "line": {
+              "color": "rgba(0,0,0,1)",
+              "width": 1.8897637795275593
+            },
+            "name": "8",
+            "legendgroup": "8",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          },
+          {
+            "x": [
+              0.40000000000000002,
+              3.6000000000000001
+            ],
+            "y": [
+              11.4,
+              11.4
+            ],
+            "text": "yintercept: 11.4",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 2.2677165354330708,
+              "color": "rgba(238,0,0,1)",
+              "dash": "dash"
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              0.40000000000000002,
+              2.6000000000000001
+            ],
+            "y": [
+              11.4,
+              11.4
+            ],
+            "text": "yintercept: 11.4",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 2.2677165354330708,
+              "color": "rgba(238,0,0,1)",
+              "dash": "dash"
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              0.40000000000000002,
+              3.6000000000000001
+            ],
+            "y": [
+              11.4,
+              11.4
+            ],
+            "text": "yintercept: 11.4",
+            "type": "scatter",
+            "mode": "lines",
+            "line": {
+              "width": 2.2677165354330708,
+              "color": "rgba(238,0,0,1)",
+              "dash": "dash"
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1,
+              2,
+              3
+            ],
+            "y": [
+              21.5,
+              19.75,
+              15.050000000000001
+            ],
+            "text": [
+              "x: 4<br />y: 21.5<br />x: #000000<br />stat_shape: 25",
+              "x: 6<br />y:   NA<br />x: #000000<br />stat_shape: 25",
+              "x: 8<br />y:   NA<br />x: #000000<br />stat_shape: 25"
+            ],
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "autocolorscale": false,
+              "color": "rgba(0,0,0,1)",
+              "opacity": 1,
+              "size": 3.7795275590551185,
+              "symbol": "triangle-down",
+              "line": {
+                "width": 22.677165354330711,
+                "color": "rgba(0,0,0,1)"
+              }
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x",
+            "yaxis": "y",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1,
+              2
+            ],
+            "y": [
+              26.925000000000001,
+              19.75
+            ],
+            "text": [
+              "x: 4<br />y:   NA<br />x: #000000<br />stat_shape: 25",
+              "x: 6<br />y:   NA<br />x: #000000<br />stat_shape: 25"
+            ],
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "autocolorscale": false,
+              "color": "rgba(0,0,0,1)",
+              "opacity": 1,
+              "size": 3.7795275590551185,
+              "symbol": "triangle-down",
+              "line": {
+                "width": 22.677165354330711,
+                "color": "rgba(0,0,0,1)"
+              }
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "hoverinfo": "text",
+            "frame": null
+          },
+          {
+            "x": [
+              1,
+              2,
+              3
+            ],
+            "y": [
+              28.199999999999999,
+              19.699999999999999,
+              15.4
+            ],
+            "text": [
+              "x: 4<br />y:   NA<br />x: #000000<br />stat_shape: 25",
+              "x: 6<br />y: 19.7<br />x: #000000<br />stat_shape: 25",
+              "x: 8<br />y:   NA<br />x: #000000<br />stat_shape: 25"
+            ],
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "autocolorscale": false,
+              "color": "rgba(0,0,0,1)",
+              "opacity": 1,
+              "size": 3.7795275590551185,
+              "symbol": "triangle-down",
+              "line": {
+                "width": 22.677165354330711,
+                "color": "rgba(0,0,0,1)"
+              }
+            },
+            "hoveron": "points",
+            "showlegend": false,
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "hoverinfo": "text",
+            "frame": null
+          }
+        ],
+        "layout": {
+          "margin": {
+            "t": 45.887920298879209,
+            "r": 13.283520132835198,
+            "b": 50.145288501452882,
+            "l": 50.145288501452889
+          },
+          "plot_bgcolor": "rgba(255,255,255,1)",
+          "paper_bgcolor": "rgba(255,255,255,1)",
+          "font": {
+            "color": "rgba(0,0,0,1)",
+            "family": "",
+            "size": 15.940224159402243
+          },
+          "xaxis": {
+            "domain": [
+              0,
+              0.30609173931091738
+            ],
+            "automargin": true,
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              0.40000000000000002,
+              3.6000000000000001
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "4",
+              "6",
+              "8"
+            ],
+            "tickvals": [
+              1,
+              2,
+              3
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "4",
+              "6",
+              "8"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "gridcolor": "rgba(190,190,190,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "y",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "annotations": [
+            {
+              "text": "x",
+              "x": 0.5,
+              "y": 0,
+              "showarrow": false,
+              "ax": 0,
+              "ay": 0,
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 17.268576172685762
+              },
+              "xref": "paper",
+              "yref": "paper",
+              "textangle": 0,
+              "xanchor": "center",
+              "yanchor": "top",
+              "annotationType": "axis",
+              "yshift": -26.168534661685349
+            },
+            {
+              "text": "y",
+              "x": 0,
+              "y": 0.5,
+              "showarrow": false,
+              "ax": 0,
+              "ay": 0,
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 17.268576172685762
+              },
+              "xref": "paper",
+              "yref": "paper",
+              "textangle": -90,
+              "xanchor": "right",
+              "yanchor": "center",
+              "annotationType": "axis",
+              "xshift": -26.168534661685349
+            },
+            {
+              "text": "3",
+              "x": 0.15304586965545869,
+              "y": 1,
+              "showarrow": false,
+              "ax": 0,
+              "ay": 0,
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 16.604400166044005
+              },
+              "xref": "paper",
+              "yref": "paper",
+              "textangle": 0,
+              "xanchor": "center",
+              "yanchor": "bottom"
+            },
+            {
+              "text": "4",
+              "x": 0.49999999999999994,
+              "y": 1,
+              "showarrow": false,
+              "ax": 0,
+              "ay": 0,
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 16.604400166044005
+              },
+              "xref": "paper",
+              "yref": "paper",
+              "textangle": 0,
+              "xanchor": "center",
+              "yanchor": "bottom"
+            },
+            {
+              "text": "5",
+              "x": 0.84695413034454137,
+              "y": 1,
+              "showarrow": false,
+              "ax": 0,
+              "ay": 0,
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 16.604400166044005
+              },
+              "xref": "paper",
+              "yref": "paper",
+              "textangle": 0,
+              "xanchor": "center",
+              "yanchor": "bottom"
+            }
+          ],
+          "yaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              9.8450000000000006,
+              22.055
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "10",
+              "14",
+              "18",
+              "22"
+            ],
+            "tickvals": [
+              10,
+              14,
+              18,
+              22
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "10",
+              "14",
+              "18",
+              "22"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "gridcolor": "rgba(255,255,255,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "x",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "shapes": [
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "rgba(0,0,0,1)",
+                "width": 0,
+                "linetype": "solid"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0,
+              "x1": 0.30609173931091738,
+              "y0": 0,
+              "y1": 1
+            },
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "transparent",
+                "width": 0,
+                "linetype": "none"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0,
+              "x1": 0.30609173931091738,
+              "y0": 0,
+              "y1": 24.574512245745126,
+              "yanchor": 1,
+              "ysizemode": "pixel"
+            },
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "rgba(0,0,0,1)",
+                "width": 0,
+                "linetype": "solid"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0.36057492735574925,
+              "x1": 0.63942507264425064,
+              "y0": 0,
+              "y1": 1
+            },
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "transparent",
+                "width": 0,
+                "linetype": "none"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0.36057492735574925,
+              "x1": 0.63942507264425064,
+              "y0": 0,
+              "y1": 24.574512245745126,
+              "yanchor": 1,
+              "ysizemode": "pixel"
+            },
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "rgba(0,0,0,1)",
+                "width": 0,
+                "linetype": "solid"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0.69390826068908262,
+              "x1": 1,
+              "y0": 0,
+              "y1": 1
+            },
+            {
+              "type": "rect",
+              "fillcolor": "transparent",
+              "line": {
+                "color": "transparent",
+                "width": 0,
+                "linetype": "none"
+              },
+              "yref": "paper",
+              "xref": "paper",
+              "layer": "below",
+              "x0": 0.69390826068908262,
+              "x1": 1,
+              "y0": 0,
+              "y1": 24.574512245745126,
+              "yanchor": 1,
+              "ysizemode": "pixel"
+            }
+          ],
+          "xaxis2": {
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              0.40000000000000002,
+              2.6000000000000001
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "4",
+              "6"
+            ],
+            "tickvals": [
+              1,
+              2
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "4",
+              "6"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "domain": [
+              0.36057492735574925,
+              0.63942507264425064
+            ],
+            "gridcolor": "rgba(190,190,190,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "y2",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "yaxis2": {
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              10.275,
+              35.024999999999999
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "15",
+              "20",
+              "25",
+              "30",
+              "35"
+            ],
+            "tickvals": [
+              15,
+              20,
+              25,
+              30,
+              35
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "15",
+              "20",
+              "25",
+              "30",
+              "35"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "domain": [
+              0,
+              1
+            ],
+            "gridcolor": "rgba(255,255,255,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "x2",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "xaxis3": {
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              0.40000000000000002,
+              3.6000000000000001
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "4",
+              "6",
+              "8"
+            ],
+            "tickvals": [
+              1,
+              2,
+              3
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "4",
+              "6",
+              "8"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "domain": [
+              0.69390826068908262,
+              1
+            ],
+            "gridcolor": "rgba(190,190,190,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "y3",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "yaxis3": {
+            "type": "linear",
+            "autorange": false,
+            "range": [
+              10.450000000000001,
+              31.349999999999998
+            ],
+            "tickmode": "array",
+            "ticktext": [
+              "20",
+              "30"
+            ],
+            "tickvals": [
+              20,
+              30
+            ],
+            "categoryorder": "array",
+            "categoryarray": [
+              "20",
+              "30"
+            ],
+            "nticks": null,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "showticklabels": true,
+            "tickfont": {
+              "color": "#000000",
+              "family": "Arial",
+              "size": 12
+            },
+            "tickangle": 0,
+            "showline": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "showgrid": true,
+            "domain": [
+              0,
+              1
+            ],
+            "gridcolor": "rgba(255,255,255,1)",
+            "gridwidth": 0,
+            "zeroline": false,
+            "anchor": "x3",
+            "title": {
+              "font": {
+                "size": 18,
+                "family": "Arial",
+                "color": "#000000"
+              }
+            },
+            "hoverformat": ".2f",
+            "mirror": true
+          },
+          "showlegend": true,
+          "legend": {
+            "bgcolor": null,
+            "bordercolor": null,
+            "borderwidth": 0,
+            "font": {
+              "color": "rgba(0,0,0,1)",
+              "family": "",
+              "size": 14.611872146118724
+            },
+            "title": {
+              "text": "<br />x",
+              "font": {
+                "color": "rgba(0,0,0,1)",
+                "family": "",
+                "size": 15.940224159402243
+              }
+            }
+          },
+          "hovermode": "closest",
+          "barmode": "relative",
+          "title": {
+            "font": {
+              "size": 28,
+              "family": "Arial",
+              "color": "#000000"
+            },
+            "x": 0.5,
+            "xanchor": "center",
+            "y": 0.97999999999999998,
+            "yanchor": "top"
+          }
+        },
+        "config": {
+          "doubleClick": "reset",
+          "modeBarButtonsToAdd": [
+            "drawline",
+            "drawopenpath",
+            "drawclosedpath",
+            "drawcircle",
+            "drawrect",
+            "eraseshape",
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": false,
+            "titleText": false,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "png",
+            "filename": "2026-01-15"
+          },
+          "displaylogo": false
+        },
+        "source": "A",
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.20000000000000001,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "setprototypeof",
+          "version": "0.1",
+          "src": {
+            "href": "setprototypeof-0.1"
+          },
+          "meta": null,
+          "script": "setprototypeof.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.2",
+          "src": {
+            "href": "crosstalk-1.2.2"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-htmlwidgets-css-2.11.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-main-2.11.1"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
