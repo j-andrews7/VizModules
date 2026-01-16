@@ -51,7 +51,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
             selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")),
             selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
-            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)),
+            uiOutput(ns("palette.selection")),
             switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),

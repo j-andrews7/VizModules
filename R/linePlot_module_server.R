@@ -36,17 +36,88 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         }
 
         ns <- session$ns
+        default_palette_name <- "Paired"
+        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        default_palette_values <- palette_lookup[[default_palette_name]]
+        if (is.null(default_palette_values) || length(default_palette_values) == 0) {
+            default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
+        }
+
+        palette_groups <- reactive({
+            df <- data_reactive()
+            if (is.null(df)) {
+                return(character(0))
+            }
+
+            x_vals <- input$x.value
+            y_vals <- input$y.value
+            group_col <- input$group.by
+            multi_axis <- xor(length(x_vals) > 1, length(y_vals) > 1)
+
+            if (multi_axis) {
+                if (length(x_vals) > 1) {
+                    return(x_vals)
+                }
+                if (length(y_vals) > 1) {
+                    return(y_vals)
+                }
+            }
+
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
+                return(unique(stats::na.omit(as.character(df[[group_col]]))))
+            }
+
+            if (!is.null(x_vals) && length(x_vals) > 0) {
+                return(x_vals[1])
+            }
+
+            if (!is.null(y_vals) && length(y_vals) > 0) {
+                return(y_vals[1])
+            }
+
+            character(0)
+        })
+
+        resolve_palette <- function(groups, selected_colors = NULL) {
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            colors <- selected_colors
+            if (is.null(colors) || length(colors) == 0) {
+                colors <- default_palette_values
+            }
+
+            if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+                colors <- colors[match(groups, names(colors))]
+            }
+
+            if (any(is.na(colors))) {
+                na_idx <- which(is.na(colors))
+                fallback <- if (length(default_palette_values) > 0) default_palette_values else "#000000"
+                colors[na_idx] <- rep_len(fallback, length(na_idx))
+            }
+
+            colors <- rep_len(colors, length(groups))
+            stats::setNames(colors[seq_along(groups)], groups)
+        }
 
         output$palette.selection <- renderUI({
-            pal <- input$palette
-            colour_selection <- plotthis::palette_list[[pal]]
+            groups <- palette_groups()
+            if (length(groups) == 0) {
+                return(NULL)
+            }
 
-            selectInput(
-                ns("palette.colours"), # namespaced ID
-                "Colours to use:",
-                multiple = TRUE,
-                selected = NULL,
-                choices  = c(colour_selection)
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
+
+            multiColorPicker(
+                ns("palette.colours"),
+                label = "Plot colors",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = default_palette_name,
+                colors = initial_colors,
+                compact = TRUE
             )
         })
 
@@ -60,7 +131,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSwitchInput(session, "order.by", value = FALSE)
             updateSwitchInput(session, "flip.x", value = FALSE)
             updateSwitchInput(session, "flip.y", value = FALSE)
-            updateSelectInput(session, "palette", selected = "Paired")
             updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scales", selected = "fixed")
@@ -100,7 +170,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             y_input <- isolate_fn(input$y.value)
 
             # Sets the colouring to the first item in the selected palette unless group.by is selected
-            group.by <- plotthis::palette_list[[isolate_fn(input$palette)]][1]
+            palette_values <- resolve_palette(
+                isolate_fn(palette_groups()),
+                isolate_fn(input$palette.colours)
+            )
+            palette_selection <- unname(palette_values)
+            if (is.null(palette_selection) || length(palette_selection) == 0) {
+                palette_selection <- default_palette_values
+            }
+
+            group.by <- palette_selection[1]
             if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
                 group.by <- reformulate(isolate_fn(input$group.by))
             }
@@ -165,7 +244,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 plot.mode = isolate_fn(input$plot.type),
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
-                palette.selection = plotthis::palette_list[[input$palette]],
+                palette.selection = palette_selection,
                 show.legend = FALSE,
                 facet.by = isolate_fn(input$facet.by),
                 facet.scales = isolate_fn(input$facet.scales),
