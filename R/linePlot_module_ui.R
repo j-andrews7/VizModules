@@ -49,6 +49,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data), multiple = TRUE),
             selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
+            switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
+            switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
             selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
         ),
@@ -63,9 +65,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     ),
                     "fixed"
                 )
-            ),
-            switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
-            switchInput(ns("flip.x"), "Flip X axis:", value = FALSE)
+            )
         ),
         "Aesthetics" = tagList(
             selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list))

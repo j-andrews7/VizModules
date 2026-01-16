@@ -59,7 +59,6 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
             switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
             selectInput(ns("split.by"), "Split by:", selected = "NULL", choices = c(char.choices, "NULL")),
-            switchInput(ns("combine"), "Combine plot:", value = TRUE, offLabel = "Off", onLabel = "On"),
             textAreaInput(ns("design"), "Custom Layout:",
                 value = "NULL", rows = 4,
                 placeholder = "122\n153\n443"
@@ -80,11 +79,9 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             )),
             colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000")
         ),
-        "Annotations" = tagList(
-            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1)
-        ),
         "Axes" = tagList(
+            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
+            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
             checkboxInput(ns("axis.showline"), "Show axis lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
