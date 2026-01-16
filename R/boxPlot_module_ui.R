@@ -44,11 +44,12 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
             selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = "NULL", choices = c(char.choices, "NULL"))
+            selectInput(ns("group.by"), "Group by:", selected = "", choices = c(char.choices, ""))
         ),
         "Adjustments" = tagList(
             shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c(
@@ -71,6 +72,9 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         ),
         "Annotations" = tagList(
             numericInput(ns("add.line"), "Add Y interception line:", value = NULL, min = min.y, max = max.y),
+            colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour:", value = "#000000"),
+            numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0.1, max = 10),
+            numericInput(ns("line.type"), "Line type: ", value = 1, min = 1, max = 40),
             textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
@@ -101,7 +105,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(char.choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),

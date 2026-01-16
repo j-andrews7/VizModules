@@ -267,8 +267,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
-        # Update y-axis range when update button is clicked (when auto-update is off)
-        observeEvent(input$update, {
+        # Update y-axis range when y data column is changed (when auto-update is off)
+        observeEvent(input$y.data, {
             y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
@@ -291,7 +291,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "NULL") {
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
             line.name <- .na_to_null(isolate_fn(input$line.name))
@@ -306,7 +306,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 width <- waiver()
             }
             split.by <- NULL
-            if (!isolate_fn(input$split.by) == "NULL") {
+            if (!isolate_fn(input$split.by) == "") {
                 split.by <- isolate_fn(input$split.by)
             }
             group.by <- NULL
@@ -339,8 +339,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 bg_alpha = isolate_fn(input$background.alpha),
-                y_min = input$y.min,  # Don't isolate - needs to be reactive for update button
-                y_max = input$y.max,  # Don't isolate - needs to be reactive for update button
+                y_min = isolate_fn(input$y.min),
+                y_max = isolate_fn(input$y.max),
                 theme = isolate_fn(input$theme),
                 alpha = isolate_fn(input$alpha),
                 add_line = isolate_fn(input$add.line),
@@ -362,8 +362,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x")
-            yaxis_style <- .create_axis_styles(input, axis_side = "y")
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 

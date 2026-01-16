@@ -135,6 +135,9 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "y.lab", value = "y title")
             updateTextInput(session, "x.lab", value = "x title")
             updateNumericInput(session, "add.line", value = NULL)
+            updateNumericInput(session, "line.width", value = 0.6)
+            colourpicker::updateColourInput(session, "line.colour", value = "#000000")
+            updateNumericInput(session, "line.type", value = 1)
             updateTextInput(session, "highlight", value = "")
             colourpicker::updateColourInput(session, "highlight.colour", value = "#000000")
             updateNumericInput(session, "highlight.size", value = 1)
@@ -196,11 +199,11 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Facet By Null option Upstream:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "NULL") {
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == "NULL") {
+            if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
             highlight <- .na_to_null(isolate_fn(input$highlight))
@@ -256,6 +259,9 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 add_line = isolate_fn(input$add.line),
+                line_color = isolate_fn(input$line.colour),
+                line_width = isolate_fn(input$line.width),
+                line_type = isolate_fn(input$line.type),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
@@ -280,8 +286,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             #Axis Styling: 
 
-            xaxis_style <- .create_axis_styles(input, axis_side = "x")
-            yaxis_style <- .create_axis_styles(input, axis_side = "y")
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)

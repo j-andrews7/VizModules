@@ -180,11 +180,11 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             split.by <- NULL
-            if (!isolate_fn(input$split.by) == "NULL") {
+            if (!isolate_fn(input$split.by) == "") {
                 split.by <- isolate_fn(input$split.by)
             }
 
-            design <- if (isolate_fn(input$split.by) == "NULL" || isolate_fn(input$design) == "NULL") NULL else isolate_fn(input$design)
+            design <- if (isolate_fn(input$split.by) == "" || isolate_fn(input$design) == "") NULL else isolate_fn(input$design)
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
@@ -227,8 +227,8 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x")
-            yaxis_style <- .create_axis_styles(input, axis_side = "y")
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
             
