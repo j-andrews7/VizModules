@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, devel]
 
-name: Test app w/ {renv}
+name: Test app w/ DESCRIPTION
 
 jobs:
   test-app:
