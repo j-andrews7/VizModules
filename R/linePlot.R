@@ -210,9 +210,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             shareX <- TRUE
             shareY <- FALSE
         }
-
-        plots <- lapply(facet_levels, function(level) {
-            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
+        # plots <- lapply(facet_levels, function(level) {
+            # facet_data <- plot_data[plot_data[[facet.by]] == level, ]        
+        plots <- list()
+        first_facet <- TRUE
+        for (n in seq_along(facet_levels)){
+            facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[n], ]
             # Initialize empty plot for this facet
             facet_fig <- plot_ly(data = facet_data, type = "scatter")
 
@@ -234,7 +237,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                         type = "scatter",
                         mode = plot.mode,
                         name = x[i],
-                        showlegend = TRUE
+                        showlegend = first_Facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
                     )
                     # Only add line parameter if mode is "lines" or "lines+markers"
                     if (plot.mode %in% c("lines", "lines+markers")) {
@@ -264,7 +267,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                         type = "scatter",
                         mode = plot.mode,
                         name = y[i],
-                        showlegend = TRUE
+                        showlegend = first_facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
                     )
                     # Only add line parameter if mode is "lines" or "lines+markers"
                     if (plot.mode %in% c("lines", "lines+markers")) {
@@ -277,10 +280,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                     facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
                 }
             }
+            plots[[length(plots) + 1]] <- facet_fig # Adding multiple lines plot for each facet to list of plots 
+            first_facet <- FALSE # Set to false after first iteration 
 
-            facet_fig
-        })
-
+            
+        }
+        # Combining all elements of plots list into one plotly element
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
 
         # Add subplot titles as annotations
