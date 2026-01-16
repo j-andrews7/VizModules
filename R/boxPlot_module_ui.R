@@ -64,13 +64,10 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
+            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On")
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",

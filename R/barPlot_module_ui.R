@@ -64,9 +64,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            selectInput(ns("background.palette"), "Background Palette:", selected = "Set2", choices = names(plotthis::palette_list)),
-            numericInput(ns("background.alpha"), "Background alpha: ", value = 0.5, min = 0, max = 1),
             selectInput(ns("theme"), "Theme:", selected = "theme_this", choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
                 "theme_dark", "theme_minimal", "theme_classic", "theme_void",
@@ -89,11 +86,9 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0),
             textInput(ns("line.name"), "Line name:", value = "", placeholder = "Line Name")
         ),
-        "Annotations" = tagList(
-            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1)
-        ),
         "Axes" = tagList(
+            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
+            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
             checkboxInput(ns("axis.showline"), "Show axis lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
