@@ -48,12 +48,12 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         "Data" = tagList(
             selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data), multiple = TRUE),
             selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
-            selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
             selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
             selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
         ),
         "Grouping & Facets" = tagList(
+            selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
             selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = cat.choices),
             selectInput(ns("facet.scales"), "Facet scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
