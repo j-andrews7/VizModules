@@ -8,7 +8,9 @@ mtcars <- transform(mtcars,
     vs = factor(vs)
 )
 
-iris <- {
+iris$Group <- c(rep(c("A", "B"), 50), rep(c("C", "D"), 25))
+
+iris_summary <- {
     iris_summary <- as.data.frame(table(iris$Species))
     names(iris_summary) <- c("Species", "Count")
     iris_summary
@@ -52,7 +54,7 @@ ui <- navbarPage(
     tabPanel(
         "PiePlot",
         sidebarLayout(
-            sidebarPanel(piePlotInputsUI("pie", mtcars, title = h3("PiePlot Settings"))),
+            sidebarPanel(piePlotInputsUI("pie", iris_summary, title = h3("PiePlot Settings"))),
             mainPanel(piePlotOutputUI("pie"))
         )
     ),
@@ -77,7 +79,7 @@ server <- function(input, output, session) {
     BarPlotServer("bar", data = reactive(mtcars))
     BoxPlotServer("box", data = reactive(mtcars))
     linePlotServer("line", data = reactive(mtcars))
-    piePlotServer("pie", data = reactive(mtcars))
+    piePlotServer("pie", data = reactive(iris_summary))
     scatterPlotServer("scatter", data = reactive(mtcars))
     volcanoPlotServer("volcano", data = reactive(volcano_data))
 }
