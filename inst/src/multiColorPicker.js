@@ -15,15 +15,37 @@
     if (value === null || value === undefined) return "";
     let val = String(value).trim();
 
-    if (/^#[0-9a-fA-F]{3}$/.test(val)) {
-      val = "#" + val.slice(1).split("").map((c) => c + c).join("");
+    if (/^#[0-9a-fA-F]{3,4}$/.test(val)) {
+      const body = val.slice(1).split("").map((c) => c + c).join("");
+      val = `#${body}`;
     }
 
-    if (!/^#[0-9a-fA-F]{6}$/.test(val)) {
+    if (!/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(val)) {
       return "";
     }
 
-    return val.toUpperCase();
+    const upper = val.toUpperCase();
+    if (upper.length === 9) {
+      return `#${upper.slice(1, 7)}`;
+    }
+
+    return upper;
+  };
+
+  const stripAlpha = (hex) => {
+    const norm = normalizeHex(hex);
+    if (!norm) return "";
+    if (norm.length === 9) return `#${norm.slice(1, 7)}`;
+    return norm;
+  };
+
+  const readableTextColor = (hex) => {
+    const val = normalizeHex(hex) || "#000000";
+    const r = parseInt(val.substr(1, 2), 16);
+    const g = parseInt(val.substr(3, 2), 16);
+    const b = parseInt(val.substr(5, 2), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? "#111111" : "#ffffff";
   };
 
   const getData = (el) => {
@@ -32,7 +54,8 @@
         palettes: parseJSON(el.dataset.palettes || "{}", {}),
         initial: parseJSON(el.dataset.initial || "{}", {}),
         groups: parseJSON(el.dataset.groups || "[]", []),
-        defaultPalette: el.dataset.defaultPalette || null
+        defaultPalette: el.dataset.defaultPalette || null,
+        compact: (el.dataset.compact || "false") === "true"
       };
     }
     return el._multiColorData;
@@ -40,6 +63,10 @@
 
   const getSelectedPalette = (el) => {
     const select = el.querySelector(".mc-palette-select");
+    if (select && select._mcSelectize) {
+      const val = select._mcSelectize.getValue();
+      if (val) return val;
+    }
     if (select && select.value) return select.value;
     const data = getData(el);
     return data.defaultPalette || Object.keys(data.palettes || {})[0] || null;
@@ -56,7 +83,8 @@
     const colorInput = row.querySelector(".mc-color-input");
     const textInput = row.querySelector(".mc-text-input");
     if (colorInput && textInput) {
-      textInput.value = (colorInput.value || "").toUpperCase();
+      const value = (row.dataset.value || colorInput.value || "").toUpperCase();
+      textInput.value = value;
     }
   };
 
@@ -64,9 +92,12 @@
     const normalized = normalizeHex(color) || "#000000";
     const colorInput = row.querySelector(".mc-color-input");
     const textInput = row.querySelector(".mc-text-input");
+    const opaqueHex = normalized.length === 9 ? `#${normalized.slice(1, 7)}` : normalized;
+
+    row.dataset.value = normalized;
 
     if (colorInput) {
-      colorInput.value = normalized;
+      colorInput.value = opaqueHex;
       if (triggerChange) colorInput.dispatchEvent(new Event("change", { bubbles: true }));
     }
     if (textInput) {
@@ -86,7 +117,11 @@
     const paletteName = data.defaultPalette || getSelectedPalette(el);
     const select = el.querySelector(".mc-palette-select");
     if (select && paletteName) {
-      select.value = paletteName;
+      if (select._mcSelectize) {
+        select._mcSelectize.setValue(paletteName, true);
+      } else {
+        select.value = paletteName;
+      }
     }
     renderSwatches(el, paletteName);
   };
@@ -102,7 +137,7 @@
       const swatch = document.createElement("button");
       swatch.type = "button";
       swatch.className = "mc-swatch";
-      swatch.dataset.color = normalizeHex(color);
+      swatch.dataset.color = stripAlpha(color);
       swatch.title = swatch.dataset.color;
       swatch.style.backgroundColor = swatch.dataset.color;
       swatch.setAttribute("aria-label", `Set color ${swatch.dataset.color}`);
@@ -125,20 +160,107 @@
   const initializeRows = (el) => {
     const rows = el.querySelectorAll(".mc-color-row");
     if (!rows.length) return;
+    const data = getData(el);
 
     rows.forEach((row) => {
-      const colorInput = row.querySelector(".mc-color-input");
-      const textInput = row.querySelector(".mc-text-input");
-      if (colorInput) {
-        const normalized = normalizeHex(colorInput.value) || "#000000";
-        colorInput.value = normalized;
-        if (textInput) textInput.value = normalized;
-      }
+      const group = row.dataset.group || "";
+      const initial = data.initial[group] || (row.querySelector(".mc-color-input") || {}).value || "#000000";
+      setRowColor(row, initial, false);
     });
 
     markActiveRow(rows[0], el);
     const defaultPalette = getSelectedPalette(el);
     renderSwatches(el, defaultPalette);
+  };
+
+  const enhancePaletteSelect = (el) => {
+    const select = el.querySelector(".mc-palette-select");
+    const hasSelectize = typeof $ !== "undefined" && $.fn && $.fn.selectize;
+    if (!select || select._mcEnhanced || !hasSelectize) return;
+
+    const data = getData(el);
+    const palettes = data.palettes || {};
+    const optgroups = [];
+    const seenGroups = new Set();
+    const options = [];
+
+    select.querySelectorAll("option").forEach((opt) => {
+      const parent = opt.parentElement;
+      const group = parent && parent.tagName.toLowerCase() === "optgroup"
+        ? parent.getAttribute("label")
+        : null;
+      const colors = (palettes[opt.value] || []).map(stripAlpha).filter(Boolean);
+
+      if (group && !seenGroups.has(group)) {
+        optgroups.push({ value: group, label: group });
+        seenGroups.add(group);
+      }
+
+      options.push({
+        value: opt.value,
+        text: opt.textContent,
+        optgroup: group,
+        colors,
+        headColor: colors[0] || "#6c757d"
+      });
+    });
+
+    const instance = $(select).selectize({
+      options,
+      optgroups,
+      optgroupField: "optgroup",
+      labelField: "text",
+      searchField: ["text"],
+      dropdownParent: "body",
+      render: {
+        option: function (item, escape) {
+          const swatches = (item.colors || [])
+            .map((color) => `<span class="mc-option-swatch" style="background:${color}" title="${color}"></span>`)
+            .join("");
+
+          return `
+            <div class="mc-palette-option">
+              <span class="mc-palette-name" style="color:${readableTextColor(item.headColor)};">${escape(item.text)}</span>
+              <span class="mc-palette-bar">${swatches}</span>
+            </div>
+          `;
+        },
+        item: function (item, escape) {
+          const swatches = (item.colors || [])
+            .map((color) => `<span class="mc-option-swatch" style="background:${color}" title="${color}"></span>`)
+            .join("");
+
+          return `
+            <div class="mc-selected-item">
+              <span class="mc-palette-name" style="color:${readableTextColor(item.headColor)};">${escape(item.text)}</span>
+              <span class="mc-palette-bar">${swatches}</span>
+            </div>
+          `;
+        }
+      },
+      onInitialize() {
+        select._mcEnhanced = true;
+      },
+      onChange(value) {
+        renderSwatches(el, value);
+      },
+      onDropdownOpen() {
+        const width = select.getBoundingClientRect().width;
+        if (instance.$dropdown && width) {
+          instance.$dropdown.css("min-width", `${width}px`);
+        }
+        if (instance.$dropdown && data.compact) {
+          instance.$dropdown.addClass("mc-compact");
+        }
+      }
+    })[0].selectize;
+
+    const defaultPalette = getSelectedPalette(el);
+    if (defaultPalette) {
+      instance.setValue(defaultPalette, true);
+    }
+
+    select._mcSelectize = instance;
   };
 
   const binding = new Shiny.InputBinding();
@@ -149,12 +271,13 @@
     },
     initialize: function (el) {
       initializeRows(el);
+      enhancePaletteSelect(el);
     },
     getValue: function (el) {
       const rows = el.querySelectorAll(".mc-color-row");
       return Array.prototype.map.call(rows, (row) => ({
         name: row.dataset.group || "",
-        value: (row.querySelector(".mc-color-input") || {}).value || ""
+        value: row.dataset.value || (row.querySelector(".mc-color-input") || {}).value || ""
       }));
     },
     setValue: function (el, value) {
@@ -182,6 +305,7 @@
       $el.on("input.multiColorPicker change.multiColorPicker", ".mc-color-input", function (evt) {
         const row = evt.currentTarget.closest(".mc-color-row");
         if (!row) return;
+        row.dataset.value = (evt.currentTarget.value || "").toUpperCase();
         syncTextFromColor(row);
         callback();
       });

@@ -12,7 +12,9 @@ multiColorPicker(
   selected_palette = NULL,
   colors = NULL,
   width = NULL,
-  show_text = TRUE
+  show_text = TRUE,
+  compact = FALSE,
+  panel = TRUE
 )
 }
 \arguments{
@@ -34,6 +36,12 @@ colors). Defaults to the palettes from \code{\link[=default_palettes]{default_pa
 
 \item{show_text}{Logical. If \code{TRUE}, show editable hex text inputs beside the
 color pickers.}
+
+\item{compact}{Logical. If \code{TRUE}, renders a tighter layout with reduced
+spacing, smaller controls, and narrower palette selector.}
+
+\item{panel}{Logical. If \code{FALSE}, removes the surrounding panel/well styling
+(border, padding, background).}
 }
 \value{
 A UI element that produces a named character vector of colors.

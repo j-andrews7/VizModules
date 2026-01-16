@@ -22,6 +22,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        ns <- session$ns
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
@@ -36,35 +37,100 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             })
         }
 
-        # Get color panel
-        color.panel <- reactive({
-            # Set up wrapper function based on switch state
-            use_update <- input$use.update.button
-            isolate_fn <- if (use_update) isolate else identity
+        # Available color groups for the current color.by selection
+        color_levels <- reactive({
+            df <- data()
+            color_by <- input$color.by
 
-            palette <- NULL
-            if (!is.null(manual.colors)) {
-                if (is.reactive(manual.colors)) {
-                    palette <- manual.colors()
-                } else if (is.function(manual.colors)) {
-                    palette <- manual.colors(input)
-                } else {
-                    palette <- manual.colors
-                }
+            if (is.null(df) || is.null(color_by) || color_by == "" || !color_by %in% names(df)) {
+                return(character(0))
             }
 
-            if (is.null(palette)) {
-                if (is.null(isolate_fn(input$color.panel)) || isolate_fn(input$color.panel) == "dittoColors") {
-                    palette <- dittoColors()
-                } else if (!is.null(isolate_fn(input$color.by))) {
-                    if (isolate_fn(input$color.panel) %in% c("viridis", "magma", "inferno", "plasma", "cividis")) {
-                        palette <- viridis_pal(option = isolate_fn(input$color.panel))(length(colLevels(isolate_fn(input$color.by), data())))
-                    } else if (isolate_fn(input$color.panel) == "ggplot2") {
-                        palette <- hue_pal()(length(colLevels(isolate_fn(input$color.by), data())))
-                    } else {
-                        palette <- brewer_pal(palette = isolate_fn(input$color.panel))(length(colLevels(isolate_fn(input$color.by), data())))
-                    }
+            if (is.numeric(df[[color_by]])) {
+                return(character(0))
+            }
+
+            colLevels(color_by, df)
+        })
+
+        # Resolve manual colors supplied to the module (reactive or static)
+        manual_color_values <- reactive({
+            if (is.null(manual.colors)) {
+                return(NULL)
+            }
+
+            if (is.reactive(manual.colors)) {
+                manual.colors()
+            } else {
+                manual.colors
+            }
+        })
+
+        # Render the multiColorPicker for discrete color mappings
+        output$color.panel.ui <- renderUI({
+            groups <- color_levels()
+
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            initial_colors <- isolate(input$color.panel)
+            if (is.null(initial_colors) || length(initial_colors) == 0) {
+                initial_colors <- manual_color_values()
+            }
+
+            multiColorPicker(
+                ns("color.panel"),
+                label = "Color palette",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = "dittoColors",
+                colors = initial_colors,
+                compact = TRUE
+            )
+        })
+
+        # Get color panel aligned to the current groups
+        color.panel <- reactive({
+            auto_update <- input$auto.update
+
+            # If update button is required, add dependency on it
+            if (!auto_update) {
+                input$update
+            }
+
+            isolate_fn <- if (auto_update) identity else isolate
+
+            picker_values <- isolate_fn(input$color.panel)
+            manual_vals <- manual_color_values()
+
+            palette <- NULL
+
+            if (!is.null(picker_values) && length(picker_values) > 0) {
+                palette <- picker_values
+            } else if (!is.null(manual_vals) && length(manual_vals) > 0) {
+                palette <- manual_vals
+            }
+
+            if (is.null(palette) || length(palette) == 0) {
+                palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+            }
+
+            levels <- isolate_fn(color_levels())
+            if (length(levels) > 0) {
+                if (!is.null(names(palette)) && any(nzchar(names(palette)))) {
+                    palette <- palette[match(levels, names(palette))]
                 }
+
+                if (any(is.na(palette))) {
+                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+                    na_idx <- which(is.na(palette))
+                    palette[na_idx] <- rep_len(fallback_palette, length(na_idx))
+                }
+
+                palette <- rep_len(palette, length(levels))
+                palette <- palette[seq_len(length(levels))]
+                palette <- stats::setNames(palette, levels)
             }
 
             palette
@@ -165,6 +231,9 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 hover.data <- unique(c(null.na.inputs$hover.data, null.na.inputs$annotate.by))
             }
 
+            palette_values <- isolate_fn(color.panel())
+            current_color_levels <- isolate_fn(color_levels())
+
             p <- dittoViz::scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -183,8 +252,8 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 color.adj.fxn = eval(str2expression(isolate_fn(input$color.adj.fxn))),
                 split.show.all.others = isolate_fn(input$split.show.all.others),
                 opacity = isolate_fn(input$opacity),
-                color.panel = isolate_fn(color.panel()),
-                colors = seq_along(isolate_fn(color.panel())),
+                color.panel = unname(palette_values),
+                colors = if (length(palette_values) > 0) seq_len(length(palette_values)) else NULL,
                 split.nrow = null.na.inputs$split.nrow,
                 split.ncol = null.na.inputs$split.ncol,
                 split.adjust = list(scales = isolate_fn(input$split.adjust.scales)),
@@ -228,15 +297,30 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             plot_data <- p$Target_data
 
             # COLOUR MAPPING FOR LINE
-            if (!is.null(manual.colors)) {
-                if (is.reactive(manual.colors)) {
-                    color_mapping <- manual.colors()
-                } else {
-                    color_mapping <- manual.colors
+            manual_vals <- manual_color_values()
+            if (!is.null(manual_vals) && length(manual_vals) > 0) {
+                palette_for_mapping <- manual_vals
+            } else if (!is.null(null.na.inputs$color.by) &&
+                length(current_color_levels) > 0 &&
+                length(palette_values) > 0) {
+                palette_for_mapping <- palette_values
+            } else {
+                palette_for_mapping <- NULL
+            }
+
+            if (!is.null(palette_for_mapping) && length(current_color_levels) > 0) {
+                if (!is.null(names(palette_for_mapping)) && any(nzchar(names(palette_for_mapping)))) {
+                    palette_for_mapping <- palette_for_mapping[match(current_color_levels, names(palette_for_mapping))]
                 }
-            } else if (!is.null(isolate_fn(input$color.by)) && isolate_fn(input$color.by) != "") {
-                color_levels <- colLevels(isolate_fn(input$color.by), data())
-                color_mapping <- setNames(color.panel()[seq_along(color_levels)], color_levels)
+
+                if (any(is.na(palette_for_mapping))) {
+                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+                    na_idx <- which(is.na(palette_for_mapping))
+                    palette_for_mapping[na_idx] <- rep_len(fallback_palette, length(na_idx))
+                }
+
+                palette_for_mapping <- rep_len(palette_for_mapping, length(current_color_levels))
+                color_mapping <- stats::setNames(palette_for_mapping[seq_len(length(current_color_levels))], current_color_levels)
             } else {
                 color_mapping <- NULL
             }

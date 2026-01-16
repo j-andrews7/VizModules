@@ -29,7 +29,6 @@
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @importFrom colourpicker colourInput
-#' @importFrom esquisse palettePicker
 #' @importFrom shinyWidgets switchInput
 #'
 #' @export
@@ -224,13 +223,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "solid"
                 )
             ),
-            palettePicker(ns("color.panel"), "Color panel",
-                choices = default_palettes()[["choices"]],
-                textColor = default_palettes()[["textColor"]],
-                selected = ifelse("color.panel" %in% names(defaults),
-                    defaults[["color.panel"]], "dittoColors"
-                )
-            )
+            uiOutput(ns("color.panel.ui"))
         ),
         "Facets" = tagList(
             numericInput(ns("split.nrow"), "Split nrow",

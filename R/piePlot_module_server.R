@@ -50,7 +50,8 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 ns("slice.colors"),
                 label = "Slice colors",
                 groups = groups,
-                selected_palette = "dittoColors"
+                selected_palette = "dittoColors",
+                compact = TRUE
             )
         })
 
