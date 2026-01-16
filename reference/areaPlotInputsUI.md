@@ -75,25 +75,25 @@ mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 AreaPlotInputsUI("areaPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="6974">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="6934">
 #>     <li class="active">
-#>       <a href="#tab-6974-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6934-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6974-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6934-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6974-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
+#>       <a href="#tab-6934-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetic">Aesthetic</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6974-4" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-6934-4" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6974-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6934-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6974">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6974-1">
+#>   <div class="tab-content" data-tabsetid="6934">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6934-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -139,7 +139,7 @@ AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6974-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6934-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -189,10 +189,10 @@ AreaPlotInputsUI("areaPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="areaPlot-split.by-label" for="areaPlot-split.by">Split by:</label>
 #>             <div>
-#>               <select id="areaPlot-split.by" class="shiny-input-select"><option value=""></option>
+#>               <select id="areaPlot-split.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="cyl">cyl</option>
 #> <option value="gear">gear</option>
-#> <option value="NULL" selected>NULL</option></select>
+#> <option value="" selected></option></select>
 #>               <script type="application/json" data-for="areaPlot-split.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
@@ -207,12 +207,12 @@ AreaPlotInputsUI("areaPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="shiny-input-textarea form-group shiny-input-container">
 #>             <label class="control-label" id="areaPlot-design-label" for="areaPlot-design">Custom Layout:</label>
-#>             <textarea id="areaPlot-design" class="form-control" placeholder="122&#10;153&#10;443" rows="4" data-update-on="change">NULL</textarea>
+#>             <textarea id="areaPlot-design" class="form-control" placeholder="122&#10;153&#10;443" rows="4" data-update-on="change"></textarea>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetic" id="tab-6974-3">
+#>     <div class="tab-pane" data-value="Aesthetic" id="tab-6934-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="areaPlot-palette.selection" class="shiny-html-output"></div>
@@ -245,7 +245,7 @@ AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-6974-4">
+#>     <div class="tab-pane" data-value="Labels" id="tab-6934-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -294,7 +294,7 @@ AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6974-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6934-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
