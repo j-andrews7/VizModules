@@ -33,13 +33,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
 
-        # Update facet.by choices when x.data changes to prevent same selection
-        observeEvent(input$x.data, ignoreInit = TRUE, {
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            facet_choices <- setdiff(char.choices, input$x.data)
-            updateSelectInput(session, "facet.by", choices = c(facet_choices, "NULL"), selected = if (input$facet.by %in% c(facet_choices, "NULL")) input$facet.by else "NULL")
-        })
-
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
