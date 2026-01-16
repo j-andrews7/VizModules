@@ -16,7 +16,9 @@ multiColorPicker(
   selected_palette = NULL,
   colors = NULL,
   width = NULL,
-  show_text = TRUE
+  show_text = TRUE,
+  compact = FALSE,
+  panel = TRUE
 )
 ```
 
@@ -57,6 +59,16 @@ multiColorPicker(
 
   Logical. If `TRUE`, show editable hex text inputs beside the color
   pickers.
+
+- compact:
+
+  Logical. If `TRUE`, renders a tighter layout with reduced spacing,
+  smaller controls, and narrower palette selector.
+
+- panel:
+
+  Logical. If `FALSE`, removes the surrounding panel/well styling
+  (border, padding, background).
 
 ## Value
 

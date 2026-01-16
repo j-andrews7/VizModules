@@ -290,7 +290,7 @@ for non-functional/broken parameters.
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
 - [`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
-  : Create a plotly line plot
+  : Create an Interactive Line Plot with plotly
 - [`linePlotApp()`](https://j-andrews7.github.io/vizModules/reference/linePlotApp.md)
   : Create an example Modular linePlot Shiny Application
 - [`linePlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/linePlotInputsUI.md)

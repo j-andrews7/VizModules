@@ -1,6 +1,7 @@
-# Create a plotly line plot
+# Create an Interactive Line Plot with plotly
 
-Create a plotly line plot
+Generates a customizable interactive line plot using plotly, supporting
+grouping, faceting, axis adjustments, and color palettes.
 
 ## Usage
 
@@ -44,10 +45,168 @@ linePlot(
 )
 ```
 
+## Arguments
+
+- reactive.data:
+
+  A data.frame or tibble containing the data to plot.
+
+- x:
+
+  Character vector of column name(s) for the x-axis.
+
+- y:
+
+  Character vector of column name(s) for the y-axis.
+
+- plot.mode:
+
+  Character, plotly mode (e.g., "lines", "markers", "lines+markers").
+
+- line.type:
+
+  Character, line style (e.g., "solid", "dash").
+
+- colour.group.by:
+
+  Character vector of column name(s) to group lines by color.
+
+- palette.selection:
+
+  Character vector of colors or palette name for line colors.
+
+- show.legend:
+
+  Logical, whether to display the legend.
+
+- facet.by:
+
+  Optional character, column name to facet by.
+
+- facet.scales:
+
+  Character, facet axis scaling ("fixed", "free", "free_x", "free_y").
+
+- axis.showline:
+
+  Logical, show axis line.
+
+- axis.mirror:
+
+  Logical, mirror axis lines.
+
+- axis.linecolor:
+
+  Character, axis line color.
+
+- axis.linewidth:
+
+  Numeric, axis line width.
+
+- axis.tickfont.size:
+
+  Numeric, axis tick font size.
+
+- axis.tickfont.color:
+
+  Character, axis tick font color.
+
+- axis.tickfont.family:
+
+  Character, axis tick font family.
+
+- axis.tickangle.x:
+
+  Numeric, x-axis tick angle.
+
+- axis.tickangle.y:
+
+  Numeric, y-axis tick angle.
+
+- axis.ticks:
+
+  Character, tick style ("outside", "inside", "none").
+
+- axis.tickcolor:
+
+  Character, tick color.
+
+- axis.ticklen:
+
+  Numeric, tick length.
+
+- axis.tickwidth:
+
+  Numeric, tick width.
+
+- title.text:
+
+  Character, plot title.
+
+- title.font.size:
+
+  Numeric, title font size.
+
+- title.font.family:
+
+  Character, title font family.
+
+- title.text.color:
+
+  Character, title font color.
+
+- y.title:
+
+  Character, y-axis label.
+
+- x.title:
+
+  Character, x-axis label.
+
+- flip.x:
+
+  Logical, reverse x-axis.
+
+- flip.y:
+
+  Logical, reverse y-axis.
+
+- x.adjustment:
+
+  Optional function or string, adjustment for x values.
+
+- y.adjustment:
+
+  Optional function or string, adjustment for y values.
+
+- color.adjustment:
+
+  Optional function or string, adjustment for color grouping.
+
+- order.by:
+
+  Optional character vector, column(s) to order data by.
+
 ## Value
 
-A plotly object.
+A plotly object representing the interactive line plot.
 
 ## Author
 
 Jacob Martin, Jared Andrews
+
+## Examples
+
+``` r
+palette <- plotthis::palette_list[["Set2"]]
+fig <- linePlot(
+  reactive.data = mtcars,
+  x = "cyl",
+  y = "mpg",
+  plot.mode = "lines",
+  line.type = "solid",
+  colour.group.by = "mpg",
+  palette.selection = palette,
+  show.legend = TRUE
+  )
+```
