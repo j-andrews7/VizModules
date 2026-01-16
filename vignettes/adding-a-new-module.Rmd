@@ -1,0 +1,85 @@
+---
+title: "Adding a New Module"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adding a New Module}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    eval = FALSE
+)
+```
+
+This checklist walks through how to add a new plotting module to **vizModules** so it matches the package's organization, documentation, and testing standards.
+
+## Quick Checklist
+
+- [ ] Pick the plot function you are wrapping (e.g., `plotthis::AreaPlot`) and mirror its name everywhere. If you are adding a brand-new plotting function (e.g., `piePlot`), define and document that plot function first, then wrap it with the module.
+- [ ] Create the three core files: `R/<plot>_module_ui.R`, `R/<plot>_module_server.R`, and `R/<plot>_module_app.R`.
+- [ ] Document UI, server, and app functions with roxygen (`@export`, params, examples).
+- [ ] Add an example app that uses the module twice to prove multi-instance behavior.
+- [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
+- [ ] In the UI function, clearly list any plot function inputs you did **not** expose (because they are broken or don’t round-trip through `ggplotly`), and why.
+- [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
+
+## Naming & Organization
+
+- [ ] File names follow `<plot>_module_ui.R`, `<plot>_module_server.R`, `<plot>_module_app.R` (e.g., `barPlot_module_server.R`).
+- [ ] Function names mirror the plot: `<Plot>InputsUI()`, `<Plot>OutputUI()`, `<Plot>Server()`, `<Plot>App()`.
+- [ ] Internal helpers stay in existing helper files when broadly useful; otherwise keep them inside the module file.
+
+## Documentation Standards
+
+- [ ] Roxygen headers include title, description, parameters, return value, authors, and `@export`.
+- [ ] Examples show minimal, runnable usage with a small dataset.
+- [ ] The UI function's documentation explicitly lists:
+  - Inputs mapped through to the plot function.
+  - Inputs intentionally **not** exposed (broken or not plotly-compatible) with a short reason.
+  - Any default behaviors that differ from the base plot function.
+
+## Functionality & Non-Exposed Inputs
+
+- [ ] For each plot function argument, decide: expose, set a fixed default, or drop.
+- [ ] If dropped or fixed, document it inside the UI function (description + reason).
+- [ ] If `ggplotly` alters or drops a feature (e.g., certain geoms, annotations), note that limitation in the UI docs so users know what to expect.
+
+## Example App Requirement
+
+- [ ] Provide an app in `<plot>_module_app.R` that instantiates the module **twice** with different datasets/IDs.
+- [ ] Keep the app minimal: load sample data, render both modules' inputs/outputs, and no extra custom logic beyond demonstrating the module.
+- [ ] Add the module to the gallery app (`inst/apps/module-gallery/app.R`), placing it in its own tab alongside the other modules.
+
+## Testing Requirements
+
+- [ ] `testthat`: cover the base plotting function's core behavior and arguments (data handling, grouping, palette handling, etc.).
+- [ ] `shinytest2`: cover the module/app (rendering inputs, updating outputs, download buttons if present).
+- [ ] Place tests under `tests/testthat/` with clear file names (`test-<plot>.R`, `test-<plot>-app.R`).
+- [ ] Ensure tests run headless and deterministically (seed randomness where needed).
+- [ ] For new plotting functions, add dedicated `testthat` coverage of the plotting helper itself (input validation, defaults, edge cases) in addition to the module tests.
+
+## Implementing a New Plotting Function (e.g., `piePlot`)
+
+- [ ] Add the plotting function under `R/` with full roxygen docs, inputs/returns, and examples.
+- [ ] Keep arguments consistent with existing plot functions (data first, `...` last, palette/palcolor patterns).
+- [ ] Document any assumptions about input shape (e.g., pre-summarized table for pies).
+- [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
+- [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
+
+## Gallery App
+
+- [ ] Add or update the gallery app at `inst/apps/module-gallery/app.R` to include the new module in its own tab.
+- [ ] Each tab should load a small sample dataset and show the module's inputs and outputs together.
+- [ ] Verify namespacing: each module instance should have a unique `id` and independent state.
+- [ ] Keep dependencies minimal (prefer built-in datasets) so the gallery runs out-of-the-box.
+
+## Review Before Submitting
+
+- [ ] Run `devtools::document()` to update NAMESPACE and Rd files.
+- [ ] Run `devtools::check()` and ensure tests pass locally.
+- [ ] Confirm UI text/tooltips mention any missing or altered plot features.
+- [ ] Verify both module instances in the example app work independently (namespacing correct).
