@@ -40,6 +40,8 @@
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
+#' @import plotly
+#' 
 #' @author Jacob Martin, Jared Andrews
 #' @export
 #'

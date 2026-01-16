@@ -8,6 +8,7 @@
 #'   a label column and an aggregated numeric value column.
 #' @return A Shiny app object.
 #'
+#' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'

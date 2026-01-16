@@ -6,7 +6,8 @@
 #' @param data_list A named list of data frames for which AreaPlot modules will be created.
 #'   That is, UI inputs and an area plot will be generated for each.
 #' @return A Shiny app object.
-#'
+#' 
+#' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'

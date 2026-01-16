@@ -7,6 +7,8 @@
 #'   That is, UI inputs and a bar plot will be generated for each.
 #' @return A Shiny app object.
 #'
+#' @import shiny
+#' @importFrom plotthis BarPlot
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'

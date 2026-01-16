@@ -21,6 +21,7 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
+#' @import shiny
 #' @importFrom colourpicker colourInput
 #'
 #' @export
@@ -233,6 +234,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @return A Shiny plotlyOutput for the piePlot
 #'
+#' @import shiny
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

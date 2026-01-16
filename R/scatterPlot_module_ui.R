@@ -28,6 +28,7 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
+#' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets switchInput
 #'

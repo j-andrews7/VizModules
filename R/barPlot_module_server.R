@@ -10,6 +10,7 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @return The `moduleServer` function for the BarPlot module.
 #'
+#' @import shiny
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateSwitchInput
 #'

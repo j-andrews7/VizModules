@@ -22,6 +22,8 @@
 #'
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets switchInput
+#' @import shiny
+#' @importFrom plotthis BarPlot
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -226,6 +228,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @return A Shiny plotlyOutput for the BarPlot
 #'
+#' @import shiny
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

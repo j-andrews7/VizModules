@@ -7,6 +7,7 @@
 #'   That is, UI inputs and a box plot will be generated for each.
 #' @return A Shiny app object.
 #'
+#' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @export
 #'
