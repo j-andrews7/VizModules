@@ -66,6 +66,9 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "y.lab", value = "y title")
             updateTextInput(session, "x.lab", value = "x title")
             updateNumericInput(session, "add.line", value = NULL)
+            updateNumericInput(session, "line.width", value = 0.6)
+            colourpicker::updateColourInput(session, "line.colour", value = "#000000")
+            updateNumericInput(session, "line.type", value = 1)
             updateTextInput(session, "highlight", value = "")
             colourpicker::updateColourInput(session, "highlight.colour", value = "#000000")
             updateNumericInput(session, "highlight.size", value = 1)
@@ -179,6 +182,9 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 add_line = isolate_fn(input$add.line),
+                line_color = isolate_fn(input$line.colour),
+                line_width = isolate_fn(input$line.width),
+                line_type = isolate_fn(input$line.type),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
