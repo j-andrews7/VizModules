@@ -193,10 +193,7 @@ multiColorPicker <- function(
 	)
 
 	htmltools::attachDependencies(
-		tagList(
-			singleton(tags$style(HTML(.multi_color_picker_css()))),
-			widget
-		),
+		widget,
 		.multi_color_picker_dependency()
 	)
 }
@@ -218,7 +215,8 @@ multiColorPicker <- function(
 			version = as.character(utils::packageVersion("vizModules")),
 			src = "src",
 			package = "vizModules",
-			script = "multiColorPicker.js"
+			script = "multiColorPicker.js",
+			stylesheet = "multiColorPicker.css"
 		),
 		htmltools::htmlDependency(
 			name = "selectize",
