@@ -33,6 +33,75 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
 
+        ns <- session$ns
+        default_palette_name <- "Paired"
+        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        default_palette_values <- palette_lookup[[default_palette_name]]
+        if (is.null(default_palette_values) || length(default_palette_values) == 0) {
+            default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
+        }
+
+        palette_groups <- reactive({
+            df <- data()
+            if (is.null(df)) {
+                return(character(0))
+            }
+
+            group_col <- input$group.by
+            x_col <- input$x.data
+
+            if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[group_col]])))
+            } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[x_col]])))
+            } else {
+                character(0)
+            }
+        })
+
+        resolve_palette <- function(groups, selected_colors = NULL) {
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            colors <- selected_colors
+            if (is.null(colors) || length(colors) == 0) {
+                colors <- default_palette_values
+            }
+
+            if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+                colors <- colors[match(groups, names(colors))]
+            }
+
+            if (any(is.na(colors))) {
+                na_idx <- which(is.na(colors))
+                fallback <- if (length(default_palette_values) > 0) default_palette_values else "#000000"
+                colors[na_idx] <- rep_len(fallback, length(na_idx))
+            }
+
+            colors <- rep_len(colors, length(groups))
+            stats::setNames(colors[seq_along(groups)], groups)
+        }
+
+        output$palette.selection <- renderUI({
+            groups <- palette_groups()
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
+
+            multiColorPicker(
+                ns("palette.colours"),
+                label = "Plot colors",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = default_palette_name,
+                colors = initial_colors,
+                compact = TRUE
+            )
+        })
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
@@ -86,8 +155,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "stat.sroke", value = 1)
             updateNumericInput(session, "stat.shape", value = 25)
 
-            # Palette
-            updateSelectInput(session, "palette", selected = "Paired")
             # Facet
             updateSelectInput(session, "facet.by", selected = "NULL")
             updateSelectInput(session, "facet.scale", selected = "fixed")
@@ -147,6 +214,15 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (!input$add.stat == ""){
                 add.stat <- input$add.stat
             }
+            palette_values <- resolve_palette(
+                isolate_fn(palette_groups()),
+                isolate_fn(input$palette.colours)
+            )
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                # plotthis::BarPlot expects a named list for palcolor when manually setting colors
+                palcolor_arg <- as.list(palette_values)
+            }
 
             p <- plotthis::BoxPlot(
                 data = data(),
@@ -175,7 +251,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 stat_stroke = isolate_fn(input$stat.stroke),
                 stat_shape = isolate_fn(input$stat.shape),
                 stat_name = isolate_fn(input$add.stat),
-                palette = isolate_fn(input$palette),
+                palette = default_palette_name,
+                palcolor = palcolor_arg,
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 add_line = isolate_fn(input$add.line),
