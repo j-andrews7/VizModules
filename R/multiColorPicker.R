@@ -15,6 +15,10 @@
 #' @param width Optional CSS width for the container.
 #' @param show_text Logical. If `TRUE`, show editable hex text inputs beside the
 #'   color pickers.
+#' @param compact Logical. If `TRUE`, renders a tighter layout with reduced
+#'   spacing, smaller controls, and narrower palette selector.
+#' @param panel Logical. If `FALSE`, removes the surrounding panel/well styling
+#'   (border, padding, background).
 #'
 #' @return A UI element that produces a named character vector of colors.
 #'
@@ -45,149 +49,156 @@
 #'   shinyApp(ui, server)
 #' }
 multiColorPicker <- function(
-    inputId,
-    label = NULL,
-    groups,
-    palette_options = NULL,
-    selected_palette = NULL,
-    colors = NULL,
-    width = NULL,
-    show_text = TRUE
+	inputId,
+	label = NULL,
+	groups,
+	palette_options = NULL,
+	selected_palette = NULL,
+	colors = NULL,
+	width = NULL,
+	show_text = TRUE,
+	compact = FALSE,
+	panel = TRUE
 ) {
-    .register_multi_color_picker_handler()
+	.register_multi_color_picker_handler()
 
-    if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
-        stop("`inputId` must be a non-empty string.")
-    }
-    if (missing(groups) || length(groups) == 0) {
-        stop("`groups` must contain at least one value.")
-    }
+	if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
+		stop("`inputId` must be a non-empty string.")
+	}
+	if (missing(groups) || length(groups) == 0) {
+		stop("`groups` must contain at least one value.")
+	}
 
-    groups <- as.character(unique(groups))
+	groups <- as.character(unique(groups))
 
-    palette_source <- palette_options
-    if (is.null(palette_source)) {
-        palette_source <- default_palettes()$choices
-    }
+	palette_source <- palette_options
+	if (is.null(palette_source)) {
+		palette_source <- default_palettes()$choices
+	}
 
-    palette_lookup <- .flatten_palette_options(palette_source)
-    if (length(palette_lookup) == 0) {
-        stop("`palette_options` must contain at least one palette.")
-    }
+	palette_lookup <- .flatten_palette_options(palette_source)
+	if (length(palette_lookup) == 0) {
+		stop("`palette_options` must contain at least one palette.")
+	}
 
-    palette_lookup <- lapply(palette_lookup, .normalize_hex)
-    if (
-        is.null(selected_palette) ||
-            is.na(selected_palette) ||
-            !selected_palette %in% names(palette_lookup)
-    ) {
-        selected_palette <- names(palette_lookup)[1]
-    }
+	palette_lookup <- lapply(palette_lookup, .normalize_hex)
+	if (
+		is.null(selected_palette) ||
+			is.na(selected_palette) ||
+			!selected_palette %in% names(palette_lookup)
+	) {
+		selected_palette <- names(palette_lookup)[1]
+	}
 
-    if (length(palette_lookup[[selected_palette]]) == 0) {
-        stop("The selected palette does not contain any colors.")
-    }
+	if (length(palette_lookup[[selected_palette]]) == 0) {
+		stop("The selected palette does not contain any colors.")
+	}
 
-    base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
+	base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
 
-    if (!is.null(colors)) {
-        override <- .normalize_hex(colors)
-        if (is.null(names(override))) {
-            idx <- seq_len(min(length(override), length(base_colors)))
-            base_colors[idx] <- override[idx]
-        } else {
-            matched <- intersect(names(override), groups)
-            base_colors[matched] <- override[matched]
-        }
-    }
+	if (!is.null(colors)) {
+		override <- .normalize_hex(colors)
+		if (is.null(names(override))) {
+			idx <- seq_len(min(length(override), length(base_colors)))
+			base_colors[idx] <- override[idx]
+		} else {
+			matched <- intersect(names(override), groups)
+			base_colors[matched] <- override[matched]
+		}
+	}
 
-    initial_colors <- .normalize_hex(base_colors)
-    names(initial_colors) <- groups
+	initial_colors <- .normalize_hex(base_colors)
+	names(initial_colors) <- groups
 
-    palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
-    initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
-    groups_json <- toJSON(groups, auto_unbox = TRUE)
+	palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
+	initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
+	groups_json <- toJSON(groups, auto_unbox = TRUE)
 
-    palette_select <- tags$select(
-        id = paste0(inputId, "-palette"),
-        class = "mc-palette-select form-control input-sm",
-        `aria-label` = "Palette",
-        .build_palette_options(palette_source, selected_palette)
-    )
+	palette_select <- tags$select(
+		id = paste0(inputId, "-palette"),
+		class = "mc-palette-select form-control input-sm",
+		`aria-label` = "Palette",
+		.build_palette_options(palette_source, selected_palette)
+	)
 
-    rows <- lapply(seq_along(groups), function(i) {
-        grp <- groups[[i]]
-        tags$div(
-            class = paste("mc-color-row", if (i == 1) "is-active"),
-            `data-group` = grp,
-            tags$span(class = "mc-group-label", grp),
-            tags$input(
-                type = "color",
-                class = "mc-color-input",
-                value = initial_colors[[grp]],
-                `aria-label` = paste0(grp, " color")
-            ),
-            if (isTRUE(show_text)) {
-                tags$input(
-                    type = "text",
-                    class = "mc-text-input form-control input-sm",
-                    value = initial_colors[[grp]],
-                    `aria-label` = paste0(grp, " hex code")
-                )
-            }
-        )
-    })
+	rows <- lapply(seq_along(groups), function(i) {
+		grp <- groups[[i]]
+		tags$div(
+			class = paste("mc-color-row", if (i == 1) "is-active"),
+			`data-group` = grp,
+			tags$span(class = "mc-group-label", grp),
+			tags$input(
+				type = "color",
+				class = "mc-color-input",
+				value = initial_colors[[grp]],
+				`aria-label` = paste0(grp, " color")
+			),
+			if (isTRUE(show_text)) {
+				tags$input(
+					type = "text",
+					class = "mc-text-input form-control input-sm",
+					value = initial_colors[[grp]],
+					`aria-label` = paste0(grp, " hex code")
+				)
+			}
+		)
+	})
 
-    width_style <- if (!is.null(width)) {
-        paste0("max-width:", validateCssUnit(width), ";")
-    }
+	width_style <- if (!is.null(width)) {
+		paste0("max-width:", validateCssUnit(width), ";")
+	}
 
-    widget <- tags$div(
-        class = "multi-color-picker shiny-input-container form-group",
-        id = inputId,
-        style = width_style,
-        `data-palettes` = palette_json,
-        `data-initial` = initial_json,
-        `data-groups` = groups_json,
-        `data-default-palette` = selected_palette,
-        tags$div(
-            class = "mc-top",
-            if (!is.null(label)) {
-                tags$label(
-                    class = "control-label",
-                    `for` = inputId,
-                    label
-                )
-            },
-            tags$div(
-                class = "mc-actions",
-                palette_select,
-                tags$div(
-                    class = "mc-button-group",
-                    tags$button(
-                        type = "button",
-                        class = "mc-button mc-apply-palette",
-                        "Apply"
-                    ),
-                    tags$button(
-                        type = "button",
-                        class = "mc-button mc-reset-palette",
-                        "Reset"
-                    )
-                )
-            )
-        ),
-        tags$div(class = "mc-swatch-row", role = "list"),
-        tags$div(class = "mc-color-rows", rows)
-    )
+	widget <- tags$div(
+		class = paste(
+			"multi-color-picker shiny-input-container form-group",
+			if (isTRUE(compact)) "is-compact" else NULL,
+			if (!isTRUE(panel)) "is-plain" else NULL
+		),
+		id = inputId,
+		style = width_style,
+		`data-palettes` = palette_json,
+		`data-initial` = initial_json,
+		`data-groups` = groups_json,
+		`data-default-palette` = selected_palette,
+		`data-compact` = if (isTRUE(compact)) "true" else "false",
+		tags$div(
+			class = "mc-top",
+			if (!is.null(label)) {
+				tags$label(
+					class = "control-label",
+					`for` = inputId,
+					label
+				)
+			},
+			tags$div(
+				class = "mc-actions",
+				palette_select,
+				tags$div(
+					class = "mc-button-group",
+					tags$button(
+						type = "button",
+						class = "mc-button mc-apply-palette",
+						"Apply"
+					),
+					tags$button(
+						type = "button",
+						class = "mc-button mc-reset-palette",
+						"Reset"
+					)
+				)
+			)
+		),
+		tags$div(class = "mc-swatch-row", role = "list"),
+		tags$div(class = "mc-color-rows", rows)
+	)
 
-    htmltools::attachDependencies(
-        tagList(
-            singleton(tags$style(HTML(.multi_color_picker_css()))),
-            widget
-        ),
-        .multi_color_picker_dependency()
-    )
+	htmltools::attachDependencies(
+		tagList(
+			singleton(tags$style(HTML(.multi_color_picker_css()))),
+			widget
+		),
+		.multi_color_picker_dependency()
+	)
 }
 
 #' HTML dependency for the multi-color picker widget
@@ -201,13 +212,26 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_multi_color_picker_dependency
 #' @keywords internal
 .multi_color_picker_dependency <- function() {
-    htmltools::htmlDependency(
-        name = "multi-color-picker",
-        version = as.character(utils::packageVersion("vizModules")),
-        src = "src",
-        package = "vizModules",
-        script = "multiColorPicker.js"
-    )
+	list(
+		htmltools::htmlDependency(
+			name = "multi-color-picker",
+			version = as.character(utils::packageVersion("vizModules")),
+			src = "src",
+			package = "vizModules",
+			script = "multiColorPicker.js"
+		),
+		htmltools::htmlDependency(
+			name = "selectize",
+			version = as.character(utils::packageVersion("shiny")),
+			src = "www/shared/selectize",
+			package = "shiny",
+			script = c(
+				"js/selectize.min.js",
+				"accessibility/js/selectize-plugin-a11y.min.js"
+			),
+			stylesheet = "css/selectize.bootstrap3.css"
+		)
+	)
 }
 
 #' Register input handler for the multi-color picker
@@ -221,19 +245,19 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_register_multi_color_picker_handler
 #' @keywords internal
 .register_multi_color_picker_handler <- function() {
-    registerInputHandler(
-        "vizModules.multiColorPicker",
-        function(data, ...) {
-            if (is.null(data) || length(data) == 0) {
-                return(setNames(character(0), character(0)))
-            }
+	registerInputHandler(
+		"vizModules.multiColorPicker",
+		function(data, ...) {
+			if (is.null(data) || length(data) == 0) {
+				return(setNames(character(0), character(0)))
+			}
 
-            vals <- vapply(data, function(x) x$value %||% "", character(1))
-            nms <- vapply(data, function(x) x$name %||% "", character(1))
-            setNames(vals, nms)
-        },
-        force = TRUE
-    )
+			vals <- vapply(data, function(x) x$value %||% "", character(1))
+			nms <- vapply(data, function(x) x$name %||% "", character(1))
+			setNames(vals, nms)
+		},
+		force = TRUE
+	)
 }
 
 #' Flatten nested palette options
@@ -249,27 +273,27 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_flatten_palette_options
 #' @keywords internal
 .flatten_palette_options <- function(palettes) {
-    out <- list()
-    if (is.null(palettes) || length(palettes) == 0) {
-        return(out)
-    }
+	out <- list()
+	if (is.null(palettes) || length(palettes) == 0) {
+		return(out)
+	}
 
-    if (!is.list(palettes)) {
-        stop("`palette_options` must be a list.")
-    }
+	if (!is.list(palettes)) {
+		stop("`palette_options` must be a list.")
+	}
 
-    for (nm in names(palettes)) {
-        current <- palettes[[nm]]
-        if (is.list(current) && !is.null(names(current))) {
-            for (sub_nm in names(current)) {
-                out[[sub_nm]] <- current[[sub_nm]]
-            }
-        } else {
-            out[[nm]] <- current
-        }
-    }
+	for (nm in names(palettes)) {
+		current <- palettes[[nm]]
+		if (is.list(current) && !is.null(names(current))) {
+			for (sub_nm in names(current)) {
+				out[[sub_nm]] <- current[[sub_nm]]
+			}
+		} else {
+			out[[nm]] <- current
+		}
+	}
 
-    out
+	out
 }
 
 #' Build palette select options
@@ -285,34 +309,34 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_build_palette_options
 #' @keywords internal
 .build_palette_options <- function(palette_source, selected_palette) {
-    opts <- lapply(names(palette_source), function(cat) {
-        entry <- palette_source[[cat]]
-        if (is.list(entry)) {
-            tags$optgroup(
-                label = cat,
-                lapply(names(entry), function(nm) {
-                    tags$option(
-                        value = nm,
-                        selected = if (nm == selected_palette) {
-                            "selected"
-                        } else {
-                            NULL
-                        },
-                        nm
-                    )
-                })
-            )
-        } else {
-            tags$option(
-                value = cat,
-                selected = if (cat == selected_palette) "selected" else NULL,
-                cat
-            )
-        }
-    })
+	opts <- lapply(names(palette_source), function(cat) {
+		entry <- palette_source[[cat]]
+		if (is.list(entry)) {
+			tags$optgroup(
+				label = cat,
+				lapply(names(entry), function(nm) {
+					tags$option(
+						value = nm,
+						selected = if (nm == selected_palette) {
+							"selected"
+						} else {
+							NULL
+						},
+						nm
+					)
+				})
+			)
+		} else {
+			tags$option(
+				value = cat,
+				selected = if (cat == selected_palette) "selected" else NULL,
+				cat
+			)
+		}
+	})
 
-    # Flatten the list so selectInput renders correctly
-    do.call(tagList, opts)
+	# Flatten the list so selectInput renders correctly
+	do.call(tagList, opts)
 }
 
 #' Seed group colors from a palette
@@ -328,9 +352,9 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_seed_colors
 #' @keywords internal
 .seed_colors <- function(groups, palette) {
-    palette <- .normalize_hex(palette)
-    recycled <- rep_len(palette, length(groups))
-    stats::setNames(recycled, groups)
+	palette <- .normalize_hex(palette)
+	recycled <- rep_len(palette, length(groups))
+	stats::setNames(recycled, groups)
 }
 
 #' Normalize colors to hex strings
@@ -346,18 +370,18 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_normalize_hex
 #' @keywords internal
 .normalize_hex <- function(x) {
-    if (length(x) == 0) {
-        return(character(0))
-    }
+	if (length(x) == 0) {
+		return(character(0))
+	}
 
-    vapply(
-        x,
-        function(val) {
-            if (is.null(val) || is.na(val) || val == "") {
-                return("")
-            }
+	vapply(
+		x,
+		function(val) {
+			if (is.null(val) || is.na(val) || val == "") {
+				return("")
+			}
 
-            val <- trimws(as.character(val))
+			val <- trimws(as.character(val))
             if (!startsWith(val, "#")) {
                 col <- tryCatch(grDevices::col2rgb(val), error = function(...) {
                     NULL
@@ -370,15 +394,19 @@ multiColorPicker <- function(
                         col[3, 1]
                     )
                 }
-            } else if (nchar(val) == 4) {
-                # Expand shorthand hex (#abc -> #aabbcc)
-                val <- paste0(
-                    "#",
-                    paste(
-                        rep.int(substring(val, 2:4, 2:4), each = 2),
-                        collapse = ""
-                    )
-                )
+            } else if (nchar(val) == 4 || nchar(val) == 5) {
+                # Expand shorthand hex (#abc -> #aabbcc, #abcd -> #aabbccdd)
+                body <- substring(val, 2:nchar(val), 2:nchar(val))
+                expanded <- paste(rep.int(body, each = 2), collapse = "")
+                val <- paste0("#", expanded)
+            }
+
+            if (!nchar(val) %in% c(7L, 9L)) {
+                return("")
+            }
+
+            if (nchar(val) == 9L) {
+                val <- paste0("#", substring(val, 2, 7))
             }
 
             toupper(val)
@@ -397,7 +425,7 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_multi_color_picker_css
 #' @keywords internal
 .multi_color_picker_css <- function() {
-    "
+	"
 .multi-color-picker {
   border: 1px solid #dee2e6;
   border-radius: 6px;
@@ -416,18 +444,22 @@ multiColorPicker <- function(
 .multi-color-picker .mc-actions {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: 4px;
   margin-left: auto;
 }
 
 .multi-color-picker .selectize-control.mc-palette-select {
-  width: 150px;
+  width: 170px;
   min-width: 150px;
+  margin: 0;
 }
 
 .multi-color-picker .selectize-control.mc-palette-select .selectize-input {
-  min-height: 32px;
-  padding: 4px 6px;
+  min-height: 30px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .multi-color-picker .mc-button-group {
@@ -437,8 +469,8 @@ multiColorPicker <- function(
 }
 
 .multi-color-picker .mc-palette-select {
-  width: 150px;
-  padding: 4px 6px;
+  width: 170px;
+  padding: 3px 6px;
   font-size: 12px;
 }
 
@@ -454,6 +486,12 @@ multiColorPicker <- function(
 
 .multi-color-picker .mc-button:hover {
   background: #e9ecef;
+}
+
+.multi-color-picker.is-plain {
+  border: none;
+  padding: 0;
+  background: transparent;
 }
 
 .multi-color-picker .mc-swatch-row {
@@ -516,31 +554,183 @@ multiColorPicker <- function(
   font-size: 12px;
 }
 
-.multi-color-picker .mc-option-row,
+.multi-color-picker .mc-palette-option,
 .multi-color-picker .mc-selected-item {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  width: 100%;
 }
 
-.multi-color-picker .mc-option-label {
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.multi-color-picker .mc-option-swatches {
+.multi-color-picker .mc-palette-name {
+  position: absolute;
+  inset: 0;
   display: flex;
-  gap: 2px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.multi-color-picker .mc-palette-bar {
+  display: flex;
+  gap: 1px;
+  flex: 1;
+  min-width: 140px;
+  align-items: center;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
 }
 
 .multi-color-picker .mc-option-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  border: 1px solid #ced4da;
+  flex: 1;
+  min-width: 8px;
+  height: 18px;
   box-sizing: border-box;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select .selectize-input > div {
+  padding: 2px 4px;
+}
+
+/* Dropdown lives outside the widget container; keep these unscoped */
+.selectize-dropdown .option {
+  padding: 0 !important;
+}
+
+.selectize-dropdown .selectize-dropdown-content {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selectize-dropdown .optgroup-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  padding: 4px 2px;
+}
+
+.selectize-dropdown .mc-palette-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.selectize-dropdown .mc-palette-name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.selectize-dropdown .mc-palette-bar {
+  display: flex;
+  gap: 1px;
+  flex: 1;
+  min-width: 140px;
+  align-items: center;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.selectize-dropdown .mc-option-swatch {
+  flex: 1;
+  min-width: 8px;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+.selectize-dropdown.mc-compact .selectize-dropdown-content {
+  padding: 4px;
+  gap: 4px;
+}
+
+.selectize-dropdown.mc-compact .mc-palette-bar {
+  min-width: 120px;
+  height: 16px;
+}
+
+.selectize-dropdown.mc-compact .mc-option-swatch {
+  min-width: 7px;
+  height: 16px;
+}
+
+.multi-color-picker.is-compact {
+  padding: 6px;
+  font-size: 11px;
+}
+
+.multi-color-picker.is-compact .mc-actions {
+  gap: 2px;
+}
+
+.multi-color-picker.is-compact .selectize-control.mc-palette-select {
+  width: 140px;
+  min-width: 130px;
+}
+
+.multi-color-picker.is-compact .selectize-control.mc-palette-select .selectize-input {
+  min-height: 26px;
+  padding: 2px 4px;
+  gap: 3px;
+}
+
+.multi-color-picker.is-compact .mc-palette-select {
+  width: 140px;
+  padding: 2px 5px;
+}
+
+.multi-color-picker.is-compact .mc-button-group {
+  gap: 2px;
+}
+
+.multi-color-picker.is-compact .mc-button {
+  padding: 2px 5px;
+  font-size: 10px;
+}
+
+.multi-color-picker.is-compact .mc-color-row {
+  gap: 5px;
+  padding: 2px 4px;
+}
+
+.multi-color-picker.is-compact .mc-color-input {
+  width: 32px;
+  height: 18px;
+  padding: 0;
+}
+
+.multi-color-picker.is-compact .mc-text-input {
+  width: 70px;
+  height: 18px;
+  padding: 2px 4px;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.multi-color-picker.is-compact .mc-palette-bar,
+.selectize-dropdown .is-compact .mc-palette-bar {
+  min-width: 110px;
+  height: 14px;
+}
+
+.multi-color-picker.is-compact .mc-option-swatch,
+.selectize-dropdown .is-compact .mc-option-swatch {
+  min-width: 6px;
+  height: 14px;
 }
 "
 }
@@ -559,5 +749,5 @@ multiColorPicker <- function(
 #' @rdname INTERNAL_null_coalesce
 #' @keywords internal
 `%||%` <- function(x, y) {
-    if (is.null(x) || length(x) == 0) y else x
+	if (is.null(x) || length(x) == 0) y else x
 }
