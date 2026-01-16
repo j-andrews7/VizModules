@@ -38,16 +38,21 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         # Get color panel
         color.panel <- reactive({
+            # Check if auto update on
+            auto_update <- input$auto.update
+
+            # If update button is required, add dependency on it
+            if (!auto_update) {
+                input$update
+            }
+
             # Set up wrapper function based on switch state
-            use_update <- input$use.update.button
-            isolate_fn <- if (use_update) isolate else identity
+            isolate_fn <- if (auto_update) identity else isolate
 
             palette <- NULL
             if (!is.null(manual.colors)) {
                 if (is.reactive(manual.colors)) {
                     palette <- manual.colors()
-                } else if (is.function(manual.colors)) {
-                    palette <- manual.colors(input)
                 } else {
                     palette <- manual.colors
                 }

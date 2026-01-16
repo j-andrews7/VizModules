@@ -44,245 +44,360 @@
 #'
 #'   shinyApp(ui, server)
 #' }
-multiColorPicker <- function(inputId,
-                             label = NULL,
-                             groups,
-                             palette_options = NULL,
-                             selected_palette = NULL,
-                             colors = NULL,
-                             width = NULL,
-                             show_text = TRUE) {
-  .register_multi_color_picker_handler()
+multiColorPicker <- function(
+    inputId,
+    label = NULL,
+    groups,
+    palette_options = NULL,
+    selected_palette = NULL,
+    colors = NULL,
+    width = NULL,
+    show_text = TRUE
+) {
+    .register_multi_color_picker_handler()
 
-  if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
-    stop("`inputId` must be a non-empty string.")
-  }
-  if (missing(groups) || length(groups) == 0) {
-    stop("`groups` must contain at least one value.")
-  }
-
-  groups <- as.character(unique(groups))
-
-  palette_source <- palette_options
-  if (is.null(palette_source)) {
-    palette_source <- default_palettes()$choices
-  }
-
-  palette_lookup <- .flatten_palette_options(palette_source)
-  if (length(palette_lookup) == 0) {
-    stop("`palette_options` must contain at least one palette.")
-  }
-
-  palette_lookup <- lapply(palette_lookup, .normalize_hex)
-  if (is.null(selected_palette) || is.na(selected_palette) || !selected_palette %in% names(palette_lookup)) {
-    selected_palette <- names(palette_lookup)[1]
-  }
-
-  if (length(palette_lookup[[selected_palette]]) == 0) {
-    stop("The selected palette does not contain any colors.")
-  }
-
-  base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
-
-  if (!is.null(colors)) {
-    override <- .normalize_hex(colors)
-    if (is.null(names(override))) {
-      idx <- seq_len(min(length(override), length(base_colors)))
-      base_colors[idx] <- override[idx]
-    } else {
-      matched <- intersect(names(override), groups)
-      base_colors[matched] <- override[matched]
+    if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
+        stop("`inputId` must be a non-empty string.")
     }
-  }
+    if (missing(groups) || length(groups) == 0) {
+        stop("`groups` must contain at least one value.")
+    }
 
-  initial_colors <- .normalize_hex(base_colors)
-  names(initial_colors) <- groups
+    groups <- as.character(unique(groups))
 
-  palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
-  initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
-  groups_json <- toJSON(groups, auto_unbox = TRUE)
+    palette_source <- palette_options
+    if (is.null(palette_source)) {
+        palette_source <- default_palettes()$choices
+    }
 
-  palette_select <- shiny::tags$select(
-    id = paste0(inputId, "-palette"),
-    class = "mc-palette-select form-control input-sm",
-    `aria-label` = "Palette",
-    .build_palette_options(palette_source, selected_palette)
-  )
+    palette_lookup <- .flatten_palette_options(palette_source)
+    if (length(palette_lookup) == 0) {
+        stop("`palette_options` must contain at least one palette.")
+    }
 
-  rows <- lapply(seq_along(groups), function(i) {
-    grp <- groups[[i]]
-    shiny::tags$div(
-      class = paste("mc-color-row", if (i == 1) "is-active"),
-      `data-group` = grp,
-      shiny::tags$span(class = "mc-group-label", grp),
-      shiny::tags$input(
-        type = "color",
-        class = "mc-color-input",
-        value = initial_colors[[grp]],
-        `aria-label` = paste0(grp, " color")
-      ),
-      if (isTRUE(show_text)) {
-        shiny::tags$input(
-          type = "text",
-          class = "mc-text-input form-control input-sm",
-          value = initial_colors[[grp]],
-          `aria-label` = paste0(grp, " hex code")
-        )
-      }
+    palette_lookup <- lapply(palette_lookup, .normalize_hex)
+    if (
+        is.null(selected_palette) ||
+            is.na(selected_palette) ||
+            !selected_palette %in% names(palette_lookup)
+    ) {
+        selected_palette <- names(palette_lookup)[1]
+    }
+
+    if (length(palette_lookup[[selected_palette]]) == 0) {
+        stop("The selected palette does not contain any colors.")
+    }
+
+    base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
+
+    if (!is.null(colors)) {
+        override <- .normalize_hex(colors)
+        if (is.null(names(override))) {
+            idx <- seq_len(min(length(override), length(base_colors)))
+            base_colors[idx] <- override[idx]
+        } else {
+            matched <- intersect(names(override), groups)
+            base_colors[matched] <- override[matched]
+        }
+    }
+
+    initial_colors <- .normalize_hex(base_colors)
+    names(initial_colors) <- groups
+
+    palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
+    initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
+    groups_json <- toJSON(groups, auto_unbox = TRUE)
+
+    palette_select <- tags$select(
+        id = paste0(inputId, "-palette"),
+        class = "mc-palette-select form-control input-sm",
+        `aria-label` = "Palette",
+        .build_palette_options(palette_source, selected_palette)
     )
-  })
 
-  width_style <- if (!is.null(width)) {
-    paste0("max-width:", shiny::validateCssUnit(width), ";")
-  }
-
-  widget <- shiny::tags$div(
-    class = "multi-color-picker shiny-input-container form-group",
-    id = inputId,
-    style = width_style,
-    `data-palettes` = palette_json,
-    `data-initial` = initial_json,
-    `data-groups` = groups_json,
-    `data-default-palette` = selected_palette,
-    shiny::tags$div(
-      class = "mc-top",
-      if (!is.null(label)) shiny::tags$label(class = "control-label", `for` = inputId, label),
-      shiny::tags$div(
-        class = "mc-actions",
-        palette_select,
-        shiny::tags$button(
-          type = "button", class = "mc-button mc-apply-palette",
-          "Apply"
-        ),
-        shiny::tags$button(
-          type = "button", class = "mc-button mc-reset-palette",
-          "Reset"
+    rows <- lapply(seq_along(groups), function(i) {
+        grp <- groups[[i]]
+        tags$div(
+            class = paste("mc-color-row", if (i == 1) "is-active"),
+            `data-group` = grp,
+            tags$span(class = "mc-group-label", grp),
+            tags$input(
+                type = "color",
+                class = "mc-color-input",
+                value = initial_colors[[grp]],
+                `aria-label` = paste0(grp, " color")
+            ),
+            if (isTRUE(show_text)) {
+                tags$input(
+                    type = "text",
+                    class = "mc-text-input form-control input-sm",
+                    value = initial_colors[[grp]],
+                    `aria-label` = paste0(grp, " hex code")
+                )
+            }
         )
-      )
-    ),
-    shiny::tags$div(class = "mc-swatch-row", role = "list"),
-    shiny::tags$div(class = "mc-color-rows", rows)
-  )
+    })
 
-  htmltools::attachDependencies(
-    shiny::tagList(
-      shiny::singleton(shiny::tags$style(shiny::HTML(.multi_color_picker_css()))),
-      widget
-    ),
-    .multi_color_picker_dependency()
-  )
+    width_style <- if (!is.null(width)) {
+        paste0("max-width:", validateCssUnit(width), ";")
+    }
+
+    widget <- tags$div(
+        class = "multi-color-picker shiny-input-container form-group",
+        id = inputId,
+        style = width_style,
+        `data-palettes` = palette_json,
+        `data-initial` = initial_json,
+        `data-groups` = groups_json,
+        `data-default-palette` = selected_palette,
+        tags$div(
+            class = "mc-top",
+            if (!is.null(label)) {
+                tags$label(
+                    class = "control-label",
+                    `for` = inputId,
+                    label
+                )
+            },
+            tags$div(
+                class = "mc-actions",
+                palette_select,
+                tags$div(
+                    class = "mc-button-group",
+                    tags$button(
+                        type = "button",
+                        class = "mc-button mc-apply-palette",
+                        "Apply"
+                    ),
+                    tags$button(
+                        type = "button",
+                        class = "mc-button mc-reset-palette",
+                        "Reset"
+                    )
+                )
+            )
+        ),
+        tags$div(class = "mc-swatch-row", role = "list"),
+        tags$div(class = "mc-color-rows", rows)
+    )
+
+    htmltools::attachDependencies(
+        tagList(
+            singleton(tags$style(HTML(.multi_color_picker_css()))),
+            widget
+        ),
+        .multi_color_picker_dependency()
+    )
 }
 
+#' HTML dependency for the multi-color picker widget
+#'
+#' Points htmltools to the bundled JavaScript assets so Shiny can initialize
+#' the widget on the client.
+#'
+#' @return An `htmltools::htmlDependency` object.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_multi_color_picker_dependency
+#' @keywords internal
 .multi_color_picker_dependency <- function() {
-  htmltools::htmlDependency(
-    name = "multi-color-picker",
-    version = as.character(utils::packageVersion("vizModules")),
-    src = "src",
-    package = "vizModules",
-    script = "multiColorPicker.js"
-  )
+    htmltools::htmlDependency(
+        name = "multi-color-picker",
+        version = as.character(utils::packageVersion("vizModules")),
+        src = "src",
+        package = "vizModules",
+        script = "multiColorPicker.js"
+    )
 }
 
+#' Register input handler for the multi-color picker
+#'
+#' Creates the `vizModules.multiColorPicker` input handler that turns the
+#' JavaScript payload into a named vector of hex codes.
+#'
+#' @return Invisibly returns the result of `registerInputHandler()`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_register_multi_color_picker_handler
+#' @keywords internal
 .register_multi_color_picker_handler <- function() {
-  shiny::registerInputHandler(
-    "vizModules.multiColorPicker",
-    function(data, ...) {
-      if (is.null(data) || length(data) == 0) {
-        return(setNames(character(0), character(0)))
-      }
+    registerInputHandler(
+        "vizModules.multiColorPicker",
+        function(data, ...) {
+            if (is.null(data) || length(data) == 0) {
+                return(setNames(character(0), character(0)))
+            }
 
-      vals <- vapply(data, function(x) x$value %||% "", character(1))
-      nms <- vapply(data, function(x) x$name %||% "", character(1))
-      setNames(vals, nms)
-    },
-    force = TRUE
-  )
+            vals <- vapply(data, function(x) x$value %||% "", character(1))
+            nms <- vapply(data, function(x) x$name %||% "", character(1))
+            setNames(vals, nms)
+        },
+        force = TRUE
+    )
 }
 
+#' Flatten nested palette options
+#'
+#' Converts a nested list of palette choices into a single-level named list
+#' where each entry is a character vector of colors.
+#'
+#' @param palettes A named list of palettes or nested category lists.
+#'
+#' @return A flattened named list of palettes.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_flatten_palette_options
+#' @keywords internal
 .flatten_palette_options <- function(palettes) {
-  out <- list()
-  if (is.null(palettes) || length(palettes) == 0) {
-    return(out)
-  }
-
-  if (!is.list(palettes)) {
-    stop("`palette_options` must be a list.")
-  }
-
-  for (nm in names(palettes)) {
-    current <- palettes[[nm]]
-    if (is.list(current) && !is.null(names(current))) {
-      for (sub_nm in names(current)) {
-        out[[sub_nm]] <- current[[sub_nm]]
-      }
-    } else {
-      out[[nm]] <- current
+    out <- list()
+    if (is.null(palettes) || length(palettes) == 0) {
+        return(out)
     }
-  }
 
-  out
+    if (!is.list(palettes)) {
+        stop("`palette_options` must be a list.")
+    }
+
+    for (nm in names(palettes)) {
+        current <- palettes[[nm]]
+        if (is.list(current) && !is.null(names(current))) {
+            for (sub_nm in names(current)) {
+                out[[sub_nm]] <- current[[sub_nm]]
+            }
+        } else {
+            out[[nm]] <- current
+        }
+    }
+
+    out
 }
 
+#' Build palette select options
+#'
+#' Creates `option` and `optgroup` tags used by the palette selector input.
+#'
+#' @param palette_source A named list of palette choices or nested categories.
+#' @param selected_palette Optional palette name to mark as selected.
+#'
+#' @return A `tagList` containing the option/optgroup elements.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_build_palette_options
+#' @keywords internal
 .build_palette_options <- function(palette_source, selected_palette) {
-  opts <- lapply(names(palette_source), function(cat) {
-    entry <- palette_source[[cat]]
-    if (is.list(entry)) {
-      shiny::tags$optgroup(
-        label = cat,
-        lapply(names(entry), function(nm) {
-          shiny::tags$option(
-            value = nm,
-            selected = if (nm == selected_palette) "selected" else NULL,
-            nm
-          )
-        })
-      )
-    } else {
-      shiny::tags$option(
-        value = cat,
-        selected = if (cat == selected_palette) "selected" else NULL,
-        cat
-      )
-    }
-  })
+    opts <- lapply(names(palette_source), function(cat) {
+        entry <- palette_source[[cat]]
+        if (is.list(entry)) {
+            tags$optgroup(
+                label = cat,
+                lapply(names(entry), function(nm) {
+                    tags$option(
+                        value = nm,
+                        selected = if (nm == selected_palette) {
+                            "selected"
+                        } else {
+                            NULL
+                        },
+                        nm
+                    )
+                })
+            )
+        } else {
+            tags$option(
+                value = cat,
+                selected = if (cat == selected_palette) "selected" else NULL,
+                cat
+            )
+        }
+    })
 
-  # Flatten the list so selectInput renders correctly
-  do.call(shiny::tagList, opts)
+    # Flatten the list so selectInput renders correctly
+    do.call(tagList, opts)
 }
 
+#' Seed group colors from a palette
+#'
+#' Recycles palette values to cover all requested groups and names the result.
+#'
+#' @param groups Character vector of group names.
+#' @param palette Character vector of colors to recycle.
+#'
+#' @return A named character vector of colors aligned to `groups`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_seed_colors
+#' @keywords internal
 .seed_colors <- function(groups, palette) {
-  palette <- .normalize_hex(palette)
-  recycled <- rep_len(palette, length(groups))
-  stats::setNames(recycled, groups)
+    palette <- .normalize_hex(palette)
+    recycled <- rep_len(palette, length(groups))
+    stats::setNames(recycled, groups)
 }
 
+#' Normalize colors to hex strings
+#'
+#' Converts color names or shorthand hex values to full `#RRGGBB` strings and
+#' returns empty strings for missing values.
+#'
+#' @param x Character vector of colors or hex codes.
+#'
+#' @return A character vector of uppercase hex colors.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_normalize_hex
+#' @keywords internal
 .normalize_hex <- function(x) {
-  if (length(x) == 0) {
-    return(character(0))
-  }
-
-  vapply(x, function(val) {
-    if (is.null(val) || is.na(val) || val == "") {
-      return("")
+    if (length(x) == 0) {
+        return(character(0))
     }
 
-    val <- trimws(as.character(val))
-    if (!startsWith(val, "#")) {
-      col <- tryCatch(grDevices::col2rgb(val), error = function(...) NULL)
-      if (!is.null(col)) {
-        val <- sprintf("#%02X%02X%02X", col[1, 1], col[2, 1], col[3, 1])
-      }
-    } else if (nchar(val) == 4) {
-      # Expand shorthand hex (#abc -> #aabbcc)
-      val <- paste0("#", paste(rep.int(substring(val, 2:4, 2:4), each = 2), collapse = ""))
-    }
+    vapply(
+        x,
+        function(val) {
+            if (is.null(val) || is.na(val) || val == "") {
+                return("")
+            }
 
-    toupper(val)
-  }, character(1))
+            val <- trimws(as.character(val))
+            if (!startsWith(val, "#")) {
+                col <- tryCatch(grDevices::col2rgb(val), error = function(...) {
+                    NULL
+                })
+                if (!is.null(col)) {
+                    val <- sprintf(
+                        "#%02X%02X%02X",
+                        col[1, 1],
+                        col[2, 1],
+                        col[3, 1]
+                    )
+                }
+            } else if (nchar(val) == 4) {
+                # Expand shorthand hex (#abc -> #aabbcc)
+                val <- paste0(
+                    "#",
+                    paste(
+                        rep.int(substring(val, 2:4, 2:4), each = 2),
+                        collapse = ""
+                    )
+                )
+            }
+
+            toupper(val)
+        },
+        character(1)
+    )
 }
 
+#' CSS for the multi-color picker widget
+#'
+#' Provides the inline stylesheet used to render the multi-color picker UI.
+#'
+#' @return A character string containing the CSS rules.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_multi_color_picker_css
+#' @keywords internal
 .multi_color_picker_css <- function() {
-  "
+    "
 .multi-color-picker {
   border: 1px solid #dee2e6;
   border-radius: 6px;
@@ -300,9 +415,25 @@ multiColorPicker <- function(inputId,
 
 .multi-color-picker .mc-actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   margin-left: auto;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select {
+  width: 150px;
+  min-width: 150px;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select .selectize-input {
+  min-height: 32px;
+  padding: 4px 6px;
+}
+
+.multi-color-picker .mc-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .multi-color-picker .mc-palette-select {
@@ -384,9 +515,49 @@ multiColorPicker <- function(inputId,
   width: 96px;
   font-size: 12px;
 }
+
+.multi-color-picker .mc-option-row,
+.multi-color-picker .mc-selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.multi-color-picker .mc-option-label {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.multi-color-picker .mc-option-swatches {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.multi-color-picker .mc-option-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid #ced4da;
+  box-sizing: border-box;
+}
 "
 }
 
+#' Null-or-empty coalescing operator
+#'
+#' Returns the left-hand side unless it is `NULL` or has length zero, in which
+#' case the right-hand side is returned.
+#'
+#' @param x Primary value.
+#' @param y Fallback value.
+#'
+#' @return `x` when present, otherwise `y`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_null_coalesce
+#' @keywords internal
 `%||%` <- function(x, y) {
-  if (is.null(x) || length(x) == 0) y else x
+    if (is.null(x) || length(x) == 0) y else x
 }

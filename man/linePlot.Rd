@@ -2,7 +2,7 @@
 % Please edit documentation in R/linePlot.R
 \name{linePlot}
 \alias{linePlot}
-\title{Create a plotly line plot}
+\title{Create an Interactive Line Plot with plotly}
 \usage{
 linePlot(
   reactive.data,
@@ -42,11 +42,95 @@ linePlot(
   order.by = NULL
 )
 }
+\arguments{
+\item{reactive.data}{A data.frame or tibble containing the data to plot.}
+
+\item{x}{Character vector of column name(s) for the x-axis.}
+
+\item{y}{Character vector of column name(s) for the y-axis.}
+
+\item{plot.mode}{Character, plotly mode (e.g., "lines", "markers", "lines+markers").}
+
+\item{line.type}{Character, line style (e.g., "solid", "dash").}
+
+\item{colour.group.by}{Character vector of column name(s) to group lines by color.}
+
+\item{palette.selection}{Character vector of colors or palette name for line colors.}
+
+\item{show.legend}{Logical, whether to display the legend.}
+
+\item{facet.by}{Optional character, column name to facet by.}
+
+\item{facet.scales}{Character, facet axis scaling ("fixed", "free", "free_x", "free_y").}
+
+\item{axis.showline}{Logical, show axis line.}
+
+\item{axis.mirror}{Logical, mirror axis lines.}
+
+\item{axis.linecolor}{Character, axis line color.}
+
+\item{axis.linewidth}{Numeric, axis line width.}
+
+\item{axis.tickfont.size}{Numeric, axis tick font size.}
+
+\item{axis.tickfont.color}{Character, axis tick font color.}
+
+\item{axis.tickfont.family}{Character, axis tick font family.}
+
+\item{axis.tickangle.x}{Numeric, x-axis tick angle.}
+
+\item{axis.tickangle.y}{Numeric, y-axis tick angle.}
+
+\item{axis.ticks}{Character, tick style ("outside", "inside", "none").}
+
+\item{axis.tickcolor}{Character, tick color.}
+
+\item{axis.ticklen}{Numeric, tick length.}
+
+\item{axis.tickwidth}{Numeric, tick width.}
+
+\item{title.text}{Character, plot title.}
+
+\item{title.font.size}{Numeric, title font size.}
+
+\item{title.font.family}{Character, title font family.}
+
+\item{title.text.color}{Character, title font color.}
+
+\item{y.title}{Character, y-axis label.}
+
+\item{x.title}{Character, x-axis label.}
+
+\item{flip.x}{Logical, reverse x-axis.}
+
+\item{flip.y}{Logical, reverse y-axis.}
+
+\item{x.adjustment}{Optional function or string, adjustment for x values.}
+
+\item{y.adjustment}{Optional function or string, adjustment for y values.}
+
+\item{color.adjustment}{Optional function or string, adjustment for color grouping.}
+
+\item{order.by}{Optional character vector, column(s) to order data by.}
+}
 \value{
-A plotly object.
+A plotly object representing the interactive line plot.
 }
 \description{
-Create a plotly line plot
+Generates a customizable interactive line plot using plotly, supporting grouping, faceting, axis adjustments, and color palettes.
+}
+\examples{
+palette <- plotthis::palette_list[["Set2"]]
+fig <- linePlot(
+  reactive.data = mtcars,
+  x = "cyl",
+  y = "mpg",
+  plot.mode = "lines",
+  line.type = "solid",
+  colour.group.by = "mpg",
+  palette.selection = palette,
+  show.legend = TRUE
+  )
 }
 \author{
 Jacob Martin, Jared Andrews

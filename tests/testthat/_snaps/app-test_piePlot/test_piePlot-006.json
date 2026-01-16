@@ -26,12 +26,12 @@
     "iris-legend.orientation": "h",
     "iris-piePlotTabsetPanel": "Data",
     "iris-piePlot__shinyjquiBookmarkState__resizable": {
-      "width": 1049.33,
+      "width": 1039.33,
       "height": 400
     },
     "iris-piePlot_is_resizing": false,
     "iris-piePlot_size": {
-      "width": 1049.33,
+      "width": 1039.33,
       "height": 400
     },
     "iris-reset": 0,
@@ -63,12 +63,12 @@
     "mtcars-legend.orientation": "h",
     "mtcars-piePlotTabsetPanel": "Labels & Text",
     "mtcars-piePlot__shinyjquiBookmarkState__resizable": {
-      "width": 1049.33,
+      "width": 1039.33,
       "height": 400
     },
     "mtcars-piePlot_is_resizing": false,
     "mtcars-piePlot_size": {
-      "width": 1049.33,
+      "width": 1039.33,
       "height": 400
     },
     "mtcars-reset": 1,
@@ -99,7 +99,7 @@
     "mtcars-update": 6,
     "mtcars-values": "Count",
     "plotly_afterplot-A": "\"mtcars-piePlot\"",
-    "plotly_relayout-A": "{\"width\":1049.328125,\"height\":400}"
+    "plotly_relayout-A": "{\"width\":1039.328125,\"height\":400}"
   },
   "output": {
     "iris-piePlot": {

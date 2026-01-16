@@ -99,7 +99,7 @@
     "mtcars-y.value": "cyl",
     "plotly_afterplot-A": "\"mtcars-linePlot\"",
     "plotly_hover-A": null,
-    "plotly_relayout-A": "{\"width\":1049.328125,\"height\":400}"
+    "plotly_relayout-A": "{\"width\":1039.328125,\"height\":400}"
   },
   "output": {
     "iris-linePlot": {

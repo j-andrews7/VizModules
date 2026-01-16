@@ -40,6 +40,10 @@
 
   const getSelectedPalette = (el) => {
     const select = el.querySelector(".mc-palette-select");
+    if (select && select._mcSelectize) {
+      const val = select._mcSelectize.getValue();
+      if (val) return val;
+    }
     if (select && select.value) return select.value;
     const data = getData(el);
     return data.defaultPalette || Object.keys(data.palettes || {})[0] || null;
@@ -86,7 +90,11 @@
     const paletteName = data.defaultPalette || getSelectedPalette(el);
     const select = el.querySelector(".mc-palette-select");
     if (select && paletteName) {
-      select.value = paletteName;
+      if (select._mcSelectize) {
+        select._mcSelectize.setValue(paletteName, true);
+      } else {
+        select.value = paletteName;
+      }
     }
     renderSwatches(el, paletteName);
   };
@@ -141,6 +149,91 @@
     renderSwatches(el, defaultPalette);
   };
 
+  const enhancePaletteSelect = (el) => {
+    const select = el.querySelector(".mc-palette-select");
+    const hasSelectize = typeof $ !== "undefined" && $.fn && $.fn.selectize;
+    if (!select || select._mcEnhanced || !hasSelectize) return;
+
+    const data = getData(el);
+    const palettes = data.palettes || {};
+    const optgroups = [];
+    const seenGroups = new Set();
+    const options = [];
+
+    select.querySelectorAll("option").forEach((opt) => {
+      const parent = opt.parentElement;
+      const group = parent && parent.tagName.toLowerCase() === "optgroup"
+        ? parent.getAttribute("label")
+        : null;
+
+      if (group && !seenGroups.has(group)) {
+        optgroups.push({ value: group, label: group });
+        seenGroups.add(group);
+      }
+
+      options.push({
+        value: opt.value,
+        text: opt.textContent,
+        optgroup: group,
+        colors: (palettes[opt.value] || []).map(normalizeHex).filter(Boolean)
+      });
+    });
+
+    const instance = $(select).selectize({
+      options,
+      optgroups,
+      optgroupField: "optgroup",
+      labelField: "text",
+      searchField: ["text"],
+      dropdownParent: "body",
+      render: {
+        option: function (item, escape) {
+          const swatches = (item.colors || [])
+            .slice(0, 10)
+            .map((color) => (
+              `<span class="mc-option-swatch" style="background:${color}" title="${color}"></span>`
+            ))
+            .join("");
+
+          return `
+            <div class="mc-option-row">
+              <span class="mc-option-label">${escape(item.text)}</span>
+              <span class="mc-option-swatches">${swatches}</span>
+            </div>
+          `;
+        },
+        item: function (item, escape) {
+          const swatches = (item.colors || [])
+            .slice(0, 6)
+            .map((color) => (
+              `<span class="mc-option-swatch" style="background:${color}" title="${color}"></span>`
+            ))
+            .join("");
+
+          return `
+            <div class="mc-selected-item">
+              <span class="mc-option-label">${escape(item.text)}</span>
+              <span class="mc-option-swatches">${swatches}</span>
+            </div>
+          `;
+        }
+      },
+      onInitialize() {
+        select._mcEnhanced = true;
+      },
+      onChange(value) {
+        renderSwatches(el, value);
+      }
+    })[0].selectize;
+
+    const defaultPalette = getSelectedPalette(el);
+    if (defaultPalette) {
+      instance.setValue(defaultPalette, true);
+    }
+
+    select._mcSelectize = instance;
+  };
+
   const binding = new Shiny.InputBinding();
 
   $.extend(binding, {
@@ -149,6 +242,7 @@
     },
     initialize: function (el) {
       initializeRows(el);
+      enhancePaletteSelect(el);
     },
     getValue: function (el) {
       const rows = el.querySelectorAll(".mc-color-row");
