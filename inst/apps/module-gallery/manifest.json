@@ -759,7 +759,7 @@
       "description": {
         "Package": "cpp11",
         "Title": "A C++11 Interface for R's C Interface",
-        "Version": "0.5.2-2",
+        "Version": "0.5.1",
         "Authors@R": "\n    c(\n      person(\"Davis\", \"Vaughan\", email = \"davis@posit.co\", role = c(\"aut\", \"cre\"), comment = c(ORCID = \"0000-0003-4777-038X\")),\n      person(\"Jim\",\"Hester\", role = \"aut\", comment = c(ORCID = \"0000-0002-2739-7082\")),\n      person(\"Romain\", \"François\", role = \"aut\", comment = c(ORCID = \"0000-0002-2444-4226\")),\n      person(\"Benjamin\", \"Kietzman\", role = \"ctb\"),\n      person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n    )",
         "Description": "Provides a header only, C++11 interface to R's C\n    interface.  Compared to other approaches 'cpp11' strives to be safe\n    against long jumps from the C API as well as C++ exceptions, conform\n    to normal R function semantics and supports interaction with 'ALTREP'\n    vectors.",
         "License": "MIT + file LICENSE",
