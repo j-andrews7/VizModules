@@ -43,6 +43,8 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
+    # Filter facet choices to exclude the default x.data selection
+    facet_choices <- setdiff(char.choices, char.choices[2])
 
     inputs <- list(
         "Data" = tagList(
@@ -101,7 +103,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(facet_choices, "NULL")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),

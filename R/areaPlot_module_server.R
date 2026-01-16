@@ -170,8 +170,8 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x")
-            yaxis_style <- .create_axis_styles(input, axis_side = "y")
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
             
