@@ -55,12 +55,12 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         ),
         "Grouping" = tagList(
             selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(char.choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
             switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            selectInput(ns("split.by"), "Split by:", selected = "NULL", choices = c(char.choices, "NULL"))
+            selectInput(ns("split.by"), "Split by:", selected = "", choices = c(char.choices, ""))
         ),
         "Aesthetic" = tagList(
             selectInput(ns("palette"), "Plot Palette:", selected = "Set2", choices = names(plotthis::palette_list)),

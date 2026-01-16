@@ -238,7 +238,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "NULL") {
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
             line.name <- .na_to_null(isolate_fn(input$line.name))
@@ -253,7 +253,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 width <- waiver()
             }
             split.by <- NULL
-            if (!isolate_fn(input$split.by) == "NULL") {
+            if (!isolate_fn(input$split.by) == "") {
                 split.by <- isolate_fn(input$split.by)
             }
             group.by <- NULL
