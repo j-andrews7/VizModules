@@ -6,3 +6,5 @@
   Module](https://j-andrews7.github.io/vizModules/articles/adding-a-new-module.md):
 - [Building Custom
   Modules](https://j-andrews7.github.io/vizModules/articles/custom-modules.md):
+- [Quick Start with
+  vizModules](https://j-andrews7.github.io/vizModules/articles/quick-start.md):

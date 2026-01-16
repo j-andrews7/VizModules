@@ -32,6 +32,63 @@ Currently, the package can be installed from Github:
 devtools::install_github("j-andrews7/vizModules")
 ```
 
+## Quick Start
+
+- Explore the hosted gallery:
+  <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Run the same gallery locally:
+  `shiny::runApp(system.file("apps/module-gallery", package = "vizModules"))`
+- See the vignette for a full walkthrough:
+  [`vignette("quick-start", package = "vizModules")`](https://j-andrews7.github.io/vizModules/articles/quick-start.md)
+
+``` r
+library(vizModules)
+
+ui <- fluidPage(
+    sidebarLayout(
+        sidebarPanel(
+            scatterPlotInputsUI(
+                "cars",
+                mtcars,
+                defaults = list(
+                    x.by = "wt",
+                    y.by = "mpg",
+                    color.by = "cyl"
+                )
+            )
+        ),
+        mainPanel(scatterPlotOutputUI("cars"))
+    )
+)
+
+server <- function(input, output, session) {
+    scatterPlotServer(
+        "cars",
+        data = reactive(mtcars),
+        hide.inputs = c("rows.use"),
+        hide.tabs = c("Plotly")
+    )
+}
+
+shinyApp(ui, server)
+```
+
+Every module uses the same trio of functions: `*InputsUI()` for
+controls, `*OutputUI()` for the plot, and `*Server()` for the logic. Use
+`defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide
+controls while keeping their values so you can enforce app-level
+defaults without exposing them.
+
+Modules built on plotting functions from other packages expose most of
+the underlying arguments. The module input help pages (e.g.,
+[`?scatterPlotInputsUI`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md),
+[`?AreaPlotInputsUI`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md))
+list what is wired through and any omissions; cross-reference the
+underlying plot docs
+([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
+[`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),
+etc.) to see the full parameter set.
+
 ## Using **vizModules**
 
 Including a vizModules module in your Shiny application is simple. The
