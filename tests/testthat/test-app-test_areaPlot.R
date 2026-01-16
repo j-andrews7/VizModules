@@ -7,7 +7,8 @@ test_that("{shinytest2} recording: test_areaPlot", {
         name = "test_areaPlot",
         seed = 7,
         height = 958,
-        width = 1619
+        width = 1619,
+        variant = platform_variant()
     )
     app$wait_for_idle(800)
     app$expect_values()

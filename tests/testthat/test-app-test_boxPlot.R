@@ -7,7 +7,8 @@ test_that("{shinytest2} recording: test_boxPlot", {
         name = "test_boxPlot",
         seed = 7,
         height = 958,
-        width = 1619
+        width = 1619,
+        variant = platform_variant()
     )
     app$set_inputs(`box-x.data` = "group1")
 
