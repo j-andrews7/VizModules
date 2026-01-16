@@ -33,7 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
+<li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -78,8 +79,8 @@
 </h2>
 <p>The modules in <strong>vizModules</strong> are designed to be
 composed and extended. You can build higher-level modules that add
-custom logic—such as data filtering, transformations, or additional UI
-controls—while reusing the full functionality of the base modules.</p>
+custom logic such as data filtering, transformations, or additional UI
+controls while reusing the full functionality of the base modules.</p>
 <p>This vignette demonstrates how to create a custom module by building
 on top of the <code>scatterPlot</code> module.</p>
 </div>
@@ -244,8 +245,6 @@ they could potentially be wrapped by even higher-level modules.</p></li>
 <h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
 <ul>
-<li>The <code>minimal_wrapper.R</code> file in the package source
-contains a working example.</li>
 <li>The base modules (<code>scatterPlotInputsUI</code>,
 <code>scatterPlotOutputUI</code>, <code>scatterPlotServer</code>) are
 documented in the package reference.</li>

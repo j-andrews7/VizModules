@@ -3,8 +3,8 @@
 ## Introduction
 
 The modules in **vizModules** are designed to be composed and extended.
-You can build higher-level modules that add custom logic—such as data
-filtering, transformations, or additional UI controls—while reusing the
+You can build higher-level modules that add custom logic such as data
+filtering, transformations, or additional UI controls while reusing the
 full functionality of the base modules.
 
 This vignette demonstrates how to create a custom module by building on
@@ -166,7 +166,5 @@ focusedModuleUI <- function(id) {
 
 ## See Also
 
-- The `minimal_wrapper.R` file in the package source contains a working
-  example.
 - The base modules (`scatterPlotInputsUI`, `scatterPlotOutputUI`,
   `scatterPlotServer`) are documented in the package reference.
