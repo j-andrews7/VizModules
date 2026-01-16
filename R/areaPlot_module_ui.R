@@ -58,10 +58,10 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
             switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            selectInput(ns("split.by"), "Split by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("split.by"), "Split by:", selected = "", choices = c(char.choices, "")),
             switchInput(ns("combine"), "Combine plot:", value = TRUE, offLabel = "Off", onLabel = "On"),
             textAreaInput(ns("design"), "Custom Layout:",
-                value = "NULL", rows = 4,
+                value = "", rows = 4,
                 placeholder = "122\n153\n443"
             )
         ),

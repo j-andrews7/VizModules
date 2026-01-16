@@ -129,11 +129,11 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Facet By Null option Upstream:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "NULL") {
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == "NULL") {
+            if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
             highlight <- .na_to_null(isolate_fn(input$highlight))
