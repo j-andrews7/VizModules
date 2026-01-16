@@ -1,5 +1,5 @@
 # Changelog
 
-## vizModules 0.99.0
+## vizModules 1.0.0
 
-- Submitted to Bioconductor.
+- Submitted to CRAN.
