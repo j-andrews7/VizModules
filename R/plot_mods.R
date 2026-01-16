@@ -329,7 +329,7 @@
 }
 
 
-.create_axis_styles <- function (input, axis_side = c("x", "y")){
+.create_axis_styles <- function (input, axis_side = c("x", "y"), isolate_fn = isolate){
 
     axis_side <- match.arg(axis_side)
 
@@ -337,28 +337,28 @@
         title = list(
             font = list(
                 size   = 18,
-                family = isolate(input$font.type),
-                color  = isolate(input$text.colour)
+                family = isolate_fn(input$font.type),
+                color  = isolate_fn(input$text.colour)
             )
         ),
-        showline  = isolate(input$axis.showline),
-        mirror    = isolate(input$axis.mirror),
-        linecolor = isolate(input$axis.linecolor),
-        linewidth = isolate(input$axis.linewidth),
+        showline  = isolate_fn(input$axis.showline),
+        mirror    = isolate_fn(input$axis.mirror),
+        linecolor = isolate_fn(input$axis.linecolor),
+        linewidth = isolate_fn(input$axis.linewidth),
         tickfont  = list(
-            size   = isolate(input$axis.tickfont.size),
-            color  = isolate(input$axis.tickfont.color),
-            family = isolate(input$axis.tickfont.family)
+            size   = isolate_fn(input$axis.tickfont.size),
+            color  = isolate_fn(input$axis.tickfont.color),
+            family = isolate_fn(input$axis.tickfont.family)
         ),
         tickangle = if (axis_side == "x") {
-            isolate(input$axis.tickangle.x)
+            isolate_fn(input$axis.tickangle.x)
         } else {
-            isolate(input$axis.tickangle.y)
+            isolate_fn(input$axis.tickangle.y)
         },
-        ticks     = isolate(input$axis.ticks),
-        tickcolor = isolate(input$axis.tickcolor),
-        ticklen   = isolate(input$axis.ticklen),
-        tickwidth = isolate(input$axis.tickwidth)
+        ticks     = isolate_fn(input$axis.ticks),
+        tickcolor = isolate_fn(input$axis.tickcolor),
+        ticklen   = isolate_fn(input$axis.ticklen),
+        tickwidth = isolate_fn(input$axis.tickwidth)
     )
 
     return(style)

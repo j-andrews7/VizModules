@@ -44,6 +44,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
