@@ -48,9 +48,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "Data" = tagList(
             selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
             selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = "NULL", choices = c(char.choices, "NULL"))
-        ),
-        "Adjustments" = tagList(
+            selectInput(ns("group.by"), "Group by:", selected = "NULL", choices = c(char.choices, "NULL")),
             shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c(
                 "none", "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
@@ -60,6 +58,25 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
             numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
             numericInput(ns("aspect.ratio"), "Aspect Ratio:", value = 1, min = 0, max = 100)
+        ),
+        "Grouping & Facets" = tagList(
+            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
+            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
+            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
+        ),
+        "Aesthetics" = tagList(
+            uiOutput(ns("palette.selection")),
+            switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
+            selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
+            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
+                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
+                "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
+                "sans-serif", "serif", "monospace"
+            )),
+            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
         ),
         "Points" = tagList(
             switchInput(ns("add.points"), "Add Jitter Points: ", value = FALSE, onLabel = "Points", offLabel = "No Points"),
@@ -75,38 +92,15 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
             numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1),
-            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
-                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
-                "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
-                "sans-serif", "serif", "monospace"
-            )),
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
-        ),
-        "Trajectory" = tagList(
             switchInput(ns("add.trend"), "Add Median Point", value = FALSE, onLabel = "Trend Added", offLabel = "Trend Not Added"),
             numericInput(ns("trend.pt.size"), "Trend Point Size:", min = 0, max = 40, value = 2),
             colourpicker::colourInput(ns("trend.colour"), "Colour of trend:", value = "#000000"),
-            numericInput(ns("trend.line.width"), "Trend line width:", value = 1, min = 0)
-        ),
-        "Stats" = tagList(
+            numericInput(ns("trend.line.width"), "Trend line width:", value = 1, min = 0),
             selectInput(ns("add.stat"), "Add Stats:", selected = "", choices = c("", "mean", "sd", "median", "var")),
             colourpicker::colourInput(ns("stat.color"), "Stats Colour:", value = "#000000"),
             numericInput(ns("stat.size"), "Stat Size:", value = 1, min = 0, max = 10),
             numericInput(ns("stat.stroke"), "Stat Stroke:", value = 1, min = 0, max = 10),
             numericInput(ns("stat.shape"), "Stat Shape:", value = 25, min = 0, max = 100)
-        ),
-        "Palette" = tagList(
-            uiOutput(ns("palette.selection")),
-            switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
-        ),
-        "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
-            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",

@@ -79,7 +79,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 step = 0.01
             )
         ),
-        "Colors" = tagList(
+        "Aesthetics" = tagList(
             uiOutput(ns("color.picker")),
             colourpicker::colourInput(ns("slice.line.color"), "Slice border color:",
                 value = ifelse("slice.line.color" %in% names(defaults),
@@ -94,9 +94,35 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 ),
                 min = 0,
                 step = 0.5
+            ),
+            selectInput(ns("text.font.family"), "Slice text font:",
+                choices = font.choices,
+                selected = ifelse("text.font.family" %in% names(defaults) && defaults[["text.font.family"]] %in% font.choices,
+                    defaults[["text.font.family"]],
+                    "Arial"
+                )
+            ),
+            colourpicker::colourInput(ns("text.font.color"), "Slice text color:",
+                value = ifelse("text.font.color" %in% names(defaults),
+                    defaults[["text.font.color"]],
+                    "#000000"
+                )
+            ),
+            selectInput(ns("title.font.family"), "Title font:",
+                choices = font.choices,
+                selected = ifelse("title.font.family" %in% names(defaults) && defaults[["title.font.family"]] %in% font.choices,
+                    defaults[["title.font.family"]],
+                    "Arial"
+                )
+            ),
+            colourpicker::colourInput(ns("title.font.color"), "Title font color:",
+                value = ifelse("title.font.color" %in% names(defaults),
+                    defaults[["title.font.color"]],
+                    "#000000"
+                )
             )
         ),
-        "Labels & Text" = tagList(
+        "Annotations" = tagList(
             selectInput(ns("textinfo"), "Text to show on slices:",
                 selected = ifelse("textinfo" %in% names(defaults),
                     defaults[["textinfo"]],
@@ -127,21 +153,6 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 min = 6,
                 step = 1
             ),
-            selectInput(ns("text.font.family"), "Slice text font:",
-                choices = font.choices,
-                selected = ifelse("text.font.family" %in% names(defaults) && defaults[["text.font.family"]] %in% font.choices,
-                    defaults[["text.font.family"]],
-                    "Arial"
-                )
-            ),
-            colourpicker::colourInput(ns("text.font.color"), "Slice text color:",
-                value = ifelse("text.font.color" %in% names(defaults),
-                    defaults[["text.font.color"]],
-                    "#000000"
-                )
-            )
-        ),
-        "Title & Legend" = tagList(
             sliderInput(ns("title.x"), "Title horizontal position:",
                 min = 0, max = 1,
                 value = ifelse("title.x" %in% names(defaults),
@@ -156,19 +167,6 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                     28
                 ),
                 min = 0
-            ),
-            selectInput(ns("title.font.family"), "Title font:",
-                choices = font.choices,
-                selected = ifelse("title.font.family" %in% names(defaults) && defaults[["title.font.family"]] %in% font.choices,
-                    defaults[["title.font.family"]],
-                    "Arial"
-                )
-            ),
-            colourpicker::colourInput(ns("title.font.color"), "Title font color:",
-                value = ifelse("title.font.color" %in% names(defaults),
-                    defaults[["title.font.color"]],
-                    "#000000"
-                )
             ),
             checkboxInput(ns("show.legend"), "Show legend",
                 value = ifelse("show.legend" %in% names(defaults),

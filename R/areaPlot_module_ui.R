@@ -52,7 +52,7 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selectInput(ns("y.data"), "Y values:", selected = num.choices[2], choices = num.choices),
             selectInput(ns("group.by"), "Group by:", selected = char.choices[3], choices = c("", group_facet_choices))
         ),
-        "Facet" = tagList(
+        "Grouping & Facets" = tagList(
             selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(group_facet_choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
@@ -65,24 +65,24 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                 placeholder = "122\n153\n443"
             )
         ),
-        "Aesthetic" = tagList(
+        "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
             selectInput(ns("theme"), "Theme:", selected = "theme_this", choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
                 "theme_dark", "theme_minimal", "theme_classic", "theme_void",
                 "theme_this", "theme_blank"
             )),
-            numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1)
-        ),
-        "Labels" = tagList(
+            numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1),
             selectInput(ns("font.type"), "Font:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                 "sans-serif", "serif", "monospace"
             )),
-            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
             colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000")
+        ),
+        "Annotations" = tagList(
+            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
+            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1)
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",

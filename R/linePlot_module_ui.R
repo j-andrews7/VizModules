@@ -48,13 +48,12 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         "Data" = tagList(
             selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data), multiple = TRUE),
             selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
-            selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
-            selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")),
             selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
-            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)),
-            switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
-            switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
             switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
+            selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
+            selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
+        ),
+        "Grouping & Facets" = tagList(
             selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = cat.choices),
             selectInput(ns("facet.scales"), "Facet scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
@@ -65,8 +64,15 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     "fixed"
                 )
             ),
-            selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
-            selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
+            switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
+            switchInput(ns("flip.x"), "Flip X axis:", value = FALSE)
+        ),
+        "Aesthetics" = tagList(
+            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list))
+        ),
+        "Lines" = tagList(
+            selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
+            selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"))
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",
