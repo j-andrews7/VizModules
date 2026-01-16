@@ -43,6 +43,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
+  
 
     inputs <- list(
         "Data" = tagList(

@@ -46,11 +46,19 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 choices  = c(colour_selection)
             )
         })
+        #Not allowing user to slecect 
+        
+        observeEvent(input$x.data, ignoreInit = TRUE, {
+            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            group_facet_choices <- setdiff(char.choices, input$x.data) 
+            updateSelectInput(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
+            updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if(input$facet.by %in% group_facet_choices) input$facet.by else "")
+        })
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
@@ -58,8 +66,8 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "x.data", selected = char.choices[2])
 
             # Grouping
-            updateSelectInput(session, "group.by", selected = char.choices[3])
-            updateSelectInput(session, "facet.by", selected = "NULL")
+            updateSelectInput(session, "group.by", selected = "")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
@@ -99,7 +107,11 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$AreaPlot <- renderPlotly({
             # Check if auto update on
             auto_update <- input$auto.update
-
+            isolate_fn <- if (auto_update) identity else isolate
+            group.by <- NULL
+            if (!isolate_fn(input$group.by) == ""){
+                group.by <- isolate_fn(input$group.by)
+            }
             # If update button is required, add dependency on it
             if (!auto_update) {
                 input$update
@@ -110,7 +122,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "NULL") {
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -130,7 +142,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 split_by = split.by,
-                group_by = isolate_fn(input$group.by),
+                group_by = group.by,
                 theme = isolate_fn(input$theme),
                 palette = isolate_fn(input$palette),
                 palcolor = isolate_fn(input$palette.colours),

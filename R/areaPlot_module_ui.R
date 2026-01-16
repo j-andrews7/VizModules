@@ -45,15 +45,15 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
-
+    group_facet_choices <- setdiff(char.choices, char.choices[2]) 
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.data"), "X values:", selected = char.choices[2], choices = char.choices),
             selectInput(ns("y.data"), "Y values:", selected = num.choices[2], choices = num.choices),
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[3], choices = char.choices)
+            selectInput(ns("group.by"), "Group by:", selected = char.choices[3], choices = c("", group_facet_choices))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(group_facet_choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
