@@ -48,7 +48,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "Data" = tagList(
             selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
             selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = "NULL", choices = c(char.choices, "NULL"))
+            selectInput(ns("group.by"), "Group by:", selected = "", choices = c(char.choices, ""))
         ),
         "Adjustments" = tagList(
             shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c(
@@ -101,7 +101,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(char.choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
