@@ -214,14 +214,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
-        # Update y-axis range when update button is clicked (when auto-update is off)
-        observeEvent(input$update, {
-            y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
-            if (!is.null(y_range)) {
-                updateNumericInput(session, "y.max", value = y_range$max)
-                updateNumericInput(session, "y.min", value = y_range$min)
-            }
-        })
+
 
 
         output$BarPlot <- renderPlotly({
