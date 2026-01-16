@@ -116,22 +116,31 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$BoxPlot <- renderPlotly({
-            input$update
+           # Check if auto update on
+            auto_update <- input$auto.update
+
+            # If update button is required, add dependency on it
+            if (!auto_update) {
+                input$update
+            }
+
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (auto_update) identity else isolate
 
             # Facet By Null option Upstream:
             facet.by <- NULL
-            if (!isolate(input$facet.by) == "NULL") {
-                facet.by <- isolate(input$facet.by)
+            if (!isolate_fn(input$facet.by) == "NULL") {
+                facet.by <- isolate_fn(input$facet.by)
             }
             group.by <- NULL
-            if (!isolate(input$group.by) == "NULL") {
-                group.by <- isolate(input$group.by)
+            if (!isolate_fn(input$group.by) == "NULL") {
+                group.by <- isolate_fn(input$group.by)
             }
-            highlight <- .na_to_null(isolate(input$highlight))
+            highlight <- .na_to_null(isolate_fn(input$highlight))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate(input$facet.nrow))
+            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             #Stats Default: 
             add.stat <- NULL
@@ -139,56 +148,54 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 add.stat <- input$add.stat
             }
 
-
-            # Box Plot
             p <- plotthis::BoxPlot(
                 data = data(),
-                x = isolate(input$x.data),
-                y = isolate(input$y.data),
-                flip = isolate(input$flip),
-                sort_x = isolate(input$sort_x),
-                stack = isolate(input$stack),
-                y_max = isolate(input$y.max),
-                y_min = isolate(input$y.min),
-                aspect.ratio = isolate(input$aspect.ratio),
-                add_point = isolate(input$add.points),
-                pt_size = isolate(input$pt.size),
-                pt_alpha = isolate(input$pt.alpha),
-                jitter_width = isolate(input$jitter.width),
-                jitter_height = isolate(input$jitter.height),
-                pt_color = isolate(input$pt.color),
-                alpha = isolate(input$alpha),
-                add_trend = isolate(input$add.trend),
-                trend_ptsize = isolate(input$trend.pt.size),
-                trend_color = isolate(input$trend.colour),
-                trend_linewidth = isolate(input$trend.line.width),
+                x = isolate_fn(input$x.data),
+                y = isolate_fn(input$y.data),
+                flip = isolate_fn(input$flip),
+                sort_x = isolate_fn(input$sort_x),
+                stack = isolate_fn(input$stack),
+                y_max = isolate_fn(input$y.max),
+                y_min = isolate_fn(input$y.min),
+                aspect.ratio = isolate_fn(input$aspect.ratio),
+                add_point = isolate_fn(input$add.points),
+                pt_size = isolate_fn(input$pt.size),
+                pt_alpha = isolate_fn(input$pt.alpha),
+                jitter_width = isolate_fn(input$jitter.width),
+                jitter_height = isolate_fn(input$jitter.height),
+                pt_color = isolate_fn(input$pt.color),
+                alpha = isolate_fn(input$alpha),
+                add_trend = isolate_fn(input$add.trend),
+                trend_ptsize = isolate_fn(input$trend.pt.size),
+                trend_color = isolate_fn(input$trend.colour),
+                trend_linewidth = isolate_fn(input$trend.line.width),
                 add_stat = add.stat,
-                stat_color = isolate(input$stat.color),
-                stat_size = isolate(input$stat.size),
-                stat_stroke = isolate(input$stat.stroke),
-                stat_shape = isolate(input$stat.shape),
-                stat_name = isolate(input$add.stat),
-                palette = isolate(input$palette),
-                add_bg = isolate(input$background.colour),
-                bg_palette = isolate(input$background.palette),
-                add_line = isolate(input$add.line),
+                stat_color = isolate_fn(input$stat.color),
+                stat_size = isolate_fn(input$stat.size),
+                stat_stroke = isolate_fn(input$stat.stroke),
+                stat_shape = isolate_fn(input$stat.shape),
+                stat_name = isolate_fn(input$add.stat),
+                palette = isolate_fn(input$palette),
+                add_bg = isolate_fn(input$background.colour),
+                bg_palette = isolate_fn(input$background.palette),
+                add_line = isolate_fn(input$add.line),
                 facet_by = facet.by,
-                facet_scales = isolate(input$facet.scale),
+                facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
-                facet_byrow = isolate(input$facet.by.row),
+                facet_byrow = isolate_fn(input$facet.by.row),
                 group_by = group.by,
                 highlight = highlight,
-                highlight_color = isolate(input$highlight.colour),
-                highlight_size = isolate(input$highlight.size),
-                highlight_alpha = isolate(input$highlight.alpha),
-                combine = isolate(input$combine)
+                highlight_color = isolate_fn(input$highlight.colour),
+                highlight_size = isolate_fn(input$highlight.size),
+                highlight_alpha = isolate_fn(input$highlight.alpha),
+                combine = isolate_fn(input$combine)
             )
 
             fig <- ggplotly(p) |>
                 layout(
                     title = list(
-                        font = list(size = 28, family = isolate(input$font.type), color = isolate(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )
@@ -200,7 +207,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             yaxis_style <- .create_axis_styles(input, axis_side = "y")
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) 
-            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

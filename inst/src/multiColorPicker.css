@@ -1,0 +1,306 @@
+.multi-color-picker {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.multi-color-picker .mc-top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.multi-color-picker .mc-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select {
+  width: 170px;
+  min-width: 150px;
+  margin: 0;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select .selectize-input {
+  min-height: 30px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.multi-color-picker .mc-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.multi-color-picker .mc-palette-select {
+  width: 170px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+.multi-color-picker .mc-button {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #ced4da;
+  background: #f8f9fa;
+  color: #333333;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.multi-color-picker .mc-button:hover {
+  background: #e9ecef;
+}
+
+.multi-color-picker.is-plain {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.multi-color-picker .mc-swatch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.multi-color-picker .mc-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  cursor: pointer;
+}
+
+.multi-color-picker .mc-swatch:hover {
+  outline: 1px solid #6c757d;
+}
+
+.multi-color-picker .mc-color-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.multi-color-picker .mc-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.multi-color-picker .mc-color-row.is-active {
+  border-color: #94bde7;
+  box-shadow: 0 0 0 2px rgba(52, 144, 220, 0.18);
+}
+
+.multi-color-picker .mc-group-label {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.multi-color-picker .mc-color-input {
+  width: 42px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.multi-color-picker .mc-text-input {
+  width: 96px;
+  font-size: 12px;
+}
+
+.multi-color-picker .mc-palette-option,
+.multi-color-picker .mc-selected-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.multi-color-picker .mc-palette-name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.multi-color-picker .mc-palette-bar {
+  display: flex;
+  gap: 1px;
+  flex: 1;
+  min-width: 140px;
+  align-items: center;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.multi-color-picker .mc-option-swatch {
+  flex: 1;
+  min-width: 8px;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+.multi-color-picker .selectize-control.mc-palette-select .selectize-input > div {
+  padding: 2px 4px;
+}
+
+/* Dropdown lives outside the widget container; keep these unscoped */
+.selectize-dropdown .option {
+  padding: 0 !important;
+}
+
+.selectize-dropdown .selectize-dropdown-content {
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.selectize-dropdown .optgroup-header {
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  padding: 4px 2px;
+}
+
+.selectize-dropdown .mc-palette-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.selectize-dropdown .mc-palette-name {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 2px rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.selectize-dropdown .mc-palette-bar {
+  display: flex;
+  gap: 1px;
+  flex: 1;
+  min-width: 140px;
+  align-items: center;
+  height: 18px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.selectize-dropdown .mc-option-swatch {
+  flex: 1;
+  min-width: 8px;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+.selectize-dropdown.mc-compact .selectize-dropdown-content {
+  padding: 4px;
+  gap: 4px;
+}
+
+.selectize-dropdown.mc-compact .mc-palette-bar {
+  min-width: 120px;
+  height: 16px;
+}
+
+.selectize-dropdown.mc-compact .mc-option-swatch {
+  min-width: 7px;
+  height: 16px;
+}
+
+.multi-color-picker.is-compact {
+  padding: 6px;
+  font-size: 11px;
+}
+
+.multi-color-picker.is-compact .mc-actions {
+  gap: 2px;
+}
+
+.multi-color-picker.is-compact .selectize-control.mc-palette-select {
+  width: 140px;
+  min-width: 130px;
+}
+
+.multi-color-picker.is-compact .selectize-control.mc-palette-select .selectize-input {
+  min-height: 26px;
+  padding: 2px 4px;
+  gap: 3px;
+}
+
+.multi-color-picker.is-compact .mc-palette-select {
+  width: 140px;
+  padding: 2px 5px;
+}
+
+.multi-color-picker.is-compact .mc-button-group {
+  gap: 2px;
+}
+
+.multi-color-picker.is-compact .mc-button {
+  padding: 2px 5px;
+  font-size: 10px;
+}
+
+.multi-color-picker.is-compact .mc-color-row {
+  gap: 5px;
+  padding: 2px 4px;
+}
+
+.multi-color-picker.is-compact .mc-color-input {
+  width: 32px;
+  height: 18px;
+  padding: 0;
+}
+
+.multi-color-picker.is-compact .mc-text-input {
+  width: 70px;
+  height: 18px;
+  padding: 2px 4px;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.multi-color-picker.is-compact .mc-palette-bar,
+.selectize-dropdown .is-compact .mc-palette-bar {
+  min-width: 110px;
+  height: 14px;
+}
+
+.multi-color-picker.is-compact .mc-option-swatch,
+.selectize-dropdown .is-compact .mc-option-swatch {
+  min-width: 6px;
+  height: 14px;
+}

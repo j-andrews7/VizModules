@@ -1,11 +1,61 @@
-#' Create a plotly line plot
+#' Create an Interactive Line Plot with plotly
 #'
-#' @return A plotly object.
+#' Generates a customizable interactive line plot using plotly, supporting grouping, faceting, axis adjustments, and color palettes.
 #'
-#' @importFrom plotly plot_ly subplot add_trace
+#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param x Character vector of column name(s) for the x-axis.
+#' @param y Character vector of column name(s) for the y-axis.
+#' @param plot.mode Character, plotly mode (e.g., "lines", "markers", "lines+markers").
+#' @param line.type Character, line style (e.g., "solid", "dash").
+#' @param colour.group.by Character vector of column name(s) to group lines by color.
+#' @param palette.selection Character vector of colors or palette name for line colors.
+#' @param show.legend Logical, whether to display the legend.
+#' @param facet.by Optional character, column name to facet by.
+#' @param facet.scales Character, facet axis scaling ("fixed", "free", "free_x", "free_y").
+#' @param axis.showline Logical, show axis line.
+#' @param axis.mirror Logical, mirror axis lines.
+#' @param axis.linecolor Character, axis line color.
+#' @param axis.linewidth Numeric, axis line width.
+#' @param axis.tickfont.size Numeric, axis tick font size.
+#' @param axis.tickfont.color Character, axis tick font color.
+#' @param axis.tickfont.family Character, axis tick font family.
+#' @param axis.tickangle.x Numeric, x-axis tick angle.
+#' @param axis.tickangle.y Numeric, y-axis tick angle.
+#' @param axis.ticks Character, tick style ("outside", "inside", "none").
+#' @param axis.tickcolor Character, tick color.
+#' @param axis.ticklen Numeric, tick length.
+#' @param axis.tickwidth Numeric, tick width.
+#' @param title.text Character, plot title.
+#' @param title.font.size Numeric, title font size.
+#' @param title.font.family Character, title font family.
+#' @param title.text.color Character, title font color.
+#' @param y.title Character, y-axis label.
+#' @param x.title Character, x-axis label.
+#' @param flip.x Logical, reverse x-axis.
+#' @param flip.y Logical, reverse y-axis.
+#' @param x.adjustment Optional function or string, adjustment for x values.
+#' @param y.adjustment Optional function or string, adjustment for y values.
+#' @param color.adjustment Optional function or string, adjustment for color grouping.
+#' @param order.by Optional character vector, column(s) to order data by.
 #'
+#' @return A plotly object representing the interactive line plot.
+#'
+#' @author Jacob Martin, Jared Andrews
 #' @export
-#' @author Jacob Martin
+#'
+#' @examples
+#' palette <- plotthis::palette_list[["Set2"]]
+#' fig <- linePlot(
+#'   reactive.data = mtcars,
+#'   x = "cyl",
+#'   y = "mpg",
+#'   plot.mode = "lines",
+#'   line.type = "solid",
+#'   colour.group.by = "mpg",
+#'   palette.selection = palette,
+#'   show.legend = TRUE
+#'   )
+
 linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
                      facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
@@ -121,7 +171,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         }
 
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
-        
+
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)
@@ -146,7 +196,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
-        
+
         # Determine shareX and shareY based on facet.scales
         shareX <- TRUE
         shareY <- TRUE
@@ -160,12 +210,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             shareX <- TRUE
             shareY <- FALSE
         }
-        
+
         plots <- lapply(facet_levels, function(level) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
             # Initialize empty plot for this facet
             facet_fig <- plot_ly(data = facet_data, type = "scatter")
-            
+
             # Add traces for multi-axis
             if (length(x) > 1) {
                 for (i in 1:length(x)) {
@@ -227,12 +277,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                     facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
                 }
             }
-            
+
             facet_fig
         })
-        
+
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
-        
+
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)

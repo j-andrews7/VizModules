@@ -26,5 +26,5 @@ The \code{moduleServer} function for the BarPlot module.
 Server logic for BarPlot module
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -24,7 +24,7 @@
 #' @importFrom shinyWidgets switchInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::AreaPlot()], [vizModules::organize_inputs()],
 #' [vizModules::AreaPlotOutputUI()], [vizModules::AreaPlotServer()], [vizModules::AreaPlotApp()]
 #' @examples
@@ -45,15 +45,15 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
-
+    group_facet_choices <- setdiff(char.choices, char.choices[2]) 
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.data"), "X values:", selected = char.choices[2], choices = char.choices),
             selectInput(ns("y.data"), "Y values:", selected = num.choices[2], choices = num.choices),
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[3], choices = char.choices)
+            selectInput(ns("group.by"), "Group by:", selected = char.choices[3], choices = c("", group_facet_choices))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "NULL", choices = c(char.choices, "NULL")),
+            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(group_facet_choices, "")),
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
@@ -197,9 +197,12 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         id = ns("AreaPlotTabsetPanel"),
         title = title,
         tack = tagList(
-            actionButton(ns("update"), "Update Plot"),
-            actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
-            selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
+            fluidRow(
+                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+            ),
             br()
         ),
         columns = columns
@@ -214,8 +217,6 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #'
 #' @return A Shiny plotlyOutput for the AreaPlot
 #'
-#' @importFrom shiny NS
-#' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export
@@ -223,12 +224,6 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 AreaPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("AreaPlot"), width = "100%", height = "400px"),
-        options = list(
-            minWidth = 300,
-            minHeight = 300,
-            maxWidth = 1200,
-            maxHeight = 800
-        )
+        plotlyOutput(ns("AreaPlot"))
     )
 }

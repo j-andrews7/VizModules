@@ -67,7 +67,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
+            updateCheckboxInput(session, "axis.mirror", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateNumericInput(session, "axis.tickfont.size", value = 12)
@@ -83,17 +83,26 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$linePlot <- renderPlotly({
-            input$update
+            # Check if auto update on
+            auto_update <- input$auto.update
+
+            # If update button is required, add dependency on it
+            if (!auto_update) {
+                input$update
+            }
+
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (auto_update) identity else isolate
 
             d <- data_reactive()
 
-            x_input <- input$x.value
-            y_input <- input$y.value
+            x_input <- isolate_fn(input$x.value)
+            y_input <- isolate_fn(input$y.value)
 
             # Sets the colouring to the first item in the selected palette unless group.by is selected
-            group.by <- plotthis::palette_list[[input$palette]][1]
-            if (!input$group.by == "" && length(x_input) == 1 && length(y_input) == 1) {
-                group.by <- reformulate(input$group.by)
+            group.by <- plotthis::palette_list[[isolate_fn(input$palette)]][1]
+            if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
+                group.by <- reformulate(isolate_fn(input$group.by))
             }
 
             # Making multiple lines on the axis. e.g 3x and 1y
@@ -105,7 +114,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Choosing which axis to order by:
             order_by <- x_input
-            if (input$order.by == TRUE) {
+            if (isolate_fn(input$order.by)) {
                 order_by <- y_input
             }
 
@@ -129,16 +138,17 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             y.adjustment <- NULL
-            if (!input$y.adjustment == "") {
-                y.adjustment <- input$y.adjustment
+            if (!isolate_fn(input$y.adjustment) == "") {
+                y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (!input$x.adjustment == "") {
-                x.adjustment <- input$x.adjustment
+            if (!isolate_fn(input$x.adjustment) == "") {
+                x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
             # Checking that all columns are numeric for x and y adjustment to be available
+            # TODO: remove sapply usage here
             if (!all(sapply(d[x_input], is.numeric))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
@@ -152,39 +162,39 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 reactive.data = d,
                 x = x_input,
                 y = y_input,
-                plot.mode = isolate(input$plot.type),
-                line.type = isolate(input$line.type),
+                plot.mode = isolate_fn(input$plot.type),
+                line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = plotthis::palette_list[[input$palette]],
                 show.legend = FALSE,
-                facet.by = input$facet.by,
-                facet.scales = isolate(input$facet.scales),
+                facet.by = isolate_fn(input$facet.by),
+                facet.scales = isolate_fn(input$facet.scales),
                 order.by = order_by,
-                axis.showline = isolate(input$axis.showline),
-                axis.mirror = isolate(input$axis.mirror),
-                axis.linecolor = isolate(input$axis.linecolor),
-                axis.linewidth = isolate(input$axis.linewidth),
-                axis.tickfont.size = isolate(input$axis.tickfont.size),
-                axis.tickfont.color = isolate(input$axis.tickfont.color),
-                axis.tickfont.family = isolate(input$axis.tickfont.family),
-                axis.tickangle.x = isolate(input$axis.tickangle.x),
-                axis.tickangle.y = isolate(input$axis.tickangle.y),
-                axis.ticks = isolate(input$axis.ticks),
-                axis.tickcolor = isolate(input$axis.tickcolor),
-                axis.ticklen = isolate(input$axis.ticklen),
-                axis.tickwidth = isolate(input$axis.tickwidth),
-                title.font.size = isolate(input$title.font.size),
-                title.font.family = isolate(input$font.type),
-                title.text.color = isolate(input$text.colour),
+                axis.showline = isolate_fn(input$axis.showline),
+                axis.mirror = isolate_fn(input$axis.mirror),
+                axis.linecolor = isolate_fn(input$axis.linecolor),
+                axis.linewidth = isolate_fn(input$axis.linewidth),
+                axis.tickfont.size = isolate_fn(input$axis.tickfont.size),
+                axis.tickfont.color = isolate_fn(input$axis.tickfont.color),
+                axis.tickfont.family = isolate_fn(input$axis.tickfont.family),
+                axis.tickangle.x = isolate_fn(input$axis.tickangle.x),
+                axis.tickangle.y = isolate_fn(input$axis.tickangle.y),
+                axis.ticks = isolate_fn(input$axis.ticks),
+                axis.tickcolor = isolate_fn(input$axis.tickcolor),
+                axis.ticklen = isolate_fn(input$axis.ticklen),
+                axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                title.font.size = isolate_fn(input$title.font.size),
+                title.font.family = isolate_fn(input$font.type),
+                title.text.color = isolate_fn(input$text.colour),
                 x.title = x_title,
                 y.title = y_title,
-                flip.x = isolate(input$flip.x),
-                flip.y = isolate(input$flip.y),
+                flip.x = isolate_fn(input$flip.x),
+                flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
                 y.adjustment = y.adjustment
             )
 
-            config_list <- .add_plot_config(download.format = isolate(input$download.type), include.modebar.buttons = FALSE, facet.by = input$facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = FALSE, facet.by = input$facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

@@ -24,7 +24,7 @@
 #' @importFrom shinyWidgets switchInput
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::BarPlot()], [vizModules::organize_inputs()],
 #' [vizModules::BarPlotOutputUI()], [vizModules::BarPlotServer()], [vizModules::BarPlotApp()]
 #' @examples
@@ -43,6 +43,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
+  
 
     inputs <- list(
         "Data" = tagList(
@@ -79,7 +80,7 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "Line" = tagList(
             numericInput(ns("add.line"), "Add line:", value = NULL),
             colourpicker::colourInput(ns("line.colour"), "Line colour:", value = "#000000"),
-            numericInput(ns("line.type"), "Line type:", value = 2, min = 0),
+            numericInput(ns("line.type"), "Line type:", value = 1, min = 0),
             numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0),
             textInput(ns("line.name"), "Line name:", value = "", placeholder = "Line Name")
         ),
@@ -205,9 +206,12 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         id = ns("BarPlotTabsetPanel"),
         title = title,
         tack = tagList(
-            actionButton(ns("update"), "Update Plot"),
-            actionButton(ns("reset"), "Reset Defaults", class = "btn-secondary"),
-            selectInput(ns("download.type"), "Download Format:", selected = "png", choices = c("png", "svg")),
+            fluidRow(
+                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+            ),
             br()
         ),
         columns = columns
@@ -223,8 +227,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #'
 #' @return A Shiny plotlyOutput for the BarPlot
 #'
-#' @importFrom shiny NS
-#' @importFrom plotly plotlyOutput
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export
@@ -232,12 +234,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 BarPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("BarPlot"), width = "100%", height = "400px"),
-        options = list(
-            minWidth = 300,
-            minHeight = 300,
-            maxWidth = 1200,
-            maxHeight = 800
-        )
+        plotlyOutput(ns("BarPlot"))
     )
 }

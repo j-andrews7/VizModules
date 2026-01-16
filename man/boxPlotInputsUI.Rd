@@ -42,8 +42,8 @@ BoxPlotInputsUI("BoxPlot", mtcars)
 }
 \seealso{
 \code{\link[plotthis:boxviolinplot]{plotthis::BoxPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=BoxPlotOutputUI]{BoxPlotOutputUI()}}, \code{\link[=BoxPlotServer]{BoxPlotServer()}}, \code{\link[=createBoxPlotApp]{createBoxPlotApp()}}
+\code{\link[=BoxPlotOutputUI]{BoxPlotOutputUI()}}, \code{\link[=BoxPlotServer]{BoxPlotServer()}}, \code{\link[=BoxPlotApp]{BoxPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

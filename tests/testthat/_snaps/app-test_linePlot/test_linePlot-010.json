@@ -1,0 +1,1389 @@
+{
+  "input": {
+    ".clientValue-default-plotlyCrosstalkOpts": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0,
+      "color": [
+
+      ]
+    },
+    "iris-auto.update": false,
+    "iris-axis.linecolor": "#000000",
+    "iris-axis.linewidth": 0.5,
+    "iris-axis.mirror": true,
+    "iris-axis.showline": true,
+    "iris-axis.tickangle.x": 0,
+    "iris-axis.tickangle.y": 0,
+    "iris-axis.tickcolor": "#000000",
+    "iris-axis.tickfont.color": "#000000",
+    "iris-axis.tickfont.family": "Arial",
+    "iris-axis.tickfont.size": 12,
+    "iris-axis.ticklen": 5,
+    "iris-axis.ticks": "outside",
+    "iris-axis.tickwidth": 1,
+    "iris-download.type": "png",
+    "iris-facet.by": "",
+    "iris-facet.scales": "fixed",
+    "iris-flip.x": false,
+    "iris-flip.y": false,
+    "iris-group.by": "",
+    "iris-line.type": "solid",
+    "iris-linePlotTabsetPanel": "Data",
+    "iris-linePlot__shinyjquiBookmarkState__resizable": [
+      1039.33,
+      400
+    ],
+    "iris-linePlot_is_resizing": false,
+    "iris-linePlot_size": [
+      1039.33,
+      400
+    ],
+    "iris-order.by": false,
+    "iris-palette": "Paired",
+    "iris-plot.type": "lines",
+    "iris-reset": 0,
+    "iris-update": 0,
+    "iris-x.adjustment": "",
+    "iris-x.value": "Sepal.Length",
+    "iris-y.adjustment": "",
+    "iris-y.value": "Sepal.Width",
+    "mtcars-auto.update": false,
+    "mtcars-axis.linecolor": "#F01111",
+    "mtcars-axis.linewidth": 2,
+    "mtcars-axis.mirror": true,
+    "mtcars-axis.showline": true,
+    "mtcars-axis.tickangle.x": -45,
+    "mtcars-axis.tickangle.y": 45,
+    "mtcars-axis.tickcolor": "#0D00FF",
+    "mtcars-axis.tickfont.color": "#D200F7",
+    "mtcars-axis.tickfont.family": "Droid Sans",
+    "mtcars-axis.tickfont.size": 18,
+    "mtcars-axis.ticklen": 14,
+    "mtcars-axis.ticks": "inside",
+    "mtcars-axis.tickwidth": 3.5,
+    "mtcars-download.type": "png",
+    "mtcars-facet.by": "gear",
+    "mtcars-facet.scales": "free",
+    "mtcars-flip.x": true,
+    "mtcars-flip.y": true,
+    "mtcars-group.by": "",
+    "mtcars-line.type": "dash",
+    "mtcars-linePlotTabsetPanel": "Axes",
+    "mtcars-linePlot__shinyjquiBookmarkState__resizable": [
+      1039.33,
+      400
+    ],
+    "mtcars-linePlot_is_resizing": false,
+    "mtcars-linePlot_size": [
+      1039.33,
+      400
+    ],
+    "mtcars-order.by": true,
+    "mtcars-palette": "SunsetDark",
+    "mtcars-plot.type": "lines+markers",
+    "mtcars-reset": 0,
+    "mtcars-update": 8,
+    "mtcars-x.adjustment": "log2",
+    "mtcars-x.value": [
+      "mpg",
+      "disp"
+    ],
+    "mtcars-y.adjustment": "",
+    "mtcars-y.value": "cyl",
+    "plotly_afterplot-A": "\"mtcars-linePlot\"",
+    "plotly_hover-A": null,
+    "plotly_relayout-A": "{\"width\":1039.328125,\"height\":400}"
+  },
+  "output": {
+    "iris-linePlot": {
+      "x": {
+        "layout": {
+          "margin": {
+            "b": 40,
+            "l": 60,
+            "t": 80,
+            "r": 10
+          },
+          "title": {
+            "text": "",
+            "font": {
+              "size": [
+
+              ],
+              "family": [
+
+              ],
+              "color": [
+
+              ]
+            },
+            "x": 0.46999999999999997,
+            "xanchor": "center",
+            "y": 0.94999999999999996,
+            "yanchor": "top",
+            "pad": {
+              "t": 20
+            }
+          },
+          "showlegend": true,
+          "xaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "tickfont": {
+              "size": 12,
+              "color": "#000000",
+              "family": "Arial"
+            },
+            "tickangle": 0,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "title": "Sepal.Length",
+            "autorange": true
+          },
+          "yaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#000000",
+            "linewidth": 0.5,
+            "tickfont": {
+              "size": 12,
+              "color": "#000000",
+              "family": "Arial"
+            },
+            "tickangle": 0,
+            "ticks": "outside",
+            "tickcolor": "#000000",
+            "ticklen": 5,
+            "tickwidth": 1,
+            "title": "Sepal.Width",
+            "autorange": true
+          },
+          "hovermode": "closest"
+        },
+        "source": "A",
+        "config": {
+          "modeBarButtonsToAdd": [
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": false,
+            "titleText": false,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "png",
+            "filename": "2026-01-15"
+          },
+          "displaylogo": false
+        },
+        "data": [
+          {
+            "x": [
+              4.2999999999999998,
+              4.4000000000000004,
+              4.4000000000000004,
+              4.4000000000000004,
+              4.5,
+              4.5999999999999996,
+              4.5999999999999996,
+              4.5999999999999996,
+              4.5999999999999996,
+              4.7000000000000002,
+              4.7000000000000002,
+              4.7999999999999998,
+              4.7999999999999998,
+              4.7999999999999998,
+              4.7999999999999998,
+              4.7999999999999998,
+              4.9000000000000004,
+              4.9000000000000004,
+              4.9000000000000004,
+              4.9000000000000004,
+              4.9000000000000004,
+              4.9000000000000004,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.0999999999999996,
+              5.2000000000000002,
+              5.2000000000000002,
+              5.2000000000000002,
+              5.2000000000000002,
+              5.2999999999999998,
+              5.4000000000000004,
+              5.4000000000000004,
+              5.4000000000000004,
+              5.4000000000000004,
+              5.4000000000000004,
+              5.4000000000000004,
+              5.5,
+              5.5,
+              5.5,
+              5.5,
+              5.5,
+              5.5,
+              5.5,
+              5.5999999999999996,
+              5.5999999999999996,
+              5.5999999999999996,
+              5.5999999999999996,
+              5.5999999999999996,
+              5.5999999999999996,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7000000000000002,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.7999999999999998,
+              5.9000000000000004,
+              5.9000000000000004,
+              5.9000000000000004,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6.0999999999999996,
+              6.0999999999999996,
+              6.0999999999999996,
+              6.0999999999999996,
+              6.0999999999999996,
+              6.0999999999999996,
+              6.2000000000000002,
+              6.2000000000000002,
+              6.2000000000000002,
+              6.2000000000000002,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.2999999999999998,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.4000000000000004,
+              6.5,
+              6.5,
+              6.5,
+              6.5,
+              6.5,
+              6.5999999999999996,
+              6.5999999999999996,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7000000000000002,
+              6.7999999999999998,
+              6.7999999999999998,
+              6.7999999999999998,
+              6.9000000000000004,
+              6.9000000000000004,
+              6.9000000000000004,
+              6.9000000000000004,
+              7,
+              7.0999999999999996,
+              7.2000000000000002,
+              7.2000000000000002,
+              7.2000000000000002,
+              7.2999999999999998,
+              7.4000000000000004,
+              7.5999999999999996,
+              7.7000000000000002,
+              7.7000000000000002,
+              7.7000000000000002,
+              7.7000000000000002,
+              7.9000000000000004
+            ],
+            "y": [
+              3,
+              2.8999999999999999,
+              3,
+              3.2000000000000002,
+              2.2999999999999998,
+              3.1000000000000001,
+              3.3999999999999999,
+              3.6000000000000001,
+              3.2000000000000002,
+              3.2000000000000002,
+              3.2000000000000002,
+              3.3999999999999999,
+              3,
+              3.3999999999999999,
+              3.1000000000000001,
+              3,
+              3,
+              3.1000000000000001,
+              3.1000000000000001,
+              3.6000000000000001,
+              2.3999999999999999,
+              2.5,
+              3.6000000000000001,
+              3.3999999999999999,
+              3,
+              3.3999999999999999,
+              3.2000000000000002,
+              3.5,
+              3.5,
+              3.2999999999999998,
+              2,
+              2.2999999999999998,
+              3.5,
+              3.5,
+              3.7999999999999998,
+              3.7000000000000002,
+              3.2999999999999998,
+              3.3999999999999999,
+              3.7999999999999998,
+              3.7999999999999998,
+              2.5,
+              3.5,
+              3.3999999999999999,
+              4.0999999999999996,
+              2.7000000000000002,
+              3.7000000000000002,
+              3.8999999999999999,
+              3.7000000000000002,
+              3.8999999999999999,
+              3.3999999999999999,
+              3.3999999999999999,
+              3,
+              4.2000000000000002,
+              3.5,
+              2.2999999999999998,
+              2.3999999999999999,
+              2.3999999999999999,
+              2.5,
+              2.6000000000000001,
+              2.8999999999999999,
+              3,
+              2.5,
+              3,
+              2.7000000000000002,
+              2.7999999999999998,
+              4.4000000000000004,
+              3.7999999999999998,
+              2.7999999999999998,
+              2.6000000000000001,
+              3,
+              2.8999999999999999,
+              2.7999999999999998,
+              2.5,
+              4,
+              2.7000000000000002,
+              2.7000000000000002,
+              2.6000000000000001,
+              2.7000000000000002,
+              2.7999999999999998,
+              2.7000000000000002,
+              3,
+              3.2000000000000002,
+              3,
+              2.2000000000000002,
+              2.8999999999999999,
+              2.7000000000000002,
+              3.3999999999999999,
+              2.2000000000000002,
+              3,
+              2.8999999999999999,
+              2.7999999999999998,
+              2.7999999999999998,
+              3,
+              3,
+              2.6000000000000001,
+              2.2000000000000002,
+              2.8999999999999999,
+              2.7999999999999998,
+              3.3999999999999999,
+              3.2999999999999998,
+              2.5,
+              2.2999999999999998,
+              3.2999999999999998,
+              2.8999999999999999,
+              2.7000000000000002,
+              2.7999999999999998,
+              3.3999999999999999,
+              2.5,
+              3.2000000000000002,
+              2.8999999999999999,
+              2.7000000000000002,
+              3.2000000000000002,
+              2.7999999999999998,
+              2.7999999999999998,
+              3.1000000000000001,
+              2.7999999999999998,
+              3,
+              3.2000000000000002,
+              3,
+              3,
+              2.8999999999999999,
+              3,
+              3.1000000000000001,
+              3,
+              3.1000000000000001,
+              2.5,
+              3.2999999999999998,
+              3.1000000000000001,
+              3.2999999999999998,
+              3,
+              2.7999999999999998,
+              3,
+              3.2000000000000002,
+              3.1000000000000001,
+              3.2000000000000002,
+              3.1000000000000001,
+              3.1000000000000001,
+              3.2000000000000002,
+              3,
+              3.6000000000000001,
+              3.2000000000000002,
+              3,
+              2.8999999999999999,
+              2.7999999999999998,
+              3,
+              3.7999999999999998,
+              2.6000000000000001,
+              2.7999999999999998,
+              3,
+              3.7999999999999998
+            ],
+            "mode": "lines",
+            "showlegend": false,
+            "line": {
+              "color": "rgba(255,140,92,1)",
+              "dash": "solid"
+            },
+            "type": "scatter",
+            "name": "#A6CEE3",
+            "marker": {
+              "color": "rgba(255,140,92,1)",
+              "line": {
+                "color": "rgba(255,140,92,1)"
+              }
+            },
+            "textfont": {
+              "color": "rgba(255,140,92,1)"
+            },
+            "error_y": {
+              "color": "rgba(255,140,92,1)"
+            },
+            "error_x": {
+              "color": "rgba(255,140,92,1)"
+            },
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          }
+        ],
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.20000000000000001,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "setprototypeof",
+          "version": "0.1",
+          "src": {
+            "href": "setprototypeof-0.1"
+          },
+          "meta": null,
+          "script": "setprototypeof.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.2",
+          "src": {
+            "href": "crosstalk-1.2.2"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-htmlwidgets-css-2.11.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-main-2.11.1"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    },
+    "mtcars-linePlot": {
+      "x": {
+        "data": [
+          {
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "color": "rgba(31,119,180,1)",
+              "line": {
+                "color": "rgba(31,119,180,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(31,119,180,1)"
+            },
+            "error_x": {
+              "color": "rgba(31,119,180,1)"
+            },
+            "line": {
+              "color": "rgba(31,119,180,1)"
+            },
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              4.5109619192773796,
+              4.6088092426755241,
+              4.5109619192773796,
+              5.0179219079972626,
+              4.9259994185562235,
+              5.0832133682489813,
+              4.7708290460324898,
+              4.4195388915137848,
+              4.3923174227787607,
+              4.3923174227787607,
+              4.2630344058337934,
+              4.1538053360790359
+            ],
+            "y": [
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "6",
+              "6",
+              "6",
+              "6"
+            ],
+            "mode": "lines+markers",
+            "name": "mpg.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FCDE9C",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FCDE9C",
+              "line": {
+                "color": "rgba(255,127,14,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(255,127,14,1)"
+            },
+            "error_x": {
+              "color": "rgba(255,127,14,1)"
+            },
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              6.7548875021634682,
+              7.1967250607860276,
+              7.1375035237499347,
+              6.2982917306201243,
+              6.2422213950983689,
+              6.1517776547320526,
+              6.3037807481771031,
+              6.9188632372745946,
+              7.3219280948873626,
+              7.3219280948873626,
+              7.3888783388119892,
+              7.3888783388119892
+            ],
+            "y": [
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "4",
+              "6",
+              "6",
+              "6",
+              "6"
+            ],
+            "mode": "lines+markers",
+            "name": "disp.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FAA476",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FAA476",
+              "line": {
+                "color": "rgba(44,160,44,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(44,160,44,1)"
+            },
+            "error_x": {
+              "color": "rgba(44,160,44,1)"
+            },
+            "xaxis": "x",
+            "yaxis": "y",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "color": "rgba(214,39,40,1)",
+              "line": {
+                "color": "rgba(214,39,40,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(214,39,40,1)"
+            },
+            "error_x": {
+              "color": "rgba(214,39,40,1)"
+            },
+            "line": {
+              "color": "rgba(214,39,40,1)"
+            },
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              4.4262647547020979,
+              4.4195388915137848,
+              4.177917792195843,
+              4.2249663650002747,
+              3.8379432418910273,
+              4.0356239097307212,
+              4.112700132749362,
+              3.925999418556223,
+              3.37851162325373,
+              3.37851162325373,
+              3.8777442499490018,
+              3.9541963103868754,
+              3.925999418556223,
+              3.7333543406138272,
+              4.2630344058337934
+            ],
+            "y": [
+              "4",
+              "6",
+              "6",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8"
+            ],
+            "mode": "lines+markers",
+            "name": "mpg.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FCDE9C",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FCDE9C",
+              "line": {
+                "color": "rgba(148,103,189,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(148,103,189,1)"
+            },
+            "error_x": {
+              "color": "rgba(148,103,189,1)"
+            },
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              6.9080923408182713,
+              8.011227255423254,
+              7.8137811912170374,
+              8.4918530963296739,
+              8.4918530963296739,
+              8.1074786466266175,
+              8.1074786466266175,
+              8.1074786466266175,
+              8.8826430493618407,
+              8.8454900509443757,
+              8.7813597135246599,
+              8.3128829552843548,
+              8.2479275134435852,
+              8.451211111832329,
+              8.6438561897747253
+            ],
+            "y": [
+              "4",
+              "6",
+              "6",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8",
+              "8"
+            ],
+            "mode": "lines+markers",
+            "name": "disp.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FAA476",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FAA476",
+              "line": {
+                "color": "rgba(140,86,75,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(140,86,75,1)"
+            },
+            "error_x": {
+              "color": "rgba(140,86,75,1)"
+            },
+            "xaxis": "x2",
+            "yaxis": "y2",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "mode": "markers",
+            "marker": {
+              "color": "rgba(227,119,194,1)",
+              "line": {
+                "color": "rgba(227,119,194,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(227,119,194,1)"
+            },
+            "error_x": {
+              "color": "rgba(227,119,194,1)"
+            },
+            "line": {
+              "color": "rgba(227,119,194,1)"
+            },
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              4.7004397181410917,
+              4.9259994185562235,
+              4.3001237245690138,
+              3.9818526532897405,
+              3.9068905956085187
+            ],
+            "y": [
+              "4",
+              "4",
+              "6",
+              "8",
+              "8"
+            ],
+            "mode": "lines+markers",
+            "name": "mpg.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FCDE9C",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FCDE9C",
+              "line": {
+                "color": "rgba(127,127,127,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(127,127,127,1)"
+            },
+            "error_x": {
+              "color": "rgba(127,127,127,1)"
+            },
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          },
+          {
+            "type": "scatter",
+            "x": [
+              6.910492832288714,
+              6.571373435973201,
+              7.1799090900149345,
+              8.4553272203045609,
+              8.2336196767597016
+            ],
+            "y": [
+              "4",
+              "4",
+              "6",
+              "8",
+              "8"
+            ],
+            "mode": "lines+markers",
+            "name": "disp.adj",
+            "showlegend": true,
+            "line": {
+              "color": "#FAA476",
+              "dash": "dash"
+            },
+            "marker": {
+              "color": "#FAA476",
+              "line": {
+                "color": "rgba(188,189,34,1)"
+              }
+            },
+            "error_y": {
+              "color": "rgba(188,189,34,1)"
+            },
+            "error_x": {
+              "color": "rgba(188,189,34,1)"
+            },
+            "xaxis": "x3",
+            "yaxis": "y3",
+            "frame": null
+          }
+        ],
+        "layout": {
+          "xaxis": {
+            "domain": [
+              0,
+              0.3133333333333333
+            ],
+            "automargin": true,
+            "title": "Value",
+            "anchor": "y",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "xaxis2": {
+            "domain": [
+              0.35333333333333333,
+              0.64666666666666661
+            ],
+            "automargin": true,
+            "title": "Value",
+            "anchor": "y2",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "xaxis3": {
+            "domain": [
+              0.68666666666666665,
+              1
+            ],
+            "automargin": true,
+            "title": "Value",
+            "anchor": "y3",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": -45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "yaxis3": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "title": "cyl",
+            "anchor": "x3",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "yaxis2": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "title": "cyl",
+            "anchor": "x2",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "yaxis": {
+            "domain": [
+              0,
+              1
+            ],
+            "automargin": true,
+            "title": "cyl",
+            "anchor": "x",
+            "showline": true,
+            "mirror": true,
+            "linecolor": "#F01111",
+            "linewidth": 2,
+            "tickfont": {
+              "size": 18,
+              "color": "#D200F7",
+              "family": "Droid Sans"
+            },
+            "tickangle": 45,
+            "ticks": "inside",
+            "tickcolor": "#0D00FF",
+            "ticklen": 14,
+            "tickwidth": 3.5,
+            "autorange": "reversed"
+          },
+          "annotations": [
+            {
+              "x": 0.16666666666666666,
+              "y": 1.05,
+              "xref": "paper",
+              "yref": "paper",
+              "text": "4",
+              "showarrow": false,
+              "xanchor": "center",
+              "yanchor": "bottom",
+              "font": {
+                "size": 14
+              }
+            },
+            {
+              "x": 0.5,
+              "y": 1.05,
+              "xref": "paper",
+              "yref": "paper",
+              "text": "3",
+              "showarrow": false,
+              "xanchor": "center",
+              "yanchor": "bottom",
+              "font": {
+                "size": 14
+              }
+            },
+            {
+              "x": 0.83333333333333326,
+              "y": 1.05,
+              "xref": "paper",
+              "yref": "paper",
+              "text": "5",
+              "showarrow": false,
+              "xanchor": "center",
+              "yanchor": "bottom",
+              "font": {
+                "size": 14
+              }
+            }
+          ],
+          "shapes": [
+
+          ],
+          "images": [
+
+          ],
+          "margin": {
+            "b": 40,
+            "l": 60,
+            "t": 80,
+            "r": 10
+          },
+          "hovermode": "closest",
+          "showlegend": true,
+          "title": {
+            "text": "",
+            "font": {
+              "size": [
+
+              ],
+              "family": [
+
+              ],
+              "color": [
+
+              ]
+            },
+            "x": 0.46999999999999997,
+            "xanchor": "center",
+            "y": 0.94999999999999996,
+            "yanchor": "top",
+            "pad": {
+              "t": 20
+            }
+          }
+        },
+        "source": "A",
+        "config": {
+          "modeBarButtonsToAdd": [
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": false,
+            "titleText": false,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "png",
+            "filename": "2026-01-15"
+          },
+          "displaylogo": false
+        },
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.20000000000000001,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "subplot": true,
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "setprototypeof",
+          "version": "0.1",
+          "src": {
+            "href": "setprototypeof-0.1"
+          },
+          "meta": null,
+          "script": "setprototypeof.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.2",
+          "src": {
+            "href": "crosstalk-1.2.2"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-htmlwidgets-css-2.11.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-main-2.11.1"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
