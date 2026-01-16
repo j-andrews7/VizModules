@@ -63,7 +63,6 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("split.by"), "Split by:", selected = "NULL", choices = c(char.choices, "NULL"))
         ),
         "Aesthetic" = tagList(
-            selectInput(ns("palette"), "Plot Palette:", selected = "Set2", choices = names(plotthis::palette_list)),
             uiOutput(ns("palette.selection")),
             switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
             selectInput(ns("background.palette"), "Background Palette:", selected = "Set2", choices = names(plotthis::palette_list)),

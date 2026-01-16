@@ -77,20 +77,74 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         }
 
         ns <- session$ns
-        
+        default_palette_name <- "Set2"
+        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        default_palette_values <- palette_lookup[[default_palette_name]]
+        if (is.null(default_palette_values) || length(default_palette_values) == 0) {
+            default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
+        }
+
+        palette_groups <- reactive({
+            df <- data()
+            if (is.null(df)) {
+                return(character(0))
+            }
+
+            group_col <- input$group.by
+            x_col <- input$x.data
+
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[group_col]])))
+            } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[x_col]])))
+            } else {
+                character(0)
+            }
+        })
+
+        resolve_palette <- function(groups, selected_colors = NULL) {
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            colors <- selected_colors
+            if (is.null(colors) || length(colors) == 0) {
+                colors <- default_palette_values
+            }
+
+            if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+                colors <- colors[match(groups, names(colors))]
+            }
+
+            if (any(is.na(colors))) {
+                na_idx <- which(is.na(colors))
+                fallback <- if (length(default_palette_values) > 0) default_palette_values else "#000000"
+                colors[na_idx] <- rep_len(fallback, length(na_idx))
+            }
+
+            colors <- rep_len(colors, length(groups))
+            stats::setNames(colors[seq_along(groups)], groups)
+        }
+
         # Track initialization
         initialized <- reactiveVal(FALSE)
-        
-        output$palette.selection <- renderUI({
-            pal <- input$palette
-            colour_selection <- plotthis::palette_list[[pal]]
 
-            selectInput(
-                ns("palette.colours"), # namespaced ID
-                "Colours to use:",
-                multiple = TRUE,
-                selected = NULL,
-                choices  = c(colour_selection)
+        output$palette.selection <- renderUI({
+            groups <- palette_groups()
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
+
+            multiColorPicker(
+                ns("palette.colours"),
+                label = "Plot colors",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = default_palette_name,
+                colors = initial_colors,
+                compact = TRUE
             )
         })
 
@@ -174,7 +228,6 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "split.by", selected = "NULL")
 
             # Aesthetics
-            updateSelectInput(session, "palette", selected = "Set2")
             updateSwitchInput(session, "background.colour", value = FALSE)
             updateSelectInput(session, "background.palette", selected = "Set2")
             updateNumericInput(session, "background.alpha", value = 0.5)
@@ -264,6 +317,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            palette_values <- resolve_palette(
+                isolate_fn(palette_groups()),
+                isolate_fn(input$palette.colours)
+            )
 
             # bar Plot
             p <- plotthis::BarPlot(
@@ -277,8 +334,8 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palette = isolate_fn(input$palette),
-                palcolor = isolate_fn(input$palette.colours),
+                palette = default_palette_name,
+                palcolor = unname(palette_values),
                 add_bg = isolate_fn(input$background.colour),
                 bg_palette = isolate_fn(input$background.palette),
                 bg_alpha = isolate_fn(input$background.alpha),

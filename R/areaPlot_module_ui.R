@@ -66,7 +66,6 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             )
         ),
         "Aesthetic" = tagList(
-            selectInput(ns("palette"), "Plot Palette:", selected = "Set2", choices = names(plotthis::palette_list)),
             uiOutput(ns("palette.selection")),
             selectInput(ns("theme"), "Theme:", selected = "theme_this", choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",

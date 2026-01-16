@@ -96,7 +96,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             numericInput(ns("stat.shape"), "Stat Shape:", value = 25, min = 0, max = 100)
         ),
         "Palette" = tagList(
-            selectInput(ns("palette"), "Plot Palette:", selected = "Paired", choices = names(plotthis::palette_list)),
+            uiOutput(ns("palette.selection")),
             switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
             selectInput(ns("background.palette"), "Background Palette:", selected = "Paired", choices = names(plotthis::palette_list))
         ),
