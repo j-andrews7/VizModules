@@ -59,12 +59,7 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
             switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            selectInput(ns("split.by"), "Split by:", selected = "", choices = c(char.choices, "")),
-            switchInput(ns("combine"), "Combine plot:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            textAreaInput(ns("design"), "Custom Layout:",
-                value = "", rows = 4,
-                placeholder = "122\n153\n443"
-            )
+            selectInput(ns("split.by"), "Split by:", selected = "", choices = c(char.choices, ""))
         ),
         "Aesthetic" = tagList(
             uiOutput(ns("palette.selection")),
@@ -75,17 +70,14 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             )),
             numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1)
         ),
-        "Labels" = tagList(
+        "Axes" = tagList(
+            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
+            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
             selectInput(ns("font.type"), "Font:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
-                "sans-serif", "serif", "monospace"
-            )),
-            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
-            colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000")
-        ),
-        "Axes" = tagList(
+                "sans-serif", "serif", "monospace")),
+            colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000"),
             checkboxInput(ns("axis.showline"), "Show axis lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
