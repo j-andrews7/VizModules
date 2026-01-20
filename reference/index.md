@@ -4,10 +4,28 @@
 
 - [`AreaPlotApp()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotApp.md)
   : Create an example Modular AreaPlot Shiny Application
+- [`AreaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotInputsUI.md)
+  : Input UI components for the AreaPlot module
+- [`AreaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotOutputUI.md)
+  : Output UI components for the AreaPlot module
+- [`AreaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/AreaPlotServer.md)
+  : Server logic for AreaPlot module
 - [`BarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BarPlotApp.md)
   : Create an example Modular BarPlot Shiny Application
+- [`BarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/BarPlotInputsUI.md)
+  : Input UI components for the BarPlot module
+- [`BarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/BarPlotOutputUI.md)
+  : Output UI components for the BarPlot module
+- [`BarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/BarPlotServer.md)
+  : Server logic for BarPlot module
 - [`BoxPlotApp()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotApp.md)
   : Create an example Modular BoxPlot Shiny Application
+- [`BoxPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotInputsUI.md)
+  : Input UI components for the BoxPlot module
+- [`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotOutputUI.md)
+  : Output UI components for the BoxPlot module
+- [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/BoxPlotServer.md)
+  : Server logic for BoxPlot module
 - [`.string_to_list_of_vectors()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_list_of_vectors.md)
   : Parse a string indicating a set of vectors to a list of vectors.
 - [`.string_to_vector()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_vector.md)
@@ -55,6 +73,12 @@
   : Server logic for piePlot module
 - [`scatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotApp.md)
   : Create an example Modular scatterPlot Shiny Application
+- [`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotInputsUI.md)
+  : Input UI components for the scatterPlot module
+- [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotOutputUI.md)
+  : Output UI components for the scatterPlot module
+- [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotServer.md)
+  : Server logic for scatterPlot module
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/vizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
 - [`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)

@@ -95,7 +95,7 @@
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
-<span>            <span class="fu">scatterPlotInputsUI</span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span></span>
 <span>                <span class="st">"cars"</span>,</span>
 <span>                <span class="va">mtcars</span>,</span>
 <span>                defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -105,12 +105,12 @@
 <span>                <span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu">scatterPlotOutputUI</span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">scatterPlotServer</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span></span>
 <span>        <span class="st">"cars"</span>,</span>
 <span>        data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>,</span>
 <span>        hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rows.use"</span><span class="op">)</span>,</span>
@@ -120,7 +120,7 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p>Every module uses the same trio of functions: <code>*InputsUI()</code> for controls, <code>*OutputUI()</code> for the plot, and <code>*Server()</code> for the logic. Use <code>defaults</code> to pre-fill inputs, and <code>hide.inputs</code>/<code>hide.tabs</code> to hide controls while keeping their values so you can enforce app-level defaults without exposing them.</p>
-<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code>?scatterPlotInputsUI</code>, <code>?AreaPlotInputsUI</code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
+<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code><a href="reference/scatterPlotInputsUI.html">?scatterPlotInputsUI</a></code>, <code><a href="reference/AreaPlotInputsUI.html">?AreaPlotInputsUI</a></code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
 </div>
 <div class="section level2">
 <h2 id="using-vizmodules">Using <strong>vizModules</strong>
@@ -147,7 +147,7 @@
 <span>                <span class="co"># Add the module inputs UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>                        <span class="fu">scatterPlotInputsUI</span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h3</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                        <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h3</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>                    <span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
@@ -155,7 +155,7 @@
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span></span>
 <span>                <span class="co"># Add the module output UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span><span class="fu">scatterPlotOutputUI</span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span><span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
@@ -166,7 +166,7 @@
 <span></span>
 <span>        <span class="co"># Add the module server for each data frame</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="fu">scatterPlotServer</span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span></span>
@@ -192,12 +192,12 @@
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Minimal Wrapper Controls"</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"filter_setosa"</span><span class="op">)</span>, <span class="st">"Start with Setosa Only"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        <span class="fu">scatterPlotInputsUI</span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">minimalWrapperOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">scatterPlotOutputUI</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Define the wrapper server</span></span>
@@ -224,7 +224,7 @@
 <span>    <span class="co"># We call this OUTSIDE the first moduleServer closure so that</span></span>
 <span>    <span class="co"># scatterPlotServer attaches to 'id' relative to the parent,</span></span>
 <span>    <span class="co"># avoiding nested namespace issues (e.g. id-id-input).</span></span>
-<span>    <span class="fu">scatterPlotServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Create the app using the wrapper</span></span>
