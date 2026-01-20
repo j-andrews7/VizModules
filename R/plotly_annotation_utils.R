@@ -142,11 +142,14 @@
     coord_ids <- .create_coord_id(trace$x, trace$y)
     
     # Extract annotation values from hover text (vectorized)
+    # Note: .extract_annotation_from_text can return NULL, so we wrap it
     anno_values <- vapply(
         trace$text,
-        .extract_annotation_from_text,
+        function(txt) {
+            result <- .extract_annotation_from_text(txt, annotate.by)
+            if (is.null(result)) NA_character_ else result
+        },
         character(1),
-        annotate.by = annotate.by,
         USE.NAMES = FALSE
     )
     
