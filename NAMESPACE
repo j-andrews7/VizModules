@@ -2,6 +2,7 @@
 
 export(.adjust_column_values)
 export(AreaPlotApp)
+export(setup_auto_update_logic)
 export(AreaPlotInputsUI)
 export(AreaPlotOutputUI)
 export(AreaPlotServer)

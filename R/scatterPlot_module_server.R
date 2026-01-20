@@ -94,14 +94,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         # Get color panel aligned to the current groups
         color.panel <- reactive({
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             picker_values <- isolate_fn(input$color.panel)
             manual_vals <- manual_color_values()
@@ -168,16 +161,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
 
-            # Check if auto update on
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(

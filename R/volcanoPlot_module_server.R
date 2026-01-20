@@ -19,14 +19,7 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         data_reac <- reactive({
             req(data())
             
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             # Use isolate for threshold inputs so they don't trigger updates
             sig_thresh <- isolate_fn(input$sig.thresh)
