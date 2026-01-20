@@ -82,9 +82,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selected = "solid",
             choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ),
-            selectInput(ns("palette"), "Select palette:",
-            selected = "Paired", choices = names(plotthis::palette_list)
-            )
+            uiOutput(ns("palette.selection"))
         ),
 
         "Axes" = tagList(
