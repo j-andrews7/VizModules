@@ -10,6 +10,8 @@
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
+#' 
+#' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_apply_subplot_axis_styling
@@ -100,6 +102,8 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
+#' 
+#' @importFrom stats lm coef
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_linear_fit
@@ -153,6 +157,8 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
+#' 
+#' @importFrom stats loess predict
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_loess_fit
@@ -259,8 +265,7 @@
 #' @param download.format Character. The image format for downloads (e.g., "png", "svg", "jpeg").
 #' @param filename Character. The filename for downloaded images (default: current date).
 #' @param include.modebar.buttons Logical. Whether to include drawing tool buttons in the modebar (default: TRUE).
-#' @param simple Logical. If TRUE, returns a simplified config with only basic edits (titleText, axisTitleText).
-#'   If FALSE, includes all edit options and drawing tools (default: FALSE).
+#' @param facet.by Logical. Whether the figure is facetted to determine if axes labels for each plot should be editable or not.
 #'
 #' @return A named list suitable for use as the `config` argument in Plotly
 #'   calls, containing edit options, image download settings, extra modebar

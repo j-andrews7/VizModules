@@ -38,9 +38,8 @@
 #' [vizModules::volcanoPlotApp()]
 #' @examples
 #' library(vizModules)
-#' data(mtcars)
-#' # Not a real volcano dataset, but demonstrates the UI
-#' volcanoPlotInputsUI("volcanoPlot", mtcars)
+#' data(airway_deseq2)
+#' volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2) {
     # Add a few extra inputs to control the DE thresholds
     ns <- NS(id)

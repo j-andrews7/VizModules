@@ -251,8 +251,8 @@ multiColorPicker <- function(
 				return(setNames(character(0), character(0)))
 			}
 
-			vals <- vapply(data, function(x) x$value %||% "", character(1))
-			nms <- vapply(data, function(x) x$name %||% "", character(1))
+			vals <- vapply(data, function(x) x$value %__% "", character(1))
+			nms <- vapply(data, function(x) x$name %__% "", character(1))
 			setNames(vals, nms)
 		},
 		force = TRUE
@@ -396,7 +396,7 @@ multiColorPicker <- function(
             } else if (nchar(val) == 4 || nchar(val) == 5) {
                 # Expand shorthand hex (#abc -> #aabbcc, #abcd -> #aabbccdd)
                 body <- substring(val, 2:nchar(val), 2:nchar(val))
-                expanded <- paste(rep.int(body, each = 2), collapse = "")
+                expanded <- paste(rep(body, each = 2), collapse = "")
                 val <- paste0("#", expanded)
             }
 
@@ -747,6 +747,6 @@ multiColorPicker <- function(
 #' @author Jared Andrews
 #' @rdname INTERNAL_null_coalesce
 #' @keywords internal
-`%||%` <- function(x, y) {
+`%__%` <- function(x, y) {
 	if (is.null(x) || length(x) == 0) y else x
 }

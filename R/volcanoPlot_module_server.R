@@ -8,8 +8,6 @@
 #'   Must contain `padj` and `log2FoldChange` columns.
 #' @param hide.inputs A character vector of input IDs to hide.
 #' @param hide.tabs A character vector of tab names to hide.
-#' @param update.button Logical; if `TRUE` (default), an "Update Plot" button is shown and plot only re-renders when clicked.
-#'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the volcanoPlot module.
 #'
 #' @import shiny
@@ -21,16 +19,14 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         data_reac <- reactive({
             req(data())
             
-            # Check if update button is required
-            use_update <- input$use.update.button
-            
+            auto_update <- input$auto.update
+
             # If update button is required, add dependency on it
-            if (use_update) {
+            if (!auto_update) {
                 input$update
             }
-            
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (use_update) isolate else identity
+
+            isolate_fn <- if (auto_update) identity else isolate
 
             # Use isolate for threshold inputs so they don't trigger updates
             sig_thresh <- isolate_fn(input$sig.thresh)

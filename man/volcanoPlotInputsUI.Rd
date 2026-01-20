@@ -52,9 +52,8 @@ Additional inputs specific to volcano plots are added to control significance th
 }
 \examples{
 library(vizModules)
-data(mtcars)
-# Not a real volcano dataset, but demonstrates the UI
-volcanoPlotInputsUI("volcanoPlot", mtcars)
+data(airway_deseq2)
+volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

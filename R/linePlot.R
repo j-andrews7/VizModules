@@ -239,7 +239,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                         type = "scatter",
                         mode = plot.mode,
                         name = x[i],
-                        showlegend = first_Facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
+                        showlegend = first_facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
                     )
                     # Only add line parameter if mode is "lines" or "lines+markers"
                     if (plot.mode %in% c("lines", "lines+markers")) {

@@ -11,12 +11,12 @@
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny
-#' @importFrom dittoViz scatterPlot
+#' @importFrom dittoViz scatterPlot colLevels
 #' @importFrom ggplot2 theme_bw waiver
 #' @importFrom shinyjs hide
 #'
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
-#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::ScatterPlotApp()]
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::scatterPlotApp()]
 #'
 #' @export
 #' @author Jared Andrews

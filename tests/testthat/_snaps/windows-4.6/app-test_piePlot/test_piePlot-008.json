@@ -1,0 +1,588 @@
+{
+  "input": {
+    ".clientValue-default-plotlyCrosstalkOpts": {
+      "on": "plotly_click",
+      "persistent": false,
+      "dynamic": false,
+      "selectize": false,
+      "opacityDim": 0.2,
+      "selected": {
+        "opacity": 1
+      },
+      "debounce": 0,
+      "color": [
+
+      ]
+    },
+    "iris-auto.update": false,
+    "iris-direction": "counterclockwise",
+    "iris-download.type": "png",
+    "iris-hole": 0,
+    "iris-insidetextorientation": "auto",
+    "iris-labels": "Species",
+    "iris-legend.font.color": "#000000",
+    "iris-legend.font.family": "Arial",
+    "iris-legend.font.size": 12,
+    "iris-legend.orientation": "h",
+    "iris-piePlotTabsetPanel": "Data",
+    "iris-piePlot__shinyjquiBookmarkState__resizable": {
+      "width": 1039.33,
+      "height": 400
+    },
+    "iris-piePlot_is_resizing": false,
+    "iris-piePlot_size": {
+      "width": 1039.33,
+      "height": 400
+    },
+    "iris-reset": 0,
+    "iris-rotation": 0,
+    "iris-show.legend": true,
+    "iris-slice.line.color": "#FFFFFF",
+    "iris-slice.line.width": 0,
+    "iris-sort.slices": true,
+    "iris-text.font.color": "#000000",
+    "iris-text.font.family": "Arial",
+    "iris-text.font.size": 12,
+    "iris-textinfo": "label",
+    "iris-textposition": "auto",
+    "iris-title.font.color": "#000000",
+    "iris-title.font.family": "Arial",
+    "iris-title.font.size": 28,
+    "iris-title.x": 0.5,
+    "iris-update": 0,
+    "iris-values": "Count",
+    "mtcars-auto.update": true,
+    "mtcars-direction": "counterclockwise",
+    "mtcars-download.type": "svg",
+    "mtcars-hole": 0,
+    "mtcars-insidetextorientation": "auto",
+    "mtcars-labels": "Cylinders",
+    "mtcars-legend.font.color": "#000000",
+    "mtcars-legend.font.family": "Arial",
+    "mtcars-legend.font.size": 12,
+    "mtcars-legend.orientation": "h",
+    "mtcars-piePlotTabsetPanel": "Title & Legend",
+    "mtcars-piePlot__shinyjquiBookmarkState__resizable": {
+      "width": 1039.33,
+      "height": 400
+    },
+    "mtcars-piePlot_is_resizing": false,
+    "mtcars-piePlot_size": {
+      "width": 1039.33,
+      "height": 400
+    },
+    "mtcars-reset": 4,
+    "mtcars-rotation": 0,
+    "mtcars-show.legend": true,
+    "mtcars-slice.colors": {
+      "4": "#E69F00",
+      "6": "#56B4E9",
+      "8": "#009E73"
+    },
+    "mtcars-slice.colors-palette": null,
+    "mtcars-slice.line.color": "#FFFFFF",
+    "mtcars-slice.line.width": 0,
+    "mtcars-sort.slices": true,
+    "mtcars-text.font.color": "#000000",
+    "mtcars-text.font.family": "Arial",
+    "mtcars-text.font.size": 12,
+    "mtcars-textinfo": [
+      "label",
+      "percent"
+    ],
+    "mtcars-textposition": "auto",
+    "mtcars-title.font.color": "#000000",
+    "mtcars-title.font.family": "Arial",
+    "mtcars-title.font.size": 36,
+    "mtcars-title.x": 0.5,
+    "mtcars-update": 8,
+    "mtcars-values": "Count",
+    "plotly_afterplot-A": "\"mtcars-piePlot\"",
+    "plotly_relayout-A": "{\"width\":1039.328125,\"height\":400}"
+  },
+  "output": {
+    "iris-piePlot": {
+      "x": {
+        "layout": {
+          "margin": {
+            "b": 40,
+            "l": 60,
+            "t": 80,
+            "r": 10
+          },
+          "title": {
+            "text": "",
+            "font": {
+              "family": "Arial",
+              "size": 28,
+              "color": "#000000"
+            },
+            "x": 0.5,
+            "xanchor": "center",
+            "y": 0.94999999999999996,
+            "yanchor": "top",
+            "pad": {
+              "t": 20
+            }
+          },
+          "showlegend": true,
+          "legend": {
+            "orientation": "h",
+            "x": 0.5,
+            "y": -0.10000000000000001,
+            "font": {
+              "family": "Arial",
+              "size": 12,
+              "color": "#000000"
+            }
+          },
+          "hovermode": "closest"
+        },
+        "source": "A",
+        "config": {
+          "modeBarButtonsToAdd": [
+            "drawline",
+            "drawopenpath",
+            "drawclosedpath",
+            "drawcircle",
+            "drawrect",
+            "eraseshape",
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": true,
+            "titleText": true,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "png",
+            "filename": "2026-01-16"
+          },
+          "displaylogo": false
+        },
+        "data": [
+          {
+            "labels": [
+              "setosa",
+              "versicolor",
+              "virginica"
+            ],
+            "values": [
+              50,
+              50,
+              50
+            ],
+            "hole": 0,
+            "sort": true,
+            "direction": "counterclockwise",
+            "rotation": 0,
+            "textinfo": "label",
+            "textposition": [
+              "auto",
+              "auto",
+              "auto"
+            ],
+            "insidetextorientation": "auto",
+            "marker": {
+              "color": "rgba(31,119,180,1)",
+              "colors": [
+                "#E69F00",
+                "#56B4E9",
+                "#009E73"
+              ],
+              "line": {
+                "color": "#FFFFFF",
+                "width": 0
+              }
+            },
+            "textfont": {
+              "family": "Arial",
+              "size": 12,
+              "color": "#000000"
+            },
+            "type": "pie",
+            "frame": null
+          }
+        ],
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.20000000000000001,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "setprototypeof",
+          "version": "0.1",
+          "src": {
+            "href": "setprototypeof-0.1"
+          },
+          "meta": null,
+          "script": "setprototypeof.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.2",
+          "src": {
+            "href": "crosstalk-1.2.2"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-htmlwidgets-css-2.11.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-main-2.11.1"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    },
+    "mtcars-color.picker": {
+      "html": "<div class=\"multi-color-picker shiny-input-container form-group is-compact \" id=\"mtcars-slice.colors\" data-palettes=\"{&quot;dittoColors&quot;:[&quot;#E69F00&quot;,&quot;#56B4E9&quot;,&quot;#009E73&quot;,&quot;#F0E442&quot;,&quot;#0072B2&quot;,&quot;#D55E00&quot;,&quot;#CC79A7&quot;,&quot;#666666&quot;],&quot;ggplot2&quot;:[&quot;#F8766D&quot;,&quot;#D39200&quot;,&quot;#93AA00&quot;,&quot;#00BA38&quot;,&quot;#00C19F&quot;,&quot;#00B9E3&quot;,&quot;#619CFF&quot;,&quot;#DB72FB&quot;,&quot;#FF61C3&quot;],&quot;viridis&quot;:[&quot;#440154&quot;,&quot;#482878&quot;,&quot;#3E4A89&quot;,&quot;#31688E&quot;,&quot;#26828E&quot;,&quot;#1F9E89&quot;,&quot;#35B779&quot;,&quot;#6DCD59&quot;,&quot;#B4DE2C&quot;,&quot;#FDE725&quot;],&quot;magma&quot;:[&quot;#000004&quot;,&quot;#180F3E&quot;,&quot;#451077&quot;,&quot;#721F81&quot;,&quot;#9F2F7F&quot;,&quot;#CD4071&quot;,&quot;#F1605D&quot;,&quot;#FD9567&quot;,&quot;#FEC98D&quot;,&quot;#FCFDBF&quot;],&quot;inferno&quot;:[&quot;#000004&quot;,&quot;#1B0C42&quot;,&quot;#4B0C6B&quot;,&quot;#781C6D&quot;,&quot;#A52C60&quot;,&quot;#CF4446&quot;,&quot;#ED6925&quot;,&quot;#FB9A06&quot;,&quot;#F7D03C&quot;,&quot;#FCFFA4&quot;],&quot;plasma&quot;:[&quot;#0D0887&quot;,&quot;#47039F&quot;,&quot;#7301A8&quot;,&quot;#9C179E&quot;,&quot;#BD3786&quot;,&quot;#D8576B&quot;,&quot;#ED7953&quot;,&quot;#FA9E3B&quot;,&quot;#FDC926&quot;,&quot;#F0F921&quot;],&quot;cividis&quot;:[&quot;#00204D&quot;,&quot;#00336F&quot;,&quot;#39486B&quot;,&quot;#575C6D&quot;,&quot;#707173&quot;,&quot;#8A8779&quot;,&quot;#A69D75&quot;,&quot;#C4B56C&quot;,&quot;#E4CF5B&quot;,&quot;#FFEA46&quot;],&quot;BrBG&quot;:[&quot;#543005&quot;,&quot;#8C510A&quot;,&quot;#BF812D&quot;,&quot;#DFC27D&quot;,&quot;#F6E8C3&quot;,&quot;#F5F5F5&quot;,&quot;#C7EAE5&quot;,&quot;#80CDC1&quot;,&quot;#35978F&quot;,&quot;#01665E&quot;,&quot;#003C30&quot;],&quot;PiYG&quot;:[&quot;#8E0152&quot;,&quot;#C51B7D&quot;,&quot;#DE77AE&quot;,&quot;#F1B6DA&quot;,&quot;#FDE0EF&quot;,&quot;#F7F7F7&quot;,&quot;#E6F5D0&quot;,&quot;#B8E186&quot;,&quot;#7FBC41&quot;,&quot;#4D9221&quot;,&quot;#276419&quot;],&quot;PRGn&quot;:[&quot;#40004B&quot;,&quot;#762A83&quot;,&quot;#9970AB&quot;,&quot;#C2A5CF&quot;,&quot;#E7D4E8&quot;,&quot;#F7F7F7&quot;,&quot;#D9F0D3&quot;,&quot;#A6DBA0&quot;,&quot;#5AAE61&quot;,&quot;#1B7837&quot;,&quot;#00441B&quot;],&quot;PuOr&quot;:[&quot;#7F3B08&quot;,&quot;#B35806&quot;,&quot;#E08214&quot;,&quot;#FDB863&quot;,&quot;#FEE0B6&quot;,&quot;#F7F7F7&quot;,&quot;#D8DAEB&quot;,&quot;#B2ABD2&quot;,&quot;#8073AC&quot;,&quot;#542788&quot;,&quot;#2D004B&quot;],&quot;RdBu&quot;:[&quot;#67001F&quot;,&quot;#B2182B&quot;,&quot;#D6604D&quot;,&quot;#F4A582&quot;,&quot;#FDDBC7&quot;,&quot;#F7F7F7&quot;,&quot;#D1E5F0&quot;,&quot;#92C5DE&quot;,&quot;#4393C3&quot;,&quot;#2166AC&quot;,&quot;#053061&quot;],&quot;RdGy&quot;:[&quot;#67001F&quot;,&quot;#B2182B&quot;,&quot;#D6604D&quot;,&quot;#F4A582&quot;,&quot;#FDDBC7&quot;,&quot;#FFFFFF&quot;,&quot;#E0E0E0&quot;,&quot;#BABABA&quot;,&quot;#878787&quot;,&quot;#4D4D4D&quot;,&quot;#1A1A1A&quot;],&quot;RdYlBu&quot;:[&quot;#A50026&quot;,&quot;#D73027&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE090&quot;,&quot;#FFFFBF&quot;,&quot;#E0F3F8&quot;,&quot;#ABD9E9&quot;,&quot;#74ADD1&quot;,&quot;#4575B4&quot;,&quot;#313695&quot;],&quot;RdYlGn&quot;:[&quot;#A50026&quot;,&quot;#D73027&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE08B&quot;,&quot;#FFFFBF&quot;,&quot;#D9EF8B&quot;,&quot;#A6D96A&quot;,&quot;#66BD63&quot;,&quot;#1A9850&quot;,&quot;#006837&quot;],&quot;Spectral&quot;:[&quot;#9E0142&quot;,&quot;#D53E4F&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE08B&quot;,&quot;#FFFFBF&quot;,&quot;#E6F598&quot;,&quot;#ABDDA4&quot;,&quot;#66C2A5&quot;,&quot;#3288BD&quot;,&quot;#5E4FA2&quot;],&quot;Accent&quot;:[&quot;#7FC97F&quot;,&quot;#BEAED4&quot;,&quot;#FDC086&quot;,&quot;#FFFF99&quot;,&quot;#386CB0&quot;,&quot;#F0027F&quot;,&quot;#BF5B17&quot;,&quot;#666666&quot;],&quot;Dark2&quot;:[&quot;#1B9E77&quot;,&quot;#D95F02&quot;,&quot;#7570B3&quot;,&quot;#E7298A&quot;,&quot;#66A61E&quot;,&quot;#E6AB02&quot;,&quot;#A6761D&quot;,&quot;#666666&quot;],&quot;Paired&quot;:[&quot;#A6CEE3&quot;,&quot;#1F78B4&quot;,&quot;#B2DF8A&quot;,&quot;#33A02C&quot;,&quot;#FB9A99&quot;,&quot;#E31A1C&quot;,&quot;#FDBF6F&quot;,&quot;#FF7F00&quot;,&quot;#CAB2D6&quot;,&quot;#6A3D9A&quot;,&quot;#FFFF99&quot;,&quot;#B15928&quot;],&quot;Pastel1&quot;:[&quot;#FBB4AE&quot;,&quot;#B3CDE3&quot;,&quot;#CCEBC5&quot;,&quot;#DECBE4&quot;,&quot;#FED9A6&quot;,&quot;#FFFFCC&quot;,&quot;#E5D8BD&quot;,&quot;#FDDAEC&quot;,&quot;#F2F2F2&quot;],&quot;Pastel2&quot;:[&quot;#B3E2CD&quot;,&quot;#FDCDAC&quot;,&quot;#CBD5E8&quot;,&quot;#F4CAE4&quot;,&quot;#E6F5C9&quot;,&quot;#FFF2AE&quot;,&quot;#F1E2CC&quot;,&quot;#CCCCCC&quot;],&quot;Set1&quot;:[&quot;#E41A1C&quot;,&quot;#377EB8&quot;,&quot;#4DAF4A&quot;,&quot;#984EA3&quot;,&quot;#FF7F00&quot;,&quot;#FFFF33&quot;,&quot;#A65628&quot;,&quot;#F781BF&quot;],&quot;Set2&quot;:[&quot;#66C2A5&quot;,&quot;#FC8D62&quot;,&quot;#8DA0CB&quot;,&quot;#E78AC3&quot;,&quot;#A6D854&quot;,&quot;#FFD92F&quot;,&quot;#E5C494&quot;,&quot;#B3B3B3&quot;],&quot;Set3&quot;:[&quot;#8DD3C7&quot;,&quot;#FFFFB3&quot;,&quot;#BEBADA&quot;,&quot;#FB8072&quot;,&quot;#80B1D3&quot;,&quot;#FDB462&quot;,&quot;#B3DE69&quot;,&quot;#FCCDE5&quot;,&quot;#D9D9D9&quot;,&quot;#BC80BD&quot;,&quot;#CCEBC5&quot;,&quot;#FFED6F&quot;],&quot;Blues&quot;:[&quot;#F7FBFF&quot;,&quot;#DEEBF7&quot;,&quot;#C6DBEF&quot;,&quot;#9ECAE1&quot;,&quot;#6BAED6&quot;,&quot;#4292C6&quot;,&quot;#2171B5&quot;,&quot;#08519C&quot;,&quot;#08306B&quot;],&quot;BuGn&quot;:[&quot;#F7FCFD&quot;,&quot;#E5F5F9&quot;,&quot;#CCECE6&quot;,&quot;#99D8C9&quot;,&quot;#66C2A4&quot;,&quot;#41AE76&quot;,&quot;#238B45&quot;,&quot;#006D2C&quot;,&quot;#00441B&quot;],&quot;BuPu&quot;:[&quot;#F7FCFD&quot;,&quot;#E0ECF4&quot;,&quot;#BFD3E6&quot;,&quot;#9EBCDA&quot;,&quot;#8C96C6&quot;,&quot;#8C6BB1&quot;,&quot;#88419D&quot;,&quot;#810F7C&quot;,&quot;#4D004B&quot;],&quot;GnBu&quot;:[&quot;#F7FCF0&quot;,&quot;#E0F3DB&quot;,&quot;#CCEBC5&quot;,&quot;#A8DDB5&quot;,&quot;#7BCCC4&quot;,&quot;#4EB3D3&quot;,&quot;#2B8CBE&quot;,&quot;#0868AC&quot;,&quot;#084081&quot;],&quot;Greens&quot;:[&quot;#F7FCF5&quot;,&quot;#E5F5E0&quot;,&quot;#C7E9C0&quot;,&quot;#A1D99B&quot;,&quot;#74C476&quot;,&quot;#41AB5D&quot;,&quot;#238B45&quot;,&quot;#006D2C&quot;,&quot;#00441B&quot;],&quot;Greys&quot;:[&quot;#FFFFFF&quot;,&quot;#F0F0F0&quot;,&quot;#D9D9D9&quot;,&quot;#BDBDBD&quot;,&quot;#969696&quot;,&quot;#737373&quot;,&quot;#525252&quot;,&quot;#252525&quot;,&quot;#000000&quot;],&quot;Oranges&quot;:[&quot;#FFF5EB&quot;,&quot;#FEE6CE&quot;,&quot;#FDD0A2&quot;,&quot;#FDAE6B&quot;,&quot;#FD8D3C&quot;,&quot;#F16913&quot;,&quot;#D94801&quot;,&quot;#A63603&quot;,&quot;#7F2704&quot;],&quot;OrRd&quot;:[&quot;#FFF7EC&quot;,&quot;#FEE8C8&quot;,&quot;#FDD49E&quot;,&quot;#FDBB84&quot;,&quot;#FC8D59&quot;,&quot;#EF6548&quot;,&quot;#D7301F&quot;,&quot;#B30000&quot;,&quot;#7F0000&quot;],&quot;PuBu&quot;:[&quot;#FFF7FB&quot;,&quot;#ECE7F2&quot;,&quot;#D0D1E6&quot;,&quot;#A6BDDB&quot;,&quot;#74A9CF&quot;,&quot;#3690C0&quot;,&quot;#0570B0&quot;,&quot;#045A8D&quot;,&quot;#023858&quot;],&quot;PuBuGn&quot;:[&quot;#FFF7FB&quot;,&quot;#ECE2F0&quot;,&quot;#D0D1E6&quot;,&quot;#A6BDDB&quot;,&quot;#67A9CF&quot;,&quot;#3690C0&quot;,&quot;#02818A&quot;,&quot;#016C59&quot;,&quot;#014636&quot;],&quot;PuRd&quot;:[&quot;#F7F4F9&quot;,&quot;#E7E1EF&quot;,&quot;#D4B9DA&quot;,&quot;#C994C7&quot;,&quot;#DF65B0&quot;,&quot;#E7298A&quot;,&quot;#CE1256&quot;,&quot;#980043&quot;,&quot;#67001F&quot;],&quot;Purples&quot;:[&quot;#FCFBFD&quot;,&quot;#EFEDF5&quot;,&quot;#DADAEB&quot;,&quot;#BCBDDC&quot;,&quot;#9E9AC8&quot;,&quot;#807DBA&quot;,&quot;#6A51A3&quot;,&quot;#54278F&quot;,&quot;#3F007D&quot;],&quot;RdPu&quot;:[&quot;#FFF7F3&quot;,&quot;#FDE0DD&quot;,&quot;#FCC5C0&quot;,&quot;#FA9FB5&quot;,&quot;#F768A1&quot;,&quot;#DD3497&quot;,&quot;#AE017E&quot;,&quot;#7A0177&quot;,&quot;#49006A&quot;],&quot;Reds&quot;:[&quot;#FFF5F0&quot;,&quot;#FEE0D2&quot;,&quot;#FCBBA1&quot;,&quot;#FC9272&quot;,&quot;#FB6A4A&quot;,&quot;#EF3B2C&quot;,&quot;#CB181D&quot;,&quot;#A50F15&quot;,&quot;#67000D&quot;],&quot;YlGn&quot;:[&quot;#FFFFE5&quot;,&quot;#F7FCB9&quot;,&quot;#D9F0A3&quot;,&quot;#ADDD8E&quot;,&quot;#78C679&quot;,&quot;#41AB5D&quot;,&quot;#238443&quot;,&quot;#006837&quot;,&quot;#004529&quot;],&quot;YlGnBu&quot;:[&quot;#FFFFD9&quot;,&quot;#EDF8B1&quot;,&quot;#C7E9B4&quot;,&quot;#7FCDBB&quot;,&quot;#41B6C4&quot;,&quot;#1D91C0&quot;,&quot;#225EA8&quot;,&quot;#253494&quot;,&quot;#081D58&quot;],&quot;YlOrBr&quot;:[&quot;#FFFFE5&quot;,&quot;#FFF7BC&quot;,&quot;#FEE391&quot;,&quot;#FEC44F&quot;,&quot;#FE9929&quot;,&quot;#EC7014&quot;,&quot;#CC4C02&quot;,&quot;#993404&quot;,&quot;#662506&quot;],&quot;YlOrRd&quot;:[&quot;#FFFFCC&quot;,&quot;#FFEDA0&quot;,&quot;#FED976&quot;,&quot;#FEB24C&quot;,&quot;#FD8D3C&quot;,&quot;#FC4E2A&quot;,&quot;#E31A1C&quot;,&quot;#BD0026&quot;,&quot;#800026&quot;]}\" data-initial=\"{&quot;4&quot;:&quot;#E69F00&quot;,&quot;6&quot;:&quot;#56B4E9&quot;,&quot;8&quot;:&quot;#009E73&quot;}\" data-groups=\"[&quot;4&quot;,&quot;6&quot;,&quot;8&quot;]\" data-default-palette=\"dittoColors\" data-compact=\"true\">\n  <div class=\"mc-top\">\n    <label class=\"control-label\" for=\"mtcars-slice.colors\">Slice colors<\/label>\n    <div class=\"mc-actions\">\n      <select id=\"mtcars-slice.colors-palette\" class=\"mc-palette-select form-control input-sm\" aria-label=\"Palette\">\n        <optgroup label=\"Defaults\">\n          <option value=\"dittoColors\" selected=\"selected\">dittoColors<\/option>\n          <option value=\"ggplot2\">ggplot2<\/option>\n        <\/optgroup>\n        <optgroup label=\"Viridis\">\n          <option value=\"viridis\">viridis<\/option>\n          <option value=\"magma\">magma<\/option>\n          <option value=\"inferno\">inferno<\/option>\n          <option value=\"plasma\">plasma<\/option>\n          <option value=\"cividis\">cividis<\/option>\n        <\/optgroup>\n        <optgroup label=\"Diverging\">\n          <option value=\"BrBG\">BrBG<\/option>\n          <option value=\"PiYG\">PiYG<\/option>\n          <option value=\"PRGn\">PRGn<\/option>\n          <option value=\"PuOr\">PuOr<\/option>\n          <option value=\"RdBu\">RdBu<\/option>\n          <option value=\"RdGy\">RdGy<\/option>\n          <option value=\"RdYlBu\">RdYlBu<\/option>\n          <option value=\"RdYlGn\">RdYlGn<\/option>\n          <option value=\"Spectral\">Spectral<\/option>\n        <\/optgroup>\n        <optgroup label=\"Qualitative\">\n          <option value=\"Accent\">Accent<\/option>\n          <option value=\"Dark2\">Dark2<\/option>\n          <option value=\"Paired\">Paired<\/option>\n          <option value=\"Pastel1\">Pastel1<\/option>\n          <option value=\"Pastel2\">Pastel2<\/option>\n          <option value=\"Set1\">Set1<\/option>\n          <option value=\"Set2\">Set2<\/option>\n          <option value=\"Set3\">Set3<\/option>\n        <\/optgroup>\n        <optgroup label=\"Sequential\">\n          <option value=\"Blues\">Blues<\/option>\n          <option value=\"BuGn\">BuGn<\/option>\n          <option value=\"BuPu\">BuPu<\/option>\n          <option value=\"GnBu\">GnBu<\/option>\n          <option value=\"Greens\">Greens<\/option>\n          <option value=\"Greys\">Greys<\/option>\n          <option value=\"Oranges\">Oranges<\/option>\n          <option value=\"OrRd\">OrRd<\/option>\n          <option value=\"PuBu\">PuBu<\/option>\n          <option value=\"PuBuGn\">PuBuGn<\/option>\n          <option value=\"PuRd\">PuRd<\/option>\n          <option value=\"Purples\">Purples<\/option>\n          <option value=\"RdPu\">RdPu<\/option>\n          <option value=\"Reds\">Reds<\/option>\n          <option value=\"YlGn\">YlGn<\/option>\n          <option value=\"YlGnBu\">YlGnBu<\/option>\n          <option value=\"YlOrBr\">YlOrBr<\/option>\n          <option value=\"YlOrRd\">YlOrRd<\/option>\n        <\/optgroup>\n      <\/select>\n      <div class=\"mc-button-group\">\n        <button type=\"button\" class=\"mc-button mc-apply-palette\">Apply<\/button>\n        <button type=\"button\" class=\"mc-button mc-reset-palette\">Reset<\/button>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"mc-swatch-row\" role=\"list\"><\/div>\n  <div class=\"mc-color-rows\">\n    <div class=\"mc-color-row is-active\" data-group=\"4\">\n      <span class=\"mc-group-label\">4<\/span>\n      <input type=\"color\" class=\"mc-color-input\" value=\"#E69F00\" aria-label=\"4 color\"/>\n      <input type=\"text\" class=\"mc-text-input form-control input-sm\" value=\"#E69F00\" aria-label=\"4 hex code\"/>\n    <\/div>\n    <div class=\"mc-color-row \" data-group=\"6\">\n      <span class=\"mc-group-label\">6<\/span>\n      <input type=\"color\" class=\"mc-color-input\" value=\"#56B4E9\" aria-label=\"6 color\"/>\n      <input type=\"text\" class=\"mc-text-input form-control input-sm\" value=\"#56B4E9\" aria-label=\"6 hex code\"/>\n    <\/div>\n    <div class=\"mc-color-row \" data-group=\"8\">\n      <span class=\"mc-group-label\">8<\/span>\n      <input type=\"color\" class=\"mc-color-input\" value=\"#009E73\" aria-label=\"8 color\"/>\n      <input type=\"text\" class=\"mc-text-input form-control input-sm\" value=\"#009E73\" aria-label=\"8 hex code\"/>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+        {
+          "name": "multi-color-picker",
+          "version": "0.99.0.9000",
+          "src": {
+            "href": "multi-color-picker-0.99.0.9000"
+          },
+          "meta": null,
+          "script": "multiColorPicker.js",
+          "stylesheet": "multiColorPicker.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "selectize",
+          "version": "1.12.1",
+          "src": {
+            "href": "selectize-1.12.1"
+          },
+          "meta": null,
+          "script": [
+            "js/selectize.min.js",
+            "accessibility/js/selectize-plugin-a11y.min.js"
+          ],
+          "stylesheet": "css/selectize.bootstrap3.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    },
+    "mtcars-piePlot": {
+      "x": {
+        "layout": {
+          "margin": {
+            "b": 40,
+            "l": 60,
+            "t": 80,
+            "r": 10
+          },
+          "title": {
+            "text": "",
+            "font": {
+              "family": "Arial",
+              "size": 36,
+              "color": "#000000"
+            },
+            "x": 0.5,
+            "xanchor": "center",
+            "y": 0.94999999999999996,
+            "yanchor": "top",
+            "pad": {
+              "t": 20
+            }
+          },
+          "showlegend": true,
+          "legend": {
+            "orientation": "h",
+            "x": 0.5,
+            "y": -0.10000000000000001,
+            "font": {
+              "family": "Arial",
+              "size": 12,
+              "color": "#000000"
+            }
+          },
+          "hovermode": "closest"
+        },
+        "source": "A",
+        "config": {
+          "modeBarButtonsToAdd": [
+            "drawline",
+            "drawopenpath",
+            "drawclosedpath",
+            "drawcircle",
+            "drawrect",
+            "eraseshape",
+            "hoverclosest",
+            "hovercompare"
+          ],
+          "showSendToCloud": false,
+          "edits": {
+            "axisTitleText": true,
+            "titleText": true,
+            "annotationText": true,
+            "legendText": true,
+            "legendPosition": true,
+            "colorbarPosition": true,
+            "colorbarTitleText": true,
+            "annotationTail": true
+          },
+          "toImageButtonOptions": {
+            "format": "svg",
+            "filename": "2026-01-16"
+          },
+          "displaylogo": false
+        },
+        "data": [
+          {
+            "labels": [
+              "4",
+              "6",
+              "8"
+            ],
+            "values": [
+              11,
+              7,
+              14
+            ],
+            "hole": 0,
+            "sort": true,
+            "direction": "counterclockwise",
+            "rotation": 0,
+            "textinfo": "label+percent",
+            "textposition": [
+              "auto",
+              "auto",
+              "auto"
+            ],
+            "insidetextorientation": "auto",
+            "marker": {
+              "color": "rgba(31,119,180,1)",
+              "colors": [
+                "#E69F00",
+                "#56B4E9",
+                "#009E73"
+              ],
+              "line": {
+                "color": "#FFFFFF",
+                "width": 0
+              }
+            },
+            "textfont": {
+              "family": "Arial",
+              "size": 12,
+              "color": "#000000"
+            },
+            "type": "pie",
+            "frame": null
+          }
+        ],
+        "highlight": {
+          "on": "plotly_click",
+          "persistent": false,
+          "dynamic": false,
+          "selectize": false,
+          "opacityDim": 0.20000000000000001,
+          "selected": {
+            "opacity": 1
+          },
+          "debounce": 0
+        },
+        "shinyEvents": [
+          "plotly_hover",
+          "plotly_click",
+          "plotly_selected",
+          "plotly_relayout",
+          "plotly_brushed",
+          "plotly_brushing",
+          "plotly_clickannotation",
+          "plotly_doubleclick",
+          "plotly_deselect",
+          "plotly_afterplot",
+          "plotly_sunburstclick"
+        ],
+        "base_url": "https://plot.ly"
+      },
+      "evals": [
+
+      ],
+      "jsHooks": [
+
+      ],
+      "deps": [
+        {
+          "name": "setprototypeof",
+          "version": "0.1",
+          "src": {
+            "href": "setprototypeof-0.1"
+          },
+          "meta": null,
+          "script": "setprototypeof.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "typedarray",
+          "version": "0.1",
+          "src": {
+            "href": "typedarray-0.1"
+          },
+          "meta": null,
+          "script": "typedarray.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "jquery",
+          "version": "3.5.1",
+          "src": {
+            "href": "jquery-3.5.1"
+          },
+          "meta": null,
+          "script": "jquery.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "crosstalk",
+          "version": "1.2.2",
+          "src": {
+            "href": "crosstalk-1.2.2"
+          },
+          "meta": null,
+          "script": "js/crosstalk.min.js",
+          "stylesheet": "css/crosstalk.min.css",
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        },
+        {
+          "name": "plotly-htmlwidgets-css",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-htmlwidgets-css-2.11.1"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "plotly-htmlwidgets.css",
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        },
+        {
+          "name": "plotly-main",
+          "version": "2.11.1",
+          "src": {
+            "href": "plotly-main-2.11.1"
+          },
+          "meta": null,
+          "script": "plotly-latest.min.js",
+          "stylesheet": null,
+          "head": null,
+          "attachment": null,
+          "all_files": false
+        }
+      ]
+    }
+  },
+  "export": {
+
+  }
+}

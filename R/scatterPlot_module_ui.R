@@ -35,7 +35,7 @@
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
-#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::ScatterPlotApp()]
+#' [vizModules::scatterPlotOutputUI()], [vizModules::scatterPlotServer()], [vizModules::scatterPlotApp()]
 #' @examples
 #' library(vizModules)
 #' data(mtcars)

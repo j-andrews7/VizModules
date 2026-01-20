@@ -13,6 +13,7 @@
 #' @import shiny
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom stats aggregate
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews

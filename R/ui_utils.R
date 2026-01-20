@@ -11,6 +11,8 @@
 #' @return A Shiny tagList with inputs organized into a grid, optionally
 #'   nested inside a tabsetPanel.
 #'
+#' @import shiny
+#' @importFrom methods is
 #' @export
 #'
 #' @author Jared Andrews
@@ -105,6 +107,7 @@ organize_inputs <- function(
 
 #' Color palette options for palettePicker
 #' @importFrom scales hue_pal viridis_pal brewer_pal
+#' @importFrom dittoViz dittoColors
 #' @export
 #' @author Jared Andrews
 default_palettes <- function() {
