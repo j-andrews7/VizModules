@@ -53,10 +53,11 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
 
         # Use color inputs for manual colors - reactive so it updates immediately
         color_reac <- reactive({
+            isolate_fn <- setup_auto_update_logic(input)
             c(
-                "Up" = if (!is.null(input$color.up)) input$color.up else "red",
-                "Down" = if (!is.null(input$color.down)) input$color.down else "blue",
-                "n.s." = if (!is.null(input$color.ns)) input$color.ns else "lightgray"
+                "Up" = if (!is.null(isolate_fn(input$color.up))) isolate_fn(input$color.up) else "red",
+                "Down" = if (!is.null(isolate_fn(input$color.down))) isolate_fn(input$color.down) else "blue",
+                "n.s." = if (!is.null(isolate_fn(input$color.ns))) isolate_fn(input$color.ns) else "lightgray"
             )
         })
 

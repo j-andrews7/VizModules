@@ -115,10 +115,11 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
             numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
-            # Reset numeric inputs to defaults derived from data
-            # Data
+
             # Data
             updateSelectInput(session, "x.data",    selected = char.choices[2])
             updateSelectInput(session, "y.data",    selected = num.choices[2])
