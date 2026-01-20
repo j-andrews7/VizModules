@@ -436,19 +436,20 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 }
             }
 
+            # Create annotation parameters (used for both manual and auto annotations)
+            annotation_params <- list(
+                ax = isolate_fn(input$annotation.ax),
+                ay = isolate_fn(input$annotation.ay),
+                showarrow = isolate_fn(input$annotation.showarrow),
+                arrowcolor = isolate_fn(input$annotation.arrowcolor),
+                arrowhead = isolate_fn(input$annotation.arrowhead),
+                arrowwidth = isolate_fn(input$annotation.arrowwidth),
+                size = isolate_fn(input$annotation.size),
+                color = isolate_fn(input$annotation.color)
+            )
+
             if (!is.null(null.na.inputs$annotate.by) && !is.null(selected.data())) {
                 # Create annotations for selected points using helper function
-                annotation_params <- list(
-                    ax = isolate_fn(input$annotation.ax),
-                    ay = isolate_fn(input$annotation.ay),
-                    showarrow = isolate_fn(input$annotation.showarrow),
-                    arrowcolor = isolate_fn(input$annotation.arrowcolor),
-                    arrowhead = isolate_fn(input$annotation.arrowhead),
-                    arrowwidth = isolate_fn(input$annotation.arrowwidth),
-                    size = isolate_fn(input$annotation.size),
-                    color = isolate_fn(input$annotation.color)
-                )
-                
                 annos <- .create_selected_annotations(
                     selected_data = selected.data(),
                     fig = fig,
@@ -469,18 +470,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 highlight_vals <- highlight_vals[highlight_vals != ""]
 
                 if (length(highlight_vals) > 0) {
-                    # Create annotation parameters
-                    annotation_params <- list(
-                        ax = isolate_fn(input$annotation.ax),
-                        ay = isolate_fn(input$annotation.ay),
-                        showarrow = isolate_fn(input$annotation.showarrow),
-                        arrowcolor = isolate_fn(input$annotation.arrowcolor),
-                        arrowhead = isolate_fn(input$annotation.arrowhead),
-                        arrowwidth = isolate_fn(input$annotation.arrowwidth),
-                        size = isolate_fn(input$annotation.size),
-                        color = isolate_fn(input$annotation.color)
-                    )
-                    
                     # Create annotations for highlighted points
                     highlight_annos <- .create_highlight_annotations(
                         plot_data = plot_data,

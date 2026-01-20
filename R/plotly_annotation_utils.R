@@ -16,7 +16,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_should_include_trace
 .should_include_trace <- function(trace, show.others = TRUE) {
     # Skip non-scatter traces or traces without proper data
     if (is.null(trace$x) || is.null(trace$y)) {
@@ -64,7 +63,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_extract_annotation_from_text
 .extract_annotation_from_text <- function(trace_text, annotate.by) {
     if (is.null(trace_text) || is.na(trace_text) || trace_text == "") {
         return(NULL)
@@ -110,7 +108,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_create_coord_id
 .create_coord_id <- function(x, y, precision = 10) {
     paste0(round(x, precision), "_", round(y, precision))
 }
@@ -132,7 +129,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_build_trace_anno_map
 .build_trace_anno_map <- function(trace, annotate.by) {
     if (is.null(trace$x) || is.null(trace$y) || is.null(trace$text)) {
         return(NULL)
@@ -145,11 +141,14 @@
     # Create coordinate IDs
     coord_ids <- .create_coord_id(trace$x, trace$y)
     
-    # Extract annotation values from hover text
-    anno_values <- character(length(trace$text))
-    for (i in seq_along(trace$text)) {
-        anno_values[i] <- .extract_annotation_from_text(trace$text[i], annotate.by)
-    }
+    # Extract annotation values from hover text (vectorized)
+    anno_values <- vapply(
+        trace$text,
+        .extract_annotation_from_text,
+        character(1),
+        annotate.by = annotate.by,
+        USE.NAMES = FALSE
+    )
     
     # Return data frame mapping coordinates to annotation values
     data.frame(
@@ -176,7 +175,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_create_selected_annotations
 .create_selected_annotations <- function(selected_data, fig, annotate.by,
                                           annotation_params, show.others = TRUE) {
     if (is.null(selected_data) || nrow(selected_data) == 0) {
@@ -299,7 +297,6 @@
 #'
 #' @author Jared Andrews
 #' @keywords internal
-#' @rdname INTERNAL_create_highlight_annotations
 .create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
                                            x_col, y_col, annotation_params, show.others = TRUE) {
     if (is.null(plot_data) || is.null(highlight_vals) || length(highlight_vals) == 0) {
