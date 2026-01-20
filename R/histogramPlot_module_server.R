@@ -137,6 +137,7 @@ histogramPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) 
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+            updateSelectInput(session, "font.type", selected = "Arial")
         })
 
 
