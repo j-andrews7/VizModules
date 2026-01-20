@@ -71,6 +71,8 @@
   : Output UI components for the scatterPlot module
 - [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
   : Server logic for scatterPlot module
+- [`setup_auto_update_logic()`](https://j-andrews7.github.io/vizModules/reference/setup_auto_update_logic.md)
+  : Set up auto-update/isolate logic for reactive contexts
 - [`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)
   : Create a standalone Shiny app for the volcanoPlot module
 - [`volcanoPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotInputsUI.md)
