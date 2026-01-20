@@ -1,18 +1,21 @@
-#' Create an example Modular histogramPlot Shiny Application
+#' Standalone Multi-Dataset Histogram Application
 #'
-#' This function generates a Shiny application with modular [plotthis::histogramPlot()] components.
-#' A module is created for each data frame provided in the named list of data frames.
+#' @description
+#' Launches a complete Shiny application that displays interactive histogram modules 
+#' for every data frame provided in a list. This is ideal for side-by-side 
+#' comparison of different genomic datasets or clinical cohorts.
 #'
-#' @param data_list A named list of data frames for which histogramPlot modules will be created.
-#'   That is, UI inputs and an histogram plot will be generated for each.
-#' @return A Shiny app object.
+#' @param data_list \code{list} A named list of data frames. Each list element will 
+#' trigger the creation of a separate histogram module instance.
+#'
+#' @return A Shiny app object that can be run locally or deployed to a server.
+#'
+#' @author Jacob Martin
 #' 
 #' @import shiny
-#' @importFrom shinyjs useShinyjs
+#' @import shinyjs
 #' @export
-#'
-#' @author Jacob Martin, Jared Andrews
-#'
+#' 
 #' @examples
 #' library(vizModules)
 #' # Needs at least 2 categorical variables for grouping and x-axis

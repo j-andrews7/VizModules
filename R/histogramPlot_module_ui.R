@@ -1,4 +1,23 @@
-library(shiny)
+#' Histogram Plot Input UI Module
+#'
+#' @description
+#' Generates the user interface for histogram configuration, including data selection,
+#' faceting options, aesthetic controls (bins, trend lines, alpha), and detailed axis styling.
+#'
+#' @param id \code{character} unique ID for the shiny namespace.
+#' @param data \code{data.frame} The dataset used to populate column selection choices.
+#' @param defaults \code{list} Optional named list of default values for the inputs.
+#' @param title \code{character} Optional title for the input panel.
+#' @param columns \code{numeric} Number of columns to organize the inputs into. Default is 2.
+#'
+#' @return A \code{tagList} containing the organized UI elements.
+#'
+#' @author Jacob Martin
+#' 
+#' @import shiny
+#' @importFrom shinyWidgets switchInput
+#' @importFrom colourpicker colourInput
+#' @export
 histogramPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
