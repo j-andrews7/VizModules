@@ -94,14 +94,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
         # Get color panel aligned to the current groups
         color.panel <- reactive({
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             picker_values <- isolate_fn(input$color.panel)
             manual_vals <- manual_color_values()
@@ -168,16 +161,7 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
 
-            # Check if auto update on
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
@@ -626,12 +610,13 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
 
                                     # Check that trace coords and anno match highlight coords and vals
-                                    trace_anno <- strsplit(trace$text, "\\n")
+                                    trace_anno <- strsplit(as.character(trace$text), "\\n")
                                     trace_anno <- lapply(trace_anno, function(x) {
                                         y <- grep(isolate_fn(input$annotate.by), x, value = TRUE)
                                         y <- strsplit(y, " ")[[1]][2]
                                         y
                                     })
+
                                     trace_anno <- unlist(trace_anno)
                                     trace_coords <- data.frame(
                                         xy = trace_coords,

@@ -19,14 +19,7 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         data_reac <- reactive({
             req(data())
             
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             # Use isolate for threshold inputs so they don't trigger updates
             sig_thresh <- isolate_fn(input$sig.thresh)
@@ -58,19 +51,9 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
             dat
         })
 
-        # Use color inputs for manual colors - reactive so it updates on button click
+        # Use color inputs for manual colors - reactive so it updates immediately
         color_reac <- reactive({
-            # Check if update button is required
-            use_update <- input$use.update.button
-            
-            # If update button is required, add dependency on it
-            if (use_update) {
-                input$update
-            }
-            
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (use_update) isolate else identity
-            
+            isolate_fn <- setup_auto_update_logic(input)
             c(
                 "Up" = if (!is.null(isolate_fn(input$color.up))) isolate_fn(input$color.up) else "red",
                 "Down" = if (!is.null(isolate_fn(input$color.down))) isolate_fn(input$color.down) else "blue",

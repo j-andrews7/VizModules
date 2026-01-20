@@ -166,20 +166,12 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$AreaPlot <- renderPlotly({
-            # Check if auto update on
-            auto_update <- input$auto.update
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
+
             group.by <- NULL
             if (!isolate_fn(input$group.by) == ""){
                 group.by <- isolate_fn(input$group.by)
             }
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (auto_update) identity else isolate
 
             # Null Values:
             facet.by <- NULL

@@ -284,8 +284,8 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             numericInput(ns("highlight.size"), "Highlight size",
                 min = 0.1, step = 0.5,
                 value = ifelse("highlight.size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], 5),
-                    NA
+                    ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], 7),
+                    7
                 )
             ),
             colourInput(ns("highlight.border.color"), "Highlight border color",
