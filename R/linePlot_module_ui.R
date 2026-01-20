@@ -46,134 +46,178 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.value"), "Select X values:", selected = names(data)[1], choices = names(data), multiple = TRUE),
-            selectInput(ns("y.value"), "Select Y values:", selected = names(data)[2], choices = names(data), multiple = TRUE),
-            selectInput(ns("plot.type"), "Plot type: ", selected = "lines", choices = c("lines", "markers", "lines+markers")),
-            selectInput(ns("line.type"), "Line type:", selected = "solid", choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")),
-            selectInput(ns("group.by"), "Group by:", selected = cat.choices[1], choices = cat.choices),
-            selectInput(ns("palette"), "Select palette:", selected = "Paired", choices = names(plotthis::palette_list)),
+            selectInput(ns("x.value"), "Select X values:",
+            selected = names(data)[1], choices = names(data), multiple = TRUE
+            ),
+            selectInput(ns("y.value"), "Select Y values:",
+            selected = names(data)[2], choices = names(data), multiple = TRUE
+            ),
+            selectInput(ns("group.by"), "Group by:",
+            selected = cat.choices[1], choices = cat.choices
+            )
+        ),
+
+        "Facet" = tagList(
+            selectInput(ns("facet.by"), "Facet by:",
+            selected = "", choices = cat.choices
+            ),
+            selectInput(ns("facet.scales"), "Facet scales",
+            choices   = c("fixed", "free", "free_x", "free_y"),
+            selected  = ifelse("facet.scales" %in% names(defaults),
+                ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
+                defaults[["facet.scales"]], "fixed"
+                ),
+                "fixed"
+            )
+            )
+        ),
+
+        "Aesthetics" = tagList(
+            selectInput(ns("plot.type"), "Plot type:",
+            selected = "lines",
+            choices  = c("lines", "markers", "lines+markers")
+            ),
+            selectInput(ns("line.type"), "Line type:",
+            selected = "solid",
+            choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
+            ),
+            selectInput(ns("palette"), "Select palette:",
+            selected = "Paired", choices = names(plotthis::palette_list)
+            )
+        ),
+
+        "Axes" = tagList(
             switchInput(ns("flip.y"), "Flip Y axis:", value = FALSE),
             switchInput(ns("flip.x"), "Flip X axis:", value = FALSE),
-            switchInput(ns("order.by"), "Order plot by:", value = FALSE, offLabel = "x axis", onLabel = "y axis"),
-            selectInput(ns("facet.by"), "Facet by: ", selected = "", choices = cat.choices),
-            selectInput(ns("facet.scales"), "Facet scales",
-                choices = c("fixed", "free", "free_x", "free_y"),
-                selected = ifelse("facet.scales" %in% names(defaults),
-                    ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
-                        defaults[["facet.scales"]], "fixed"
-                    ),
-                    "fixed"
-                )
+            switchInput(ns("order.by"), "Order plot by:",
+            value = FALSE, offLabel = "x axis", onLabel = "y axis"
             ),
-            selectInput(ns("y.adjustment"), "Adjust the y axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt")),
-            selectInput(ns("x.adjustment"), "Adjust the x axis:", selected = "", choices = c("", "log2", "log", "log10", "neg_log10", "log1p", "abs", "sqrt"))
-        ),
-        "Axes" = tagList(
+
+            selectInput(ns("y.adjustment"), "Adjust the y axis:",
+            selected = "", choices = c("", "log2", "log", "log10",
+                                        "neg_log10", "log1p", "abs", "sqrt")
+            ),
+            selectInput(ns("x.adjustment"), "Adjust the x axis:",
+            selected = "", choices = c("", "log2", "log", "log10",
+                                        "neg_log10", "log1p", "abs", "sqrt")
+            ),
+
             checkboxInput(ns("axis.showline"), "Show axis lines",
-                value = ifelse("axis.showline" %in% names(defaults),
-                    ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
-                    TRUE
-                )
+            value = ifelse("axis.showline" %in% names(defaults),
+                ifelse(is.logical(defaults[["axis.showline"]]),
+                defaults[["axis.showline"]], TRUE
+                ),
+                TRUE
+            )
             ),
             checkboxInput(ns("axis.mirror"), "Mirror axis lines",
-                value = ifelse("axis.mirror" %in% names(defaults),
-                    ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
-                    TRUE
-                )
+            value = ifelse("axis.mirror" %in% names(defaults),
+                ifelse(is.logical(defaults[["axis.mirror"]]),
+                defaults[["axis.mirror"]], TRUE
+                ),
+                TRUE
+            )
             ),
             colourInput(ns("axis.linecolor"), "Axis line color",
-                value = ifelse("axis.linecolor" %in% names(defaults),
-                    defaults[["axis.linecolor"]], "black"
-                )
+            value = ifelse("axis.linecolor" %in% names(defaults),
+                defaults[["axis.linecolor"]], "black"
+            )
             ),
             numericInput(ns("axis.linewidth"), "Axis line width",
-                value = ifelse("axis.linewidth" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
-                    0.5
+            value = ifelse("axis.linewidth" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.linewidth"]]),
+                defaults[["axis.linewidth"]], 0.5
                 ),
-                min = 0,
-                step = 0.1
+                0.5
+            ),
+            min = 0, step = 0.1
             ),
             numericInput(ns("axis.tickfont.size"), "Tick label size",
-                value = ifelse("axis.tickfont.size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
-                    12
+            value = ifelse("axis.tickfont.size" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.tickfont.size"]]),
+                defaults[["axis.tickfont.size"]], 12
                 ),
-                min = 1,
-                step = 1
+                12
+            ),
+            min = 1, step = 1
             ),
             colourInput(ns("axis.tickfont.color"), "Tick label color",
-                value = ifelse("axis.tickfont.color" %in% names(defaults),
-                    defaults[["axis.tickfont.color"]], "black"
-                )
+            value = ifelse("axis.tickfont.color" %in% names(defaults),
+                defaults[["axis.tickfont.color"]], "black"
+            )
             ),
             selectInput(ns("axis.tickfont.family"), "Tick label font",
-                choices = c(
-                    "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                    "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                    "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                    "Verdana", "sans-serif", "serif", "monospace"
+            choices = c(
+                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+                "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+                "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+                "Verdana", "sans-serif", "serif", "monospace"
+            ),
+            selected = ifelse("axis.tickfont.family" %in% names(defaults),
+                ifelse(defaults[["axis.tickfont.family"]] %in% c(
+                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+                "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+                "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+                "Verdana", "sans-serif", "serif", "monospace"
                 ),
-                selected = ifelse("axis.tickfont.family" %in% names(defaults),
-                    ifelse(defaults[["axis.tickfont.family"]] %in% c(
-                        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                        "Verdana", "sans-serif", "serif", "monospace"
-                    ), defaults[["axis.tickfont.family"]], "Arial"),
-                    "Arial"
-                )
+                defaults[["axis.tickfont.family"]], "Arial"
+                ),
+                "Arial"
+            )
             ),
             numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
-                value = ifelse("axis.tickangle.x" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
-                    0
+            value = ifelse("axis.tickangle.x" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.tickangle.x"]]),
+                defaults[["axis.tickangle.x"]], 0
                 ),
-                min = -180,
-                max = 180,
-                step = 15
+                0
+            ),
+            min = -180, max = 180, step = 15
             ),
             numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
-                value = ifelse("axis.tickangle.y" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
-                    0
+            value = ifelse("axis.tickangle.y" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.tickangle.y"]]),
+                defaults[["axis.tickangle.y"]], 0
                 ),
-                min = -180,
-                max = 180,
-                step = 15
+                0
+            ),
+            min = -180, max = 180, step = 15
             ),
             selectInput(ns("axis.ticks"), "Tick position",
-                choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-                selected = ifelse("axis.ticks" %in% names(defaults),
-                    ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
-                        defaults[["axis.ticks"]], "outside"
-                    ),
-                    "outside"
-                )
+            choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
+            selected = ifelse("axis.ticks" %in% names(defaults),
+                ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
+                defaults[["axis.ticks"]], "outside"
+                ),
+                "outside"
+            )
             ),
             colourInput(ns("axis.tickcolor"), "Tick mark color",
-                value = ifelse("axis.tickcolor" %in% names(defaults),
-                    defaults[["axis.tickcolor"]], "black"
-                )
+            value = ifelse("axis.tickcolor" %in% names(defaults),
+                defaults[["axis.tickcolor"]], "black"
+            )
             ),
             numericInput(ns("axis.ticklen"), "Tick mark length",
-                value = ifelse("axis.ticklen" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
-                    5
+            value = ifelse("axis.ticklen" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.ticklen"]]),
+                defaults[["axis.ticklen"]], 5
                 ),
-                min = 0,
-                step = 1
+                5
+            ),
+            min = 0, step = 1
             ),
             numericInput(ns("axis.tickwidth"), "Tick mark width",
-                value = ifelse("axis.tickwidth" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
-                    1
+            value = ifelse("axis.tickwidth" %in% names(defaults),
+                ifelse(is.numeric(defaults[["axis.tickwidth"]]),
+                defaults[["axis.tickwidth"]], 1
                 ),
-                min = 0,
-                step = 0.1
+                1
+            ),
+            min = 0, step = 0.1
             )
         )
-    )
+        )
+
 
     organize_inputs(
         inputs,

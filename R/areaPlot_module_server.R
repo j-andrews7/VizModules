@@ -117,30 +117,31 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             min.y <- min(numeric.data, na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
             # Data
-            updateSelectInput(session, "x.data", selected = char.choices[2])
+            # Data
+            updateSelectInput(session, "x.data",    selected = char.choices[2])
+            updateSelectInput(session, "y.data",    selected = num.choices[2])
+            updateSelectInput(session, "group.by",  selected = char.choices[3])
 
-            # Grouping
-            updateSelectInput(session, "group.by", selected = "")
-            updateSelectInput(session, "facet.by", selected = "")
+            # Facet
+            updateSelectInput(session, "facet.by",    selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateSwitchInput(session, "facet.by.row", value = TRUE)
-            updateSelectInput(session, "split.by", selected = "NULL")
+            updateSelectInput(session, "split.by", selected = "")
 
-            # Aesthetics
+            # Aesthetic
+            # (palette.selection is UI output, so no reset call here)
             updateSelectInput(session, "theme", selected = "theme_this")
             updateNumericInput(session, "alpha", value = 1)
+            
 
-            # Labels
-            updateSelectInput(session, "font.type", selected = "Arial")
+            # Axes
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
+            updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            # Action Button:
-            updateSelectInput(session, "download.type", selected = "png")
 
-            # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
@@ -154,6 +155,10 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+
+            # Action Button
+            updateSelectInput(session, "download.type", selected = "png")
+
         })
 
 

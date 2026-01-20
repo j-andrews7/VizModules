@@ -214,8 +214,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             #Stats Default: 
             add.stat <- NULL
-            if (!input$add.stat == ""){
-                add.stat <- input$add.stat
+            if (!isolate_fn(input$add.stat) == ""){
+                add.stat <- isolate_fn(input$add.stat)
             }
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
@@ -244,10 +244,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 jitter_height = isolate_fn(input$jitter.height),
                 pt_color = isolate_fn(input$pt.color),
                 alpha = isolate_fn(input$alpha),
-                add_trend = isolate_fn(input$add.trend),
-                trend_ptsize = isolate_fn(input$trend.pt.size),
-                trend_color = isolate_fn(input$trend.colour),
-                trend_linewidth = isolate_fn(input$trend.line.width),
                 add_stat = add.stat,
                 stat_color = isolate_fn(input$stat.color),
                 stat_size = isolate_fn(input$stat.size),
@@ -256,8 +252,6 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 stat_name = isolate_fn(input$add.stat),
                 palette = default_palette_name,
                 palcolor = palcolor_arg,
-                add_bg = isolate_fn(input$background.colour),
-                bg_palette = isolate_fn(input$background.palette),
                 add_line = isolate_fn(input$add.line),
                 line_color = isolate_fn(input$line.colour),
                 line_width = isolate_fn(input$line.width),

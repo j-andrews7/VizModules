@@ -46,159 +46,223 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
   
 
     inputs <- list(
-        "Data" = tagList(
-            selectInput(ns("x.data"), "X values:", selected = char.choices[2], choices = char.choices),
-            selectInput(ns("y.data"), "Y values:", selected = num.choices[2], choices = num.choices),
-            switchInput(ns("flip"), "Flip plot:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            numericInput(ns("y.max"), "Max y value:", value = max.y),
-            numericInput(ns("y.min"), "Min y value:", value = min.y)
+    "Data" = tagList(
+        selectInput(ns("x.data"), "X values:",
+        selected = char.choices[2], choices = char.choices
         ),
-        "Grouping" = tagList(
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
-            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(char.choices, "")),
-            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            selectInput(ns("split.by"), "Split by:", selected = "", choices = c(char.choices, ""))
+        selectInput(ns("y.data"), "Y values:",
+        selected = num.choices[2], choices = num.choices
         ),
-        "Aesthetic" = tagList(
-            uiOutput(ns("palette.selection")),
-            switchInput(ns("background.colour"), "Background colour:", value = FALSE, onLabel = "On", offLabel = "Off"),
-            selectInput(ns("background.palette"), "Background Palette:", selected = "Set2", choices = names(plotthis::palette_list)),
-            numericInput(ns("background.alpha"), "Background alpha: ", value = 0.5, min = 0, max = 1),
-            selectInput(ns("theme"), "Theme:", selected = "theme_this", choices = c(
-                "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-                "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-                "theme_this", "theme_blank"
-            )),
-            numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1),
-            numericInput(ns("width"), "Width:", value = NA),
-            textInput(ns("expand"), "Expand:", value = "", placeholder = "e.g. 1,2,3,4")
+        selectInput(ns("group.by"), "Group by:",
+        selected = char.choices[2], choices = char.choices
+        )
+    ),
+
+    "Facet" = tagList(
+        selectInput(ns("facet.by"), "Facet by:",
+        selected = "", choices = c(char.choices, "")
         ),
-        "Line" = tagList(
-            numericInput(ns("add.line"), "Add line:", value = NULL),
-            colourpicker::colourInput(ns("line.colour"), "Line colour:", value = "#000000"),
-            numericInput(ns("line.type"), "Line type:", value = 1, min = 0),
-            numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0),
-            textInput(ns("line.name"), "Line name:", value = "", placeholder = "Line Name")
+        selectInput(ns("facet.scale"), "Facet scale:",
+        selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
         ),
-        "Labels" = tagList(
-            selectInput(ns("font.type"), "Font:", selected = "Arial", choices = c(
-                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
-                "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
-                "sans-serif", "serif", "monospace"
-            )),
-            numericInput(ns("axis.font.size"), "Axis font size", value = 18, min = 1),
-            numericInput(ns("title.font.size"), "Title font size", value = 28, min = 1),
-            colourpicker::colourInput(ns("text.colour"), "Label colour:", value = "#000000")
+        numericInput(ns("facet.ncol"), "Facet number of columns:",
+        value = NULL, min = 0, max = 20
         ),
-        "Axes" = tagList(
-            checkboxInput(ns("axis.showline"), "Show axis lines",
-                value = ifelse("axis.showline" %in% names(defaults),
-                    ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
-                    TRUE
-                )
+        numericInput(ns("facet.nrow"), "Facet number of rows:",
+        value = NULL, min = 0, max = 20
+        ),
+        switchInput(ns("facet.by.row"), "Facet by row:",
+        value = TRUE, offLabel = "Off", onLabel = "On"
+        ),
+        selectInput(ns("split.by"), "Split by:",
+        selected = "", choices = c(char.choices, "")
+        )
+    ),
+
+    "Aesthetics" = tagList(
+        uiOutput(ns("palette.selection")),
+        selectInput(ns("theme"), "Theme:",
+        selected = "theme_this",
+        choices = c(
+            "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
+            "theme_dark", "theme_minimal", "theme_classic", "theme_void",
+            "theme_this", "theme_blank"
+        )
+        ),
+        numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1),
+        numericInput(ns("width"), "Width:", value = NA),
+        textInput(ns("expand"), "Expand:", value = "",
+        placeholder = "e.g. 1,2,3,4"
+        )
+    ),
+
+    "Extras" = tagList(
+        numericInput(ns("add.line"), "Add line:", value = NULL),
+        colourpicker::colourInput(ns("line.colour"), "Line colour:",
+        value = "#000000"
+        ),
+        numericInput(ns("line.type"), "Line type:", value = 1, min = 0),
+        numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0),
+        textInput(ns("line.name"), "Line name:", value = "",
+        placeholder = "Line Name"
+        )
+    ),
+
+    "Axes" = tagList(
+        
+        switchInput(ns("flip"), "Flip plot:",
+        value = FALSE, onLabel = "On", offLabel = "Off"),
+        # axis range
+        numericInput(ns("y.max"), "Max y value:", value = max.y),
+        numericInput(ns("y.min"), "Min y value:", value = min.y),
+
+        # axis/title text settings
+        selectInput(ns("font.type"), "Font:",
+        selected = "Arial",
+        choices = c(
+            "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+            "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+            "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+            "Verdana", "sans-serif", "serif", "monospace"
+        )
+        ),
+        numericInput(ns("axis.font.size"), "Axis font size",
+        value = 18, min = 1
+        ),
+        numericInput(ns("title.font.size"), "Title font size",
+        value = 28, min = 1
+        ),
+        colourpicker::colourInput(ns("text.colour"), "Label colour:",
+        value = "#000000"
+        ),
+
+        # axis line and ticks
+        checkboxInput(ns("axis.showline"), "Show axis lines",
+        value = ifelse("axis.showline" %in% names(defaults),
+            ifelse(is.logical(defaults[["axis.showline"]]),
+            defaults[["axis.showline"]], TRUE
             ),
-            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
-                value = ifelse("axis.mirror" %in% names(defaults),
-                    ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
-                    TRUE
-                )
+            TRUE
+        )
+        ),
+        checkboxInput(ns("axis.mirror"), "Mirror axis lines",
+        value = ifelse("axis.mirror" %in% names(defaults),
+            ifelse(is.logical(defaults[["axis.mirror"]]),
+            defaults[["axis.mirror"]], TRUE
             ),
-            colourInput(ns("axis.linecolor"), "Axis line color",
-                value = ifelse("axis.linecolor" %in% names(defaults),
-                    defaults[["axis.linecolor"]], "black"
-                )
+            TRUE
+        )
+        ),
+        colourInput(ns("axis.linecolor"), "Axis line color",
+        value = ifelse("axis.linecolor" %in% names(defaults),
+            defaults[["axis.linecolor"]], "black"
+        )
+        ),
+        numericInput(ns("axis.linewidth"), "Axis line width",
+        value = ifelse("axis.linewidth" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.linewidth"]]),
+            defaults[["axis.linewidth"]], 0.5
             ),
-            numericInput(ns("axis.linewidth"), "Axis line width",
-                value = ifelse("axis.linewidth" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
-                    0.5
-                ),
-                min = 0,
-                step = 0.1
+            0.5
+        ),
+        min = 0,
+        step = 0.1
+        ),
+        numericInput(ns("axis.tickfont.size"), "Tick label size",
+        value = ifelse("axis.tickfont.size" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.tickfont.size"]]),
+            defaults[["axis.tickfont.size"]], 12
             ),
-            numericInput(ns("axis.tickfont.size"), "Tick label size",
-                value = ifelse("axis.tickfont.size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
-                    12
-                ),
-                min = 1,
-                step = 1
+            12
+        ),
+        min = 1,
+        step = 1
+        ),
+        colourInput(ns("axis.tickfont.color"), "Tick label color",
+        value = ifelse("axis.tickfont.color" %in% names(defaults),
+            defaults[["axis.tickfont.color"]], "black"
+        )
+        ),
+        selectInput(ns("axis.tickfont.family"), "Tick label font",
+        choices = c(
+            "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+            "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+            "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+            "Verdana", "sans-serif", "serif", "monospace"
+        ),
+        selected = ifelse("axis.tickfont.family" %in% names(defaults),
+            ifelse(defaults[["axis.tickfont.family"]] %in% c(
+            "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+            "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+            "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+            "Verdana", "sans-serif", "serif", "monospace"
             ),
-            colourInput(ns("axis.tickfont.color"), "Tick label color",
-                value = ifelse("axis.tickfont.color" %in% names(defaults),
-                    defaults[["axis.tickfont.color"]], "black"
-                )
+            defaults[["axis.tickfont.family"]], "Arial"
             ),
-            selectInput(ns("axis.tickfont.family"), "Tick label font",
-                choices = c(
-                    "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                    "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                    "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                    "Verdana", "sans-serif", "serif", "monospace"
-                ),
-                selected = ifelse("axis.tickfont.family" %in% names(defaults),
-                    ifelse(defaults[["axis.tickfont.family"]] %in% c(
-                        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                        "Verdana", "sans-serif", "serif", "monospace"
-                    ), defaults[["axis.tickfont.family"]], "Arial"),
-                    "Arial"
-                )
+            "Arial"
+        )
+        ),
+        numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
+        value = ifelse("axis.tickangle.x" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.tickangle.x"]]),
+            defaults[["axis.tickangle.x"]], 0
             ),
-            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
-                value = ifelse("axis.tickangle.x" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
-                    0
-                ),
-                min = -180,
-                max = 180,
-                step = 15
+            0
+        ),
+        min = -180,
+        max = 180,
+        step = 15
+        ),
+        numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
+        value = ifelse("axis.tickangle.y" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.tickangle.y"]]),
+            defaults[["axis.tickangle.y"]], 0
             ),
-            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
-                value = ifelse("axis.tickangle.y" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
-                    0
-                ),
-                min = -180,
-                max = 180,
-                step = 15
+            0
+        ),
+        min = -180,
+        max = 180,
+        step = 15
+        ),
+        selectInput(ns("axis.ticks"), "Tick position",
+        choices = c("Outside" = "outside",
+                    "Inside" = "inside",
+                    "None" = ""),
+        selected = ifelse("axis.ticks" %in% names(defaults),
+            ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
+            defaults[["axis.ticks"]], "outside"
             ),
-            selectInput(ns("axis.ticks"), "Tick position",
-                choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-                selected = ifelse("axis.ticks" %in% names(defaults),
-                    ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
-                        defaults[["axis.ticks"]], "outside"
-                    ),
-                    "outside"
-                )
+            "outside"
+        )
+        ),
+        colourInput(ns("axis.tickcolor"), "Tick mark color",
+        value = ifelse("axis.tickcolor" %in% names(defaults),
+            defaults[["axis.tickcolor"]], "black"
+        )
+        ),
+        numericInput(ns("axis.ticklen"), "Tick mark length",
+        value = ifelse("axis.ticklen" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.ticklen"]]),
+            defaults[["axis.ticklen"]], 5
             ),
-            colourInput(ns("axis.tickcolor"), "Tick mark color",
-                value = ifelse("axis.tickcolor" %in% names(defaults),
-                    defaults[["axis.tickcolor"]], "black"
-                )
+            5
+        ),
+        min = 0,
+        step = 1
+        ),
+        numericInput(ns("axis.tickwidth"), "Tick mark width",
+        value = ifelse("axis.tickwidth" %in% names(defaults),
+            ifelse(is.numeric(defaults[["axis.tickwidth"]]),
+            defaults[["axis.tickwidth"]], 1
             ),
-            numericInput(ns("axis.ticklen"), "Tick mark length",
-                value = ifelse("axis.ticklen" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
-                    5
-                ),
-                min = 0,
-                step = 1
-            ),
-            numericInput(ns("axis.tickwidth"), "Tick mark width",
-                value = ifelse("axis.tickwidth" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
-                    1
-                ),
-                min = 0,
-                step = 0.1
-            )
+            1
+        ),
+        min = 0,
+        step = 0.1
         )
     )
+    )
+
 
     organize_inputs(
         inputs,

@@ -214,44 +214,40 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = default_y_col)
-            updateSwitchInput(session, "flip", value = FALSE)
-            updateNumericInput(session, "y.max", value = max.y)
-            updateNumericInput(session, "y.min", value = min.y)
-
-            # Grouping
             updateSelectInput(session, "group.by", selected = char.choices[2])
-            updateSelectInput(session, "facet.by", selected = "NULL")
+
+
+            # Facet
+            updateSelectInput(session, "facet.by",   selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateSwitchInput(session, "facet.by.row", value = TRUE)
-            updateSelectInput(session, "split.by", selected = "NULL")
+            updateSelectInput(session, "split.by", selected = "")
 
             # Aesthetics
-            updateSwitchInput(session, "background.colour", value = FALSE)
-            updateSelectInput(session, "background.palette", selected = "Set2")
-            updateNumericInput(session, "background.alpha", value = 0.5)
             updateSelectInput(session, "theme", selected = "theme_this")
             updateNumericInput(session, "alpha", value = 1)
             updateNumericInput(session, "width", value = NA)
             updateTextInput(session, "expand", value = "")
 
-            # Line
+            # Extras
             updateNumericInput(session, "add.line", value = NA)
             colourpicker::updateColourInput(session, "line.colour", value = "#000000")
             updateNumericInput(session, "line.type", value = 1)
             updateNumericInput(session, "line.width", value = 0.6)
             updateTextInput(session, "line.name", value = "")
 
-            # Labels
+            # Axes
+            updateSwitchInput(session, "flip", value = FALSE)
+            updateNumericInput(session, "y.max", value = max.y)
+            updateNumericInput(session, "y.min", value = min.y)
+
             updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            # Action Button:
-            updateSelectInput(session, "download.type", selected = "png")
 
-            # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
@@ -265,6 +261,10 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+
+            # Action Button (unchanged)
+            updateSelectInput(session, "download.type", selected = "png")
+
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off)
@@ -336,9 +336,6 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet_byrow = isolate_fn(input$facet.by.row),
                 palette = default_palette_name,
                 palcolor = unname(palette_values),
-                add_bg = isolate_fn(input$background.colour),
-                bg_palette = isolate_fn(input$background.palette),
-                bg_alpha = isolate_fn(input$background.alpha),
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = isolate_fn(input$theme),
