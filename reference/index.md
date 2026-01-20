@@ -19,26 +19,16 @@
   : Example edgeR results from airway dataset
 - [`airway_voom`](https://j-andrews7.github.io/vizModules/reference/airway_voom.md)
   : Example limma-voom results from airway dataset
-- [`AreaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
-  : Input UI components for the AreaPlot module
-- [`AreaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
-  : Output UI components for the AreaPlot module
-- [`AreaPlotServer()`](https://j-andrews7.github.io/vizModules/reference/areaPlotServer.md)
-  : Server logic for AreaPlot module
-- [`BarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotInputsUI.md)
-  : Input UI components for the BarPlot module
-- [`BarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/barPlotOutputUI.md)
-  : Output UI components for the BarPlot module
-- [`BarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/barPlotServer.md)
-  : Server logic for BarPlot module
-- [`BoxPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotInputsUI.md)
-  : Input UI components for the BoxPlot module
-- [`BoxPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/boxPlotOutputUI.md)
-  : Output UI components for the BoxPlot module
-- [`BoxPlotServer()`](https://j-andrews7.github.io/vizModules/reference/boxPlotServer.md)
-  : Server logic for BoxPlot module
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
+- [`histogramPlotApp()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotApp.md)
+  : Standalone Multi-Dataset Histogram Application
+- [`histogramPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotInputsUI.md)
+  : Histogram Plot Input UI Module
+- [`histogramPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotOutputUI.md)
+  : Output UI components for the histogramPlot module
+- [`histogramPlotServer()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotServer.md)
+  : Histogram Plot Server Module
 - [`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
   : Create an Interactive Line Plot with plotly
 - [`linePlotApp()`](https://j-andrews7.github.io/vizModules/reference/linePlotApp.md)
@@ -65,12 +55,6 @@
   : Server logic for piePlot module
 - [`scatterPlotApp()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotApp.md)
   : Create an example Modular scatterPlot Shiny Application
-- [`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotInputsUI.md)
-  : Input UI components for the scatterPlot module
-- [`scatterPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/scatterplotOutputUI.md)
-  : Output UI components for the scatterPlot module
-- [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
-  : Server logic for scatterPlot module
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/vizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
 - [`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)

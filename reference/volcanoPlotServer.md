@@ -1,9 +1,7 @@
 # Server logic for volcanoPlot module
 
-This module builds upon the
-[`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterplotServer.md)
-to provide a volcano plot with interactive significance and fold-change
-thresholding.
+This module builds upon the `scatterPlotServer()` to provide a volcano
+plot with interactive significance and fold-change thresholding.
 
 ## Usage
 
