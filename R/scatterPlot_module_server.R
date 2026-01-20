@@ -617,7 +617,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                         y
                                     })
 
-                                    browser()
                                     trace_anno <- unlist(trace_anno)
                                     trace_coords <- data.frame(
                                         xy = trace_coords,
