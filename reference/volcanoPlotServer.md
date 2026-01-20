@@ -35,12 +35,6 @@ volcanoPlotServer(
 
   A character vector of tab names to hide.
 
-- update.button:
-
-  Logical; if `TRUE` (default), an "Update Plot" button is shown and
-  plot only re-renders when clicked. If `FALSE`, plot re-renders
-  immediately when inputs change.
-
 ## Value
 
 The `moduleServer` function for the volcanoPlot module.

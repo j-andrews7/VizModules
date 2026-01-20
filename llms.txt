@@ -322,6 +322,10 @@ for non-functional/broken parameters.
   vector.
 - [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
   : Example DESeq2 results from airway dataset
+- [`airway_edger`](https://j-andrews7.github.io/vizModules/reference/airway_edger.md)
+  : Example edgeR results from airway dataset
+- [`airway_voom`](https://j-andrews7.github.io/vizModules/reference/airway_voom.md)
+  : Example limma-voom results from airway dataset
 - [`AreaPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotInputsUI.md)
   : Input UI components for the AreaPlot module
 - [`AreaPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/areaPlotOutputUI.md)
