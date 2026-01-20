@@ -29,6 +29,8 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
+#' @import shiny
+#' 
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
@@ -122,6 +124,8 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
 #' @param id The ID for the Shiny module.
 #'
 #' @return A Shiny plotlyOutput for the volcano plot
+#' 
+#' @import shiny
 #'
 #' @export
 #' @author Jared Andrews

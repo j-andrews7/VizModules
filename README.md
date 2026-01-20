@@ -1,6 +1,10 @@
 # vizModules
 
-![check-app](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yml/badge.svg)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml)
+[![Tests](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml)
+[![pkgdown](https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml)
+<!-- badges: end -->
 
 This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis)) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
 
@@ -18,6 +22,48 @@ Currently, the package can be installed from Github:
 ```r
 devtools::install_github("j-andrews7/vizModules")
 ```
+
+## Quick Start
+
+- Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "vizModules"))`
+- See the vignette for a full walkthrough: `vignette("quick-start", package = "vizModules")`
+
+```r
+library(vizModules)
+
+ui <- fluidPage(
+    sidebarLayout(
+        sidebarPanel(
+            scatterPlotInputsUI(
+                "cars",
+                mtcars,
+                defaults = list(
+                    x.by = "wt",
+                    y.by = "mpg",
+                    color.by = "cyl"
+                )
+            )
+        ),
+        mainPanel(scatterPlotOutputUI("cars"))
+    )
+)
+
+server <- function(input, output, session) {
+    scatterPlotServer(
+        "cars",
+        data = reactive(mtcars),
+        hide.inputs = c("rows.use"),
+        hide.tabs = c("Plotly")
+    )
+}
+
+shinyApp(ui, server)
+```
+
+Every module uses the same trio of functions: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic. Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide controls while keeping their values so you can enforce app-level defaults without exposing them.
+
+Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?scatterPlotInputsUI`, `?AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
 ## Using **vizModules** 
 

@@ -20,6 +20,7 @@
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
 #'
+#' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets switchInput
 #'
@@ -245,6 +246,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #'
 #' @return A Shiny plotlyOutput for the linePlot
 #'
+#' @import shiny
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

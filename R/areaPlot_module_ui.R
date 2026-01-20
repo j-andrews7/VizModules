@@ -21,6 +21,7 @@
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @importFrom colourpicker colourInput
+#' @import shiny
 #' @importFrom shinyWidgets switchInput
 #'
 #' @export
@@ -208,6 +209,7 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #'
 #' @return A Shiny plotlyOutput for the AreaPlot
 #'
+#' @import shiny
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

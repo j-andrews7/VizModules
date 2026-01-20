@@ -3,6 +3,7 @@
 #' @param df A data frame to plot. Must contain `padj` and `log2FoldChange` columns.
 #' @return A Shiny app object.
 #'
+#' @import shiny
 #' @importFrom shinyjs useShinyjs
 #'
 #' @export

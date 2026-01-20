@@ -11,6 +11,7 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @return The `moduleServer` function for the piePlot module.
 #'
+#' @import shiny
 #' @importFrom shinyjs hide
 #' @importFrom stats na.omit setNames
 #'

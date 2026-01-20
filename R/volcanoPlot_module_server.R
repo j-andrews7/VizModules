@@ -12,7 +12,7 @@
 #'   If `FALSE`, plot re-renders immediately when inputs change.
 #' @return The `moduleServer` function for the volcanoPlot module.
 #'
-#' @importFrom shiny moduleServer reactive isolate req
+#' @import shiny
 #' @export
 #' @author Jared Andrews
 volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets")) {

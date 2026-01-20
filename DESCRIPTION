@@ -1,5 +1,5 @@
 Package: vizModules
-Title: Flexible, Interactive Shiny Modules For Almost Any Plot
+Title: Flexible, Interactive Shiny Modules for Almost Any Plot
 Version: 0.99.0.9000
 Authors@R: 
     c(person(given = "Jared", family = "Andrews", email = "jared.andrews07@gmail.com", role = c("aut", "cre"),
@@ -29,7 +29,8 @@ Imports:
     shinyjqui,
     ggplot2,
     htmltools,
-    jsonlite
+    jsonlite,
+    shinyWidgets
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

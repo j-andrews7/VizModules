@@ -22,6 +22,7 @@
 #'
 #' @return A UI element that produces a named character vector of colors.
 #'
+#' @import shiny
 #' @importFrom htmltools attachDependencies htmlDependency
 #' @importFrom jsonlite toJSON
 #'

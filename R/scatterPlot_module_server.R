@@ -10,6 +10,8 @@
 #' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
+#' @import shiny
+#' @importFrom dittoViz scatterPlot
 #' @importFrom ggplot2 theme_bw waiver
 #' @importFrom shinyjs hide
 #'
