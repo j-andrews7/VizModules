@@ -15,6 +15,7 @@
 #'   - Single text element (this check is REMOVED as it's unreliable)
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_should_include_trace
 #' @keywords internal
 .should_include_trace <- function(trace, show.others = TRUE) {
     # Skip non-scatter traces or traces without proper data
@@ -62,6 +63,7 @@
 #'   or "field1 value1\\nfield2 value2\\n..."
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_extract_annotation_from_text
 #' @keywords internal
 .extract_annotation_from_text <- function(trace_text, annotate.by) {
     if (is.null(trace_text) || is.na(trace_text) || trace_text == "") {
@@ -107,6 +109,7 @@
 #' @return Character vector. Coordinate identifiers in format "x_y".
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_create_coord_id
 #' @keywords internal
 .create_coord_id <- function(x, y, precision = 10) {
     paste0(round(x, precision), "_", round(y, precision))
@@ -128,6 +131,7 @@
 #'   Returns NULL if trace has no valid data.
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_build_trace_anno_map
 #' @keywords internal
 .build_trace_anno_map <- function(trace, annotate.by) {
     if (is.null(trace$x) || is.null(trace$y) || is.null(trace$text)) {
@@ -177,6 +181,7 @@
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_create_selected_annotations
 #' @keywords internal
 .create_selected_annotations <- function(selected_data, fig, annotate.by,
                                           annotation_params, show.others = TRUE) {
@@ -299,6 +304,7 @@
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_create_selected_annotations
 #' @keywords internal
 .create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
                                            x_col, y_col, annotation_params, show.others = TRUE) {
