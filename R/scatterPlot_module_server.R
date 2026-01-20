@@ -610,12 +610,14 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                     trace_coords <- paste0(round(trace$x, 10), "_", round(trace$y, 10))
 
                                     # Check that trace coords and anno match highlight coords and vals
-                                    trace_anno <- strsplit(trace$text, "\\n")
+                                    trace_anno <- strsplit(as.character(trace$text), "\\n")
                                     trace_anno <- lapply(trace_anno, function(x) {
                                         y <- grep(isolate_fn(input$annotate.by), x, value = TRUE)
                                         y <- strsplit(y, " ")[[1]][2]
                                         y
                                     })
+
+                                    browser()
                                     trace_anno <- unlist(trace_anno)
                                     trace_coords <- data.frame(
                                         xy = trace_coords,
