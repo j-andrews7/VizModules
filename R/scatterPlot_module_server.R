@@ -356,9 +356,21 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
                                 # Get current marker properties (may be single value or vector)
                                 cur_color <- trace$marker$color
-                                cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else isolate_fn(input$size)
-                                cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
-                                cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
+                                cur_size <- if (!is.null(trace$marker$size)) {
+                                    trace$marker$size
+                                } else {
+                                    isolate_fn(input$size)
+                                }
+                                cur_line_color <- if (!is.null(trace$marker$line$color)) {
+                                    trace$marker$line$color
+                                } else {
+                                    "transparent"
+                                }
+                                cur_line_width <- if (!is.null(trace$marker$line$width)) {
+                                    trace$marker$line$width
+                                } else {
+                                    0
+                                }
 
                                 # Expand to vectors if single values
                                 if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
@@ -375,8 +387,16 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                                 # Get plot coordinates for highlighted points
                                 x_adj_col <- paste0(isolate_fn(input$x.by), ".x.adj")
                                 y_adj_col <- paste0(isolate_fn(input$y.by), ".y.adj")
-                                x_match_col <- if (x_adj_col %in% names(plot_data)) x_adj_col else isolate_fn(input$x.by)
-                                y_match_col <- if (y_adj_col %in% names(plot_data)) y_adj_col else isolate_fn(input$y.by)
+                                x_match_col <- if (x_adj_col %in% names(plot_data)) {
+                                    x_adj_col
+                                } else {
+                                    isolate_fn(input$x.by)
+                                }
+                                y_match_col <- if (y_adj_col %in% names(plot_data)) {
+                                    y_adj_col
+                                } else {
+                                    isolate_fn(input$y.by)
+                                }
 
                                 highlight_coords <- .create_coord_id(
                                     plot_data[[x_match_col]][highlight_idx],
