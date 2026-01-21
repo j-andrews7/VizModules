@@ -2601,16 +2601,16 @@
         "RemoteRepo": "vizModules",
         "RemoteUsername": "j-andrews7",
         "RemoteRef": "HEAD",
-        "RemoteSha": "aeb47a2e98fbb14bc935dc69bed4253252ccc336",
+        "RemoteSha": "ea785d3611b98c868cdcb9b47124521613945069",
         "GithubRepo": "vizModules",
         "GithubUsername": "j-andrews7",
         "GithubRef": "HEAD",
-        "GithubSHA1": "aeb47a2e98fbb14bc935dc69bed4253252ccc336",
+        "GithubSHA1": "ea785d3611b98c868cdcb9b47124521613945069",
         "NeedsCompilation": "no",
-        "Packaged": "2026-01-21 16:53:36 UTC; jandrews",
+        "Packaged": "2026-01-21 17:04:00 UTC; jandrews",
         "Author": "Jared Andrews [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-0780-6248>),\n  Jacob Martin [aut]",
         "Maintainer": "Jared Andrews <jared.andrews07@gmail.com>",
-        "Built": "R 4.6.0; ; 2026-01-21 16:53:41 UTC; windows"
+        "Built": "R 4.6.0; ; 2026-01-21 17:04:04 UTC; windows"
       }
     },
     "withr": {
