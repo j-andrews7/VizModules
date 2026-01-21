@@ -73,40 +73,40 @@ library(vizModules)
 data(mtcars)
 yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="7008">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="7555">
 #>     <li class="active">
-#>       <a href="#tab-7008-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7555-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-7555-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-7555-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-7555-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-7555-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-7555-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-7555-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-8" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-7555-8" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7555-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7008-10" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7555-10" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7008">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7008-1">
+#>   <div class="tab-content" data-tabsetid="7555">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7555-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -166,36 +166,17 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-7008-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-7555-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div id="yPlot-plots" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="yPlot-plots-label">
+#>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plot types to show:</label>
-#>             <div class="shiny-options-group">
-#>               <div class="checkbox">
-#>                 <label>
-#>                   <input type="checkbox" name="yPlot-plots" value="vlnplot" checked="checked"/>
-#>                   <span>Violin</span>
-#>                 </label>
-#>               </div>
-#>               <div class="checkbox">
-#>                 <label>
-#>                   <input type="checkbox" name="yPlot-plots" value="boxplot" checked="checked"/>
-#>                   <span>Box</span>
-#>                 </label>
-#>               </div>
-#>               <div class="checkbox">
-#>                 <label>
-#>                   <input type="checkbox" name="yPlot-plots" value="jitter" checked="checked"/>
-#>                   <span>Jitter</span>
-#>                 </label>
-#>               </div>
-#>               <div class="checkbox">
-#>                 <label>
-#>                   <input type="checkbox" name="yPlot-plots" value="ridgeplot"/>
-#>                   <span>Ridge</span>
-#>                 </label>
-#>               </div>
+#>             <div>
+#>               <select id="yPlot-plots" class="shiny-input-select" multiple="multiple"><option value="vlnplot" selected>Violin</option>
+#> <option value="boxplot" selected>Box</option>
+#> <option value="jitter" selected>Jitter</option>
+#> <option value="ridgeplot">Ridge</option></select>
+#>               <script type="application/json" data-for="yPlot-plots">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -204,7 +185,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7008-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-7555-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -233,7 +214,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-7008-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-7555-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -276,7 +257,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-7008-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-7555-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -326,7 +307,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-7008-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-7555-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -361,7 +342,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-7008-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-7555-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -409,7 +390,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-7008-8">
+#>     <div class="tab-pane" data-value="Extras" id="tab-7555-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -455,7 +436,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7008-9">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7555-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -521,7 +502,7 @@ yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7008-10">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7555-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
