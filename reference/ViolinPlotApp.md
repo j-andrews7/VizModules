@@ -1,0 +1,43 @@
+# Create an example Modular ViolinPlot Shiny Application
+
+This function generates a Shiny application with modular
+[`plotthis::ViolinPlot()`](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
+components. A module is created for each data frame provided in the
+named list of data frames.
+
+## Usage
+
+``` r
+ViolinPlotApp(data_list)
+```
+
+## Arguments
+
+- data_list:
+
+  A named list of data frames for which ViolinPlot modules will be
+  created. That is, UI inputs and a violin plot will be generated for
+  each.
+
+## Value
+
+A Shiny app object.
+
+## Author
+
+Jacob Martin
+
+## Examples
+
+``` r
+library(vizModules)
+data <- data.frame(
+    x = rep(LETTERS[1:8], each = 40),
+    y = c(rnorm(160), rnorm(160, mean = 1)),
+    group1 = sample(c("g1", "g2"), 320, replace = TRUE),
+    group2 = sample(c("h1", "h2", "h3", "h4"), 320, replace = TRUE)
+)
+data_list <- list("test_data" = data)
+app <- ViolinPlotApp(data_list)
+if (interactive()) runApp(app)
+```

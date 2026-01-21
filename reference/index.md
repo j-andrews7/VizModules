@@ -39,6 +39,14 @@
   : Output UI components for the SplitBarPlot module
 - [`SplitBarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotServer.md)
   : Server logic for SplitBarPlot module
+- [`ViolinPlotApp()`](https://j-andrews7.github.io/vizModules/reference/ViolinPlotApp.md)
+  : Create an example Modular ViolinPlot Shiny Application
+- [`ViolinPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/ViolinPlotInputsUI.md)
+  : Input UI components for the ViolinPlot module
+- [`ViolinPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/ViolinPlotOutputUI.md)
+  : Output UI components for the ViolinPlot module
+- [`ViolinPlotServer()`](https://j-andrews7.github.io/vizModules/reference/ViolinPlotServer.md)
+  : Server logic for ViolinPlot module
 - [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
   : Example DESeq2 results from airway dataset
 - [`airway_edger`](https://j-andrews7.github.io/vizModules/reference/airway_edger.md)
