@@ -74,14 +74,17 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             numericInput(ns("jitter.size"), "Jitter Point Size:", max = 10, min = 0.1, value = 1),
             numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.2),
             colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
-            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size:", value = 5, min = 0, max = 20),
-            switchInput(ns("jitter.shape.legend.show"), "Show Shape Legend: ", value = TRUE, onLabel = "Show", offLabel = "Hide"),
+            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size:",
+                value = 5, min = 0, max = 20),
+            switchInput(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
+                value = TRUE, onLabel = "Show", offLabel = "Hide"),
             numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = 1, min = 0, max = 5)
         ),
         "Box" = tagList(
             numericInput(ns("boxplot.width"), "Boxplot Width:", min = 0, max = 2, value = 0.2),
             colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            switchInput(ns("boxplot.show.outliers"), "Show Outliers: ", value = FALSE, onLabel = "Show", offLabel = "Hide"),
+            switchInput(ns("boxplot.show.outliers"), "Show Outliers: ",
+                value = FALSE, onLabel = "Show", offLabel = "Hide"),
             numericInput(ns("boxplot.outlier.size"), "Outlier Size:", value = 1.5, min = 0, max = 10),
             switchInput(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, onLabel = "Fill", offLabel = "No Fill"),
             numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 1, min = 0, max = 5),
@@ -90,28 +93,32 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
         "Violin" = tagList(
             numericInput(ns("vlnplot.lineweight"), "Violin Line Weight:", value = 1, min = 0, max = 5),
             numericInput(ns("vlnplot.width"), "Violin Width:", value = 1, min = 0, max = 5),
-            selectInput(ns("vlnplot.scaling"), "Violin Scaling:", 
-                selected = "area", 
+            selectInput(ns("vlnplot.scaling"), "Violin Scaling:",
+                selected = "area",
                 choices = c("area", "count", "width")),
-            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (comma-separated, 0-1):", value = "", 
-                placeholder = "e.g., 0.25, 0.5, 0.75")
+            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (comma-separated, 0-1):",
+                value = "", placeholder = "e.g., 0.25, 0.5, 0.75")
         ),
         "Ridge" = tagList(
             numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight:", value = 1, min = 0, max = 5),
             numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap):", value = 1.25, min = 0.5, max = 3),
-            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion:", value = NA, min = 0, max = 1),
-            selectInput(ns("ridgeplot.shape"), "Ridge Shape:", 
-                selected = "smooth", 
+            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion:",
+                value = NA, min = 0, max = 1),
+            selectInput(ns("ridgeplot.shape"), "Ridge Shape:",
+                selected = "smooth",
                 choices = c("smooth", "hist")),
-            numericInput(ns("ridgeplot.bins"), "Ridge Bins (for hist):", value = 30, min = 5, max = 100),
-            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth:", value = NULL, min = 0)
+            numericInput(ns("ridgeplot.bins"), "Ridge Bins (for hist):",
+                value = 30, min = 5, max = 100),
+            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth:",
+                value = NULL, min = 0)
         ),
         "Extras" = tagList(
-            textInput(ns("add.line"), "Add Y interception line (comma-separated):", value = "", 
-                placeholder = "e.g., 0, 1, 2"),
+            textInput(ns("add.line"), "Add Y interception line (comma-separated):",
+                value = "", placeholder = "e.g., 0, 1, 2"),
             colourpicker::colourInput(ns("line.color"), "Line Color:", value = "#000000"),
-            numericInput(ns("line.linewidth"), "Line Width:", value = 0.5, min = 0.1, max = 10),
-            selectInput(ns("line.linetype"), "Line Type:", 
+            numericInput(ns("line.linewidth"), "Line Width:",
+                value = 0.5, min = 0.1, max = 10),
+            selectInput(ns("line.linetype"), "Line Type:",
                 selected = "dashed",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")),
             numericInput(ns("line.opacity"), "Line Opacity:", value = 1, min = 0, max = 1)
@@ -121,7 +128,8 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             selectInput(ns("split.nrow"), "Split number of rows:", selected = "", choices = c("", 1:10))
         ),
         "Axes" = tagList(
-            switchInput(ns("x.labels.rotate"), "Rotate X labels: ", value = TRUE, onLabel = "Rotate", offLabel = "Don't Rotate"),
+            switchInput(ns("x.labels.rotate"), "Rotate X labels: ",
+                value = TRUE, onLabel = "Rotate", offLabel = "Don't Rotate"),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
@@ -240,10 +248,15 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
-                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
-                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
-                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+                column(3, switchInput(ns("auto.update"), "Auto Update",
+                    value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+                    style = "margin-top: 25px;"),
+                column(3, actionButton(ns("update"), "Update", width = "100%"),
+                    style = "margin-top: 25px;"),
+                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary",
+                    width = "100%"), style = "margin-top: 25px;"),
+                column(3, selectInput(ns("download.type"), "Download Format",
+                    selected = "png", choices = c("png", "svg"), width = "100%"))
             ),
             br()
         ),
