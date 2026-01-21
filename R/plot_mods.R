@@ -333,7 +333,37 @@
     return(config)
 }
 
-
+#' Create Plotly axis style list
+#'
+#' Constructs a style list for a Plotly axis using values from a Shiny
+#' \code{input} object, including title font, axis lines, and tick
+#' appearance settings.
+#'
+#' @param input Shiny input object. Expected to contain axis-related fields
+#'   such as \code{font.type}, \code{text.colour}, \code{axis.showline},
+#'   \code{axis.mirror}, \code{axis.linecolor}, \code{axis.linewidth},
+#'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
+#'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
+#'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
+#'   \code{axis.ticklen}, and \code{axis.tickwidth}.
+#' @param axis_side Character. Which axis to style, either \code{"x"} or
+#'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
+#'   \code{axis.tickangle.y} is used for the tick angle.
+#' @param isolate_fn Function. A function used to isolate Shiny inputs,
+#'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
+#'
+#' @return A named list containing Plotly-compatible axis styling
+#'   components, including title font, line properties, and tick label
+#'   formatting.
+#'
+#' @details The function collects axis- and font-related settings from
+#'   the provided \code{input} object and assembles them into a list
+#'   suitable for use as an axis specification in Plotly layouts. The
+#'   tick angle is chosen based on the value of \code{axis_side}.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_create_axis_styles
 .create_axis_styles <- function (input, axis_side = c("x", "y"), isolate_fn = isolate){
 
     axis_side <- match.arg(axis_side)
@@ -367,4 +397,48 @@
     )
 
     return(style)
+}
+#' Calculate Y-axis range from data
+#'
+#' Computes a numeric range for the Y-axis based on a specified column in a
+#' data frame, applying a scaling factor to the maximum value. This is useful
+#' for deriving dynamic axis limits directly from the underlying data. [web:16]
+#'
+#' @param df Data frame. The data containing the Y variable. [web:16]
+#' @param y_data_col Character. Name of the column in \code{df} to use for
+#'   calculating the Y-axis range. [web:16]
+#' @param Y_AXIS_SCALE_FACTOR Numeric. Multiplicative factor applied to the
+#'   maximum Y value to provide additional headroom on the axis. [web:16]
+#'
+#' @return A named list with components \code{min} and \code{max} giving the
+#'   lower and upper limits for the Y-axis, or \code{NULL} if the input column
+#'   is missing, non-numeric, or otherwise invalid. [web:16]
+#'
+#' @details The function first validates that \code{y_data_col} is specified
+#'   and corresponds to a numeric column in \code{df}. It then computes the
+#'   minimum and maximum of that column, ignoring \code{NA} values, and scales
+#'   the maximum by \code{Y_AXIS_SCALE_FACTOR}. Non-finite results are replaced
+#'   by default values of 0 for the minimum and 1 for the maximum. [web:16]
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_calculate_y_range
+.calculate_y_range <- function(df, y_data_col, Y_AXIS_SCALE_FACTOR) {
+    if (is.null(y_data_col) || y_data_col == "") {
+        return(NULL)
+    }
+
+    if (!y_data_col %in% names(df) || !is.numeric(df[[y_data_col]])) {
+        return(NULL)
+    }
+
+    # Calculate min and max from raw data
+    min.y <- min(df[[y_data_col]], na.rm = TRUE)
+    max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+
+    # Handle edge cases
+    if (!is.finite(min.y)) min.y <- 0
+    if (!is.finite(max.y)) max.y <- 1
+
+    return(list(min = min.y, max = max.y))
 }

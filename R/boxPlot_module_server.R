@@ -21,6 +21,10 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
+        
+
+        
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
@@ -104,15 +108,25 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
         })
 
+        # Track initialization
+        # initialized <- reactiveVal(FALSE)
+
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            max.y <- max(numeric.data, na.rm = TRUE)
-            min.y <- min(numeric.data, na.rm = TRUE)
+            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            
+            # Calculate y.max and y.min from the default selections
+            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR 
+            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
 
             # Data
             updateSelectInput(session, "group.by", selected = "NULL")
+            updateSelectInput(session, "x.data", selected = char.choices[2])
+            updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
             updateSwitchInput(session, "flip", value = FALSE)
@@ -184,6 +198,15 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+        })
+
+        # Update y-axis range when y data column is changed
+        observeEvent(input$y.data, {
+            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, Y_AXIS_SCALE_FACTOR = 1.11)
+            if (!is.null(y_range)) {
+                updateNumericInput(session, "y.max", value = y_range$max)
+                updateNumericInput(session, "y.min", value = y_range$min)
+            }
         })
 
 

@@ -42,8 +42,8 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
+    max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor ( Allows the top of the graph to not reach the top of the axes)
+    min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
 
     inputs <- list(
