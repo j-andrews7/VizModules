@@ -78,6 +78,7 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
             )),
+            colourInput(ns("text.colour"), "Title text colour:", value = "#000000"),
             checkboxInput(ns("axis.showline"), "Show axis lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),

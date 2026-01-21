@@ -150,6 +150,7 @@ densityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
             updateSelectInput(session, "font.type", selected = "Arial")
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
         })
 
 
