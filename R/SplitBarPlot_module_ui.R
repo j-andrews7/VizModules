@@ -1,3 +1,20 @@
+#' Input UI components for the SplitBarPlot module
+#'
+#' Builds the tabbed input controls used to configure the SplitBarPlot module.
+#' This should be placed alongside [SplitBarPlotOutputUI()] in your app.
+#'
+#' @param id The ID for the Shiny module.
+#' @param data A data frame used to populate input choices.
+#' @param defaults Named list of default input values.
+#' @param title Optional title for the input panel.
+#' @param columns Integer. Number of columns for organizing inputs.
+#'
+#' @return A Shiny UI element containing the inputs for SplitBarPlot.
+#'
+#' @import shiny
+#'
+#' @export
+#' @author Jacob Martin
 SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
