@@ -55,11 +55,11 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
-            checkboxGroupInput(
+            selectInput(
                 ns("plots"),
                 "Plot types to show:",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
-                selected = c("vlnplot", "boxplot", "jitter")
+                selected = c("vlnplot", "boxplot", "jitter"), multiple = TRUE
             ),
             helpText("Order matters: first selected will be in back, last in front")
         ),
