@@ -22,29 +22,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
-        Y_AXIS_SCALE_FACTOR <- 1.11
         
-        # Helper function to calculate y-axis range
-        calculate_y_range <- function(y_data_col) {
-            if (is.null(y_data_col) || y_data_col == "") {
-                return(NULL)
-            }
-            
-            df <- data()
-            if (!y_data_col %in% names(df) || !is.numeric(df[[y_data_col]])) {
-                return(NULL)
-            }
-            
-            # Calculate min and max from raw data
-            min.y <- min(df[[y_data_col]], na.rm = TRUE)
-            max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
-            
-            # Handle edge cases
-            if (!is.finite(min.y)) min.y <- 0
-            if (!is.finite(max.y)) max.y <- 1
-            
-            return(list(min = min.y, max = max.y))
-        }
+
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
@@ -130,46 +109,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         # Track initialization
-        initialized <- reactiveVal(FALSE)
+        # initialized <- reactiveVal(FALSE)
 
-        # Initialize y-axis range on startup
-        observe({
-            # Only run once when inputs are first available
-            if (!initialized()) {
-                # Only require y.data, other inputs can be empty
-                req(input$y.data)
-                
-                # Wait a moment for other inputs to be available
-                if (!is.null(input$y.data) && input$y.data != "") {
-                    y_range <- calculate_y_range(input$y.data)
-                    if (!is.null(y_range)) {
-                        updateNumericInput(session, "y.max", value = y_range$max)
-                        updateNumericInput(session, "y.min", value = y_range$min)
-                        initialized(TRUE)
-                    }
-                }
-            }
-        })
-
-        # Auto-update y-axis range when relevant inputs change
-        observe({
-            # Trigger on changes to y.data
-            y_col <- input$y.data
-            
-            # Skip if we haven't initialized yet or y.data is not set
-            if (!initialized() || is.null(y_col) || y_col == "") {
-                return()
-            }
-            
-            # Only auto-update if auto.update is enabled
-            if (!is.null(input$auto.update) && input$auto.update) {
-                y_range <- calculate_y_range(y_col)
-                if (!is.null(y_range)) {
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
-                }
-            }
-        })
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -178,21 +119,14 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-            
-            y_range <- calculate_y_range(default_y_col)
-            if (!is.null(y_range)) {
-                min.y <- y_range$min
-                max.y <- y_range$max
-            } else {
-                # Fallback to all numeric data if no default column
-                min.y <- min(numeric.data, na.rm = TRUE)
-                max.y <- max(numeric.data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
-            }
+            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR 
+            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
 
             # Data
             updateSelectInput(session, "group.by", selected = "NULL")
+            updateSelectInput(session, "x.data", selected = char.choices[2])
+            updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
             updateSwitchInput(session, "flip", value = FALSE)
@@ -268,7 +202,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- calculate_y_range(input$y.data)
+            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, Y_AXIS_SCALE_FACTOR = 1.11)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)

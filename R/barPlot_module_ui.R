@@ -43,8 +43,9 @@ BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
+    #Axis range values 
+    max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE)
+    min.y <- 0
   
 
     inputs <- list(
