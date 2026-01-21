@@ -338,6 +338,8 @@ for non-functional/broken parameters.
 - [`.string_to_vector()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_vector.md)
   : Parse a string delimited by commas, whitespace, or new lines to a
   vector.
+- [`SplitBarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotApp.md)
+  : Create an example Modular SplitBarPlot Shiny Application
 - [`SplitBarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotInputsUI.md)
   : Input UI components for the SplitBarPlot module
 - [`SplitBarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotOutputUI.md)

@@ -29,6 +29,8 @@ Jacob Martin, Jared Andrews
 ## Examples
 
 ``` r
+mtcars$cyl <- as.factor(mtcars$cly)
+#> Error in `$<-.data.frame`(`*tmp*`, cyl, value = structure(integer(0), levels = character(0), class = "factor")): replacement has 0 rows, data has 32
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- BarPlotApp(data_list)
 if (interactive()) runApp(app)

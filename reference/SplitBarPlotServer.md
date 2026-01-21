@@ -40,7 +40,7 @@ The `moduleServer` function for the SplitBarPlot module.
 [`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
 [`SplitBarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotInputsUI.md),
 [`SplitBarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotOutputUI.md),
-`SplitBarPlotApp()`
+[`SplitBarPlotApp()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotApp.md)
 
 ## Author
 
