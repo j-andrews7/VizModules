@@ -152,7 +152,7 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "pt.color", value = "#4472C4")
 
             # Annotations
-            updateNumericInput(session, "add.line", value = NULL)
+            updateNumericInput(session, "add.line", value = NA)
             updateNumericInput(session, "line.width", value = 0.6)
             colourpicker::updateColourInput(session, "line.colour", value = "#000000")
             updateNumericInput(session, "line.type", value = 1)
@@ -164,7 +164,7 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
 
             # Stats
-            updateSelectInput(session, "add.stat", selected = "mean")
+            updateSelectInput(session, "add.stat", selected = "")
             colourpicker::updateColourInput(session, "stat.color", value = "#000000")
             updateNumericInput(session, "stat.size", value = 1)
             updateNumericInput(session, "stat.stroke", value = 1)
@@ -280,8 +280,7 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 highlight = highlight,
                 highlight_color = isolate_fn(input$highlight.colour),
                 highlight_size = isolate_fn(input$highlight.size),
-                highlight_alpha = isolate_fn(input$highlight.alpha),
-                combine = isolate_fn(input$combine)
+                highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
             fig <- ggplotly(p) |>

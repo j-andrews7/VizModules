@@ -75,15 +75,14 @@ ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns 
             numericInput(ns("box.ptsize"), "Box Point Size:", min = 0, max = 10, value = 2.5)
         ),
         "Extras" = tagList(
-            numericInput(ns("add.line"), "Add Y interception line:", value = NULL, min = min.y, max = max.y),
+            numericInput(ns("add.line"), "Add Y interception line:", value = NA, min = min.y, max = max.y),
             colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour:", value = "#000000"),
             numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0.1, max = 10),
             numericInput(ns("line.type"), "Line type: ", value = 1, min = 1, max = 40),
             textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
-            numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1),
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
+            numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1)
         ),
         "Stats" = tagList(
             selectInput(ns("add.stat"), "Add Stats:", selected = "", choices = c("", "mean", "sd", "median", "var")),
@@ -97,10 +96,10 @@ ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns 
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
+            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On")
         ),
         "Axes" = tagList(
+            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000"),
             switchInput(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped"),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
