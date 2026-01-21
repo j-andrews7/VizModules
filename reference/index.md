@@ -113,3 +113,11 @@
   : Output UI components for the volcanoPlot module
 - [`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md)
   : Server logic for volcanoPlot module
+- [`yPlotApp()`](https://j-andrews7.github.io/vizModules/reference/yPlotApp.md)
+  : Create an example Modular yPlot Shiny Application
+- [`yPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/yPlotInputsUI.md)
+  : Input UI components for the yPlot module
+- [`yPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/yPlotOutputUI.md)
+  : Output UI components for the yPlot module
+- [`yPlotServer()`](https://j-andrews7.github.io/vizModules/reference/yPlotServer.md)
+  : Server logic for yPlot module
