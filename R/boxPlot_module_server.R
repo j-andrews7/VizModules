@@ -266,15 +266,12 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
-        # Update y-axis range when y data column is changed (when auto-update is off)
+        # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            # Only update if auto.update is disabled (the auto-update observer handles it when enabled)
-            if (is.null(input$auto.update) || !input$auto.update) {
-                y_range <- calculate_y_range(input$y.data)
-                if (!is.null(y_range)) {
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
-                }
+            y_range <- calculate_y_range(input$y.data)
+            if (!is.null(y_range)) {
+                updateNumericInput(session, "y.max", value = y_range$max)
+                updateNumericInput(session, "y.min", value = y_range$min)
             }
         })
 
