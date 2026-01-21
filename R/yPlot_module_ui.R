@@ -52,7 +52,6 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
             selectInput(ns("color.by"), "Color by:", selected = "", choices = c("", char.choices)),
             selectInput(ns("shape.by"), "Shape by:", selected = "", choices = c("", char.choices)),
-            selectInput(ns("split.by"), "Split by (facet):", selected = "", choices = c("", char.choices)),
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
@@ -124,8 +123,10 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             numericInput(ns("line.opacity"), "Line Opacity:", value = 1, min = 0, max = 1)
         ),
         "Facet" = tagList(
-            selectInput(ns("split.ncol"), "Split number of columns:", selected = "", choices = c("", 1:10)),
-            selectInput(ns("split.nrow"), "Split number of rows:", selected = "", choices = c("", 1:10))
+            selectInput(ns("split.by"), "Split by (facet):", selected = "", choices = c("", char.choices)),
+            selectInput(ns("split.adjust"), "Facet scaling: ", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
+            selectInput(ns("split.ncol"), "Split number of columns:", selected = 4, choices = c("", 1:10)),
+            selectInput(ns("split.nrow"), "Split number of rows:", selected = 4, choices = c("", 1:10))
         ),
         "Axes" = tagList(
             switchInput(ns("x.labels.rotate"), "Rotate X labels: ",

@@ -127,7 +127,7 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "group.by", selected = char.choices[2])
             updateSelectInput(session, "color.by", selected = "")
             updateSelectInput(session, "shape.by", selected = "")
-            updateSelectInput(session, "split.by", selected = "")
+            
 
             # Plot Type
             updateCheckboxGroupInput(session, "plots", selected = c("vlnplot", "boxplot", "jitter"))
@@ -177,6 +177,8 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "line.opacity", value = 1)
 
             # Facet
+            updateSelectInput(session, "split.by", selected = "")
+            updateSelectInput(session, "split.adjust", selected = "free")
             updateSelectInput(session, "split.ncol", selected = "")
             updateSelectInput(session, "split.nrow", selected = "")
 
@@ -282,6 +284,12 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (is.null(color.by) || color.by == "") {
                 color.by <- isolate_fn(input$group.by)
             }
+            
+            #Formating split adjustment into correct structure for dittoViz paramater input 
+            split.adjust <- list(scales = "free")
+            if (!isolate_fn(input$split.adjust) == "free"){
+                split.adjust$scales <- isolate_fn(input$split.adjust)
+            }
 
             p <- dittoViz::yPlot(
                 data_frame = data(),
@@ -298,6 +306,7 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.labels.rotate = isolate_fn(input$x.labels.rotate),
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
+                split.adjust = split.adjust,
                 do.raster = isolate_fn(input$do.raster),
                 raster.dpi = isolate_fn(input$raster.dpi),
                 jitter.size = isolate_fn(input$jitter.size),
