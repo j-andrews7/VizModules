@@ -31,6 +31,8 @@
 - [`.string_to_vector()`](https://j-andrews7.github.io/vizModules/reference/INTERNAL_string_to_vector.md)
   : Parse a string delimited by commas, whitespace, or new lines to a
   vector.
+- [`SplitBarPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotInputsUI.md)
+  : Input UI components for the SplitBarPlot module
 - [`SplitBarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotOutputUI.md)
   : Output UI components for the SplitBarPlot module
 - [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
