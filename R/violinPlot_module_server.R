@@ -119,7 +119,7 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR 
+            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 
             min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
 
@@ -150,12 +150,8 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Colors
             colourpicker::updateColourInput(session, "pt.color", value = "#4472C4")
-            updateNumericInput(session, "alpha", value = 0.7)
 
             # Annotations
-            updateTextInput(session, "title", value = "title")
-            updateTextInput(session, "y.lab", value = "y title")
-            updateTextInput(session, "x.lab", value = "x title")
             updateNumericInput(session, "add.line", value = NULL)
             updateNumericInput(session, "line.width", value = 0.6)
             colourpicker::updateColourInput(session, "line.colour", value = "#000000")
@@ -167,17 +163,11 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
 
-            # Trajectory
-            updateSwitchInput(session, "add.trend", value = FALSE)
-            updateNumericInput(session, "trend.pt.size", value = 2)
-            colourpicker::updateColourInput(session, "trend.colour", value = "#000000")
-            updateNumericInput(session, "trend.line.width", value = 1)
-
             # Stats
             updateSelectInput(session, "add.stat", selected = "mean")
             colourpicker::updateColourInput(session, "stat.color", value = "#000000")
             updateNumericInput(session, "stat.size", value = 1)
-            updateNumericInput(session, "stat.sroke", value = 1)
+            updateNumericInput(session, "stat.stroke", value = 1)
             updateNumericInput(session, "stat.shape", value = 25)
 
             # Facet
@@ -269,7 +259,6 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 box_color = isolate_fn(input$box.color),
                 box_width = isolate_fn(input$box.width),
                 box_ptsize = isolate_fn(input$box.ptsize),
-                alpha = isolate_fn(input$alpha),
                 add_stat = add.stat,
                 stat_color = isolate_fn(input$stat.color),
                 stat_size = isolate_fn(input$stat.size),
