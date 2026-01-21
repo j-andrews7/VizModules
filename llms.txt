@@ -362,6 +362,14 @@ for non-functional/broken parameters.
   : Example limma-voom results from airway dataset
 - [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
+- [`densityPlotApp()`](https://j-andrews7.github.io/vizModules/reference/densityPlotApp.md)
+  : Standalone Multi-Dataset Density Plot Application
+- [`densityPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/densityPlotInputsUI.md)
+  : Density Plot Input UI Module
+- [`densityPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/densityPlotOutputUI.md)
+  : Output UI components for the densityPlot module
+- [`densityPlotServer()`](https://j-andrews7.github.io/vizModules/reference/densityPlotServer.md)
+  : Density Plot Server Module
 - [`histogramPlotApp()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotApp.md)
   : Standalone Multi-Dataset Histogram Application
 - [`histogramPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/histogramPlotInputsUI.md)
