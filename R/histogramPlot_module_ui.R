@@ -73,9 +73,9 @@ histogramPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colum
 
         "Extras" = tagList(
             switchInput(ns("add.bars"), "Add rug plot", value = FALSE),
-            numericInput(ns("bar.height"), "Rug bar height:", value = 0.025),
+            numericInput(ns("bar.height"), "Rug bar height:", value = 0.05),
             sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("bar.width"), "Rug bar width:", value = 0.1)
+            numericInput(ns("bar.width"), "Rug bar width:", value = 1)
         ),
 
 
