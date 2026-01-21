@@ -15,6 +15,7 @@
 #' @author Jacob Martin, Jared Andrews
 #
 #' @examples
+#' mtcars$cyl <- as.factor(mtcars$cly)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- BarPlotApp(data_list)
 #' if (interactive()) runApp(app)

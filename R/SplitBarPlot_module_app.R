@@ -1,3 +1,25 @@
+#' Create an example Modular SplitBarPlot Shiny Application
+#'
+#' This function generates a Shiny application with modular [plotthis::SplitBarPlot()] components.
+#' A module is created for each data frame provided in the named list of data frames.
+#'
+#' @param data_list A named list of data frames for which SplitBarPlot modules will be created.
+#'   That is, UI inputs and a split bar plot will be generated for each.
+#' @return A Shiny app object.
+#'
+#' @import shiny
+#' @importFrom plotthis SplitBarPlot
+#' @importFrom shinyjs useShinyjs
+#' @export
+#'
+#' @author Jacob Martin
+#'
+#' @examples
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#' data_list <- list("mtcars" = mtcars, "iris" = iris)
+#' app <- SplitBarPlotApp(data_list)
+#' if (interactive()) runApp(app)
+
 SplitBarPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
