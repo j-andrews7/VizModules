@@ -154,74 +154,74 @@ densityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
         output$densityPlot <- renderPlotly({
-          # Check if auto update on
-          auto_update <- input$auto.update
+            # Check if auto update on
+            auto_update <- input$auto.update
 
-          # If update button is required, add dependency on it
-          if (!auto_update) {
-              input$update
-          }
+            # If update button is required, add dependency on it
+            if (!auto_update) {
+                input$update
+            }
 
-          # Set up wrapper function based on switch state
-          isolate_fn <- if (auto_update) identity else isolate
+            # Set up wrapper function based on switch state
+            isolate_fn <- if (auto_update) identity else isolate
 
-          facet.by <- NULL 
-          if (!isolate_fn(input$facet.by) == ""){
-            facet.by <- isolate_fn(input$facet.by)
-          }
-        
-          group.by <- NULL
-          if (!isolate_fn(input$group.by) == "") {
-              group.by <- isolate_fn(input$group.by)
-          }
+            facet.by <- NULL
+            if (!isolate_fn(input$facet.by) == "") {
+                facet.by <- isolate_fn(input$facet.by)
+            }
 
-        palette_values <- resolve_palette(
+            group.by <- NULL
+            if (!isolate_fn(input$group.by) == "") {
+                group.by <- isolate_fn(input$group.by)
+            }
+
+            palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours)
             )
-          
-        # Facet rows and columns na to null
-        facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-        facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))          
-          
-        p <- plotthis::DensityPlot(
-            data = data(),
-            x = isolate_fn(input$x.data),
-            group_by = group.by,
-            facet_by = facet.by,
-            facet_scales = isolate_fn(input$facet.scale),
-            facet_ncol = facet.ncol,
-            facet_nrow = facet.nrow,
-            facet_byrow = isolate_fn(input$facet.by.row),
-            alpha = isolate_fn(input$plot.alpha),
-            flip = isolate_fn(input$flip),
-            add_bars = isolate_fn(input$add.bars),
-            bar_height = isolate_fn(input$bar.height),
-            bar_alpha = isolate_fn(input$bar.alpha),
-            bar_width = isolate_fn(input$bar.width),
-            theme = isolate_fn(input$theme),
-            position = isolate_fn(input$position)
-          )
 
-          fig <- ggplotly(p) |>
-              layout(
-                  title = list(
-                      font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
-                      x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                  )
-              )
+            # Facet rows and columns na to null
+            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
-          # Apply axis styling to all subplot axes (handles faceting/split_by)
-          # Axis Styling: 
+            p <- plotthis::DensityPlot(
+                data = data(),
+                x = isolate_fn(input$x.data),
+                group_by = group.by,
+                facet_by = facet.by,
+                facet_scales = isolate_fn(input$facet.scale),
+                facet_ncol = facet.ncol,
+                facet_nrow = facet.nrow,
+                facet_byrow = isolate_fn(input$facet.by.row),
+                alpha = isolate_fn(input$plot.alpha),
+                flip = isolate_fn(input$flip),
+                add_bars = isolate_fn(input$add.bars),
+                bar_height = isolate_fn(input$bar.height),
+                bar_alpha = isolate_fn(input$bar.alpha),
+                bar_width = isolate_fn(input$bar.width),
+                theme = isolate_fn(input$theme),
+                position = isolate_fn(input$position)
+            )
 
-          xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-          yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            fig <- ggplotly(p) |>
+                layout(
+                    title = list(
+                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                    )
+                )
 
-          fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) 
-          config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
-          fig <- do.call(config, c(list(p = fig), config_list))
+            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Axis Styling:
 
-          return(fig)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            fig <- do.call(config, c(list(p = fig), config_list))
+
+            return(fig)
         })
     })
 }
