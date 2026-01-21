@@ -153,10 +153,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Auto-update y-axis range when relevant inputs change
         observe({
-            # Trigger on changes to y.data, x.data, or group.by
+            # Trigger on changes to y.data
             y_col <- input$y.data
-            x_col <- input$x.data
-            group_col <- input$group.by
             
             # Skip if we haven't initialized yet or y.data is not set
             if (!initialized() || is.null(y_col) || y_col == "") {
