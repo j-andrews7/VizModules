@@ -24,8 +24,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
         Y_AXIS_SCALE_FACTOR <- 1.11
         
-        # Helper function to calculate y-axis range accounting for grouping
-        calculate_y_range <- function(y_data_col, x_data_col = NULL, group_data_col = NULL) {
+        # Helper function to calculate y-axis range
+        calculate_y_range <- function(y_data_col) {
             if (is.null(y_data_col) || y_data_col == "") {
                 return(NULL)
             }
@@ -141,7 +141,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$y.data) && input$y.data != "") {
-                    y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
+                    y_range <- calculate_y_range(input$y.data)
                     if (!is.null(y_range)) {
                         updateNumericInput(session, "y.max", value = y_range$max)
                         updateNumericInput(session, "y.min", value = y_range$min)
@@ -165,7 +165,7 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                y_range <- calculate_y_range(y_col, x_col, group_col)
+                y_range <- calculate_y_range(y_col)
                 if (!is.null(y_range)) {
                     updateNumericInput(session, "y.max", value = y_range$max)
                     updateNumericInput(session, "y.min", value = y_range$min)
@@ -181,10 +181,8 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             
             # Calculate y.max and y.min from the default selections
             default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-            default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
-            default_group_col <- ""
             
-            y_range <- calculate_y_range(default_y_col, default_x_col, default_group_col)
+            y_range <- calculate_y_range(default_y_col)
             if (!is.null(y_range)) {
                 min.y <- y_range$min
                 max.y <- y_range$max
@@ -272,10 +270,13 @@ BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Update y-axis range when y data column is changed (when auto-update is off)
         observeEvent(input$y.data, {
-            y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
-            if (!is.null(y_range)) {
-                updateNumericInput(session, "y.max", value = y_range$max)
-                updateNumericInput(session, "y.min", value = y_range$min)
+            # Only update if auto.update is disabled (the auto-update observer handles it when enabled)
+            if (is.null(input$auto.update) || !input$auto.update) {
+                y_range <- calculate_y_range(input$y.data)
+                if (!is.null(y_range)) {
+                    updateNumericInput(session, "y.max", value = y_range$max)
+                    updateNumericInput(session, "y.min", value = y_range$min)
+                }
             }
         })
 
