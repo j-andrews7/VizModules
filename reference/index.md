@@ -35,6 +35,8 @@
   : Input UI components for the SplitBarPlot module
 - [`SplitBarPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotOutputUI.md)
   : Output UI components for the SplitBarPlot module
+- [`SplitBarPlotServer()`](https://j-andrews7.github.io/vizModules/reference/SplitBarPlotServer.md)
+  : Server logic for SplitBarPlot module
 - [`airway_deseq2`](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
   : Example DESeq2 results from airway dataset
 - [`airway_edger`](https://j-andrews7.github.io/vizModules/reference/airway_edger.md)
