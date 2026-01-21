@@ -38,6 +38,20 @@ ui <- navbarPage(
         )
     ),
     tabPanel(
+        "SplitBarPlot",
+        sidebarLayout(
+            sidebarPanel(SplitBarPlotInputsUI("splitbar", mtcars, title = h3("SplitBarPlot Settings"))),
+            mainPanel(SplitBarPlotOutputUI("splitbar"))
+        )
+    ),
+    tabPanel(
+        "histogram",
+        sidebarLayout(
+            sidebarPanel(histogramPlotInputsUI("histogram", mtcars, title = h3("histogram Settings"))),
+            mainPanel(histogramPlotOutputUI("histogram"))
+        )
+    ),
+    tabPanel(
         "BoxPlot",
         sidebarLayout(
             sidebarPanel(BoxPlotInputsUI("box", mtcars, title = h3("BoxPlot Settings"))),
@@ -77,6 +91,8 @@ ui <- navbarPage(
 server <- function(input, output, session) {
     AreaPlotServer("area", data = reactive(iris))
     BarPlotServer("bar", data = reactive(mtcars))
+    SplitBarPlotServer("splitbar", data = reactive(mtcars))
+    histogramPlotServer("histogram", data = reactive(mtcars))
     BoxPlotServer("box", data = reactive(mtcars))
     linePlotServer("line", data = reactive(mtcars))
     piePlotServer("pie", data = reactive(iris_summary))
