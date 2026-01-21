@@ -18,6 +18,7 @@ This function generates a Shiny application with modular \code{\link[plotthis:ba
 A module is created for each data frame provided in the named list of data frames.
 }
 \examples{
+mtcars$cyl <- as.factor(mtcars$cly)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- BarPlotApp(data_list)
 if (interactive()) runApp(app)
