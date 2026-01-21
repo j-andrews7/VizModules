@@ -113,7 +113,7 @@ densityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data", selected = names(data)[1])
+            updateSelectInput(session, "x.data", selected = names(data())[1])
             updateSelectInput(session, "group.by", selected = "")
             updateTextInput(session, "group.by.name", value = "")
             updateSelectInput(session, "facet.by", selected = "")
@@ -180,6 +180,11 @@ densityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours)
             )
+            
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            }
 
             # Facet rows and columns na to null
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
@@ -201,6 +206,8 @@ densityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 bar_alpha = isolate_fn(input$bar.alpha),
                 bar_width = isolate_fn(input$bar.width),
                 theme = isolate_fn(input$theme),
+                palette = default_palette_name,
+                palcolor = palcolor_arg,
                 position = isolate_fn(input$position)
             )
 
