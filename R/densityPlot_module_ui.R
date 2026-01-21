@@ -65,9 +65,9 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
         "Extras" = tagList(
             switchInput(ns("add.bars"), "Add rug plot", value = FALSE),
-            numericInput(ns("bar.height"), "Rug bar height:", value = 0.025),
+            numericInput(ns("bar.height"), "Rug bar height:", value = 0.04),
             sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("bar.width"), "Rug bar width:", value = 0.1)
+            numericInput(ns("bar.width"), "Rug bar width:", value = 1)
         ),
 
 
