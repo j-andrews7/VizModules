@@ -41,8 +41,8 @@ data(mtcars)
 yPlotInputsUI("yPlot", mtcars)
 }
 \seealso{
-\code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=organize_inputs]{vizModules::organize_inputs()}},
-\code{\link[=yPlotOutputUI]{vizModules::yPlotOutputUI()}}, \code{\link[=yPlotServer]{vizModules::yPlotServer()}}, \code{\link[=yPlotApp]{vizModules::yPlotApp()}}
+\code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[=yPlotOutputUI]{yPlotOutputUI()}}, \code{\link[=yPlotServer]{yPlotServer()}}, \code{\link[=yPlotApp]{yPlotApp()}}
 }
 \author{
 Jared Andrews

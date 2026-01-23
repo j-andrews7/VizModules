@@ -398,32 +398,34 @@
 
     return(style)
 }
+
+
 #' Calculate Y-axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on a specified column in a
 #' data frame, applying a scaling factor to the maximum value. This is useful
-#' for deriving dynamic axis limits directly from the underlying data. [web:16]
+#' for deriving dynamic axis limits directly from the underlying data.
 #'
-#' @param df Data frame. The data containing the Y variable. [web:16]
+#' @param df Data frame. The data containing the Y variable.
 #' @param y_data_col Character. Name of the column in \code{df} to use for
-#'   calculating the Y-axis range. [web:16]
-#' @param Y_AXIS_SCALE_FACTOR Numeric. Multiplicative factor applied to the
-#'   maximum Y value to provide additional headroom on the axis. [web:16]
+#'   calculating the Y-axis range.
+#' @param y_axis_scale_factor Numeric. Multiplicative factor applied to the
+#'   maximum Y value to provide additional headroom on the axis.
 #'
 #' @return A named list with components \code{min} and \code{max} giving the
 #'   lower and upper limits for the Y-axis, or \code{NULL} if the input column
-#'   is missing, non-numeric, or otherwise invalid. [web:16]
+#'   is missing, non-numeric, or otherwise invalid.
 #'
 #' @details The function first validates that \code{y_data_col} is specified
 #'   and corresponds to a numeric column in \code{df}. It then computes the
 #'   minimum and maximum of that column, ignoring \code{NA} values, and scales
-#'   the maximum by \code{Y_AXIS_SCALE_FACTOR}. Non-finite results are replaced
-#'   by default values of 0 for the minimum and 1 for the maximum. [web:16]
+#'   the maximum by \code{y_axis_scale_factor}. Non-finite results are replaced
+#'   by default values of 0 for the minimum and 1 for the maximum.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_calculate_y_range
-.calculate_y_range <- function(df, y_data_col, Y_AXIS_SCALE_FACTOR) {
+.calculate_y_range <- function(df, y_data_col, y_axis_scale_factor) {
     if (is.null(y_data_col) || y_data_col == "") {
         return(NULL)
     }
@@ -434,7 +436,7 @@
 
     # Calculate min and max from raw data
     min.y <- min(df[[y_data_col]], na.rm = TRUE)
-    max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+    max.y <- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
 
     # Handle edge cases
     if (!is.finite(min.y)) min.y <- 0

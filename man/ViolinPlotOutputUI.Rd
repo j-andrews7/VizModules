@@ -10,7 +10,7 @@ ViolinPlotOutputUI(id)
 \item{id}{The ID for the Shiny module.}
 }
 \value{
-A Shiny plotlyOutput for the boxPlot
+A Shiny plotlyOutput for the ViolinPlot
 }
 \description{
 This should be placed in the UI where the plot should be shown.

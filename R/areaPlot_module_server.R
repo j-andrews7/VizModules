@@ -36,7 +36,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         }
       
         ns <- session$ns
-        default_palette_name <- "Set2"
+        default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
@@ -131,14 +131,13 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateSwitchInput(session, "facet.by.row", value = TRUE)
-            updateSelectInput(session, "split.by", selected = "")
 
             # Aesthetic
             # (palette.selection is UI output, so no reset call here)
             updateSelectInput(session, "theme", selected = "theme_this")
             updateNumericInput(session, "alpha", value = 1)
+            updateSelectInput(session, "legend.direction", selected = "vertical")
             
-
             # Axes
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
@@ -149,6 +148,9 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
+            updateSwitchInput(session, "scale.y", value = FALSE)
+
+            # Ticks
             updateNumericInput(session, "axis.tickfont.size", value = 12)
             colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
             updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
@@ -161,9 +163,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Action Button
             updateSelectInput(session, "download.type", selected = "png")
-
         })
-
 
         output$AreaPlot <- renderPlotly({
             isolate_fn <- setup_auto_update_logic(input)
@@ -179,13 +179,6 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
-            split.by <- NULL
-            if (!isolate_fn(input$split.by) == "") {
-                split.by <- isolate_fn(input$split.by)
-            }
-
-            design <- if (isolate_fn(input$split.by) == "" || isolate_fn(input$design) == "") NULL else isolate_fn(input$design)
-
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
@@ -198,10 +191,9 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                split_by = split.by,
                 group_by = group.by,
                 theme = isolate_fn(input$theme),
-                palette = default_palette_name,
+                # palette = default_palette_name,
                 palcolor = unname(palette_values),
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
@@ -209,8 +201,8 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                combine = isolate_fn(input$combine),
-                design = design
+                scale_y = isolate_fn(input$scale.y),
+                legend_direction = isolate_fn(input$legend.direction)
             )
 
 

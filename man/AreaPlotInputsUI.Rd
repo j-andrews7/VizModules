@@ -35,6 +35,49 @@ Defaults can be set for each input by providing a named list of values to the \c
 Nearly all parameters for \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters are not available via UI inputs:
+\itemize{
+\item \code{xlab} - X-axis label (plotly allows interactive editing)
+\item \code{ylab} - Y-axis label (plotly allows interactive editing)
+\item \code{title} - Plot title (plotly allows interactive editing)
+\item \code{subtitle} - Plot subtitle (not supported in plotly)
+\item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+\item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+\item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
+\item \code{design} - Only applies if \code{split_by} is used
+\item \code{split_by_sep} - Only applies if \code{split_by} is used
+\item \code{axes} - Only applies if \code{split_by} is used
+\item \code{axis_titles} - Only applies if \code{split_by} is used
+\item \code{guides} - Only applies if \code{split_by} is used
+\item \code{byrow} - Only applies if \code{split_by} is used
+\item \code{nrow} - Only applies if \code{split_by} is used
+\item \code{ncol} - Only applies if \code{split_by} is used
+\item \code{palette} - Managed internally via the palette selection UI
+}
+}
+
+\section{Plot parameters and defaults}{
+
+The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+\itemize{
+\item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
+\item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
+\item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: 3rd categorical variable or "")
+\item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
+\item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
+\item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
+\item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
+\item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
+\item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+\item \code{theme} - ggplot2 theme (UI: "Theme", default: "theme_this")
+\item \code{alpha} - Area fill transparency (UI: "Alpha", default: 1)
+\item \code{scale_y} - Scale y-axis by total (UI: "Scale y-axis by total", default: FALSE)
+\item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
+}
+}
+
 \examples{
 library(vizModules)
 # Needs at least 2 categorical variables for grouping and x-axis

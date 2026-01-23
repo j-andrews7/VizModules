@@ -236,7 +236,7 @@ ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns 
 #'
 #' @param id The ID for the Shiny module.
 #'
-#' @return A Shiny plotlyOutput for the violinPlot
+#' @return A Shiny plotlyOutput for the ViolinPlot
 #'
 #' @import shiny
 #' @importFrom shinyjqui jqui_resizable
