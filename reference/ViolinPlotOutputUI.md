@@ -16,7 +16,7 @@ ViolinPlotOutputUI(id)
 
 ## Value
 
-A Shiny plotlyOutput for the boxPlot
+A Shiny plotlyOutput for the ViolinPlot
 
 ## Author
 
