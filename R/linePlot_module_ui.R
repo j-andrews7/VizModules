@@ -10,7 +10,7 @@
 #' with `columns` controlling the number of columns in the grid.
 #'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
-#' Nearly all parameters for [vizModules::linePlot()] can be set via these inputs, so see the help
+#' Nearly all parameters for [VizModules::linePlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
 #' @param id The ID for the Shiny module.
@@ -26,10 +26,10 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-#' @seealso [vizModules::linePlot()], [vizModules::organize_inputs()],
-#' [vizModules::linePlotOutputUI()], [vizModules::linePlotServer()], [vizModules::linePlotApp()]
+#' @seealso [VizModules::linePlot()], [VizModules::organize_inputs()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()], [VizModules::linePlotApp()]
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' data(mtcars)
 #' linePlotInputsUI("linePlot", mtcars)
 linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {

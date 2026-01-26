@@ -6,7 +6,7 @@
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
 #'
-#' The inputs will automatically be organized into a grid layout via the [vizModules::organize_inputs()] function,
+#' The inputs will automatically be organized into a grid layout via the [VizModules::organize_inputs()] function,
 #' with `columns` controlling the number of columns in the grid.
 #'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
@@ -33,11 +33,11 @@
 #' 
 #' @export
 #' @author Jared Andrews
-#' @seealso [dittoViz::scatterPlot()], [vizModules::organize_inputs()],
-#' [vizModules::volcanoPlotOutputUI()], [vizModules::volcanoPlotServer()],
-#' [vizModules::volcanoPlotApp()]
+#' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
+#' [VizModules::volcanoPlotOutputUI()], [VizModules::volcanoPlotServer()],
+#' [VizModules::volcanoPlotApp()]
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' data(airway_deseq2)
 #' volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Settings", columns = 2) {
@@ -104,13 +104,13 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
 
     extras <- organize_inputs(extras, columns = columns)
 
-    # Ensure 'group' is in the data so it appears in the choices for scatterPlotInputsUI
+    # Ensure 'group' is in the data so it appears in the choices for dittoViz_ScatterPlotInputsUI
     # This allows the default selected="group" for color.by to work correctly
     if (!"group" %in% names(data)) {
         data$group <- "dummy"
     }
 
-    outs <- scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
+    outs <- dittoViz_ScatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
 
     tagList(extras, outs)
 }
@@ -129,5 +129,5 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
 #' @export
 #' @author Jared Andrews
 volcanoPlotOutputUI <- function(id) {
-    scatterPlotOutputUI(id)
+    dittoViz_ScatterPlotOutputUI(id)
 }

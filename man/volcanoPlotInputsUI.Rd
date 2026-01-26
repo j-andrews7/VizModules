@@ -51,7 +51,7 @@ Additional inputs specific to volcano plots are added to control significance th
 }
 }
 \examples{
-library(vizModules)
+library(VizModules)
 data(airway_deseq2)
 volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 }

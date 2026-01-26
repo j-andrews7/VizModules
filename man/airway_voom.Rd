@@ -29,7 +29,7 @@ A dataset containing differential expression results from comparing treated vs u
 samples in the airway dataset using limma-voom.
 }
 \examples{
-library(vizModules)
+library(VizModules)
 head(airway_voom)
 
 }

@@ -19,7 +19,7 @@ This function generates a Shiny application with modular piePlot components.
 A module is created for each data frame provided in the named list of data frames.
 }
 \examples{
-library(vizModules)
+library(VizModules)
 iris_summary <- as.data.frame(table(iris$Species))
 names(iris_summary) <- c("Species", "Count")
 cyl_summary <- as.data.frame(table(mtcars$cyl))

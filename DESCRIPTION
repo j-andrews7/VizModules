@@ -1,4 +1,4 @@
-Package: vizModules
+Package: VizModules
 Title: Flexible, Interactive Shiny Modules for Almost Any Plot
 Version: 0.99.0.9000
 Authors@R: 
@@ -8,7 +8,7 @@ Authors@R:
                 family = "Martin",
                 role = c("aut"),
                 email = "jacob@martin-email.com"))
-Description: vizModules offers a core selection of interactivity-first Shiny modules for many 
+Description: VizModules offers a core selection of interactivity-first Shiny modules for many 
     plot types meant to serve as flexible building blocks for applications and 
     as the base for more complex modules. These modules
     allow for the rapid and convenient construction of Shiny apps with very few lines
@@ -42,4 +42,4 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
-URL: https://j-andrews7.github.io/vizModules/, https://github.com/j-andrews7/vizModules
+URL: https://j-andrews7.github.io/VizModules/, https://github.com/j-andrews7/VizModules

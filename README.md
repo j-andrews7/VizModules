@@ -1,9 +1,9 @@
-# vizModules
+# VizModules
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml)
-[![Tests](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml)
-[![pkgdown](https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml)
+[![R-CMD-check](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml)
+[![Tests](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml)
+[![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis)) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
@@ -20,22 +20,22 @@ Note that this package is in development and may break at any time.
 Currently, the package can be installed from Github:
 
 ```r
-devtools::install_github("j-andrews7/vizModules")
+devtools::install_github("j-andrews7/VizModules")
 ```
 
 ## Quick Start
 
 - Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
-- Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "vizModules"))`
-- See the vignette for a full walkthrough: `vignette("quick-start", package = "vizModules")`
+- Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
+- See the vignette for a full walkthrough: `vignette("quick-start", package = "VizModules")`
 
 ```r
-library(vizModules)
+library(VizModules)
 
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            scatterPlotInputsUI(
+            dittoViz_ScatterPlotInputsUI(
                 "cars",
                 mtcars,
                 defaults = list(
@@ -45,12 +45,12 @@ ui <- fluidPage(
                 )
             )
         ),
-        mainPanel(scatterPlotOutputUI("cars"))
+        mainPanel(dittoViz_ScatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    scatterPlotServer(
+    dittoViz_ScatterPlotServer(
         "cars",
         data = reactive(mtcars),
         hide.inputs = c("rows.use"),
@@ -63,19 +63,19 @@ shinyApp(ui, server)
 
 Every module uses the same trio of functions: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic. Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide controls while keeping their values so you can enforce app-level defaults without exposing them.
 
-Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?scatterPlotInputsUI`, `?AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
+Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
-## Using **vizModules** 
+## Using **VizModules** 
 
-Including a vizModules module in your Shiny application is simple. 
+Including a VizModules module in your Shiny application is simple. 
 The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.
 
-As an example, we can look at the `createScatterPlotApp()` function:
+As an example, we can look at the `createdittoViz_ScatterPlotApp()` function:
 
 ```r
-library(vizModules)
+library(VizModules)
 
-createScatterPlotApp <- function(data_list) {
+createdittoViz_ScatterPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -99,7 +99,7 @@ createScatterPlotApp <- function(data_list) {
             mainPanel(
                 # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(scatterPlotOutputUI(name), br())
+                    tagList(dittoViz_ScatterPlotOutputUI(name), br())
                 })
             )
         )
@@ -110,7 +110,7 @@ createScatterPlotApp <- function(data_list) {
 
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            scatterPlotServer(name, data = reactive(data_list[[name]]))
+            dittoViz_ScatterPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 
@@ -119,17 +119,17 @@ createScatterPlotApp <- function(data_list) {
 }
 
 data_list <- list("mtcars" = mtcars, "iris" = iris)
-createScatterPlotApp(data_list)
+createdittoViz_ScatterPlotApp(data_list)
 ```
 
 ## Building Custom Wrapper Modules
 
-The modules in **vizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
+The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
 
-Here's a minimal example of wrapping the `scatterPlot` module to add custom filtering logic:
+Here's a minimal example of wrapping the `dittoViz_ScatterPlot` module to add custom filtering logic:
 
 ```r
-library(vizModules)
+library(VizModules)
 
 # Define the wrapper UI
 minimalWrapperUI <- function(id) {
@@ -138,12 +138,12 @@ minimalWrapperUI <- function(id) {
         h4("Minimal Wrapper Controls"),
         checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
         hr(),
-        scatterPlotInputsUI(id, iris)
+        dittoViz_ScatterPlotInputsUI(id, iris)
     )
 }
 
 minimalWrapperOutput <- function(id) {
-    scatterPlotOutputUI(id)
+    dittoViz_ScatterPlotOutputUI(id)
 }
 
 # Define the wrapper server
@@ -168,9 +168,9 @@ minimalWrapperServer <- function(id, data_reactive) {
 
     # 2. Call the base module server with the processed data.
     # We call this OUTSIDE the first moduleServer closure so that
-    # scatterPlotServer attaches to 'id' relative to the parent,
+    # dittoViz_ScatterPlotServer attaches to 'id' relative to the parent,
     # avoiding nested namespace issues (e.g. id-id-input).
-    scatterPlotServer(id, filtered_data)
+    dittoViz_ScatterPlotServer(id, filtered_data)
 }
 
 # Create the app using the wrapper
@@ -201,15 +201,32 @@ shinyApp(ui, server)
 
 3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
 
-For more details, see `vignette("custom-modules", package = "vizModules")`.
+For more details, see `vignette("custom-modules", package = "VizModules")`.
 
 ## Modules Provided
 
-Currently, **vizModules** contains a functional Shiny module for the following visualization functions:
+Currently, **VizModules** contains a functional Shiny module for the following visualization functions:
 
 ### `dittoViz`
 
-* `scatterPlot` - x/y coordinate plots with additional color and shape encodings.
+* `dittoViz_ScatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`).
+* `dittoViz_yPlot` - Multi-variate Y-axis plots (wraps `dittoViz::yPlot`).
+
+### `plotthis`
+
+* `plotthis_AreaPlot` - Stacked area charts (wraps `plotthis::AreaPlot`).
+* `plotthis_ViolinPlot` - Violin plots (wraps `plotthis::ViolinPlot`).
+* `plotthis_BoxPlot` - Box plots (wraps `plotthis::BoxPlot`).
+* `plotthis_BarPlot` - Bar charts (wraps `plotthis::BarPlot`).
+* `plotthis_SplitBarPlot` - Split bar charts (wraps `plotthis::SplitBarPlot`).
+* `plotthis_DensityPlot` - Density plots (wraps `plotthis::DensityPlot`).
+* `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
+
+### Defined in VizModules
+
+* `linePlot` - Line plots with customizable trajectories.
+* `piePlot` - Pie and donut charts.
+* `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_ScatterPlot`).
 
 ## Modules Planned
 

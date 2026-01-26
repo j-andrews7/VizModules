@@ -36,7 +36,7 @@ Nearly all parameters for \code{\link[=linePlot]{linePlot()}} can be set via the
 for that function for an exhaustive list.
 }
 \examples{
-library(vizModules)
+library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 }

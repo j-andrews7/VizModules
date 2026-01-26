@@ -8,10 +8,10 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [vizModules::volcanoPlotInputsUI()], [vizModules::volcanoPlotOutputUI()],
-#' [vizModules::volcanoPlotServer()], [vizModules::airway_deseq2]
+#' @seealso [VizModules::volcanoPlotInputsUI()], [VizModules::volcanoPlotOutputUI()],
+#' [VizModules::volcanoPlotServer()], [VizModules::airway_deseq2]
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' data(airway_deseq2)
 #' if (interactive()) {
 #'     volcanoPlotApp(airway_deseq2)

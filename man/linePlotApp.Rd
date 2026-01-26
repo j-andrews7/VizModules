@@ -18,7 +18,7 @@ This function generates a Shiny application with modular \code{\link[=linePlot]{
 A module is created for each data frame provided in the named list of data frames.
 }
 \examples{
-library(vizModules)
+library(VizModules)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- linePlotApp(data_list)
 if (interactive()) runApp(app)

@@ -12,8 +12,8 @@
 #' @import shiny
 #' @importFrom shinyjs hide
 #'
-#' @seealso [vizModules::linePlot()], [vizModules::organize_inputs()],
-#' [vizModules::linePlotOutputUI()], [vizModules::linePlotServer()], [vizModules::linePlotApp()]
+#' @seealso [VizModules::linePlot()], [VizModules::organize_inputs()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()], [VizModules::linePlotApp()]
 #'
 #' @export
 #' @author Jacob Martin

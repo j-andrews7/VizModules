@@ -37,7 +37,7 @@ Nearly all parameters for \code{\link[=piePlot]{piePlot()}} can be set via these
 for that function for an exhaustive list.
 }
 \examples{
-library(vizModules)
+library(VizModules)
 pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)

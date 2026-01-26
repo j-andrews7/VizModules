@@ -19,7 +19,7 @@
 #' The contrast compares dexamethasone treatment ("trt") vs untreated ("untrt").
 #'
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' head(airway_deseq2)
 #'
 #' @author Jared Andrews
@@ -46,7 +46,7 @@
 #' The contrast compares dexamethasone treatment ("trt") vs untreated ("untrt").
 #'
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' head(airway_edger)
 #'
 #' @author Jared Andrews
@@ -74,7 +74,7 @@
 #' The contrast compares dexamethasone treatment ("trt") vs untreated ("untrt").
 #'
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' head(airway_voom)
 #'
 #' @author Jared Andrews

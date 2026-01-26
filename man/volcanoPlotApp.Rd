@@ -16,7 +16,7 @@ A Shiny app object.
 Create a standalone Shiny app for the volcanoPlot module
 }
 \examples{
-library(vizModules)
+library(VizModules)
 data(airway_deseq2)
 if (interactive()) {
     volcanoPlotApp(airway_deseq2)

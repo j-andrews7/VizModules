@@ -1,6 +1,6 @@
 #' Create an example Modular linePlot Shiny Application
 #'
-#' This function generates a Shiny application with modular [vizModules::linePlot()] components.
+#' This function generates a Shiny application with modular [VizModules::linePlot()] components.
 #' A module is created for each data frame provided in the named list of data frames.
 #'
 #' @param data_list A named list of data frames for which linePlot modules will be created.
@@ -14,7 +14,7 @@
 #' @author Jacob Martin, Jared Andrews
 #'
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
 #' app <- linePlotApp(data_list)
 #' if (interactive()) runApp(app)

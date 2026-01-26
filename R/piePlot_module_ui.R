@@ -11,7 +11,7 @@
 #'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Provide summarized data (one row per slice) with columns for labels and aggregated values.
-#' Nearly all parameters for [vizModules::piePlot()] can be set via these inputs, so see the help
+#' Nearly all parameters for [VizModules::piePlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
 #' @param id The ID for the Shiny module.
@@ -26,10 +26,10 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-#' @seealso [vizModules::piePlot()], [vizModules::organize_inputs()],
-#' [vizModules::piePlotOutputUI()], [vizModules::piePlotServer()], [vizModules::piePlotApp()]
+#' @seealso [VizModules::piePlot()], [VizModules::organize_inputs()],
+#' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()], [VizModules::piePlotApp()]
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' pie_df <- as.data.frame(table(iris$Species))
 #' names(pie_df) <- c("Species", "Count")
 #' piePlotInputsUI("piePlot", pie_df)

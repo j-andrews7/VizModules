@@ -17,7 +17,7 @@
 #'
 #' @author Jared Andrews
 #' @examples
-#' library(vizModules)
+#' library(VizModules)
 #' # Example 1: Basic usage with a simple grid
 #' ui.inputs <- tagList(
 #'   textInput("name", "Name"),
