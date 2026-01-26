@@ -209,7 +209,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### `dittoViz`
 
-* `dittoViz_ScatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`).
+* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`).
 * `dittoViz_yPlot` - Multi-variate Y-axis plots (wraps `dittoViz::yPlot`).
 
 ### `plotthis`
@@ -226,7 +226,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 * `linePlot` - Line plots with customizable trajectories.
 * `piePlot` - Pie and donut charts.
-* `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_ScatterPlot`).
+* `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`).
 
 ## Modules Planned
 
@@ -241,29 +241,4 @@ dittoViz is under active development, so additional modules will be created as m
 
 ## Contributing a New Module
 
-To contribute a new module to the package, three files detailing the components & usage of the module must be added. 
-Using the `scatterPlot` module as an example:
-
-* The module UI - where all inputs and outputs will be defined. The inputs and outputs should each be defined in their own function (`scatterPlot_module_UI.R`).
-* The module server function - where all server logic will be defined (`scatterPlot_module_server.R`).
-* A function to generate a basic example application using the module (`scatterPlot_module_app.R`).
-
-Each function should be fully documented, all outputs should be plotly plots, default values for the UI inputs should be able to be provided via a named list, and UI inputs should be hideable.
-
-In addition, tooltips matching the dittoViz parameter documentation (with any necessary associated edits to account for the input type) should be used for each input. 
-Inputs supporting new functionality should also have descriptive tooltips indicating how they modify the plot.
-
-See the **scatterPlot** module for how these things can be easily accomplished.
-
-### Superceded Functionality
-
-Certain **dittoViz** or **plotthis** parameters are more easily adjusted via the interactive features of plotly, e.g. axis labels, plot title, etc.
-
-As such, inputs for such features need not be provided so long as the reason for their exclusion is included in the documentation of the module inputs UI function.
-
-### Missing/Broken Functionality
-
-At times, there will be functionality or geoms that just can't be done in plotly.
-
-Such missing or broken functionality should be clearly indicated in the module inputs UI function documentation. 
-Inputs should not be generated for non-functional/broken parameters.
+To contribute a new module to the package, see the vignette for guidelines: `vignette("adding-a-new-module", package = "VizModules")`.

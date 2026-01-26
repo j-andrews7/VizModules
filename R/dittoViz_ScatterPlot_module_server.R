@@ -16,11 +16,11 @@
 #' @importFrom shinyjs hide
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
-#' [VizModules::dittoViz_ScatterPlotOutputUI()], [VizModules::dittoViz_ScatterPlotServer()], [VizModules::dittoViz_ScatterPlotApp()]
+#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_ScatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
+dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {

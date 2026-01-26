@@ -1,7 +1,7 @@
 #' Input UI components for the scatterPlot module
 #'
 #' This should be placed in the UI where the inputs should be shown, with an `id`
-#' that matches the `id` used in the `dittoViz_ScatterPlotServer()` and `dittoViz_ScatterPlotOutputUI()` functions.
+#' that matches the `id` used in the `dittoViz_scatterPlotServer()` and `dittoViz_scatterPlotOutputUI()` functions.
 #'
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
@@ -48,12 +48,12 @@
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
-#' [VizModules::dittoViz_ScatterPlotOutputUI()], [VizModules::dittoViz_ScatterPlotServer()], [VizModules::dittoViz_ScatterPlotApp()]
+#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
 #' @examples
 #' library(VizModules)
 #' data(mtcars)
-#' dittoViz_ScatterPlotInputsUI("scatterPlot", mtcars)
-dittoViz_ScatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+#' dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
+dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -761,7 +761,7 @@ dittoViz_ScatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_ScatterPlotOutputUI <- function(id) {
+dittoViz_scatterPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
         plotlyOutput(ns("scatterPlot"))

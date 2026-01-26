@@ -16,9 +16,9 @@
 #' @examples
 #' library(VizModules)
 #' data_list <- list("mtcars" = mtcars, "iris" = iris)
-#' app <- dittoViz_ScatterPlotApp(data_list)
+#' app <- dittoViz_scatterPlotApp(data_list)
 #' if (interactive()) runApp(app)
-dittoViz_ScatterPlotApp <- function(data_list) {
+dittoViz_scatterPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -33,7 +33,7 @@ dittoViz_ScatterPlotApp <- function(data_list) {
                 # Add the module inputs UI for each data frame
                 lapply(names(data_list), function(name) {
                     tagList(
-                        dittoViz_ScatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                        dittoViz_scatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
                         hr()
                     )
                 })
@@ -41,7 +41,7 @@ dittoViz_ScatterPlotApp <- function(data_list) {
             mainPanel(
                 # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(dittoViz_ScatterPlotOutputUI(name), br())
+                    tagList(dittoViz_scatterPlotOutputUI(name), br())
                 })
             )
         )
@@ -50,7 +50,7 @@ dittoViz_ScatterPlotApp <- function(data_list) {
     server <- function(input, output, session) {
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            dittoViz_ScatterPlotServer(name, data = reactive(data_list[[name]]))
+            dittoViz_scatterPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 

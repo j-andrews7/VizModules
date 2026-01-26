@@ -51,6 +51,45 @@
 #'   \item \code{scale_y} - Scale y-axis by total (UI: "Scale y-axis by total", default: FALSE)
 #'   \item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
 #' }
+#' 
+#' The following parameters implementing new functionality or controlling plotly-specific features are also available:
+#' \itemize{
+#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
+#'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
+#'   \item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+#'   \item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+#'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
+#'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
+#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
+#'   \item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick label color", default: "black")
+#'   \item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick label font", default: "Arial")
+#'   \item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
+#'   \item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
+#'   \item \code{axis.ticks} - Position of tick marks (UI: "Tick position", default: "outside")
+#'   \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
+#'   \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
+#'   \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+#'   \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
+#'   \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
+#'   \item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line types", default: "dashed")
+#'   \item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+#'   \item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
+#'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
+#'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line types", default: "dashed")
+#'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#'   \item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+#'   \item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
+#'   \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
+#'   \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
+#'   \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' }
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
