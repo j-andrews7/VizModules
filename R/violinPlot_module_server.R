@@ -13,7 +13,7 @@
 #' @import shiny
 #' @importFrom plotthis ViolinPlot
 #' @importFrom shinyjs hide
-#' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
 #' @author Jacob Martin
@@ -129,21 +129,21 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
-            updateSwitchInput(session, "flip", value = FALSE)
-            updateSwitchInput(session, "stack", value = FALSE)
+            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "stack", value = FALSE)
             updateNumericInput(session, "aspect.ratio", value = 1)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
 
             # Points
-            updateSwitchInput(session, "add.points", value = FALSE)
+            updateMaterialSwitch(session, "add.points", value = FALSE)
             updateNumericInput(session, "pt.size", value = 1)
             updateNumericInput(session, "pt.alpha", value = 1)
             updateNumericInput(session, "jitter.width", value = 0.5)
             updateNumericInput(session, "jitter.height", value = 0)
 
             # Box
-            updateSwitchInput(session, "add.box", value = FALSE)
+            updateMaterialSwitch(session, "add.box", value = FALSE)
             colourpicker::updateColourInput(session, "box.color", value = "#000000")
             updateNumericInput(session, "box.width", value = 0.1)
             updateNumericInput(session, "box.ptsize", value = 2.5)
@@ -175,7 +175,7 @@ ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
-            updateSwitchInput(session, "facet.by.row", value = TRUE)
+            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
             # Action Button:
             updateSelectInput(session, "download.type", selected = "png")

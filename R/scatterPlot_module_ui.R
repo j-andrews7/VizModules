@@ -43,7 +43,7 @@
 #'
 #' @import shiny
 #' @importFrom colourpicker colourInput
-#' @importFrom shinyWidgets switchInput
+#' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
 #' @author Jared Andrews
@@ -535,68 +535,67 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             )
         ),
         "Lines" = tagList(
-            textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("hline.intercepts"), "Y-intercepts",
                 placeholder = "e.g. 2, -2",
                 value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
             ),
-            textInput(ns("hline.colors"), "Colors (comma-separated)",
+            textInput(ns("hline.colors"), "Colors",
                 value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
             ),
-            textInput(ns("hline.widths"), "Widths (comma-separated)",
+            textInput(ns("hline.widths"), "Widths",
                 value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
             ),
             selectInput(ns("hline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
             ),
-            textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("hline.opacities"), "Opacities (0-1)",
                 value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
+            textInput(ns("vline.intercepts"), "X-intercepts",
                 placeholder = "e.g. 2, -2",
                 value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
             ),
-            textInput(ns("vline.colors"), "Colors (comma-separated)",
+            textInput(ns("vline.colors"), "Colors",
                 value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
             ),
-            textInput(ns("vline.widths"), "Widths (comma-separated)",
+            textInput(ns("vline.widths"), "Widths",
                 value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
             selectInput(ns("vline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
-            textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("vline.opacities"), "Opacities (0-1)",
                 value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+            textInput(ns("abline.slopes"), "Slopes",
                 value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
             ),
-            textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("abline.intercepts"), "Y-intercepts",
                 value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
             ),
-            textInput(ns("abline.colors"), "Colors (comma-separated)",
+            textInput(ns("abline.colors"), "Colors",
                 value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
             ),
-            textInput(ns("abline.widths"), "Widths (comma-separated)",
+            textInput(ns("abline.widths"), "Widths",
                 value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
             ),
             selectInput(ns("abline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
             ),
-            textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("abline.opacities"), "Opacities (0-1)",
                 value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
             ),
             hr(),
-            h5("Trend Lines"),
-            switchInput(ns("best.fit"), "Line of best fit:",
+            materialSwitch(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
                 offLabel = "Off",
                 onLabel = "On"
-            ),
+            , status = "success"),
             numericInput(ns("line.best.smoothness"), "Smoothness of line of best fit:",
                 value = 1,
                 min = 0,
@@ -605,11 +604,11 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             colourpicker::colourInput(ns("line.best.colour"), "Line of best fit colour:",
                 value = "#000000"
             ),
-            switchInput(ns("linear.model"), "Linear model line",
+            materialSwitch(ns("linear.model"), "Linear model line",
                 value = FALSE,
                 onLabel = "On",
                 offLabel = "Off"
-            )
+            , status = "success")
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",
@@ -736,7 +735,7 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

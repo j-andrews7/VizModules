@@ -22,7 +22,7 @@
 #'
 #' @import shiny
 #' @importFrom colourpicker colourInput
-#' @importFrom shinyWidgets switchInput
+#' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
 #' @author Jared Andrews
@@ -66,7 +66,7 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
         "Adjustments" = tagList(
             numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
             numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
-            switchInput(ns("do.raster"), "Rasterize jitter: ", value = FALSE, onLabel = "On", offLabel = "Off"),
+            materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE, onLabel = "On", offLabel = "Off", status = "success"),
             numericInput(ns("raster.dpi"), "Raster DPI:", value = 300, min = 100, max = 1200)
         ),
         "Jitter" = tagList(
@@ -75,17 +75,17 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
             numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size:",
                 value = 5, min = 0, max = 20),
-            switchInput(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
-                value = TRUE, onLabel = "Show", offLabel = "Hide"),
+            materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
+                value = TRUE, onLabel = "Show", offLabel = "Hide", status = "success"),
             numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = 1, min = 0, max = 5)
         ),
         "Box" = tagList(
             numericInput(ns("boxplot.width"), "Boxplot Width:", min = 0, max = 2, value = 0.2),
             colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            switchInput(ns("boxplot.show.outliers"), "Show Outliers: ",
-                value = FALSE, onLabel = "Show", offLabel = "Hide"),
+            materialSwitch(ns("boxplot.show.outliers"), "Show Outliers: ",
+                value = FALSE, onLabel = "Show", offLabel = "Hide", status = "success"),
             numericInput(ns("boxplot.outlier.size"), "Outlier Size:", value = 1.5, min = 0, max = 10),
-            switchInput(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, onLabel = "Fill", offLabel = "No Fill"),
+            materialSwitch(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, onLabel = "Fill", offLabel = "No Fill", status = "success"),
             numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 1, min = 0, max = 5),
             numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight:", value = 1, min = 0, max = 5)
         ),
@@ -95,7 +95,7 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             selectInput(ns("vlnplot.scaling"), "Violin Scaling:",
                 selected = "area",
                 choices = c("area", "count", "width")),
-            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (comma-separated, 0-1):",
+            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1):",
                 value = "", placeholder = "e.g., 0.25, 0.5, 0.75")
         ),
         "Ridge" = tagList(
@@ -112,7 +112,7 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
                 value = NULL, min = 0)
         ),
         "Extras" = tagList(
-            textInput(ns("add.line"), "Add Y interception line (comma-separated):",
+            textInput(ns("add.line"), "Add Y interception line:",
                 value = "", placeholder = "e.g., 0, 1, 2"),
             colourpicker::colourInput(ns("line.color"), "Line Color:", value = "#000000"),
             numericInput(ns("line.linewidth"), "Line Width:",
@@ -129,8 +129,8 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             selectInput(ns("split.nrow"), "Split number of rows:", selected = 4, choices = c("", 1:10))
         ),
         "Axes" = tagList(
-            switchInput(ns("x.labels.rotate"), "Rotate X labels: ",
-                value = TRUE, onLabel = "Rotate", offLabel = "Don't Rotate"),
+            materialSwitch(ns("x.labels.rotate"), "Rotate X labels: ",
+                value = TRUE, onLabel = "Rotate", offLabel = "Don't Rotate", status = "success"),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
@@ -254,57 +254,57 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
             colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
         ),
         "Lines" = tagList(
-            textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("hline.intercepts"), "Y-intercepts",
                 value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
             ),
-            textInput(ns("hline.colors"), "Colors (comma-separated)",
+            textInput(ns("hline.colors"), "Colors",
                 value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
             ),
-            textInput(ns("hline.widths"), "Widths (comma-separated)",
+            textInput(ns("hline.widths"), "Widths",
                 value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
             ),
             selectInput(ns("hline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
             ),
-            textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("hline.opacities"), "Opacities (0-1)",
                 value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
+            textInput(ns("vline.intercepts"), "X-intercepts",
                 value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
             ),
-            textInput(ns("vline.colors"), "Colors (comma-separated)",
+            textInput(ns("vline.colors"), "Colors",
                 value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
             ),
-            textInput(ns("vline.widths"), "Widths (comma-separated)",
+            textInput(ns("vline.widths"), "Widths",
                 value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
             selectInput(ns("vline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
-            textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("vline.opacities"), "Opacities (0-1)",
                 value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+            textInput(ns("abline.slopes"), "Slopes",
                 value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
             ),
-            textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("abline.intercepts"), "Y-intercepts",
                 value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
             ),
-            textInput(ns("abline.colors"), "Colors (comma-separated)",
+            textInput(ns("abline.colors"), "Colors",
                 value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
             ),
-            textInput(ns("abline.widths"), "Widths (comma-separated)",
+            textInput(ns("abline.widths"), "Widths",
                 value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
             ),
             selectInput(ns("abline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
             ),
-            textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("abline.opacities"), "Opacities (0-1)",
                 value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
             )
         )
@@ -316,8 +316,8 @@ yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) 
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, switchInput(ns("auto.update"), "Auto Update",
-                    value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update",
+                    value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"),
                     style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"),
                     style = "margin-top: 25px;"),

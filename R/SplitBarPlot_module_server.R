@@ -228,18 +228,18 @@ SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scale", selected = "free_y")
             updateNumericInput(session, "facet.ncol", value = NA) # Using NA for NULL in numericInput
             updateNumericInput(session, "facet.nrow", value = NA)
-            updateSwitchInput(session, "facet.by.row", value = TRUE)
+            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
           #Aesthetics
             updateSelectInput(session, "theme", selected = "theme_this")
             updateSelectInput(session, "alpha.by", selected = "")
-            updateSwitchInput(session, "alpha.reverse", value = FALSE)
+            updateMaterialSwitch(session, "alpha.reverse", value = FALSE)
             updateTextInput(session, "alpha.name", value = "")
             updateNumericInput(session, "bar.height", value = 0.9)
             updateNumericInput(session, "line.height", value = 0.5)
             updateNumericInput(session, "max.charwidth", value = 80)
             # Axes
-            updateSwitchInput(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "flip", value = FALSE)
             updateNumericInput(session, "x.max", value = max.y)
             updateNumericInput(session, "x.min", value = min.y)
 

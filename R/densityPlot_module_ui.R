@@ -15,7 +15,7 @@
 #' @author Jacob Martin
 #' 
 #' @import shiny
-#' @importFrom shinyWidgets switchInput
+#' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #' @export
 densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
@@ -44,7 +44,7 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
+            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success"),
             selectInput(ns("split.by"), "Split by:", selected = "", choices = c("", char.choices))
         ),
 
@@ -64,7 +64,7 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         ),
 
         "Extras" = tagList(
-            switchInput(ns("add.bars"), "Add rug plot", value = FALSE),
+            materialSwitch(ns("add.bars"), "Add rug plot", value = FALSE, status = "success"),
             numericInput(ns("bar.height"), "Rug bar height:", value = 0.04),
             sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
             numericInput(ns("bar.width"), "Rug bar width:", value = 1)
@@ -72,7 +72,7 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
 
         "Axes" = tagList(
-            switchInput(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped"),
+            materialSwitch(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped", status = "success"),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
@@ -196,57 +196,57 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             )
         ),
         "Lines" = tagList(
-            textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("hline.intercepts"), "Y-intercepts",
                 value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
             ),
-            textInput(ns("hline.colors"), "Colors (comma-separated)",
+            textInput(ns("hline.colors"), "Colors",
                 value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
             ),
-            textInput(ns("hline.widths"), "Widths (comma-separated)",
+            textInput(ns("hline.widths"), "Widths",
                 value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
             ),
             selectInput(ns("hline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
             ),
-            textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("hline.opacities"), "Opacities (0-1)",
                 value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
+            textInput(ns("vline.intercepts"), "X-intercepts",
                 value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
             ),
-            textInput(ns("vline.colors"), "Colors (comma-separated)",
+            textInput(ns("vline.colors"), "Colors",
                 value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
             ),
-            textInput(ns("vline.widths"), "Widths (comma-separated)",
+            textInput(ns("vline.widths"), "Widths",
                 value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
             selectInput(ns("vline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
-            textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("vline.opacities"), "Opacities (0-1)",
                 value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+            textInput(ns("abline.slopes"), "Slopes",
                 value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
             ),
-            textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("abline.intercepts"), "Y-intercepts",
                 value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
             ),
-            textInput(ns("abline.colors"), "Colors (comma-separated)",
+            textInput(ns("abline.colors"), "Colors",
                 value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
             ),
-            textInput(ns("abline.widths"), "Widths (comma-separated)",
+            textInput(ns("abline.widths"), "Widths",
                 value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
             ),
             selectInput(ns("abline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
             ),
-            textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("abline.opacities"), "Opacities (0-1)",
                 value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
             )
         )
@@ -258,7 +258,7 @@ densityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

@@ -13,7 +13,7 @@
 #' @import shiny
 #' @importFrom plotthis AreaPlot
 #' @importFrom shinyjs hide
-#' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -130,7 +130,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
-            updateSwitchInput(session, "facet.by.row", value = TRUE)
+            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
             # Aesthetic
             # (palette.selection is UI output, so no reset call here)
@@ -150,7 +150,7 @@ AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateSwitchInput(session, "scale.y", value = FALSE)
+            updateMaterialSwitch(session, "scale.y", value = FALSE)
 
             # Ticks
             updateNumericInput(session, "axis.tickfont.size", value = 12)

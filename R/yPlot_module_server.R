@@ -13,7 +13,7 @@
 #' @import shiny
 #' @importFrom dittoViz yPlot
 #' @importFrom shinyjs hide
-#' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
 #' @author Jared Andrews
@@ -135,7 +135,7 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Adjustments
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
-            updateSwitchInput(session, "do.raster", value = FALSE)
+            updateMaterialSwitch(session, "do.raster", value = FALSE)
             updateNumericInput(session, "raster.dpi", value = 300)
 
             # Jitter
@@ -143,15 +143,15 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "jitter.width", value = 0.2)
             colourpicker::updateColourInput(session, "jitter.color", value = "#000000")
             updateNumericInput(session, "jitter.shape.legend.size", value = 5)
-            updateSwitchInput(session, "jitter.shape.legend.show", value = TRUE)
+            updateMaterialSwitch(session, "jitter.shape.legend.show", value = TRUE)
             updateNumericInput(session, "jitter.position.dodge", value = 1)
 
             # Box
             updateNumericInput(session, "boxplot.width", value = 0.2)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
-            updateSwitchInput(session, "boxplot.show.outliers", value = FALSE)
+            updateMaterialSwitch(session, "boxplot.show.outliers", value = FALSE)
             updateNumericInput(session, "boxplot.outlier.size", value = 1.5)
-            updateSwitchInput(session, "boxplot.fill", value = TRUE)
+            updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
             updateNumericInput(session, "boxplot.position.dodge", value = 1)
             updateNumericInput(session, "boxplot.lineweight", value = 1)
 
@@ -183,7 +183,7 @@ yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "split.nrow", selected = "")
 
             # Axes
-            updateSwitchInput(session, "x.labels.rotate", value = TRUE)
+            updateMaterialSwitch(session, "x.labels.rotate", value = TRUE)
             updateSelectInput(session, "font.type", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)

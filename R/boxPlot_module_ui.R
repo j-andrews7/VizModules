@@ -22,7 +22,7 @@
 #'
 #' @import shiny
 #' @importFrom colourpicker colourInput
-#' @importFrom shinyWidgets switchInput
+#' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -59,11 +59,11 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 "median_desc", "median"
             ), selected = "none"),
             
-            switchInput(ns("stack"), "Stack Plot: ", value = FALSE, onLabel = "Stacked", offLabel = "Not Stacked"),
+            materialSwitch(ns("stack"), "Stack Plot: ", value = FALSE, onLabel = "Stacked", offLabel = "Not Stacked", status = "success"),
             numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
             numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
             numericInput(ns("aspect.ratio"), "Aspect Ratio:", value = 1, min = 0, max = 100),
-            switchInput(ns("add.points"), "Add Jitter Points: ", value = FALSE, onLabel = "Points", offLabel = "No Points"),
+            materialSwitch(ns("add.points"), "Add Jitter Points: ", value = FALSE, onLabel = "Points", offLabel = "No Points", status = "success"),
             numericInput(ns("pt.size"), "Point Size:", max = 100, min = 0.1, value = 1),
             numericInput(ns("pt.alpha"), "Point Alpha:", min = 0, max = 1, value = 1),
             numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.5),
@@ -93,11 +93,11 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            switchInput(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On"),
-            switchInput(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On")
+            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success"),
+            materialSwitch(ns("combine"), "Combine plots:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success")
         ),
         "Axes" = tagList(
-            switchInput(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped"),
+            materialSwitch(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped", status = "success"),
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
@@ -220,57 +220,57 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             )
         ),
         "Lines" = tagList(
-            textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("hline.intercepts"), "Y-intercepts",
                 value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
             ),
-            textInput(ns("hline.colors"), "Colors (comma-separated)",
+            textInput(ns("hline.colors"), "Colors",
                 value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
             ),
-            textInput(ns("hline.widths"), "Widths (comma-separated)",
+            textInput(ns("hline.widths"), "Widths",
                 value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
             ),
             selectInput(ns("hline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
             ),
-            textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("hline.opacities"), "Opacities (0-1)",
                 value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
+            textInput(ns("vline.intercepts"), "X-intercepts",
                 value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
             ),
-            textInput(ns("vline.colors"), "Colors (comma-separated)",
+            textInput(ns("vline.colors"), "Colors",
                 value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
             ),
-            textInput(ns("vline.widths"), "Widths (comma-separated)",
+            textInput(ns("vline.widths"), "Widths",
                 value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
             selectInput(ns("vline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
-            textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("vline.opacities"), "Opacities (0-1)",
                 value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
             ),
             hr(),
-            textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+            textInput(ns("abline.slopes"), "Slopes",
                 value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
             ),
-            textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+            textInput(ns("abline.intercepts"), "Y-intercepts",
                 value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
             ),
-            textInput(ns("abline.colors"), "Colors (comma-separated)",
+            textInput(ns("abline.colors"), "Colors",
                 value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
             ),
-            textInput(ns("abline.widths"), "Widths (comma-separated)",
+            textInput(ns("abline.widths"), "Widths",
                 value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
             ),
             selectInput(ns("abline.linetypes"), "Line type",
                 choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
                 selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
             ),
-            textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+            textInput(ns("abline.opacities"), "Opacities (0-1)",
                 value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
             )
         )
@@ -282,7 +282,7 @@ BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, switchInput(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

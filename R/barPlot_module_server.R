@@ -12,7 +12,7 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs hide
-#' @importFrom shinyWidgets updateSwitchInput
+#' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom stats aggregate
 #'
 #' @export
@@ -135,7 +135,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
-            updateSwitchInput(session, "facet.by.row", value = TRUE)
+            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
 
             # Aesthetics
@@ -152,7 +152,7 @@ BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "line.name", value = "")
 
             # Axes
-            updateSwitchInput(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "flip", value = FALSE)
             updateNumericInput(session, "y.max", value = max.y)
             updateNumericInput(session, "y.min", value = min.y)
 
