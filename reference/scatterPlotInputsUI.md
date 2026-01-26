@@ -67,6 +67,30 @@ additionally modify the plotly output:
 
 - `id`: The ID for the Shiny module.
 
+## Plot parameters not implemented or with altered functionality
+
+The following
+[`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)
+parameters are superseded by the enhanced Lines tab:
+
+- `add.xline` - Use `vline.intercepts` instead for vertical lines with
+  full styling options
+
+- `add.yline` - Use `hline.intercepts` instead for horizontal lines with
+  full styling options
+
+- `xline.linetype` - Use `vline.linetypes` instead
+
+- `xline.color` - Use `vline.colors` instead
+
+- `yline.linetype` - Use `hline.linetypes` instead
+
+- `yline.color` - Use `hline.colors` instead
+
+The new Lines tab provides enhanced functionality including multiple
+lines per type, individual line widths, opacities, and diagonal/ablines
+with slope control.
+
 ## See also
 
 [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
@@ -86,46 +110,46 @@ library(vizModules)
 data(mtcars)
 scatterPlotInputsUI("scatterPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="2241">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="5684">
 #>     <li class="active">
-#>       <a href="#tab-2241-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5684-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-5684-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-5684-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-5684-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-5684-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-5684-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-5684-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-5684-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-5684-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-5684-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-5684-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2241-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5684-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2241">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2241-1">
+#>   <div class="tab-content" data-tabsetid="5684">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5684-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -217,7 +241,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-2241-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-5684-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -309,7 +333,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-2241-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-5684-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -367,7 +391,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-2241-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-5684-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -410,7 +434,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-2241-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-5684-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -450,7 +474,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-2241-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-5684-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -585,7 +609,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-2241-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-5684-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -641,7 +665,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-2241-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-5684-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -668,7 +692,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2241-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-5684-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -736,7 +760,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-2241-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-5684-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -800,63 +824,157 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2241-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-5684-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-add.xline-label" for="scatterPlot-add.xline">Add xlines</label>
-#>             <input id="scatterPlot-add.xline" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="scatterPlot-hline.intercepts-label" for="scatterPlot-hline.intercepts">Y-intercepts (comma-separated)</label>
+#>             <input id="scatterPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-add.yline-label" for="scatterPlot-add.yline">Add ylines</label>
-#>             <input id="scatterPlot-add.yline" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="scatterPlot-hline.colors-label" for="scatterPlot-hline.colors">Colors (comma-separated)</label>
+#>             <input id="scatterPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-xline.linetype-label" for="scatterPlot-xline.linetype">xline linetype</label>
-#>             <div>
-#>               <select id="scatterPlot-xline.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
-#> <option value="dashed">dashed</option>
-#> <option value="dotted">dotted</option>
-#> <option value="dotdash">dotdash</option>
-#> <option value="longdash">longdash</option>
-#> <option value="twodash">twodash</option></select>
-#>               <script type="application/json" data-for="scatterPlot-xline.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
+#>             <label class="control-label" id="scatterPlot-hline.widths-label" for="scatterPlot-hline.widths">Widths (comma-separated)</label>
+#>             <input id="scatterPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-yline.linetype-label" for="scatterPlot-yline.linetype">yline linetype</label>
+#>             <label class="control-label" id="scatterPlot-hline.linetypes-label" for="scatterPlot-hline.linetypes">Line type</label>
 #>             <div>
-#>               <select id="scatterPlot-yline.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
-#> <option value="dashed">dashed</option>
+#>               <select id="scatterPlot-hline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
 #> <option value="dotted">dotted</option>
 #> <option value="dotdash">dotdash</option>
 #> <option value="longdash">longdash</option>
 #> <option value="twodash">twodash</option></select>
-#>               <script type="application/json" data-for="scatterPlot-yline.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="scatterPlot-hline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="scatterPlot-xline.color">xline color</label>
-#>             <input id="scatterPlot-xline.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-hline.opacities-label" for="scatterPlot-hline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="scatterPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="scatterPlot-yline.color">yline color</label>
-#>             <input id="scatterPlot-yline.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           <hr/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-vline.intercepts-label" for="scatterPlot-vline.intercepts">X-intercepts (comma-separated)</label>
+#>             <input id="scatterPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-vline.colors-label" for="scatterPlot-vline.colors">Colors (comma-separated)</label>
+#>             <input id="scatterPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-vline.widths-label" for="scatterPlot-vline.widths">Widths (comma-separated)</label>
+#>             <input id="scatterPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-vline.linetypes-label" for="scatterPlot-vline.linetypes">Line type</label>
+#>             <div>
+#>               <select id="scatterPlot-vline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
+#> <option value="dotted">dotted</option>
+#> <option value="dotdash">dotdash</option>
+#> <option value="longdash">longdash</option>
+#> <option value="twodash">twodash</option></select>
+#>               <script type="application/json" data-for="scatterPlot-vline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-vline.opacities-label" for="scatterPlot-vline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="scatterPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <hr/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.slopes-label" for="scatterPlot-abline.slopes">Slopes (comma-separated)</label>
+#>             <input id="scatterPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.intercepts-label" for="scatterPlot-abline.intercepts">Y-intercepts (comma-separated)</label>
+#>             <input id="scatterPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.colors-label" for="scatterPlot-abline.colors">Colors (comma-separated)</label>
+#>             <input id="scatterPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.widths-label" for="scatterPlot-abline.widths">Widths (comma-separated)</label>
+#>             <input id="scatterPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.linetypes-label" for="scatterPlot-abline.linetypes">Line type</label>
+#>             <div>
+#>               <select id="scatterPlot-abline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
+#> <option value="dotted">dotted</option>
+#> <option value="dotdash">dotdash</option>
+#> <option value="longdash">longdash</option>
+#> <option value="twodash">twodash</option></select>
+#>               <script type="application/json" data-for="scatterPlot-abline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="scatterPlot-abline.opacities-label" for="scatterPlot-abline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="scatterPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <hr/>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <h5>Trend Lines</h5>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -886,7 +1004,7 @@ scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2241-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5684-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

@@ -129,46 +129,46 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #> </div>
 #> <h3>Volcano Settings</h3>
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="5711">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="6248">
 #>     <li class="active">
-#>       <a href="#tab-5711-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6248-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6248-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-6248-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-6248-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-6248-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-6248-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-6248-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-6248-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6248-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-6248-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6248-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5711-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6248-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5711">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5711-1">
+#>   <div class="tab-content" data-tabsetid="6248">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6248-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -260,7 +260,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5711-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6248-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -352,7 +352,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-5711-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-6248-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -410,7 +410,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-5711-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-6248-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -453,7 +453,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-5711-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-6248-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -493,7 +493,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-5711-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-6248-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -626,7 +626,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-5711-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-6248-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -682,7 +682,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-5711-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-6248-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -712,7 +712,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5711-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6248-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -780,7 +780,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-5711-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-6248-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -842,63 +842,157 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5711-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6248-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volcanoPlot-add.xline-label" for="volcanoPlot-add.xline">Add xlines</label>
-#>             <input id="volcanoPlot-add.xline" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="volcanoPlot-hline.intercepts-label" for="volcanoPlot-hline.intercepts">Y-intercepts (comma-separated)</label>
+#>             <input id="volcanoPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volcanoPlot-add.yline-label" for="volcanoPlot-add.yline">Add ylines</label>
-#>             <input id="volcanoPlot-add.yline" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="volcanoPlot-hline.colors-label" for="volcanoPlot-hline.colors">Colors (comma-separated)</label>
+#>             <input id="volcanoPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volcanoPlot-xline.linetype-label" for="volcanoPlot-xline.linetype">xline linetype</label>
-#>             <div>
-#>               <select id="volcanoPlot-xline.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
-#> <option value="dashed">dashed</option>
-#> <option value="dotted">dotted</option>
-#> <option value="dotdash">dotdash</option>
-#> <option value="longdash">longdash</option>
-#> <option value="twodash">twodash</option></select>
-#>               <script type="application/json" data-for="volcanoPlot-xline.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
+#>             <label class="control-label" id="volcanoPlot-hline.widths-label" for="volcanoPlot-hline.widths">Widths (comma-separated)</label>
+#>             <input id="volcanoPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volcanoPlot-yline.linetype-label" for="volcanoPlot-yline.linetype">yline linetype</label>
+#>             <label class="control-label" id="volcanoPlot-hline.linetypes-label" for="volcanoPlot-hline.linetypes">Line type</label>
 #>             <div>
-#>               <select id="volcanoPlot-yline.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
-#> <option value="dashed">dashed</option>
+#>               <select id="volcanoPlot-hline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
 #> <option value="dotted">dotted</option>
 #> <option value="dotdash">dotdash</option>
 #> <option value="longdash">longdash</option>
 #> <option value="twodash">twodash</option></select>
-#>               <script type="application/json" data-for="volcanoPlot-yline.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="volcanoPlot-hline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="volcanoPlot-xline.color">xline color</label>
-#>             <input id="volcanoPlot-xline.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-hline.opacities-label" for="volcanoPlot-hline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="volcanoPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="volcanoPlot-yline.color">yline color</label>
-#>             <input id="volcanoPlot-yline.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           <hr/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-vline.intercepts-label" for="volcanoPlot-vline.intercepts">X-intercepts (comma-separated)</label>
+#>             <input id="volcanoPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-vline.colors-label" for="volcanoPlot-vline.colors">Colors (comma-separated)</label>
+#>             <input id="volcanoPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-vline.widths-label" for="volcanoPlot-vline.widths">Widths (comma-separated)</label>
+#>             <input id="volcanoPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-vline.linetypes-label" for="volcanoPlot-vline.linetypes">Line type</label>
+#>             <div>
+#>               <select id="volcanoPlot-vline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
+#> <option value="dotted">dotted</option>
+#> <option value="dotdash">dotdash</option>
+#> <option value="longdash">longdash</option>
+#> <option value="twodash">twodash</option></select>
+#>               <script type="application/json" data-for="volcanoPlot-vline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-vline.opacities-label" for="volcanoPlot-vline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="volcanoPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <hr/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.slopes-label" for="volcanoPlot-abline.slopes">Slopes (comma-separated)</label>
+#>             <input id="volcanoPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.intercepts-label" for="volcanoPlot-abline.intercepts">Y-intercepts (comma-separated)</label>
+#>             <input id="volcanoPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.colors-label" for="volcanoPlot-abline.colors">Colors (comma-separated)</label>
+#>             <input id="volcanoPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.widths-label" for="volcanoPlot-abline.widths">Widths (comma-separated)</label>
+#>             <input id="volcanoPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.linetypes-label" for="volcanoPlot-abline.linetypes">Line type</label>
+#>             <div>
+#>               <select id="volcanoPlot-abline.linetypes" class="shiny-input-select"><option value="solid">solid</option>
+#> <option value="dashed" selected>dashed</option>
+#> <option value="dotted">dotted</option>
+#> <option value="dotdash">dotdash</option>
+#> <option value="longdash">longdash</option>
+#> <option value="twodash">twodash</option></select>
+#>               <script type="application/json" data-for="volcanoPlot-abline.linetypes" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="volcanoPlot-abline.opacities-label" for="volcanoPlot-abline.opacities">Opacities (comma-separated, 0-1)</label>
+#>             <input id="volcanoPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <hr/>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <h5>Trend Lines</h5>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -928,7 +1022,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5711-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6248-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
