@@ -77,9 +77,10 @@ defaults without exposing them.
 
 Modules built on plotting functions from other packages expose most of
 the underlying arguments. The module input help pages (e.g.,
-`?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what
-is wired through and any omissions; cross-reference the underlying plot
-docs
+`?dittoViz_ScatterPlotInputsUI`,
+[`?plotthis_AreaPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotInputsUI.md))
+list what is wired through and any omissions; cross-reference the
+underlying plot docs
 ([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
 [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),
 etc.) to see the full parameter set.

@@ -91,5 +91,5 @@ Jared Andrews
 library(VizModules)
 data(airway_deseq2)
 volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
-#> Error in materialSwitch(ns("best.fit"), "Line of best fit:", value = FALSE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")
+#> Error in dittoViz_ScatterPlotInputsUI(id = id, data = data, defaults = defaults,     title = h3(title), columns = columns): could not find function "dittoViz_ScatterPlotInputsUI"
 ```

@@ -135,6 +135,113 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `legend_direction` - Legend orientation (UI: "Legend direction",
   default: "vertical")
 
+The following parameters implementing new functionality or controlling
+plotly-specific features are also available:
+
+- `axis.font.size` - Axis title font size (UI: "Axis font size",
+  default: 18)
+
+- `title.font.size` - Plot title font size (UI: "Title font size",
+  default: 28)
+
+- `font.type` - Font family for plot text (UI: "Font", default: "Arial")
+
+- `text.colour` - Color for axis labels (UI: "Label colour", default:
+  "#000000")
+
+- `axis.showline` - Show axis border lines (UI: "Show axis lines",
+  default: TRUE)
+
+- `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
+  lines", default: TRUE)
+
+- `show.major.grid.x` - Show X-axis major gridlines (UI: "Show X major
+  gridlines", default: TRUE)
+
+- `show.major.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
+  gridlines", default: TRUE)
+
+- `axis.linecolor` - Color of axis lines (UI: "Axis line color",
+  default: "black")
+
+- `axis.linewidth` - Width of axis lines (UI: "Axis line width",
+  default: 0.5)
+
+- `axis.tickfont.size` - Size of tick labels (UI: "Tick label size",
+  default: 12)
+
+- `axis.tickfont.color` - Color of tick labels (UI: "Tick label color",
+  default: "black")
+
+- `axis.tickfont.family` - Font family for tick labels (UI: "Tick label
+  font", default: "Arial")
+
+- `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI:
+  "X-axis tick label angle", default: 0)
+
+- `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI:
+  "Y-axis tick label angle", default: 0)
+
+- `axis.ticks` - Position of tick marks (UI: "Tick position", default:
+  "outside")
+
+- `axis.tickcolor` - Color of tick marks (UI: "Tick mark color",
+  default: "black")
+
+- `axis.ticklen` - Length of tick marks (UI: "Tick mark length",
+  default: 5)
+
+- `axis.tickwidth` - Width of tick marks (UI: "Tick mark width",
+  default: 1)
+
+- `hline.intercepts` - Y-coordinates for horizontal reference lines (UI:
+  "Y-intercepts", default: "")
+
+- `hline.colors` - Colors for horizontal lines (UI: "Colors", default:
+  "#000000")
+
+- `hline.widths` - Widths for horizontal lines (UI: "Widths", default:
+  "1")
+
+- `hline.linetypes` - Line types for horizontal lines (UI: "Line types",
+  default: "dashed")
+
+- `hline.opacities` - Opacities for horizontal lines (UI: "Opacities
+  (0-1)", default: "1")
+
+- `vline.intercepts` - X-coordinates for vertical reference lines (UI:
+  "X-intercepts", default: "")
+
+- `vline.colors` - Colors for vertical lines (UI: "Colors", default:
+  "#000000")
+
+- `vline.widths` - Widths for vertical lines (UI: "Widths", default:
+  "1")
+
+- `vline.linetypes` - Line types for vertical lines (UI: "Line types",
+  default: "dashed")
+
+- `vline.opacities` - Opacities for vertical lines (UI: "Opacities
+  (0-1)", default: "1")
+
+- `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes",
+  default: "")
+
+- `abline.intercepts` - Y-intercepts for diagonal lines (UI:
+  "Y-intercepts", default: "")
+
+- `abline.colors` - Colors for diagonal lines (UI: "Colors", default:
+  "#000000")
+
+- `abline.widths` - Widths for diagonal lines (UI: "Widths", default:
+  "1")
+
+- `abline.linetypes` - Line types for diagonal lines (UI: "Line types",
+  default: "dashed")
+
+- `abline.opacities` - Opacities for diagonal lines (UI: "Opacities
+  (0-1)", default: "1")
+
 ## See also
 
 [`plotthis::AreaPlot()`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),
@@ -156,28 +263,28 @@ mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="2877">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="7263">
 #>     <li class="active">
-#>       <a href="#tab-2877-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7263-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2877-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7263-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2877-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7263-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2877-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7263-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2877-5" data-toggle="tab" data-bs-toggle="tab" data-value="Ticks">Ticks</a>
+#>       <a href="#tab-7263-5" data-toggle="tab" data-bs-toggle="tab" data-value="Ticks">Ticks</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2877-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7263-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2877">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2877-1">
+#>   <div class="tab-content" data-tabsetid="7263">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7263-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -223,7 +330,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2877-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7263-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -275,7 +382,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2877-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7263-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="areaPlot-palette.selection" class="shiny-html-output"></div>
@@ -318,7 +425,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2877-4">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7263-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -436,7 +543,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ticks" id="tab-2877-5">
+#>     <div class="tab-pane" data-value="Ticks" id="tab-7263-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -526,7 +633,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2877-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7263-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

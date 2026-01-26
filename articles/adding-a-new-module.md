@@ -59,8 +59,10 @@ File names follow the module naming pattern:
 Function names follow the pattern: `<moduleName>InputsUI()`,
 `<moduleName>OutputUI()`, `<moduleName>Server()`, `<moduleName>App()`.
 
-- Examples: `plotthis_AreaPlotInputsUI()`,
-  `dittoViz_scatterPlotServer()`, `linePlotApp()`
+- Examples:
+  [`plotthis_AreaPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotInputsUI.md),
+  [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md),
+  [`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md)
 
 Internal helpers stay in existing helper files when broadly useful;
 otherwise keep them inside the module file.

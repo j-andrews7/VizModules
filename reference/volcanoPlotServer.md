@@ -1,9 +1,7 @@
 # Server logic for volcanoPlot module
 
-This module builds upon the
-[`dittoViz_ScatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotServer.md)
-to provide a volcano plot with interactive significance and fold-change
-thresholding.
+This module builds upon the `dittoViz_ScatterPlotServer()` to provide a
+volcano plot with interactive significance and fold-change thresholding.
 
 ## Usage
 
