@@ -33,5 +33,6 @@ Jacob Martin, Jared Andrews
 library(vizModules)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- linePlotApp(data_list)
+#> Error in materialSwitch(ns("order.by"), "Order plot by:", value = FALSE,     offLabel = "x axis", onLabel = "y axis", status = "success"): unused arguments (offLabel = "x axis", onLabel = "y axis")
 if (interactive()) runApp(app)
 ```

@@ -38,5 +38,6 @@ data <- data.frame(
 )
 data_list <- list("test_data" = data)
 app <- yPlotApp(data_list)
+#> Error in materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE,     onLabel = "On", offLabel = "Off", status = "success"): unused arguments (onLabel = "On", offLabel = "Off")
 if (interactive()) runApp(app)
 ```

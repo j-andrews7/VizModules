@@ -33,5 +33,6 @@ Jared Andrews
 library(vizModules)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- scatterPlotApp(data_list)
+#> Error in materialSwitch(ns("best.fit"), "Line of best fit:", value = FALSE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")
 if (interactive()) runApp(app)
 ```

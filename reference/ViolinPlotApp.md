@@ -39,5 +39,6 @@ data <- data.frame(
 )
 data_list <- list("test_data" = data)
 app <- ViolinPlotApp(data_list)
+#> Error in materialSwitch(ns("stack"), "Stack Plot: ", value = FALSE, onLabel = "Stacked",     offLabel = "Not Stacked", status = "success"): unused arguments (onLabel = "Stacked", offLabel = "Not Stacked")
 if (interactive()) runApp(app)
 ```
