@@ -57,6 +57,51 @@
     x
 }
 
+#' Parse and validate linetype string to a vector
+#'
+#' Parses a comma-separated string of linetypes and validates each element.
+#' Invalid linetypes are replaced with "solid" and a warning is issued.
+#'
+#' @param x A string of linetypes delimited by commas, e.g. "solid, dashed, dotted".
+#'   Valid linetypes are: "solid", "dashed", "dotted", "dotdash", "longdash", "twodash".
+#'
+#' @return A character vector of validated linetypes.
+#'   If the input is "" or NULL, returns "solid".
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_string_to_linetypes
+.string_to_linetypes <- function(x) {
+    valid_linetypes <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
+
+    if (is.null(x) || identical(x, "")) {
+        return("solid")
+    }
+
+    # Split string on commas and trim whitespace
+    linetypes <- trimws(strsplit(x, ",")[[1]])
+
+    # Remove empty strings that might result from trailing commas
+    linetypes <- linetypes[linetypes != ""]
+
+    if (length(linetypes) == 0) {
+        return("solid")
+    }
+
+    # Validate each linetype
+    validated <- vapply(linetypes, function(lt) {
+        lt_lower <- tolower(lt)
+        if (lt_lower %in% valid_linetypes) {
+            lt_lower
+        } else {
+            warning(paste0("Invalid linetype '", lt, "'. Using 'solid' instead. ",
+                "Valid options: ", paste(valid_linetypes, collapse = ", ")))
+            "solid"
+        }
+    }, character(1), USE.NAMES = FALSE)
+
+    validated
+}
+
 #' Convert NA or empty string to NULL
 #'
 #' A helper function to convert NA values or empty strings to NULL.

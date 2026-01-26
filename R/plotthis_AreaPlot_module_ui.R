@@ -336,9 +336,9 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
             textInput(ns("hline.widths"), "Widths",
                 value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
             ),
-            selectInput(ns("hline.linetypes"), "Line type",
-                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-                selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
+            textInput(ns("hline.linetypes"), "Line types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
             ),
             textInput(ns("hline.opacities"), "Opacities (0-1)",
                 value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
@@ -353,9 +353,9 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
             textInput(ns("vline.widths"), "Widths",
                 value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
-            selectInput(ns("vline.linetypes"), "Line type",
-                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-                selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
+            textInput(ns("vline.linetypes"), "Line types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
             textInput(ns("vline.opacities"), "Opacities (0-1)",
                 value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
@@ -373,9 +373,9 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
             textInput(ns("abline.widths"), "Widths",
                 value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
             ),
-            selectInput(ns("abline.linetypes"), "Line type",
-                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
-                selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
+            textInput(ns("abline.linetypes"), "Line types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
             ),
             textInput(ns("abline.opacities"), "Opacities (0-1)",
                 value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")

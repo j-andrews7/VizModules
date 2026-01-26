@@ -708,11 +708,7 @@
         }
         h_widths <- .parse_numeric_list(hline.widths)
         if (is.null(h_widths)) h_widths <- 1
-        h_linetypes <- if (!is.null(hline.linetypes) && nzchar(hline.linetypes)) {
-            trimws(unlist(strsplit(hline.linetypes, ",")))
-        } else {
-            "dashed"
-        }
+        h_linetypes <- .string_to_linetypes(hline.linetypes)
         h_opacities <- .parse_numeric_list(hline.opacities)
         if (is.null(h_opacities)) h_opacities <- 1
         h_shapes <- .add_hlines(h_intercepts, h_colors, h_widths, h_linetypes, h_opacities)
@@ -729,11 +725,7 @@
         }
         v_widths <- .parse_numeric_list(vline.widths)
         if (is.null(v_widths)) v_widths <- 1
-        v_linetypes <- if (!is.null(vline.linetypes) && nzchar(vline.linetypes)) {
-            trimws(unlist(strsplit(vline.linetypes, ",")))
-        } else {
-            "dashed"
-        }
+        v_linetypes <- .string_to_linetypes(vline.linetypes)
         v_opacities <- .parse_numeric_list(vline.opacities)
         if (is.null(v_opacities)) v_opacities <- 1
         v_shapes <- .add_vlines(v_intercepts, v_colors, v_widths, v_linetypes, v_opacities)
@@ -751,11 +743,7 @@
         }
         ab_widths <- .parse_numeric_list(abline.widths)
         if (is.null(ab_widths)) ab_widths <- 1
-        ab_linetypes <- if (!is.null(abline.linetypes) && nzchar(abline.linetypes)) {
-            trimws(unlist(strsplit(abline.linetypes, ",")))
-        } else {
-            "dashed"
-        }
+        ab_linetypes <- .string_to_linetypes(abline.linetypes)
         ab_opacities <- .parse_numeric_list(abline.opacities)
         if (is.null(ab_opacities)) ab_opacities <- 1
         ab_shapes <- .add_ablines(fig, ab_slopes, ab_intercepts, ab_colors, ab_widths, ab_linetypes, ab_opacities)
