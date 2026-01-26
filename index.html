@@ -127,11 +127,11 @@
 <a class="anchor" aria-label="anchor" href="#using-vizmodules"></a>
 </h2>
 <p>Including a VizModules module in your Shiny application is simple. The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.</p>
-<p>As an example, we can look at the <code>createdittoViz_ScatterPlotApp()</code> function:</p>
+<p>As an example, we can look at the <code><a href="reference/dittoViz_ScatterPlotApp.html">dittoViz_ScatterPlotApp()</a></code> function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">createdittoViz_ScatterPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">dittoViz_ScatterPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Validate input</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">is.list</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
@@ -175,7 +175,7 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mtcars"</span> <span class="op">=</span> <span class="va">mtcars</span>, <span class="st">"iris"</span> <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="fu">createdittoViz_ScatterPlotApp</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/dittoViz_ScatterPlotApp.html">dittoViz_ScatterPlotApp</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="building-custom-wrapper-modules">Building Custom Wrapper Modules<a class="anchor" aria-label="anchor" href="#building-custom-wrapper-modules"></a>

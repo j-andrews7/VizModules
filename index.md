@@ -91,13 +91,14 @@ Including a VizModules module in your Shiny application is simple. The
 package provides a function returning an example Shiny application for
 each module that showcases their functionality and how they can be used.
 
-As an example, we can look at the `createdittoViz_ScatterPlotApp()`
+As an example, we can look at the
+[`dittoViz_ScatterPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotApp.md)
 function:
 
 ``` r
 library(VizModules)
 
-createdittoViz_ScatterPlotApp <- function(data_list) {
+dittoViz_ScatterPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -141,7 +142,7 @@ createdittoViz_ScatterPlotApp <- function(data_list) {
 }
 
 data_list <- list("mtcars" = mtcars, "iris" = iris)
-createdittoViz_ScatterPlotApp(data_list)
+dittoViz_ScatterPlotApp(data_list)
 ```
 
 ## Building Custom Wrapper Modules
