@@ -123,13 +123,13 @@ AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ),
             numericInput(ns("facet.ncol"), "Facet number of columns:",
                 value = ifelse("facet.ncol" %in% names(defaults) && is.numeric(defaults[["facet.ncol"]]),
-                    defaults[["facet.ncol"]], NULL
+                    defaults[["facet.ncol"]], NA
                 ),
                 min = 0, max = 20
             ),
             numericInput(ns("facet.nrow"), "Facet number of rows:",
                 value = ifelse("facet.nrow" %in% names(defaults) && is.numeric(defaults[["facet.nrow"]]),
-                    defaults[["facet.nrow"]], NULL
+                    defaults[["facet.nrow"]], NA
                 ),
                 min = 0, max = 20
             ),
