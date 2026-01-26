@@ -10,7 +10,7 @@
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
-#' 
+#'
 #' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
@@ -102,7 +102,7 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#' 
+#'
 #' @importFrom stats lm coef
 #'
 #' @author Jared Andrews
@@ -157,7 +157,7 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#' 
+#'
 #' @importFrom stats loess predict
 #'
 #' @author Jared Andrews
@@ -279,9 +279,9 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_add_plot_config
-.add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()), 
-                              include.modebar.buttons = TRUE, facet.by = NULL) {
-    if (is.null(facet.by)){
+.add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()),
+                             include.modebar.buttons = TRUE, facet.by = NULL) {
+    if (is.null(facet.by)) {
         config <- list(
             edits = list(
                 axisTitleText = TRUE,
@@ -318,26 +318,26 @@
             displaylogo = FALSE
         )
     }
-        if (include.modebar.buttons) {
-            config$modeBarButtonsToAdd <- list(
-                "drawline",
-                "drawopenpath",
-                "drawclosedpath",
-                "drawcircle",
-                "drawrect",
-                "eraseshape"
-            )
-        }
-    
-    
+    if (include.modebar.buttons) {
+        config$modeBarButtonsToAdd <- list(
+            "drawline",
+            "drawopenpath",
+            "drawclosedpath",
+            "drawcircle",
+            "drawrect",
+            "eraseshape"
+        )
+    }
+
+
     return(config)
 }
 
 #' Create Plotly axis style list
 #'
 #' Constructs a style list for a Plotly axis using values from a Shiny
-#' \code{input} object, including title font, axis lines, and tick
-#' appearance settings.
+#' \code{input} object, including title font, axis lines, tick
+#' appearance, and gridline settings.
 #'
 #' @param input Shiny input object. Expected to contain axis-related fields
 #'   such as \code{font.type}, \code{text.colour}, \code{axis.showline},
@@ -345,28 +345,39 @@
 #'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
 #'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
 #'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
-#'   \code{axis.ticklen}, and \code{axis.tickwidth}.
+#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.major.grid.x},
+#'   and \code{show.major.grid.y}.
 #' @param axis_side Character. Which axis to style, either \code{"x"} or
 #'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
-#'   \code{axis.tickangle.y} is used for the tick angle.
+#'   \code{axis.tickangle.y} is used for the tick angle, and which
+#'   gridline inputs are applied.
 #' @param isolate_fn Function. A function used to isolate Shiny inputs,
 #'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
 #'
 #' @return A named list containing Plotly-compatible axis styling
-#'   components, including title font, line properties, and tick label
-#'   formatting.
+#'   components, including title font, line properties, tick label
+#'   formatting, and gridline visibility.
 #'
 #' @details The function collects axis- and font-related settings from
 #'   the provided \code{input} object and assembles them into a list
 #'   suitable for use as an axis specification in Plotly layouts. The
-#'   tick angle is chosen based on the value of \code{axis_side}.
+#'   tick angle and gridline visibility are chosen based on the value
+#'   of \code{axis_side}. If gridline inputs are not present in the
+#'   input object, defaults to showing gridlines.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function (input, axis_side = c("x", "y"), isolate_fn = isolate){
-
+.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate) {
     axis_side <- match.arg(axis_side)
+
+    # Determine gridline visibility based on axis side
+    # Use defaults if inputs are not present (for backwards compatibility)
+    show_grid <- ifelse(axis_side == "x",
+        isolate_fn(input$show.major.grid.x),
+        isolate_fn(input$show.major.grid.y)
+    )
+
 
     style <- list(
         title = list(
@@ -376,24 +387,24 @@
                 color  = isolate_fn(input$text.colour)
             )
         ),
-        showline  = isolate_fn(input$axis.showline),
-        mirror    = isolate_fn(input$axis.mirror),
+        showline = isolate_fn(input$axis.showline),
+        mirror = isolate_fn(input$axis.mirror),
         linecolor = isolate_fn(input$axis.linecolor),
         linewidth = isolate_fn(input$axis.linewidth),
-        tickfont  = list(
+        tickfont = list(
             size   = isolate_fn(input$axis.tickfont.size),
             color  = isolate_fn(input$axis.tickfont.color),
             family = isolate_fn(input$axis.tickfont.family)
         ),
-        tickangle = if (axis_side == "x") {
-            isolate_fn(input$axis.tickangle.x)
-        } else {
+        tickangle = ifelse(axis_side == "x",
+            isolate_fn(input$axis.tickangle.x),
             isolate_fn(input$axis.tickangle.y)
-        },
-        ticks     = isolate_fn(input$axis.ticks),
+        ),
+        ticks = isolate_fn(input$axis.ticks),
         tickcolor = isolate_fn(input$axis.tickcolor),
-        ticklen   = isolate_fn(input$axis.ticklen),
-        tickwidth = isolate_fn(input$axis.tickwidth)
+        ticklen = isolate_fn(input$axis.ticklen),
+        tickwidth = isolate_fn(input$axis.tickwidth),
+        showgrid = show_grid
     )
 
     return(style)

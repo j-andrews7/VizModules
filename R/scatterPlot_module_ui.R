@@ -604,6 +604,18 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     TRUE
                 )
             ),
+            checkboxInput(ns("show.major.grid.x"), "Show X major gridlines",
+                value = ifelse("show.major.grid.x" %in% names(defaults),
+                    ifelse(is.logical(defaults[["show.major.grid.x"]]), defaults[["show.major.grid.x"]], TRUE),
+                    TRUE
+                )
+            ),
+            checkboxInput(ns("show.major.grid.y"), "Show Y major gridlines",
+                value = ifelse("show.major.grid.y" %in% names(defaults),
+                    ifelse(is.logical(defaults[["show.major.grid.y"]]), defaults[["show.major.grid.y"]], TRUE),
+                    TRUE
+                )
+            ),
             colourInput(ns("axis.linecolor"), "Axis line color",
                 value = ifelse("axis.linecolor" %in% names(defaults),
                     defaults[["axis.linecolor"]], "black"
@@ -724,6 +736,8 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #'
 #' @return A Shiny plotlyOutput for the scatterplot
 #'
+#' @import shiny
+#' @import plotly
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

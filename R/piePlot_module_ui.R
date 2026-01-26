@@ -235,6 +235,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #' @return A Shiny plotlyOutput for the piePlot
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export

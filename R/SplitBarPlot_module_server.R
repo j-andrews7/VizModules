@@ -250,6 +250,8 @@ SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateNumericInput(session, "axis.tickfont.size", value = 12)
