@@ -167,8 +167,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
             null.na.inputs <- list(
                 "trajectory.group.by" = .na_to_null(isolate_fn(input$trajectory.group.by)),
                 "add.trajectory.by.groups" = .na_to_null(isolate_fn(input$add.trajectory.by.groups)),
-                "add.xline" = .na_to_null(isolate_fn(input$add.xline)),
-                "add.yline" = .na_to_null(isolate_fn(input$add.yline)),
                 "color.by" = .na_to_null(isolate_fn(input$color.by)),
                 "shape.by" = .na_to_null(isolate_fn(input$shape.by)),
                 "split.by" = .na_to_null(isolate_fn(input$split.by)),
@@ -262,12 +260,6 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
                 add.trajectory.by.groups = .string_to_list_of_vectors(null.na.inputs$add.trajectory.by.groups),
                 trajectory.group.by = null.na.inputs$trajectory.group.by,
                 trajectory.arrow.size = isolate_fn(input$trajectory.arrow.size),
-                add.xline = as.numeric(.string_to_vector(null.na.inputs$add.xline)),
-                xline.linetype = isolate_fn(input$xline.linetype),
-                xline.color = isolate_fn(input$xline.color),
-                add.yline = as.numeric(.string_to_vector(null.na.inputs$add.yline)),
-                yline.linetype = isolate_fn(input$yline.linetype),
-                yline.color = isolate_fn(input$yline.color),
                 do.ellipse = isolate_fn(input$do.ellipse),
                 legend.show = isolate_fn(input$legend.show),
                 legend.color.title = isolate_fn(input$legend.color.title),
@@ -314,6 +306,26 @@ scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, ma
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = p$plot), config_list))
+
+            # Add reference lines
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
+            )
 
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate_fn(input$highlight.points)

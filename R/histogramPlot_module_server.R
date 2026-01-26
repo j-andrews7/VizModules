@@ -143,6 +143,24 @@ histogramPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) 
             # Action Button:
             updateSelectInput(session, "download.type", selected = "png")
 
+            # Lines
+            updateTextInput(session, "hline.intercepts", value = "")
+            updateTextInput(session, "hline.colors", value = "#000000")
+            updateTextInput(session, "hline.widths", value = "1")
+            updateSelectInput(session, "hline.linetypes", selected = "dashed")
+            updateTextInput(session, "hline.opacities", value = "1")
+            updateTextInput(session, "vline.intercepts", value = "")
+            updateTextInput(session, "vline.colors", value = "#000000")
+            updateTextInput(session, "vline.widths", value = "1")
+            updateSelectInput(session, "vline.linetypes", selected = "dashed")
+            updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
+            updateTextInput(session, "abline.intercepts", value = "")
+            updateTextInput(session, "abline.colors", value = "#000000")
+            updateTextInput(session, "abline.widths", value = "1")
+            updateSelectInput(session, "abline.linetypes", selected = "dashed")
+            updateTextInput(session, "abline.opacities", value = "1")
+
             # Axes:
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
@@ -253,7 +271,28 @@ histogramPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) 
           xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
           yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-          fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style) 
+          fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
+          # Add reference lines
+          fig <- .add_reference_lines(fig,
+              hline.intercepts = isolate_fn(input$hline.intercepts),
+              hline.colors = isolate_fn(input$hline.colors),
+              hline.widths = isolate_fn(input$hline.widths),
+              hline.linetypes = isolate_fn(input$hline.linetypes),
+              hline.opacities = isolate_fn(input$hline.opacities),
+              vline.intercepts = isolate_fn(input$vline.intercepts),
+              vline.colors = isolate_fn(input$vline.colors),
+              vline.widths = isolate_fn(input$vline.widths),
+              vline.linetypes = isolate_fn(input$vline.linetypes),
+              vline.opacities = isolate_fn(input$vline.opacities),
+              abline.slopes = isolate_fn(input$abline.slopes),
+              abline.intercepts = isolate_fn(input$abline.intercepts),
+              abline.colors = isolate_fn(input$abline.colors),
+              abline.widths = isolate_fn(input$abline.widths),
+              abline.linetypes = isolate_fn(input$abline.linetypes),
+              abline.opacities = isolate_fn(input$abline.opacities)
+          )
+
           config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
           fig <- do.call(config, c(list(p = fig), config_list))
 

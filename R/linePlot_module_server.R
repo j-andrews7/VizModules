@@ -152,6 +152,24 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+
+            # Lines
+            updateTextInput(session, "hline.intercepts", value = "")
+            updateTextInput(session, "hline.colors", value = "#000000")
+            updateTextInput(session, "hline.widths", value = "1")
+            updateSelectInput(session, "hline.linetypes", selected = "dashed")
+            updateTextInput(session, "hline.opacities", value = "1")
+            updateTextInput(session, "vline.intercepts", value = "")
+            updateTextInput(session, "vline.colors", value = "#000000")
+            updateTextInput(session, "vline.widths", value = "1")
+            updateSelectInput(session, "vline.linetypes", selected = "dashed")
+            updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
+            updateTextInput(session, "abline.intercepts", value = "")
+            updateTextInput(session, "abline.colors", value = "#000000")
+            updateTextInput(session, "abline.widths", value = "1")
+            updateSelectInput(session, "abline.linetypes", selected = "dashed")
+            updateTextInput(session, "abline.opacities", value = "1")
         })
 
 
@@ -265,6 +283,26 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
                 y.adjustment = y.adjustment
+            )
+
+            # Add reference lines
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
             )
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = FALSE, facet.by = input$facet.by)

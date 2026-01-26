@@ -251,6 +251,61 @@ SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
         min = 0,
         step = 0.1
         )
+    ),
+    "Lines" = tagList(
+        textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
+            value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
+        ),
+        textInput(ns("hline.colors"), "Colors (comma-separated)",
+            value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
+        ),
+        textInput(ns("hline.widths"), "Widths (comma-separated)",
+            value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
+        ),
+        selectInput(ns("hline.linetypes"), "Line type",
+            choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+            selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
+        ),
+        textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+            value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
+        ),
+        hr(),
+        textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
+            value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
+        ),
+        textInput(ns("vline.colors"), "Colors (comma-separated)",
+            value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
+        ),
+        textInput(ns("vline.widths"), "Widths (comma-separated)",
+            value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
+        ),
+        selectInput(ns("vline.linetypes"), "Line type",
+            choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+            selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
+        ),
+        textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+            value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
+        ),
+        hr(),
+        textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+            value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
+        ),
+        textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+            value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
+        ),
+        textInput(ns("abline.colors"), "Colors (comma-separated)",
+            value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
+        ),
+        textInput(ns("abline.widths"), "Widths (comma-separated)",
+            value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
+        ),
+        selectInput(ns("abline.linetypes"), "Line type",
+            choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+            selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
+        ),
+        textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+            value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
+        )
     )
     )
 

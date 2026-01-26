@@ -21,6 +21,19 @@
 #'
 #' - `id`: The ID for the Shiny module.
 #'
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [dittoViz::scatterPlot()] parameters are superseded by the enhanced Lines tab:
+#' \itemize{
+#'   \item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
+#'   \item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
+#'   \item \code{xline.linetype} - Use \code{vline.linetypes} instead
+#'   \item \code{xline.color} - Use \code{vline.colors} instead
+#'   \item \code{yline.linetype} - Use \code{hline.linetypes} instead
+#'   \item \code{yline.color} - Use \code{hline.colors} instead
+#' }
+#' The new Lines tab provides enhanced functionality including multiple lines per type,
+#' individual line widths, opacities, and diagonal/ablines with slope control.
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs.
@@ -522,56 +535,63 @@ scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             )
         ),
         "Lines" = tagList(
-            textInput(ns("add.xline"), "Add xlines",
+            textInput(ns("hline.intercepts"), "Y-intercepts (comma-separated)",
                 placeholder = "e.g. 2, -2",
-                value = ifelse("add.xline" %in% names(defaults),
-                    ifelse(is.character(defaults[["add.xline"]]), defaults[["add.xline"]], ""),
-                    ""
-                )
+                value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
             ),
-            textInput(ns("add.yline"), "Add ylines",
+            textInput(ns("hline.colors"), "Colors (comma-separated)",
+                value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
+            ),
+            textInput(ns("hline.widths"), "Widths (comma-separated)",
+                value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
+            ),
+            selectInput(ns("hline.linetypes"), "Line type",
+                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+                selected = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
+            ),
+            textInput(ns("hline.opacities"), "Opacities (comma-separated, 0-1)",
+                value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
+            ),
+            hr(),
+            textInput(ns("vline.intercepts"), "X-intercepts (comma-separated)",
                 placeholder = "e.g. 2, -2",
-                value = ifelse("add.yline" %in% names(defaults),
-                    ifelse(is.character(defaults[["add.yline"]]), defaults[["add.yline"]], ""),
-                    ""
-                )
+                value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
             ),
-            selectInput(ns("xline.linetype"), "xline linetype",
-                choices = c(
-                    "solid", "dashed", "dotted", "dotdash",
-                    "longdash", "twodash"
-                ),
-                selected = ifelse("xline.linetype" %in% names(defaults),
-                    ifelse(defaults[["xline.linetype"]] %in% c(
-                        "solid", "dashed", "dotted", "dotdash",
-                        "longdash", "twodash"
-                    ), defaults[["xline.linetype"]], "solid"),
-                    "solid"
-                )
+            textInput(ns("vline.colors"), "Colors (comma-separated)",
+                value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
             ),
-            selectInput(ns("yline.linetype"), "yline linetype",
-                choices = c(
-                    "solid", "dashed", "dotted", "dotdash",
-                    "longdash", "twodash"
-                ),
-                selected = ifelse("yline.linetype" %in% names(defaults),
-                    ifelse(defaults[["yline.linetype"]] %in% c(
-                        "solid", "dashed", "dotted", "dotdash",
-                        "longdash", "twodash"
-                    ), defaults[["yline.linetype"]], "solid"),
-                    "solid"
-                )
+            textInput(ns("vline.widths"), "Widths (comma-separated)",
+                value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
             ),
-            colourInput(ns("xline.color"), "xline color",
-                value = ifelse("xline.color" %in% names(defaults),
-                    defaults[["xline.color"]], "black"
-                )
+            selectInput(ns("vline.linetypes"), "Line type",
+                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+                selected = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
             ),
-            colourInput(ns("yline.color"), "yline color",
-                value = ifelse("yline.color" %in% names(defaults),
-                    defaults[["yline.color"]], "black"
-                )
+            textInput(ns("vline.opacities"), "Opacities (comma-separated, 0-1)",
+                value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
             ),
+            hr(),
+            textInput(ns("abline.slopes"), "Slopes (comma-separated)",
+                value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
+            ),
+            textInput(ns("abline.intercepts"), "Y-intercepts (comma-separated)",
+                value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
+            ),
+            textInput(ns("abline.colors"), "Colors (comma-separated)",
+                value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
+            ),
+            textInput(ns("abline.widths"), "Widths (comma-separated)",
+                value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
+            ),
+            selectInput(ns("abline.linetypes"), "Line type",
+                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash"),
+                selected = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
+            ),
+            textInput(ns("abline.opacities"), "Opacities (comma-separated, 0-1)",
+                value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
+            ),
+            hr(),
+            h5("Trend Lines"),
             switchInput(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
                 offLabel = "Off",

@@ -44,6 +44,21 @@ There are also a handful that are specific to the Shiny module that additionally
 \item \code{id}: The ID for the Shiny module.
 }
 }
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parameters are superseded by the enhanced Lines tab:
+\itemize{
+\item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
+\item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
+\item \code{xline.linetype} - Use \code{vline.linetypes} instead
+\item \code{xline.color} - Use \code{vline.colors} instead
+\item \code{yline.linetype} - Use \code{hline.linetypes} instead
+\item \code{yline.color} - Use \code{hline.colors} instead
+}
+The new Lines tab provides enhanced functionality including multiple lines per type,
+individual line widths, opacities, and diagonal/ablines with slope control.
+}
+
 \examples{
 library(vizModules)
 data(mtcars)
