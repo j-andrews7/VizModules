@@ -53,7 +53,5 @@ population <- data.frame(
 
 data_list <- list("sales" = sales, "population" = population)
 app <- AreaPlotApp(data_list)
-#> Warning: 'x' is NULL so the result will be NULL
-#> Error in ans[npos] <- rep(no, length.out = len)[npos]: replacement has length zero
 if (interactive()) runApp(app)
 ```
