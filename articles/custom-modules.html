@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Building Custom Modules • vizModules</title>
+<title>Building Custom Modules • VizModules</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">vizModules</a>
+    <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0.9000</small>
 
@@ -35,7 +35,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
-    <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with vizModules</a></li>
+    <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -44,7 +44,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/vizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/VizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
@@ -69,7 +69,7 @@
       <h1>Building Custom Modules</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/vizModules/blob/devel/vignettes/custom-modules.Rmd" class="external-link"><code>vignettes/custom-modules.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/vignettes/custom-modules.Rmd" class="external-link"><code>vignettes/custom-modules.Rmd</code></a></small>
       <div class="d-none name"><code>custom-modules.Rmd</code></div>
     </div>
 
@@ -78,7 +78,7 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The modules in <strong>vizModules</strong> are designed to be
+<p>The modules in <strong>VizModules</strong> are designed to be
 composed and extended. You can build higher-level modules that add
 custom logic such as data filtering, transformations, or additional UI
 controls while reusing the full functionality of the base modules.</p>
@@ -116,7 +116,7 @@ the <code>scatterPlot</code> module.</p>
 <h3 id="the-ui">The UI<a class="anchor" aria-label="anchor" href="#the-ui"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">minimalModuleUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
@@ -126,19 +126,19 @@ the <code>scatterPlot</code> module.</p>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"filter_setosa"</span><span class="op">)</span>, <span class="st">"Start with Setosa Only"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        <span class="co"># Base module UI - pass the bare 'id', not ns(id)</span></span>
-<span>        <span class="fu"><a href="../reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">minimalModuleOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Simply delegate to the base module's output UI</span></span>
-<span>    <span class="fu"><a href="../reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_ScatterPlotOutputUI.html">dittoViz_ScatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Notice that <code><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput()</a></code> uses
 <code>ns("filter_setosa")</code> to namespace the custom input, while
-<code><a href="../reference/scatterPlotInputsUI.html">scatterPlotInputsUI()</a></code> receives the bare <code>id</code>.
-This ensures the base module creates its inputs in the correct
-namespace.</p>
+<code><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI()</a></code> receives the bare
+<code>id</code>. This ensures the base module creates its inputs in the
+correct namespace.</p>
 </div>
 <div class="section level3">
 <h3 id="the-server">The Server<a class="anchor" aria-label="anchor" href="#the-server"></a>
@@ -164,8 +164,8 @@ namespace.</p>
 <span></span>
 <span>    <span class="co"># Step 2: Call the base module server OUTSIDE the moduleServer block</span></span>
 <span>    <span class="co"># This is critical! If we called this inside the moduleServer above,</span></span>
-<span>    <span class="co"># scatterPlotServer would look for inputs at id-id-inputName instead of id-inputName</span></span>
-<span>    <span class="fu"><a href="../reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
+<span>    <span class="co"># dittoViz_ScatterPlotServer would look for inputs at id-id-inputName instead of id-inputName</span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><strong>Why this pattern?</strong></p>
 <ul>
@@ -173,10 +173,11 @@ namespace.</p>
 <code>moduleServer(id, ...)</code> gives us access to
 <code>input$filter_setosa</code>, which is namespaced to our wrapper’s
 <code>id</code>.</li>
-<li>By calling <code>scatterPlotServer(id, filtered_data)</code>
+<li>By calling
+<code>dittoViz_ScatterPlotServer(id, filtered_data)</code>
 <em>outside</em> the <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> closure, the base
 module attaches to the same namespace as our UI, not a nested one.</li>
-<li>If we called <code><a href="../reference/scatterPlotServer.html">scatterPlotServer()</a></code> inside the
+<li>If we called <code><a href="../reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer()</a></code> inside the
 <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> block, it would create nested namespaces
 like <code>id-id-x_axis</code>, which wouldn’t match the actual input
 IDs in the UI.</li>
@@ -219,7 +220,7 @@ from the user to keep them from being changed:</p>
 <span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Simplified Scatter Plot"</span><span class="op">)</span>,</span>
 <span>        <span class="co"># Only show essential controls</span></span>
-<span>        <span class="fu"><a href="../reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span>,</span>
+<span>        <span class="fu"><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span>,</span>
 <span>            hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shape.by"</span>, <span class="st">"color.by"</span><span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
@@ -246,9 +247,10 @@ they could potentially be wrapped by even higher-level modules.</p></li>
 <h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
 <ul>
-<li>The base modules (<code>scatterPlotInputsUI</code>,
-<code>scatterPlotOutputUI</code>, <code>scatterPlotServer</code>) are
-documented in the package reference.</li>
+<li>The base modules (<code>dittoViz_ScatterPlotInputsUI</code>,
+<code>dittoViz_ScatterPlotOutputUI</code>,
+<code>dittoViz_ScatterPlotServer</code>) are documented in the package
+reference.</li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

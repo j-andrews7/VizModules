@@ -40,7 +40,7 @@ multiColorPicker(
 
   Named list of palettes (each a character vector of colors). Defaults
   to the palettes from
-  [`default_palettes()`](https://j-andrews7.github.io/vizModules/reference/default_palettes.md).
+  [`default_palettes()`](https://j-andrews7.github.io/VizModules/reference/default_palettes.md).
 
 - selected_palette:
 

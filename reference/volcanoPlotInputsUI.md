@@ -2,9 +2,9 @@
 
 This should be placed in the UI where the inputs should be shown, with
 an `id` that matches the `id` used in the
-[`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md)
+[`volcanoPlotServer()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotServer.md)
 and
-[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md)
+[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md)
 functions.
 
 ## Usage
@@ -51,7 +51,7 @@ The user inputs for this module are separated from the outputs to allow
 for more flexible UI design.
 
 The inputs will automatically be organized into a grid layout via the
-[`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md)
+[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md)
 function, with `columns` controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values
@@ -76,10 +76,10 @@ significance thresholds and colors:
 ## See also
 
 [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
-[`organize_inputs()`](https://j-andrews7.github.io/vizModules/reference/organize_inputs.md),
-[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md),
-[`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md),
-[`volcanoPlotApp()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotApp.md)
+[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md),
+[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md),
+[`volcanoPlotServer()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotServer.md),
+[`volcanoPlotApp()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotApp.md)
 
 ## Author
 
@@ -88,7 +88,7 @@ Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 data(airway_deseq2)
 volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #> Error in materialSwitch(ns("best.fit"), "Line of best fit:", value = FALSE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")

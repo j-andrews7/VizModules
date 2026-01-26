@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The modules in **vizModules** are designed to be composed and extended.
+The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic such as data
 filtering, transformations, or additional UI controls while reusing the
 full functionality of the base modules.
@@ -34,7 +34,7 @@ Let’s build a custom module that adds a simple filtering checkbox to the
 ### The UI
 
 ``` r
-library(vizModules)
+library(VizModules)
 
 minimalModuleUI <- function(id) {
     ns <- NS(id)
@@ -44,20 +44,20 @@ minimalModuleUI <- function(id) {
         checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
         hr(),
         # Base module UI - pass the bare 'id', not ns(id)
-        scatterPlotInputsUI(id, iris)
+        dittoViz_ScatterPlotInputsUI(id, iris)
     )
 }
 
 minimalModuleOutput <- function(id) {
     # Simply delegate to the base module's output UI
-    scatterPlotOutputUI(id)
+    dittoViz_ScatterPlotOutputUI(id)
 }
 ```
 
 Notice that
 [`checkboxInput()`](https://rdrr.io/pkg/shiny/man/checkboxInput.html)
 uses `ns("filter_setosa")` to namespace the custom input, while
-[`scatterPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotInputsUI.md)
+[`dittoViz_ScatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotInputsUI.md)
 receives the bare `id`. This ensures the base module creates its inputs
 in the correct namespace.
 
@@ -84,8 +84,8 @@ minimalModuleServer <- function(id, data_reactive) {
 
     # Step 2: Call the base module server OUTSIDE the moduleServer block
     # This is critical! If we called this inside the moduleServer above,
-    # scatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
-    scatterPlotServer(id, filtered_data)
+    # dittoViz_ScatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
+    dittoViz_ScatterPlotServer(id, filtered_data)
 }
 ```
 
@@ -93,12 +93,13 @@ minimalModuleServer <- function(id, data_reactive) {
 
 - `moduleServer(id, ...)` gives us access to `input$filter_setosa`,
   which is namespaced to our wrapper’s `id`.
-- By calling `scatterPlotServer(id, filtered_data)` *outside* the
+- By calling `dittoViz_ScatterPlotServer(id, filtered_data)` *outside*
+  the
   [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
   closure, the base module attaches to the same namespace as our UI, not
   a nested one.
 - If we called
-  [`scatterPlotServer()`](https://j-andrews7.github.io/vizModules/reference/scatterPlotServer.md)
+  [`dittoViz_ScatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotServer.md)
   inside the
   [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
   block, it would create nested namespaces like `id-id-x_axis`, which
@@ -140,7 +141,7 @@ focusedModuleUI <- function(id) {
     tagList(
         h4("Simplified Scatter Plot"),
         # Only show essential controls
-        scatterPlotInputsUI(id, iris,
+        dittoViz_ScatterPlotInputsUI(id, iris,
             hide.inputs = c("shape.by", "color.by")
         )
     )
@@ -166,5 +167,6 @@ focusedModuleUI <- function(id) {
 
 ## See Also
 
-- The base modules (`scatterPlotInputsUI`, `scatterPlotOutputUI`,
-  `scatterPlotServer`) are documented in the package reference.
+- The base modules (`dittoViz_ScatterPlotInputsUI`,
+  `dittoViz_ScatterPlotOutputUI`, `dittoViz_ScatterPlotServer`) are
+  documented in the package reference.

@@ -1,15 +1,15 @@
-# Quick Start with vizModules
+# Quick Start with VizModules
 
 ## See the modules
 
 Start with the hosted gallery to explore what each module can do:
-<https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+<https://j-andrews7-VizModules.share.connect.posit.cloud/>
 
 You can also run the same gallery locally from this package:
 
 ``` r
 library(shiny)
-shiny::runApp(system.file("apps/module-gallery", package = "vizModules"))
+shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
 ```
 
 ## Drop a module into your app
@@ -20,12 +20,12 @@ minimal `scatterPlot` example:
 
 ``` r
 library(shiny)
-library(vizModules)
+library(VizModules)
 
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            scatterPlotInputsUI("cars",
+            dittoViz_ScatterPlotInputsUI("cars",
                 mtcars,
                 defaults = list(
                     x.by = "wt",
@@ -34,12 +34,12 @@ ui <- fluidPage(
                 )
             )
         ),
-        mainPanel(scatterPlotOutputUI("cars"))
+        mainPanel(dittoViz_ScatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    scatterPlotServer("cars", data = reactive(mtcars))
+    dittoViz_ScatterPlotServer("cars", data = reactive(mtcars))
 }
 
 shinyApp(ui, server)
@@ -62,7 +62,7 @@ visualization.
   (e.g., `"Plotly"` or `"Legend/Scale"` in `scatterPlot`).
 
 ``` r
-scatterPlotServer(
+dittoViz_ScatterPlotServer(
     "cars",
     data = reactive(mtcars),
     hide.inputs = c("split.by", "rows.use"),
@@ -79,12 +79,10 @@ Modules wrap plotting functions from **dittoViz** and **plotthis**. To
 see which arguments are available in a module:
 
 1.  Open the module input help page, e.g.,
-    [`?scatterPlotInputsUI`](https://j-andrews7.github.io/vizModules/reference/scatterPlotInputsUI.md)
-    or
-    [`?AreaPlotInputsUI`](https://j-andrews7.github.io/vizModules/reference/AreaPlotInputsUI.md).
-    The **Details** section notes which arguments from the underlying
-    plot function are wired through and any that are intentionally
-    omitted.
+    [`?dittoViz_ScatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotInputsUI.md)
+    or `?AreaPlotInputsUI`. The **Details** section notes which
+    arguments from the underlying plot function are wired through and
+    any that are intentionally omitted.
 2.  Cross-reference the base plot documentation
     ([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
     [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),

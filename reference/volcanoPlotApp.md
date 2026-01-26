@@ -21,10 +21,10 @@ A Shiny app object.
 
 ## See also
 
-[`volcanoPlotInputsUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotInputsUI.md),
-[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotOutputUI.md),
-[`volcanoPlotServer()`](https://j-andrews7.github.io/vizModules/reference/volcanoPlotServer.md),
-[airway_deseq2](https://j-andrews7.github.io/vizModules/reference/airway_deseq2.md)
+[`volcanoPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotInputsUI.md),
+[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md),
+[`volcanoPlotServer()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotServer.md),
+[airway_deseq2](https://j-andrews7.github.io/VizModules/reference/airway_deseq2.md)
 
 ## Author
 
@@ -33,7 +33,7 @@ Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 data(airway_deseq2)
 if (interactive()) {
     volcanoPlotApp(airway_deseq2)

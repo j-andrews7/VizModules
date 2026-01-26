@@ -58,7 +58,7 @@ Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 head(airway_deseq2)
 #>                    baseMean log2FoldChange     lfcSE       stat     pvalue
 #> ENSG00000000003 708.6021697    -0.37884667 0.1731411 -2.1880804 0.02866375

@@ -58,7 +58,7 @@ Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 head(airway_voom)
 #>                    logFC  AveExpr        t      P.Value    adj.P.Val        B
 #> ENSG00000134686 1.381139 6.839533 17.35671 3.800818e-08 0.0001823477 9.401640

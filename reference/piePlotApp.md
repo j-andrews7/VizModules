@@ -30,7 +30,7 @@ Jacob Martin, Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 iris_summary <- as.data.frame(table(iris$Species))
 names(iris_summary) <- c("Species", "Count")
 cyl_summary <- as.data.frame(table(mtcars$cyl))

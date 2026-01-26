@@ -1,7 +1,7 @@
 # Create an example Modular linePlot Shiny Application
 
 This function generates a Shiny application with modular
-[`linePlot()`](https://j-andrews7.github.io/vizModules/reference/linePlot.md)
+[`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
 components. A module is created for each data frame provided in the
 named list of data frames.
 
@@ -30,7 +30,7 @@ Jacob Martin, Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- linePlotApp(data_list)
 #> Error in materialSwitch(ns("order.by"), "Order plot by:", value = FALSE,     offLabel = "x axis", onLabel = "y axis", status = "success"): unused arguments (offLabel = "x axis", onLabel = "y axis")

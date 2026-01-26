@@ -45,7 +45,7 @@ devtools::build()             # Create .tar.gz
 pkgdown::build_site()         # Build documentation website
 
 # Testing (no formal test suite - use example apps)
-scatterPlotApp(list("mtcars" = mtcars))
+DittoVizScatterPlotApp(list("mtcars" = mtcars))
 ```
 
 ### Build Commands (Shell)

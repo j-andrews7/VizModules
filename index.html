@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Flexible, Interactive Shiny Modules for Almost Any Plot • vizModules</title>
+<title>Flexible, Interactive Shiny Modules for Almost Any Plot • VizModules</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Flexible, Interactive Shiny Modules for Almost Any Plot">
-<meta name="description" content="vizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
-<meta property="og:description" content="vizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
+<meta name="description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
+<meta property="og:description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">vizModules</a>
+    <a class="navbar-brand me-2" href="index.html">VizModules</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0.9000</small>
 
@@ -37,7 +37,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/adding-a-new-module.html">Adding a New Module</a></li>
     <li><a class="dropdown-item" href="articles/custom-modules.html">Building Custom Modules</a></li>
-    <li><a class="dropdown-item" href="articles/quick-start.html">Quick Start with vizModules</a></li>
+    <li><a class="dropdown-item" href="articles/quick-start.html">Quick Start with VizModules</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -46,7 +46,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/vizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/j-andrews7/VizModules/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
@@ -63,7 +63,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="vizmodules">vizModules<a class="anchor" aria-label="anchor" href="#vizmodules"></a>
+<div class="page-header"><h1 id="vizmodules">VizModules<a class="anchor" aria-label="anchor" href="#vizmodules"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -76,7 +76,7 @@
 <p>Note that this package is in development and may break at any time.</p>
 <p>Currently, the package can be installed from Github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"j-andrews7/vizModules"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"j-andrews7/VizModules"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -84,18 +84,18 @@
 <ul>
 <li>Explore the hosted gallery: <a href="https://j-andrews7-vizmodules.share.connect.posit.cloud/" class="external-link uri">https://j-andrews7-vizmodules.share.connect.posit.cloud/</a>
 </li>
-<li>Run the same gallery locally: <code>shiny::runApp(system.file("apps/module-gallery", package = "vizModules"))</code>
+<li>Run the same gallery locally: <code>shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))</code>
 </li>
-<li>See the vignette for a full walkthrough: <code><a href="articles/quick-start.html">vignette("quick-start", package = "vizModules")</a></code>
+<li>See the vignette for a full walkthrough: <code><a href="articles/quick-start.html">vignette("quick-start", package = "VizModules")</a></code>
 </li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span></span>
 <span>                <span class="st">"cars"</span>,</span>
 <span>                <span class="va">mtcars</span>,</span>
 <span>                defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -105,12 +105,12 @@
 <span>                <span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="reference/dittoViz_ScatterPlotOutputUI.html">dittoViz_ScatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer</a></span><span class="op">(</span></span>
 <span>        <span class="st">"cars"</span>,</span>
 <span>        data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>,</span>
 <span>        hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rows.use"</span><span class="op">)</span>,</span>
@@ -120,18 +120,18 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p>Every module uses the same trio of functions: <code>*InputsUI()</code> for controls, <code>*OutputUI()</code> for the plot, and <code>*Server()</code> for the logic. Use <code>defaults</code> to pre-fill inputs, and <code>hide.inputs</code>/<code>hide.tabs</code> to hide controls while keeping their values so you can enforce app-level defaults without exposing them.</p>
-<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code><a href="reference/scatterPlotInputsUI.html">?scatterPlotInputsUI</a></code>, <code><a href="reference/AreaPlotInputsUI.html">?AreaPlotInputsUI</a></code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
+<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code><a href="reference/dittoViz_ScatterPlotInputsUI.html">?dittoViz_ScatterPlotInputsUI</a></code>, <code><a href="reference/plotthis_AreaPlotInputsUI.html">?plotthis_AreaPlotInputsUI</a></code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
 </div>
 <div class="section level2">
-<h2 id="using-vizmodules">Using <strong>vizModules</strong>
+<h2 id="using-vizmodules">Using <strong>VizModules</strong>
 <a class="anchor" aria-label="anchor" href="#using-vizmodules"></a>
 </h2>
-<p>Including a vizModules module in your Shiny application is simple. The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.</p>
-<p>As an example, we can look at the <code>createScatterPlotApp()</code> function:</p>
+<p>Including a VizModules module in your Shiny application is simple. The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.</p>
+<p>As an example, we can look at the <code>createdittoViz_ScatterPlotApp()</code> function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">createScatterPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">createdittoViz_ScatterPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Validate input</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">is.list</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
@@ -147,7 +147,7 @@
 <span>                <span class="co"># Add the module inputs UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>                        <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h3</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                        <span class="fu">scatterPlotInputsUI</span><span class="op">(</span><span class="va">name</span>, <span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span>, title <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h3</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">"Settings"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>                    <span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
@@ -155,7 +155,7 @@
 <span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span></span>
 <span>                <span class="co"># Add the module output UI for each data frame</span></span>
 <span>                <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span><span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>                    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span><span class="fu"><a href="reference/dittoViz_ScatterPlotOutputUI.html">dittoViz_ScatterPlotOutputUI</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>                <span class="op">}</span><span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
@@ -166,7 +166,7 @@
 <span></span>
 <span>        <span class="co"># Add the module server for each data frame</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span> <span class="op">{</span></span>
-<span>            <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="fu"><a href="reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer</a></span><span class="op">(</span><span class="va">name</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">[[</span><span class="va">name</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span></span>
@@ -175,15 +175,15 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mtcars"</span> <span class="op">=</span> <span class="va">mtcars</span>, <span class="st">"iris"</span> <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="fu">createScatterPlotApp</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">createdittoViz_ScatterPlotApp</span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="building-custom-wrapper-modules">Building Custom Wrapper Modules<a class="anchor" aria-label="anchor" href="#building-custom-wrapper-modules"></a>
 </h2>
-<p>The modules in <strong>vizModules</strong> are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.</p>
-<p>Here’s a minimal example of wrapping the <code>scatterPlot</code> module to add custom filtering logic:</p>
+<p>The modules in <strong>VizModules</strong> are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.</p>
+<p>Here’s a minimal example of wrapping the <code>dittoViz_ScatterPlot</code> module to add custom filtering logic:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/vizModules/">vizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Define the wrapper UI</span></span>
 <span><span class="va">minimalWrapperUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
@@ -192,12 +192,12 @@
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Minimal Wrapper Controls"</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"filter_setosa"</span><span class="op">)</span>, <span class="st">"Start with Setosa Only"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="reference/scatterPlotInputsUI.html">scatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">minimalWrapperOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="reference/scatterPlotOutputUI.html">scatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/dittoViz_ScatterPlotOutputUI.html">dittoViz_ScatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Define the wrapper server</span></span>
@@ -222,9 +222,9 @@
 <span></span>
 <span>    <span class="co"># 2. Call the base module server with the processed data.</span></span>
 <span>    <span class="co"># We call this OUTSIDE the first moduleServer closure so that</span></span>
-<span>    <span class="co"># scatterPlotServer attaches to 'id' relative to the parent,</span></span>
+<span>    <span class="co"># dittoViz_ScatterPlotServer attaches to 'id' relative to the parent,</span></span>
 <span>    <span class="co"># avoiding nested namespace issues (e.g. id-id-input).</span></span>
-<span>    <span class="fu"><a href="reference/scatterPlotServer.html">scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Create the app using the wrapper</span></span>
@@ -251,19 +251,54 @@
 <li><p><strong>Data processing pattern</strong>: Process your data inside a <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> block to access your wrapper’s namespaced inputs, then call the base module’s server function <em>outside</em> that block to avoid double-namespacing.</p></li>
 <li><p><strong>Reactive data</strong>: Always pass reactive expressions to both your wrapper and the underlying module servers.</p></li>
 </ol>
-<p>For more details, see <code><a href="articles/custom-modules.html">vignette("custom-modules", package = "vizModules")</a></code>.</p>
+<p>For more details, see <code><a href="articles/custom-modules.html">vignette("custom-modules", package = "VizModules")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="modules-provided">Modules Provided<a class="anchor" aria-label="anchor" href="#modules-provided"></a>
 </h2>
-<p>Currently, <strong>vizModules</strong> contains a functional Shiny module for the following visualization functions:</p>
+<p>Currently, <strong>VizModules</strong> contains a functional Shiny module for the following visualization functions:</p>
 <div class="section level3">
 <h3 id="dittoviz">
 <code>dittoViz</code><a class="anchor" aria-label="anchor" href="#dittoviz"></a>
 </h3>
 <ul>
 <li>
-<code>scatterPlot</code> - x/y coordinate plots with additional color and shape encodings.</li>
+<code>dittoViz_ScatterPlot</code> - x/y coordinate plots with additional color and shape encodings (wraps <code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">dittoViz::scatterPlot</a></code>).</li>
+<li>
+<code>dittoViz_yPlot</code> - Multi-variate Y-axis plots (wraps <code><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">dittoViz::yPlot</a></code>).</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="plotthis">
+<code>plotthis</code><a class="anchor" aria-label="anchor" href="#plotthis"></a>
+</h3>
+<ul>
+<li>
+<code>plotthis_AreaPlot</code> - Stacked area charts (wraps <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">plotthis::AreaPlot</a></code>).</li>
+<li>
+<code>plotthis_ViolinPlot</code> - Violin plots (wraps <code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::ViolinPlot</a></code>).</li>
+<li>
+<code>plotthis_BoxPlot</code> - Box plots (wraps <code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::BoxPlot</a></code>).</li>
+<li>
+<code>plotthis_BarPlot</code> - Bar charts (wraps <code><a href="https://pwwang.github.io/plotthis/reference/barplot.html" class="external-link">plotthis::BarPlot</a></code>).</li>
+<li>
+<code>plotthis_SplitBarPlot</code> - Split bar charts (wraps <code><a href="https://pwwang.github.io/plotthis/reference/barplot.html" class="external-link">plotthis::SplitBarPlot</a></code>).</li>
+<li>
+<code>plotthis_DensityPlot</code> - Density plots (wraps <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::DensityPlot</a></code>).</li>
+<li>
+<code>plotthis_Histogram</code> - Histograms (wraps <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::Histogram</a></code>).</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="defined-in-vizmodules">Defined in VizModules<a class="anchor" aria-label="anchor" href="#defined-in-vizmodules"></a>
+</h3>
+<ul>
+<li>
+<code>linePlot</code> - Line plots with customizable trajectories.</li>
+<li>
+<code>piePlot</code> - Pie and donut charts.</li>
+<li>
+<code>volcanoPlot</code> - Volcano plots for differential expression analysis (extends <code>dittoViz_ScatterPlot</code>).</li>
 </ul>
 </div>
 </div>
@@ -316,7 +351,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/j-andrews7/vizModules/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
 
@@ -332,7 +367,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing vizModules</a></li>
+<li><a href="authors.html#citation">Citing VizModules</a></li>
 </ul>
 </div>
 
@@ -347,9 +382,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/j-andrews7/vizModules/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml" class="external-link"><img src="https://github.com/j-andrews7/vizModules/actions/workflows/check-app.yaml/badge.svg" alt="Tests"></a></li>
-<li><a href="https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/j-andrews7/vizModules/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg" alt="Tests"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
 </ul>
 </div>
 

@@ -55,7 +55,7 @@ Jared Andrews
 ## Examples
 
 ``` r
-library(vizModules)
+library(VizModules)
 head(airway_edger)
 #>                    logFC   logCPM        F       PValue          FDR
 #> ENSG00000152583 4.592225 5.542697 485.5167 4.650242e-09 7.405976e-05

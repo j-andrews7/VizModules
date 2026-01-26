@@ -1,0 +1,38 @@
+# Create an example Modular SplitBarPlot Shiny Application
+
+This function generates a Shiny application with modular
+[`plotthis::SplitBarPlot()`](https://pwwang.github.io/plotthis/reference/barplot.html)
+components. A module is created for each data frame provided in the
+named list of data frames.
+
+## Usage
+
+``` r
+plotthis_SplitBarPlotApp(data_list)
+```
+
+## Arguments
+
+- data_list:
+
+  A named list of data frames for which SplitBarPlot modules will be
+  created. That is, UI inputs and a split bar plot will be generated for
+  each.
+
+## Value
+
+A Shiny app object.
+
+## Author
+
+Jacob Martin
+
+## Examples
+
+``` r
+mtcars$cyl <- as.factor(mtcars$cyl)
+data_list <- list("mtcars" = mtcars, "iris" = iris)
+app <- plotthis_SplitBarPlotApp(data_list)
+#> Error in materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")
+if (interactive()) runApp(app)
+```
