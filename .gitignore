@@ -53,3 +53,5 @@ docs
 
 # Internal docs
 INTERNAL_*
+
+.vscode
