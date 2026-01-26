@@ -126,17 +126,17 @@ the <code>scatterPlot</code> module.</p>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"filter_setosa"</span><span class="op">)</span>, <span class="st">"Start with Setosa Only"</span>, value <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">hr</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        <span class="co"># Base module UI - pass the bare 'id', not ns(id)</span></span>
-<span>        <span class="fu"><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span>        <span class="fu">dittoViz_ScatterPlotInputsUI</span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">minimalModuleOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># Simply delegate to the base module's output UI</span></span>
-<span>    <span class="fu"><a href="../reference/dittoViz_ScatterPlotOutputUI.html">dittoViz_ScatterPlotOutputUI</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
+<span>    <span class="fu">dittoViz_ScatterPlotOutputUI</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Notice that <code><a href="https://rdrr.io/pkg/shiny/man/checkboxInput.html" class="external-link">checkboxInput()</a></code> uses
 <code>ns("filter_setosa")</code> to namespace the custom input, while
-<code><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI()</a></code> receives the bare
+<code>dittoViz_ScatterPlotInputsUI()</code> receives the bare
 <code>id</code>. This ensures the base module creates its inputs in the
 correct namespace.</p>
 </div>
@@ -165,7 +165,7 @@ correct namespace.</p>
 <span>    <span class="co"># Step 2: Call the base module server OUTSIDE the moduleServer block</span></span>
 <span>    <span class="co"># This is critical! If we called this inside the moduleServer above,</span></span>
 <span>    <span class="co"># dittoViz_ScatterPlotServer would look for inputs at id-id-inputName instead of id-inputName</span></span>
-<span>    <span class="fu"><a href="../reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
+<span>    <span class="fu">dittoViz_ScatterPlotServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered_data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><strong>Why this pattern?</strong></p>
 <ul>
@@ -177,7 +177,7 @@ correct namespace.</p>
 <code>dittoViz_ScatterPlotServer(id, filtered_data)</code>
 <em>outside</em> the <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> closure, the base
 module attaches to the same namespace as our UI, not a nested one.</li>
-<li>If we called <code><a href="../reference/dittoViz_ScatterPlotServer.html">dittoViz_ScatterPlotServer()</a></code> inside the
+<li>If we called <code>dittoViz_ScatterPlotServer()</code> inside the
 <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> block, it would create nested namespaces
 like <code>id-id-x_axis</code>, which wouldn’t match the actual input
 IDs in the UI.</li>
@@ -220,7 +220,7 @@ from the user to keep them from being changed:</p>
 <span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Simplified Scatter Plot"</span><span class="op">)</span>,</span>
 <span>        <span class="co"># Only show essential controls</span></span>
-<span>        <span class="fu"><a href="../reference/dittoViz_ScatterPlotInputsUI.html">dittoViz_ScatterPlotInputsUI</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span>,</span>
+<span>        <span class="fu">dittoViz_ScatterPlotInputsUI</span><span class="op">(</span><span class="va">id</span>, <span class="va">iris</span>,</span>
 <span>            hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shape.by"</span>, <span class="st">"color.by"</span><span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>

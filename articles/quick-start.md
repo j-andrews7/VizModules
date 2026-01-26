@@ -79,10 +79,9 @@ Modules wrap plotting functions from **dittoViz** and **plotthis**. To
 see which arguments are available in a module:
 
 1.  Open the module input help page, e.g.,
-    [`?dittoViz_ScatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotInputsUI.md)
-    or `?AreaPlotInputsUI`. The **Details** section notes which
-    arguments from the underlying plot function are wired through and
-    any that are intentionally omitted.
+    `?dittoViz_ScatterPlotInputsUI` or `?AreaPlotInputsUI`. The
+    **Details** section notes which arguments from the underlying plot
+    function are wired through and any that are intentionally omitted.
 2.  Cross-reference the base plot documentation
     ([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
     [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),

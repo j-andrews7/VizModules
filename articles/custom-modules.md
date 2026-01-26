@@ -57,9 +57,8 @@ minimalModuleOutput <- function(id) {
 Notice that
 [`checkboxInput()`](https://rdrr.io/pkg/shiny/man/checkboxInput.html)
 uses `ns("filter_setosa")` to namespace the custom input, while
-[`dittoViz_ScatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotInputsUI.md)
-receives the bare `id`. This ensures the base module creates its inputs
-in the correct namespace.
+`dittoViz_ScatterPlotInputsUI()` receives the bare `id`. This ensures
+the base module creates its inputs in the correct namespace.
 
 ### The Server
 
@@ -98,9 +97,7 @@ minimalModuleServer <- function(id, data_reactive) {
   [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
   closure, the base module attaches to the same namespace as our UI, not
   a nested one.
-- If we called
-  [`dittoViz_ScatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_ScatterPlotServer.md)
-  inside the
+- If we called `dittoViz_ScatterPlotServer()` inside the
   [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
   block, it would create nested namespaces like `id-id-x_axis`, which
   wouldn’t match the actual input IDs in the UI.

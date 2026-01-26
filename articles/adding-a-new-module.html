@@ -82,27 +82,52 @@ documentation, and testing standards.</p>
 <h2 id="quick-checklist">Quick Checklist<a class="anchor" aria-label="anchor" href="#quick-checklist"></a>
 </h2>
 <ul class="task-list">
-<li><label><input type="checkbox">Pick the plot function you are
-wrapping (e.g., <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">plotthis::AreaPlot</a></code>) and mirror its name
-everywhere. If you are adding a brand-new plotting function (e.g.,
-<code>piePlot</code>), define and document that plot function first,
-then wrap it with the module.</label></li>
+<li>
+<label><input type="checkbox">Pick the plot function you are
+wrapping and name your module accordingly:</label>
+<ul>
+<li>For <strong>dittoViz</strong> functions: use
+<code>dittoViz_&lt;PlotName&gt;</code> (e.g.,
+<code>dittoViz_ScatterPlot</code> for
+<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">dittoViz::scatterPlot</a></code>)</li>
+<li>For <strong>plotthis</strong> functions: use
+<code>plotthis_&lt;PlotName&gt;</code> (e.g.,
+<code>plotthis_AreaPlot</code> for <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">plotthis::AreaPlot</a></code>)</li>
+<li>For <strong>custom/standalone</strong> functions: use the plot name
+directly (e.g., <code>linePlot</code>, <code>piePlot</code>)</li>
+</ul>
+</li>
+<li><label><input type="checkbox">If adding a brand-new plotting
+function (e.g., <code>piePlot</code>), define and document that plot
+function first, then wrap it with the module.</label></li>
 <li><label><input type="checkbox">Create the three core files:
-<code>R/&lt;plot&gt;_module_ui.R</code>,
-<code>R/&lt;plot&gt;_module_server.R</code>, and
-<code>R/&lt;plot&gt;_module_app.R</code>.</label></li>
+<code>R/&lt;moduleName&gt;_module_ui.R</code>,
+<code>R/&lt;moduleName&gt;_module_server.R</code>, and
+<code>R/&lt;moduleName&gt;_module_app.R</code>.</label></li>
 <li><label><input type="checkbox">Document UI, server, and app
 functions with roxygen (<code>@export</code>, params,
 examples).</label></li>
+<li>
+<label><input type="checkbox">In the UI function docstring, add
+<strong>three required sections</strong>:</label>
+<ul>
+<li>
+<code>@section Plot parameters not implemented or with altered functionality:</code>
+- List inputs not exposed and why</li>
+<li>
+<code>@section Plot parameters and defaults:</code> - Document all
+exposed parameters with UI labels and defaults</li>
+<li>
+<code>@section Plot parameters implementing new functionality:</code>
+- Document any new or plotly-specific controls (axes, ticks, reference
+lines, etc)</li>
+</ul>
+</li>
 <li><label><input type="checkbox">Add an example app that uses the
 module twice to prove multi-instance behavior.</label></li>
 <li><label><input type="checkbox">Cover the base plotting function
 with <code>testthat</code>; cover the module/app with
 <code>shinytest2</code>.</label></li>
-<li><label><input type="checkbox">In the UI function, clearly list any
-plot function inputs you did <strong>not</strong> expose (because they
-are broken or don’t round-trip through <code>ggplotly</code>), and
-why.</label></li>
 <li><label><input type="checkbox">Note any <code>ggplotly</code>
 conversion quirks that change or drop functionality.</label></li>
 </ul>
@@ -111,15 +136,37 @@ conversion quirks that change or drop functionality.</label></li>
 <h2 id="naming-organization">Naming &amp; Organization<a class="anchor" aria-label="anchor" href="#naming-organization"></a>
 </h2>
 <ul class="task-list">
-<li><label><input type="checkbox">File names follow
-<code>&lt;plot&gt;_module_ui.R</code>,
-<code>&lt;plot&gt;_module_server.R</code>,
-<code>&lt;plot&gt;_module_app.R</code> (e.g.,
-<code>barPlot_module_server.R</code>).</label></li>
-<li><label><input type="checkbox">Function names mirror the plot:
-<code>&lt;Plot&gt;InputsUI()</code>,
-<code>&lt;Plot&gt;OutputUI()</code>, <code>&lt;Plot&gt;Server()</code>,
-<code>&lt;Plot&gt;App()</code>.</label></li>
+<li>
+<label><input type="checkbox">File names follow the module naming
+pattern:</label>
+<ul>
+<li>
+<strong>dittoViz wrappers</strong>:
+<code>dittoViz_&lt;PlotName&gt;_module_ui.R</code> (e.g.,
+<code>dittoViz_scatterPlot_module_ui.R</code>)</li>
+<li>
+<strong>plotthis wrappers</strong>:
+<code>plotthis_&lt;PlotName&gt;_module_ui.R</code> (e.g.,
+<code>plotthis_AreaPlot_module_ui.R</code>)</li>
+<li>
+<strong>Custom modules</strong>:
+<code>&lt;plotName&gt;_module_ui.R</code> (e.g.,
+<code>linePlot_module_ui.R</code>)</li>
+</ul>
+</li>
+<li>
+<label><input type="checkbox">Function names follow the pattern:
+<code>&lt;moduleName&gt;InputsUI()</code>,
+<code>&lt;moduleName&gt;OutputUI()</code>,
+<code>&lt;moduleName&gt;Server()</code>,
+<code>&lt;moduleName&gt;App()</code>.</label>
+<ul>
+<li>Examples: <code>plotthis_AreaPlotInputsUI()</code>,
+<code>dittoViz_scatterPlotServer()</code>,
+<code>linePlotApp()</code>
+</li>
+</ul>
+</li>
 <li><label><input type="checkbox">Internal helpers stay in existing
 helper files when broadly useful; otherwise keep them inside the module
 file.</label></li>
@@ -134,17 +181,67 @@ description, parameters, return value, authors, and
 <code>@export</code>.</label></li>
 <li><label><input type="checkbox">Examples show minimal, runnable
 usage with a small dataset.</label></li>
-<li>
-<label><input type="checkbox">The UI function’s documentation
-explicitly lists:</label>
-<ul>
-<li>Inputs mapped through to the plot function.</li>
-<li>Inputs intentionally <strong>not</strong> exposed (broken or not
-plotly-compatible) with a short reason.</li>
-<li>Any default behaviors that differ from the base plot function.</li>
+<li><label><input type="checkbox"><strong>The UI function must include
+three documentation sections:</strong></label></li>
 </ul>
-</li>
-</ul>
+<div class="section level3">
+<h3 id="section-plot-parameters-not-implemented-or-with-altered-functionality">1.
+<code>@section Plot parameters not implemented or with altered functionality:</code><a class="anchor" aria-label="anchor" href="#section-plot-parameters-not-implemented-or-with-altered-functionality"></a>
+</h3>
+<p>List all parameters from the base plot function that are
+<strong>not</strong> exposed via UI inputs, with explanations:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' @section Plot parameters not implemented or with altered functionality:</span></span>
+<span><span class="co">#' The following [plotthis::AreaPlot()] parameters are not available via UI inputs:</span></span>
+<span><span class="co">#' \itemize{</span></span>
+<span><span class="co">#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)</span></span>
+<span><span class="co">#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)</span></span>
+<span><span class="co">#'   \item \code{title} - Plot title (plotly allows interactive editing)</span></span>
+<span><span class="co">#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)</span></span>
+<span><span class="co">#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)</span></span>
+<span><span class="co">#'   \item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly)</span></span>
+<span><span class="co">#'   \item \code{palette} - Managed internally via the palette selection UI</span></span>
+<span><span class="co">#' }</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="section-plot-parameters-and-defaults">2. <code>@section Plot parameters and defaults:</code><a class="anchor" aria-label="anchor" href="#section-plot-parameters-and-defaults"></a>
+</h3>
+<p>Document all parameters that <strong>are</strong> exposed, listing
+their UI label and default value:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' @section Plot parameters and defaults:</span></span>
+<span><span class="co">#' The following [plotthis::AreaPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:</span></span>
+<span><span class="co">#' \itemize{</span></span>
+<span><span class="co">#'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)</span></span>
+<span><span class="co">#'   \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)</span></span>
+<span><span class="co">#'   \item \code{group_by} - Grouping variable (UI: "Group by", default: 3rd categorical variable or "")</span></span>
+<span><span class="co">#'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")</span></span>
+<span><span class="co">#'   \item \code{theme} - ggplot2 theme (UI: "Theme", default: "theme_this")</span></span>
+<span><span class="co">#'   \item \code{alpha} - Area fill transparency (UI: "Alpha", default: 1)</span></span>
+<span><span class="co">#' }</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="section-plot-parameters-implementing-new-functionality">3.
+<code>@section Plot parameters implementing new functionality:</code><a class="anchor" aria-label="anchor" href="#section-plot-parameters-implementing-new-functionality"></a>
+</h3>
+<p>Document all module-specific parameters (plotly controls, reference
+lines, etc.):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' The following parameters implementing new functionality or controlling plotly-specific features are also available:</span></span>
+<span><span class="co">#' \itemize{</span></span>
+<span><span class="co">#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)</span></span>
+<span><span class="co">#'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)</span></span>
+<span><span class="co">#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)</span></span>
+<span><span class="co">#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")</span></span>
+<span><span class="co">#'   \item \code{hline.colors} - Colors for horizontal lines, comma-separated (UI: "Colors", default: "#000000")</span></span>
+<span><span class="co">#'   \item \code{hline.linetypes} - Line types for horizontal lines, comma-separated (UI: "Line types", default: "dashed")</span></span>
+<span><span class="co">#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")</span></span>
+<span><span class="co">#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")</span></span>
+<span><span class="co">#' }</span></span></code></pre></div>
+<p><strong>Note:</strong> Reference line parameters
+(<code>hline.*</code>, <code>vline.*</code>, <code>abline.*</code>)
+accept comma-separated values to control each line individually.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="functionality-non-exposed-inputs">Functionality &amp; Non-Exposed Inputs<a class="anchor" aria-label="anchor" href="#functionality-non-exposed-inputs"></a>
