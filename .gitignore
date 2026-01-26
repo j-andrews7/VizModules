@@ -55,6 +55,3 @@ docs
 INTERNAL_*
 
 .vscode
-R/dittoViz_ScatterPlot_module_app.R
-R/dittoViz_ScatterPlot_module_server.R
-R/dittoViz_ScatterPlot_module_ui.R
