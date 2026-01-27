@@ -71,10 +71,6 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#000000")
         ),
         "Extras" = tagList(
-            numericInput(ns("add.line"), "Add Y interception line:", value = NULL, min = min.y, max = max.y),
-            colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour:", value = "#000000"),
-            numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0.1, max = 10),
-            numericInput(ns("line.type"), "Line type: ", value = 1, min = 1, max = 40),
             textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
