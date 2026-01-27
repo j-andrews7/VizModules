@@ -110,7 +110,7 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
         data$group <- "dummy"
     }
 
-    outs <- dittoViz_ScatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
+    outs <- dittoViz_scatterPlotInputsUI(id = id, data = data, defaults = defaults, title = h3(title), columns = columns)
 
     tagList(extras, outs)
 }
@@ -129,5 +129,5 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
 #' @export
 #' @author Jared Andrews
 volcanoPlotOutputUI <- function(id) {
-    dittoViz_ScatterPlotOutputUI(id)
+    dittoViz_scatterPlotOutputUI(id)
 }
