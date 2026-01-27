@@ -350,15 +350,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                add.line = add.line,
-                line.linetype = isolate_fn(input$line.linetype),
-                line.color = isolate_fn(input$line.color),
-                line.linewidth = isolate_fn(input$line.linewidth),
-                line.opacity = isolate_fn(input$line.opacity),
                 legend.show = TRUE
             )
 
-            fig <- ggplotly(p) |>
+            fig <- p |>
                 layout(
                     title = list(
                         font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),

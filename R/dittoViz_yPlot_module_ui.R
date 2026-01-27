@@ -111,17 +111,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth:",
                 value = NULL, min = 0)
         ),
-        "Extras" = tagList(
-            textInput(ns("add.line"), "Add Y interception line:",
-                value = "", placeholder = "e.g., 0, 1, 2"),
-            colourpicker::colourInput(ns("line.color"), "Line Color:", value = "#000000"),
-            numericInput(ns("line.linewidth"), "Line Width:",
-                value = 0.5, min = 0.1, max = 10),
-            selectInput(ns("line.linetype"), "Line Type:",
-                selected = "dashed",
-                choices = c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")),
-            numericInput(ns("line.opacity"), "Line Opacity:", value = 1, min = 0, max = 1)
-        ),
         "Facet" = tagList(
             selectInput(ns("split.by"), "Split by (facet):", selected = "", choices = c("", char.choices)),
             selectInput(ns("split.adjust"), "Facet scaling: ", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
@@ -129,7 +118,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             selectInput(ns("split.nrow"), "Split number of rows:", selected = 4, choices = c("", 1:10))
         ),
         "Axes" = tagList(
-
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",

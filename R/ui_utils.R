@@ -115,7 +115,7 @@ default_palettes <- function() {
     choices = list(
       Defaults = list(
         "dittoColors" = dittoColors()[1:16],
-        "dittoColors_full" = dittoColors(),
+        "dittoColors_full" = dittoColors()[1:32],
         "ggplot2" = hue_pal()(16)
       ),
       Viridis = list(
