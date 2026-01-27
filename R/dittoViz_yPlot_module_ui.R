@@ -77,16 +77,15 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 value = 5, min = 0, max = 20),
             materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
                 value = TRUE, status = "success"),
-            numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = 1, min = 0, max = 5)
+            numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = NA, min = 0, max = 1)
         ),
         "Box" = tagList(
-            numericInput(ns("boxplot.width"), "Boxplot Width:", min = 0, max = 2, value = 0.2),
             colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
             materialSwitch(ns("boxplot.show.outliers"), "Show Outliers: ",
                 value = FALSE, status = "success"),
             numericInput(ns("boxplot.outlier.size"), "Outlier Size:", value = 1.5, min = 0, max = 10),
             materialSwitch(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, status = "success"),
-            numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 1, min = 0, max = 5),
+            numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 0.2, min = 0, max = 1),
             numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight:", value = 1, min = 0, max = 5)
         ),
         "Violin" = tagList(

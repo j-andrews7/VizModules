@@ -144,15 +144,14 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             colourpicker::updateColourInput(session, "jitter.color", value = "#000000")
             updateNumericInput(session, "jitter.shape.legend.size", value = 5)
             updateMaterialSwitch(session, "jitter.shape.legend.show", value = TRUE)
-            updateNumericInput(session, "jitter.position.dodge", value = 1)
+            updateNumericInput(session, "jitter.position.dodge", value = NA)
 
             # Box
-            updateNumericInput(session, "boxplot.width", value = 0.2)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
             updateMaterialSwitch(session, "boxplot.show.outliers", value = FALSE)
             updateNumericInput(session, "boxplot.outlier.size", value = 1.5)
             updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
-            updateNumericInput(session, "boxplot.position.dodge", value = 1)
+            updateNumericInput(session, "boxplot.position.dodge", value = 0.2)
             updateNumericInput(session, "boxplot.lineweight", value = 1)
 
             # Violin
@@ -332,13 +331,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 jitter.color = isolate_fn(input$jitter.color),
                 jitter.shape.legend.size = isolate_fn(input$jitter.shape.legend.size),
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
-                jitter.position.dodge = isolate_fn(input$jitter.position.dodge),
-                boxplot.width = isolate_fn(input$boxplot.width),
                 boxplot.color = isolate_fn(input$boxplot.color),
                 boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
                 boxplot.outlier.size = isolate_fn(input$boxplot.outlier.size),
                 boxplot.fill = isolate_fn(input$boxplot.fill),
-                boxplot.position.dodge = isolate_fn(input$boxplot.position.dodge),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
                 vlnplot.width = isolate_fn(input$vlnplot.width),
@@ -358,7 +354,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                     title = list(
                         font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    )
+                    ),
+                    boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay")
                 )
 
             # Apply axis styling

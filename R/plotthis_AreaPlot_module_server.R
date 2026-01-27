@@ -213,7 +213,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
                 theme = isolate_fn(input$theme),
-                # palette = default_palette_name,
                 palcolor = unname(palette_values),
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,

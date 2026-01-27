@@ -25,7 +25,7 @@ Must contain \code{padj} and \code{log2FoldChange} columns.}
 The \code{moduleServer} function for the volcanoPlot module.
 }
 \description{
-This module builds upon the \code{\link[=dittoViz_ScatterPlotServer]{dittoViz_ScatterPlotServer()}} to provide a volcano plot
+This module builds upon the \code{\link[=dittoViz_scatterPlotServer]{dittoViz_scatterPlotServer()}} to provide a volcano plot
 with interactive significance and fold-change thresholding.
 }
 \author{
