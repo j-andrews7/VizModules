@@ -168,13 +168,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateNumericInput(session, "ridgeplot.bins", value = 30)
             updateNumericInput(session, "ridgeplot.binwidth", value = NULL)
 
-            # Extras
-            updateTextInput(session, "add.line", value = "")
-            colourpicker::updateColourInput(session, "line.color", value = "#000000")
-            updateNumericInput(session, "line.linewidth", value = 0.5)
-            updateSelectInput(session, "line.linetype", selected = "dashed")
-            updateNumericInput(session, "line.opacity", value = 1)
-
             # Facet
             updateSelectInput(session, "split.by", selected = "")
             updateSelectInput(session, "split.adjust", selected = "free")
@@ -331,15 +324,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 jitter.color = isolate_fn(input$jitter.color),
                 jitter.shape.legend.size = isolate_fn(input$jitter.shape.legend.size),
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
+                jitter.position.dodge = 1 - isolate_fn(input$boxgap),
                 boxplot.color = isolate_fn(input$boxplot.color),
                 boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
                 boxplot.outlier.size = isolate_fn(input$boxplot.outlier.size),
                 boxplot.fill = isolate_fn(input$boxplot.fill),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
-                vlnplot.width = isolate_fn(input$vlnplot.width),
                 vlnplot.scaling = isolate_fn(input$vlnplot.scaling),
                 vlnplot.quantiles = vlnplot.quantiles,
+                vlnplot.width = 1 - isolate_fn(input$boxgap),
                 ridgeplot.lineweight = isolate_fn(input$ridgeplot.lineweight),
                 ridgeplot.scale = isolate_fn(input$ridgeplot.scale),
                 ridgeplot.ymax.expansion = ridgeplot.ymax.expansion,
@@ -355,7 +349,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                         font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
-                    boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay")
+                    boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
+                    boxgap = isolate_fn(input$boxgap),
+                    boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
 
             # Apply axis styling

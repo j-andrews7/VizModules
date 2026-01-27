@@ -40,118 +40,116 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
     min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
-
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("var"), "Select Y data (var):", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = char.choices[2], choices = char.choices),
-            selectInput(ns("color.by"), "Color by:", selected = "", choices = c("", char.choices)),
-            selectInput(ns("shape.by"), "Shape by:", selected = "", choices = c("", char.choices)),
+            selectInput(ns("var"), "Y data (var)", choices = num.choices, selected = num.choices[2]),
+            selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
+            selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
+            selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
             selectInput(
                 ns("plots"),
-                "Plot types to show:",
+                "Plots to show:",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
-                selected = c("vlnplot", "boxplot", "jitter"), multiple = TRUE
+                selected = c("boxplot", "jitter"), multiple = TRUE
             ),
-            helpText("Order matters: first selected will be in back, last in front")
+            helpText("Order not currently respected")
         ),
         "Adjustments" = tagList(
-            numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
-            materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE, status = "success"),
-            numericInput(ns("raster.dpi"), "Raster DPI:", value = 300, min = 100, max = 1200)
+            numericInput(ns("y.max"), "Y Axis Max", value = max.y, min = -1000, max = 1000),
+            numericInput(ns("y.min"), "Y Axis Min", value = min.y, min = -1000, max = 1000),
+            materialSwitch(ns("do.raster"), "Rasterize Jitter", value = FALSE, status = "success"),
+            numericInput(ns("raster.dpi"), "Raster DPI", value = 600, min = 100, max = 1200)
         ),
         "Jitter" = tagList(
-            numericInput(ns("jitter.size"), "Jitter Point Size:", max = 10, min = 0.1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.2),
+            numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1, value = 1),
+            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.2, step = 0.05),
             colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
-            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size:",
+            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
                 value = 5, min = 0, max = 20),
-            materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
-                value = TRUE, status = "success"),
-            numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = NA, min = 0, max = 1)
+            materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
+                value = TRUE, status = "success")
         ),
         "Box" = tagList(
             colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            materialSwitch(ns("boxplot.show.outliers"), "Show Outliers: ",
+            materialSwitch(ns("boxplot.show.outliers"), "Show Outliers",
                 value = FALSE, status = "success"),
-            numericInput(ns("boxplot.outlier.size"), "Outlier Size:", value = 1.5, min = 0, max = 10),
-            materialSwitch(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, status = "success"),
-            numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 0.2, min = 0, max = 1),
-            numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight:", value = 1, min = 0, max = 5)
+            numericInput(ns("boxplot.outlier.size"), "Outlier Size", value = 1.5, min = 0, max = 10),
+            materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
+            numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+            numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),
+            numericInput(ns("boxgroupgap"), "Boxplot Group Dodge", value = 0.2, min = 0, max = 1, step = 0.05)
         ),
         "Violin" = tagList(
-            numericInput(ns("vlnplot.lineweight"), "Violin Line Weight:", value = 1, min = 0, max = 5),
-            numericInput(ns("vlnplot.width"), "Violin Width:", value = 1, min = 0, max = 5),
-            selectInput(ns("vlnplot.scaling"), "Violin Scaling:",
+            numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+            selectInput(ns("vlnplot.scaling"), "Violin Scaling",
                 selected = "area",
                 choices = c("area", "count", "width")),
-            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1):",
+            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
                 value = "", placeholder = "e.g., 0.25, 0.5, 0.75")
         ),
         "Ridge" = tagList(
-            numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight:", value = 1, min = 0, max = 5),
-            numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap):", value = 1.25, min = 0.5, max = 3),
-            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion:",
+            numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+            numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)", value = 1.25, min = 0.5, max = 3),
+            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
                 value = NA, min = 0, max = 1),
-            selectInput(ns("ridgeplot.shape"), "Ridge Shape:",
+            selectInput(ns("ridgeplot.shape"), "Ridge Shape",
                 selected = "smooth",
                 choices = c("smooth", "hist")),
-            numericInput(ns("ridgeplot.bins"), "Ridge Bins (for hist):",
+            numericInput(ns("ridgeplot.bins"), "Ridge Bins",
                 value = 30, min = 5, max = 100),
-            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth:",
+            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
                 value = NULL, min = 0)
         ),
         "Facet" = tagList(
-            selectInput(ns("split.by"), "Split by (facet):", selected = "", choices = c("", char.choices)),
-            selectInput(ns("split.adjust"), "Facet scaling: ", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
-            selectInput(ns("split.ncol"), "Split number of columns:", selected = 4, choices = c("", 1:10)),
-            selectInput(ns("split.nrow"), "Split number of rows:", selected = 4, choices = c("", 1:10))
+            selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
+            selectInput(ns("split.adjust"), "Facet Scaling", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
+            selectInput(ns("split.ncol"), "Number of Columns", selected = 4, choices = c("", 1:10)),
+            selectInput(ns("split.nrow"), "Number of Rows", selected = 4, choices = c("", 1:10))
         ),
         "Axes" = tagList(
-            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
+            selectInput(ns("font.type"), "Font Type", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                 "sans-serif", "serif", "monospace"
             )),
-            checkboxInput(ns("axis.showline"), "Show axis lines",
+            checkboxInput(ns("axis.showline"), "Show Axis Lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
+            checkboxInput(ns("axis.mirror"), "Mirror Axis Lines",
                 value = ifelse("axis.mirror" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.x"), "Show X major gridlines",
+            checkboxInput(ns("show.major.grid.x"), "Show X Gridlines",
                 value = ifelse("show.major.grid.x" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.x"]]), defaults[["show.major.grid.x"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.y"), "Show Y major gridlines",
+            checkboxInput(ns("show.major.grid.y"), "Show Y Gridlines",
                 value = ifelse("show.major.grid.y" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.y"]]), defaults[["show.major.grid.y"]], TRUE),
                     TRUE
                 )
             ),
-            colourInput(ns("axis.linecolor"), "Axis line color",
+            colourInput(ns("axis.linecolor"), "Axis Line Color",
                 value = ifelse("axis.linecolor" %in% names(defaults),
                     defaults[["axis.linecolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.linewidth"), "Axis line width",
+            numericInput(ns("axis.linewidth"), "Axis Line Width",
                 value = ifelse("axis.linewidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
                     0.5
@@ -159,7 +157,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 min = 0,
                 step = 0.1
             ),
-            numericInput(ns("axis.tickfont.size"), "Tick label size",
+            numericInput(ns("axis.tickfont.size"), "Tick Label Size",
                 value = ifelse("axis.tickfont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
                     12
@@ -167,12 +165,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 min = 1,
                 step = 1
             ),
-            colourInput(ns("axis.tickfont.color"), "Tick label color",
+            colourInput(ns("axis.tickfont.color"), "Tick Label Color",
                 value = ifelse("axis.tickfont.color" %in% names(defaults),
                     defaults[["axis.tickfont.color"]], "black"
                 )
             ),
-            selectInput(ns("axis.tickfont.family"), "Tick label font",
+            selectInput(ns("axis.tickfont.family"), "Tick Label Font",
                 choices = c(
                     "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
                     "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -189,7 +187,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     "Arial"
                 )
             ),
-            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
+            numericInput(ns("axis.tickangle.x"), "X-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.x" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
                     0
@@ -198,7 +196,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 max = 180,
                 step = 15
             ),
-            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
+            numericInput(ns("axis.tickangle.y"), "Y-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.y" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
                     0
@@ -207,7 +205,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 max = 180,
                 step = 15
             ),
-            selectInput(ns("axis.ticks"), "Tick position",
+            selectInput(ns("axis.ticks"), "Tick Position",
                 choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
                 selected = ifelse("axis.ticks" %in% names(defaults),
                     ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
@@ -216,12 +214,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     "outside"
                 )
             ),
-            colourInput(ns("axis.tickcolor"), "Tick mark color",
+            colourInput(ns("axis.tickcolor"), "Tick Mark Color",
                 value = ifelse("axis.tickcolor" %in% names(defaults),
                     defaults[["axis.tickcolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.ticklen"), "Tick mark length",
+            numericInput(ns("axis.ticklen"), "Tick Mark Length",
                 value = ifelse("axis.ticklen" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
                     5
@@ -229,7 +227,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 min = 0,
                 step = 1
             ),
-            numericInput(ns("axis.tickwidth"), "Tick mark width",
+            numericInput(ns("axis.tickwidth"), "Tick Mark Width",
                 value = ifelse("axis.tickwidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
                     1
@@ -237,7 +235,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 min = 0,
                 step = 0.1
             ),
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
+            colourpicker::colourInput(ns("text.colour"), "Axis Title Colour", value = "#000000")
         ),
         "Lines" = tagList(
             textInput(ns("hline.intercepts"), "Y-intercepts",
