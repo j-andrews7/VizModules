@@ -225,7 +225,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Update y-axis range when var (y data) column is changed
         observeEvent(input$var, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$var, Y_AXIS_SCALE_FACTOR = 1.11)
+            y_range <- .calculate_y_range(df = data(), y_data_col = input$var, y_axis_scale_factor = 1.11)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)

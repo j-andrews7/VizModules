@@ -76,6 +76,9 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters c
 \item \code{scale_y} - Scale y-axis by total (UI: "Scale y-axis by total", default: FALSE)
 \item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
 }
+}
+
+\section{Parameters controlling additional functionality}{
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{

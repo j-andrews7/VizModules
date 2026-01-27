@@ -114,15 +114,15 @@ default_palettes <- function() {
   pals <- list(
     choices = list(
       Defaults = list(
-        "dittoColors" = dittoColors()[1:8],
-        "ggplot2" = hue_pal()(9)
+        "dittoColors" = dittoColors()[1:16],
+        "ggplot2" = hue_pal()(12)
       ),
       Viridis = list(
-        "viridis" = viridis_pal(option = "viridis")(10),
-        "magma" = viridis_pal(option = "magma")(10),
-        "inferno" = viridis_pal(option = "inferno")(10),
-        "plasma" = viridis_pal(option = "plasma")(10),
-        "cividis" = viridis_pal(option = "cividis")(10)
+        "viridis" = viridis_pal(option = "viridis")(12),
+        "magma" = viridis_pal(option = "magma")(12),
+        "inferno" = viridis_pal(option = "inferno")(12),
+        "plasma" = viridis_pal(option = "plasma")(12),
+        "cividis" = viridis_pal(option = "cividis")(12)
       ),
       Diverging = list(
         "BrBG" = brewer_pal(palette = "BrBG")(11),

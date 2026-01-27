@@ -316,7 +316,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         tack = tagList(
             fluidRow(
                 column(3, materialSwitch(ns("auto.update"), "Auto Update",
-                    value = FALSE, size = "mini", status = "success"),
+                    value = FALSE, status = "success"),
                     style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"),
                     style = "margin-top: 25px;"),

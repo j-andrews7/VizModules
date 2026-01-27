@@ -52,6 +52,7 @@
 #'   \item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
 #' }
 #' 
+#' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
 #'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
