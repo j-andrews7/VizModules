@@ -116,46 +116,46 @@ library(VizModules)
 data(mtcars)
 dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="2654">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="8292">
 #>     <li class="active">
-#>       <a href="#tab-2654-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8292-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-8292-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-8292-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-8292-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-8292-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-8292-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-8292-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-8292-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8292-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-8292-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8292-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2654-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8292-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2654">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2654-1">
+#>   <div class="tab-content" data-tabsetid="8292">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8292-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -247,7 +247,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-2654-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-8292-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -339,7 +339,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-2654-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-8292-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -397,7 +397,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-2654-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-8292-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -440,7 +440,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-2654-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-8292-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -480,7 +480,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-2654-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-8292-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -615,7 +615,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-2654-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-8292-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -671,7 +671,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-2654-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-8292-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -698,7 +698,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2654-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8292-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -766,7 +766,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-2654-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-8292-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -830,7 +830,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2654-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8292-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -991,7 +991,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2654-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8292-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

@@ -110,7 +110,792 @@ for that function for an exhaustive list.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">dittoViz_yPlotInputsUI</span><span class="op">(</span><span class="st">"yPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in materialSwitch(ns("auto.update"), "Auto Update", value = FALSE,     size = "mini", status = "success"):</span> unused argument (size = "mini")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="1496"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type"&gt;Plot Type&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter"&gt;Jitter&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box"&gt;Box&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin"&gt;Violin&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge"&gt;Ridge&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-8" data-toggle="tab" data-bs-toggle="tab" data-value="Extras"&gt;Extras&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-10" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1496-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="1496"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-1496-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-var-label" for="yPlot-var"&gt;Select Y data (var):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-var" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="mpg" selected&gt;mpg&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="cyl"&gt;cyl&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="disp"&gt;disp&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="hp"&gt;hp&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="drat"&gt;drat&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="wt"&gt;wt&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="qsec"&gt;qsec&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="vs"&gt;vs&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="am"&gt;am&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="gear"&gt;gear&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="carb"&gt;carb&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-var"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by"&gt;Group by:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-group.by" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-group.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by"&gt;Color by:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-color.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-color.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by"&gt;Shape by:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-shape.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-shape.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="yPlot-palette.selection" class="shiny-html-output"&gt;&lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plot Type" id="tab-1496-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-plots-label" for="yPlot-plots"&gt;Plot types to show:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-plots" class="shiny-input-select" multiple="multiple"&gt;&lt;option value="vlnplot" selected&gt;Violin&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="boxplot" selected&gt;Box&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jitter" selected&gt;Jitter&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="ridgeplot"&gt;Ridge&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-plots"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;span class="help-block"&gt;Order matters: first selected will be in back, last in front&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-1496-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-y.max-label" for="yPlot-y.max"&gt;Max Value of Y Axis:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-1000" max="1000"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-y.min-label" for="yPlot-y.min"&gt;Min Value of Y Axis:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-1000" max="1000"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-do.raster" style="padding-right: 10px;"&gt;Rasterize jitter: &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-do.raster" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-do.raster"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-raster.dpi-label" for="yPlot-raster.dpi"&gt;Raster DPI:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-raster.dpi" type="number" class="shiny-input-number form-control" value="300" data-update-on="change" min="100" max="1200"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Jitter" id="tab-1496-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-jitter.size-label" for="yPlot-jitter.size"&gt;Jitter Point Size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-jitter.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="10"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-jitter.width-label" for="yPlot-jitter.width"&gt;Jitter Width:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-jitter.color"&gt;Jitter Point Color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-jitter.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-jitter.shape.legend.size-label" for="yPlot-jitter.shape.legend.size"&gt;Shape Legend Size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-jitter.shape.legend.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" max="20"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-jitter.shape.legend.show" style="padding-right: 10px;"&gt;Show Shape Legend: &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-jitter.shape.legend.show" type="checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-jitter.shape.legend.show"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-jitter.position.dodge-label" for="yPlot-jitter.position.dodge"&gt;Jitter Position Dodge:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-jitter.position.dodge" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Box" id="tab-1496-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-boxplot.width-label" for="yPlot-boxplot.width"&gt;Boxplot Width:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-boxplot.width" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="2"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-boxplot.color"&gt;Boxplot Color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-boxplot.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-boxplot.show.outliers" style="padding-right: 10px;"&gt;Show Outliers: &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-boxplot.show.outliers" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-boxplot.show.outliers"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-boxplot.outlier.size-label" for="yPlot-boxplot.outlier.size"&gt;Outlier Size:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-boxplot.outlier.size" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change" min="0" max="10"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-boxplot.fill" style="padding-right: 10px;"&gt;Fill Boxplot: &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-boxplot.fill" type="checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-boxplot.fill"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-boxplot.position.dodge-label" for="yPlot-boxplot.position.dodge"&gt;Boxplot Position Dodge:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-boxplot.position.dodge" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-boxplot.lineweight-label" for="yPlot-boxplot.lineweight"&gt;Boxplot Line Weight:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-boxplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Violin" id="tab-1496-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vlnplot.lineweight-label" for="yPlot-vlnplot.lineweight"&gt;Violin Line Weight:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vlnplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vlnplot.width-label" for="yPlot-vlnplot.width"&gt;Violin Width:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vlnplot.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vlnplot.scaling-label" for="yPlot-vlnplot.scaling"&gt;Violin Scaling:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-vlnplot.scaling" class="shiny-input-select"&gt;&lt;option value="area" selected&gt;area&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="count"&gt;count&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="width"&gt;width&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-vlnplot.scaling" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vlnplot.quantiles-label" for="yPlot-vlnplot.quantiles"&gt;Violin Quantiles (0-1):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vlnplot.quantiles" type="text" class="shiny-input-text form-control" value="" placeholder="e.g., 0.25, 0.5, 0.75" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Ridge" id="tab-1496-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.lineweight-label" for="yPlot-ridgeplot.lineweight"&gt;Ridge Line Weight:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-ridgeplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.scale-label" for="yPlot-ridgeplot.scale"&gt;Ridge Scale (overlap):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-ridgeplot.scale" type="number" class="shiny-input-number form-control" value="1.25" data-update-on="change" min="0.5" max="3"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.ymax.expansion-label" for="yPlot-ridgeplot.ymax.expansion"&gt;Ridge Y-max Expansion:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-ridgeplot.ymax.expansion" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.shape-label" for="yPlot-ridgeplot.shape"&gt;Ridge Shape:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-ridgeplot.shape" class="shiny-input-select"&gt;&lt;option value="smooth" selected&gt;smooth&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="hist"&gt;hist&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-ridgeplot.shape" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.bins-label" for="yPlot-ridgeplot.bins"&gt;Ridge Bins (for hist):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-ridgeplot.bins" type="number" class="shiny-input-number form-control" value="30" data-update-on="change" min="5" max="100"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-ridgeplot.binwidth-label" for="yPlot-ridgeplot.binwidth"&gt;Ridge Binwidth:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-ridgeplot.binwidth" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Extras" id="tab-1496-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-add.line-label" for="yPlot-add.line"&gt;Add Y interception line:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-add.line" type="text" class="shiny-input-text form-control" value="" placeholder="e.g., 0, 1, 2" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-line.color"&gt;Line Color:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-line.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-line.linewidth-label" for="yPlot-line.linewidth"&gt;Line Width:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-line.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0.1" max="10"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-line.linetype-label" for="yPlot-line.linetype"&gt;Line Type:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-line.linetype" class="shiny-input-select"&gt;&lt;option value="solid"&gt;solid&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dashed" selected&gt;dashed&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dotted"&gt;dotted&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dotdash"&gt;dotdash&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="longdash"&gt;longdash&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="twodash"&gt;twodash&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-line.linetype" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-line.opacity-label" for="yPlot-line.opacity"&gt;Line Opacity:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-line.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-1496-9"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-split.by-label" for="yPlot-split.by"&gt;Split by (facet):&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-split.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-split.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-split.adjust-label" for="yPlot-split.adjust"&gt;Facet scaling: &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-split.adjust" class="shiny-input-select"&gt;&lt;option value="fixed"&gt;fixed&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="free" selected&gt;free&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="free_y"&gt;free_y&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="free_x"&gt;free_x&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-split.adjust" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-split.ncol-label" for="yPlot-split.ncol"&gt;Split number of columns:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-split.ncol" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="1"&gt;1&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="2"&gt;2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="3"&gt;3&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="4" selected&gt;4&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="5"&gt;5&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="6"&gt;6&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="7"&gt;7&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="8"&gt;8&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="9"&gt;9&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="10"&gt;10&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-split.ncol"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-split.nrow-label" for="yPlot-split.nrow"&gt;Split number of rows:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-split.nrow" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="1"&gt;1&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="2"&gt;2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="3"&gt;3&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="4" selected&gt;4&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="5"&gt;5&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="6"&gt;6&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="7"&gt;7&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="8"&gt;8&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="9"&gt;9&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="10"&gt;10&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-split.nrow"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-1496-10"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-font.type-label" for="yPlot-font.type"&gt;Font type:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-font.type" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-font.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="yPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Show axis lines&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="yPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Mirror axis lines&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="yPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Show X major gridlines&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="yPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;span&gt;Show Y major gridlines&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-axis.linecolor"&gt;Axis line color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.linewidth-label" for="yPlot-axis.linewidth"&gt;Axis line width&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.tickfont.size-label" for="yPlot-axis.tickfont.size"&gt;Tick label size&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-axis.tickfont.color"&gt;Tick label color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.tickfont.family-label" for="yPlot-axis.tickfont.family"&gt;Tick label font&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-axis.tickfont.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-axis.tickfont.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.tickangle.x-label" for="yPlot-axis.tickangle.x"&gt;X-axis tick label angle&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.tickangle.y-label" for="yPlot-axis.tickangle.y"&gt;Y-axis tick label angle&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.ticks-label" for="yPlot-axis.ticks"&gt;Tick position&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-axis.ticks" class="shiny-input-select"&gt;&lt;option value="outside" selected&gt;Outside&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inside"&gt;Inside&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value=""&gt;None&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-axis.ticks"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-axis.tickcolor"&gt;Tick mark color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.ticklen-label" for="yPlot-axis.ticklen"&gt;Tick mark length&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-axis.tickwidth-label" for="yPlot-axis.tickwidth"&gt;Tick mark width&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="yPlot-text.colour"&gt;Axis title colour:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-1496-11"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.intercepts-label" for="yPlot-hline.intercepts"&gt;Y-intercepts&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.colors-label" for="yPlot-hline.colors"&gt;Colors&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.widths-label" for="yPlot-hline.widths"&gt;Widths&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.linetypes-label" for="yPlot-hline.linetypes"&gt;Line types&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.opacities-label" for="yPlot-hline.opacities"&gt;Opacities (0-1)&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;hr/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.intercepts-label" for="yPlot-vline.intercepts"&gt;X-intercepts&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.colors-label" for="yPlot-vline.colors"&gt;Colors&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.widths-label" for="yPlot-vline.widths"&gt;Widths&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.linetypes-label" for="yPlot-vline.linetypes"&gt;Line types&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.opacities-label" for="yPlot-vline.opacities"&gt;Opacities (0-1)&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;hr/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.slopes-label" for="yPlot-abline.slopes"&gt;Slopes&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.intercepts-label" for="yPlot-abline.intercepts"&gt;Y-intercepts&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.colors-label" for="yPlot-abline.colors"&gt;Colors&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.widths-label" for="yPlot-abline.widths"&gt;Widths&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.linetypes-label" for="yPlot-abline.linetypes"&gt;Line types&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-abline.opacities-label" for="yPlot-abline.opacities"&gt;Opacities (0-1)&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3" style="margin-top: 25px;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label for="yPlot-auto.update" style="padding-right: 10px;"&gt;Auto Update&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;input id="yPlot-auto.update" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label class="switch label-success bg-success" for="yPlot-auto.update"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3" style="margin-top: 25px;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button id="yPlot-update" style="width:100%;" type="button" class="btn btn-default action-button"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span class="action-label"&gt;Update&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3" style="margin-top: 25px;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button class="btn btn-default action-button btn-secondary" id="yPlot-reset" style="width:100%;" type="button"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span class="action-label"&gt;Reset&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="yPlot-download.type-label" for="yPlot-download.type"&gt;Download Format&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;select id="yPlot-download.type" class="shiny-input-select"&gt;&lt;option value="png" selected&gt;png&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="svg"&gt;svg&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="yPlot-download.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;br/&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
