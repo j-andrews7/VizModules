@@ -41,9 +41,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Available color groups for the current color.by selection
         color_levels <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
             df <- data()
-            color_by <- isolate_fn(input$color.by)
+            color_by <- input$color.by
 
             if (is.null(df) || is.null(color_by) || color_by == "" || !color_by %in% names(df)) {
                 return(character(0))
@@ -195,6 +194,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "max.color", value = "#0072B2")
             colourpicker::updateColourInput(session, "contour.color", value = "black")
             updateSelectInput(session, "contour.linetype", selected = "solid")
+            
+            # Simulate clicking the reset button in the multiColorPicker widget
+            shinyjs::runjs(sprintf("
+                var colorPanel = document.getElementById('%s');
+                if (colorPanel) {
+                    var resetBtn = colorPanel.querySelector('.mc-reset-palette');
+                    if (resetBtn) resetBtn.click();
+                }
+            ", ns("color.panel")))
 
             # Facets
             updateNumericInput(session, "split.nrow", value = NA)
