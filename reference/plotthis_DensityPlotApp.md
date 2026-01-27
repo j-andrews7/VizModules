@@ -36,6 +36,5 @@ mtcars$gear <- as.factor(mtcars$gear)
 iris$group <- rep(c("A", "B"), each = 75)
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- plotthis_DensityPlotApp(data_list)
-#> Error in materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")
 if (interactive()) runApp(app)
 ```

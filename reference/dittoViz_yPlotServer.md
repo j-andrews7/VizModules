@@ -36,4 +36,4 @@ The `moduleServer` function for the yPlot module.
 
 ## Author
 
-Jared Andrews
+Jared Andrews, Jacob Martin

@@ -33,6 +33,5 @@ mtcars$cyl <- as.factor(mtcars$cly)
 #> Error in `$<-.data.frame`(`*tmp*`, cyl, value = structure(integer(0), levels = character(0), class = "factor")): replacement has 0 rows, data has 32
 data_list <- list("mtcars" = mtcars, "iris" = iris)
 app <- plotthis_BarPlotApp(data_list)
-#> Error in materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE,     offLabel = "Off", onLabel = "On", status = "success"): unused arguments (offLabel = "Off", onLabel = "On")
 if (interactive()) runApp(app)
 ```

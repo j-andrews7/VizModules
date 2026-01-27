@@ -64,7 +64,7 @@ exhaustive list.
 
 ## Author
 
-Jared Andrews
+Jared Andrews, Jacob Martin
 
 ## Examples
 
@@ -72,5 +72,5 @@ Jared Andrews
 library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
-#> Error in materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE,     onLabel = "On", offLabel = "Off", status = "success"): unused arguments (onLabel = "On", offLabel = "Off")
+#> Error in materialSwitch(ns("auto.update"), "Auto Update", value = FALSE,     size = "mini", status = "success"): unused argument (size = "mini")
 ```

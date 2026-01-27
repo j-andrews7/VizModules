@@ -38,6 +38,6 @@ data <- data.frame(
 )
 data_list <- list("test_data" = data)
 app <- dittoViz_yPlotApp(data_list)
-#> Error in materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE,     onLabel = "On", offLabel = "Off", status = "success"): unused arguments (onLabel = "On", offLabel = "Off")
+#> Error in materialSwitch(ns("auto.update"), "Auto Update", value = FALSE,     size = "mini", status = "success"): unused argument (size = "mini")
 if (interactive()) runApp(app)
 ```

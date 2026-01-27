@@ -37,6 +37,5 @@ cyl_summary <- as.data.frame(table(mtcars$cyl))
 names(cyl_summary) <- c("Cylinders", "Count")
 data_list <- list("mtcars" = cyl_summary, "iris" = iris_summary)
 app <- piePlotApp(data_list)
-#> Error in materialSwitch(ns("auto.update"), "Auto Update", value = FALSE,     size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"): unused arguments (size = "mini", onLabel = "ON", offLabel = "OFF")
 if (interactive()) runApp(app)
 ```
