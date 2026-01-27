@@ -41,8 +41,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Available color groups for the current color.by selection
         color_levels <- reactive({
+            isolate_fn <- setup_auto_update_logic(input)
             df <- data()
-            color_by <- input$color.by
+            color_by <- isolate_fn(input$color.by)
 
             if (is.null(df) || is.null(color_by) || color_by == "" || !color_by %in% names(df)) {
                 return(character(0))
@@ -156,6 +157,136 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Observer to clear selected data
         observeEvent(input$annotation.clear, {
             selected.data(NULL)
+        })
+
+        # Reset all inputs to defaults
+        observeEvent(input$reset, {
+            # Get data for defaults
+            choices <- c("", names(data()))
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            cat.choices <- c("", names(data())[unlist(lapply(data(), FUN = function(x) !is.numeric(x)), use.names = FALSE)])
+
+            # Data
+            updateSelectInput(session, "x.by", selected = choices[2])
+            updateSelectInput(session, "y.by", selected = choices[3])
+            updateSelectInput(session, "color.by", selected = "")
+            updateSelectInput(session, "shape.by", selected = "")
+            updateSelectizeInput(session, "split.by", selected = "")
+            updateTextInput(session, "rows.use", value = "")
+
+            # Adjustments
+            updateSelectInput(session, "x.adjustment", selected = "")
+            updateSelectInput(session, "y.adjustment", selected = "")
+            updateSelectInput(session, "color.adjustment", selected = "")
+            updateSelectInput(session, "x.adj.fxn", selected = "")
+            updateSelectInput(session, "y.adj.fxn", selected = "")
+            updateSelectInput(session, "color.adj.fxn", selected = "")
+
+            # Points
+            updateNumericInput(session, "size", value = 1)
+            updateNumericInput(session, "opacity", value = 1)
+            updateCheckboxInput(session, "show.others", value = TRUE)
+            updateCheckboxInput(session, "split.show.all.others", value = TRUE)
+            updateSelectInput(session, "plot.order", selected = "unordered")
+            updateTextInput(session, "shape.panel", value = "16, 15, 17, 23, 25, 8")
+
+            # Colors
+            colourpicker::updateColourInput(session, "min.color", value = "#F0E442")
+            colourpicker::updateColourInput(session, "max.color", value = "#0072B2")
+            colourpicker::updateColourInput(session, "contour.color", value = "black")
+            updateSelectInput(session, "contour.linetype", selected = "solid")
+
+            # Facets
+            updateNumericInput(session, "split.nrow", value = NA)
+            updateNumericInput(session, "split.ncol", value = NA)
+            updateSelectInput(session, "multivar.split.dir", selected = "col")
+            updateSelectInput(session, "split.adjust.scales", selected = "fixed")
+
+            # Annotations
+            updateSelectInput(session, "annotate.by", selected = "")
+            updateTextAreaInput(session, "highlight.points", value = "")
+            colourpicker::updateColourInput(session, "highlight.color", value = "#00FFF7")
+            updateNumericInput(session, "highlight.size", value = 7)
+            colourpicker::updateColourInput(session, "highlight.border.color", value = "#000000")
+            updateNumericInput(session, "highlight.border.width", value = 1)
+            updateCheckboxInput(session, "highlight.auto.annotate", value = TRUE)
+            colourpicker::updateColourInput(session, "annotation.color", value = "black")
+            updateNumericInput(session, "annotation.ax", value = 20)
+            updateNumericInput(session, "annotation.ay", value = -20)
+            updateNumericInput(session, "annotation.size", value = 10)
+            updateCheckboxInput(session, "annotation.showarrow", value = TRUE)
+            colourpicker::updateColourInput(session, "annotation.arrowcolor", value = "black")
+            updateNumericInput(session, "annotation.arrowhead", value = 2)
+            updateNumericInput(session, "annotation.arrowwidth", value = 1.5)
+
+            # Legend/Scale
+            updateCheckboxInput(session, "legend.show", value = TRUE)
+            updateTextInput(session, "legend.color.title", value = "make")
+            updateNumericInput(session, "legend.color.size", value = 5)
+            updateNumericInput(session, "legend.shape.size", value = 5)
+            updateTextInput(session, "legend.color.breaks", value = "")
+            updateNumericInput(session, "min.value", value = NA)
+            updateNumericInput(session, "max.value", value = NA)
+
+            # Trajectory
+            updateSelectInput(session, "trajectory.group.by", selected = "")
+            updateTextInput(session, "add.trajectory.by.groups", value = "")
+            updateNumericInput(session, "trajectory.arrow.size", value = 0.15)
+
+            # Plotly
+            updateCheckboxInput(session, "webgl", value = TRUE)
+            updateSelectInput(session, "download.format", selected = "svg")
+            colourpicker::updateColourInput(session, "shape.fill", value = "rgba(0, 0, 0, 0)")
+            colourpicker::updateColourInput(session, "shape.line.color", value = "black")
+            updateNumericInput(session, "shape.line.width", value = 4)
+            updateSelectInput(session, "shape.linetype", selected = "solid")
+            updateNumericInput(session, "shape.opacity", value = 1)
+
+            # Extras
+            updateCheckboxInput(session, "do.ellipse", value = FALSE)
+            updateCheckboxInput(session, "do.contour", value = FALSE)
+            updateCheckboxInput(session, "show.grid.lines", value = TRUE)
+            updateSelectizeInput(session, "hover.data", selected = "")
+            updateNumericInput(session, "hover.round.digits", value = 5)
+
+            # Lines
+            updateTextInput(session, "hline.intercepts", value = "")
+            updateTextInput(session, "hline.colors", value = "#000000")
+            updateTextInput(session, "hline.widths", value = "1")
+            updateTextInput(session, "hline.linetypes", value = "dashed")
+            updateTextInput(session, "hline.opacities", value = "1")
+            updateTextInput(session, "vline.intercepts", value = "")
+            updateTextInput(session, "vline.colors", value = "#000000")
+            updateTextInput(session, "vline.widths", value = "1")
+            updateTextInput(session, "vline.linetypes", value = "dashed")
+            updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
+            updateTextInput(session, "abline.intercepts", value = "")
+            updateTextInput(session, "abline.colors", value = "#000000")
+            updateTextInput(session, "abline.widths", value = "1")
+            updateTextInput(session, "abline.linetypes", value = "dashed")
+            updateTextInput(session, "abline.opacities", value = "1")
+            shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
+            updateNumericInput(session, "line.best.smoothness", value = 1)
+            colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
+            shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
+
+            # Axes
+            updateCheckboxInput(session, "axis.showline", value = TRUE)
+            updateCheckboxInput(session, "axis.mirror", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
+            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
+            updateNumericInput(session, "axis.linewidth", value = 0.5)
+            updateNumericInput(session, "axis.tickfont.size", value = 12)
+            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
+            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
+            updateNumericInput(session, "axis.tickangle.x", value = 0)
+            updateNumericInput(session, "axis.tickangle.y", value = 0)
+            updateSelectInput(session, "axis.ticks", selected = "outside")
+            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
+            updateNumericInput(session, "axis.ticklen", value = 5)
+            updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
         output$scatterPlot <- renderPlotly({
