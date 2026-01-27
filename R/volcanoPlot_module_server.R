@@ -1,6 +1,6 @@
 #' Server logic for volcanoPlot module
 #'
-#' This module builds upon the [VizModules::dittoViz_ScatterPlotServer()] to provide a volcano plot
+#' This module builds upon the [VizModules::dittoViz_scatterPlotServer()] to provide a volcano plot
 #' with interactive significance and fold-change thresholding.
 #'
 #' @param id The ID for the Shiny module.
@@ -71,5 +71,5 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
         hide.inputs <- c(hide.inputs, "color.panel")
     }
 
-    dittoViz_ScatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors)
+    dittoViz_scatterPlotServer(id = id, data = res$data, hide.inputs = hide.inputs, hide.tabs = hide.tabs, manual.colors = res$colors)
 }
