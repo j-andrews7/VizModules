@@ -16,7 +16,7 @@
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jared Andrews, Jacob Martin
 dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
@@ -183,7 +183,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateSelectInput(session, "split.nrow", selected = "")
 
             # Axes
-            updateMaterialSwitch(session, "x.labels.rotate", value = TRUE)
             updateSelectInput(session, "font.type", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
@@ -323,7 +322,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 color.panel = if (!is.null(color.panel.arg)) color.panel.arg else dittoViz::dittoColors(),
                 min = isolate_fn(input$y.min),
                 max = isolate_fn(input$y.max),
-                x.labels.rotate = isolate_fn(input$x.labels.rotate),
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,

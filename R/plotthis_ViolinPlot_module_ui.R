@@ -48,60 +48,60 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
-            selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = "", choices = c(char.choices, "")),
+            selectInput(ns("x.data"), "Select X data", choices = char.choices, selected = char.choices[2]),
+            selectInput(ns("y.data"), "Select Y data", choices = num.choices, selected = num.choices[2]),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c(char.choices, "")),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c(
+            shiny::selectInput(ns("sort_x"), "Sort X axis by", c(
                 "none", "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
             ), selected = "none"),
             
-            materialSwitch(ns("stack"), "Stack Plot: ", value = FALSE, onLabel = "Stacked", offLabel = "Not Stacked", status = "success"),
-            numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
-            numericInput(ns("aspect.ratio"), "Aspect Ratio:", value = 1, min = 0, max = 100),
-            materialSwitch(ns("add.points"), "Add Jitter Points: ", value = FALSE, onLabel = "Points", offLabel = "No Points", status = "success"),
-            numericInput(ns("pt.size"), "Point Size:", max = 100, min = 0.1, value = 1),
-            numericInput(ns("pt.alpha"), "Point Alpha:", min = 0, max = 1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.5),
-            numericInput(ns("jitter.height"), "Jitter Height: ", min = 0, max = 1, value = 0),
+            materialSwitch(ns("stack"), "Stack Plot", value = FALSE, status = "success"),
+            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -1000, max = 1000),
+            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -1000, max = 1000),
+            numericInput(ns("aspect.ratio"), "Aspect Ratio", value = 1, min = 0, max = 100),
+            materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
+            numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
+            numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
+            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.5),
+            numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1, value = 0),
             colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#000000"),
-            materialSwitch(ns("add.box"), "Add Box: ", value = FALSE, onLabel = "Box", offLabel = "No Box", status = "success"),
+            materialSwitch(ns("add.box"), "Add Box", value = FALSE, status = "success"),
             colourpicker::colourInput(ns("box.color"), "Box colour", value = "#000000"),
-            numericInput(ns("box.width"), "Box Width:", min = 0, max = 1, value = 0.1),
-            numericInput(ns("box.ptsize"), "Box Point Size:", min = 0, max = 10, value = 2.5)
+            numericInput(ns("box.width"), "Box Width", min = 0, max = 1, value = 0.1),
+            numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10, value = 2.5)
         ),
         "Extras" = tagList(
-            numericInput(ns("add.line"), "Add Y interception line:", value = NA, min = min.y, max = max.y),
-            colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour:", value = "#000000"),
-            numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0.1, max = 10),
-            numericInput(ns("line.type"), "Line type: ", value = 1, min = 1, max = 40),
-            textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
-            colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
-            numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
+            numericInput(ns("add.line"), "Add Y interception line", value = NA, min = min.y, max = max.y),
+            colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour", value = "#000000"),
+            numericInput(ns("line.width"), "Line width", value = 0.6, min = 0.1, max = 10),
+            numericInput(ns("line.type"), "Line type", value = 1, min = 1, max = 40),
+            textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
+            colourpicker::colourInput(ns("highlight.colour"), "Highlight colour", value = "#000000"),
+            numericInput(ns("highlight.size"), "Highlight size", value = 1, min = 0),
             numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1)
         ),
         "Stats" = tagList(
-            selectInput(ns("add.stat"), "Add Stats:", selected = "", choices = c("", "mean", "sd", "median", "var")),
-            colourpicker::colourInput(ns("stat.color"), "Stats Colour:", value = "#000000"),
-            numericInput(ns("stat.size"), "Stat Size:", value = 1, min = 0, max = 10),
-            numericInput(ns("stat.stroke"), "Stat Stroke:", value = 1, min = 0, max = 10),
-            numericInput(ns("stat.shape"), "Stat Shape:", value = 25, min = 0, max = 100)
+            selectInput(ns("add.stat"), "Add Stats", selected = "", choices = c("", "mean", "sd", "median", "var")),
+            colourpicker::colourInput(ns("stat.color"), "Stats Colour", value = "#000000"),
+            numericInput(ns("stat.size"), "Stat Size", value = 1, min = 0, max = 10),
+            numericInput(ns("stat.stroke"), "Stat Stroke", value = 1, min = 0, max = 10),
+            numericInput(ns("stat.shape"), "Stat Shape", value = 25, min = 0, max = 100)
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c(char.choices, "")),
-            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success")
+            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(char.choices, "")),
+            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
+            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success")
         ),
         "Axes" = tagList(
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000"),
-            materialSwitch(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped", status = "success"),
-            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
+            colourpicker::colourInput(ns("text.colour"), "Axis title colour", value = "#000000"),
+            materialSwitch(ns("flip"), "Flip horizontal", value = FALSE, status = "success"),
+            selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
@@ -285,7 +285,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

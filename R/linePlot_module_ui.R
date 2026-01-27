@@ -88,9 +88,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         "Axes" = tagList(
             materialSwitch(ns("flip.y"), "Flip Y axis:", value = FALSE, status = "success"),
             materialSwitch(ns("flip.x"), "Flip X axis:", value = FALSE, status = "success"),
-            materialSwitch(ns("order.by"), "Order plot by:",
-            value = FALSE, offLabel = "x axis", onLabel = "y axis"
-            , status = "success"),
+            materialSwitch(ns("order.by"), "Order by Y:", value = FALSE, status = "success"),
 
             selectInput(ns("y.adjustment"), "Adjust the y axis:",
             selected = "", choices = c("", "log2", "log", "log10",
@@ -295,7 +293,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

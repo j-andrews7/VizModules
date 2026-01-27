@@ -25,7 +25,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jared Andrews, Jacob Martin
 #' @seealso [dittoViz::yPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotServer()], [VizModules::dittoViz_yPlotApp()]
 #' @examples
@@ -66,7 +66,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Adjustments" = tagList(
             numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
             numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
-            materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE, onLabel = "On", offLabel = "Off", status = "success"),
+            materialSwitch(ns("do.raster"), "Rasterize jitter: ", value = FALSE, status = "success"),
             numericInput(ns("raster.dpi"), "Raster DPI:", value = 300, min = 100, max = 1200)
         ),
         "Jitter" = tagList(
@@ -76,16 +76,16 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size:",
                 value = 5, min = 0, max = 20),
             materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend: ",
-                value = TRUE, onLabel = "Show", offLabel = "Hide", status = "success"),
+                value = TRUE, status = "success"),
             numericInput(ns("jitter.position.dodge"), "Jitter Position Dodge:", value = 1, min = 0, max = 5)
         ),
         "Box" = tagList(
             numericInput(ns("boxplot.width"), "Boxplot Width:", min = 0, max = 2, value = 0.2),
             colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
             materialSwitch(ns("boxplot.show.outliers"), "Show Outliers: ",
-                value = FALSE, onLabel = "Show", offLabel = "Hide", status = "success"),
+                value = FALSE, status = "success"),
             numericInput(ns("boxplot.outlier.size"), "Outlier Size:", value = 1.5, min = 0, max = 10),
-            materialSwitch(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, onLabel = "Fill", offLabel = "No Fill", status = "success"),
+            materialSwitch(ns("boxplot.fill"), "Fill Boxplot: ", value = TRUE, status = "success"),
             numericInput(ns("boxplot.position.dodge"), "Boxplot Position Dodge:", value = 1, min = 0, max = 5),
             numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight:", value = 1, min = 0, max = 5)
         ),
@@ -129,8 +129,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             selectInput(ns("split.nrow"), "Split number of rows:", selected = 4, choices = c("", 1:10))
         ),
         "Axes" = tagList(
-            materialSwitch(ns("x.labels.rotate"), "Rotate X labels: ",
-                value = TRUE, onLabel = "Rotate", offLabel = "Don't Rotate", status = "success"),
+
             selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
                 "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                 "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
@@ -317,7 +316,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         tack = tagList(
             fluidRow(
                 column(3, materialSwitch(ns("auto.update"), "Auto Update",
-                    value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"),
+                    value = FALSE, size = "mini", status = "success"),
                     style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"),
                     style = "margin-top: 25px;"),

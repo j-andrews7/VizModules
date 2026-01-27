@@ -31,42 +31,41 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     inputs <- list(
       "Data" = tagList(
-      selectInput(ns("x.data"), "X values:",
+      selectInput(ns("x.data"), "X values",
         selected = num.choices[2], choices = num.choices
       ),
-      selectInput(ns("y.data"), "Y values:",
+      selectInput(ns("y.data"), "Y values",
         selected = char.choices[2], choices = char.choices
       ),
       # Changed from group.by to fill.by
-      selectInput(ns("fill.by"), "Fill by:",
+      selectInput(ns("fill.by"), "Fill by",
         selected = char.choices[2], choices = char.choices
       )),
 
 
     "Facet" = tagList(
-        selectInput(ns("facet.by"), "Facet by:",
+        selectInput(ns("facet.by"), "Facet by",
         selected = "", choices = c(char.choices, "")
         ),
-        selectInput(ns("facet.scale"), "Facet scale:",
+        selectInput(ns("facet.scale"), "Facet scale",
         selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
         ),
-        numericInput(ns("facet.ncol"), "Facet number of columns:",
+        numericInput(ns("facet.ncol"), "Facet number of columns",
         value = NULL, min = 0, max = 20
         ),
-        numericInput(ns("facet.nrow"), "Facet number of rows:",
+        numericInput(ns("facet.nrow"), "Facet number of rows",
         value = NULL, min = 0, max = 20
         ),
-        materialSwitch(ns("facet.by.row"), "Facet by row:",
-        value = TRUE, offLabel = "Off", onLabel = "On"
-        , status = "success"),
-        selectInput(ns("split.by"), "Split by:",
+        materialSwitch(ns("facet.by.row"), "Facet by row",
+        value = TRUE, status = "success"),
+        selectInput(ns("split.by"), "Split by",
         selected = "", choices = c(char.choices, "")
         )
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        selectInput(ns("theme"), "Theme:",
+        selectInput(ns("theme"), "Theme",
         selected = "theme_this",
         choices = c(
             "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
@@ -74,25 +73,25 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             "theme_this", "theme_blank"
         )
         ),
-        selectInput(ns("alpha.by"), "Alpha by:", selected = "", choices = c("", num.choices)),
-        materialSwitch(ns("alpha.reverse"), "Alpha reverse:", value = FALSE, status = "success"),
-        textInput(ns("alpha.name"), "Alpha name:", value = ""),
-        numericInput(ns("bar.height"), "Bar height:", value = 0.9, min = 0),
-        numericInput(ns("line.height"), "Line height:", value = 0.5, min = 0),
-        numericInput(ns("max.charwidth"), "Max charwidth:", value = 80, min = 0)
+        selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
+        materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
+        textInput(ns("alpha.name"), "Alpha name", value = ""),
+        numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+        numericInput(ns("line.height"), "Line height", value = 0.5, min = 0),
+        numericInput(ns("max.charwidth"), "Max charwidth", value = 80, min = 0)
     ),
 
 
     "Axes" = tagList(
         
-        materialSwitch(ns("flip"), "Flip plot:",
-        value = FALSE, onLabel = "On", offLabel = "Off", status = "success"),
+        materialSwitch(ns("flip"), "Flip horizontal",
+        value = FALSE, status = "success"),
         # axis range
-        numericInput(ns("x.max"), "Max y value:", value = max.x),
-        numericInput(ns("x.min"), "Min y value:", value = min.x),
+        numericInput(ns("x.max"), "Max y value", value = max.x),
+        numericInput(ns("x.min"), "Min y value", value = min.x),
 
         # axis/title text settings
-        selectInput(ns("font.type"), "Font:",
+        selectInput(ns("font.type"), "Font",
         selected = "Arial",
         choices = c(
             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
@@ -316,7 +315,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

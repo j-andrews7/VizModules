@@ -45,5 +45,5 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 \code{\link[=dittoViz_yPlotOutputUI]{dittoViz_yPlotOutputUI()}}, \code{\link[=dittoViz_yPlotServer]{dittoViz_yPlotServer()}}, \code{\link[=dittoViz_yPlotApp]{dittoViz_yPlotApp()}}
 }
 \author{
-Jared Andrews
+Jared Andrews, Jacob Martin
 }

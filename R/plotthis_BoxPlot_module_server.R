@@ -167,13 +167,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             colourpicker::updateColourInput(session, "trend.colour", value = "#000000")
             updateNumericInput(session, "trend.line.width", value = 1)
 
-            # Stats
-            updateSelectInput(session, "add.stat", selected = "mean")
-            colourpicker::updateColourInput(session, "stat.color", value = "#000000")
-            updateNumericInput(session, "stat.size", value = 1)
-            updateNumericInput(session, "stat.sroke", value = 1)
-            updateNumericInput(session, "stat.shape", value = 25)
-
             # Facet
             updateSelectInput(session, "facet.by", selected = "NULL")
             updateSelectInput(session, "facet.scale", selected = "fixed")
@@ -248,11 +241,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
-            #Stats Default: 
-            add.stat <- NULL
-            if (!isolate_fn(input$add.stat) == ""){
-                add.stat <- isolate_fn(input$add.stat)
-            }
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours)
@@ -280,12 +268,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 jitter_height = isolate_fn(input$jitter.height),
                 pt_color = isolate_fn(input$pt.color),
                 alpha = isolate_fn(input$alpha),
-                add_stat = add.stat,
-                stat_color = isolate_fn(input$stat.color),
-                stat_size = isolate_fn(input$stat.size),
-                stat_stroke = isolate_fn(input$stat.stroke),
-                stat_shape = isolate_fn(input$stat.shape),
-                stat_name = isolate_fn(input$add.stat),
                 palette = default_palette_name,
                 palcolor = palcolor_arg,
                 add_line = isolate_fn(input$add.line),

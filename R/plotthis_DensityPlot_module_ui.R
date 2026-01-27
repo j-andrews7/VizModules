@@ -12,7 +12,7 @@
 #'
 #' @return A \code{tagList} containing the organized UI elements.
 #'
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' 
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
@@ -44,13 +44,13 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success"),
+            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, status = "success"),
             selectInput(ns("split.by"), "Split by:", selected = "", choices = c("", char.choices))
         ),
 
         "Aesthetics" = tagList(
             sliderInput(ns("plot.alpha"), "Plot alpha", min = 0, max = 1, value = 0.5),
-            selectInput(ns("theme"), "Plot theme:", selected = "theme_this",
+            selectInput(ns("theme"), "Plot theme", selected = "theme_this",
             choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
                 "theme_dark", "theme_minimal", "theme_classic", "theme_void",
@@ -58,27 +58,27 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             )
             ),
             uiOutput(ns("palette.selection")),
-            selectInput(ns("position"), "Position:", selected = "identity",
+            selectInput(ns("position"), "Position", selected = "identity",
             choices = c("identity", "stack", "dodge", "fill")
             )
         ),
 
-        "Extras" = tagList(
+        "Rug" = tagList(
             materialSwitch(ns("add.bars"), "Add rug plot", value = FALSE, status = "success"),
-            numericInput(ns("bar.height"), "Rug bar height:", value = 0.04),
+            numericInput(ns("bar.height"), "Rug bar height", value = 0.04),
             sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("bar.width"), "Rug bar width:", value = 1)
+            numericInput(ns("bar.width"), "Rug bar width", value = 1)
         ),
 
 
         "Axes" = tagList(
-            materialSwitch(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped", status = "success"),
-            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
+            materialSwitch(ns("flip"), "Flip the plot", value = FALSE, status = "success"),
+            selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
             )),
-            colourInput(ns("text.colour"), "Title text colour:", value = "#000000"),
+            colourInput(ns("text.colour"), "Title text colour", value = "#000000"),
             checkboxInput(ns("axis.showline"), "Show axis lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
@@ -258,7 +258,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

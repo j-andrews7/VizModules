@@ -593,9 +593,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             hr(),
             materialSwitch(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
-                offLabel = "Off",
-                onLabel = "On"
-            , status = "success"),
+                status = "success"),
             numericInput(ns("line.best.smoothness"), "Smoothness of line of best fit:",
                 value = 1,
                 min = 0,
@@ -606,9 +604,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ),
             materialSwitch(ns("linear.model"), "Linear model line",
                 value = FALSE,
-                onLabel = "On",
-                offLabel = "Off"
-            , status = "success")
+                status = "success")
         ),
         "Axes" = tagList(
             checkboxInput(ns("axis.showline"), "Show axis lines",
@@ -735,7 +731,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

@@ -26,5 +26,5 @@ The \code{moduleServer} function for the yPlot module.
 Server logic for yPlot module
 }
 \author{
-Jared Andrews
+Jared Andrews, Jacob Martin
 }

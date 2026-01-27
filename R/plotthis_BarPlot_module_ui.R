@@ -75,8 +75,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         value = NULL, min = 0, max = 20
         ),
         materialSwitch(ns("facet.by.row"), "Facet by row:",
-        value = TRUE, offLabel = "Off", onLabel = "On"
-        , status = "success"),
+        value = TRUE, status = "success"),
         selectInput(ns("split.by"), "Split by:",
         selected = "", choices = c(char.choices, "")
         )
@@ -84,7 +83,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        selectInput(ns("theme"), "Theme:",
+        selectInput(ns("theme"), "Theme",
         selected = "theme_this",
         choices = c(
             "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
@@ -92,35 +91,34 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             "theme_this", "theme_blank"
         )
         ),
-        numericInput(ns("alpha"), "Alpha:", value = 1, min = 0, max = 1),
-        numericInput(ns("width"), "Width:", value = NA),
-        textInput(ns("expand"), "Expand:", value = "",
+        numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
+        numericInput(ns("width"), "Width", value = NA),
+        textInput(ns("expand"), "Expand", value = "",
         placeholder = "e.g. 1,2,3,4"
         )
     ),
 
     "Extras" = tagList(
-        numericInput(ns("add.line"), "Add line:", value = NULL),
+        numericInput(ns("add.line"), "Add line", value = NULL),
         colourpicker::colourInput(ns("line.colour"), "Line colour:",
         value = "#000000"
         ),
-        numericInput(ns("line.type"), "Line type:", value = 1, min = 0),
-        numericInput(ns("line.width"), "Line width:", value = 0.6, min = 0),
-        textInput(ns("line.name"), "Line name:", value = "",
+        numericInput(ns("line.type"), "Line type", value = 1, min = 0),
+        numericInput(ns("line.width"), "Line width", value = 0.6, min = 0),
+        textInput(ns("line.name"), "Line name", value = "",
         placeholder = "Line Name"
         )
     ),
 
     "Axes" = tagList(
         
-        materialSwitch(ns("flip"), "Flip plot:",
-        value = FALSE, onLabel = "On", offLabel = "Off", status = "success"),
+        materialSwitch(ns("flip"), "Flip horizontal", value = FALSE, status = "success"),
         # axis range
-        numericInput(ns("y.max"), "Max y value:", value = max.y),
-        numericInput(ns("y.min"), "Min y value:", value = min.y),
+        numericInput(ns("y.max"), "Max y value", value = max.y),
+        numericInput(ns("y.min"), "Min y value", value = min.y),
 
         # axis/title text settings
-        selectInput(ns("font.type"), "Font:",
+        selectInput(ns("font.type"), "Font",
         selected = "Arial",
         choices = c(
             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
@@ -135,7 +133,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         numericInput(ns("title.font.size"), "Title font size",
         value = 28, min = 1
         ),
-        colourpicker::colourInput(ns("text.colour"), "Label colour:",
+        colourpicker::colourInput(ns("text.colour"), "Label colour",
         value = "#000000"
         ),
 
@@ -344,7 +342,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

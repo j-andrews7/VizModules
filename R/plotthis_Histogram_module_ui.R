@@ -34,31 +34,31 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X input:", selected = names(data)[1], choices = names(data)),
-            selectInput(ns("group.by"), "Group by:", selected = "", choices = c("", char.choices)),
+            selectInput(ns("x.data"), "X input", selected = names(data)[1], choices = names(data)),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", char.choices)),
             textInput(ns("group.by.name"), "Group by legend name", value = "")
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c("", char.choices)),
-            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, offLabel = "Off", onLabel = "On", status = "success"),
-            selectInput(ns("split.by"), "Split by:", selected = "", choices = c("", char.choices))
+            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c("", char.choices)),
+            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
+            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success"),
+            selectInput(ns("split.by"), "Split by", selected = "", choices = c("", char.choices))
         ),
 
         "Aesthetics" = tagList(
-            numericInput(ns("bins"), "Number of bins:", value = NA, min = 0),
-            numericInput(ns("bin.width"), "Bin width:", value = NA, min = 0),
+            numericInput(ns("bins"), "Number of bins", value = NA, min = 0),
+            numericInput(ns("bin.width"), "Bin width", value = NA, min = 0),
             materialSwitch(ns("use.trend"), "Trend line only", value = FALSE, status = "success"),
             materialSwitch(ns("trend.skip.zero"), "Skip zero values", value = FALSE, status = "success"),
             materialSwitch(ns("add.trend"), "Add trend to histogram", value = FALSE, status = "success"),
             sliderInput(ns("trend.alpha"), "Trend line alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("trend.linewidth"), "Trend line width:", value = 0.8, min = 0),
-            numericInput(ns("trend.pt.size"), "Trend point size:", value = 1.5),
+            numericInput(ns("trend.linewidth"), "Trend line width", value = 0.8, min = 0),
+            numericInput(ns("trend.pt.size"), "Trend point size", value = 1.5),
             sliderInput(ns("plot.alpha"), "Plot alpha", min = 0, max = 1, value = 1),
-            selectInput(ns("theme"), "Plot theme:", selected = "theme_this",
+            selectInput(ns("theme"), "Plot theme", selected = "theme_this",
             choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
                 "theme_dark", "theme_minimal", "theme_classic", "theme_void",
@@ -66,22 +66,22 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
             )
             ),
             uiOutput(ns("palette.selection")),
-            selectInput(ns("position"), "Postion:", selected = "identity",
+            selectInput(ns("position"), "Position", selected = "identity",
             choices = c("identity", "stack", "dodge", "fill")
             )
         ),
 
         "Extras" = tagList(
             materialSwitch(ns("add.bars"), "Add rug plot", value = FALSE, status = "success"),
-            numericInput(ns("bar.height"), "Rug bar height:", value = 0.05),
+            numericInput(ns("bar.height"), "Rug bar height", value = 0.05),
             sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("bar.width"), "Rug bar width:", value = 1)
+            numericInput(ns("bar.width"), "Rug bar width", value = 1)
         ),
 
 
         "Axes" = tagList(
-            materialSwitch(ns("flip"), "Flip the plot: ", value = FALSE, onLabel = "Flipped", offLabel = "Not Flipped", status = "success"),
-            selectInput(ns("font.type"), "Font type:", selected = "Arial", choices = c(
+            materialSwitch(ns("flip"), "Flip horizontal", value = FALSE, status = "success"),
+            selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
@@ -265,7 +265,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
         title = title,
         tack = tagList(
             fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, size = "mini", onLabel = "ON", offLabel = "OFF", status = "success"), style = "margin-top: 25px;"),
+                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
                 column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))

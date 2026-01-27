@@ -31,5 +31,5 @@ Generates the user interface for density plot configuration, including data sele
 faceting options, aesthetic controls (alpha, position), and detailed axis styling.
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
