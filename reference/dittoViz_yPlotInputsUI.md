@@ -73,44 +73,44 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="7500">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="1043">
 #>     <li class="active">
-#>       <a href="#tab-7500-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1043-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-1043-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-1043-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-1043-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-1043-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-1043-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-1043-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1043-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1043-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7500-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1043-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7500">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7500-1">
+#>   <div class="tab-content" data-tabsetid="1043">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1043-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-var-label" for="yPlot-var">Select Y data (var):</label>
+#>             <label class="control-label" id="yPlot-var-label" for="yPlot-var">Y data (var)</label>
 #>             <div>
 #>               <select id="yPlot-var" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
@@ -130,7 +130,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by">Group by:</label>
+#>             <label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by">Group by</label>
 #>             <div>
 #>               <select id="yPlot-group.by" class="shiny-input-select"><option value=""></option></select>
 #>               <script type="application/json" data-for="yPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -141,7 +141,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by">Color by:</label>
+#>             <label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by">Color by</label>
 #>             <div>
 #>               <select id="yPlot-color.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option></select>
@@ -151,7 +151,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by">Shape by:</label>
+#>             <label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by">Shape by</label>
 #>             <div>
 #>               <select id="yPlot-shape.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option></select>
@@ -166,13 +166,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-7500-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-1043-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plot types to show:</label>
+#>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plots to show:</label>
 #>             <div>
-#>               <select id="yPlot-plots" class="shiny-input-select" multiple="multiple"><option value="vlnplot" selected>Violin</option>
+#>               <select id="yPlot-plots" class="shiny-input-select" multiple="multiple"><option value="vlnplot">Violin</option>
 #> <option value="boxplot" selected>Box</option>
 #> <option value="jitter" selected>Jitter</option>
 #> <option value="ridgeplot">Ridge</option></select>
@@ -181,21 +181,21 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <span class="help-block">Order matters: first selected will be in back, last in front</span>
+#>           <span class="help-block">Order not currently respected</span>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7500-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-1043-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-y.max-label" for="yPlot-y.max">Max Value of Y Axis:</label>
+#>             <label class="control-label" id="yPlot-y.max-label" for="yPlot-y.max">Y Axis Max</label>
 #>             <input id="yPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-y.min-label" for="yPlot-y.min">Min Value of Y Axis:</label>
+#>             <label class="control-label" id="yPlot-y.min-label" for="yPlot-y.min">Y Axis Min</label>
 #>             <input id="yPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
 #>         </div>
@@ -204,7 +204,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="yPlot-do.raster" style="padding-right: 10px;">Rasterize jitter: </label>
+#>               <label for="yPlot-do.raster" style="padding-right: 10px;">Rasterize Jitter</label>
 #>               <input id="yPlot-do.raster" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="yPlot-do.raster"></label>
 #>             </div>
@@ -212,24 +212,24 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-raster.dpi-label" for="yPlot-raster.dpi">Raster DPI:</label>
-#>             <input id="yPlot-raster.dpi" type="number" class="shiny-input-number form-control" value="300" data-update-on="change" min="100" max="1200"/>
+#>             <label class="control-label" id="yPlot-raster.dpi-label" for="yPlot-raster.dpi">Raster DPI</label>
+#>             <input id="yPlot-raster.dpi" type="number" class="shiny-input-number form-control" value="600" data-update-on="change" min="100" max="1200"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-7500-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-1043-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-jitter.size-label" for="yPlot-jitter.size">Jitter Point Size:</label>
+#>             <label class="control-label" id="yPlot-jitter.size-label" for="yPlot-jitter.size">Jitter Point Size</label>
 #>             <input id="yPlot-jitter.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="10"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-jitter.width-label" for="yPlot-jitter.width">Jitter Width:</label>
-#>             <input id="yPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1"/>
+#>             <label class="control-label" id="yPlot-jitter.width-label" for="yPlot-jitter.width">Jitter Width</label>
+#>             <input id="yPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1" step="0.05"/>
 #>           </div>
 #>         </div>
 #>       </div>
@@ -242,7 +242,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-jitter.shape.legend.size-label" for="yPlot-jitter.shape.legend.size">Shape Legend Size:</label>
+#>             <label class="control-label" id="yPlot-jitter.shape.legend.size-label" for="yPlot-jitter.shape.legend.size">Shape Legend Size</label>
 #>             <input id="yPlot-jitter.shape.legend.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>         </div>
@@ -251,21 +251,15 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="yPlot-jitter.shape.legend.show" style="padding-right: 10px;">Show Shape Legend: </label>
+#>               <label for="yPlot-jitter.shape.legend.show" style="padding-right: 10px;">Show Shape Legend</label>
 #>               <input id="yPlot-jitter.shape.legend.show" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="yPlot-jitter.shape.legend.show"></label>
 #>             </div>
 #>           </div>
 #>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-jitter.position.dodge-label" for="yPlot-jitter.position.dodge">Jitter Position Dodge:</label>
-#>             <input id="yPlot-jitter.position.dodge" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="1"/>
-#>           </div>
-#>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-7500-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-1043-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -276,7 +270,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="yPlot-boxplot.show.outliers" style="padding-right: 10px;">Show Outliers: </label>
+#>               <label for="yPlot-boxplot.show.outliers" style="padding-right: 10px;">Show Outliers</label>
 #>               <input id="yPlot-boxplot.show.outliers" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="yPlot-boxplot.show.outliers"></label>
 #>             </div>
@@ -286,14 +280,14 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-boxplot.outlier.size-label" for="yPlot-boxplot.outlier.size">Outlier Size:</label>
+#>             <label class="control-label" id="yPlot-boxplot.outlier.size-label" for="yPlot-boxplot.outlier.size">Outlier Size</label>
 #>             <input id="yPlot-boxplot.outlier.size" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change" min="0" max="10"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="yPlot-boxplot.fill" style="padding-right: 10px;">Fill Boxplot: </label>
+#>               <label for="yPlot-boxplot.fill" style="padding-right: 10px;">Fill Boxplot</label>
 #>               <input id="yPlot-boxplot.fill" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="yPlot-boxplot.fill"></label>
 #>             </div>
@@ -303,37 +297,37 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-boxplot.position.dodge-label" for="yPlot-boxplot.position.dodge">Boxplot Position Dodge:</label>
-#>             <input id="yPlot-boxplot.position.dodge" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1"/>
+#>             <label class="control-label" id="yPlot-boxplot.lineweight-label" for="yPlot-boxplot.lineweight">Boxplot Line Weight</label>
+#>             <input id="yPlot-boxplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-boxplot.lineweight-label" for="yPlot-boxplot.lineweight">Boxplot Line Weight:</label>
-#>             <input id="yPlot-boxplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/>
+#>             <label class="control-label" id="yPlot-boxgap-label" for="yPlot-boxgap">Boxplot Position Dodge</label>
+#>             <input id="yPlot-boxgap" type="number" class="shiny-input-number form-control" value="0.3" data-update-on="change" min="0" max="1" step="0.05"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="yPlot-boxgroupgap-label" for="yPlot-boxgroupgap">Boxplot Group Dodge</label>
+#>             <input id="yPlot-boxgroupgap" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1" step="0.05"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-7500-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-1043-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-vlnplot.lineweight-label" for="yPlot-vlnplot.lineweight">Violin Line Weight:</label>
-#>             <input id="yPlot-vlnplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/>
+#>             <label class="control-label" id="yPlot-vlnplot.lineweight-label" for="yPlot-vlnplot.lineweight">Violin Line Weight</label>
+#>             <input id="yPlot-vlnplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-vlnplot.width-label" for="yPlot-vlnplot.width">Violin Width:</label>
-#>             <input id="yPlot-vlnplot.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-vlnplot.scaling-label" for="yPlot-vlnplot.scaling">Violin Scaling:</label>
+#>             <label class="control-label" id="yPlot-vlnplot.scaling-label" for="yPlot-vlnplot.scaling">Violin Scaling</label>
 #>             <div>
 #>               <select id="yPlot-vlnplot.scaling" class="shiny-input-select"><option value="area" selected>area</option>
 #> <option value="count">count</option>
@@ -342,25 +336,27 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-vlnplot.quantiles-label" for="yPlot-vlnplot.quantiles">Violin Quantiles (0-1):</label>
+#>             <label class="control-label" id="yPlot-vlnplot.quantiles-label" for="yPlot-vlnplot.quantiles">Violin Quantiles (0-1)</label>
 #>             <input id="yPlot-vlnplot.quantiles" type="text" class="shiny-input-text form-control" value="" placeholder="e.g., 0.25, 0.5, 0.75" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-7500-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-1043-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.lineweight-label" for="yPlot-ridgeplot.lineweight">Ridge Line Weight:</label>
-#>             <input id="yPlot-ridgeplot.lineweight" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="5"/>
+#>             <label class="control-label" id="yPlot-ridgeplot.lineweight-label" for="yPlot-ridgeplot.lineweight">Ridge Line Weight</label>
+#>             <input id="yPlot-ridgeplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.scale-label" for="yPlot-ridgeplot.scale">Ridge Scale (overlap):</label>
+#>             <label class="control-label" id="yPlot-ridgeplot.scale-label" for="yPlot-ridgeplot.scale">Ridge Scale (overlap)</label>
 #>             <input id="yPlot-ridgeplot.scale" type="number" class="shiny-input-number form-control" value="1.25" data-update-on="change" min="0.5" max="3"/>
 #>           </div>
 #>         </div>
@@ -368,13 +364,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.ymax.expansion-label" for="yPlot-ridgeplot.ymax.expansion">Ridge Y-max Expansion:</label>
+#>             <label class="control-label" id="yPlot-ridgeplot.ymax.expansion-label" for="yPlot-ridgeplot.ymax.expansion">Ridge Y-max Expansion</label>
 #>             <input id="yPlot-ridgeplot.ymax.expansion" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.shape-label" for="yPlot-ridgeplot.shape">Ridge Shape:</label>
+#>             <label class="control-label" id="yPlot-ridgeplot.shape-label" for="yPlot-ridgeplot.shape">Ridge Shape</label>
 #>             <div>
 #>               <select id="yPlot-ridgeplot.shape" class="shiny-input-select"><option value="smooth" selected>smooth</option>
 #> <option value="hist">hist</option></select>
@@ -386,23 +382,23 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.bins-label" for="yPlot-ridgeplot.bins">Ridge Bins (for hist):</label>
+#>             <label class="control-label" id="yPlot-ridgeplot.bins-label" for="yPlot-ridgeplot.bins">Ridge Bins</label>
 #>             <input id="yPlot-ridgeplot.bins" type="number" class="shiny-input-number form-control" value="30" data-update-on="change" min="5" max="100"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-ridgeplot.binwidth-label" for="yPlot-ridgeplot.binwidth">Ridge Binwidth:</label>
+#>             <label class="control-label" id="yPlot-ridgeplot.binwidth-label" for="yPlot-ridgeplot.binwidth">Ridge Binwidth</label>
 #>             <input id="yPlot-ridgeplot.binwidth" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7500-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1043-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-split.by-label" for="yPlot-split.by">Split by (facet):</label>
+#>             <label class="control-label" id="yPlot-split.by-label" for="yPlot-split.by">Split by (facet)</label>
 #>             <div>
 #>               <select id="yPlot-split.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option></select>
@@ -412,7 +408,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-split.adjust-label" for="yPlot-split.adjust">Facet scaling: </label>
+#>             <label class="control-label" id="yPlot-split.adjust-label" for="yPlot-split.adjust">Facet Scaling</label>
 #>             <div>
 #>               <select id="yPlot-split.adjust" class="shiny-input-select"><option value="fixed">fixed</option>
 #> <option value="free" selected>free</option>
@@ -426,7 +422,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-split.ncol-label" for="yPlot-split.ncol">Split number of columns:</label>
+#>             <label class="control-label" id="yPlot-split.ncol-label" for="yPlot-split.ncol">Number of Columns</label>
 #>             <div>
 #>               <select id="yPlot-split.ncol" class="shiny-input-select"><option value=""></option>
 #> <option value="1">1</option>
@@ -445,7 +441,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-split.nrow-label" for="yPlot-split.nrow">Split number of rows:</label>
+#>             <label class="control-label" id="yPlot-split.nrow-label" for="yPlot-split.nrow">Number of Rows</label>
 #>             <div>
 #>               <select id="yPlot-split.nrow" class="shiny-input-select"><option value=""></option>
 #> <option value="1">1</option>
@@ -464,11 +460,11 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7500-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1043-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-font.type-label" for="yPlot-font.type">Font type:</label>
+#>             <label class="control-label" id="yPlot-font.type-label" for="yPlot-font.type">Font Type</label>
 #>             <div>
 #>               <select id="yPlot-font.type" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -496,7 +492,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="yPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show axis lines</span>
+#>                 <span>Show Axis Lines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -508,7 +504,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="yPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Mirror axis lines</span>
+#>                 <span>Mirror Axis Lines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -518,7 +514,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="yPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show X major gridlines</span>
+#>                 <span>Show X Gridlines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -530,14 +526,14 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="yPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show Y major gridlines</span>
+#>                 <span>Show Y Gridlines</span>
 #>               </label>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="yPlot-axis.linecolor">Axis line color</label>
+#>             <label class="control-label" for="yPlot-axis.linecolor">Axis Line Color</label>
 #>             <input id="yPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -545,13 +541,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.linewidth-label" for="yPlot-axis.linewidth">Axis line width</label>
+#>             <label class="control-label" id="yPlot-axis.linewidth-label" for="yPlot-axis.linewidth">Axis Line Width</label>
 #>             <input id="yPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.tickfont.size-label" for="yPlot-axis.tickfont.size">Tick label size</label>
+#>             <label class="control-label" id="yPlot-axis.tickfont.size-label" for="yPlot-axis.tickfont.size">Tick Label Size</label>
 #>             <input id="yPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
@@ -559,13 +555,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="yPlot-axis.tickfont.color">Tick label color</label>
+#>             <label class="control-label" for="yPlot-axis.tickfont.color">Tick Label Color</label>
 #>             <input id="yPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.tickfont.family-label" for="yPlot-axis.tickfont.family">Tick label font</label>
+#>             <label class="control-label" id="yPlot-axis.tickfont.family-label" for="yPlot-axis.tickfont.family">Tick Label Font</label>
 #>             <div>
 #>               <select id="yPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -592,13 +588,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.tickangle.x-label" for="yPlot-axis.tickangle.x">X-axis tick label angle</label>
+#>             <label class="control-label" id="yPlot-axis.tickangle.x-label" for="yPlot-axis.tickangle.x">X-axis Tick Label Angle</label>
 #>             <input id="yPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.tickangle.y-label" for="yPlot-axis.tickangle.y">Y-axis tick label angle</label>
+#>             <label class="control-label" id="yPlot-axis.tickangle.y-label" for="yPlot-axis.tickangle.y">Y-axis Tick Label Angle</label>
 #>             <input id="yPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
@@ -606,7 +602,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.ticks-label" for="yPlot-axis.ticks">Tick position</label>
+#>             <label class="control-label" id="yPlot-axis.ticks-label" for="yPlot-axis.ticks">Tick Position</label>
 #>             <div>
 #>               <select id="yPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
 #> <option value="inside">Inside</option>
@@ -617,7 +613,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="yPlot-axis.tickcolor">Tick mark color</label>
+#>             <label class="control-label" for="yPlot-axis.tickcolor">Tick Mark Color</label>
 #>             <input id="yPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -625,13 +621,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.ticklen-label" for="yPlot-axis.ticklen">Tick mark length</label>
+#>             <label class="control-label" id="yPlot-axis.ticklen-label" for="yPlot-axis.ticklen">Tick Mark Length</label>
 #>             <input id="yPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-axis.tickwidth-label" for="yPlot-axis.tickwidth">Tick mark width</label>
+#>             <label class="control-label" id="yPlot-axis.tickwidth-label" for="yPlot-axis.tickwidth">Tick Mark Width</label>
 #>             <input id="yPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
@@ -639,13 +635,13 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="yPlot-text.colour">Axis title colour:</label>
+#>             <label class="control-label" for="yPlot-text.colour">Axis Title Colour</label>
 #>             <input id="yPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7500-10">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1043-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
