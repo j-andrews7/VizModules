@@ -199,6 +199,76 @@ multiColorPicker <- function(
 	)
 }
 
+#' Update a multiColorPicker input on the client
+#'
+#' Change the color values assigned to groups in an existing multiColorPicker
+#' input from the server side.
+#'
+#' @param session The Shiny session object, typically `session`.
+#' @param inputId Character. The input id of the multiColorPicker to update.
+#' @param colors A named character vector of hex colors keyed by group name.
+#'   Only groups present in the vector will be updated; others remain unchanged.
+#'
+#' @return Invisibly returns `NULL`. Called for its side effect.
+#'
+#' @import shiny
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   library(shiny)
+#'   groups <- c("setosa", "virginica", "versicolor")
+#'
+#'   ui <- fluidPage(
+#'     multiColorPicker(
+#'       "species_cols",
+#'       "Species colors",
+#'       groups = groups,
+#'       selected_palette = "dittoColors"
+#'     ),
+#'     actionButton("randomize", "Randomize colors"),
+#'     verbatimTextOutput("chosen")
+#'   )
+#'
+#'   server <- function(input, output, session) {
+#'     output$chosen <- renderPrint(input$species_cols)
+#'
+#'     observeEvent(input$randomize, {
+#'       new_colors <- setNames(
+#'         sprintf("#%06X", sample(0xFFFFFF, length(groups))),
+#'         groups
+#'       )
+#'       updateMultiColorPicker(session, "species_cols", new_colors)
+#'     })
+#'   }
+#'
+#'   shinyApp(ui, server)
+#' }
+updateMultiColorPicker <- function(session, inputId, colors) {
+    if (missing(session) || is.null(session)) {
+        stop("`session` must be a valid Shiny session object.")
+    }
+    if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
+        stop("`inputId` must be a non-empty string.")
+    }
+    if (missing(colors) || is.null(colors) || length(colors) == 0) {
+        stop("`colors` must be a non-empty named character vector.")
+    }
+
+    colors <- .normalize_hex(colors)
+    if (is.null(names(colors)) || any(names(colors) == "")) {
+        stop("`colors` must be a named character vector with group names.")
+    }
+
+    # Convert to list format expected by JS receiveMessage
+    value <- lapply(names(colors), function(nm) {
+        list(name = nm, value = colors[[nm]])
+    })
+
+    session$sendInputMessage(inputId, list(value = value))
+    invisible(NULL)
+}
+
 #' HTML dependency for the multi-color picker widget
 #'
 #' Points htmltools to the bundled JavaScript assets so Shiny can initialize
