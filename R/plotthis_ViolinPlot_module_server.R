@@ -21,9 +21,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
-        # Constant for y-axis scaling to ensure highest violin reaches ~90% of chart height
-        
-
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
@@ -218,7 +215,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, Y_AXIS_SCALE_FACTOR = 1.11)
+            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, y_axis_scale_factor = 1.11)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)

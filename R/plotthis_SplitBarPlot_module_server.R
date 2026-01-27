@@ -26,7 +26,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
-        Y_AXIS_SCALE_FACTOR <- 1.18
+        y_axis_scale_factor <- 1.18
         
         # Helper function to calculate y-axis range accounting for grouping/stacking
         calculate_y_range <- function(y_data_col, x_data_col = NULL, group_data_col = NULL) {
@@ -51,14 +51,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     agg_data <- aggregate(df[[y_data_col]], 
                                          by = list(x = df[[x_data_col]]), 
                                          FUN = sum, na.rm = TRUE)
-                    max.y <- max(agg_data$x, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                    max.y <- max(agg_data$x, na.rm = TRUE) * y_axis_scale_factor
                 }, error = function(e) {
                     # If aggregation fails, fall back to simple max
-                    max.y <<- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                    max.y <<- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
                 })
             } else {
                 # No grouping, just use max of y column
-                max.y <- max(df[[y_data_col]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                max.y <- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
             }
             
             # Handle edge cases
@@ -213,7 +213,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             } else {
                 # Fallback to all numeric data if no default column
                 min.y <- min(numeric.data, na.rm = TRUE)
-                max.y <- max(numeric.data, na.rm = TRUE) * Y_AXIS_SCALE_FACTOR
+                max.y <- max(numeric.data, na.rm = TRUE) * y_axis_scale_factor
             }
             # Reset numeric inputs to defaults derived from data
 

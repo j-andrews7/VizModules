@@ -22,7 +22,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
-        Y_AXIS_SCALE_FACTOR <- 1.18
+        y_axis_scale_factor <- 1.18
         
         
         # Hide individual inputs if specified
@@ -120,7 +120,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * Y_AXIS_SCALE_FACTOR 
+            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor 
             min.y <- 0
             # Reset numeric inputs to defaults derived from data
 
@@ -200,9 +200,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         })
 
-        # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, Y_AXIS_SCALE_FACTOR
+        # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
         observeEvent(input$y.data, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, Y_AXIS_SCALE_FACTOR = 1.18)
+            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, y_axis_scale_factor = 1.18)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = 0)
