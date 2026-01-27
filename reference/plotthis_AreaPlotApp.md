@@ -33,22 +33,25 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Create sample data with time series and multiple groups
 set.seed(7)
-months <- rep(month.abb, each = 4)
-regions <- rep(c("North", "South", "East", "West"), 12)
+# Sales data: 10 years × 12 months × 6 regions = 720 rows
+years_sales <- rep(2015:2024, each = 72)
+months <- rep(rep(month.abb, each = 6), 10)
+regions <- rep(c("North", "South", "East", "West", "Central", "International"), 120)
 sales <- data.frame(
+    year = factor(years_sales),
     month = factor(months, levels = month.abb),
     region = factor(regions),
-    revenue = round(runif(48, 50, 200) + rep(seq(0, 55, 5), each = 4), 1),
-    units = sample(100:500, 48, replace = TRUE)
+    revenue = round(runif(720, 50, 200) + rep(seq(0, 350, length.out = 720)), 1),
+    units = sample(100:500, 720, replace = TRUE)
 )
 
-# Population data across age groups over time
-years <- rep(2015:2024, each = 5)
-age_groups <- rep(c("0-17", "18-34", "35-54", "55-74", "75+"), 10)
+# Population data: 50 years × 8 age groups = 400 rows
+years <- rep(1975:2024, each = 8)
+age_groups <- rep(c("0-9", "10-17", "18-34", "35-44", "45-54", "55-64", "65-74", "75+"), 50)
 population <- data.frame(
     year = factor(years),
-    age_group = factor(age_groups, levels = c("0-17", "18-34", "35-54", "55-74", "75+")),
-    count = round(rnorm(50, mean = 5000, sd = 800) + rep(seq(0, 900, 100), each = 5))
+    age_group = factor(age_groups, levels = c("0-9", "10-17", "18-34", "35-44", "45-54", "55-64", "65-74", "75+")),
+    count = round(rnorm(400, mean = 5000, sd = 800) + rep(seq(0, 3900, length.out = 400)))
 )
 
 data_list <- list("sales" = sales, "population" = population)
