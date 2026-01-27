@@ -498,16 +498,18 @@
 #' @param widths Numeric vector. Line widths in pixels.
 #' @param linetypes Character vector. Line types: "solid", "dashed", "dotted", "dotdash", "longdash", "twodash".
 #' @param opacities Numeric vector. Line opacities (0 to 1).
+#' @param fig A plotly figure object. Used to detect subplot axes for faceted plots.
 #'
 #' @return A list of shape specifications for use with plotly::layout().
 #'
 #' @details If style vector lengths don't match the number of intercepts, only the first
-#'   value of each style vector is used for all lines.
+#'   value of each style vector is used for all lines. When the figure contains subplots
+#'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
 #' @keywords internal
 #' @rdname INTERNAL_add_hlines
-.add_hlines <- function(intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
+.add_hlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
     if (is.null(intercepts) || length(intercepts) == 0) {
         return(list())
     }
@@ -518,19 +520,41 @@
     linetypes <- .recycle_line_style(linetypes, n, "solid")
     opacities <- .recycle_line_style(opacities, n, 1)
 
-    lapply(seq_len(n), function(i) {
-        list(
-            type = "line",
-            x0 = 0, x1 = 1, xref = "paper",
-            y0 = intercepts[i], y1 = intercepts[i], yref = "y",
-            line = list(
-                color = colors[i],
-                width = widths[i],
-                dash = .linetype_to_dash(linetypes[i])
-            ),
-            opacity = opacities[i]
-        )
-    })
+    # Extract unique axis pairs from traces
+    # Each trace has xaxis (e.g., "x", "x2") and yaxis (e.g., "y", "y2") attributes
+    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
+        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
+        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
+        list(x = xaxis, y = yaxis)
+    }))
+
+    # If no traces found, default to main axes
+    if (length(axis_pairs) == 0) {
+        axis_pairs <- list(list(x = "x", y = "y"))
+    }
+
+    all_shapes <- list()
+
+    for (pair in axis_pairs) {
+        xref <- paste0(pair$x, " domain")
+        yref <- pair$y
+
+        for (i in seq_len(n)) {
+            all_shapes <- c(all_shapes, list(list(
+                type = "line",
+                x0 = 0, x1 = 1, xref = xref,
+                y0 = intercepts[i], y1 = intercepts[i], yref = yref,
+                line = list(
+                    color = colors[i],
+                    width = widths[i],
+                    dash = .linetype_to_dash(linetypes[i])
+                ),
+                opacity = opacities[i]
+            )))
+        }
+    }
+
+    all_shapes
 }
 
 #' Build vertical line shapes for a plotly figure
@@ -543,16 +567,18 @@
 #' @param widths Numeric vector. Line widths in pixels.
 #' @param linetypes Character vector. Line types: "solid", "dashed", "dotted", "dotdash", "longdash", "twodash".
 #' @param opacities Numeric vector. Line opacities (0 to 1).
+#' @param fig A plotly figure object. Used to detect subplot axes for faceted plots.
 #'
 #' @return A list of shape specifications for use with plotly::layout().
 #'
 #' @details If style vector lengths don't match the number of intercepts, only the first
-#'   value of each style vector is used for all lines.
+#'   value of each style vector is used for all lines. When the figure contains subplots
+#'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
 #' @keywords internal
 #' @rdname INTERNAL_add_vlines
-.add_vlines <- function(intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
+.add_vlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
     if (is.null(intercepts) || length(intercepts) == 0) {
         return(list())
     }
@@ -563,19 +589,40 @@
     linetypes <- .recycle_line_style(linetypes, n, "solid")
     opacities <- .recycle_line_style(opacities, n, 1)
 
-    lapply(seq_len(n), function(i) {
-        list(
-            type = "line",
-            x0 = intercepts[i], x1 = intercepts[i], xref = "x",
-            y0 = 0, y1 = 1, yref = "paper",
-            line = list(
-                color = colors[i],
-                width = widths[i],
-                dash = .linetype_to_dash(linetypes[i])
-            ),
-            opacity = opacities[i]
-        )
-    })
+    # Extract unique axis pairs from traces
+    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
+        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
+        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
+        list(x = xaxis, y = yaxis)
+    }))
+
+    # If no traces found, default to main axes
+    if (length(axis_pairs) == 0) {
+        axis_pairs <- list(list(x = "x", y = "y"))
+    }
+
+    all_shapes <- list()
+
+    for (pair in axis_pairs) {
+        xref <- pair$x
+        yref <- paste0(pair$y, " domain")
+
+        for (i in seq_len(n)) {
+            all_shapes <- c(all_shapes, list(list(
+                type = "line",
+                x0 = intercepts[i], x1 = intercepts[i], xref = xref,
+                y0 = 0, y1 = 1, yref = yref,
+                line = list(
+                    color = colors[i],
+                    width = widths[i],
+                    dash = .linetype_to_dash(linetypes[i])
+                ),
+                opacity = opacities[i]
+            )))
+        }
+    }
+
+    all_shapes
 }
 
 #' Build diagonal (abline) line shapes for a plotly figure
@@ -583,7 +630,7 @@
 #' Creates shape specifications for one or more diagonal lines defined by slope and intercept.
 #' Lines are drawn across the provided or computed axis range.
 #'
-#' @param fig A plotly figure object (used to determine x-axis range).
+#' @param fig A plotly figure object (used to determine x-axis range and detect subplots).
 #' @param slopes Numeric vector. Slopes for the diagonal lines.
 #' @param intercepts Numeric vector. Y-intercepts for the diagonal lines. Must be same length as slopes.
 #' @param colors Character vector. Line colors (hex or named colors).
@@ -595,7 +642,8 @@
 #'
 #' @details If style vector lengths don't match the number of lines, only the first
 #'   value of each style vector is used for all lines. If slopes and intercepts have
-#'   different lengths, the shorter one is recycled.
+#'   different lengths, the shorter one is recycled. When the figure contains subplots
+#'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
 #' @keywords internal
@@ -619,39 +667,68 @@
     linetypes <- .recycle_line_style(linetypes, n, "solid")
     opacities <- .recycle_line_style(opacities, n, 1)
 
-    # Get axis ranges to compute line endpoints
-    x_range <- fig$x$layout$xaxis$range
-    if (is.null(x_range)) {
-        # Try to get range from data
-        x_data <- unlist(lapply(fig$x$data, function(tr) tr$x))
-        if (length(x_data) > 0) {
-            x_range <- range(x_data, na.rm = TRUE)
-            # Add padding
-            padding <- diff(x_range) * 0.1
-            x_range <- c(x_range[1] - padding, x_range[2] + padding)
-        } else {
-            x_range <- c(0, 1)
+    # Extract unique axis pairs from traces
+    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
+        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
+        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
+        list(x = xaxis, y = yaxis)
+    }))
+
+    # If no traces found, default to main axes
+    if (length(axis_pairs) == 0) {
+        axis_pairs <- list(list(x = "x", y = "y"))
+    }
+
+    all_shapes <- list()
+
+    for (pair in axis_pairs) {
+        # Get axis range for this subplot
+        # Convert trace axis ref (x, x2) to layout axis name (xaxis, xaxis2)
+        xaxis_name <- paste0("xaxis", sub("^x", "", pair$x))
+        if (xaxis_name == "xaxis") xaxis_name <- "xaxis"  # Handle main axis
+        xaxis <- fig$x$layout[[xaxis_name]]
+        x_range <- if (!is.null(xaxis)) xaxis$range else NULL
+
+        if (is.null(x_range)) {
+            # Try to get range from data for this subplot
+            x_data <- unlist(lapply(fig$x$data, function(tr) {
+                tr_xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
+                if (tr_xaxis == pair$x) tr$x else NULL
+            }))
+            if (length(x_data) > 0) {
+                x_range <- range(x_data, na.rm = TRUE)
+                # Add padding
+                padding <- diff(x_range) * 0.1
+                x_range <- c(x_range[1] - padding, x_range[2] + padding)
+            } else {
+                x_range <- c(0, 1)
+            }
+        }
+
+        xref <- pair$x
+        yref <- pair$y
+
+        for (i in seq_len(n)) {
+            x0 <- x_range[1]
+            x1 <- x_range[2]
+            y0 <- intercepts[i] + slopes[i] * x0
+            y1 <- intercepts[i] + slopes[i] * x1
+
+            all_shapes <- c(all_shapes, list(list(
+                type = "line",
+                x0 = x0, x1 = x1, xref = xref,
+                y0 = y0, y1 = y1, yref = yref,
+                line = list(
+                    color = colors[i],
+                    width = widths[i],
+                    dash = .linetype_to_dash(linetypes[i])
+                ),
+                opacity = opacities[i]
+            )))
         }
     }
 
-    lapply(seq_len(n), function(i) {
-        x0 <- x_range[1]
-        x1 <- x_range[2]
-        y0 <- intercepts[i] + slopes[i] * x0
-        y1 <- intercepts[i] + slopes[i] * x1
-
-        list(
-            type = "line",
-            x0 = x0, x1 = x1, xref = "x",
-            y0 = y0, y1 = y1, yref = "y",
-            line = list(
-                color = colors[i],
-                width = widths[i],
-                dash = .linetype_to_dash(linetypes[i])
-            ),
-            opacity = opacities[i]
-        )
-    })
+    all_shapes
 }
 
 #' Add reference lines to a plotly figure from Shiny inputs
@@ -711,7 +788,7 @@
         h_linetypes <- .string_to_linetypes(hline.linetypes)
         h_opacities <- .parse_numeric_list(hline.opacities)
         if (is.null(h_opacities)) h_opacities <- 1
-        h_shapes <- .add_hlines(h_intercepts, h_colors, h_widths, h_linetypes, h_opacities)
+        h_shapes <- .add_hlines(fig, h_intercepts, h_colors, h_widths, h_linetypes, h_opacities)
         all_shapes <- c(all_shapes, h_shapes)
     }
 
@@ -728,7 +805,7 @@
         v_linetypes <- .string_to_linetypes(vline.linetypes)
         v_opacities <- .parse_numeric_list(vline.opacities)
         if (is.null(v_opacities)) v_opacities <- 1
-        v_shapes <- .add_vlines(v_intercepts, v_colors, v_widths, v_linetypes, v_opacities)
+        v_shapes <- .add_vlines(fig, v_intercepts, v_colors, v_widths, v_linetypes, v_opacities)
         all_shapes <- c(all_shapes, v_shapes)
     }
 
