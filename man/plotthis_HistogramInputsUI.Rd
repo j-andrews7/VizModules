@@ -31,5 +31,5 @@ Generates the user interface for histogram configuration, including data selecti
 faceting options, aesthetic controls (bins, trend lines, alpha), and detailed axis styling.
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

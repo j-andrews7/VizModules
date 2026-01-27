@@ -51,13 +51,12 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             group_col <- input$group.by
-            x_col <- input$x.data
 
+            # Only return groups when group.by is set to a valid categorical column
             if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
-            } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
             } else {
+                # No grouping - will show single color picker instead
                 character(0)
             }
         })
@@ -89,7 +88,16 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
-                return(NULL)
+                # No grouping - show single color picker for fill color
+                initial_color <- isolate(input$single.fill.color)
+                if (is.null(initial_color) || !nzchar(initial_color)) {
+                    initial_color <- default_palette_values[1]
+                }
+                return(colourpicker::colourInput(
+                    ns("single.fill.color"),
+                    label = "Fill color",
+                    value = initial_color
+                ))
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
@@ -130,6 +138,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSliderInput(session, "plot.alpha", value = 0.5)
             updateSelectInput(session, "theme", selected = "theme_this")
             updateSelectInput(session, "position", selected = "identity")
+            colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
 
             # Action Button:
@@ -200,10 +209,16 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours)
             )
-            
+
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
                 palcolor_arg <- as.list(palette_values)
+            } else {
+                # No grouping - use single fill color
+                single_color <- isolate_fn(input$single.fill.color)
+                if (!is.null(single_color) && nzchar(single_color)) {
+                    palcolor_arg <- list(single_color)
+                }
             }
 
             # Facet rows and columns na to null

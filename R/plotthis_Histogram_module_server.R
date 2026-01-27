@@ -12,12 +12,13 @@
 #' 
 #' @return A \code{reactive} Plotly object.
 #' 
-#' @author Jacob Martin
-#' 
-#' @export
 #' @import shiny
 #' @import plotly
-#' @importFrom stats na.omit setNames
+#' @importFrom stats na.omit setNames 
+#' 
+#' @author Jacob Martin, Jared Andrews
+#' 
+#' @export
 plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
@@ -51,13 +52,12 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             }
 
             group_col <- input$group.by
-            x_col <- input$x.data
 
+            # Only return groups when group.by is set to a valid categorical column
             if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
-            } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
             } else {
+                # No grouping - will show single color picker instead
                 character(0)
             }
         })
@@ -89,7 +89,16 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
-                return(NULL)
+                # No grouping - show single color picker for fill color
+                initial_color <- isolate(input$single.fill.color)
+                if (is.null(initial_color) || !nzchar(initial_color)) {
+                    initial_color <- default_palette_values[1]
+                }
+                return(colourpicker::colourInput(
+                    ns("single.fill.color"),
+                    label = "Fill color",
+                    value = initial_color
+                ))
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
@@ -138,6 +147,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateSliderInput(session, "plot.alpha", value = 1)
             updateSelectInput(session, "theme", selected = "theme_this")
             updateSelectInput(session, "position", selected = "identity")
+            colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
 
             # Action Button:
@@ -210,7 +220,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
           }
 
           bin.width <- NULL
-          if (!is.na(isolate_fn(input$bin.width)))
+          if (!is.na(isolate_fn(input$bin.width))) {
+            bin.width <- isolate_fn(input$bin.width)
+          }
 
         #   split.by <- NULL
         #   if (!isolate_fn(input$split.by) == ""){
@@ -222,6 +234,17 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours)
             )
+
+        palcolor_arg <- NULL
+        if (!is.null(palette_values) && length(palette_values) > 0) {
+            palcolor_arg <- unname(palette_values)
+        } else {
+            # No grouping - use single fill color
+            single_color <- isolate_fn(input$single.fill.color)
+            if (!is.null(single_color) && nzchar(single_color)) {
+                palcolor_arg <- single_color
+            }
+        }
           
         #Facet rows and columns na to null
         facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
@@ -237,7 +260,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             facet_nrow = facet.nrow,
             facet_byrow = isolate_fn(input$facet.by.row),
             alpha = isolate_fn(input$plot.alpha),
-            #   split_by = split.by,
             flip = isolate_fn(input$flip),
             bins = bins,
             binwidth = bin.width,
@@ -252,8 +274,8 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             bar_alpha = isolate_fn(input$bar.alpha),
             bar_width = isolate_fn(input$bar.width),
             theme = isolate_fn(input$theme),
-            #   palette = default_palette_name,
-            #   palcolor = unname(palette_values)
+            palette = default_palette_name,
+            palcolor = palcolor_arg,
             position = isolate_fn(input$position)
           )
 

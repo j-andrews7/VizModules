@@ -24,5 +24,5 @@ reactive data processing, dynamic UI generation for color palettes,
 and the rendering of interactive Plotly histograms.
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

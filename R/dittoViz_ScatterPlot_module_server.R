@@ -68,12 +68,21 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
-        # Render the multiColorPicker for discrete color mappings
+        # Render the multiColorPicker for discrete color mappings or single colourInput
         output$color.panel.ui <- renderUI({
             groups <- color_levels()
 
             if (length(groups) == 0) {
-                return(NULL)
+                # No grouping - show single color picker for point color
+                initial_color <- isolate(input$single.point.color)
+                if (is.null(initial_color) || !nzchar(initial_color)) {
+                    initial_color <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1]
+                }
+                return(colourpicker::colourInput(
+                    ns("single.point.color"),
+                    label = "Point color",
+                    value = initial_color
+                ))
             }
 
             initial_colors <- isolate(input$color.panel)
@@ -96,6 +105,18 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         color.panel <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
+            levels <- color_levels()
+
+            # When there are no color levels, use single point color
+            if (length(levels) == 0) {
+                single_color <- isolate_fn(input$single.point.color)
+                if (!is.null(single_color) && nzchar(single_color)) {
+                    return(single_color)
+                } else {
+                    return(default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1])
+                }
+            }
+
             picker_values <- isolate_fn(input$color.panel)
             manual_vals <- manual_color_values()
 
@@ -111,22 +132,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
             }
 
-            levels <- isolate_fn(color_levels())
-            if (length(levels) > 0) {
-                if (!is.null(names(palette)) && any(nzchar(names(palette)))) {
-                    palette <- palette[match(levels, names(palette))]
-                }
-
-                if (any(is.na(palette))) {
-                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                    na_idx <- which(is.na(palette))
-                    palette[na_idx] <- rep_len(fallback_palette, length(na_idx))
-                }
-
-                palette <- rep_len(palette, length(levels))
-                palette <- palette[seq_len(length(levels))]
-                palette <- stats::setNames(palette, levels)
+            if (!is.null(names(palette)) && any(nzchar(names(palette)))) {
+                palette <- palette[match(levels, names(palette))]
             }
+
+            if (any(is.na(palette))) {
+                fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+                na_idx <- which(is.na(palette))
+                palette[na_idx] <- rep_len(fallback_palette, length(na_idx))
+            }
+
+            palette <- rep_len(palette, length(levels))
+            palette <- palette[seq_len(length(levels))]
+            palette <- stats::setNames(palette, levels)
 
             palette
         })
@@ -194,6 +212,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "max.color", value = "#0072B2")
             colourpicker::updateColourInput(session, "contour.color", value = "black")
             updateSelectInput(session, "contour.linetype", selected = "solid")
+            colourpicker::updateColourInput(session, "single.point.color", 
+                value = default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1])
             
             # Simulate clicking the reset button in the multiColorPicker widget
             shinyjs::runjs(sprintf("
@@ -445,6 +465,25 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = p$plot), config_list))
+
+            # Apply single point color when color.by is not set
+            if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {
+                single_pt_color <- isolate_fn(input$single.point.color)
+                if (!is.null(single_pt_color) && nzchar(single_pt_color)) {
+                    for (i in seq_along(fig$x$data)) {
+                        trace <- fig$x$data[[i]]
+                        # Only modify scatter traces with markers (not lines, shapes, etc.)
+                        if (!is.null(trace$mode) && grepl("markers", trace$mode)) {
+                            fig$x$data[[i]]$marker$color <- single_pt_color
+                            # Also apply to marker border/outline
+                            if (is.null(fig$x$data[[i]]$marker$line)) {
+                                fig$x$data[[i]]$marker$line <- list()
+                            }
+                            fig$x$data[[i]]$marker$line$color <- single_pt_color
+                        }
+                    }
+                }
+            }
 
             # Add reference lines
             fig <- .add_reference_lines(fig,

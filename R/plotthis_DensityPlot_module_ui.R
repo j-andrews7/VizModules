@@ -26,7 +26,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
@@ -34,22 +34,20 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X input:", selected = names(data)[1], choices = names(data)),
-            selectInput(ns("group.by"), "Group by:", selected = "", choices = c("", char.choices)),
+            selectInput(ns("x.data"), "X data", selected = names(num.choices)[1], choices = names(num.choices)),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
             textInput(ns("group.by.name"), "Group by legend name", value = "")
         ),
-
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:", selected = "", choices = c("", char.choices)),
-            selectInput(ns("facet.scale"), "Facet scale:", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns:", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows:", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row:", value = TRUE, status = "success"),
-            selectInput(ns("split.by"), "Split by:", selected = "", choices = c("", char.choices))
+            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c("", cat.choices)),
+            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
+            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success"),
+            selectInput(ns("split.by"), "Split by", selected = "", choices = c("", cat.choices))
         ),
-
         "Aesthetics" = tagList(
-            sliderInput(ns("plot.alpha"), "Plot alpha", min = 0, max = 1, value = 0.5),
+            numericInput(ns("plot.alpha"), "Plot alpha", min = 0, max = 1, value = 0.5),
             selectInput(ns("theme"), "Plot theme", selected = "theme_this",
             choices = c(
                 "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
@@ -62,15 +60,12 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             choices = c("identity", "stack", "dodge", "fill")
             )
         ),
-
         "Rug" = tagList(
             materialSwitch(ns("add.bars"), "Add rug plot", value = FALSE, status = "success"),
             numericInput(ns("bar.height"), "Rug bar height", value = 0.04),
-            sliderInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
+            numericInput(ns("bar.alpha"), "Rug bar alpha", min = 0, max = 1, value = 1),
             numericInput(ns("bar.width"), "Rug bar width", value = 1)
         ),
-
-
         "Axes" = tagList(
             materialSwitch(ns("flip"), "Flip the plot", value = FALSE, status = "success"),
             selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(

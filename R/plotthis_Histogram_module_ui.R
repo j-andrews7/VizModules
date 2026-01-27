@@ -12,7 +12,7 @@
 #'
 #' @return A \code{tagList} containing the organized UI elements.
 #'
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' 
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
@@ -26,7 +26,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
@@ -34,18 +34,18 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X input", selected = names(data)[1], choices = names(data)),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", char.choices)),
+            selectInput(ns("x.data"), "X input", selected = names(num.choices)[1], choices = names(num.choices)),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
             textInput(ns("group.by.name"), "Group by legend name", value = "")
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c("", char.choices)),
+            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c("", cat.choices)),
             selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
             numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
             numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
             materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success"),
-            selectInput(ns("split.by"), "Split by", selected = "", choices = c("", char.choices))
+            selectInput(ns("split.by"), "Split by", selected = "", choices = c("", cat.choices))
         ),
 
         "Aesthetics" = tagList(
