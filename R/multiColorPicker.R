@@ -283,9 +283,9 @@ updateMultiColorPicker <- function(session, inputId, colors) {
 	list(
 		htmltools::htmlDependency(
 			name = "multi-color-picker",
-			version = as.character(utils::packageVersion("vizModules")),
+			version = as.character(utils::packageVersion("VizModules")),
 			src = "src",
-			package = "vizModules",
+			package = "VizModules",
 			script = "multiColorPicker.js",
 			stylesheet = "multiColorPicker.css"
 		),
@@ -305,7 +305,7 @@ updateMultiColorPicker <- function(session, inputId, colors) {
 
 #' Register input handler for the multi-color picker
 #'
-#' Creates the `vizModules.multiColorPicker` input handler that turns the
+#' Creates the `VizModules.multiColorPicker` input handler that turns the
 #' JavaScript payload into a named vector of hex codes.
 #'
 #' @return Invisibly returns the result of `registerInputHandler()`.
@@ -315,7 +315,7 @@ updateMultiColorPicker <- function(session, inputId, colors) {
 #' @keywords internal
 .register_multi_color_picker_handler <- function() {
 	registerInputHandler(
-		"vizModules.multiColorPicker",
+		"VizModules.multiColorPicker",
 		function(data, ...) {
 			if (is.null(data) || length(data) == 0) {
 				return(setNames(character(0), character(0)))

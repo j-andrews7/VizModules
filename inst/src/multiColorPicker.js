@@ -351,9 +351,9 @@
       $(el).off(".multiColorPicker");
     },
     getType: function () {
-      return "vizModules.multiColorPicker";
+      return "VizModules.multiColorPicker";
     }
   });
 
-  Shiny.inputBindings.register(binding, "vizModules.multiColorPicker");
+  Shiny.inputBindings.register(binding, "VizModules.multiColorPicker");
 })();
