@@ -914,3 +914,35 @@
     )
     fig
 }
+
+#' Hide jitter points from plotly legend
+#'
+#' Hides jitter point traces from the legend by setting showlegend to FALSE.
+#' The jitter points remain visible in the plot but do not clutter the legend
+#' with individual point entries.
+#'
+#' @param fig A plotly figure object containing scatter traces for jitter points.
+#'
+#' @return The modified plotly figure with jitter points hidden from the legend.
+#'
+#' @details This function iterates through all traces in the plotly figure and
+#'   identifies scatter traces that represent jitter points (mode = "markers").
+#'   For each jitter trace, it sets showlegend to FALSE, preventing them from
+#'   appearing in the legend while keeping them visible in the plot. Box traces
+#'   and other trace types are returned unchanged.
+#'
+#' @author Jacob Martin 
+#' @keywords internal
+#' @rdname INTERNAL_hide_jitter_from_legend
+.hide_jitter_from_legend <- function(fig){
+
+    stopifnot("plotly" %in% class(fig))
+    for (i in seq_along(fig$x$data)) {
+        fig_data <- fig$x$data[[i]]
+        if (!is.null(fig_data$type) && fig_data$type == "scatter" && !is.null(fig_data$mode) && fig_data$mode =="markers"){
+            fig_data$showlegend <- FALSE
+        }
+        fig$x$data[[i]] <- fig_data
+    }
+    fig 
+}
