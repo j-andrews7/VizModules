@@ -16,7 +16,8 @@ setup_auto_update_logic(input)
 
 - input:
 
-  The Shiny input object from the module server.
+  The Shiny input object from the module server, should have both
+  `auto.update` (boolean) and `update` (button) inputs.
 
 ## Value
 

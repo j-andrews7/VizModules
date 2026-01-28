@@ -106,6 +106,8 @@
   : Output UI components for the ViolinPlot module
 - [`plotthis_ViolinPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotServer.md)
   : Server logic for ViolinPlot module
+- [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
+  : Resolve a color palette for plot groups
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
 - [`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md)
