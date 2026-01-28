@@ -7,7 +7,8 @@
 setup_auto_update_logic(input)
 }
 \arguments{
-\item{input}{The Shiny input object from the module server.}
+\item{input}{The Shiny input object from the module server,
+should have both \code{auto.update} (boolean) and \code{update} (button) inputs.}
 }
 \value{
 A function that wraps reactive expressions. Returns \code{identity} if auto-update
