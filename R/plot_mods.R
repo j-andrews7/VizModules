@@ -931,17 +931,15 @@
 #'   appearing in the legend while keeping them visible in the plot. Box traces
 #'   and other trace types are returned unchanged.
 #'
-#' @author Jared Andrews
+#' @author Jacob Martin 
 #' @keywords internal
 #' @rdname INTERNAL_hide_jitter_from_legend
 .hide_jitter_from_legend <- function(fig) {
     stopifnot("plotly" %in% class(fig))
     fig$x$data <- lapply(
-        fig$x$data,
-        function(i) {
+        fig$x$data, function(i) {
             # Hide scatter traces (jitter points) from legend, but keep box traces
-            if (!is.null(i$type) && i$type == "scatter" && 
-                !is.null(i$mode) && i$mode == "markers") {
+            if (!is.null(i$type) && i$type == "scatter" && !is.null(i$mode) && i$mode == "markers") {
                 i$showlegend <- FALSE
             }
             i
