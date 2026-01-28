@@ -79,35 +79,32 @@ library(VizModules)
 data(mtcars)
 plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="2994">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="9504">
 #>     <li class="active">
-#>       <a href="#tab-2994-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9504-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2994-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-9504-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2994-3" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-9504-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2994-4" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-9504-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2994-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9504-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2994-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
-#>     </li>
-#>     <li>
-#>       <a href="#tab-2994-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9504-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2994">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2994-1">
+#>   <div class="tab-content" data-tabsetid="9504">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9504-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-x.data-label" for="ViolinPlot-x.data">Select X data</label>
+#>             <label class="control-label" id="ViolinPlot-x.data-label" for="ViolinPlot-x.data">X Data</label>
 #>             <div>
 #>               <select id="ViolinPlot-x.data" class="shiny-input-select"><option value=""></option></select>
 #>               <script type="application/json" data-for="ViolinPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -116,7 +113,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-y.data-label" for="ViolinPlot-y.data">Select Y data</label>
+#>             <label class="control-label" id="ViolinPlot-y.data-label" for="ViolinPlot-y.data">Y Data</label>
 #>             <div>
 #>               <select id="ViolinPlot-y.data" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
@@ -138,7 +135,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-group.by-label" for="ViolinPlot-group.by">Group by</label>
+#>             <label class="control-label" id="ViolinPlot-group.by-label" for="ViolinPlot-group.by">Group By</label>
 #>             <div>
 #>               <select id="ViolinPlot-group.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option></select>
@@ -151,11 +148,11 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-2994-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9504-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-sort_x-label" for="ViolinPlot-sort_x">Sort X axis by</label>
+#>             <label class="control-label" id="ViolinPlot-sort_x-label" for="ViolinPlot-sort_x">Sort X By</label>
 #>             <div>
 #>               <select id="ViolinPlot-sort_x" class="shiny-input-select"><option value="none" selected>none</option>
 #> <option value="mean_asc">mean_asc</option>
@@ -170,33 +167,16 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <div class="material-switch">
-#>               <label for="ViolinPlot-stack" style="padding-right: 10px;">Stack Plot</label>
-#>               <input id="ViolinPlot-stack" type="checkbox"/>
-#>               <label class="switch label-success bg-success" for="ViolinPlot-stack"></label>
-#>             </div>
+#>             <label class="control-label" id="ViolinPlot-y.max-label" for="ViolinPlot-y.max">Y Max</label>
+#>             <input id="ViolinPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-y.max-label" for="ViolinPlot-y.max">Max Value of Y Axis</label>
-#>             <input id="ViolinPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-1000" max="1000"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-y.min-label" for="ViolinPlot-y.min">Min Value of Y Axis</label>
-#>             <input id="ViolinPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-1000" max="1000"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-aspect.ratio-label" for="ViolinPlot-aspect.ratio">Aspect Ratio</label>
-#>             <input id="ViolinPlot-aspect.ratio" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="100"/>
+#>             <label class="control-label" id="ViolinPlot-y.min-label" for="ViolinPlot-y.min">Y Min</label>
+#>             <input id="ViolinPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
@@ -240,7 +220,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-pt.color">Point outline colour</label>
+#>             <label class="control-label" for="ViolinPlot-pt.color">Point Outline Colour</label>
 #>             <input id="ViolinPlot-pt.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -257,7 +237,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-box.color">Box colour</label>
+#>             <label class="control-label" for="ViolinPlot-box.color">Box Colour</label>
 #>             <input id="ViolinPlot-box.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -277,35 +257,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-2994-3">
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-add.line-label" for="ViolinPlot-add.line">Add Y interception line</label>
-#>             <input id="ViolinPlot-add.line" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="10.4" max="37.629"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-line.colour">Y Intercept line colour</label>
-#>             <input id="ViolinPlot-line.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-line.width-label" for="ViolinPlot-line.width">Line width</label>
-#>             <input id="ViolinPlot-line.width" type="number" class="shiny-input-number form-control" value="0.6" data-update-on="change" min="0.1" max="10"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-line.type-label" for="ViolinPlot-line.type">Line type</label>
-#>             <input id="ViolinPlot-line.type" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="1" max="40"/>
-#>           </div>
-#>         </div>
-#>       </div>
+#>     <div class="tab-pane" data-value="Highlight" id="tab-9504-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -315,7 +267,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-highlight.colour">Highlight colour</label>
+#>             <label class="control-label" for="ViolinPlot-highlight.colour">Highlight Colour</label>
 #>             <input id="ViolinPlot-highlight.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -323,68 +275,23 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-highlight.size-label" for="ViolinPlot-highlight.size">Highlight size</label>
+#>             <label class="control-label" id="ViolinPlot-highlight.size-label" for="ViolinPlot-highlight.size">Highlight Size</label>
 #>             <input id="ViolinPlot-highlight.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-highlight.alpha-label" for="ViolinPlot-highlight.alpha">Highlight alpha</label>
+#>             <label class="control-label" id="ViolinPlot-highlight.alpha-label" for="ViolinPlot-highlight.alpha">Highlight Alpha</label>
 #>             <input id="ViolinPlot-highlight.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-2994-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9504-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-add.stat-label" for="ViolinPlot-add.stat">Add Stats</label>
-#>             <div>
-#>               <select id="ViolinPlot-add.stat" class="shiny-input-select"><option value="" selected></option>
-#> <option value="mean">mean</option>
-#> <option value="sd">sd</option>
-#> <option value="median">median</option>
-#> <option value="var">var</option></select>
-#>               <script type="application/json" data-for="ViolinPlot-add.stat">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-stat.color">Stats Colour</label>
-#>             <input id="ViolinPlot-stat.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-stat.size-label" for="ViolinPlot-stat.size">Stat Size</label>
-#>             <input id="ViolinPlot-stat.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
-#>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-stat.stroke-label" for="ViolinPlot-stat.stroke">Stat Stroke</label>
-#>             <input id="ViolinPlot-stat.stroke" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-stat.shape-label" for="ViolinPlot-stat.shape">Stat Shape</label>
-#>             <input id="ViolinPlot-stat.shape" type="number" class="shiny-input-number form-control" value="25" data-update-on="change" min="0" max="100"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2994-5">
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-facet.by-label" for="ViolinPlot-facet.by">Facet by</label>
+#>             <label class="control-label" id="ViolinPlot-facet.by-label" for="ViolinPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="ViolinPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option></select>
@@ -394,7 +301,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-facet.scale-label" for="ViolinPlot-facet.scale">Facet scale</label>
+#>             <label class="control-label" id="ViolinPlot-facet.scale-label" for="ViolinPlot-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select id="ViolinPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
 #> <option value="free">free</option>
@@ -408,14 +315,14 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-facet.ncol-label" for="ViolinPlot-facet.ncol">Facet number of columns</label>
-#>             <input id="ViolinPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="ViolinPlot-facet.ncol-label" for="ViolinPlot-facet.ncol">Columns</label>
+#>             <input id="ViolinPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-facet.nrow-label" for="ViolinPlot-facet.nrow">Facet number of rows</label>
-#>             <input id="ViolinPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="ViolinPlot-facet.nrow-label" for="ViolinPlot-facet.nrow">Rows</label>
+#>             <input id="ViolinPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>       </div>
@@ -423,7 +330,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="ViolinPlot-facet.by.row" style="padding-right: 10px;">Facet by row</label>
+#>               <label for="ViolinPlot-facet.by.row" style="padding-right: 10px;">Facet By Row</label>
 #>               <input id="ViolinPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="ViolinPlot-facet.by.row"></label>
 #>             </div>
@@ -431,18 +338,18 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2994-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9504-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-text.colour">Axis title colour</label>
+#>             <label class="control-label" for="ViolinPlot-text.colour">Axis Title Colour</label>
 #>             <input id="ViolinPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
-#>               <label for="ViolinPlot-flip" style="padding-right: 10px;">Flip horizontal</label>
+#>               <label for="ViolinPlot-flip" style="padding-right: 10px;">Flip Horizontal</label>
 #>               <input id="ViolinPlot-flip" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="ViolinPlot-flip"></label>
 #>             </div>
@@ -452,7 +359,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-font.type-label" for="ViolinPlot-font.type">Font type</label>
+#>             <label class="control-label" id="ViolinPlot-font.type-label" for="ViolinPlot-font.type">Font Type</label>
 #>             <div>
 #>               <select id="ViolinPlot-font.type" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -480,7 +387,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="ViolinPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show axis lines</span>
+#>                 <span>Show Axis Lines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -492,7 +399,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="ViolinPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Mirror axis lines</span>
+#>                 <span>Mirror Axis Lines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -502,7 +409,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="ViolinPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show X major gridlines</span>
+#>                 <span>Show X Gridlines</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -514,14 +421,14 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="ViolinPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show Y major gridlines</span>
+#>                 <span>Show Y Gridlines</span>
 #>               </label>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-axis.linecolor">Axis line color</label>
+#>             <label class="control-label" for="ViolinPlot-axis.linecolor">Axis Line Color</label>
 #>             <input id="ViolinPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -529,13 +436,13 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.linewidth-label" for="ViolinPlot-axis.linewidth">Axis line width</label>
+#>             <label class="control-label" id="ViolinPlot-axis.linewidth-label" for="ViolinPlot-axis.linewidth">Axis Line Width</label>
 #>             <input id="ViolinPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.tickfont.size-label" for="ViolinPlot-axis.tickfont.size">Tick label size</label>
+#>             <label class="control-label" id="ViolinPlot-axis.tickfont.size-label" for="ViolinPlot-axis.tickfont.size">Tick Label Size</label>
 #>             <input id="ViolinPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
@@ -543,13 +450,13 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-axis.tickfont.color">Tick label color</label>
+#>             <label class="control-label" for="ViolinPlot-axis.tickfont.color">Tick Label Color</label>
 #>             <input id="ViolinPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.tickfont.family-label" for="ViolinPlot-axis.tickfont.family">Tick label font</label>
+#>             <label class="control-label" id="ViolinPlot-axis.tickfont.family-label" for="ViolinPlot-axis.tickfont.family">Tick Label Font</label>
 #>             <div>
 #>               <select id="ViolinPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -576,13 +483,13 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.tickangle.x-label" for="ViolinPlot-axis.tickangle.x">X-axis tick label angle</label>
+#>             <label class="control-label" id="ViolinPlot-axis.tickangle.x-label" for="ViolinPlot-axis.tickangle.x">X-axis Tick Label Angle</label>
 #>             <input id="ViolinPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.tickangle.y-label" for="ViolinPlot-axis.tickangle.y">Y-axis tick label angle</label>
+#>             <label class="control-label" id="ViolinPlot-axis.tickangle.y-label" for="ViolinPlot-axis.tickangle.y">Y-axis Tick Label Angle</label>
 #>             <input id="ViolinPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
@@ -590,7 +497,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.ticks-label" for="ViolinPlot-axis.ticks">Tick position</label>
+#>             <label class="control-label" id="ViolinPlot-axis.ticks-label" for="ViolinPlot-axis.ticks">Tick Position</label>
 #>             <div>
 #>               <select id="ViolinPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
 #> <option value="inside">Inside</option>
@@ -601,7 +508,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="ViolinPlot-axis.tickcolor">Tick mark color</label>
+#>             <label class="control-label" for="ViolinPlot-axis.tickcolor">Tick Mark Color</label>
 #>             <input id="ViolinPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
@@ -609,19 +516,19 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.ticklen-label" for="ViolinPlot-axis.ticklen">Tick mark length</label>
+#>             <label class="control-label" id="ViolinPlot-axis.ticklen-label" for="ViolinPlot-axis.ticklen">Tick Mark Length</label>
 #>             <input id="ViolinPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-axis.tickwidth-label" for="ViolinPlot-axis.tickwidth">Tick mark width</label>
+#>             <label class="control-label" id="ViolinPlot-axis.tickwidth-label" for="ViolinPlot-axis.tickwidth">Tick Mark Width</label>
 #>             <input id="ViolinPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2994-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9504-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

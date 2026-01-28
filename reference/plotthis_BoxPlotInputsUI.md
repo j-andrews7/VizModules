@@ -73,28 +73,28 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="6117">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="1100">
 #>     <li class="active">
-#>       <a href="#tab-6117-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1100-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6117-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-1100-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6117-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-1100-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6117-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1100-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6117-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1100-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6117-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1100-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6117">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6117-1">
+#>   <div class="tab-content" data-tabsetid="1100">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1100-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -153,7 +153,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-6117-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-1100-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -231,7 +231,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-6117-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-1100-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -261,7 +261,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6117-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1100-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -289,14 +289,14 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="BoxPlot-facet.ncol-label" for="BoxPlot-facet.ncol">Number of Columns</label>
-#>             <input id="BoxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="BoxPlot-facet.ncol-label" for="BoxPlot-facet.ncol">Columns</label>
+#>             <input id="BoxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="BoxPlot-facet.nrow-label" for="BoxPlot-facet.nrow">Number of Rows</label>
-#>             <input id="BoxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>             <label class="control-label" id="BoxPlot-facet.nrow-label" for="BoxPlot-facet.nrow">Rows</label>
+#>             <input id="BoxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
 #>         </div>
 #>       </div>
@@ -312,7 +312,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6117-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1100-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -417,7 +417,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="BoxPlot-axis.tickfont.size-label" for="BoxPlot-axis.tickfont.size">Tick Label Size</label>
-#>             <input id="BoxPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>             <input id="BoxPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
 #>         </div>
 #>       </div>
@@ -502,7 +502,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-6117-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1100-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
