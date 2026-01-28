@@ -934,16 +934,15 @@
 #' @author Jacob Martin 
 #' @keywords internal
 #' @rdname INTERNAL_hide_jitter_from_legend
-.hide_jitter_from_legend <- function(fig) {
+.hide_jitter_from_legend <- function(fig){
+
     stopifnot("plotly" %in% class(fig))
-    fig$x$data <- lapply(
-        fig$x$data, function(i) {
-            # Hide scatter traces (jitter points) from legend, but keep box traces
-            if (!is.null(i$type) && i$type == "scatter" && !is.null(i$mode) && i$mode == "markers") {
-                i$showlegend <- FALSE
-            }
-            i
+    for (i in seq_along(fig$x$data)) {
+        fig_data <- fig$x$data[[i]]
+        if (!is.null(fig_data$type) && fig_data$type == "scatter" && !is.null(fig_data$mode) && fig_data$mode =="markers"){
+            fig_data$showlegend <- FALSE
         }
-    )
-    fig
+        fig$x$data[[i]] <- fig_data
+    }
+    fig 
 }
