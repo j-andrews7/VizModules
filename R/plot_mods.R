@@ -52,7 +52,6 @@
         # Only the primary xaxis should have a title in faceted plots
         style_to_apply <- xaxis_style
         if (xaxis_name != "xaxis") {
-            style_to_apply <- xaxis_style
             style_to_apply$title <- NULL
         }
         
@@ -71,7 +70,6 @@
         # Only the primary yaxis should have a title in faceted plots
         style_to_apply <- yaxis_style
         if (yaxis_name != "yaxis") {
-            style_to_apply <- yaxis_style
             style_to_apply$title <- NULL
         }
         
