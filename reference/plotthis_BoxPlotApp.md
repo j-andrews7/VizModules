@@ -30,13 +30,7 @@ Jacob Martin
 
 ``` r
 library(VizModules)
-data <- data.frame(
-    x = rep(LETTERS[1:8], each = 40),
-    y = c(rnorm(160), rnorm(160, mean = 1)),
-    group1 = sample(c("g1", "g2"), 320, replace = TRUE),
-    group2 = sample(c("h1", "h2", "h3", "h4"), 320, replace = TRUE)
-)
-data_list <- list("test_data" = data)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- plotthis_BoxPlotApp(data_list)
 if (interactive()) runApp(app)
 ```

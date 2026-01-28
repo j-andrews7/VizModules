@@ -26,6 +26,10 @@
   : Output UI components for the yPlot module
 - [`dittoViz_yPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.md)
   : Server logic for yPlot module
+- [`example_population`](https://j-andrews7.github.io/VizModules/reference/example_population.md)
+  : Example population dataset for module apps
+- [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
+  : Example sales dataset for module apps
 - [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
   : Create an Interactive Line Plot with plotly
 - [`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md)

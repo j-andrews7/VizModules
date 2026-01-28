@@ -30,8 +30,8 @@ Jacob Martin
 ## Examples
 
 ``` r
-mtcars$cyl <- as.factor(mtcars$cyl)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
+library(VizModules)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- plotthis_SplitBarPlotApp(data_list)
 if (interactive()) runApp(app)
 ```

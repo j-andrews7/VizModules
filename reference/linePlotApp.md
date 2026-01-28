@@ -31,7 +31,7 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- linePlotApp(data_list)
 if (interactive()) runApp(app)
 ```

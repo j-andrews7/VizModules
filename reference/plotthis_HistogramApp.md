@@ -30,11 +30,7 @@ Jacob Martin
 
 ``` r
 library(VizModules)
-# Needs at least 2 categorical variables for grouping and x-axis
-mtcars$cyl <- as.factor(mtcars$cyl)
-mtcars$gear <- as.factor(mtcars$gear)
-iris$group <- rep(c("A", "B"), each = 75)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- plotthis_HistogramApp(data_list)
 if (interactive()) runApp(app)
 ```
