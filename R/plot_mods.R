@@ -48,23 +48,39 @@
 
     # Apply x-axis styling to all x-axes
     for (xaxis_name in xaxis_names) {
+        # For subplot axes (xaxis2, xaxis3, etc.), remove title to avoid duplicates
+        # Only the primary xaxis should have a title in faceted plots
+        style_to_apply <- xaxis_style
+        if (xaxis_name != "xaxis") {
+            style_to_apply <- xaxis_style
+            style_to_apply$title <- NULL
+        }
+        
         # Preserve existing axis properties and merge with new styling
         existing_axis <- fig$x$layout[[xaxis_name]]
         if (!is.null(existing_axis)) {
-            layout_updates[[xaxis_name]] <- modifyList(existing_axis, xaxis_style)
+            layout_updates[[xaxis_name]] <- modifyList(existing_axis, style_to_apply)
         } else {
-            layout_updates[[xaxis_name]] <- xaxis_style
+            layout_updates[[xaxis_name]] <- style_to_apply
         }
     }
 
     # Apply y-axis styling to all y-axes
     for (yaxis_name in yaxis_names) {
+        # For subplot axes (yaxis2, yaxis3, etc.), remove title to avoid duplicates
+        # Only the primary yaxis should have a title in faceted plots
+        style_to_apply <- yaxis_style
+        if (yaxis_name != "yaxis") {
+            style_to_apply <- yaxis_style
+            style_to_apply$title <- NULL
+        }
+        
         # Preserve existing axis properties and merge with new styling
         existing_axis <- fig$x$layout[[yaxis_name]]
         if (!is.null(existing_axis)) {
-            layout_updates[[yaxis_name]] <- modifyList(existing_axis, yaxis_style)
+            layout_updates[[yaxis_name]] <- modifyList(existing_axis, style_to_apply)
         } else {
-            layout_updates[[yaxis_name]] <- yaxis_style
+            layout_updates[[yaxis_name]] <- style_to_apply
         }
 
         # For subplots with matched axes (yaxis2, yaxis3, etc.), explicitly ensure
