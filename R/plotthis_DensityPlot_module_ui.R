@@ -31,19 +31,17 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X data", selected = names(num.choices)[1], choices = names(num.choices)),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
-            textInput(ns("group.by.name"), "Group by legend name", value = "")
+            selectInput(ns("x.data"), "X Data", selected = names(num.choices)[2], choices = names(num.choices)),
+            selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success"),
+            selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
+            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
             selectInput(ns("split.by"), "Split by", selected = "", choices = c("", cat.choices))
         ),
         "Aesthetics" = tagList(

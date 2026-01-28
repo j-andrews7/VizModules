@@ -97,9 +97,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data", selected = names(data())[1])
+            updateSelectInput(session, "x.data", selected = names(numeric.data)[1])
             updateSelectInput(session, "group.by", selected = "")
-            updateTextInput(session, "group.by.name", value = "")
             updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
@@ -116,8 +115,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "position", selected = "identity")
             colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
-
-            # Action Button:
+            # Action Button
             updateSelectInput(session, "download.type", selected = "png")
 
             # Lines
@@ -138,7 +136,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateTextInput(session, "abline.linetypes", value = "dashed")
             updateTextInput(session, "abline.opacities", value = "1")
 
-            # Axes:
+            # Axes
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -218,7 +216,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 bar_alpha = isolate_fn(input$bar.alpha),
                 bar_width = isolate_fn(input$bar.width),
                 theme = isolate_fn(input$theme),
-                palette = default_palette_name,
                 palcolor = palcolor_arg,
                 position = isolate_fn(input$position)
             )
@@ -232,8 +229,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            # Axis Styling:
-
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 

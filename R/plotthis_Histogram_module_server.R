@@ -98,9 +98,8 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data", selected = names(data)[1])
+            updateSelectInput(session, "x.data", selected = names(numeric.data)[1])
             updateSelectInput(session, "group.by", selected = "")
-            updateTextInput(session, "group.by.name", value = "")
             updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
@@ -126,7 +125,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
 
-            # Action Button:
+            # Action Button
             updateSelectInput(session, "download.type", selected = "png")
 
             # Lines
@@ -147,7 +146,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateTextInput(session, "abline.linetypes", value = "dashed")
             updateTextInput(session, "abline.opacities", value = "1")
 
-            # Axes:
+            # Axes
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -200,12 +199,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             bin.width <- isolate_fn(input$bin.width)
           }
 
-        #   split.by <- NULL
-        #   if (!isolate_fn(input$split.by) == ""){
-        #     browser()
-        #     split.by <- isolate_fn(input$split.by)
-        #   }
-
         palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
@@ -251,7 +244,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             bar_alpha = isolate_fn(input$bar.alpha),
             bar_width = isolate_fn(input$bar.width),
             theme = isolate_fn(input$theme),
-            palette = default_palette_name,
             palcolor = palcolor_arg,
             position = isolate_fn(input$position)
           )
@@ -265,8 +257,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
               )
 
           # Apply axis styling to all subplot axes (handles faceting/split_by)
-          #Axis Styling: 
-
           xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
           yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 

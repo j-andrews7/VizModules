@@ -78,10 +78,9 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 value = TRUE, status = "success")
         ),
         "Box" = tagList(
-            colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            materialSwitch(ns("boxplot.show.outliers"), "Show Outliers",
+            materialSwitch(ns("show.outliers"), "Show Outliers",
                 value = FALSE, status = "success"),
-            numericInput(ns("boxplot.outlier.size"), "Outlier Size", value = 1.5, min = 0, max = 10),
+            colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
             materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
             numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
             numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),

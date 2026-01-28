@@ -50,6 +50,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
             selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
             selectInput(ns("group.by"), "Group by", selected = "", choices = c(cat.choices, "")),
+            materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(

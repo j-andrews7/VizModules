@@ -34,9 +34,8 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X input", selected = names(num.choices)[1], choices = names(num.choices)),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
-            textInput(ns("group.by.name"), "Group by legend name", value = "")
+            selectInput(ns("x.data"), "X input", selected = names(num.choices)[2], choices = names(num.choices)),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices))
         ),
 
         "Facet" = tagList(

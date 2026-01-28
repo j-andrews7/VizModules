@@ -100,6 +100,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateSelectInput(session, "group.by", selected = "NULL")
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
+            updateMaterialSwitch(session, "show.outliers", value = TRUE)
 
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
@@ -277,6 +278,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 abline.linetypes = isolate_fn(input$abline.linetypes),
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
+
+            # Remove outliers if jitter points are shown or if user explicitly disabled outliers
+            if (isolate_fn(input$add.points) || !isolate_fn(input$show.outliers)) {
+                fig <- .remove_boxplot_outliers(fig)
+            }
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))

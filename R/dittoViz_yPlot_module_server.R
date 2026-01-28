@@ -123,11 +123,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateNumericInput(session, "jitter.position.dodge", value = NA)
 
             # Box
+            updateMaterialSwitch(session, "show.outliers", value = FALSE)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
-            updateMaterialSwitch(session, "boxplot.show.outliers", value = FALSE)
-            updateNumericInput(session, "boxplot.outlier.size", value = 1.5)
             updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
-            updateNumericInput(session, "boxplot.position.dodge", value = 0.2)
             updateNumericInput(session, "boxplot.lineweight", value = 1)
 
             # Violin
@@ -303,8 +301,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
                 jitter.position.dodge = 1 - isolate_fn(input$boxgap),
                 boxplot.color = isolate_fn(input$boxplot.color),
-                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
-                boxplot.outlier.size = isolate_fn(input$boxplot.outlier.size),
+                boxplot.show.outliers = TRUE,
                 boxplot.fill = isolate_fn(input$boxplot.fill),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
@@ -356,6 +353,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 abline.linetypes = isolate_fn(input$abline.linetypes),
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
+
+            # Remove outliers if jitter is shown or if user explicitly disabled outliers
+            if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$show.outliers)) {
+                fig <- .remove_boxplot_outliers(fig)
+            }
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
