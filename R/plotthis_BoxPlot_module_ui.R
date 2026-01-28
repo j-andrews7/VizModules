@@ -53,28 +53,24 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
+            numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
             shiny::selectInput(ns("sort_x"), "Sort X by", c(
                 "none", "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
             ), selected = "none"),
-            
-            materialSwitch(ns("stack"), "Stack Plot", value = FALSE, status = "success"),
-            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -1000, max = 1000),
-            numericInput(ns("aspect.ratio"), "Aspect Ratio", value = 1, min = 0, max = 100),
+            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
+            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),
             materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
             numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
             numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.5),
-            numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1, value = 0),
+            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.3, step = 0.05),
             colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000")
         ),
         "Extras" = tagList(
             textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
-            numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1),
-            colourpicker::colourInput(ns("text.colour"), "Axis Title Colour", value = "#000000")
+            numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1)
         ),
         "Facet" = tagList(
             selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
@@ -85,6 +81,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ),
         "Axes" = tagList(
             materialSwitch(ns("flip"), "Flip Horizontal", value = FALSE, status = "success"),
+            colourpicker::colourInput(ns("text.colour"), "Axis Title Colour", value = "#000000"),
             selectInput(ns("font.type"), "Font Type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",

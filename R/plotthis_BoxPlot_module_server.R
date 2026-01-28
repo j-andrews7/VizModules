@@ -92,7 +92,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor 
+            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
             min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             # Reset numeric inputs to defaults derived from data
 
@@ -100,11 +100,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateSelectInput(session, "group.by", selected = "NULL")
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
+
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
             updateMaterialSwitch(session, "flip", value = FALSE)
-            updateMaterialSwitch(session, "stack", value = FALSE)
-            updateNumericInput(session, "aspect.ratio", value = 1)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
 
@@ -112,29 +111,17 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "add.points", value = FALSE)
             updateNumericInput(session, "pt.size", value = 1)
             updateNumericInput(session, "pt.alpha", value = 1)
-            updateNumericInput(session, "jitter.width", value = 0.5)
-            updateNumericInput(session, "jitter.height", value = 0)
+            updateNumericInput(session, "jitter.width", value = 0.3)
 
             # Colors
-            colourpicker::updateColourInput(session, "pt.color", value = "#4472C4")
-            updateNumericInput(session, "alpha", value = 0.7)
+            colourpicker::updateColourInput(session, "pt.color", value = "#000000")
+            updateNumericInput(session, "alpha", value = 1)
 
             # Annotations
-            updateTextInput(session, "title", value = "title")
-            updateTextInput(session, "y.lab", value = "y title")
-            updateTextInput(session, "x.lab", value = "x title")
             updateTextInput(session, "highlight", value = "")
             colourpicker::updateColourInput(session, "highlight.colour", value = "#000000")
             updateNumericInput(session, "highlight.size", value = 1)
             updateNumericInput(session, "highlight.alpha", value = 1)
-            updateSelectInput(session, "font.type", selected = "Arial")
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-
-            # Trajectory
-            updateMaterialSwitch(session, "add.trend", value = FALSE)
-            updateNumericInput(session, "trend.pt.size", value = 2)
-            colourpicker::updateColourInput(session, "trend.colour", value = "#000000")
-            updateNumericInput(session, "trend.line.width", value = 1)
 
             # Facet
             updateSelectInput(session, "facet.by", selected = "NULL")
@@ -164,7 +151,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateTextInput(session, "abline.linetypes", value = "dashed")
             updateTextInput(session, "abline.opacities", value = "1")
 
-            # Axes:
+            # Axes
+            updateSelectInput(session, "font.type", selected = "Arial")
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -229,15 +218,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$flip),
                 sort_x = isolate_fn(input$sort_x),
-                stack = isolate_fn(input$stack),
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
-                aspect.ratio = isolate_fn(input$aspect.ratio),
                 add_point = isolate_fn(input$add.points),
                 pt_size = isolate_fn(input$pt.size),
                 pt_alpha = isolate_fn(input$pt.alpha),
                 jitter_width = isolate_fn(input$jitter.width),
-                jitter_height = isolate_fn(input$jitter.height),
                 pt_color = isolate_fn(input$pt.color),
                 alpha = isolate_fn(input$alpha),
                 palcolor = palcolor_arg,
@@ -250,8 +236,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight = highlight,
                 highlight_color = isolate_fn(input$highlight.colour),
                 highlight_size = isolate_fn(input$highlight.size),
-                highlight_alpha = isolate_fn(input$highlight.alpha),
-                combine = isolate_fn(input$combine)
+                highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
             fig <- ggplotly(p) |>
@@ -260,7 +245,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                         font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
-                    boxmode = ifelse(!is.null(group.by), "group", "overlay")
+                    boxmode = ifelse(!is.null(group.by), "group", "overlay"),
+                    boxgap = 0.1, 
+                    boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
