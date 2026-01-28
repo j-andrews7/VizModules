@@ -313,6 +313,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
+            # Hide jitter points from legend if they are shown
+            if (isolate_fn(input$add.points)) {
+                fig <- .hide_jitter_from_legend(fig)
+            }
+
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
