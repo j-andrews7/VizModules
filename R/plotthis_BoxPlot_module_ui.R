@@ -49,7 +49,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Data" = tagList(
             selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
             selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c(cat.choices, "")),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
             materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
             uiOutput(ns("palette.selection"))
         ),
@@ -76,8 +76,8 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Facet" = tagList(
             selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
             selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
+            numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
             materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
         ),
         "Axes" = tagList(
@@ -131,7 +131,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     12
                 ),
                 min = 1,
-                step = 1
+                step = 0.5
             ),
             colourInput(ns("axis.tickfont.color"), "Tick Label Color",
                 value = ifelse("axis.tickfont.color" %in% names(defaults),

@@ -48,94 +48,80 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "Select X data", choices = char.choices, selected = char.choices[2]),
-            selectInput(ns("y.data"), "Select Y data", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c(char.choices, "")),
+            selectInput(ns("x.data"), "X Data", choices = char.choices, selected = char.choices[2]),
+            selectInput(ns("y.data"), "Y Data", choices = num.choices, selected = num.choices[2]),
+            selectInput(ns("group.by"), "Group By", selected = "", choices = c("", char.choices)),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            shiny::selectInput(ns("sort_x"), "Sort X axis by", c(
+            shiny::selectInput(ns("sort_x"), "Sort X By", c(
                 "none", "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
             ), selected = "none"),
-            
-            materialSwitch(ns("stack"), "Stack Plot", value = FALSE, status = "success"),
-            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -1000, max = 1000),
-            numericInput(ns("aspect.ratio"), "Aspect Ratio", value = 1, min = 0, max = 100),
+            numericInput(ns("y.max"), "Y Max", value = max.y),
+            numericInput(ns("y.min"), "Y Min", value = min.y),
             materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
             numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
             numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
             numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.5),
             numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1, value = 0),
-            colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#000000"),
+            colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000"),
             materialSwitch(ns("add.box"), "Add Box", value = FALSE, status = "success"),
-            colourpicker::colourInput(ns("box.color"), "Box colour", value = "#000000"),
+            colourpicker::colourInput(ns("box.color"), "Box Colour", value = "#000000"),
             numericInput(ns("box.width"), "Box Width", min = 0, max = 1, value = 0.1),
             numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10, value = 2.5)
         ),
-        "Extras" = tagList(
-            numericInput(ns("add.line"), "Add Y interception line", value = NA, min = min.y, max = max.y),
-            colourpicker::colourInput(ns("line.colour"), "Y Intercept line colour", value = "#000000"),
-            numericInput(ns("line.width"), "Line width", value = 0.6, min = 0.1, max = 10),
-            numericInput(ns("line.type"), "Line type", value = 1, min = 1, max = 40),
+        "Highlight" = tagList(
             textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
-            colourpicker::colourInput(ns("highlight.colour"), "Highlight colour", value = "#000000"),
-            numericInput(ns("highlight.size"), "Highlight size", value = 1, min = 0),
-            numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1)
-        ),
-        "Stats" = tagList(
-            selectInput(ns("add.stat"), "Add Stats", selected = "", choices = c("", "mean", "sd", "median", "var")),
-            colourpicker::colourInput(ns("stat.color"), "Stats Colour", value = "#000000"),
-            numericInput(ns("stat.size"), "Stat Size", value = 1, min = 0, max = 10),
-            numericInput(ns("stat.stroke"), "Stat Stroke", value = 1, min = 0, max = 10),
-            numericInput(ns("stat.shape"), "Stat Shape", value = 25, min = 0, max = 100)
+            colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
+            numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
+            numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1)
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(char.choices, "")),
-            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success")
+            selectInput(ns("facet.by"), "Facet By", selected = "", choices = c(char.choices, "")),
+            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
+            numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
+            materialSwitch(ns("facet.by.row"), "Facet By Row", value = TRUE, status = "success")
         ),
         "Axes" = tagList(
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour", value = "#000000"),
-            materialSwitch(ns("flip"), "Flip horizontal", value = FALSE, status = "success"),
-            selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(
+            colourpicker::colourInput(ns("text.colour"), "Axis Title Colour", value = "#000000"),
+            materialSwitch(ns("flip"), "Flip Horizontal", value = FALSE, status = "success"),
+            selectInput(ns("font.type"), "Font Type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
             )),
-            checkboxInput(ns("axis.showline"), "Show axis lines",
+            checkboxInput(ns("axis.showline"), "Show Axis Lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
+            checkboxInput(ns("axis.mirror"), "Mirror Axis Lines",
                 value = ifelse("axis.mirror" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.x"), "Show X major gridlines",
+            checkboxInput(ns("show.major.grid.x"), "Show X Gridlines",
                 value = ifelse("show.major.grid.x" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.x"]]), defaults[["show.major.grid.x"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.y"), "Show Y major gridlines",
+            checkboxInput(ns("show.major.grid.y"), "Show Y Gridlines",
                 value = ifelse("show.major.grid.y" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.y"]]), defaults[["show.major.grid.y"]], TRUE),
                     TRUE
                 )
             ),
-            colourInput(ns("axis.linecolor"), "Axis line color",
+            colourInput(ns("axis.linecolor"), "Axis Line Color",
                 value = ifelse("axis.linecolor" %in% names(defaults),
                     defaults[["axis.linecolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.linewidth"), "Axis line width",
+            numericInput(ns("axis.linewidth"), "Axis Line Width",
                 value = ifelse("axis.linewidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
                     0.5
@@ -143,7 +129,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 min = 0,
                 step = 0.1
             ),
-            numericInput(ns("axis.tickfont.size"), "Tick label size",
+            numericInput(ns("axis.tickfont.size"), "Tick Label Size",
                 value = ifelse("axis.tickfont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
                     12
@@ -151,12 +137,12 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 min = 1,
                 step = 1
             ),
-            colourInput(ns("axis.tickfont.color"), "Tick label color",
+            colourInput(ns("axis.tickfont.color"), "Tick Label Color",
                 value = ifelse("axis.tickfont.color" %in% names(defaults),
                     defaults[["axis.tickfont.color"]], "black"
                 )
             ),
-            selectInput(ns("axis.tickfont.family"), "Tick label font",
+            selectInput(ns("axis.tickfont.family"), "Tick Label Font",
                 choices = c(
                     "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
                     "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -173,7 +159,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                     "Arial"
                 )
             ),
-            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
+            numericInput(ns("axis.tickangle.x"), "X-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.x" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
                     0
@@ -182,7 +168,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 max = 180,
                 step = 15
             ),
-            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
+            numericInput(ns("axis.tickangle.y"), "Y-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.y" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
                     0
@@ -191,7 +177,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 max = 180,
                 step = 15
             ),
-            selectInput(ns("axis.ticks"), "Tick position",
+            selectInput(ns("axis.ticks"), "Tick Position",
                 choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
                 selected = ifelse("axis.ticks" %in% names(defaults),
                     ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
@@ -200,12 +186,12 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                     "outside"
                 )
             ),
-            colourInput(ns("axis.tickcolor"), "Tick mark color",
+            colourInput(ns("axis.tickcolor"), "Tick Mark Color",
                 value = ifelse("axis.tickcolor" %in% names(defaults),
                     defaults[["axis.tickcolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.ticklen"), "Tick mark length",
+            numericInput(ns("axis.ticklen"), "Tick Mark Length",
                 value = ifelse("axis.ticklen" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
                     5
@@ -213,7 +199,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 min = 0,
                 step = 1
             ),
-            numericInput(ns("axis.tickwidth"), "Tick mark width",
+            numericInput(ns("axis.tickwidth"), "Tick Mark Width",
                 value = ifelse("axis.tickwidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
                     1

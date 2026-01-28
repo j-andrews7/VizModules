@@ -81,10 +81,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             )
         })
 
-        # Track initialization
-        # initialized <- reactiveVal(FALSE)
-
-
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
@@ -103,8 +99,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
             updateMaterialSwitch(session, "flip", value = FALSE)
-            updateMaterialSwitch(session, "stack", value = FALSE)
-            updateNumericInput(session, "aspect.ratio", value = 1)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
 
@@ -122,26 +116,13 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateNumericInput(session, "box.ptsize", value = 2.5)
 
             # Colors
-            colourpicker::updateColourInput(session, "pt.color", value = "#4472C4")
+            colourpicker::updateColourInput(session, "pt.color", value = "#000000")
 
             # Annotations
-            updateNumericInput(session, "add.line", value = NA)
-            updateNumericInput(session, "line.width", value = 0.6)
-            colourpicker::updateColourInput(session, "line.colour", value = "#000000")
-            updateNumericInput(session, "line.type", value = 1)
             updateTextInput(session, "highlight", value = "")
             colourpicker::updateColourInput(session, "highlight.colour", value = "#000000")
             updateNumericInput(session, "highlight.size", value = 1)
             updateNumericInput(session, "highlight.alpha", value = 1)
-            updateSelectInput(session, "font.type", selected = "Arial")
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-
-            # Stats
-            updateSelectInput(session, "add.stat", selected = "")
-            colourpicker::updateColourInput(session, "stat.color", value = "#000000")
-            updateNumericInput(session, "stat.size", value = 1)
-            updateNumericInput(session, "stat.stroke", value = 1)
-            updateNumericInput(session, "stat.shape", value = 25)
 
             # Facet
             updateSelectInput(session, "facet.by", selected = "NULL")
@@ -171,7 +152,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateTextInput(session, "abline.linetypes", value = "dashed")
             updateTextInput(session, "abline.opacities", value = "1")
 
-            # Axes:
+            # Axes
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateSelectInput(session, "font.type", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -217,11 +200,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
-            #Stats Default: 
-            add.stat <- NULL
-            if (!isolate_fn(input$add.stat) == ""){
-                add.stat <- isolate_fn(input$add.stat)
-            }
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
@@ -237,12 +215,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
+                group_by = group.by,
                 flip = isolate_fn(input$flip),
                 sort_x = isolate_fn(input$sort_x),
-                stack = isolate_fn(input$stack),
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
-                aspect.ratio = isolate_fn(input$aspect.ratio),
                 add_point = isolate_fn(input$add.points),
                 pt_size = isolate_fn(input$pt.size),
                 pt_alpha = isolate_fn(input$pt.alpha),
@@ -253,13 +230,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 box_color = isolate_fn(input$box.color),
                 box_width = isolate_fn(input$box.width),
                 box_ptsize = isolate_fn(input$box.ptsize),
-                add_stat = add.stat,
-                stat_color = isolate_fn(input$stat.color),
-                stat_size = isolate_fn(input$stat.size),
-                stat_stroke = isolate_fn(input$stat.stroke),
-                stat_shape = isolate_fn(input$stat.shape),
-                stat_name = isolate_fn(input$add.stat),
-                palette = default_palette_name,
                 palcolor = palcolor_arg,
                 add_line = isolate_fn(input$add.line),
                 line_color = isolate_fn(input$line.colour),
@@ -270,7 +240,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                group_by = group.by,
                 highlight = highlight,
                 highlight_color = isolate_fn(input$highlight.colour),
                 highlight_size = isolate_fn(input$highlight.size),
