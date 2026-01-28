@@ -879,3 +879,38 @@
 
     return(list(min = min.y, max = max.y))
 }
+
+#' Remove boxplot outliers from plotly figure
+#'
+#' Hides outlier points in boxplot traces by setting their marker opacity to zero
+#' and disabling hover information. The outliers remain in the underlying data
+#' but are not visually displayed or interactive.
+#'
+#' @param fig A plotly figure object containing one or more boxplot traces.
+#'
+#' @return The modified plotly figure with outliers hidden in all boxplot traces.
+#'
+#' @details This function iterates through all traces in the plotly figure and
+#'   identifies those with type "box". For each boxplot trace, it sets the marker
+#'   opacity to 0 and disables hover information, effectively hiding the outlier
+#'   points while preserving the box, whiskers, and median line. Non-boxplot traces
+#'   are returned unchanged.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_remove_boxplot_outliers
+.remove_boxplot_outliers <- function(fig) {
+    stopifnot("plotly" %in% class(fig))
+    fig$x$data <- lapply(
+        fig$x$data,
+        function(i) {
+            if (i$type != "box") {
+                return(i)
+            }
+            i$marker <- list(opacity = 0)
+            i$hoverinfo <- "none"
+            i
+        }
+    )
+    fig
+}
