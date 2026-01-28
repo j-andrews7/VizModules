@@ -15,7 +15,7 @@
 #'
 #' @examples
 #' library(VizModules)
-#' #' # Create sample data with time series and multiple groups
+#' # Create sample data with time series and multiple groups
 #' set.seed(7)
 #' # Sales data: 10 years × 12 months × 6 regions = 720 rows
 #' years_sales <- rep(2015:2024, each = 72)
