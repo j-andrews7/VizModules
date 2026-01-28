@@ -40,88 +40,86 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     # Get numeric variables of data.
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor ( Allows the top of the graph to not reach the top of the axes)
     min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
-
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "Select X data:", choices = char.choices, selected = char.choices[2]),
-            selectInput(ns("y.data"), "Select Y data:", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by:", selected = "", choices = c(char.choices, "")),
+            selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
+            selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
+            selectInput(ns("group.by"), "Group by", selected = "", choices = c(cat.choices, "")),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            shiny::selectInput(ns("sort_x"), "Sort the X axis by: ", c(
+            shiny::selectInput(ns("sort_x"), "Sort X by", c(
                 "none", "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
             ), selected = "none"),
             
-            materialSwitch(ns("stack"), "Stack Plot:", value = FALSE, status = "success"),
-            numericInput(ns("y.max"), "Max Value of Y Axis:", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Min Value of Y Axis:", value = min.y, min = -1000, max = 1000),
-            numericInput(ns("aspect.ratio"), "Aspect Ratio:", value = 1, min = 0, max = 100),
-            materialSwitch(ns("add.points"), "Add Jitter Points:", value = FALSE, status = "success"),
-            numericInput(ns("pt.size"), "Point Size:", max = 100, min = 0.1, value = 1),
-            numericInput(ns("pt.alpha"), "Point Alpha:", min = 0, max = 1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width:", min = 0, max = 1, value = 0.5),
-            numericInput(ns("jitter.height"), "Jitter Height:", min = 0, max = 1, value = 0),
-            colourpicker::colourInput(ns("pt.color"), "Point outline colour", value = "#000000")
+            materialSwitch(ns("stack"), "Stack Plot", value = FALSE, status = "success"),
+            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -1000, max = 1000),
+            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -1000, max = 1000),
+            numericInput(ns("aspect.ratio"), "Aspect Ratio", value = 1, min = 0, max = 100),
+            materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
+            numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
+            numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
+            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.5),
+            numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1, value = 0),
+            colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000")
         ),
         "Extras" = tagList(
-            textInput(ns("highlight"), "Highlight:", value = "", placeholder = "E.g. y > 0"),
-            colourpicker::colourInput(ns("highlight.colour"), "Highlight colour:", value = "#000000"),
-            numericInput(ns("highlight.size"), "Highlight size:", value = 1, min = 0),
-            numericInput(ns("highlight.alpha"), "Highlight alpha", value = 1, min = 0, max = 1),
-            colourpicker::colourInput(ns("text.colour"), "Axis title colour:", value = "#000000")
+            textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
+            colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
+            numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
+            numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1),
+            colourpicker::colourInput(ns("text.colour"), "Axis Title Colour", value = "#000000")
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(char.choices, "")),
-            selectInput(ns("facet.scale"), "Facet scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Facet number of columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Facet number of rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by row", value = TRUE, status = "success"),
-            materialSwitch(ns("combine"), "Combine plots", value = TRUE, status = "success")
+            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
+            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
         ),
         "Axes" = tagList(
-            materialSwitch(ns("flip"), "Flip horizontal", value = FALSE, status = "success"),
-            selectInput(ns("font.type"), "Font type", selected = "Arial", choices = c(
+            materialSwitch(ns("flip"), "Flip Horizontal", value = FALSE, status = "success"),
+            selectInput(ns("font.type"), "Font Type", selected = "Arial", choices = c(
                             "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
                             "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
                             "sans-serif", "serif", "monospace"
             )),
-            checkboxInput(ns("axis.showline"), "Show axis lines",
+            checkboxInput(ns("axis.showline"), "Show Axis Lines",
                 value = ifelse("axis.showline" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
+            checkboxInput(ns("axis.mirror"), "Mirror Axis Lines",
                 value = ifelse("axis.mirror" %in% names(defaults),
                     ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.x"), "Show X major gridlines",
+            checkboxInput(ns("show.major.grid.x"), "Show X Gridlines",
                 value = ifelse("show.major.grid.x" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.x"]]), defaults[["show.major.grid.x"]], TRUE),
                     TRUE
                 )
             ),
-            checkboxInput(ns("show.major.grid.y"), "Show Y major gridlines",
+            checkboxInput(ns("show.major.grid.y"), "Show Y Gridlines",
                 value = ifelse("show.major.grid.y" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.major.grid.y"]]), defaults[["show.major.grid.y"]], TRUE),
                     TRUE
                 )
             ),
-            colourInput(ns("axis.linecolor"), "Axis line color",
+            colourInput(ns("axis.linecolor"), "Axis Line Color",
                 value = ifelse("axis.linecolor" %in% names(defaults),
                     defaults[["axis.linecolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.linewidth"), "Axis line width",
+            numericInput(ns("axis.linewidth"), "Axis Line Width",
                 value = ifelse("axis.linewidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
                     0.5
@@ -129,7 +127,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 min = 0,
                 step = 0.1
             ),
-            numericInput(ns("axis.tickfont.size"), "Tick label size",
+            numericInput(ns("axis.tickfont.size"), "Tick Label Size",
                 value = ifelse("axis.tickfont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
                     12
@@ -137,12 +135,12 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 min = 1,
                 step = 1
             ),
-            colourInput(ns("axis.tickfont.color"), "Tick label color",
+            colourInput(ns("axis.tickfont.color"), "Tick Label Color",
                 value = ifelse("axis.tickfont.color" %in% names(defaults),
                     defaults[["axis.tickfont.color"]], "black"
                 )
             ),
-            selectInput(ns("axis.tickfont.family"), "Tick label font",
+            selectInput(ns("axis.tickfont.family"), "Tick Label Font",
                 choices = c(
                     "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
                     "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -159,7 +157,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     "Arial"
                 )
             ),
-            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
+            numericInput(ns("axis.tickangle.x"), "X-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.x" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
                     0
@@ -168,7 +166,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 max = 180,
                 step = 15
             ),
-            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
+            numericInput(ns("axis.tickangle.y"), "Y-axis Tick Label Angle",
                 value = ifelse("axis.tickangle.y" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
                     0
@@ -177,7 +175,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 max = 180,
                 step = 15
             ),
-            selectInput(ns("axis.ticks"), "Tick position",
+            selectInput(ns("axis.ticks"), "Tick Position",
                 choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
                 selected = ifelse("axis.ticks" %in% names(defaults),
                     ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
@@ -186,12 +184,12 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     "outside"
                 )
             ),
-            colourInput(ns("axis.tickcolor"), "Tick mark color",
+            colourInput(ns("axis.tickcolor"), "Tick Mark Color",
                 value = ifelse("axis.tickcolor" %in% names(defaults),
                     defaults[["axis.tickcolor"]], "black"
                 )
             ),
-            numericInput(ns("axis.ticklen"), "Tick mark length",
+            numericInput(ns("axis.ticklen"), "Tick Mark Length",
                 value = ifelse("axis.ticklen" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
                     5
@@ -199,7 +197,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 min = 0,
                 step = 1
             ),
-            numericInput(ns("axis.tickwidth"), "Tick mark width",
+            numericInput(ns("axis.tickwidth"), "Tick Mark Width",
                 value = ifelse("axis.tickwidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
                     1

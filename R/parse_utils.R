@@ -135,6 +135,63 @@ neg_log10 <- function(x) {
     -log10(x)
 }
 
+#' Resolve a color palette for plot groups
+#'
+#' Maps groups to colors using selected colors or a default palette. Handles
+#' named color vectors by matching to group names, fills in missing colors with
+#' fallback values, and ensures the output vector is named and matches group length.
+#'
+#' @param groups A character vector of group names to assign colors to.
+#' @param selected_colors A named or unnamed character vector of colors to use.
+#'   If named, colors are matched to groups by name. If NULL or empty, uses
+#'   `default_palette`.
+#' @param default_palette A character vector of fallback colors to use when
+#'   `selected_colors` is NULL/empty or when groups have missing colors.
+#'   Defaults to "#000000" (black) if not provided.
+#'
+#' @return A named character vector of colors with names corresponding to groups,
+#'   or NULL if groups is empty.
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' \dontrun{
+#' groups <- c("A", "B", "C")
+#' colors <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+#' resolve_palette(groups, colors)
+#' # Returns: c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+#'
+#' # Using default palette
+#' resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
+#' }
+resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL) {
+    if (length(groups) == 0) {
+        return(NULL)
+    }
+
+    colors <- selected_colors
+    if (is.null(colors) || length(colors) == 0) {
+        colors <- default_palette
+    }
+
+    if (is.null(colors) || length(colors) == 0) {
+        colors <- "#000000"
+    }
+
+    if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+        colors <- colors[match(groups, names(colors))]
+    }
+
+    if (any(is.na(colors))) {
+        na_idx <- which(is.na(colors))
+        fallback <- if (!is.null(default_palette) && length(default_palette) > 0) default_palette else "#000000"
+        colors[na_idx] <- rep_len(fallback, length(na_idx))
+    }
+
+    colors <- rep_len(colors, length(groups))
+    stats::setNames(colors[seq_along(groups)], groups)
+}
+
 #' Set up auto-update/isolate logic for reactive contexts
 #'
 #' A helper function that encapsulates the common pattern of handling auto-update
@@ -142,7 +199,8 @@ neg_log10 <- function(x) {
 #' on the update button. Returns a wrapper function that either isolates reactive
 #' expressions or passes them through unchanged.
 #'
-#' @param input The Shiny input object from the module server.
+#' @param input The Shiny input object from the module server,
+#'   should have both `auto.update` (boolean) and `update` (button) inputs.
 #' @return A function that wraps reactive expressions. Returns `identity` if auto-update
 #'   is enabled (expressions will be reactive), or `isolate` if auto-update is disabled
 #'   (expressions will not trigger reactivity).

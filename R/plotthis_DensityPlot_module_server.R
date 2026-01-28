@@ -61,30 +61,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
-        resolve_palette <- function(groups, selected_colors = NULL) {
-            if (length(groups) == 0) {
-                return(NULL)
-            }
-
-            colors <- selected_colors
-            if (is.null(colors) || length(colors) == 0) {
-                colors <- default_palette_values
-            }
-
-            if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
-                colors <- colors[match(groups, names(colors))]
-            }
-
-            if (any(is.na(colors))) {
-                na_idx <- which(is.na(colors))
-                fallback <- if (length(default_palette_values) > 0) default_palette_values else "#000000"
-                colors[na_idx] <- rep_len(fallback, length(na_idx))
-            }
-
-            colors <- rep_len(colors, length(groups))
-            stats::setNames(colors[seq_along(groups)], groups)
-        }
-
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
@@ -100,7 +76,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours))
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -207,7 +183,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours)
+                isolate_fn(input$palette.colours),
+                default_palette_values
             )
 
             palcolor_arg <- NULL
