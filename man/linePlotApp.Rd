@@ -19,7 +19,7 @@ A module is created for each data frame provided in the named list of data frame
 }
 \examples{
 library(VizModules)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- linePlotApp(data_list)
 if (interactive()) runApp(app)
 }

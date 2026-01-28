@@ -19,13 +19,7 @@ A module is created for each data frame provided in the named list of data frame
 }
 \examples{
 library(VizModules)
-data <- data.frame(
-    group = rep(LETTERS[1:4], each = 50),
-    value = c(rnorm(50, mean = 5), rnorm(50, mean = 10), 
-              rnorm(50, mean = 7), rnorm(50, mean = 12)),
-    category = sample(c("Type1", "Type2"), 200, replace = TRUE)
-)
-data_list <- list("test_data" = data)
+data_list <- list("sales" = example_sales, "population" = example_population)
 app <- dittoViz_yPlotApp(data_list)
 if (interactive()) runApp(app)
 }

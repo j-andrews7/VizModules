@@ -15,8 +15,8 @@
 #' @author Jacob Martin, Jared Andrews
 #
 #' @examples
-#' mtcars$cyl <- as.factor(mtcars$cly)
-#' data_list <- list("mtcars" = mtcars, "iris" = iris)
+#' library(VizModules)
+#' data_list <- list("sales" = example_sales, "population" = example_population)
 #' app <- plotthis_BarPlotApp(data_list)
 #' if (interactive()) runApp(app)
 plotthis_BarPlotApp <- function(data_list) {

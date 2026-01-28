@@ -20,7 +20,8 @@ Depends:
     shiny,
     plotthis,
     dittoViz,
-    plotly
+    plotly,
+    R (>= 3.5)
 Imports:
     colourpicker,
     shinyjs,

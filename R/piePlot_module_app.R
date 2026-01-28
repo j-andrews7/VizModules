@@ -16,11 +16,9 @@
 #'
 #' @examples
 #' library(VizModules)
-#' iris_summary <- as.data.frame(table(iris$Species))
-#' names(iris_summary) <- c("Species", "Count")
-#' cyl_summary <- as.data.frame(table(mtcars$cyl))
-#' names(cyl_summary) <- c("Cylinders", "Count")
-#' data_list <- list("mtcars" = cyl_summary, "iris" = iris_summary)
+#' sales_summary <- aggregate(revenue ~ region, example_sales, sum)
+#' population_summary <- aggregate(count ~ age_group, example_population, sum)
+#' data_list <- list("sales" = sales_summary, "population" = population_summary)
 #' app <- piePlotApp(data_list)
 #' if (interactive()) runApp(app)
 piePlotApp <- function(data_list) {

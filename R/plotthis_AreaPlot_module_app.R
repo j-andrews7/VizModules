@@ -15,30 +15,7 @@
 #'
 #' @examples
 #' library(VizModules)
-#' # Create sample data with time series and multiple groups
-#' set.seed(7)
-#' # Sales data: 10 years × 12 months × 6 regions = 720 rows
-#' years_sales <- rep(2015:2024, each = 72)
-#' months <- rep(rep(month.abb, each = 6), 10)
-#' regions <- rep(c("North", "South", "East", "West", "Central", "International"), 120)
-#' sales <- data.frame(
-#'     year = factor(years_sales),
-#'     month = factor(months, levels = month.abb),
-#'     region = factor(regions),
-#'     revenue = round(runif(720, 50, 200) + rep(seq(0, 350, length.out = 720)), 1),
-#'     units = sample(100:500, 720, replace = TRUE)
-#' )
-#'
-#' # Population data: 50 years × 8 age groups = 400 rows
-#' years <- rep(1975:2024, each = 8)
-#' age_groups <- rep(c("0-9", "10-17", "18-34", "35-44", "45-54", "55-64", "65-74", "75+"), 50)
-#' population <- data.frame(
-#'     year = factor(years),
-#'     age_group = factor(age_groups, levels = c("0-9", "10-17", "18-34", "35-44", "45-54", "55-64", "65-74", "75+")),
-#'     count = round(rnorm(400, mean = 5000, sd = 800) + rep(seq(0, 3900, length.out = 400)))
-#' )
-#'
-#' data_list <- list("sales" = sales, "population" = population)
+#' data_list <- list("sales" = example_sales, "population" = example_population)
 #' app <- plotthis_AreaPlotApp(data_list)
 #' if (interactive()) runApp(app)
 plotthis_AreaPlotApp <- function(data_list) {
