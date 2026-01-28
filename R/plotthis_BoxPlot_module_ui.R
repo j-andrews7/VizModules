@@ -66,7 +66,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.3, step = 0.05),
             colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000")
         ),
-        "Extras" = tagList(
+        "Highlight" = tagList(
             textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),

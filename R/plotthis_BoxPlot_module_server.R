@@ -130,7 +130,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
-            # Action Button:
+            # Action Button
             updateSelectInput(session, "download.type", selected = "png")
 
             # Lines
