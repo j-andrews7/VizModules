@@ -77,8 +77,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
         textInput(ns("alpha.name"), "Alpha name", value = ""),
         numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
-        numericInput(ns("line.height"), "Line height", value = 0.5, min = 0),
-        numericInput(ns("max.charwidth"), "Max charwidth", value = 80, min = 0)
+        numericInput(ns("line.height"), "Line height", value = 0.5, min = 0)
     ),
 
 
