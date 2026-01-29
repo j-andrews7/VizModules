@@ -102,9 +102,8 @@ Nearly all parameters for <code><a href="https://rdrr.io/pkg/dittoViz/man/scatte
 for that function for an exhaustive list.</p>
 <p>Additional inputs specific to volcano plots are added to control significance thresholds and colors:</p><ul><li><p><code>sig.thresh</code>: Significance threshold (default 0.05)</p></li>
 <li><p><code>fc.thresh</code>: Log2 fold change threshold (default 0)</p></li>
-<li><p><code>color.up</code>: Color for upregulated genes (default "red")</p></li>
-<li><p><code>color.down</code>: Color for downregulated genes (default "blue")</p></li>
-<li><p><code>color.ns</code>: Color for non-significant genes (default "lightgray")</p></li>
+<li><p><code>volcano.colors</code>: A multiColorPicker for Up/Down/n.s. group colors
+(defaults: Up="red", Down="blue", n.s.="lightgray")</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -138,68 +137,134 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" for="volcanoPlot-color.up"&gt;Up Color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;input id="volcanoPlot-color.up" type="text" class="form-control shiny-colour-input" data-init-value="red" data-show-colour="both" data-palette="square"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" for="volcanoPlot-color.down"&gt;Down Color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;input id="volcanoPlot-color.down" type="text" class="form-control shiny-colour-input" data-init-value="blue" data-show-colour="both" data-palette="square"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" for="volcanoPlot-color.ns"&gt;N.S. Color&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;input id="volcanoPlot-color.ns" type="text" class="form-control shiny-colour-input" data-init-value="lightgray" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="multi-color-picker shiny-input-container form-group is-compact " id="volcanoPlot-volcano.colors" data-palettes="{&amp;quot;dittoColors&amp;quot;:[&amp;quot;#E69F00&amp;quot;,&amp;quot;#56B4E9&amp;quot;,&amp;quot;#009E73&amp;quot;,&amp;quot;#F0E442&amp;quot;,&amp;quot;#0072B2&amp;quot;,&amp;quot;#D55E00&amp;quot;,&amp;quot;#CC79A7&amp;quot;,&amp;quot;#666666&amp;quot;,&amp;quot;#AD7700&amp;quot;,&amp;quot;#1C91D4&amp;quot;,&amp;quot;#007756&amp;quot;,&amp;quot;#D5C711&amp;quot;,&amp;quot;#005685&amp;quot;,&amp;quot;#A04700&amp;quot;,&amp;quot;#B14380&amp;quot;,&amp;quot;#4D4D4D&amp;quot;],&amp;quot;dittoColors_full&amp;quot;:[&amp;quot;#E69F00&amp;quot;,&amp;quot;#56B4E9&amp;quot;,&amp;quot;#009E73&amp;quot;,&amp;quot;#F0E442&amp;quot;,&amp;quot;#0072B2&amp;quot;,&amp;quot;#D55E00&amp;quot;,&amp;quot;#CC79A7&amp;quot;,&amp;quot;#666666&amp;quot;,&amp;quot;#AD7700&amp;quot;,&amp;quot;#1C91D4&amp;quot;,&amp;quot;#007756&amp;quot;,&amp;quot;#D5C711&amp;quot;,&amp;quot;#005685&amp;quot;,&amp;quot;#A04700&amp;quot;,&amp;quot;#B14380&amp;quot;,&amp;quot;#4D4D4D&amp;quot;,&amp;quot;#FFBE2D&amp;quot;,&amp;quot;#80C7EF&amp;quot;,&amp;quot;#00F6B3&amp;quot;,&amp;quot;#F4EB71&amp;quot;,&amp;quot;#06A5FF&amp;quot;,&amp;quot;#FF8320&amp;quot;,&amp;quot;#D99BBD&amp;quot;,&amp;quot;#8C8C8C&amp;quot;,&amp;quot;#FFCB57&amp;quot;,&amp;quot;#9AD2F2&amp;quot;,&amp;quot;#2CFFC6&amp;quot;,&amp;quot;#F6EF8E&amp;quot;,&amp;quot;#38B7FF&amp;quot;,&amp;quot;#FF9B4D&amp;quot;,&amp;quot;#E0AFCA&amp;quot;,&amp;quot;#A3A3A3&amp;quot;],&amp;quot;ggplot2&amp;quot;:[&amp;quot;#F8766D&amp;quot;,&amp;quot;#E68613&amp;quot;,&amp;quot;#CD9600&amp;quot;,&amp;quot;#ABA300&amp;quot;,&amp;quot;#7CAE00&amp;quot;,&amp;quot;#0BB702&amp;quot;,&amp;quot;#00BE67&amp;quot;,&amp;quot;#00C19A&amp;quot;,&amp;quot;#00BFC4&amp;quot;,&amp;quot;#00B8E7&amp;quot;,&amp;quot;#00A9FF&amp;quot;,&amp;quot;#8494FF&amp;quot;,&amp;quot;#C77CFF&amp;quot;,&amp;quot;#ED68ED&amp;quot;,&amp;quot;#FF61CC&amp;quot;,&amp;quot;#FF68A1&amp;quot;],&amp;quot;viridis&amp;quot;:[&amp;quot;#440154&amp;quot;,&amp;quot;#482173&amp;quot;,&amp;quot;#433E85&amp;quot;,&amp;quot;#38598C&amp;quot;,&amp;quot;#2D708E&amp;quot;,&amp;quot;#25858E&amp;quot;,&amp;quot;#1E9B8A&amp;quot;,&amp;quot;#2BB07F&amp;quot;,&amp;quot;#51C56A&amp;quot;,&amp;quot;#85D54A&amp;quot;,&amp;quot;#C2DF23&amp;quot;,&amp;quot;#FDE725&amp;quot;],&amp;quot;magma&amp;quot;:[&amp;quot;#000004&amp;quot;,&amp;quot;#120D32&amp;quot;,&amp;quot;#331068&amp;quot;,&amp;quot;#5A167E&amp;quot;,&amp;quot;#7D2482&amp;quot;,&amp;quot;#A3307E&amp;quot;,&amp;quot;#C83E73&amp;quot;,&amp;quot;#E95562&amp;quot;,&amp;quot;#F97C5D&amp;quot;,&amp;quot;#FEA873&amp;quot;,&amp;quot;#FED395&amp;quot;,&amp;quot;#FCFDBF&amp;quot;],&amp;quot;inferno&amp;quot;:[&amp;quot;#000004&amp;quot;,&amp;quot;#140B35&amp;quot;,&amp;quot;#3A0963&amp;quot;,&amp;quot;#60136E&amp;quot;,&amp;quot;#85216B&amp;quot;,&amp;quot;#A92E5E&amp;quot;,&amp;quot;#CB4149&amp;quot;,&amp;quot;#E65D2F&amp;quot;,&amp;quot;#F78311&amp;quot;,&amp;quot;#FCAD12&amp;quot;,&amp;quot;#F5DB4B&amp;quot;,&amp;quot;#FCFFA4&amp;quot;],&amp;quot;plasma&amp;quot;:[&amp;quot;#0D0887&amp;quot;,&amp;quot;#3E049C&amp;quot;,&amp;quot;#6300A7&amp;quot;,&amp;quot;#8707A6&amp;quot;,&amp;quot;#A62098&amp;quot;,&amp;quot;#C03A83&amp;quot;,&amp;quot;#D5546E&amp;quot;,&amp;quot;#E76F5A&amp;quot;,&amp;quot;#F58C46&amp;quot;,&amp;quot;#FDAD32&amp;quot;,&amp;quot;#FCD225&amp;quot;,&amp;quot;#F0F921&amp;quot;],&amp;quot;cividis&amp;quot;:[&amp;quot;#00204D&amp;quot;,&amp;quot;#00306F&amp;quot;,&amp;quot;#2A406C&amp;quot;,&amp;quot;#48526B&amp;quot;,&amp;quot;#5E626E&amp;quot;,&amp;quot;#727374&amp;quot;,&amp;quot;#878479&amp;quot;,&amp;quot;#9E9677&amp;quot;,&amp;quot;#B6A971&amp;quot;,&amp;quot;#D0BE67&amp;quot;,&amp;quot;#EAD357&amp;quot;,&amp;quot;#FFEA46&amp;quot;],&amp;quot;BrBG&amp;quot;:[&amp;quot;#543005&amp;quot;,&amp;quot;#8C510A&amp;quot;,&amp;quot;#BF812D&amp;quot;,&amp;quot;#DFC27D&amp;quot;,&amp;quot;#F6E8C3&amp;quot;,&amp;quot;#F5F5F5&amp;quot;,&amp;quot;#C7EAE5&amp;quot;,&amp;quot;#80CDC1&amp;quot;,&amp;quot;#35978F&amp;quot;,&amp;quot;#01665E&amp;quot;,&amp;quot;#003C30&amp;quot;],&amp;quot;PiYG&amp;quot;:[&amp;quot;#8E0152&amp;quot;,&amp;quot;#C51B7D&amp;quot;,&amp;quot;#DE77AE&amp;quot;,&amp;quot;#F1B6DA&amp;quot;,&amp;quot;#FDE0EF&amp;quot;,&amp;quot;#F7F7F7&amp;quot;,&amp;quot;#E6F5D0&amp;quot;,&amp;quot;#B8E186&amp;quot;,&amp;quot;#7FBC41&amp;quot;,&amp;quot;#4D9221&amp;quot;,&amp;quot;#276419&amp;quot;],&amp;quot;PRGn&amp;quot;:[&amp;quot;#40004B&amp;quot;,&amp;quot;#762A83&amp;quot;,&amp;quot;#9970AB&amp;quot;,&amp;quot;#C2A5CF&amp;quot;,&amp;quot;#E7D4E8&amp;quot;,&amp;quot;#F7F7F7&amp;quot;,&amp;quot;#D9F0D3&amp;quot;,&amp;quot;#A6DBA0&amp;quot;,&amp;quot;#5AAE61&amp;quot;,&amp;quot;#1B7837&amp;quot;,&amp;quot;#00441B&amp;quot;],&amp;quot;PuOr&amp;quot;:[&amp;quot;#7F3B08&amp;quot;,&amp;quot;#B35806&amp;quot;,&amp;quot;#E08214&amp;quot;,&amp;quot;#FDB863&amp;quot;,&amp;quot;#FEE0B6&amp;quot;,&amp;quot;#F7F7F7&amp;quot;,&amp;quot;#D8DAEB&amp;quot;,&amp;quot;#B2ABD2&amp;quot;,&amp;quot;#8073AC&amp;quot;,&amp;quot;#542788&amp;quot;,&amp;quot;#2D004B&amp;quot;],&amp;quot;RdBu&amp;quot;:[&amp;quot;#67001F&amp;quot;,&amp;quot;#B2182B&amp;quot;,&amp;quot;#D6604D&amp;quot;,&amp;quot;#F4A582&amp;quot;,&amp;quot;#FDDBC7&amp;quot;,&amp;quot;#F7F7F7&amp;quot;,&amp;quot;#D1E5F0&amp;quot;,&amp;quot;#92C5DE&amp;quot;,&amp;quot;#4393C3&amp;quot;,&amp;quot;#2166AC&amp;quot;,&amp;quot;#053061&amp;quot;],&amp;quot;RdGy&amp;quot;:[&amp;quot;#67001F&amp;quot;,&amp;quot;#B2182B&amp;quot;,&amp;quot;#D6604D&amp;quot;,&amp;quot;#F4A582&amp;quot;,&amp;quot;#FDDBC7&amp;quot;,&amp;quot;#FFFFFF&amp;quot;,&amp;quot;#E0E0E0&amp;quot;,&amp;quot;#BABABA&amp;quot;,&amp;quot;#878787&amp;quot;,&amp;quot;#4D4D4D&amp;quot;,&amp;quot;#1A1A1A&amp;quot;],&amp;quot;RdYlBu&amp;quot;:[&amp;quot;#A50026&amp;quot;,&amp;quot;#D73027&amp;quot;,&amp;quot;#F46D43&amp;quot;,&amp;quot;#FDAE61&amp;quot;,&amp;quot;#FEE090&amp;quot;,&amp;quot;#FFFFBF&amp;quot;,&amp;quot;#E0F3F8&amp;quot;,&amp;quot;#ABD9E9&amp;quot;,&amp;quot;#74ADD1&amp;quot;,&amp;quot;#4575B4&amp;quot;,&amp;quot;#313695&amp;quot;],&amp;quot;RdYlGn&amp;quot;:[&amp;quot;#A50026&amp;quot;,&amp;quot;#D73027&amp;quot;,&amp;quot;#F46D43&amp;quot;,&amp;quot;#FDAE61&amp;quot;,&amp;quot;#FEE08B&amp;quot;,&amp;quot;#FFFFBF&amp;quot;,&amp;quot;#D9EF8B&amp;quot;,&amp;quot;#A6D96A&amp;quot;,&amp;quot;#66BD63&amp;quot;,&amp;quot;#1A9850&amp;quot;,&amp;quot;#006837&amp;quot;],&amp;quot;Spectral&amp;quot;:[&amp;quot;#9E0142&amp;quot;,&amp;quot;#D53E4F&amp;quot;,&amp;quot;#F46D43&amp;quot;,&amp;quot;#FDAE61&amp;quot;,&amp;quot;#FEE08B&amp;quot;,&amp;quot;#FFFFBF&amp;quot;,&amp;quot;#E6F598&amp;quot;,&amp;quot;#ABDDA4&amp;quot;,&amp;quot;#66C2A5&amp;quot;,&amp;quot;#3288BD&amp;quot;,&amp;quot;#5E4FA2&amp;quot;],&amp;quot;Accent&amp;quot;:[&amp;quot;#7FC97F&amp;quot;,&amp;quot;#BEAED4&amp;quot;,&amp;quot;#FDC086&amp;quot;,&amp;quot;#FFFF99&amp;quot;,&amp;quot;#386CB0&amp;quot;,&amp;quot;#F0027F&amp;quot;,&amp;quot;#BF5B17&amp;quot;,&amp;quot;#666666&amp;quot;],&amp;quot;Dark2&amp;quot;:[&amp;quot;#1B9E77&amp;quot;,&amp;quot;#D95F02&amp;quot;,&amp;quot;#7570B3&amp;quot;,&amp;quot;#E7298A&amp;quot;,&amp;quot;#66A61E&amp;quot;,&amp;quot;#E6AB02&amp;quot;,&amp;quot;#A6761D&amp;quot;,&amp;quot;#666666&amp;quot;],&amp;quot;Paired&amp;quot;:[&amp;quot;#A6CEE3&amp;quot;,&amp;quot;#1F78B4&amp;quot;,&amp;quot;#B2DF8A&amp;quot;,&amp;quot;#33A02C&amp;quot;,&amp;quot;#FB9A99&amp;quot;,&amp;quot;#E31A1C&amp;quot;,&amp;quot;#FDBF6F&amp;quot;,&amp;quot;#FF7F00&amp;quot;,&amp;quot;#CAB2D6&amp;quot;,&amp;quot;#6A3D9A&amp;quot;,&amp;quot;#FFFF99&amp;quot;,&amp;quot;#B15928&amp;quot;],&amp;quot;Pastel1&amp;quot;:[&amp;quot;#FBB4AE&amp;quot;,&amp;quot;#B3CDE3&amp;quot;,&amp;quot;#CCEBC5&amp;quot;,&amp;quot;#DECBE4&amp;quot;,&amp;quot;#FED9A6&amp;quot;,&amp;quot;#FFFFCC&amp;quot;,&amp;quot;#E5D8BD&amp;quot;,&amp;quot;#FDDAEC&amp;quot;,&amp;quot;#F2F2F2&amp;quot;],&amp;quot;Pastel2&amp;quot;:[&amp;quot;#B3E2CD&amp;quot;,&amp;quot;#FDCDAC&amp;quot;,&amp;quot;#CBD5E8&amp;quot;,&amp;quot;#F4CAE4&amp;quot;,&amp;quot;#E6F5C9&amp;quot;,&amp;quot;#FFF2AE&amp;quot;,&amp;quot;#F1E2CC&amp;quot;,&amp;quot;#CCCCCC&amp;quot;],&amp;quot;Set1&amp;quot;:[&amp;quot;#E41A1C&amp;quot;,&amp;quot;#377EB8&amp;quot;,&amp;quot;#4DAF4A&amp;quot;,&amp;quot;#984EA3&amp;quot;,&amp;quot;#FF7F00&amp;quot;,&amp;quot;#FFFF33&amp;quot;,&amp;quot;#A65628&amp;quot;,&amp;quot;#F781BF&amp;quot;],&amp;quot;Set2&amp;quot;:[&amp;quot;#66C2A5&amp;quot;,&amp;quot;#FC8D62&amp;quot;,&amp;quot;#8DA0CB&amp;quot;,&amp;quot;#E78AC3&amp;quot;,&amp;quot;#A6D854&amp;quot;,&amp;quot;#FFD92F&amp;quot;,&amp;quot;#E5C494&amp;quot;,&amp;quot;#B3B3B3&amp;quot;],&amp;quot;Set3&amp;quot;:[&amp;quot;#8DD3C7&amp;quot;,&amp;quot;#FFFFB3&amp;quot;,&amp;quot;#BEBADA&amp;quot;,&amp;quot;#FB8072&amp;quot;,&amp;quot;#80B1D3&amp;quot;,&amp;quot;#FDB462&amp;quot;,&amp;quot;#B3DE69&amp;quot;,&amp;quot;#FCCDE5&amp;quot;,&amp;quot;#D9D9D9&amp;quot;,&amp;quot;#BC80BD&amp;quot;,&amp;quot;#CCEBC5&amp;quot;,&amp;quot;#FFED6F&amp;quot;],&amp;quot;Blues&amp;quot;:[&amp;quot;#F7FBFF&amp;quot;,&amp;quot;#DEEBF7&amp;quot;,&amp;quot;#C6DBEF&amp;quot;,&amp;quot;#9ECAE1&amp;quot;,&amp;quot;#6BAED6&amp;quot;,&amp;quot;#4292C6&amp;quot;,&amp;quot;#2171B5&amp;quot;,&amp;quot;#08519C&amp;quot;,&amp;quot;#08306B&amp;quot;],&amp;quot;BuGn&amp;quot;:[&amp;quot;#F7FCFD&amp;quot;,&amp;quot;#E5F5F9&amp;quot;,&amp;quot;#CCECE6&amp;quot;,&amp;quot;#99D8C9&amp;quot;,&amp;quot;#66C2A4&amp;quot;,&amp;quot;#41AE76&amp;quot;,&amp;quot;#238B45&amp;quot;,&amp;quot;#006D2C&amp;quot;,&amp;quot;#00441B&amp;quot;],&amp;quot;BuPu&amp;quot;:[&amp;quot;#F7FCFD&amp;quot;,&amp;quot;#E0ECF4&amp;quot;,&amp;quot;#BFD3E6&amp;quot;,&amp;quot;#9EBCDA&amp;quot;,&amp;quot;#8C96C6&amp;quot;,&amp;quot;#8C6BB1&amp;quot;,&amp;quot;#88419D&amp;quot;,&amp;quot;#810F7C&amp;quot;,&amp;quot;#4D004B&amp;quot;],&amp;quot;GnBu&amp;quot;:[&amp;quot;#F7FCF0&amp;quot;,&amp;quot;#E0F3DB&amp;quot;,&amp;quot;#CCEBC5&amp;quot;,&amp;quot;#A8DDB5&amp;quot;,&amp;quot;#7BCCC4&amp;quot;,&amp;quot;#4EB3D3&amp;quot;,&amp;quot;#2B8CBE&amp;quot;,&amp;quot;#0868AC&amp;quot;,&amp;quot;#084081&amp;quot;],&amp;quot;Greens&amp;quot;:[&amp;quot;#F7FCF5&amp;quot;,&amp;quot;#E5F5E0&amp;quot;,&amp;quot;#C7E9C0&amp;quot;,&amp;quot;#A1D99B&amp;quot;,&amp;quot;#74C476&amp;quot;,&amp;quot;#41AB5D&amp;quot;,&amp;quot;#238B45&amp;quot;,&amp;quot;#006D2C&amp;quot;,&amp;quot;#00441B&amp;quot;],&amp;quot;Greys&amp;quot;:[&amp;quot;#FFFFFF&amp;quot;,&amp;quot;#F0F0F0&amp;quot;,&amp;quot;#D9D9D9&amp;quot;,&amp;quot;#BDBDBD&amp;quot;,&amp;quot;#969696&amp;quot;,&amp;quot;#737373&amp;quot;,&amp;quot;#525252&amp;quot;,&amp;quot;#252525&amp;quot;,&amp;quot;#000000&amp;quot;],&amp;quot;Oranges&amp;quot;:[&amp;quot;#FFF5EB&amp;quot;,&amp;quot;#FEE6CE&amp;quot;,&amp;quot;#FDD0A2&amp;quot;,&amp;quot;#FDAE6B&amp;quot;,&amp;quot;#FD8D3C&amp;quot;,&amp;quot;#F16913&amp;quot;,&amp;quot;#D94801&amp;quot;,&amp;quot;#A63603&amp;quot;,&amp;quot;#7F2704&amp;quot;],&amp;quot;OrRd&amp;quot;:[&amp;quot;#FFF7EC&amp;quot;,&amp;quot;#FEE8C8&amp;quot;,&amp;quot;#FDD49E&amp;quot;,&amp;quot;#FDBB84&amp;quot;,&amp;quot;#FC8D59&amp;quot;,&amp;quot;#EF6548&amp;quot;,&amp;quot;#D7301F&amp;quot;,&amp;quot;#B30000&amp;quot;,&amp;quot;#7F0000&amp;quot;],&amp;quot;PuBu&amp;quot;:[&amp;quot;#FFF7FB&amp;quot;,&amp;quot;#ECE7F2&amp;quot;,&amp;quot;#D0D1E6&amp;quot;,&amp;quot;#A6BDDB&amp;quot;,&amp;quot;#74A9CF&amp;quot;,&amp;quot;#3690C0&amp;quot;,&amp;quot;#0570B0&amp;quot;,&amp;quot;#045A8D&amp;quot;,&amp;quot;#023858&amp;quot;],&amp;quot;PuBuGn&amp;quot;:[&amp;quot;#FFF7FB&amp;quot;,&amp;quot;#ECE2F0&amp;quot;,&amp;quot;#D0D1E6&amp;quot;,&amp;quot;#A6BDDB&amp;quot;,&amp;quot;#67A9CF&amp;quot;,&amp;quot;#3690C0&amp;quot;,&amp;quot;#02818A&amp;quot;,&amp;quot;#016C59&amp;quot;,&amp;quot;#014636&amp;quot;],&amp;quot;PuRd&amp;quot;:[&amp;quot;#F7F4F9&amp;quot;,&amp;quot;#E7E1EF&amp;quot;,&amp;quot;#D4B9DA&amp;quot;,&amp;quot;#C994C7&amp;quot;,&amp;quot;#DF65B0&amp;quot;,&amp;quot;#E7298A&amp;quot;,&amp;quot;#CE1256&amp;quot;,&amp;quot;#980043&amp;quot;,&amp;quot;#67001F&amp;quot;],&amp;quot;Purples&amp;quot;:[&amp;quot;#FCFBFD&amp;quot;,&amp;quot;#EFEDF5&amp;quot;,&amp;quot;#DADAEB&amp;quot;,&amp;quot;#BCBDDC&amp;quot;,&amp;quot;#9E9AC8&amp;quot;,&amp;quot;#807DBA&amp;quot;,&amp;quot;#6A51A3&amp;quot;,&amp;quot;#54278F&amp;quot;,&amp;quot;#3F007D&amp;quot;],&amp;quot;RdPu&amp;quot;:[&amp;quot;#FFF7F3&amp;quot;,&amp;quot;#FDE0DD&amp;quot;,&amp;quot;#FCC5C0&amp;quot;,&amp;quot;#FA9FB5&amp;quot;,&amp;quot;#F768A1&amp;quot;,&amp;quot;#DD3497&amp;quot;,&amp;quot;#AE017E&amp;quot;,&amp;quot;#7A0177&amp;quot;,&amp;quot;#49006A&amp;quot;],&amp;quot;Reds&amp;quot;:[&amp;quot;#FFF5F0&amp;quot;,&amp;quot;#FEE0D2&amp;quot;,&amp;quot;#FCBBA1&amp;quot;,&amp;quot;#FC9272&amp;quot;,&amp;quot;#FB6A4A&amp;quot;,&amp;quot;#EF3B2C&amp;quot;,&amp;quot;#CB181D&amp;quot;,&amp;quot;#A50F15&amp;quot;,&amp;quot;#67000D&amp;quot;],&amp;quot;YlGn&amp;quot;:[&amp;quot;#FFFFE5&amp;quot;,&amp;quot;#F7FCB9&amp;quot;,&amp;quot;#D9F0A3&amp;quot;,&amp;quot;#ADDD8E&amp;quot;,&amp;quot;#78C679&amp;quot;,&amp;quot;#41AB5D&amp;quot;,&amp;quot;#238443&amp;quot;,&amp;quot;#006837&amp;quot;,&amp;quot;#004529&amp;quot;],&amp;quot;YlGnBu&amp;quot;:[&amp;quot;#FFFFD9&amp;quot;,&amp;quot;#EDF8B1&amp;quot;,&amp;quot;#C7E9B4&amp;quot;,&amp;quot;#7FCDBB&amp;quot;,&amp;quot;#41B6C4&amp;quot;,&amp;quot;#1D91C0&amp;quot;,&amp;quot;#225EA8&amp;quot;,&amp;quot;#253494&amp;quot;,&amp;quot;#081D58&amp;quot;],&amp;quot;YlOrBr&amp;quot;:[&amp;quot;#FFFFE5&amp;quot;,&amp;quot;#FFF7BC&amp;quot;,&amp;quot;#FEE391&amp;quot;,&amp;quot;#FEC44F&amp;quot;,&amp;quot;#FE9929&amp;quot;,&amp;quot;#EC7014&amp;quot;,&amp;quot;#CC4C02&amp;quot;,&amp;quot;#993404&amp;quot;,&amp;quot;#662506&amp;quot;],&amp;quot;YlOrRd&amp;quot;:[&amp;quot;#FFFFCC&amp;quot;,&amp;quot;#FFEDA0&amp;quot;,&amp;quot;#FED976&amp;quot;,&amp;quot;#FEB24C&amp;quot;,&amp;quot;#FD8D3C&amp;quot;,&amp;quot;#FC4E2A&amp;quot;,&amp;quot;#E31A1C&amp;quot;,&amp;quot;#BD0026&amp;quot;,&amp;quot;#800026&amp;quot;]}" data-initial="{&amp;quot;Up&amp;quot;:&amp;quot;#FF0000&amp;quot;,&amp;quot;Down&amp;quot;:&amp;quot;#0000FF&amp;quot;,&amp;quot;n.s.&amp;quot;:&amp;quot;#D3D3D3&amp;quot;}" data-groups="[&amp;quot;Up&amp;quot;,&amp;quot;Down&amp;quot;,&amp;quot;n.s.&amp;quot;]" data-default-palette="dittoColors" data-compact="true"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="mc-top"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label class="control-label" for="volcanoPlot-volcano.colors"&gt;Group Colors&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="mc-actions"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;select id="volcanoPlot-volcano.colors-palette" class="mc-palette-select form-control input-sm" aria-label="Palette"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;optgroup label="Defaults"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="dittoColors" selected="selected"&gt;dittoColors&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="dittoColors_full"&gt;dittoColors_full&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="ggplot2"&gt;ggplot2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/optgroup&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;optgroup label="Viridis"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="viridis"&gt;viridis&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="magma"&gt;magma&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="inferno"&gt;inferno&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="plasma"&gt;plasma&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="cividis"&gt;cividis&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/optgroup&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;optgroup label="Diverging"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="BrBG"&gt;BrBG&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PiYG"&gt;PiYG&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PRGn"&gt;PRGn&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PuOr"&gt;PuOr&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="RdBu"&gt;RdBu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="RdGy"&gt;RdGy&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="RdYlBu"&gt;RdYlBu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="RdYlGn"&gt;RdYlGn&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Spectral"&gt;Spectral&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/optgroup&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;optgroup label="Qualitative"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Accent"&gt;Accent&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Dark2"&gt;Dark2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Paired"&gt;Paired&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Pastel1"&gt;Pastel1&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Pastel2"&gt;Pastel2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Set1"&gt;Set1&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Set2"&gt;Set2&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Set3"&gt;Set3&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/optgroup&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;optgroup label="Sequential"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Blues"&gt;Blues&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="BuGn"&gt;BuGn&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="BuPu"&gt;BuPu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="GnBu"&gt;GnBu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Greens"&gt;Greens&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Greys"&gt;Greys&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Oranges"&gt;Oranges&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="OrRd"&gt;OrRd&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PuBu"&gt;PuBu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PuBuGn"&gt;PuBuGn&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="PuRd"&gt;PuRd&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Purples"&gt;Purples&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="RdPu"&gt;RdPu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="Reds"&gt;Reds&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="YlGn"&gt;YlGn&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="YlGnBu"&gt;YlGnBu&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="YlOrBr"&gt;YlOrBr&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;option value="YlOrRd"&gt;YlOrRd&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/optgroup&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="mc-button-group"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;button type="button" class="mc-button mc-apply-palette"&gt;Apply&lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;button type="button" class="mc-button mc-reset-palette"&gt;Reset&lt;/button&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="mc-swatch-row" role="list"&gt;&lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="mc-color-rows"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="mc-color-row is-active" data-group="Up"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;span class="mc-group-label"&gt;Up&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="color" class="mc-color-input" value="#FF0000" aria-label="Up color"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="text" class="mc-text-input form-control input-sm" value="#FF0000" aria-label="Up hex code"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="mc-color-row " data-group="Down"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;span class="mc-group-label"&gt;Down&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="color" class="mc-color-input" value="#0000FF" aria-label="Down color"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="text" class="mc-text-input form-control input-sm" value="#0000FF" aria-label="Down hex code"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="mc-color-row " data-group="n.s."&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;span class="mc-group-label"&gt;n.s.&lt;/span&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="color" class="mc-color-input" value="#D3D3D3" aria-label="n.s. color"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;input type="text" class="mc-text-input form-control input-sm" value="#D3D3D3" aria-label="n.s. hex code"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;h3&gt;Volcano Settings&lt;/h3&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="8563"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="6600"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points"&gt;Points&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points"&gt;Points&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors"&gt;Colors&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors"&gt;Colors&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets"&gt;Facets&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets"&gt;Facets&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations"&gt;Annotations&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations"&gt;Annotations&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale"&gt;Legend/Scale&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale"&gt;Legend/Scale&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory"&gt;Trajectory&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory"&gt;Trajectory&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras"&gt;Extras&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras"&gt;Extras&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8563-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6600-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="8563"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-8563-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="6600"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-6600-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -291,7 +356,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-8563-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-6600-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -383,7 +448,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Points" id="tab-8563-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Points" id="tab-6600-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -441,7 +506,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Colors" id="tab-8563-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Colors" id="tab-6600-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
@@ -484,7 +549,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facets" id="tab-8563-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facets" id="tab-6600-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -524,7 +589,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Annotations" id="tab-8563-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Annotations" id="tab-6600-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -657,7 +722,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend/Scale" id="tab-8563-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend/Scale" id="tab-6600-7"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -713,7 +778,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Trajectory" id="tab-8563-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Trajectory" id="tab-6600-8"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -743,7 +808,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-8563-9"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-6600-9"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -756,37 +821,27 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="volcanoPlot-download.format-label" for="volcanoPlot-download.format"&gt;Download format&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="volcanoPlot-download.format" class="shiny-input-select"&gt;&lt;option value="svg" selected&gt;svg&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="png"&gt;png&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="volcanoPlot-download.format" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="volcanoPlot-shape.fill"&gt;Shape fill&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="volcanoPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="volcanoPlot-shape.line.color"&gt;Shape line color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="volcanoPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="volcanoPlot-shape.line.width-label" for="volcanoPlot-shape.line.width"&gt;Shape line width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="volcanoPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="volcanoPlot-shape.linetype-label" for="volcanoPlot-shape.linetype"&gt;Shape linetype&lt;/label&gt;</span>
@@ -801,8 +856,6 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="volcanoPlot-shape.opacity-label" for="volcanoPlot-shape.opacity"&gt;Shape opacity&lt;/label&gt;</span>
@@ -811,7 +864,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Extras" id="tab-8563-10"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Extras" id="tab-6600-10"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -873,7 +926,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-8563-11"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-6600-11"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -1034,7 +1087,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-8563-12"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-6600-12"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -1206,11 +1259,11 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="volcanoPlot-download.type-label" for="volcanoPlot-download.type"&gt;Download Format&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="volcanoPlot-download.format-label" for="volcanoPlot-download.format"&gt;Download Format&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;select id="volcanoPlot-download.type" class="shiny-input-select"&gt;&lt;option value="png" selected&gt;png&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="svg"&gt;svg&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="volcanoPlot-download.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;select id="volcanoPlot-download.format" class="shiny-input-select"&gt;&lt;option value="png"&gt;png&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="svg" selected&gt;svg&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="volcanoPlot-download.format" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>

@@ -42,11 +42,11 @@ Jared Andrews
 ``` r
 library(VizModules)
 head(example_population)
-#>   record_id year age_group count
-#> 1  Record_1 1975       0-9  4789
-#> 2  Record_2 1975     10-17  6039
-#> 3  Record_3 1975     18-34  5127
-#> 4  Record_4 1975     35-44  4118
-#> 5  Record_5 1975     45-54  4633
-#> 6  Record_6 1975     55-64  5187
+#>   year age_group count record_id
+#> 1 1975       0-9  4789  Record_1
+#> 2 1975     10-17  6039  Record_2
+#> 3 1975     18-34  5127  Record_3
+#> 4 1975     35-44  4118  Record_4
+#> 5 1975     45-54  4633  Record_5
+#> 6 1975     55-64  5187  Record_6
 ```

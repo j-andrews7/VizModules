@@ -67,11 +67,8 @@ significance thresholds and colors:
 
 - `fc.thresh`: Log2 fold change threshold (default 0)
 
-- `color.up`: Color for upregulated genes (default "red")
-
-- `color.down`: Color for downregulated genes (default "blue")
-
-- `color.ns`: Color for non-significant genes (default "lightgray")
+- `volcano.colors`: A multiColorPicker for Up/Down/n.s. group colors
+  (defaults: Up="red", Down="blue", n.s.="lightgray")
 
 ## See also
 
@@ -107,68 +104,134 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #> </div>
 #> <div class="row">
 #>   <div class="col-sm-6">
-#>     <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>       <label class="control-label" for="volcanoPlot-color.up">Up Color</label>
-#>       <input id="volcanoPlot-color.up" type="text" class="form-control shiny-colour-input" data-init-value="red" data-show-colour="both" data-palette="square"/>
-#>     </div>
-#>   </div>
-#>   <div class="col-sm-6">
-#>     <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>       <label class="control-label" for="volcanoPlot-color.down">Down Color</label>
-#>       <input id="volcanoPlot-color.down" type="text" class="form-control shiny-colour-input" data-init-value="blue" data-show-colour="both" data-palette="square"/>
-#>     </div>
-#>   </div>
-#> </div>
-#> <div class="row">
-#>   <div class="col-sm-6">
-#>     <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>       <label class="control-label" for="volcanoPlot-color.ns">N.S. Color</label>
-#>       <input id="volcanoPlot-color.ns" type="text" class="form-control shiny-colour-input" data-init-value="lightgray" data-show-colour="both" data-palette="square"/>
+#>     <div class="multi-color-picker shiny-input-container form-group is-compact " id="volcanoPlot-volcano.colors" data-palettes="{&quot;dittoColors&quot;:[&quot;#E69F00&quot;,&quot;#56B4E9&quot;,&quot;#009E73&quot;,&quot;#F0E442&quot;,&quot;#0072B2&quot;,&quot;#D55E00&quot;,&quot;#CC79A7&quot;,&quot;#666666&quot;,&quot;#AD7700&quot;,&quot;#1C91D4&quot;,&quot;#007756&quot;,&quot;#D5C711&quot;,&quot;#005685&quot;,&quot;#A04700&quot;,&quot;#B14380&quot;,&quot;#4D4D4D&quot;],&quot;dittoColors_full&quot;:[&quot;#E69F00&quot;,&quot;#56B4E9&quot;,&quot;#009E73&quot;,&quot;#F0E442&quot;,&quot;#0072B2&quot;,&quot;#D55E00&quot;,&quot;#CC79A7&quot;,&quot;#666666&quot;,&quot;#AD7700&quot;,&quot;#1C91D4&quot;,&quot;#007756&quot;,&quot;#D5C711&quot;,&quot;#005685&quot;,&quot;#A04700&quot;,&quot;#B14380&quot;,&quot;#4D4D4D&quot;,&quot;#FFBE2D&quot;,&quot;#80C7EF&quot;,&quot;#00F6B3&quot;,&quot;#F4EB71&quot;,&quot;#06A5FF&quot;,&quot;#FF8320&quot;,&quot;#D99BBD&quot;,&quot;#8C8C8C&quot;,&quot;#FFCB57&quot;,&quot;#9AD2F2&quot;,&quot;#2CFFC6&quot;,&quot;#F6EF8E&quot;,&quot;#38B7FF&quot;,&quot;#FF9B4D&quot;,&quot;#E0AFCA&quot;,&quot;#A3A3A3&quot;],&quot;ggplot2&quot;:[&quot;#F8766D&quot;,&quot;#E68613&quot;,&quot;#CD9600&quot;,&quot;#ABA300&quot;,&quot;#7CAE00&quot;,&quot;#0BB702&quot;,&quot;#00BE67&quot;,&quot;#00C19A&quot;,&quot;#00BFC4&quot;,&quot;#00B8E7&quot;,&quot;#00A9FF&quot;,&quot;#8494FF&quot;,&quot;#C77CFF&quot;,&quot;#ED68ED&quot;,&quot;#FF61CC&quot;,&quot;#FF68A1&quot;],&quot;viridis&quot;:[&quot;#440154&quot;,&quot;#482173&quot;,&quot;#433E85&quot;,&quot;#38598C&quot;,&quot;#2D708E&quot;,&quot;#25858E&quot;,&quot;#1E9B8A&quot;,&quot;#2BB07F&quot;,&quot;#51C56A&quot;,&quot;#85D54A&quot;,&quot;#C2DF23&quot;,&quot;#FDE725&quot;],&quot;magma&quot;:[&quot;#000004&quot;,&quot;#120D32&quot;,&quot;#331068&quot;,&quot;#5A167E&quot;,&quot;#7D2482&quot;,&quot;#A3307E&quot;,&quot;#C83E73&quot;,&quot;#E95562&quot;,&quot;#F97C5D&quot;,&quot;#FEA873&quot;,&quot;#FED395&quot;,&quot;#FCFDBF&quot;],&quot;inferno&quot;:[&quot;#000004&quot;,&quot;#140B35&quot;,&quot;#3A0963&quot;,&quot;#60136E&quot;,&quot;#85216B&quot;,&quot;#A92E5E&quot;,&quot;#CB4149&quot;,&quot;#E65D2F&quot;,&quot;#F78311&quot;,&quot;#FCAD12&quot;,&quot;#F5DB4B&quot;,&quot;#FCFFA4&quot;],&quot;plasma&quot;:[&quot;#0D0887&quot;,&quot;#3E049C&quot;,&quot;#6300A7&quot;,&quot;#8707A6&quot;,&quot;#A62098&quot;,&quot;#C03A83&quot;,&quot;#D5546E&quot;,&quot;#E76F5A&quot;,&quot;#F58C46&quot;,&quot;#FDAD32&quot;,&quot;#FCD225&quot;,&quot;#F0F921&quot;],&quot;cividis&quot;:[&quot;#00204D&quot;,&quot;#00306F&quot;,&quot;#2A406C&quot;,&quot;#48526B&quot;,&quot;#5E626E&quot;,&quot;#727374&quot;,&quot;#878479&quot;,&quot;#9E9677&quot;,&quot;#B6A971&quot;,&quot;#D0BE67&quot;,&quot;#EAD357&quot;,&quot;#FFEA46&quot;],&quot;BrBG&quot;:[&quot;#543005&quot;,&quot;#8C510A&quot;,&quot;#BF812D&quot;,&quot;#DFC27D&quot;,&quot;#F6E8C3&quot;,&quot;#F5F5F5&quot;,&quot;#C7EAE5&quot;,&quot;#80CDC1&quot;,&quot;#35978F&quot;,&quot;#01665E&quot;,&quot;#003C30&quot;],&quot;PiYG&quot;:[&quot;#8E0152&quot;,&quot;#C51B7D&quot;,&quot;#DE77AE&quot;,&quot;#F1B6DA&quot;,&quot;#FDE0EF&quot;,&quot;#F7F7F7&quot;,&quot;#E6F5D0&quot;,&quot;#B8E186&quot;,&quot;#7FBC41&quot;,&quot;#4D9221&quot;,&quot;#276419&quot;],&quot;PRGn&quot;:[&quot;#40004B&quot;,&quot;#762A83&quot;,&quot;#9970AB&quot;,&quot;#C2A5CF&quot;,&quot;#E7D4E8&quot;,&quot;#F7F7F7&quot;,&quot;#D9F0D3&quot;,&quot;#A6DBA0&quot;,&quot;#5AAE61&quot;,&quot;#1B7837&quot;,&quot;#00441B&quot;],&quot;PuOr&quot;:[&quot;#7F3B08&quot;,&quot;#B35806&quot;,&quot;#E08214&quot;,&quot;#FDB863&quot;,&quot;#FEE0B6&quot;,&quot;#F7F7F7&quot;,&quot;#D8DAEB&quot;,&quot;#B2ABD2&quot;,&quot;#8073AC&quot;,&quot;#542788&quot;,&quot;#2D004B&quot;],&quot;RdBu&quot;:[&quot;#67001F&quot;,&quot;#B2182B&quot;,&quot;#D6604D&quot;,&quot;#F4A582&quot;,&quot;#FDDBC7&quot;,&quot;#F7F7F7&quot;,&quot;#D1E5F0&quot;,&quot;#92C5DE&quot;,&quot;#4393C3&quot;,&quot;#2166AC&quot;,&quot;#053061&quot;],&quot;RdGy&quot;:[&quot;#67001F&quot;,&quot;#B2182B&quot;,&quot;#D6604D&quot;,&quot;#F4A582&quot;,&quot;#FDDBC7&quot;,&quot;#FFFFFF&quot;,&quot;#E0E0E0&quot;,&quot;#BABABA&quot;,&quot;#878787&quot;,&quot;#4D4D4D&quot;,&quot;#1A1A1A&quot;],&quot;RdYlBu&quot;:[&quot;#A50026&quot;,&quot;#D73027&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE090&quot;,&quot;#FFFFBF&quot;,&quot;#E0F3F8&quot;,&quot;#ABD9E9&quot;,&quot;#74ADD1&quot;,&quot;#4575B4&quot;,&quot;#313695&quot;],&quot;RdYlGn&quot;:[&quot;#A50026&quot;,&quot;#D73027&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE08B&quot;,&quot;#FFFFBF&quot;,&quot;#D9EF8B&quot;,&quot;#A6D96A&quot;,&quot;#66BD63&quot;,&quot;#1A9850&quot;,&quot;#006837&quot;],&quot;Spectral&quot;:[&quot;#9E0142&quot;,&quot;#D53E4F&quot;,&quot;#F46D43&quot;,&quot;#FDAE61&quot;,&quot;#FEE08B&quot;,&quot;#FFFFBF&quot;,&quot;#E6F598&quot;,&quot;#ABDDA4&quot;,&quot;#66C2A5&quot;,&quot;#3288BD&quot;,&quot;#5E4FA2&quot;],&quot;Accent&quot;:[&quot;#7FC97F&quot;,&quot;#BEAED4&quot;,&quot;#FDC086&quot;,&quot;#FFFF99&quot;,&quot;#386CB0&quot;,&quot;#F0027F&quot;,&quot;#BF5B17&quot;,&quot;#666666&quot;],&quot;Dark2&quot;:[&quot;#1B9E77&quot;,&quot;#D95F02&quot;,&quot;#7570B3&quot;,&quot;#E7298A&quot;,&quot;#66A61E&quot;,&quot;#E6AB02&quot;,&quot;#A6761D&quot;,&quot;#666666&quot;],&quot;Paired&quot;:[&quot;#A6CEE3&quot;,&quot;#1F78B4&quot;,&quot;#B2DF8A&quot;,&quot;#33A02C&quot;,&quot;#FB9A99&quot;,&quot;#E31A1C&quot;,&quot;#FDBF6F&quot;,&quot;#FF7F00&quot;,&quot;#CAB2D6&quot;,&quot;#6A3D9A&quot;,&quot;#FFFF99&quot;,&quot;#B15928&quot;],&quot;Pastel1&quot;:[&quot;#FBB4AE&quot;,&quot;#B3CDE3&quot;,&quot;#CCEBC5&quot;,&quot;#DECBE4&quot;,&quot;#FED9A6&quot;,&quot;#FFFFCC&quot;,&quot;#E5D8BD&quot;,&quot;#FDDAEC&quot;,&quot;#F2F2F2&quot;],&quot;Pastel2&quot;:[&quot;#B3E2CD&quot;,&quot;#FDCDAC&quot;,&quot;#CBD5E8&quot;,&quot;#F4CAE4&quot;,&quot;#E6F5C9&quot;,&quot;#FFF2AE&quot;,&quot;#F1E2CC&quot;,&quot;#CCCCCC&quot;],&quot;Set1&quot;:[&quot;#E41A1C&quot;,&quot;#377EB8&quot;,&quot;#4DAF4A&quot;,&quot;#984EA3&quot;,&quot;#FF7F00&quot;,&quot;#FFFF33&quot;,&quot;#A65628&quot;,&quot;#F781BF&quot;],&quot;Set2&quot;:[&quot;#66C2A5&quot;,&quot;#FC8D62&quot;,&quot;#8DA0CB&quot;,&quot;#E78AC3&quot;,&quot;#A6D854&quot;,&quot;#FFD92F&quot;,&quot;#E5C494&quot;,&quot;#B3B3B3&quot;],&quot;Set3&quot;:[&quot;#8DD3C7&quot;,&quot;#FFFFB3&quot;,&quot;#BEBADA&quot;,&quot;#FB8072&quot;,&quot;#80B1D3&quot;,&quot;#FDB462&quot;,&quot;#B3DE69&quot;,&quot;#FCCDE5&quot;,&quot;#D9D9D9&quot;,&quot;#BC80BD&quot;,&quot;#CCEBC5&quot;,&quot;#FFED6F&quot;],&quot;Blues&quot;:[&quot;#F7FBFF&quot;,&quot;#DEEBF7&quot;,&quot;#C6DBEF&quot;,&quot;#9ECAE1&quot;,&quot;#6BAED6&quot;,&quot;#4292C6&quot;,&quot;#2171B5&quot;,&quot;#08519C&quot;,&quot;#08306B&quot;],&quot;BuGn&quot;:[&quot;#F7FCFD&quot;,&quot;#E5F5F9&quot;,&quot;#CCECE6&quot;,&quot;#99D8C9&quot;,&quot;#66C2A4&quot;,&quot;#41AE76&quot;,&quot;#238B45&quot;,&quot;#006D2C&quot;,&quot;#00441B&quot;],&quot;BuPu&quot;:[&quot;#F7FCFD&quot;,&quot;#E0ECF4&quot;,&quot;#BFD3E6&quot;,&quot;#9EBCDA&quot;,&quot;#8C96C6&quot;,&quot;#8C6BB1&quot;,&quot;#88419D&quot;,&quot;#810F7C&quot;,&quot;#4D004B&quot;],&quot;GnBu&quot;:[&quot;#F7FCF0&quot;,&quot;#E0F3DB&quot;,&quot;#CCEBC5&quot;,&quot;#A8DDB5&quot;,&quot;#7BCCC4&quot;,&quot;#4EB3D3&quot;,&quot;#2B8CBE&quot;,&quot;#0868AC&quot;,&quot;#084081&quot;],&quot;Greens&quot;:[&quot;#F7FCF5&quot;,&quot;#E5F5E0&quot;,&quot;#C7E9C0&quot;,&quot;#A1D99B&quot;,&quot;#74C476&quot;,&quot;#41AB5D&quot;,&quot;#238B45&quot;,&quot;#006D2C&quot;,&quot;#00441B&quot;],&quot;Greys&quot;:[&quot;#FFFFFF&quot;,&quot;#F0F0F0&quot;,&quot;#D9D9D9&quot;,&quot;#BDBDBD&quot;,&quot;#969696&quot;,&quot;#737373&quot;,&quot;#525252&quot;,&quot;#252525&quot;,&quot;#000000&quot;],&quot;Oranges&quot;:[&quot;#FFF5EB&quot;,&quot;#FEE6CE&quot;,&quot;#FDD0A2&quot;,&quot;#FDAE6B&quot;,&quot;#FD8D3C&quot;,&quot;#F16913&quot;,&quot;#D94801&quot;,&quot;#A63603&quot;,&quot;#7F2704&quot;],&quot;OrRd&quot;:[&quot;#FFF7EC&quot;,&quot;#FEE8C8&quot;,&quot;#FDD49E&quot;,&quot;#FDBB84&quot;,&quot;#FC8D59&quot;,&quot;#EF6548&quot;,&quot;#D7301F&quot;,&quot;#B30000&quot;,&quot;#7F0000&quot;],&quot;PuBu&quot;:[&quot;#FFF7FB&quot;,&quot;#ECE7F2&quot;,&quot;#D0D1E6&quot;,&quot;#A6BDDB&quot;,&quot;#74A9CF&quot;,&quot;#3690C0&quot;,&quot;#0570B0&quot;,&quot;#045A8D&quot;,&quot;#023858&quot;],&quot;PuBuGn&quot;:[&quot;#FFF7FB&quot;,&quot;#ECE2F0&quot;,&quot;#D0D1E6&quot;,&quot;#A6BDDB&quot;,&quot;#67A9CF&quot;,&quot;#3690C0&quot;,&quot;#02818A&quot;,&quot;#016C59&quot;,&quot;#014636&quot;],&quot;PuRd&quot;:[&quot;#F7F4F9&quot;,&quot;#E7E1EF&quot;,&quot;#D4B9DA&quot;,&quot;#C994C7&quot;,&quot;#DF65B0&quot;,&quot;#E7298A&quot;,&quot;#CE1256&quot;,&quot;#980043&quot;,&quot;#67001F&quot;],&quot;Purples&quot;:[&quot;#FCFBFD&quot;,&quot;#EFEDF5&quot;,&quot;#DADAEB&quot;,&quot;#BCBDDC&quot;,&quot;#9E9AC8&quot;,&quot;#807DBA&quot;,&quot;#6A51A3&quot;,&quot;#54278F&quot;,&quot;#3F007D&quot;],&quot;RdPu&quot;:[&quot;#FFF7F3&quot;,&quot;#FDE0DD&quot;,&quot;#FCC5C0&quot;,&quot;#FA9FB5&quot;,&quot;#F768A1&quot;,&quot;#DD3497&quot;,&quot;#AE017E&quot;,&quot;#7A0177&quot;,&quot;#49006A&quot;],&quot;Reds&quot;:[&quot;#FFF5F0&quot;,&quot;#FEE0D2&quot;,&quot;#FCBBA1&quot;,&quot;#FC9272&quot;,&quot;#FB6A4A&quot;,&quot;#EF3B2C&quot;,&quot;#CB181D&quot;,&quot;#A50F15&quot;,&quot;#67000D&quot;],&quot;YlGn&quot;:[&quot;#FFFFE5&quot;,&quot;#F7FCB9&quot;,&quot;#D9F0A3&quot;,&quot;#ADDD8E&quot;,&quot;#78C679&quot;,&quot;#41AB5D&quot;,&quot;#238443&quot;,&quot;#006837&quot;,&quot;#004529&quot;],&quot;YlGnBu&quot;:[&quot;#FFFFD9&quot;,&quot;#EDF8B1&quot;,&quot;#C7E9B4&quot;,&quot;#7FCDBB&quot;,&quot;#41B6C4&quot;,&quot;#1D91C0&quot;,&quot;#225EA8&quot;,&quot;#253494&quot;,&quot;#081D58&quot;],&quot;YlOrBr&quot;:[&quot;#FFFFE5&quot;,&quot;#FFF7BC&quot;,&quot;#FEE391&quot;,&quot;#FEC44F&quot;,&quot;#FE9929&quot;,&quot;#EC7014&quot;,&quot;#CC4C02&quot;,&quot;#993404&quot;,&quot;#662506&quot;],&quot;YlOrRd&quot;:[&quot;#FFFFCC&quot;,&quot;#FFEDA0&quot;,&quot;#FED976&quot;,&quot;#FEB24C&quot;,&quot;#FD8D3C&quot;,&quot;#FC4E2A&quot;,&quot;#E31A1C&quot;,&quot;#BD0026&quot;,&quot;#800026&quot;]}" data-initial="{&quot;Up&quot;:&quot;#FF0000&quot;,&quot;Down&quot;:&quot;#0000FF&quot;,&quot;n.s.&quot;:&quot;#D3D3D3&quot;}" data-groups="[&quot;Up&quot;,&quot;Down&quot;,&quot;n.s.&quot;]" data-default-palette="dittoColors" data-compact="true">
+#>       <div class="mc-top">
+#>         <label class="control-label" for="volcanoPlot-volcano.colors">Group Colors</label>
+#>         <div class="mc-actions">
+#>           <select id="volcanoPlot-volcano.colors-palette" class="mc-palette-select form-control input-sm" aria-label="Palette">
+#>             <optgroup label="Defaults">
+#>               <option value="dittoColors" selected="selected">dittoColors</option>
+#>               <option value="dittoColors_full">dittoColors_full</option>
+#>               <option value="ggplot2">ggplot2</option>
+#>             </optgroup>
+#>             <optgroup label="Viridis">
+#>               <option value="viridis">viridis</option>
+#>               <option value="magma">magma</option>
+#>               <option value="inferno">inferno</option>
+#>               <option value="plasma">plasma</option>
+#>               <option value="cividis">cividis</option>
+#>             </optgroup>
+#>             <optgroup label="Diverging">
+#>               <option value="BrBG">BrBG</option>
+#>               <option value="PiYG">PiYG</option>
+#>               <option value="PRGn">PRGn</option>
+#>               <option value="PuOr">PuOr</option>
+#>               <option value="RdBu">RdBu</option>
+#>               <option value="RdGy">RdGy</option>
+#>               <option value="RdYlBu">RdYlBu</option>
+#>               <option value="RdYlGn">RdYlGn</option>
+#>               <option value="Spectral">Spectral</option>
+#>             </optgroup>
+#>             <optgroup label="Qualitative">
+#>               <option value="Accent">Accent</option>
+#>               <option value="Dark2">Dark2</option>
+#>               <option value="Paired">Paired</option>
+#>               <option value="Pastel1">Pastel1</option>
+#>               <option value="Pastel2">Pastel2</option>
+#>               <option value="Set1">Set1</option>
+#>               <option value="Set2">Set2</option>
+#>               <option value="Set3">Set3</option>
+#>             </optgroup>
+#>             <optgroup label="Sequential">
+#>               <option value="Blues">Blues</option>
+#>               <option value="BuGn">BuGn</option>
+#>               <option value="BuPu">BuPu</option>
+#>               <option value="GnBu">GnBu</option>
+#>               <option value="Greens">Greens</option>
+#>               <option value="Greys">Greys</option>
+#>               <option value="Oranges">Oranges</option>
+#>               <option value="OrRd">OrRd</option>
+#>               <option value="PuBu">PuBu</option>
+#>               <option value="PuBuGn">PuBuGn</option>
+#>               <option value="PuRd">PuRd</option>
+#>               <option value="Purples">Purples</option>
+#>               <option value="RdPu">RdPu</option>
+#>               <option value="Reds">Reds</option>
+#>               <option value="YlGn">YlGn</option>
+#>               <option value="YlGnBu">YlGnBu</option>
+#>               <option value="YlOrBr">YlOrBr</option>
+#>               <option value="YlOrRd">YlOrRd</option>
+#>             </optgroup>
+#>           </select>
+#>           <div class="mc-button-group">
+#>             <button type="button" class="mc-button mc-apply-palette">Apply</button>
+#>             <button type="button" class="mc-button mc-reset-palette">Reset</button>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="mc-swatch-row" role="list"></div>
+#>       <div class="mc-color-rows">
+#>         <div class="mc-color-row is-active" data-group="Up">
+#>           <span class="mc-group-label">Up</span>
+#>           <input type="color" class="mc-color-input" value="#FF0000" aria-label="Up color"/>
+#>           <input type="text" class="mc-text-input form-control input-sm" value="#FF0000" aria-label="Up hex code"/>
+#>         </div>
+#>         <div class="mc-color-row " data-group="Down">
+#>           <span class="mc-group-label">Down</span>
+#>           <input type="color" class="mc-color-input" value="#0000FF" aria-label="Down color"/>
+#>           <input type="text" class="mc-text-input form-control input-sm" value="#0000FF" aria-label="Down hex code"/>
+#>         </div>
+#>         <div class="mc-color-row " data-group="n.s.">
+#>           <span class="mc-group-label">n.s.</span>
+#>           <input type="color" class="mc-color-input" value="#D3D3D3" aria-label="n.s. color"/>
+#>           <input type="text" class="mc-text-input form-control input-sm" value="#D3D3D3" aria-label="n.s. hex code"/>
+#>         </div>
+#>       </div>
 #>     </div>
 #>   </div>
 #> </div>
 #> <h3>Volcano Settings</h3>
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="8563">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="6600">
 #>     <li class="active">
-#>       <a href="#tab-8563-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6600-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6600-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-6600-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-6600-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-6600-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-6600-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-6600-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-6600-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6600-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-6600-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6600-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8563-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6600-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8563">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8563-1">
+#>   <div class="tab-content" data-tabsetid="6600">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6600-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -260,7 +323,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-8563-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6600-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -352,7 +415,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-8563-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-6600-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -410,7 +473,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-8563-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-6600-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -453,7 +516,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-8563-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-6600-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -493,7 +556,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-8563-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-6600-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -626,7 +689,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-8563-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-6600-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -682,7 +745,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-8563-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-6600-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -712,7 +775,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-8563-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6600-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -725,37 +788,27 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volcanoPlot-download.format-label" for="volcanoPlot-download.format">Download format</label>
-#>             <div>
-#>               <select id="volcanoPlot-download.format" class="shiny-input-select"><option value="svg" selected>svg</option>
-#> <option value="png">png</option></select>
-#>               <script type="application/json" data-for="volcanoPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="volcanoPlot-shape.fill">Shape fill</label>
 #>             <input id="volcanoPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="volcanoPlot-shape.line.color">Shape line color</label>
 #>             <input id="volcanoPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="volcanoPlot-shape.line.width-label" for="volcanoPlot-shape.line.width">Shape line width</label>
 #>             <input id="volcanoPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="volcanoPlot-shape.linetype-label" for="volcanoPlot-shape.linetype">Shape linetype</label>
@@ -770,8 +823,6 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="volcanoPlot-shape.opacity-label" for="volcanoPlot-shape.opacity">Shape opacity</label>
@@ -780,7 +831,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-8563-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-6600-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -842,7 +893,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-8563-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6600-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1003,7 +1054,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-8563-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6600-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1175,11 +1226,11 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>   </div>
 #>   <div class="col-sm-3">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
-#>       <label class="control-label" id="volcanoPlot-download.type-label" for="volcanoPlot-download.type">Download Format</label>
+#>       <label class="control-label" id="volcanoPlot-download.format-label" for="volcanoPlot-download.format">Download Format</label>
 #>       <div>
-#>         <select id="volcanoPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
-#> <option value="svg">svg</option></select>
-#>         <script type="application/json" data-for="volcanoPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <select id="volcanoPlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="volcanoPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>       </div>
 #>     </div>
 #>   </div>

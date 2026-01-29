@@ -50,11 +50,11 @@ Jared Andrews
 ``` r
 library(VizModules)
 head(example_sales)
-#>   sale_id year month        region revenue units
-#> 1  Sale_1 2015   Jan         North   198.3   243
-#> 2  Sale_2 2015   Jan         South   110.1   103
-#> 3  Sale_3 2015   Jan          East    68.3   275
-#> 4  Sale_4 2015   Jan          West    61.9   212
-#> 5  Sale_5 2015   Jan       Central    88.5   156
-#> 6  Sale_6 2015   Jan International   171.2   205
+#>          region revenue year month units sale_id
+#> 1         North   198.3 2015   Jan   243  Sale_1
+#> 2         South   110.1 2015   Jan   103  Sale_2
+#> 3          East    68.3 2015   Jan   275  Sale_3
+#> 4          West    61.9 2015   Jan   212  Sale_4
+#> 5       Central    88.5 2015   Jan   156  Sale_5
+#> 6 International   171.2 2015   Jan   205  Sale_6
 ```
