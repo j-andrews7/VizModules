@@ -11,13 +11,14 @@
 #' @param columns \code{numeric} Number of columns to organize the inputs into. Default is 2.
 #'
 #' @return A \code{tagList} containing the organized UI elements.
-#'
-#' @author Jacob Martin, Jared Andrews
 #' 
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
+#' 
 #' @export
+#' 
+#' @author Jacob Martin, Jared Andrews
 plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 

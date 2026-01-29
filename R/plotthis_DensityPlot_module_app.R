@@ -13,7 +13,7 @@
 #' @author Jacob Martin
 #' 
 #' @import shiny
-#' @import shinyjs
+#' @importFrom shinyjs useShinyjs
 #' @export
 #' 
 #' @examples
