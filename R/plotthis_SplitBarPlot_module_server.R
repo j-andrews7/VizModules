@@ -96,13 +96,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 return(character(0))
             }
 
-            group_col <- input$group.by
-            x_col <- input$x.data
+            fill_col <- input$fill.by
+            y_col <- input$y.data
 
-            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
-            } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+            if (!is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[fill_col]])))
+            } else if (!is.null(y_col) && nzchar(y_col) && y_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[y_col]])))
             } else {
                 character(0)
             }
@@ -139,7 +139,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$y.data) && input$y.data != "") {
-                    y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
+                    y_range <- calculate_y_range(input$y.data, input$x.data, input$fill.by)
                     if (!is.null(y_range)) {
                         updateNumericInput(session, "y.max", value = y_range$max)
                         updateNumericInput(session, "y.min", value = y_range$min)
@@ -151,10 +151,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Auto-update y-axis range when relevant inputs change
         observe({
-            # Trigger on changes to y.data, x.data, or group.by
+            # Trigger on changes to y.data, x.data, or fill.by
             y_col <- input$y.data
             x_col <- input$x.data
-            group_col <- input$group.by
+            fill_col <- input$fill.by
             
             # Skip if we haven't initialized yet or y.data is not set
             if (!initialized() || is.null(y_col) || y_col == "") {
@@ -163,7 +163,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                y_range <- calculate_y_range(y_col, x_col, group_col)
+                y_range <- calculate_y_range(y_col, x_col, fill_col)
                 if (!is.null(y_range)) {
                     updateNumericInput(session, "y.max", value = y_range$max)
                     updateNumericInput(session, "y.min", value = y_range$min)
@@ -213,7 +213,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateTextInput(session, "alpha.name", value = "")
             updateNumericInput(session, "bar.height", value = 0.9)
             updateNumericInput(session, "line.height", value = 0.5)
-            updateNumericInput(session, "max.charwidth", value = 80)
             # Axes
             updateMaterialSwitch(session, "flip", value = FALSE)
             updateNumericInput(session, "x.max", value = max.y)
@@ -265,7 +264,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Update y-axis range when y data column is changed (when auto-update is off)
         observeEvent(input$y.data, {
-            y_range <- calculate_y_range(input$y.data, input$x.data, input$group.by)
+            y_range <- calculate_y_range(input$y.data, input$x.data, input$fill.by)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -288,7 +287,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
             fill.by <- NULL
             if (!isolate_fn(input$fill.by) == ""){
-                group.by <- isolate_fn(input$fill.by)
+                fill.by <- isolate_fn(input$fill.by)
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
@@ -317,7 +316,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palette = default_palette_name,
                 palcolor = unname(palette_values),
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
@@ -327,8 +325,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
                 bar_height = isolate_fn(input$bar.height),
-                lineheight = isolate_fn(input$line.height),
-                max_charwidth = isolate_fn(input$max.charwidth)
+                lineheight = isolate_fn(input$line.height)
             )
             fig <- ggplotly(p) |>
                 layout(
