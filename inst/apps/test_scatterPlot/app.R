@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 scatter_mtcars <- transform(mtcars,
     cyl = factor(cyl),
@@ -13,5 +13,5 @@ data_list <- list(
     iris = scatter_iris
 )
 
-app <- scatterPlotApp(data_list)
+app <- dittoViz_scatterPlotApp(data_list)
 app

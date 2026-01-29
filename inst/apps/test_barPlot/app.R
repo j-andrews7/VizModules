@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 bar_mtcars <- transform(mtcars,
     cyl = factor(cyl),
@@ -20,5 +20,5 @@ data_list <- list(
     iris = bar_iris
 )
 
-app <- BarPlotApp(data_list)
+app <- plotthis_BarPlotApp(data_list)
 app

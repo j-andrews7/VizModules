@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 line_data <- transform(mtcars,
     cyl = factor(cyl),

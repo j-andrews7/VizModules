@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 mtcars_area <- transform(mtcars,
     cyl = factor(cyl),
@@ -15,5 +15,5 @@ data_list <- list(
     iris = iris_area
 )
 
-app <- AreaPlotApp(data_list)
+app <- plotthis_AreaPlotApp(data_list)
 app

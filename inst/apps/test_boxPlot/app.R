@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 box_data <- data.frame(
     x = factor(mtcars$cyl),
@@ -7,5 +7,5 @@ box_data <- data.frame(
     group2 = factor(mtcars$vs)
 )
 
-app <- BoxPlotApp(list(box = box_data))
+app <- plotthisBoxPlotApp(list(box = box_data))
 app

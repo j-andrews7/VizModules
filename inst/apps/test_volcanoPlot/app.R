@@ -1,4 +1,4 @@
-library(vizModules)
+library(VizModules)
 
 data(airway_deseq2, package = "vizModules")
 
