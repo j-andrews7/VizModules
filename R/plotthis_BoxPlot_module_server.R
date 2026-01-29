@@ -188,6 +188,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Facet By Null option Upstream:
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
+                updateSelectInput(session, "sort_x", selected = "") # Makes sure order x is not active when facet by is active
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -195,7 +196,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-
+            sort.x <- "none"
+            if (!isolate_fn(input$sort_x) == "") {
+                sort.x <- isolate_fn(input$sort_x)
+            }
             highlight <- .na_to_null(isolate_fn(input$highlight))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
@@ -218,7 +222,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$flip),
-                sort_x = isolate_fn(input$sort_x),
+                sort_x = sort.x,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
                 add_point = isolate_fn(input$add.points),

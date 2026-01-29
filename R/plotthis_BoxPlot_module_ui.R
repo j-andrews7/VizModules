@@ -55,10 +55,10 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ),
         "Adjustments" = tagList(
             numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
-            shiny::selectInput(ns("sort_x"), "Sort X by", c(
-                "none", "mean_asc", "mean_desc", "mean", "median_asc",
+            selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
+                "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
-            ), selected = "none"),
+            )),
             numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
             numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),
             materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
