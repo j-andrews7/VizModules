@@ -44,4 +44,4 @@ The `moduleServer` function for the SplitBarPlot module.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

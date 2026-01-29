@@ -36,4 +36,4 @@ The `moduleServer` function for the BoxPlot module.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

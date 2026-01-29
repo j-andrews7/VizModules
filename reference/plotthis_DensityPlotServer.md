@@ -35,4 +35,4 @@ A `reactive` Plotly object.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
