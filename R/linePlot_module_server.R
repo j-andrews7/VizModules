@@ -10,6 +10,7 @@
 #' @return The `moduleServer` function for the linePlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom shinyjs hide
 #'
 #' @seealso [VizModules::linePlot()], [VizModules::organize_inputs()],

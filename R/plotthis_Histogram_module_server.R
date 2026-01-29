@@ -16,9 +16,9 @@
 #' @import plotly
 #' @importFrom stats na.omit setNames 
 #' 
-#' @author Jacob Martin, Jared Andrews
-#' 
 #' @export
+#' 
+#' @author Jacob Martin, Jared Andrews
 plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

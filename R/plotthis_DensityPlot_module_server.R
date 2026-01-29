@@ -12,12 +12,12 @@
 #' 
 #' @return A \code{reactive} Plotly object.
 #' 
-#' @author Jacob Martin
-#' 
-#' @export
 #' @import shiny
 #' @import plotly
 #' @importFrom stats na.omit setNames
+#' 
+#' @export
+#' @author Jacob Martin, Jared Andrews
 plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

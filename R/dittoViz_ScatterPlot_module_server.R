@@ -11,6 +11,7 @@
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom dittoViz scatterPlot colLevels
 #' @importFrom ggplot2 theme_bw waiver
 #' @importFrom shinyjs hide

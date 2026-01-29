@@ -11,6 +11,7 @@
 #' @return The `moduleServer` function for the AreaPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom plotthis AreaPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch

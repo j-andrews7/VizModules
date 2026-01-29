@@ -11,6 +11,7 @@
 #' @return The `moduleServer` function for the BarPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom stats aggregate

@@ -11,12 +11,13 @@
 #' @return The `moduleServer` function for the BoxPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom plotthis BoxPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

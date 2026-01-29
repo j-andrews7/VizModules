@@ -12,15 +12,16 @@
 #' @return The `moduleServer` function for the SplitBarPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom plotly ggplotly
+#' 
+#' @export
 #'
 #' @seealso [plotthis::SplitBarPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_SplitBarPlotInputsUI()], [VizModules::plotthis_SplitBarPlotOutputUI()],
 #' [VizModules::plotthis_SplitBarPlotApp()]
 #'
-#' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

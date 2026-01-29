@@ -12,6 +12,7 @@
 #' @return The `moduleServer` function for the piePlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom shinyjs hide
 #' @importFrom stats na.omit setNames
 #'

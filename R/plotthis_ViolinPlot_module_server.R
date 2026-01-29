@@ -11,12 +11,13 @@
 #' @return The `moduleServer` function for the ViolinPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom plotthis ViolinPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

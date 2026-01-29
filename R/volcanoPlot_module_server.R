@@ -11,7 +11,10 @@
 #' @return The `moduleServer` function for the volcanoPlot module.
 #'
 #' @import shiny
+#' @import plotly
+#' 
 #' @export
+#' 
 #' @author Jared Andrews
 volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", "Colors", "Legend/Scale")) {
     res <- moduleServer(id, function(input, output, session) {

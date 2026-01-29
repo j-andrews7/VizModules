@@ -11,6 +11,7 @@
 #' @return The `moduleServer` function for the yPlot module.
 #'
 #' @import shiny
+#' @import plotly
 #' @importFrom dittoViz yPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
