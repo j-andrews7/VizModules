@@ -757,75 +757,33 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Linear model fits
             if (isTRUE(input$linear.model)) {
-                fit_data <- .compute_linear_fit(
+                fig <- .add_fit_lines_to_subplots(
+                    fig = fig,
                     df = data(),
                     x.col = isolate_fn(input$x.by),
                     y.col = isolate_fn(input$y.by),
-                    group.col = group_col
+                    split.by = null.na.inputs$split.by,
+                    group.col = group_col,
+                    color_mapping = color_mapping,
+                    line_color = input$line.best.colour,
+                    fit_type = "linear",
+                    line_width = 3
                 )
-
-                if (!is.null(fit_data)) {
-                    if (is.data.frame(fit_data)) {
-                        # Single global fit line
-                        fig <- fig %>%
-                            add_lines(
-                                data = fit_data,
-                                x = ~x,
-                                y = ~y,
-                                line = list(color = input$line.best.colour, width = 3),
-                                name = "Linear Fit"
-                            )
-                    } else {
-                        # Grouped fit lines (fit_data is a list)
-                        for (group_name in names(fit_data)) {
-                            line_color <- color_mapping[[group_name]]
-                            fig <- fig %>%
-                                add_lines(
-                                    data = fit_data[[group_name]],
-                                    x = ~x,
-                                    y = ~y,
-                                    line = list(color = line_color, width = 3),
-                                    name = paste("Linear", group_name)
-                                )
-                        }
-                    }
-                }
             } else if (isTRUE(input$best.fit)) {
                 # LOESS smooth fit lines (only if linear model not selected)
-                fit_data <- .compute_loess_fit(
+                fig <- .add_fit_lines_to_subplots(
+                    fig = fig,
                     df = data(),
                     x.col = isolate_fn(input$x.by),
                     y.col = isolate_fn(input$y.by),
+                    split.by = null.na.inputs$split.by,
                     group.col = group_col,
-                    span = input$line.best.smoothness
+                    color_mapping = color_mapping,
+                    line_color = input$line.best.colour,
+                    fit_type = "loess",
+                    span = input$line.best.smoothness,
+                    line_width = 3
                 )
-
-                if (!is.null(fit_data)) {
-                    if (is.data.frame(fit_data)) {
-                        # Single global fit line
-                        fig <- fig %>%
-                            add_lines(
-                                data = fit_data,
-                                x = ~x,
-                                y = ~y,
-                                line = list(color = input$line.best.colour, width = 3),
-                                name = "Best Fit"
-                            )
-                    } else {
-                        # Grouped fit lines (fit_data is a list)
-                        for (group_name in names(fit_data)) {
-                            line_color <- color_mapping[[group_name]]
-                            fig <- fig %>%
-                                add_lines(
-                                    data = fit_data[[group_name]],
-                                    x = ~x,
-                                    y = ~y,
-                                    line = list(color = line_color, width = 3),
-                                    name = paste("Best fit", group_name)
-                                )
-                        }
-                    }
-                }
             }
 
             fig
