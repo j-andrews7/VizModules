@@ -79,28 +79,28 @@ library(VizModules)
 data(mtcars)
 plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="9198">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="8841">
 #>     <li class="active">
-#>       <a href="#tab-9198-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8841-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9198-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-8841-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9198-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-8841-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9198-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-8841-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9198-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8841-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9198-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8841-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9198">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9198-1">
+#>   <div class="tab-content" data-tabsetid="8841">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8841-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -148,7 +148,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9198-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-8841-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -257,7 +257,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-9198-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-8841-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -287,7 +287,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9198-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-8841-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -338,7 +338,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9198-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8841-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -528,7 +528,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9198-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8841-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -653,7 +653,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>   </div>
 #> </div>
 #> <div class="row">
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="ViolinPlot-auto.update" style="padding-right: 10px;">Auto Update</label>
@@ -662,23 +662,29 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button id="ViolinPlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
 #>       <span class="action-label">Update</span>
 #>     </button>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="ViolinPlot-reset" style="width:100%;" type="button">
 #>       <span class="action-label">Reset</span>
 #>     </button>
 #>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="ViolinPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
 #>   <div class="col-sm-3">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
-#>       <label class="control-label" id="ViolinPlot-download.type-label" for="ViolinPlot-download.type">Download Format</label>
+#>       <label class="control-label" id="ViolinPlot-download.format-label" for="ViolinPlot-download.format">Download Format</label>
 #>       <div>
-#>         <select id="ViolinPlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
-#> <option value="svg">svg</option></select>
-#>         <script type="application/json" data-for="ViolinPlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <select id="ViolinPlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="ViolinPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>       </div>
 #>     </div>
 #>   </div>

@@ -334,6 +334,8 @@ guidelines:
   : Output UI components for the linePlot module
 - [`linePlotServer()`](https://j-andrews7.github.io/VizModules/reference/linePlotServer.md)
   : Server logic for linePlot module
+- [`module_tack_ui()`](https://j-andrews7.github.io/VizModules/reference/module_tack_ui.md)
+  : Create standard tack UI for module inputs
 - [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
   : Compact multi-group color picker input
 - [`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md)

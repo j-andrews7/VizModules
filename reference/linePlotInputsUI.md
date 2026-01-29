@@ -73,25 +73,25 @@ library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="1976">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="9951">
 #>     <li class="active">
-#>       <a href="#tab-1976-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9951-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1976-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9951-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1976-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-9951-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1976-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9951-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1976-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9951-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1976">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1976-1">
+#>   <div class="tab-content" data-tabsetid="9951">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9951-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -144,7 +144,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1976-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9951-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -169,7 +169,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1976-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9951-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -203,7 +203,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1976-4">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9951-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -414,7 +414,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-1976-5">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9951-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -539,7 +539,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>   </div>
 #> </div>
 #> <div class="row">
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="linePlot-auto.update" style="padding-right: 10px;">Auto Update</label>
@@ -548,23 +548,29 @@ linePlotInputsUI("linePlot", mtcars)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button id="linePlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
 #>       <span class="action-label">Update</span>
 #>     </button>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="linePlot-reset" style="width:100%;" type="button">
 #>       <span class="action-label">Reset</span>
 #>     </button>
 #>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="linePlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
 #>   <div class="col-sm-3">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
-#>       <label class="control-label" id="linePlot-download.type-label" for="linePlot-download.type">Download Format</label>
+#>       <label class="control-label" id="linePlot-download.format-label" for="linePlot-download.format">Download Format</label>
 #>       <div>
-#>         <select id="linePlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
-#> <option value="svg">svg</option></select>
-#>         <script type="application/json" data-for="linePlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <select id="linePlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="linePlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>       </div>
 #>     </div>
 #>   </div>

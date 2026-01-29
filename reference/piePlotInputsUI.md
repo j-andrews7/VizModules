@@ -76,22 +76,22 @@ pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="6018">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="1667">
 #>     <li class="active">
-#>       <a href="#tab-6018-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1667-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6018-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-1667-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6018-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
+#>       <a href="#tab-1667-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6018-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-1667-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6018">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6018-1">
+#>   <div class="tab-content" data-tabsetid="1667">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1667-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -151,7 +151,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-6018-2">
+#>     <div class="tab-pane" data-value="Colors" id="tab-1667-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="piePlot-color.picker" class="shiny-html-output"></div>
@@ -172,7 +172,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-6018-3">
+#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-1667-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -253,7 +253,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-6018-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-1667-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -368,7 +368,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>   </div>
 #> </div>
 #> <div class="row">
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="piePlot-auto.update" style="padding-right: 10px;">Auto Update</label>
@@ -377,23 +377,29 @@ piePlotInputsUI("piePlot", pie_df)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button id="piePlot-update" style="width:100%;" type="button" class="btn btn-default action-button">
 #>       <span class="action-label">Update</span>
 #>     </button>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="piePlot-reset" style="width:100%;" type="button">
 #>       <span class="action-label">Reset</span>
 #>     </button>
 #>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="piePlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
 #>   <div class="col-sm-3">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
-#>       <label class="control-label" id="piePlot-download.type-label" for="piePlot-download.type">Download Format</label>
+#>       <label class="control-label" id="piePlot-download.format-label" for="piePlot-download.format">Download Format</label>
 #>       <div>
-#>         <select id="piePlot-download.type" class="shiny-input-select"><option value="png" selected>png</option>
-#> <option value="svg">svg</option></select>
-#>         <script type="application/json" data-for="piePlot-download.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <select id="piePlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="piePlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>       </div>
 #>     </div>
 #>   </div>
