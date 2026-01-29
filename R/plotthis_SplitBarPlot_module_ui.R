@@ -73,7 +73,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             "theme_this", "theme_blank"
         )
         ),
-        selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", char.choices)),
+        selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
         materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
         textInput(ns("alpha.name"), "Alpha name", value = ""),
         numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
