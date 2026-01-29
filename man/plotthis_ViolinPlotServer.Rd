@@ -26,5 +26,5 @@ The \code{moduleServer} function for the ViolinPlot module.
 Server logic for ViolinPlot module
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

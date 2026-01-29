@@ -31,5 +31,5 @@ Server logic for SplitBarPlot module
 \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

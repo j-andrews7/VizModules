@@ -204,7 +204,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
 
             fig <- ggplotly(p) |>
-                layout(
+                plotly::layout(
                     title = list(
                         font = list(
                             size = isolate_fn(input$title.font.size),

@@ -319,7 +319,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             )
 
             fig <- p |>
-                layout(
+                plotly::layout(
                     title = list(
                         font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"

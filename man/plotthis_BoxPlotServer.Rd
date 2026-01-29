@@ -26,5 +26,5 @@ The \code{moduleServer} function for the BoxPlot module.
 Server logic for BoxPlot module
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

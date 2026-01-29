@@ -715,7 +715,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 }
             }
 
-            fig <- fig %>% layout(
+            fig <- fig |> plotly::layout(
                 newshape = list(
                     fillcolor = isolate_fn(input$shape.fill),
                     line = list(
