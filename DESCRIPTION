@@ -31,7 +31,8 @@ Imports:
     htmltools,
     jsonlite,
     methods,
-    shinyWidgets
+    shinyWidgets,
+    htmlwidgets
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
