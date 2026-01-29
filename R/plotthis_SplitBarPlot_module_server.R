@@ -316,7 +316,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palette = default_palette_name,
                 palcolor = unname(palette_values),
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
