@@ -8,7 +8,7 @@ volcanoPlotServer(
   id,
   data,
   hide.inputs = NULL,
-  hide.tabs = c("Trajectory", "Facets")
+  hide.tabs = c("Trajectory", "Facets", "Colors", "Legend/Scale")
 )
 }
 \arguments{

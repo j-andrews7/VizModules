@@ -40,6 +40,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         }
 
         # Available color groups for the current color.by selection
+        # NOTE: We intentionally don't use colLevels() here because it converts
+        # to character then back to factor, which sorts levels alphabetically.
+        # ggplot2/dittoViz respect the original factor level order, so we must too.
         color_levels <- reactive({
             df <- data()
             color_by <- input$color.by
@@ -48,11 +51,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 return(character(0))
             }
 
-            if (is.numeric(df[[color_by]])) {
+            col_data <- df[[color_by]]
+
+            if (is.numeric(col_data)) {
                 return(character(0))
             }
 
-            colLevels(color_by, df)
+            # For factors, use the defined levels (preserves order)
+            # For character/other, convert to factor (alphabetical order)
+            if (is.factor(col_data)) {
+                levels(col_data)
+            } else {
+                levels(as.factor(col_data))
+            }
         })
 
         # Resolve manual colors supplied to the module (reactive or static)
@@ -76,7 +87,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 # No grouping - show single color picker for point color
                 initial_color <- isolate(input$single.point.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
-                    initial_color <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1]
+                    initial_color <- "#000000"
                 }
                 return(colourpicker::colourInput(
                     ns("single.point.color"),
@@ -122,10 +133,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette <- NULL
 
-            if (!is.null(picker_values) && length(picker_values) > 0) {
-                palette <- picker_values
-            } else if (!is.null(manual_vals) && length(manual_vals) > 0) {
+            # Prioritize manual.colors when provided (e.g., from wrapper modules like volcanoPlot)
+            # This ensures wrapper-supplied colors override the internal color.panel picker
+            if (!is.null(manual_vals) && length(manual_vals) > 0) {
                 palette <- manual_vals
+            } else if (!is.null(picker_values) && length(picker_values) > 0) {
+                palette <- picker_values
             }
 
             if (is.null(palette) || length(palette) == 0) {
@@ -213,7 +226,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "contour.color", value = "black")
             updateSelectInput(session, "contour.linetype", selected = "solid")
             colourpicker::updateColourInput(session, "single.point.color", 
-                value = default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1])
+                value = "#000000")
             
             # Simulate clicking the reset button in the multiColorPicker widget
             shinyjs::runjs(sprintf("

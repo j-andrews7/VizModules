@@ -448,13 +448,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     TRUE
                 )
             ),
-            selectInput(ns("download.format"), "Download format",
-                choices = c("svg", "png"),
-                selected = ifelse("download.format" %in% names(defaults),
-                    ifelse(defaults[["download.format"]] %in% c("svg", "png"), defaults[["download.format"]], "svg"),
-                    "svg"
-                )
-            ),
             colourInput(ns("shape.fill"), "Shape fill",
                 allowTransparent = TRUE,
                 value = ifelse("shape.fill" %in% names(defaults),
@@ -734,7 +727,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
                 column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
-                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
+                column(3, selectInput(ns("download.format"), "Download Format", selected = ifelse("download.format" %in% names(defaults),
+                    ifelse(defaults[["download.format"]] %in% c("svg", "png"), defaults[["download.format"]], "svg"),
+                    "svg"
+                ), choices = c("png", "svg"), width = "100%"))
             ),
             br()
         ),

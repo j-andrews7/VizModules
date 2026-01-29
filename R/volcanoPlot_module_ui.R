@@ -17,9 +17,8 @@
 #' \itemize{
 #'   \item `sig.thresh`: Significance threshold (default 0.05)
 #'   \item `fc.thresh`: Log2 fold change threshold (default 0)
-#'   \item `color.up`: Color for upregulated genes (default "red")
-#'   \item `color.down`: Color for downregulated genes (default "blue")
-#'   \item `color.ns`: Color for non-significant genes (default "lightgray")
+#'   \item `volcano.colors`: A multiColorPicker for Up/Down/n.s. group colors
+#'     (defaults: Up="red", Down="blue", n.s.="lightgray")
 #' }
 #'
 #' @param id The ID for the Shiny module.
@@ -85,6 +84,13 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
     if (!"sig.thresh" %in% names(defaults)) defaults$sig.thresh <- 0.05
     if (!"fc.thresh" %in% names(defaults)) defaults$fc.thresh <- 0
 
+    # Build initial colors from defaults or use standard volcano colors
+    initial_colors <- c(
+        "Up" = if ("color.up" %in% names(defaults)) defaults[["color.up"]] else "red",
+        "Down" = if ("color.down" %in% names(defaults)) defaults[["color.down"]] else "blue",
+        "n.s." = if ("color.ns" %in% names(defaults)) defaults[["color.ns"]] else "lightgray"
+    )
+
     extras <- tagList(
         numericInput(ns("sig.thresh"), "Significance Threshold:",
             value = defaults[["sig.thresh"]],
@@ -97,9 +103,14 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
             min = 0,
             step = 0.25
         ),
-        colourpicker::colourInput(ns("color.up"), "Up Color", value = ifelse("color.up" %in% names(defaults), defaults[["color.up"]], "red")),
-        colourpicker::colourInput(ns("color.down"), "Down Color", value = ifelse("color.down" %in% names(defaults), defaults[["color.down"]], "blue")),
-        colourpicker::colourInput(ns("color.ns"), "N.S. Color", value = ifelse("color.ns" %in% names(defaults), defaults[["color.ns"]], "lightgray"))
+        multiColorPicker(
+            inputId = ns("volcano.colors"),
+            label = "Group Colors",
+            groups = c("Up", "Down", "n.s."),
+            colors = initial_colors,
+            palette_options = default_palettes()[["choices"]],
+            compact = TRUE
+        )
     )
 
     extras <- organize_inputs(extras, columns = columns)

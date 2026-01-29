@@ -45,9 +45,8 @@ Additional inputs specific to volcano plots are added to control significance th
 \itemize{
 \item \code{sig.thresh}: Significance threshold (default 0.05)
 \item \code{fc.thresh}: Log2 fold change threshold (default 0)
-\item \code{color.up}: Color for upregulated genes (default "red")
-\item \code{color.down}: Color for downregulated genes (default "blue")
-\item \code{color.ns}: Color for non-significant genes (default "lightgray")
+\item \code{volcano.colors}: A multiColorPicker for Up/Down/n.s. group colors
+(defaults: Up="red", Down="blue", n.s.="lightgray")
 }
 }
 \examples{

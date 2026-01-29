@@ -13,7 +13,7 @@
 #' @import shiny
 #' @export
 #' @author Jared Andrews
-volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets")) {
+volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", "Colors", "Legend/Scale")) {
     res <- moduleServer(id, function(input, output, session) {
         # Reactive data with group column based on thresholds
         data_reac <- reactive({
@@ -51,14 +51,15 @@ volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Traje
             dat
         })
 
-        # Use color inputs for manual colors - reactive so it updates immediately
+        # Use multiColorPicker input for manual colors - reactive so it updates immediately
         color_reac <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
-            c(
-                "Up" = if (!is.null(isolate_fn(input$color.up))) isolate_fn(input$color.up) else "red",
-                "Down" = if (!is.null(isolate_fn(input$color.down))) isolate_fn(input$color.down) else "blue",
-                "n.s." = if (!is.null(isolate_fn(input$color.ns))) isolate_fn(input$color.ns) else "lightgray"
-            )
+            colors <- isolate_fn(input$volcano.colors)
+            if (is.null(colors)) {
+                # Fallback defaults if input not yet initialized
+                colors <- c("Up" = "red", "Down" = "blue", "n.s." = "lightgray")
+            }
+            colors
         })
 
         list(data = data_reac, colors = color_reac)
