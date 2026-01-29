@@ -107,7 +107,8 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             paste(unique(selected), collapse = "+")
         }
 
-        output$piePlot <- renderPlotly({
+        # Reactive expression to generate the plot (used by both output and download)
+        generate_pieplot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
@@ -181,5 +182,16 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             return(fig)
         })
+
+        # Render the plot output
+        output$piePlot <- renderPlotly({
+            generate_pieplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_pieplot(),
+            filename_base = "pieplot"
+        )
     })
 }

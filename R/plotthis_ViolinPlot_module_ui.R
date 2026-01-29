@@ -269,15 +269,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         inputs,
         id = ns("ViolinPlotTabsetPanel"),
         title = title,
-        tack = tagList(
-            fluidRow(
-                column(3, materialSwitch(ns("auto.update"), "Auto Update", value = FALSE, status = "success"), style = "margin-top: 25px;"),
-                column(3, actionButton(ns("update"), "Update", width = "100%"), style = "margin-top: 25px;"),
-                column(3, actionButton(ns("reset"), "Reset", class = "btn-secondary", width = "100%"), style = "margin-top: 25px;"),
-                column(3, selectInput(ns("download.type"), "Download Format", selected = "png", choices = c("png", "svg"), width = "100%"))
-            ),
-            br()
-        ),
+        tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
     )
 }

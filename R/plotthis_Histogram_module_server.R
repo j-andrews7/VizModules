@@ -287,5 +287,16 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
           return(fig)
         })
+
+        # Render the plot output
+        output$histogramPlot <- renderPlotly({
+            generate_histogram()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_histogram(),
+            filename_base = "histogram"
+        )
     })
 }

@@ -198,8 +198,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
         })
 
-
-        output$yPlot <- renderPlotly({
+        # Generate yPlot reactive
+        generate_yplot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Parse inputs that might need conversion
@@ -365,5 +365,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
             return(fig)
         })
+
+        # Render the plot output
+        output$yPlot <- renderPlotly({
+            generate_yplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_yplot(),
+            filename_base = "yplot"
+        )
     })
 }

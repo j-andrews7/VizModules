@@ -835,6 +835,55 @@
     fig
 }
 
+#' Create download handler for interactive plotly plots
+#'
+#' Generates a Shiny downloadHandler that saves a plotly widget as an
+#' interactive HTML file with resizable functionality. This is used by all
+#' VizModules to provide a "Save Interactive" button.
+#'
+#' @param plot A plotly plot object.
+#' @param filename_base Character. Base name for the downloaded file (without extension).
+#'   Defaults to "interactive_plot".
+#'
+#' @return A downloadHandler function that can be assigned to output$download.interactive.
+#'
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom htmltools tagList tags browsable
+#' @importFrom shinyjqui jqui_resizable
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_create_download_handler
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' # In a Shiny module server:
+#' output$download.interactive <- .create_plot_download_handler(
+#'   plot = my_plotly_plot ,
+#'   filename_base = "my_plot"
+#' )
+#' }
+.create_plot_download_handler <- function(plot, filename_base = "interactive_plot") {
+    downloadHandler(
+        filename = function() {
+            paste0(filename_base, "_", Sys.Date(), ".html")
+        },
+        content = function(file) {
+            # Ensure it's a plotly widget
+            if (!inherits(plot, "plotly")) {
+                stop("Plot must be a plotly object")
+            }
+            
+            # Save as HTML widget
+            saveWidget(
+                widget = jqui_resizable(plot),
+                file = file,
+                selfcontained = TRUE
+            )
+        }
+    )
+}
+
 #' Calculate Y-axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on a specified column in a

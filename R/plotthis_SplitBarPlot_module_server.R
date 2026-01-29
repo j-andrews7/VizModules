@@ -369,5 +369,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             return(fig)
         })
+
+        # Render the plot output
+        output$splitBarPlot <- renderPlotly({
+            generate_splitbarplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_splitbarplot(),
+            filename_base = "splitbarplot"
+        )
     })
 }

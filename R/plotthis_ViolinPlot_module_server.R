@@ -292,5 +292,16 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             return(fig)
         })
+
+        # Render the plot output
+        output$violinPlot <- renderPlotly({
+            generate_violinplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_violinplot(),
+            filename_base = "violinplot"
+        )
     })
 }

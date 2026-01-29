@@ -290,5 +290,16 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             return(fig)
         })
+
+        # Render the plot output
+        output$barPlot <- renderPlotly({
+            generate_barplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_barplot(),
+            filename_base = "barplot"
+        )
     })
 }

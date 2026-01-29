@@ -148,8 +148,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "abline.opacities", value = "1")
         })
 
-
-        output$linePlot <- renderPlotly({
+        # Reactive expression to generate the plot (used by both output and download)
+        generate_lineplot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
@@ -287,5 +287,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             return(fig)
         })
+
+        # Render the plot output
+        output$linePlot <- renderPlotly({
+            generate_lineplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_lineplot(),
+            filename_base = "lineplot"
+        )
     })
 }

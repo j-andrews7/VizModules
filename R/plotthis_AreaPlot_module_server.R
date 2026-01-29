@@ -245,5 +245,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             return(fig)
         })
+
+        # Render the plot output
+        output$areaPlot <- renderPlotly({
+            generate_areaplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_areaplot(),
+            filename_base = "areaplot"
+        )
     })
 }

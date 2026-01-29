@@ -294,5 +294,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             return(fig)
         })
+
+        # Render the plot output
+        output$boxPlot <- renderPlotly({
+            generate_boxplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_boxplot(),
+            filename_base = "boxplot"
+        )
     })
 }

@@ -174,3 +174,93 @@ default_palettes <- function() {
 
   pals
 }
+
+#' Create standard tack UI for module inputs
+#'
+#' Generates a consistent set of control buttons for VizModules that includes
+#' Auto Update toggle, Update button, Reset button, Download Interactive Plot button,
+#' and Download Format selector. This ensures all modules have a uniform interface.
+#'
+#' @param ns Namespace function from the module (e.g., `ns <- NS(id)`).
+#' @param defaults Optional named list of default values. Currently supports:
+#'   \itemize{
+#'     \item \code{download.format} - Default download format ("svg" or "png"), defaults to "svg"
+#'   }
+#'
+#' @return A Shiny tagList containing the standard control buttons and inputs.
+#'
+#' @import shiny
+#' @importFrom shinyWidgets materialSwitch
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' library(VizModules)
+#' library(shiny)
+#' ns <- NS("myModule")
+#' module_tack_ui(ns)
+#'
+#' # With custom defaults
+#' module_tack_ui(ns, defaults = list(download.format = "png"))
+module_tack_ui <- function(ns, defaults = NULL) {
+    tagList(
+        fluidRow(
+            column(
+                2,
+                materialSwitch(
+                    ns("auto.update"),
+                    "Auto Update",
+                    value = FALSE,
+                    status = "success"
+                ),
+                style = "margin-top: 25px;"
+            ),
+            column(
+                2,
+                actionButton(
+                    ns("update"),
+                    "Update",
+                    width = "100%"
+                ),
+                style = "margin-top: 25px;"
+            ),
+            column(
+                2,
+                actionButton(
+                    ns("reset"),
+                    "Reset",
+                    class = "btn-secondary",
+                    width = "100%"
+                ),
+                style = "margin-top: 25px;"
+            ),
+            column(
+                3,
+                downloadButton(
+                    ns("download.interactive"),
+                    "Save Interactive",
+                    class = "btn-secondary",
+                    icon = icon("download"),
+                    width = "100%"
+                ),
+                style = "margin-top: 25px;"
+            ),
+            column(
+                3,
+                selectInput(
+                    ns("download.format"),
+                    "Download Format",
+                    selected = ifelse(
+                        "download.format" %in% names(defaults) &&
+                        defaults[["download.format"]] %in% c("svg", "png"),
+                        defaults[["download.format"]],
+                        "svg"
+                    ),
+                    choices = c("png", "svg"),
+                    width = "100%"
+                )
+            )
+        ),
+        br()
+    )
+}

@@ -259,5 +259,16 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             return(fig)
         })
+
+        # Render the plot output
+        output$densityPlot <- renderPlotly({
+            generate_densityplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_densityplot(),
+            filename_base = "densityplot"
+        )
     })
 }

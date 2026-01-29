@@ -330,7 +330,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "axis.tickwidth", value = 1)
         })
 
-        output$scatterPlot <- renderPlotly({
+        # Reactive expression to generate the plot (used by both output and download)
+        generate_scatterplot <- reactive({
             req(input$x.by, input$y.by, data())
 
             isolate_fn <- setup_auto_update_logic(input)
@@ -788,5 +789,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig
         })
+
+        # Render the plot output
+        output$scatterPlot <- renderPlotly({
+            generate_scatterplot()
+        })
+
+        # Download handler for interactive plot
+        output$download.interactive <- .create_plot_download_handler(
+            plot = generate_scatterplot(),
+            filename_base = "scatterplot"
+        )
     })
 }
