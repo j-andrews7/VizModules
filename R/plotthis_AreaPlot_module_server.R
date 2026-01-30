@@ -162,7 +162,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateTextInput(session, "abline.opacities", value = "1")
         })
 
-        generate_areaplot <- reactive({
+        generate_AreaPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             group.by <- NULL
