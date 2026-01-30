@@ -1,15 +1,19 @@
-#' Apply axis styling to all subplot axes in a plotly figure
+#' Apply axis styling to all axes in a plotly figure
 #'
-#' When using plotly subplots (e.g., via split.by in dittoViz), axis styling
-#' must be applied to all subplot axes (xaxis, xaxis2, xaxis3, etc.) individually.
-#' This helper function detects how many subplots exist and applies the provided
-#' axis styling to all of them.
+#' Applies axis styling to all axes in a plotly figure, including both single plots
+#' and subplots (e.g., via split.by in dittoViz or facet_by in plotthis).
+#' This function detects all axes (xaxis, xaxis2, yaxis, yaxis2, etc.) and applies
+#' the provided styling to each.
+#'
+#' For plotly figures created via ggplotly(), this function explicitly forces
+#' showline and mirror properties to override any defaults inherited from the
+#' ggplot theme, ensuring user preferences are respected.
 #'
 #' @param fig A plotly figure object.
 #' @param xaxis_style A named list of axis styling parameters for x-axes.
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
-#' @return The modified plotly figure with axis styling applied to all subplots.
+#' @return The modified plotly figure with axis styling applied to all axes.
 #'
 #' @importFrom utils modifyList
 #'
