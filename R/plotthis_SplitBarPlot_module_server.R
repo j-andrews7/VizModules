@@ -223,6 +223,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
@@ -255,11 +258,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
 
         })
 
