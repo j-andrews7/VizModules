@@ -200,7 +200,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         })
 
         # Generate yPlot reactive
-        generate_yplot <- reactive({
+        generate_yPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Parse inputs that might need conversion
@@ -369,13 +369,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            generate_yplot()
+            generate_yPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_yplot(),
-            filename_base = "yplot"
+            plot_reactive = generate_yPlot,
+            filename_base = "yPlot"
         )
     })
 }

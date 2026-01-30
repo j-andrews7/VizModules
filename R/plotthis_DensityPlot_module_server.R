@@ -157,7 +157,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
 
-        output$densityPlot <- renderPlotly({
+        generate_DensityPlot <- reactive({
             # Check if auto update on
             auto_update <- input$auto.update
 
@@ -261,14 +261,14 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
         # Render the plot output
-        output$densityPlot <- renderPlotly({
-            generate_densityplot()
+        output$DensityPlot <- renderPlotly({
+            generate_DensityPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_densityplot(),
-            filename_base = "densityplot"
+            plot_reactive = generate_DensityPlot,
+            filename_base = "DensityPlot"
         )
     })
 }

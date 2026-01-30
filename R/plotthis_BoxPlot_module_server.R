@@ -182,8 +182,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
-
-        output$BoxPlot <- renderPlotly({
+        generate_BoxPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Facet By Null option Upstream:
@@ -299,14 +298,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
         # Render the plot output
-        output$boxPlot <- renderPlotly({
-            generate_boxplot()
+        output$BoxPlot <- renderPlotly({
+            generate_BoxPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_boxplot(),
-            filename_base = "boxplot"
+            plot_reactive = generate_BoxPlot,
+            filename_base = "BoxPlot"
         )
     })
 }
