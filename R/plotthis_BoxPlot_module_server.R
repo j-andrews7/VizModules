@@ -156,6 +156,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Axes
             updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)

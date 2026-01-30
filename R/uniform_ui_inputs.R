@@ -55,22 +55,6 @@
         br(),
         textInput(ns("abline.slopes"), "Slopes",
             value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
-        ),
-        textInput(ns("abline.intercepts"), "Y-intercepts",
-            value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
-        ),
-        textInput(ns("abline.colors"), "Colors",
-            value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
-        ),
-        textInput(ns("abline.widths"), "Widths",
-            value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
-        ),
-        textInput(ns("abline.linetypes"), "Line types",
-            placeholder = "solid, dashed, dotted, ...",
-            value = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
-        ),
-        textInput(ns("abline.opacities"), "Opacities (0-1)",
-            value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
         )
     )
 
@@ -177,7 +161,7 @@
         ),
         colourInput(ns("axis.title.font.color"), "Axis Title Color",
             value = ifelse("axis.title.font.color" %in% names(defaults),
-                defaults[["axis.title.font.color"]], "black"
+                defaults[["axis.title.font.color"]], "#000000"
             )
         ),
         selectInput(ns("axis.title.font.family"), "Axis Title Font",
