@@ -101,7 +101,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @keywords internal
-.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE) {
+.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
     font_choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
         "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -121,8 +121,30 @@
         NULL
     }
 
+    if (include.flip){
+        flip_x <- materialSwitch(ns("flip.x"), "Flip X Axis",
+            value = ifelse("flip.x" %in% names(defaults),
+                ifelse(is.logical(defaults[["flip.x"]]), defaults[["flip.x"]], FALSE),
+                FALSE
+            ),
+            status = "success"
+        )
+        flip_y <- materialSwitch(ns("flip.y"), "Flip Y Axis",
+            value = ifelse("flip.y" %in% names(defaults),
+                ifelse(is.logical(defaults[["flip.y"]]), defaults[["flip.y"]], FALSE),
+                FALSE
+            ),
+            status = "success"
+        )
+    } else {
+        flip_x <- NULL
+        flip_y <- NULL
+    }
+
     tagList(
         rotate_input,
+        flip_x,
+        flip_y,
         selectInput(ns("font.type"), "Title Font",
             choices = font_choices,
             selected = ifelse("font.type" %in% names(defaults),
@@ -136,20 +158,6 @@
             value = ifelse("text.colour" %in% names(defaults),
                 defaults[["text.colour"]], "#000000"
             )
-        ),
-        materialSwitch(ns("flip.x"), "Flip X Axis",
-            value = ifelse("flip.x" %in% names(defaults),
-                ifelse(is.logical(defaults[["flip.x"]]), defaults[["flip.x"]], FALSE),
-                FALSE
-            ),
-            status = "success"
-        ),
-        materialSwitch(ns("flip.y"), "Flip Y Axis",
-            value = ifelse("flip.y" %in% names(defaults),
-                ifelse(is.logical(defaults[["flip.y"]]), defaults[["flip.y"]], FALSE),
-                FALSE
-            ),
-            status = "success"
         ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
             value = ifelse("axis.title.font.size" %in% names(defaults),

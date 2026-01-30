@@ -108,7 +108,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             uiOutput(ns("palette.selection"))
         ),
 
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE),
+        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
         )
 
