@@ -112,6 +112,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scales", selected = "fixed")
+            updateSelectInput(session, "x.adjustment", selected = "")
+            updateSelectInput(session, "y.adjustment", selected = "")
 
             # Axes:
             updateNumericInput(session, "axis.title.font.size", value = 18)
@@ -132,6 +134,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
