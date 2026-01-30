@@ -55,6 +55,16 @@
         } else {
             layout_updates[[xaxis_name]] <- xaxis_style
         }
+
+        # Explicitly force showline and mirror properties to override ggplotly defaults.
+        # When ggplotly() converts ggplots, it may set axis properties based on the ggplot theme,
+        # which can override user preferences. This ensures the user's axis border settings are applied.
+        style_props <- c("showline", "mirror", "linecolor", "linewidth")
+        for (prop in style_props) {
+            if (!is.null(xaxis_style[[prop]])) {
+                layout_updates[[xaxis_name]][[prop]] <- xaxis_style[[prop]]
+            }
+        }
     }
 
     # Apply y-axis styling to all y-axes
@@ -67,17 +77,13 @@
             layout_updates[[yaxis_name]] <- yaxis_style
         }
 
-        # For subplots with matched axes (yaxis2, yaxis3, etc.), explicitly ensure
-        # showline and mirror properties are set even if matches="y" is present.
-        # This forces plotly to render the axis lines on all subplot borders.
-        if (yaxis_name != "yaxis" && !is.null(layout_updates[[yaxis_name]]$matches)) {
-            # Force border styling properties for matched axes
-            # This overrides plotly's default behavior of hiding borders on matched axes
-            style_props <- c("showline", "mirror", "linecolor", "linewidth")
-            for (prop in style_props) {
-                if (!is.null(yaxis_style[[prop]])) {
-                    layout_updates[[yaxis_name]][[prop]] <- yaxis_style[[prop]]
-                }
+        # Explicitly force showline and mirror properties to override ggplotly defaults.
+        # When ggplotly() converts ggplots, it may set axis properties based on the ggplot theme,
+        # which can override user preferences. This ensures the user's axis border settings are applied.
+        style_props <- c("showline", "mirror", "linecolor", "linewidth")
+        for (prop in style_props) {
+            if (!is.null(yaxis_style[[prop]])) {
+                layout_updates[[yaxis_name]][[prop]] <- yaxis_style[[prop]]
             }
         }
     }
