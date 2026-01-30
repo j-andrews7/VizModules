@@ -150,7 +150,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         # Reactive expression to generate the plot (used by both output and download)
-        generate_lineplot <- reactive({
+        generate_linePlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
@@ -291,13 +291,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$linePlot <- renderPlotly({
-            generate_lineplot()
+            generate_linePlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_lineplot(),
-            filename_base = "lineplot"
+            plot_reactive = generate_linePlot,
+            filename_base = "linePlot"
         )
     })
 }

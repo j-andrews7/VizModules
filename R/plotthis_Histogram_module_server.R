@@ -166,7 +166,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         })
 
 
-        output$histogramPlot <- renderPlotly({
+        generate_Histogram <- reactive({
           # Check if auto update on
           auto_update <- input$auto.update
 
@@ -289,14 +289,14 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         })
 
         # Render the plot output
-        output$histogramPlot <- renderPlotly({
-            generate_histogram()
+        output$Histogram <- renderPlotly({
+            generate_Histogram()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_histogram(),
-            filename_base = "histogram"
+            plot_reactive = generate_Histogram,
+            filename_base = "Histogram"
         )
     })
 }

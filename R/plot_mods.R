@@ -841,7 +841,7 @@
 #' interactive HTML file with resizable functionality. This is used by all
 #' VizModules to provide a "Save Interactive" button.
 #'
-#' @param plot A plotly plot object.
+#' @param plot_reactive A reactive expression returning a plotly plot object.
 #' @param filename_base Character. Base name for the downloaded file (without extension).
 #'   Defaults to "interactive_plot".
 #'
@@ -859,16 +859,17 @@
 #' \dontrun{
 #' # In a Shiny module server:
 #' output$download.interactive <- .create_plot_download_handler(
-#'   plot = my_plotly_plot ,
+#'   plot_reactive = reactive({my_plotly_plot}),
 #'   filename_base = "my_plot"
 #' )
 #' }
-.create_plot_download_handler <- function(plot, filename_base = "interactive_plot") {
+.create_plot_download_handler <- function(plot_reactive, filename_base = "interactive_plot") {
     downloadHandler(
         filename = function() {
             paste0(filename_base, "_", Sys.Date(), ".html")
         },
         content = function(file) {
+            plot <- plot_reactive()
             # Ensure it's a plotly widget
             if (!inherits(plot, "plotly")) {
                 stop("Plot must be a plotly object")

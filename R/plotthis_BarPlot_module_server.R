@@ -187,7 +187,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
 
-        output$BarPlot <- renderPlotly({
+        generate_BarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Null Values:
@@ -293,14 +293,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
         # Render the plot output
-        output$barPlot <- renderPlotly({
-            generate_barplot()
+        output$BarPlot <- renderPlotly({
+            generate_BarPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_barplot(),
-            filename_base = "barplot"
+            plot_reactive = generate_BarPlot,
+            filename_base = "BarPlot"
         )
     })
 }

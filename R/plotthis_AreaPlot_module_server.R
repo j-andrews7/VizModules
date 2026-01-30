@@ -162,7 +162,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateTextInput(session, "abline.opacities", value = "1")
         })
 
-        output$AreaPlot <- renderPlotly({
+        generate_AreaPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             group.by <- NULL
@@ -248,14 +248,14 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         })
 
         # Render the plot output
-        output$areaPlot <- renderPlotly({
-            generate_areaplot()
+        output$AreaPlot <- renderPlotly({
+            generate_AreaPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_areaplot(),
-            filename_base = "areaplot"
+            plot_reactive = generate_AreaPlot,
+            filename_base = "AreaPlot"
         )
     })
 }

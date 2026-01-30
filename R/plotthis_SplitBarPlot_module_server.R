@@ -273,7 +273,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
 
-        output$SplitBarPlot <- renderPlotly({
+        generate_SplitBarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Null Values:
@@ -369,14 +369,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
         # Render the plot output
-        output$splitBarPlot <- renderPlotly({
-            generate_splitbarplot()
+        output$SplitBarPlot <- renderPlotly({
+            generate_SplitBarPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_splitbarplot(),
-            filename_base = "splitbarplot"
+            plot_reactive = generate_SplitBarPlot,
+            filename_base = "SplitBarPlot"
         )
     })
 }

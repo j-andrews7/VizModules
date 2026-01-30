@@ -182,8 +182,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             }
         })
 
-
-        output$ViolinPlot <- renderPlotly({
+        generate_ViolinPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             # Facet By Null option Upstream:
@@ -295,14 +294,14 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         })
 
         # Render the plot output
-        output$violinPlot <- renderPlotly({
-            generate_violinplot()
+        output$ViolinPlot <- renderPlotly({
+            generate_ViolinPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot = generate_violinplot(),
-            filename_base = "violinplot"
+            plot_reactive = generate_ViolinPlot,
+            filename_base = "ViolinPlot"
         )
     })
 }
