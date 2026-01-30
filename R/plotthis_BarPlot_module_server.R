@@ -229,7 +229,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 group_by = group.by,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),

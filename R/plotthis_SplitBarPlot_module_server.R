@@ -310,7 +310,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 fill_by = fill.by,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),

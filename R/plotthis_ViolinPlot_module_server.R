@@ -216,7 +216,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 sort_x = isolate_fn(input$sort_x),
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),

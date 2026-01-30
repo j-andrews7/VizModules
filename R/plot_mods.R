@@ -382,9 +382,9 @@
     style <- list(
         title = list(
             font = list(
-                size   = 18,
-                family = isolate_fn(input$font.type),
-                color  = isolate_fn(input$text.colour)
+                size   = isolate_fn(input$axis.title.font.size),
+                family = isolate_fn(input$axis.title.font.family),
+                color  = isolate_fn(input$axis.title.font.color),
             )
         ),
         showline = isolate_fn(input$axis.showline),

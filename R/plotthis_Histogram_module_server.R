@@ -230,7 +230,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             facet_nrow = facet.nrow,
             facet_byrow = isolate_fn(input$facet.by.row),
             alpha = isolate_fn(input$plot.alpha),
-            flip = isolate_fn(input$flip),
+            flip = isolate_fn(input$rotate),
             bins = bins,
             binwidth = bin.width,
             use_trend = isolate_fn(input$use.trend),

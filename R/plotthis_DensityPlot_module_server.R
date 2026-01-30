@@ -210,7 +210,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
                 alpha = isolate_fn(input$plot.alpha),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 add_bars = isolate_fn(input$add.bars),
                 bar_height = isolate_fn(input$bar.height),
                 bar_alpha = isolate_fn(input$bar.alpha),

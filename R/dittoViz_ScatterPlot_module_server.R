@@ -287,7 +287,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Extras
             updateCheckboxInput(session, "do.ellipse", value = FALSE)
             updateCheckboxInput(session, "do.contour", value = FALSE)
-            updateCheckboxInput(session, "show.grid.lines", value = TRUE)
             updateSelectizeInput(session, "hover.data", selected = "")
             updateNumericInput(session, "hover.round.digits", value = 5)
 
@@ -442,7 +441,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 legend.color.breaks.labels = waiver(),
                 legend.shape.title = null.na.inputs$shape.by,
                 legend.shape.size = isolate_fn(input$legend.shape.size),
-                show.grid.lines = isolate_fn(input$show.grid.lines),
                 data.out = TRUE
             )
 

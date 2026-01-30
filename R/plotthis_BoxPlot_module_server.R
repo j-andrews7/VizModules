@@ -221,7 +221,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 sort_x = sort.x,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
