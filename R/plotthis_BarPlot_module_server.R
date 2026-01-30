@@ -236,7 +236,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palette = default_palette_name,
                 palcolor = unname(palette_values),
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),

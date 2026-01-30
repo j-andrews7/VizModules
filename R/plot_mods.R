@@ -384,7 +384,7 @@
             font = list(
                 size   = isolate_fn(input$axis.title.font.size),
                 family = isolate_fn(input$axis.title.font.family),
-                color  = isolate_fn(input$axis.title.font.color),
+                color  = isolate_fn(input$axis.title.font.color)
             )
         ),
         showline = isolate_fn(input$axis.showline),
