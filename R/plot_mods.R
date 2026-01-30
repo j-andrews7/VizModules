@@ -6,8 +6,8 @@
 #' the provided styling to each.
 #'
 #' For plotly figures created via ggplotly(), this function explicitly forces
-#' showline and mirror properties to override any defaults inherited from the
-#' ggplot theme, ensuring user preferences are respected.
+#' showline, mirror, linecolor, and linewidth properties to override any defaults
+#' inherited from the ggplot theme, ensuring user preferences are respected.
 #'
 #' @param fig A plotly figure object.
 #' @param xaxis_style A named list of axis styling parameters for x-axes.
@@ -60,9 +60,10 @@
             layout_updates[[xaxis_name]] <- xaxis_style
         }
 
-        # Explicitly force showline and mirror properties to override ggplotly defaults.
+        # Explicitly force border styling properties to override ggplotly defaults.
         # When ggplotly() converts ggplots, it may set axis properties based on the ggplot theme,
-        # which can override user preferences. This ensures the user's axis border settings are applied.
+        # which can prevent modifyList from properly overriding them. This explicit forcing ensures
+        # the user's axis border settings (showline, mirror, linecolor, linewidth) are always applied.
         style_props <- c("showline", "mirror", "linecolor", "linewidth")
         for (prop in style_props) {
             if (!is.null(xaxis_style[[prop]])) {
@@ -81,9 +82,10 @@
             layout_updates[[yaxis_name]] <- yaxis_style
         }
 
-        # Explicitly force showline and mirror properties to override ggplotly defaults.
+        # Explicitly force border styling properties to override ggplotly defaults.
         # When ggplotly() converts ggplots, it may set axis properties based on the ggplot theme,
-        # which can override user preferences. This ensures the user's axis border settings are applied.
+        # which can prevent modifyList from properly overriding them. This explicit forcing ensures
+        # the user's axis border settings (showline, mirror, linecolor, linewidth) are always applied.
         style_props <- c("showline", "mirror", "linecolor", "linewidth")
         for (prop in style_props) {
             if (!is.null(yaxis_style[[prop]])) {
