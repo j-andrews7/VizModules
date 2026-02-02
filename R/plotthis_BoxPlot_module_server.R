@@ -247,6 +247,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
+            # Remove ggplot panel borders to prevent double borders with plotly
+            p <- .remove_ggplot_panel_borders(p)
+
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(

@@ -221,6 +221,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+            
+            # Create ggplot theme arguments based on faceting and axis border settings
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -237,13 +241,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = isolate_fn(input$theme),
+                theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
                 fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
                 split_by = split.by
-
             )
+            # .remove_ggplot_panel_borders(p)
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
@@ -253,6 +258,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Disable plotly borders since we're handling them through ggplot theme_args
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
