@@ -221,6 +221,17 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+            # If faceting is true then set borders  to be on for all axes components within ggplotly: 
+            if (is.null(facet.by)){
+                theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn, facet.by = facet.by)
+            } else {
+              theme_args <- list(panel.border = ggplot2::element_rect(
+                            colour = "black",
+                            fill = NA,
+                            linewidth = 0.5
+                        ))
+            }
+          
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -237,17 +248,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = isolate_fn(input$theme),
+                theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
                 fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
                 split_by = split.by
-
             )
-
-            # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
-
+            # .remove_ggplot_panel_borders(p)
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
@@ -257,8 +265,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, show.axis.border = FALSE, show.axis.mirror = FALSE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, show.axis.border = FALSE, show.axis.mirror = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
