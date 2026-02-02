@@ -90,19 +90,15 @@
 
 #' Remove ggplot panel borders from a ggplot object
 #'
-#' Conditionally removes panel borders from a ggplot object based on whether
-#' axis borders should be shown. This prevents double borders when ggplot
-#' panel borders conflict with plotly's axis borders after ggplotly conversion.
+#' Removes panel borders from a ggplot object to prevent double borders when
+#' ggplot panel borders conflict with plotly's axis borders after ggplotly conversion.
 #'
-#' When axis borders are disabled (axis.showline = FALSE), the ggplot panel
-#' borders must also be removed to ensure plotly doesn't render them. When
-#' axis borders are enabled, ggplot panel borders are removed to ensure only
-#' plotly's borders are shown (avoiding double borders).
+#' The ggplot panel borders are always removed to ensure that only plotly's
+#' showline and mirror settings control the axis borders. This prevents:
+#' - Double borders when axis borders are enabled
+#' - Residual ggplot borders when plotly borders are disabled
 #'
 #' @param p A ggplot object.
-#' @param show_axis_borders Logical. Whether plotly axis borders should be shown.
-#'   If FALSE, ggplot panel borders are removed. If TRUE, ggplot panel borders
-#'   are also removed to prevent double borders with plotly's axis borders.
 #'
 #' @return The modified ggplot object with panel borders removed.
 #'
@@ -111,7 +107,7 @@
 #' @author Jared Andrews
 #' @rdname INTERNAL_remove_ggplot_panel_borders
 #' @keywords internal
-.remove_ggplot_panel_borders <- function(p, show_axis_borders = TRUE) {
+.remove_ggplot_panel_borders <- function(p) {
     # Always remove ggplot panel borders to prevent conflicts with plotly axis borders
     # This ensures that only plotly's showline and mirror settings control the borders
     p + ggplot2::theme(panel.border = ggplot2::element_blank())
