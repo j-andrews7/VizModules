@@ -378,7 +378,7 @@
 #'   gridline inputs are applied.
 #' @param isolate_fn Function. A function used to isolate Shiny inputs,
 #'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
-#'
+#'@param ggplot.axis.styling boolean value that determines wether ggplot styling is applied 
 #' @return A named list containing Plotly-compatible axis styling
 #'   components, including title font, line properties, tick label
 #'   formatting, and gridline visibility.
@@ -393,7 +393,7 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate) {
+.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, ggplot.axis.styling = TRUE) {
     axis_side <- match.arg(axis_side)
 
     # Determine gridline visibility based on axis side
@@ -402,15 +402,6 @@
         isolate_fn(input$show.major.grid.x),
         isolate_fn(input$show.major.grid.y)
     )
-
-    # Determine border settings - use parameters if provided, otherwise use input
-    # if (!is.null(show_axis_border)) {
-    #     show_axis_border <- isolate_fn(input$axis.showline)
-    # }
-    # if (!is.null(show_axis_mirror)) {
-    #     show_axis_mirror <- isolate_fn(input$axis.mirror)
-    # }
-
     style <- list(
         title = list(
             font = list(
@@ -419,10 +410,6 @@
                 color  = isolate_fn(input$axis.title.font.color)
             )
         ),
-        # showline = show_axis_border,
-        # mirror = show_axis_mirror,
-        # linecolor = isolate_fn(input$axis.linecolor),
-        # linewidth = isolate_fn(input$axis.linewidth),
         tickfont = list(
             size   = isolate_fn(input$axis.tickfont.size),
             color  = isolate_fn(input$axis.tickfont.color),
@@ -438,6 +425,12 @@
         tickwidth = isolate_fn(input$axis.tickwidth),
         showgrid = show_grid
     )
+    if (!ggplot.axis.styling){
+        style$showline <- isolate_fn(input$axis.showline)
+        style$mirror <- isolate_fn(input$axis.mirror)
+        style$linecolor <- isolate_fn(input$axis.linecolor)
+        style$linewidth <- isolate_fn(input$axis.linewidth)
+    }
 
     return(style)
 }

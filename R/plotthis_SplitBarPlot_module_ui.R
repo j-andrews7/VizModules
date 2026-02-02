@@ -65,14 +65,6 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        selectInput(ns("theme"), "Theme",
-        selected = "theme_this",
-        choices = c(
-            "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-            "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-            "theme_this", "theme_blank"
-        )
-        ),
         selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
         materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
         textInput(ns("alpha.name"), "Alpha name", value = ""),

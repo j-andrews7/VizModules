@@ -220,12 +220,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palcolor_arg <- as.list(palette_values)
             }
 
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             p <- plotthis::BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$rotate),
                 sort_x = sort.x,
+                theme = "theme_this",
+                theme_args = theme_args,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
                 add_point = isolate_fn(input$add.points),
@@ -247,8 +251,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
-            # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
+
 
             fig <- ggplotly(p) |>
                 plotly::layout(

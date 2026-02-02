@@ -240,7 +240,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palcolor = unname(palette_values),
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
                 fill_by_x_if_no_group = TRUE,
@@ -248,7 +248,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 width = width,
                 split_by = split.by
             )
-            # .remove_ggplot_panel_borders(p)
+
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(

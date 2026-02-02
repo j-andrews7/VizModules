@@ -49,13 +49,6 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Aesthetics" = tagList(
             numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
-            selectInput(ns("theme"), "Plot Theme", selected = "theme_this",
-            choices = c(
-                "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-                "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-                "theme_this", "theme_blank"
-            )
-            ),
             uiOutput(ns("palette.selection")),
             selectInput(ns("position"), "Position", selected = "identity",
             choices = c("identity", "stack", "dodge", "fill")

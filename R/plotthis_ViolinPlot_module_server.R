@@ -214,6 +214,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 palcolor_arg <- as.list(palette_values)
             }
 
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             p <- plotthis::ViolinPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
@@ -246,11 +248,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 highlight = highlight,
                 highlight_color = isolate_fn(input$highlight.colour),
                 highlight_size = isolate_fn(input$highlight.size),
-                highlight_alpha = isolate_fn(input$highlight.alpha)
+                highlight_alpha = isolate_fn(input$highlight.alpha),
+                theme = "theme_this",
+                theme_args = theme_args
             )
 
-            # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
 
             fig <- ggplotly(p) |>
                 plotly::layout(

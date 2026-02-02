@@ -59,13 +59,6 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
             numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
             numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
             sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
-            selectInput(ns("theme"), "Plot Theme", selected = "theme_this",
-            choices = c(
-                "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-                "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-                "theme_this", "theme_blank"
-            )
-            ),
             uiOutput(ns("palette.selection")),
             selectInput(ns("position"), "Position", selected = "identity",
             choices = c("identity", "stack", "dodge", "fill")

@@ -83,14 +83,6 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        selectInput(ns("theme"), "Theme",
-        selected = "theme_this",
-        choices = c(
-            "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-            "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-            "theme_this", "theme_blank"
-        )
-        ),
         numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
         numericInput(ns("width"), "Width", value = NA),
         textInput(ns("expand"), "Expand", value = "",

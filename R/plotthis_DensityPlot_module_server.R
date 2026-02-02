@@ -203,6 +203,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             p <- plotthis::DensityPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
@@ -218,13 +220,12 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 bar_height = isolate_fn(input$bar.height),
                 bar_alpha = isolate_fn(input$bar.alpha),
                 bar_width = isolate_fn(input$bar.width),
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 palcolor = palcolor_arg,
                 position = isolate_fn(input$position)
             )
 
-            # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
 
             fig <- ggplotly(p) |>
                 plotly::layout(

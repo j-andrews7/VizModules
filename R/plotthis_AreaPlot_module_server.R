@@ -182,13 +182,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+            
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::AreaPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 palcolor = unname(palette_values),
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
@@ -202,7 +205,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
 
             # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
 
             fig <- ggplotly(p) |>
                 plotly::layout(

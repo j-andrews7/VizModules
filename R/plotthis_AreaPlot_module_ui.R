@@ -190,18 +190,6 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            selectInput(ns("theme"), "Theme:",
-                selected = ifelse("theme" %in% names(defaults) && defaults[["theme"]] %in% c(
-                    "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-                    "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-                    "theme_this", "theme_blank"
-                ), defaults[["theme"]], "theme_this"),
-                choices = c(
-                    "theme_grey", "theme_bw", "theme_linedraw", "theme_light",
-                    "theme_dark", "theme_minimal", "theme_classic", "theme_void",
-                    "theme_this", "theme_blank"
-                )
-            ),
             numericInput(ns("alpha"), "Alpha:",
                 value = ifelse("alpha" %in% names(defaults),
                     ifelse(is.numeric(defaults[["alpha"]]), defaults[["alpha"]], 1),

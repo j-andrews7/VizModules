@@ -303,6 +303,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
           
           
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             # bar Plot
             p <- plotthis::SplitBarPlot(
                 data(),
@@ -318,7 +320,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palcolor = unname(palette_values),
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 alpha_by  = alpha.by,
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
@@ -327,8 +330,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 lineheight = isolate_fn(input$line.height)
             )
 
-            # Remove ggplot panel borders to prevent double borders with plotly
-            p <- .remove_ggplot_panel_borders(p)
 
             fig <- ggplotly(p) |>
                 plotly::layout(
