@@ -98,18 +98,6 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         )
     ),
 
-    "Extras" = tagList(
-        numericInput(ns("add.line"), "Add line", value = NULL),
-        colourpicker::colourInput(ns("line.colour"), "Line colour:",
-        value = "#000000"
-        ),
-        numericInput(ns("line.type"), "Line type", value = 1, min = 0),
-        numericInput(ns("line.width"), "Line width", value = 0.6, min = 0),
-        textInput(ns("line.name"), "Line name", value = "",
-        placeholder = "Line Name"
-        )
-    ),
-
     "Adjustments" = tagList(
         numericInput(ns("y.min"), "Y-axis min:",
             value = min.y

@@ -203,10 +203,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$sort_x) == "") {
                 sort.x <- isolate_fn(input$sort_x)
             }
-            highlight <- NULL
-            if (!isolate_fn(input$highlight) == ""){
-                highlight <- isolate_fn(input$highlight)
-            }
+            highlight <- .na_to_null(isolate_fn(input$highlight))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))

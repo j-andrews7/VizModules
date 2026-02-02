@@ -221,7 +221,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -239,15 +238,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 y_max = isolate_fn(input$y.max),
                 theme = isolate_fn(input$theme),
                 alpha = isolate_fn(input$alpha),
-                add_line = isolate_fn(input$add.line),
-                line_color = isolate_fn(input$line.colour),
-                line_width = isolate_fn(input$line.width),
-                line_type = isolate_fn(input$line.type),
-                line_name = line.name,
                 fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
                 split_by = split.by
+
             )
             fig <- ggplotly(p) |>
                 plotly::layout(

@@ -68,7 +68,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000")
         ),
         "Highlight" = tagList(
-            textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
+            textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. col name > 0"),
             colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
             numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
             numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1)
