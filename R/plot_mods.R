@@ -393,7 +393,7 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, show.axis.border = FALSE, show.axis.mirror = FALSE) {
+.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, show_axis_border = NULL, show_axis_mirror = NULL) {
     axis_side <- match.arg(axis_side)
 
     # Determine gridline visibility based on axis side
@@ -403,6 +403,13 @@
         isolate_fn(input$show.major.grid.y)
     )
 
+    # Determine border settings - use parameters if provided, otherwise use input
+    if (is.null(show_axis_border)) {
+        show_axis_border <- isolate_fn(input$axis.showline)
+    }
+    if (is.null(show_axis_mirror)) {
+        show_axis_mirror <- isolate_fn(input$axis.mirror)
+    }
 
     style <- list(
         title = list(
@@ -412,8 +419,8 @@
                 color  = isolate_fn(input$axis.title.font.color)
             )
         ),
-        # showline = show.axis.border,
-        # mirror = show.axis.mirror,
+        showline = show_axis_border,
+        mirror = show_axis_mirror,
         linecolor = isolate_fn(input$axis.linecolor),
         linewidth = isolate_fn(input$axis.linewidth),
         tickfont = list(
@@ -435,29 +442,68 @@
     return(style)
 }
 
-.create_ggplot_axis_style <- function(input, isolate_fn = isolate, facet.by = NULL){
-    if (is.null(facet.by)){
-        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror) && is.null(facet.by)){ # Return full axis border when facet show line and axis mirror is on 
+#' Create ggplot axis styling theme arguments
+#'
+#' Creates ggplot2 theme arguments for axis borders and lines based on user inputs.
+#' This function handles axis styling through ggplot2 themes rather than plotly overlays,
+#' which provides better control especially when faceting is used.
+#'
+#' When faceting is enabled, panel borders are always shown for the full plot.
+#' When faceting is disabled:
+#' - If both axis.showline and axis.mirror are TRUE: Full panel border
+#' - If only axis.showline is TRUE: Axis lines on x and y axes only
+#' - Otherwise: No borders
+#'
+#' @param input Shiny input object containing axis styling parameters.
+#' @param isolate_fn Function to use for isolating reactive values (default: isolate).
+#' @param facet.by Character or NULL. The faceting variable name. If NULL, no faceting.
+#'
+#' @return A named list of ggplot2 theme arguments to be passed to theme_args parameter.
+#'
+#' @importFrom ggplot2 element_rect element_line element_blank
+#'
+#' @author Jacob Martin
+#' @rdname INTERNAL_create_ggplot_axis_style
+#' @keywords internal
+.create_ggplot_axis_style <- function(input, isolate_fn = isolate, facet.by = NULL) {
+    if (is.null(facet.by)) {
+        # When no faceting: control borders based on axis.showline and axis.mirror
+        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
+            # Return full axis border when both show line and mirror are on
             theme_args <- list(
-                        panel.border = ggplot2::element_rect(
-                            colour = "black",
-                            fill = NA,
-                            linewidth = 0.5
-                        )
+                panel.border = ggplot2::element_rect(
+                    colour = isolate_fn(input$axis.linecolor),
+                    fill = NA,
+                    linewidth = isolate_fn(input$axis.linewidth)
+                )
             )
             return(theme_args)
-        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror) && is.null(facet.by)) { # Set it so the axis line is only shown on x and y axis 
+        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
+            # Set it so the axis line is only shown on x and y axis
             theme_args <- list(
-                axis.line = ggplot2::element_line(colour = "black", linewidth = 0.5)
+                axis.line = ggplot2::element_line(
+                    colour = isolate_fn(input$axis.linecolor),
+                    linewidth = isolate_fn(input$axis.linewidth)
+                )
             )
-            
             return(theme_args)
         } else {
+            # No borders when axis.showline is FALSE
             theme_args <- list(
-                panel.border = element_blank()
+                panel.border = ggplot2::element_blank()
             )
             return(theme_args)
         }
+    } else {
+        # When faceting: show panel border for the full plot
+        theme_args <- list(
+            panel.border = ggplot2::element_rect(
+                colour = isolate_fn(input$axis.linecolor),
+                fill = NA,
+                linewidth = isolate_fn(input$axis.linewidth)
+            )
+        )
+        return(theme_args)
     }
 }
 

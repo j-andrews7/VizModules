@@ -221,17 +221,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-            # If faceting is true then set borders  to be on for all axes components within ggplotly: 
-            if (is.null(facet.by)){
-                theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn, facet.by = facet.by)
-            } else {
-              theme_args <- list(panel.border = ggplot2::element_rect(
-                            colour = "black",
-                            fill = NA,
-                            linewidth = 0.5
-                        ))
-            }
-          
+            
+            # Create ggplot theme arguments based on faceting and axis border settings
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn, facet.by = facet.by)
+            
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -265,8 +258,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, show.axis.border = FALSE, show.axis.mirror = FALSE)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, show.axis.border = FALSE, show.axis.mirror = FALSE)
+            # Disable plotly borders since we're handling them through ggplot theme_args
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, show_axis_border = FALSE, show_axis_mirror = FALSE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, show_axis_border = FALSE, show_axis_mirror = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
