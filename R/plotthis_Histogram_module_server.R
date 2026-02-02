@@ -251,6 +251,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             position = isolate_fn(input$position)
           )
 
+          # Remove ggplot panel borders to prevent double borders with plotly
+          p <- .remove_ggplot_panel_borders(p, show_axis_borders = isolate_fn(input$axis.showline))
+
           fig <- ggplotly(p) |>
               plotly::layout(
                   title = list(
