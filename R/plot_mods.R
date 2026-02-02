@@ -495,14 +495,29 @@
             return(theme_args)
         }
     } else {
-        # When faceting: show panel border for the full plot
-        theme_args <- list(
-            panel.border = ggplot2::element_rect(
-                colour = isolate_fn(input$axis.linecolor),
-                fill = NA,
-                linewidth = isolate_fn(input$axis.linewidth)
+        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
+            # Return full axis border when both show line and mirror are on
+            theme_args <- list(
+                panel.border = ggplot2::element_rect(
+                    colour = isolate_fn(input$axis.linecolor),
+                    fill = NA,
+                    linewidth = isolate_fn(input$axis.linewidth)
+                )
             )
-        )
+        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
+            # Set it so the axis line is only shown on x and y axis
+            theme_args <- list(
+                axis.line = ggplot2::element_line(
+                    colour = isolate_fn(input$axis.linecolor),
+                    linewidth = isolate_fn(input$axis.linewidth)
+                )
+            )
+        } else {
+            # No borders when axis.showline is FALSE
+            theme_args <- list(
+                panel.border = ggplot2::element_blank()
+            )
+        }
         return(theme_args)
     }
 }
