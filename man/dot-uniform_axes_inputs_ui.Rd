@@ -4,7 +4,12 @@
 \alias{.uniform_axes_inputs_ui}
 \title{Generate uniform Axes input UI}
 \usage{
-.uniform_axes_inputs_ui(ns, defaults = NULL, include.rotate = FALSE)
+.uniform_axes_inputs_ui(
+  ns,
+  defaults = NULL,
+  include.rotate = FALSE,
+  include.flip = FALSE
+)
 }
 \arguments{
 \item{ns}{A namespace function, typically created by \code{NS(id)}.}
