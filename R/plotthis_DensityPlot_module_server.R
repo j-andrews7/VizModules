@@ -1,8 +1,8 @@
 #' Density Plot Server Module
 #'
 #' @description 
-#' Server-side logic for the density plot module. This function manages 
-#' reactive data processing, dynamic UI generation for color palettes, 
+#' Server-side logic for the density plot module. This function manages
+#' reactive data processing, dynamic UI generation for color palettes,
 #' and the rendering of interactive Plotly density plots.
 #'
 #' @param id \code{character} unique ID for the shiny namespace.
@@ -225,7 +225,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 palcolor = palcolor_arg,
                 position = isolate_fn(input$position)
             )
-
 
             fig <- ggplotly(p) |>
                 plotly::layout(

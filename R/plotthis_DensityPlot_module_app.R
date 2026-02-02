@@ -10,7 +10,7 @@
 #'
 #' @return A Shiny app object that can be run locally or deployed to a server.
 #'
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' 
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
@@ -30,7 +30,7 @@ plotthis_DensityPlotApp <- function(data_list) {
 
     ui <- fluidPage(
         useShinyjs(),
-        titlePanel("Modular densityPlots"),
+        titlePanel("Modular DensityPlots"),
         sidebarLayout(
             sidebarPanel(
                 # Add the module inputs UI for each data frame

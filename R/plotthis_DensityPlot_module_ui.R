@@ -66,7 +66,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     organize_inputs(
         inputs,
-        id = ns("densityPlotTabsetPanel"),
+        id = ns("DensityPlotTabsetPanel"),
         title = title,
         tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
@@ -74,13 +74,13 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 }
 
 
-#' Output UI components for the densityPlot module
+#' Output UI components for the DensityPlot module
 #'
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
 #'
-#' @return A Shiny plotlyOutput for the densityPlot
+#' @return A Shiny plotlyOutput for the DensityPlot
 #'
 #' @import shiny
 #' @import plotly
@@ -91,6 +91,6 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 plotthis_DensityPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("densityPlot"))
+        plotlyOutput(ns("DensityPlot"))
     )
 }
