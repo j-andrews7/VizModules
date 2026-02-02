@@ -104,7 +104,7 @@
 #'
 #' @importFrom ggplot2 theme element_blank
 #'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @rdname INTERNAL_remove_ggplot_panel_borders
 #' @keywords internal
 .remove_ggplot_panel_borders <- function(p) {
@@ -393,7 +393,7 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate) {
+.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, show.axis.border = FALSE, show.axis.mirror = FALSE) {
     axis_side <- match.arg(axis_side)
 
     # Determine gridline visibility based on axis side
@@ -412,8 +412,8 @@
                 color  = isolate_fn(input$axis.title.font.color)
             )
         ),
-        showline = isolate_fn(input$axis.showline),
-        mirror = isolate_fn(input$axis.mirror),
+        # showline = show.axis.border,
+        # mirror = show.axis.mirror,
         linecolor = isolate_fn(input$axis.linecolor),
         linewidth = isolate_fn(input$axis.linewidth),
         tickfont = list(
@@ -435,6 +435,31 @@
     return(style)
 }
 
+.create_ggplot_axis_style <- function(input, isolate_fn = isolate, facet.by = NULL){
+    if (is.null(facet.by)){
+        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror) && is.null(facet.by)){ # Return full axis border when facet show line and axis mirror is on 
+            theme_args <- list(
+                        panel.border = ggplot2::element_rect(
+                            colour = "black",
+                            fill = NA,
+                            linewidth = 0.5
+                        )
+            )
+            return(theme_args)
+        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror) && is.null(facet.by)) { # Set it so the axis line is only shown on x and y axis 
+            theme_args <- list(
+                axis.line = ggplot2::element_line(colour = "black", linewidth = 0.5)
+            )
+            
+            return(theme_args)
+        } else {
+            theme_args <- list(
+                panel.border = element_blank()
+            )
+            return(theme_args)
+        }
+    }
+}
 
 #' Parse comma-separated numeric string to vector
 #'
