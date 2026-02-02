@@ -393,7 +393,7 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, show_axis_border = NULL, show_axis_mirror = NULL) {
+.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate) {
     axis_side <- match.arg(axis_side)
 
     # Determine gridline visibility based on axis side
@@ -404,12 +404,12 @@
     )
 
     # Determine border settings - use parameters if provided, otherwise use input
-    if (is.null(show_axis_border)) {
-        show_axis_border <- isolate_fn(input$axis.showline)
-    }
-    if (is.null(show_axis_mirror)) {
-        show_axis_mirror <- isolate_fn(input$axis.mirror)
-    }
+    # if (!is.null(show_axis_border)) {
+    #     show_axis_border <- isolate_fn(input$axis.showline)
+    # }
+    # if (!is.null(show_axis_mirror)) {
+    #     show_axis_mirror <- isolate_fn(input$axis.mirror)
+    # }
 
     style <- list(
         title = list(
@@ -419,10 +419,10 @@
                 color  = isolate_fn(input$axis.title.font.color)
             )
         ),
-        showline = show_axis_border,
-        mirror = show_axis_mirror,
-        linecolor = isolate_fn(input$axis.linecolor),
-        linewidth = isolate_fn(input$axis.linewidth),
+        # showline = show_axis_border,
+        # mirror = show_axis_mirror,
+        # linecolor = isolate_fn(input$axis.linecolor),
+        # linewidth = isolate_fn(input$axis.linewidth),
         tickfont = list(
             size   = isolate_fn(input$axis.tickfont.size),
             color  = isolate_fn(input$axis.tickfont.color),
@@ -465,9 +465,7 @@
 #' @author Jacob Martin
 #' @rdname INTERNAL_create_ggplot_axis_style
 #' @keywords internal
-.create_ggplot_axis_style <- function(input, isolate_fn = isolate, facet.by = NULL) {
-    if (is.null(facet.by)) {
-        # When no faceting: control borders based on axis.showline and axis.mirror
+.create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
         if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
             # Return full axis border when both show line and mirror are on
             theme_args <- list(
@@ -483,8 +481,9 @@
             theme_args <- list(
                 axis.line = ggplot2::element_line(
                     colour = isolate_fn(input$axis.linecolor),
-                    linewidth = isolate_fn(input$axis.linewidth)
-                )
+                    linewidth = isolate_fn(input$axis.linewidth)   
+                ),
+                panel.border = element_blank()
             )
             return(theme_args)
         } else {
@@ -494,32 +493,6 @@
             )
             return(theme_args)
         }
-    } else {
-        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
-            # Return full axis border when both show line and mirror are on
-            theme_args <- list(
-                panel.border = ggplot2::element_rect(
-                    colour = isolate_fn(input$axis.linecolor),
-                    fill = NA,
-                    linewidth = isolate_fn(input$axis.linewidth)
-                )
-            )
-        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
-            # Set it so the axis line is only shown on x and y axis
-            theme_args <- list(
-                axis.line = ggplot2::element_line(
-                    colour = isolate_fn(input$axis.linecolor),
-                    linewidth = isolate_fn(input$axis.linewidth)
-                )
-            )
-        } else {
-            # No borders when axis.showline is FALSE
-            theme_args <- list(
-                panel.border = ggplot2::element_blank()
-            )
-        }
-        return(theme_args)
-    }
 }
 
 #' Parse comma-separated numeric string to vector
