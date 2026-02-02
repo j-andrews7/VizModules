@@ -114,8 +114,7 @@
 .remove_ggplot_panel_borders <- function(p, show_axis_borders = TRUE) {
     # Always remove ggplot panel borders to prevent conflicts with plotly axis borders
     # This ensures that only plotly's showline and mirror settings control the borders
-    p <- p + ggplot2::theme(panel.border = ggplot2::element_blank())
-    return(p)
+    p + ggplot2::theme(panel.border = ggplot2::element_blank())
 }
 
 #' Compute linear regression fit line data
