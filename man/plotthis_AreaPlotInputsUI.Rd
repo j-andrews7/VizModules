@@ -55,6 +55,7 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters a
 \item \code{nrow} - Only applies if \code{split_by} is used
 \item \code{ncol} - Only applies if \code{split_by} is used
 \item \code{palette} - Managed internally via the palette selection UI
+.  \item \code{legend_direction} - Managed postion of legend however this can be handled via plotly
 }
 }
 

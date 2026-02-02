@@ -120,6 +120,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateNumericInput(session, "title.font.size", value = 28)
             updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
@@ -155,11 +158,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
         })
 
         generate_AreaPlot <- reactive({
@@ -184,13 +182,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+            
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::AreaPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 palcolor = unname(palette_values),
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
@@ -202,6 +203,8 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 legend_direction = isolate_fn(input$legend.direction)
             )
 
+
+            # Remove ggplot panel borders to prevent double borders with plotly
 
             fig <- ggplotly(p) |>
                 plotly::layout(

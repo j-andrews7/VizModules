@@ -137,6 +137,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
@@ -169,11 +172,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
 
         })
 
@@ -223,35 +221,34 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-
+            
+            # Create ggplot theme arguments based on faceting and axis border settings
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 group_by = group.by,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palette = default_palette_name,
                 palcolor = unname(palette_values),
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
-                add_line = isolate_fn(input$add.line),
-                line_color = isolate_fn(input$line.colour),
-                line_width = isolate_fn(input$line.width),
-                line_type = isolate_fn(input$line.type),
-                line_name = line.name,
                 fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
                 split_by = split.by
             )
+
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
@@ -261,6 +258,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Disable plotly borders since we're handling them through ggplot theme_args
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 

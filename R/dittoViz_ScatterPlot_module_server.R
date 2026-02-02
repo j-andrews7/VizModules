@@ -287,7 +287,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Extras
             updateCheckboxInput(session, "do.ellipse", value = FALSE)
             updateCheckboxInput(session, "do.contour", value = FALSE)
-            updateCheckboxInput(session, "show.grid.lines", value = TRUE)
             updateSelectizeInput(session, "hover.data", selected = "")
             updateNumericInput(session, "hover.round.digits", value = 5)
 
@@ -303,17 +302,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
             shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
             updateNumericInput(session, "line.best.smoothness", value = 1)
             colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
             shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
 
             # Axes
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -391,6 +388,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
+            
+            theme_style <- theme_bw() + theme(unlist(.create_ggplot_axis_style(input, isolate_fn = isolate_fn))) 
 
             p <- dittoViz::scatterPlot(
                 data(),
@@ -424,7 +423,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 min.value = isolate_fn(input$min.value),
                 max.value = isolate_fn(input$max.value),
                 plot.order = isolate_fn(input$plot.order),
-                theme = theme_bw(),
+                theme = theme_style,
                 do.hover = TRUE,
                 hover.data = hover.data,
                 hover.round.digits = isolate_fn(input$hover.round.digits),
@@ -442,7 +441,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 legend.color.breaks.labels = waiver(),
                 legend.shape.title = null.na.inputs$shape.by,
                 legend.shape.size = isolate_fn(input$legend.shape.size),
-                show.grid.lines = isolate_fn(input$show.grid.lines),
                 data.out = TRUE
             )
 

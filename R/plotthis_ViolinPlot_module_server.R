@@ -156,6 +156,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             # Axes
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
             updateSelectInput(session, "font.type", selected = "Arial")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -211,12 +214,14 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 palcolor_arg <- as.list(palette_values)
             }
 
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             p <- plotthis::ViolinPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 sort_x = isolate_fn(input$sort_x),
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
@@ -243,8 +248,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 highlight = highlight,
                 highlight_color = isolate_fn(input$highlight.colour),
                 highlight_size = isolate_fn(input$highlight.size),
-                highlight_alpha = isolate_fn(input$highlight.alpha)
+                highlight_alpha = isolate_fn(input$highlight.alpha),
+                theme = "theme_this",
+                theme_args = theme_args
             )
+
 
             fig <- ggplotly(p) |>
                 plotly::layout(

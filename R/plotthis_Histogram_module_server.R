@@ -147,6 +147,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateTextInput(session, "abline.opacities", value = "1")
 
             # Axes
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -219,7 +222,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         #Facet rows and columns na to null
         facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
         facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))          
-          
+        
+        theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)    
+            
         p <- plotthis::Histogram(
             data = data(),
             x = isolate_fn(input$x.data),
@@ -230,7 +235,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             facet_nrow = facet.nrow,
             facet_byrow = isolate_fn(input$facet.by.row),
             alpha = isolate_fn(input$plot.alpha),
-            flip = isolate_fn(input$flip),
+            flip = isolate_fn(input$rotate),
             bins = bins,
             binwidth = bin.width,
             use_trend = isolate_fn(input$use.trend),
@@ -243,10 +248,12 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             bar_height = isolate_fn(input$bar.height),
             bar_alpha = isolate_fn(input$bar.alpha),
             bar_width = isolate_fn(input$bar.width),
-            theme = isolate_fn(input$theme),
+            theme = "theme_this",
+            theme_args = theme_args,
             palcolor = palcolor_arg,
             position = isolate_fn(input$position)
           )
+
 
           fig <- ggplotly(p) |>
               plotly::layout(

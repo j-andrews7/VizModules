@@ -45,6 +45,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+    adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("x.value"), "Select X values:",
@@ -55,6 +57,27 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ),
             selectInput(ns("group.by"), "Group by:",
             selected = cat.choices[1], choices = cat.choices
+            ),
+            materialSwitch(ns("order.by"), "Order by Y",
+                value = ifelse("order.by" %in% names(defaults),
+                    ifelse(is.logical(defaults[["order.by"]]), defaults[["order.by"]], FALSE),
+                    FALSE
+                ),
+                status = "success"
+            ),
+            selectInput(ns("x.adjustment"), "X Adjustment",
+                choices = adj.choices,
+                selected = ifelse("x.adjustment" %in% names(defaults),
+                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
+                    ""
+                )
+            ),
+            selectInput(ns("y.adjustment"), "Y Adjustment",
+                choices = adj.choices,
+                selected = ifelse("y.adjustment" %in% names(defaults),
+                    ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
+                    ""
+                )
             )
         ),
 
@@ -85,205 +108,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             uiOutput(ns("palette.selection"))
         ),
 
-        "Axes" = tagList(
-            materialSwitch(ns("flip.y"), "Flip Y axis:", value = FALSE, status = "success"),
-            materialSwitch(ns("flip.x"), "Flip X axis:", value = FALSE, status = "success"),
-            materialSwitch(ns("order.by"), "Order by Y:", value = FALSE, status = "success"),
-
-            selectInput(ns("y.adjustment"), "Adjust the y axis:",
-            selected = "", choices = c("", "log2", "log", "log10",
-                                        "neg_log10", "log1p", "abs", "sqrt")
-            ),
-            selectInput(ns("x.adjustment"), "Adjust the x axis:",
-            selected = "", choices = c("", "log2", "log", "log10",
-                                        "neg_log10", "log1p", "abs", "sqrt")
-            ),
-
-            checkboxInput(ns("axis.showline"), "Show axis lines",
-            value = ifelse("axis.showline" %in% names(defaults),
-                ifelse(is.logical(defaults[["axis.showline"]]),
-                defaults[["axis.showline"]], TRUE
-                ),
-                TRUE
-            )
-            ),
-            checkboxInput(ns("axis.mirror"), "Mirror axis lines",
-            value = ifelse("axis.mirror" %in% names(defaults),
-                ifelse(is.logical(defaults[["axis.mirror"]]),
-                defaults[["axis.mirror"]], TRUE
-                ),
-                TRUE
-            )
-            ),
-            checkboxInput(ns("show.major.grid.x"), "Show X major gridlines",
-            value = ifelse("show.major.grid.x" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.major.grid.x"]]),
-                defaults[["show.major.grid.x"]], TRUE
-                ),
-                TRUE
-            )
-            ),
-            checkboxInput(ns("show.major.grid.y"), "Show Y major gridlines",
-            value = ifelse("show.major.grid.y" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.major.grid.y"]]),
-                defaults[["show.major.grid.y"]], TRUE
-                ),
-                TRUE
-            )
-            ),
-            colourInput(ns("axis.linecolor"), "Axis line color",
-            value = ifelse("axis.linecolor" %in% names(defaults),
-                defaults[["axis.linecolor"]], "black"
-            )
-            ),
-            numericInput(ns("axis.linewidth"), "Axis line width",
-            value = ifelse("axis.linewidth" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.linewidth"]]),
-                defaults[["axis.linewidth"]], 0.5
-                ),
-                0.5
-            ),
-            min = 0, step = 0.1
-            ),
-            numericInput(ns("axis.tickfont.size"), "Tick label size",
-            value = ifelse("axis.tickfont.size" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickfont.size"]]),
-                defaults[["axis.tickfont.size"]], 12
-                ),
-                12
-            ),
-            min = 1, step = 1
-            ),
-            colourInput(ns("axis.tickfont.color"), "Tick label color",
-            value = ifelse("axis.tickfont.color" %in% names(defaults),
-                defaults[["axis.tickfont.color"]], "black"
-            )
-            ),
-            selectInput(ns("axis.tickfont.family"), "Tick label font",
-            choices = c(
-                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                "Verdana", "sans-serif", "serif", "monospace"
-            ),
-            selected = ifelse("axis.tickfont.family" %in% names(defaults),
-                ifelse(defaults[["axis.tickfont.family"]] %in% c(
-                "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-                "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-                "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-                "Verdana", "sans-serif", "serif", "monospace"
-                ),
-                defaults[["axis.tickfont.family"]], "Arial"
-                ),
-                "Arial"
-            )
-            ),
-            numericInput(ns("axis.tickangle.x"), "X-axis tick label angle",
-            value = ifelse("axis.tickangle.x" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickangle.x"]]),
-                defaults[["axis.tickangle.x"]], 0
-                ),
-                0
-            ),
-            min = -180, max = 180, step = 15
-            ),
-            numericInput(ns("axis.tickangle.y"), "Y-axis tick label angle",
-            value = ifelse("axis.tickangle.y" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickangle.y"]]),
-                defaults[["axis.tickangle.y"]], 0
-                ),
-                0
-            ),
-            min = -180, max = 180, step = 15
-            ),
-            selectInput(ns("axis.ticks"), "Tick position",
-            choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-            selected = ifelse("axis.ticks" %in% names(defaults),
-                ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
-                defaults[["axis.ticks"]], "outside"
-                ),
-                "outside"
-            )
-            ),
-            colourInput(ns("axis.tickcolor"), "Tick mark color",
-            value = ifelse("axis.tickcolor" %in% names(defaults),
-                defaults[["axis.tickcolor"]], "black"
-            )
-            ),
-            numericInput(ns("axis.ticklen"), "Tick mark length",
-            value = ifelse("axis.ticklen" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.ticklen"]]),
-                defaults[["axis.ticklen"]], 5
-                ),
-                5
-            ),
-            min = 0, step = 1
-            ),
-            numericInput(ns("axis.tickwidth"), "Tick mark width",
-            value = ifelse("axis.tickwidth" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickwidth"]]),
-                defaults[["axis.tickwidth"]], 1
-                ),
-                1
-            ),
-            min = 0, step = 0.1
-            )
-        ),
-        "Lines" = tagList(
-            textInput(ns("hline.intercepts"), "Y-intercepts",
-                value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
-            ),
-            textInput(ns("hline.colors"), "Colors",
-                value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
-            ),
-            textInput(ns("hline.widths"), "Widths",
-                value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
-            ),
-            textInput(ns("hline.linetypes"), "Line types",
-                placeholder = "solid, dashed, dotted, ...",
-                value = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
-            ),
-            textInput(ns("hline.opacities"), "Opacities (0-1)",
-                value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
-            ),
-            hr(),
-            textInput(ns("vline.intercepts"), "X-intercepts",
-                value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
-            ),
-            textInput(ns("vline.colors"), "Colors",
-                value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
-            ),
-            textInput(ns("vline.widths"), "Widths",
-                value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
-            ),
-            textInput(ns("vline.linetypes"), "Line types",
-                placeholder = "solid, dashed, dotted, ...",
-                value = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
-            ),
-            textInput(ns("vline.opacities"), "Opacities (0-1)",
-                value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
-            ),
-            hr(),
-            textInput(ns("abline.slopes"), "Slopes",
-                value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
-            ),
-            textInput(ns("abline.intercepts"), "Y-intercepts",
-                value = ifelse("abline.intercepts" %in% names(defaults), defaults[["abline.intercepts"]], "")
-            ),
-            textInput(ns("abline.colors"), "Colors",
-                value = ifelse("abline.colors" %in% names(defaults), defaults[["abline.colors"]], "#000000")
-            ),
-            textInput(ns("abline.widths"), "Widths",
-                value = ifelse("abline.widths" %in% names(defaults), defaults[["abline.widths"]], "1")
-            ),
-            textInput(ns("abline.linetypes"), "Line types",
-                placeholder = "solid, dashed, dotted, ...",
-                value = ifelse("abline.linetypes" %in% names(defaults), defaults[["abline.linetypes"]], "dashed")
-            ),
-            textInput(ns("abline.opacities"), "Opacities (0-1)",
-                value = ifelse("abline.opacities" %in% names(defaults), defaults[["abline.opacities"]], "1")
-            )
-        )
+        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
+        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
         )
 
 

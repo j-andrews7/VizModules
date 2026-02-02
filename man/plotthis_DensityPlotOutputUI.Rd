@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotthis_DensityPlot_module_ui.R
 \name{plotthis_DensityPlotOutputUI}
 \alias{plotthis_DensityPlotOutputUI}
-\title{Output UI components for the densityPlot module}
+\title{Output UI components for the DensityPlot module}
 \usage{
 plotthis_DensityPlotOutputUI(id)
 }
@@ -10,7 +10,7 @@ plotthis_DensityPlotOutputUI(id)
 \item{id}{The ID for the Shiny module.}
 }
 \value{
-A Shiny plotlyOutput for the densityPlot
+A Shiny plotlyOutput for the DensityPlot
 }
 \description{
 This should be placed in the UI where the plot should be shown.

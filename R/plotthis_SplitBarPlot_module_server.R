@@ -223,6 +223,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
@@ -255,11 +258,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
 
         })
 
@@ -305,12 +303,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
           
           
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             # bar Plot
             p <- plotthis::SplitBarPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 fill_by = fill.by,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
@@ -320,14 +320,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palcolor = unname(palette_values),
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
-                theme = isolate_fn(input$theme),
+                theme = "theme_this",
+                theme_args = theme_args,
                 alpha_by  = alpha.by,
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
-                bar_height = isolate_fn(input$bar.height),
-                lineheight = isolate_fn(input$line.height)
+                bar_height = isolate_fn(input$bar.height)
             )
+
+
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(

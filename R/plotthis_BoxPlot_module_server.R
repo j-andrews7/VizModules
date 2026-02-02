@@ -156,6 +156,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Axes
             updateSelectInput(session, "font.type", selected = "Arial")
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
             updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
@@ -217,12 +220,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palcolor_arg <- as.list(palette_values)
             }
 
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+
             p <- plotthis::BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
-                flip = isolate_fn(input$flip),
+                flip = isolate_fn(input$rotate),
                 sort_x = sort.x,
+                theme = "theme_this",
+                theme_args = theme_args,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
                 add_point = isolate_fn(input$add.points),
@@ -243,6 +250,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight_size = isolate_fn(input$highlight.size),
                 highlight_alpha = isolate_fn(input$highlight.alpha)
             )
+
+
 
             fig <- ggplotly(p) |>
                 plotly::layout(
