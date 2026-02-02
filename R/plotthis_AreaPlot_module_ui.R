@@ -32,6 +32,7 @@
 #'   \item \code{nrow} - Only applies if `split_by` is used
 #'   \item \code{ncol} - Only applies if `split_by` is used
 #'   \item \code{palette} - Managed internally via the palette selection UI
+#'.  \item \code{legend_direction} - Managed postion of legend however this can be handled via plotly
 #' }
 #'
 #' @section Plot parameters and defaults:
@@ -196,12 +197,6 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                     1
                 ),
                 min = 0, max = 1
-            ),
-            selectInput(ns("legend.direction"), "Legend direction:",
-                selected = ifelse("legend.direction" %in% names(defaults) && defaults[["legend.direction"]] %in% c("vertical", "horizontal"),
-                    defaults[["legend.direction"]], "vertical"
-                ),
-                choices = c("vertical", "horizontal")
             )
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults),

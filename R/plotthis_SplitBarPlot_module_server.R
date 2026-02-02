@@ -326,8 +326,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
-                bar_height = isolate_fn(input$bar.height),
-                lineheight = isolate_fn(input$line.height)
+                bar_height = isolate_fn(input$bar.height)
             )
 
 

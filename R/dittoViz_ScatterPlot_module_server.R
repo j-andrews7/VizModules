@@ -388,6 +388,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
+            
+            theme_style <- theme_bw() + theme(unlist(.create_ggplot_axis_style(input, isolate_fn = isolate_fn))) 
 
             p <- dittoViz::scatterPlot(
                 data(),
@@ -421,7 +423,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 min.value = isolate_fn(input$min.value),
                 max.value = isolate_fn(input$max.value),
                 plot.order = isolate_fn(input$plot.order),
-                theme = theme_bw(),
+                theme = theme_style,
                 do.hover = TRUE,
                 hover.data = hover.data,
                 hover.round.digits = isolate_fn(input$hover.round.digits),
