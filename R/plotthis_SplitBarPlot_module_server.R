@@ -27,47 +27,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
-        y_axis_scale_factor <- 1.18
+        axis_scale_factor <- 1.18
         
-        # Helper function to calculate y-axis range accounting for grouping/stacking
-        calculate_y_range <- function(y_data_col, x_data_col = NULL, group_data_col = NULL) {
-            if (is.null(y_data_col) || y_data_col == "") {
-                return(NULL)
-            }
-            
-            df <- data()
-            if (!y_data_col %in% names(df) || !is.numeric(df[[y_data_col]])) {
-                return(NULL)
-            }
-            
-            # Calculate min from raw data
-            min.y <- min(df[[y_data_col]], na.rm = TRUE)
-            
-            # For max, we need to consider if bars might be stacked
-            # If there's grouping by x and group_by, bars could be stacked
-            if (!is.null(x_data_col) && x_data_col != "" && x_data_col %in% names(df) &&
-                !is.null(group_data_col) && group_data_col != "" && group_data_col %in% names(df)) {
-                # Calculate sum of y values for each x group (worst case for stacked bars)
-                tryCatch({
-                    agg_data <- aggregate(df[[y_data_col]], 
-                                         by = list(x = df[[x_data_col]]), 
-                                         FUN = sum, na.rm = TRUE)
-                    max.y <- max(agg_data$x, na.rm = TRUE) * y_axis_scale_factor
-                }, error = function(e) {
-                    # If aggregation fails, fall back to simple max
-                    max.y <<- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
-                })
-            } else {
-                # No grouping, just use max of y column
-                max.y <- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
-            }
-            
-            # Handle edge cases
-            if (!is.finite(min.y)) min.y <- 0
-            if (!is.finite(max.y)) max.y <- 1
-            
-            return(list(min = min.y, max = max.y))
-        }
+
+
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
@@ -77,6 +40,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         }
 
         # Hide tabs if specified
+    
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
                 hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
@@ -139,11 +103,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 req(input$y.data)
                 
                 # Wait a moment for other inputs to be available
-                if (!is.null(input$y.data) && input$y.data != "") {
-                    y_range <- calculate_y_range(input$y.data, input$x.data, input$fill.by)
-                    if (!is.null(y_range)) {
-                        updateNumericInput(session, "y.max", value = y_range$max)
-                        updateNumericInput(session, "y.min", value = y_range$min)
+                if (!is.null(input$x.data) && input$x.data != "") {
+                    x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+                    if (!is.null(x_range)) {
+                        updateNumericInput(session, "x.max", value = x_range$max)
+                        updateNumericInput(session, "x.min", value = -x_range$max)
                         initialized(TRUE)
                     }
                 }
@@ -164,10 +128,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                y_range <- calculate_y_range(y_col, x_col, fill_col)
-                if (!is.null(y_range)) {
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
+                x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+                if (!is.null(x_range)) {
+                    updateNumericInput(session, "x.max", value = x_range$max)
+                    updateNumericInput(session, "x.min", value = -x_range$max)
                 }
             }
         })
@@ -183,14 +147,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             
-            y_range <- calculate_y_range(default_y_col, default_x_col, default_group_col)
-            if (!is.null(y_range)) {
-                min.y <- y_range$min
-                max.y <- y_range$max
+            x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+            if (!is.null(x_range)) {
+                min.x <- -x_range$max
+                max.x <- x_range$max
             } else {
                 # Fallback to all numeric data if no default column
-                min.y <- min(numeric.data, na.rm = TRUE)
-                max.y <- max(numeric.data, na.rm = TRUE) * y_axis_scale_factor
+                max.x <- max(numeric.data, na.rm = TRUE) * axis_scale_factor
+                min.x <- -max.x
             }
             # Reset numeric inputs to defaults derived from data
 
@@ -216,8 +180,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "line.height", value = 0.5)
             # Axes
             updateMaterialSwitch(session, "flip", value = FALSE)
-            updateNumericInput(session, "x.max", value = max.y)
-            updateNumericInput(session, "x.min", value = min.y)
+            updateNumericInput(session, "x.max", value = max.x)
+            updateNumericInput(session, "x.min", value = min.x)
 
             updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.font.size", value = 18)
@@ -262,11 +226,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off)
-        observeEvent(input$y.data, {
-            y_range <- calculate_y_range(input$y.data, input$x.data, input$fill.by)
-            if (!is.null(y_range)) {
-                updateNumericInput(session, "y.max", value = y_range$max)
-                updateNumericInput(session, "y.min", value = y_range$min)
+        observeEvent(input$x.data, {
+            x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+            if (!is.null(x_range)) {
+                updateNumericInput(session, "x.max", value = x_range$max)
+                updateNumericInput(session, "x.min", value = -x_range$max)
             }
         })
 

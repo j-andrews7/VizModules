@@ -943,42 +943,42 @@
 #' for deriving dynamic axis limits directly from the underlying data.
 #'
 #' @param df Data frame. The data containing the Y variable.
-#' @param y_data_col Character. Name of the column in \code{df} to use for
+#' @param data_col Character. Name of the column in \code{df} to use for
 #'   calculating the Y-axis range.
-#' @param y_axis_scale_factor Numeric. Multiplicative factor applied to the
+#' @param axis_scale_factor Numeric. Multiplicative factor applied to the
 #'   maximum Y value to provide additional headroom on the axis.
 #'
 #' @return A named list with components \code{min} and \code{max} giving the
 #'   lower and upper limits for the Y-axis, or \code{NULL} if the input column
 #'   is missing, non-numeric, or otherwise invalid.
 #'
-#' @details The function first validates that \code{y_data_col} is specified
+#' @details The function first validates that \code{data_col} is specified
 #'   and corresponds to a numeric column in \code{df}. It then computes the
 #'   minimum and maximum of that column, ignoring \code{NA} values, and scales
-#'   the maximum by \code{y_axis_scale_factor}. Non-finite results are replaced
+#'   the maximum by \code{axis_scale_factor}. Non-finite results are replaced
 #'   by default values of 0 for the minimum and 1 for the maximum.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_calculate_y_range
-.calculate_y_range <- function(df, y_data_col, y_axis_scale_factor) {
-    if (is.null(y_data_col) || y_data_col == "") {
+.calculate_range <- function(df, data_col, axis_scale_factor) {
+    if (is.null(data_col) || data_col == "") {
         return(NULL)
     }
 
-    if (!y_data_col %in% names(df) || !is.numeric(df[[y_data_col]])) {
+    if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
         return(NULL)
     }
 
     # Calculate min and max from raw data
-    min.y <- min(df[[y_data_col]], na.rm = TRUE)
-    max.y <- max(df[[y_data_col]], na.rm = TRUE) * y_axis_scale_factor
+    min <- min(df[[data_col]], na.rm = TRUE)
+    max <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
 
     # Handle edge cases
-    if (!is.finite(min.y)) min.y <- 0
-    if (!is.finite(max.y)) max.y <- 1
+    if (!is.finite(min)) min <- 0
+    if (!is.finite(max)) max <- 1
 
-    return(list(min = min.y, max = max.y))
+    return(list(min = min, max = max))
 }
 
 #' Remove boxplot outliers from plotly figure

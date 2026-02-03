@@ -177,7 +177,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
         observeEvent(input$y.data, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, y_axis_scale_factor = 1.18)
+            y_range <- .calculate_range(df = data(), data_col = input$y.data, axis_scale_factor = 1.18)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = 0)
