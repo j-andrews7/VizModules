@@ -1248,14 +1248,14 @@
 #' @param marginal.size Numeric. Relative size of marginal plots (0.05-0.5)
 #' @param marginal.opacity Numeric. Opacity of marginal plots (0-1)
 #' @param marginal.bins Numeric. Number of bins for histograms (default 30)
-#' @param marginal.fill Character. Fill color for marginal plots (default "gray50")
 #' @param color.by Character or NULL. Name of grouping variable for coloring (optional)
 #' @param color.mapping Named character vector or NULL. Color mapping for groups (optional)
+#' @param single.point.color Character. Single color to use when no grouping (default "gray30")
 #' @param tooltip Character. Tooltip parameter for ggplotly
 #'
 #' @return A plotly object with marginal plots
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_histogram geom_density geom_rug theme_void coord_cartesian scale_fill_manual scale_color_manual
+#' @importFrom ggplot2 ggplot aes_string geom_histogram geom_density geom_rug theme_void coord_cartesian scale_fill_manual scale_color_manual theme element_blank position_jitter unit
 #' @importFrom plotly ggplotly subplot layout plot_ly
 #'
 #' @author Jared Andrews
@@ -1264,8 +1264,9 @@
 .add_marginal_plots <- function(main_plot, data, x.col, y.col, 
                                 marginal.types, marginal.sides,
                                 marginal.size, marginal.opacity,
-                                marginal.bins = 30, marginal.fill = "gray50",
+                                marginal.bins = 30,
                                 color.by = NULL, color.mapping = NULL,
+                                single.point.color = "gray30",
                                 tooltip = "text") {
     
     # If no marginal plots requested, just convert main plot
@@ -1300,6 +1301,10 @@
             # Create plot with color aesthetic
             top_plot <- ggplot(data, aes_string(x = x.col, fill = color.by)) +
                 theme_void() +
+                theme(
+                    panel.grid = element_blank(),
+                    axis.line = element_blank()
+                ) +
                 coord_cartesian(xlim = x_range)
             
             # Add color scale if color mapping is provided
@@ -1310,6 +1315,10 @@
             # No color grouping - use single color
             top_plot <- ggplot(data, aes_string(x = x.col)) +
                 theme_void() +
+                theme(
+                    panel.grid = element_blank(),
+                    axis.line = element_blank()
+                ) +
                 coord_cartesian(xlim = x_range)
         }
         
@@ -1318,29 +1327,30 @@
             if (!is.null(color.by) && color.by %in% names(data)) {
                 # Grouped histogram with color aesthetic
                 top_plot <- top_plot + 
-                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity")
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity", show.legend = FALSE)
             } else {
                 # Single color histogram
                 top_plot <- top_plot + 
-                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = single.point.color, show.legend = FALSE)
             }
         }
         if ("density" %in% marginal.types) {
             if (!is.null(color.by) && color.by %in% names(data)) {
                 # Grouped density with color aesthetic
                 top_plot <- top_plot + 
-                    geom_density(alpha = marginal.opacity)
+                    geom_density(alpha = marginal.opacity, show.legend = FALSE)
             } else {
                 # Single color density
                 top_plot <- top_plot + 
-                    geom_density(alpha = marginal.opacity, fill = marginal.fill)
+                    geom_density(alpha = marginal.opacity, fill = single.point.color, show.legend = FALSE)
             }
         }
         if ("rug" %in% marginal.types) {
             if (!is.null(color.by) && color.by %in% names(data)) {
-                # Grouped rug with color aesthetic (using color, not fill)
+                # Grouped rug with color aesthetic and position adjustment for separation
                 top_plot <- top_plot + 
-                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b")
+                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b", 
+                            position = position_jitter(height = 0.05), show.legend = FALSE, length = unit(0.05, "npc"))
                 
                 # Add color scale for rug if color mapping is provided
                 if (!is.null(color.mapping) && length(color.mapping) > 0) {
@@ -1349,7 +1359,8 @@
             } else {
                 # Single color rug
                 top_plot <- top_plot + 
-                    geom_rug(alpha = marginal.opacity, sides = "b")
+                    geom_rug(alpha = marginal.opacity, sides = "b", color = single.point.color, 
+                            show.legend = FALSE, length = unit(0.05, "npc"))
             }
         }
         
@@ -1371,6 +1382,10 @@
             # Create plot with color aesthetic
             right_plot <- ggplot(data, aes_string(x = y.col, fill = color.by)) +
                 theme_void() +
+                theme(
+                    panel.grid = element_blank(),
+                    axis.line = element_blank()
+                ) +
                 coord_cartesian(xlim = y_range)
             
             # Add color scale if color mapping is provided
@@ -1381,6 +1396,10 @@
             # No color grouping - use single color
             right_plot <- ggplot(data, aes_string(x = y.col)) +
                 theme_void() +
+                theme(
+                    panel.grid = element_blank(),
+                    axis.line = element_blank()
+                ) +
                 coord_cartesian(xlim = y_range)
         }
         
@@ -1389,29 +1408,30 @@
             if (!is.null(color.by) && color.by %in% names(data)) {
                 # Grouped histogram with color aesthetic
                 right_plot <- right_plot + 
-                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity")
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity", show.legend = FALSE)
             } else {
                 # Single color histogram
                 right_plot <- right_plot + 
-                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = single.point.color, show.legend = FALSE)
             }
         }
         if ("density" %in% marginal.types) {
             if (!is.null(color.by) && color.by %in% names(data)) {
                 # Grouped density with color aesthetic
                 right_plot <- right_plot + 
-                    geom_density(alpha = marginal.opacity)
+                    geom_density(alpha = marginal.opacity, show.legend = FALSE)
             } else {
                 # Single color density
                 right_plot <- right_plot + 
-                    geom_density(alpha = marginal.opacity, fill = marginal.fill)
+                    geom_density(alpha = marginal.opacity, fill = single.point.color, show.legend = FALSE)
             }
         }
         if ("rug" %in% marginal.types) {
             if (!is.null(color.by) && color.by %in% names(data)) {
-                # Grouped rug with color aesthetic (using color, not fill)
+                # Grouped rug with color aesthetic and position adjustment for separation
                 right_plot <- right_plot + 
-                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b")
+                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b", 
+                            position = position_jitter(height = 0.05), show.legend = FALSE, length = unit(0.05, "npc"))
                 
                 # Add color scale for rug if color mapping is provided
                 if (!is.null(color.mapping) && length(color.mapping) > 0) {
@@ -1420,7 +1440,8 @@
             } else {
                 # Single color rug
                 right_plot <- right_plot + 
-                    geom_rug(alpha = marginal.opacity, sides = "b")
+                    geom_rug(alpha = marginal.opacity, sides = "b", color = single.point.color, 
+                            show.legend = FALSE, length = unit(0.05, "npc"))
             }
         }
         
@@ -1454,11 +1475,25 @@
     
     # Combine plots using subplot
     if (show_top && show_right) {
-        # Create a 2x2 grid with empty top-right corner
+        # Create a completely blank top-right corner
         empty_plot <- plot_ly() %>%
             layout(
-                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
-                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE)
+                xaxis = list(
+                    showticklabels = FALSE, 
+                    showgrid = FALSE, 
+                    zeroline = FALSE, 
+                    showline = FALSE,
+                    visible = FALSE
+                ),
+                yaxis = list(
+                    showticklabels = FALSE, 
+                    showgrid = FALSE, 
+                    zeroline = FALSE, 
+                    showline = FALSE,
+                    visible = FALSE
+                ),
+                plot_bgcolor = "rgba(0,0,0,0)",
+                paper_bgcolor = "rgba(0,0,0,0)"
             )
         
         # Use subplot without shareX/shareY to avoid conflicts with multiple traces
@@ -1466,22 +1501,22 @@
             top_plotly, empty_plot,
             main_plotly, right_plotly,
             nrows = 2,
-            shareX = TRUE,
-            shareY = TRUE,
             heights = c(marginal.size, 1 - marginal.size),
             widths = c(1 - marginal.size, marginal.size),
             margin = 0.01
         )
         
-        # Manually set axis ranges to ensure alignment
-        # The top marginal (subplot 1) should have the same x-range as main plot (subplot 3)
-        # The right marginal (subplot 4) should have the same y-range as main plot (subplot 3)
+        # Manually set axis ranges and hide grid lines
         combined <- combined %>%
             layout(
-                xaxis = list(range = x_range),    # Top marginal x-axis
-                xaxis3 = list(range = x_range),   # Main plot x-axis
-                yaxis3 = list(range = y_range),   # Main plot y-axis
-                yaxis4 = list(range = x_range)    # Right marginal x-axis (which is actually y data rotated)
+                xaxis = list(range = x_range, showgrid = FALSE),    # Top marginal x-axis
+                yaxis = list(showgrid = FALSE),                      # Top marginal y-axis
+                xaxis2 = list(visible = FALSE, showgrid = FALSE),    # Empty plot x-axis
+                yaxis2 = list(visible = FALSE, showgrid = FALSE),    # Empty plot y-axis
+                xaxis3 = list(range = x_range),                      # Main plot x-axis (keep ticks)
+                yaxis3 = list(range = y_range),                      # Main plot y-axis (keep ticks)
+                xaxis4 = list(range = y_range, showgrid = FALSE),    # Right marginal x-axis (rotated y data)
+                yaxis4 = list(showgrid = FALSE)                      # Right marginal y-axis
             )
     } else if (show_top) {
         # Only top marginal
@@ -1490,33 +1525,32 @@
             main_plotly,
             nrows = 2, 
             heights = c(marginal.size, 1 - marginal.size),
-            shareX = TRUE,
-            shareY = TRUE,
             margin = 0.01
         )
         
-        # Ensure x-axes are aligned
+        # Set axis ranges and hide grid for marginal
         combined <- combined %>%
             layout(
-                xaxis = list(range = x_range),
-                xaxis2 = list(range = x_range)
+                xaxis = list(range = x_range, showgrid = FALSE),
+                yaxis = list(showgrid = FALSE),
+                xaxis2 = list(range = x_range)  # Main plot keeps ticks
             )
     } else if (show_right) {
         # Only right marginal
         combined <- subplot(
             main_plotly, right_plotly,
             nrows = 1,
-            shareX = TRUE,
-            shareY = TRUE,
             widths = c(1 - marginal.size, marginal.size),
             margin = 0.01
         )
         
-        # Ensure y-axes are aligned
+        # Set axis ranges and hide grid for marginal
         combined <- combined %>%
             layout(
-                yaxis = list(range = y_range),
-                xaxis2 = list(range = x_range)  # Right marginal x-axis (rotated y data)
+                yaxis = list(range = y_range),  # Main plot keeps ticks
+                xaxis2 = list(range = y_range, showgrid = FALSE),  # Right marginal x-axis (rotated y data)
+                yaxis2 = list(showgrid = FALSE)
+            )
             )
     } else {
         # No marginals (shouldn't reach here)

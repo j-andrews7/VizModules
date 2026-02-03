@@ -393,7 +393,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             
             # Check if marginal plots are requested
             marginal_types <- isolate_fn(input$marginal.plots)
-            has_marginals <- !is.null(marginal_types) && length(marginal_types) > 0
+            # Disable marginals when faceting (split.by) is used
+            has_marginals <- !is.null(marginal_types) && length(marginal_types) > 0 && 
+                            (is.null(null.na.inputs$split.by) || length(null.na.inputs$split.by) == 0)
 
             p <- dittoViz::scatterPlot(
                 data(),
@@ -514,9 +516,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     marginal.size = isolate_fn(input$marginal.size),
                     marginal.opacity = isolate_fn(input$marginal.opacity),
                     marginal.bins = isolate_fn(input$marginal.bins),
-                    marginal.fill = isolate_fn(input$marginal.fill),
                     color.by = null.na.inputs$color.by,
                     color.mapping = color_mapping,
+                    single.point.color = isolate_fn(input$single.point.color),
                     tooltip = "text"
                 )
                 # Apply config to the plotly object

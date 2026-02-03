@@ -571,11 +571,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 5,
                 max = 100,
                 step = 5
-            ),
-            colourInput(ns("marginal.fill"), "Marginal Fill Color",
-                value = ifelse("marginal.fill" %in% names(defaults),
-                    defaults[["marginal.fill"]], "gray50"
-                )
             )
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
