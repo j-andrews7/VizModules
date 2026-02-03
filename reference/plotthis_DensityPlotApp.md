@@ -24,7 +24,7 @@ A Shiny app object that can be run locally or deployed to a server.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 

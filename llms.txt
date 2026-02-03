@@ -379,7 +379,7 @@ guidelines:
 - [`plotthis_DensityPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotInputsUI.md)
   : Density Plot Input UI Module
 - [`plotthis_DensityPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotOutputUI.md)
-  : Output UI components for the densityPlot module
+  : Output UI components for the DensityPlot module
 - [`plotthis_DensityPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotServer.md)
   : Density Plot Server Module
 - [`plotthis_HistogramApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.md)

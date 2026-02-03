@@ -1,4 +1,4 @@
-# Output UI components for the densityPlot module
+# Output UI components for the DensityPlot module
 
 This should be placed in the UI where the plot should be shown.
 
@@ -16,7 +16,7 @@ plotthis_DensityPlotOutputUI(id)
 
 ## Value
 
-A Shiny plotlyOutput for the densityPlot
+A Shiny plotlyOutput for the DensityPlot
 
 ## Author
 
