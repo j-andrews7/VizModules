@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::ViolinPlot()], [VizModules::plotthis_ViolinPlotInputsUI()],
+#' [VizModules::plotthis_ViolinPlotOutputUI()], [VizModules::plotthis_ViolinPlotApp()]
 plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

@@ -18,6 +18,8 @@
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::DensityPlot()], [VizModules::plotthis_DensityPlotInputsUI()],
+#' [VizModules::plotthis_DensityPlotOutputUI()], [VizModules::plotthis_DensityPlotApp()]
 plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

@@ -17,6 +17,9 @@
 #' @importFrom stats na.omit setNames 
 #' 
 #' @export
+#' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::Histogram()], [VizModules::plotthis_HistogramInputsUI()],
+#' [VizModules::plotthis_HistogramOutputUI()], [VizModules::plotthis_HistogramApp()]
 #' 
 #' @author Jacob Martin, Jared Andrews
 plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {

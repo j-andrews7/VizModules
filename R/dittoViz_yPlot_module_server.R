@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jared Andrews, Jacob Martin
+#' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
+#' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotApp()]
 dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

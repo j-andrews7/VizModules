@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::BarPlot()], [VizModules::plotthis_BarPlotInputsUI()],
+#' [VizModules::plotthis_BarPlotOutputUI()], [VizModules::plotthis_BarPlotApp()]
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

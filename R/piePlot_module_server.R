@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
+#' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
 piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data

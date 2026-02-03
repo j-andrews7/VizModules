@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin
+#' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotApp()]
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data

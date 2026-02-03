@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::BoxPlot()], [VizModules::plotthis_BoxPlotInputsUI()],
+#' [VizModules::plotthis_BoxPlotOutputUI()], [VizModules::plotthis_BoxPlotApp()]
 plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 

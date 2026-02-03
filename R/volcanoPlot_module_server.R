@@ -14,6 +14,9 @@
 #' @import plotly
 #' 
 #' @export
+#' @author Jared Andrews
+#' @seealso [VizModules::volcanoPlotInputsUI()], [VizModules::volcanoPlotOutputUI()],
+#' [VizModules::volcanoPlotApp()]
 #' 
 #' @author Jared Andrews
 volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", "Colors", "Legend/Scale")) {

@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::AreaPlot()], [VizModules::plotthis_AreaPlotInputsUI()],
+#' [VizModules::plotthis_AreaPlotOutputUI()], [VizModules::plotthis_AreaPlotApp()]
 plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
 
