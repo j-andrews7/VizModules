@@ -1286,8 +1286,9 @@
     show_top <- grepl("t", marginal.sides)
     show_right <- grepl("r", marginal.sides)
     
-    # Convert main plot to plotly
-    main_plotly <- ggplotly(main_plot, tooltip = tooltip)
+    # Convert main plot to plotly with default tooltips (not "text" since do.hover was FALSE)
+    # This will show x, y, and other mapped aesthetics
+    main_plotly <- ggplotly(main_plot)
     
     # If no marginals requested, return main plot
     if (!show_top && !show_right) {
