@@ -1,20 +1,134 @@
 #' Input UI components for the SplitBarPlot module
 #'
-#' Builds the tabbed input controls used to configure the SplitBarPlot module.
-#' This should be placed alongside [plotthis_SplitBarPlotOutputUI()] in your app.
+#' This should be placed in the UI where the inputs should be shown, with an `id`
+#' that matches the `id` used in the `plotthis_SplitBarPlotServer()` and `plotthis_SplitBarPlotOutputUI()` functions.
+#'
+#' @details The user inputs for this module are separated from the outputs to allow for
+#' more flexible UI design.
+#'
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid.
+#'
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [plotthis::SplitBarPlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list.
+#' 
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [plotthis::SplitBarPlot()] parameters are not available via UI inputs:
+#' \itemize{
+#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{title} - Plot title (plotly allows interactive editing)
+#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
+#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+#'   \item \code{y} - Y-axis variable (automatically set from data structure)
+#'   \item \code{y_sep} - Separator for y columns (not applicable in UI context)
+#'   \item \code{flip} - Flip axes (not implemented in current UI)
+#'   \item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
+#'   \item \code{order_y} - Y-axis ordering rules (handled by default logic)
+#'   \item \code{lineheight} - Text line height (not applicable in plotly)
+#'   \item \code{max_charwidth} - Maximum character width (not applicable in plotly)
+#'   \item \code{fill_by_sep} - Separator for fill columns (not applicable in UI context)
+#'   \item \code{fill_name} - Fill legend name (handled by plotly)
+#'   \item \code{direction_pos_name} - Positive direction name (not implemented)
+#'   \item \code{direction_neg_name} - Negative direction name (not implemented)
+#'   \item \code{theme} - ggplot2 theme (not applicable in plotly)
+#'   \item \code{theme_args} - Theme arguments (not applicable in plotly)
+#'   \item \code{palette} - Managed internally via the palette selection UI
+#'   \item \code{keep_empty} - Keep empty values (not implemented)
+#'   \item \code{keep_na} - Keep NA values (not implemented)
+#'   \item \code{combine} - Only applies if `split_by` is used
+#'   \item \code{nrow} - Only applies if `split_by` is used
+#'   \item \code{ncol} - Only applies if `split_by` is used
+#'   \item \code{byrow} - Only applies if `split_by` is used
+#'   \item \code{seed} - Random seed (not applicable)
+#'   \item \code{axes} - Only applies if `split_by` is used
+#'   \item \code{axis_titles} - Only applies if `split_by` is used
+#'   \item \code{guides} - Only applies if `split_by` is used
+#'   \item \code{design} - Only applies if `split_by` is used
+#'   \item \code{legend_direction} - Managed position of legend however this can be handled via plotly
+#' }
+#'
+#' @section Plot parameters and defaults:
+#' The following [plotthis::SplitBarPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' \itemize{
+#'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd numeric variable)
+#'   \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable)
+#'   \item \code{alpha_by} - Variable for alpha transparency (UI: "Alpha by", default: "")
+#'   \item \code{alpha_reverse} - Reverse alpha order (UI: "Alpha reverse", default: FALSE)
+#'   \item \code{alpha_name} - Alpha legend name (UI: "Alpha name", default: "")
+#'   \item \code{bar_height} - Height of bars (UI: "Bar height", default: 0.9)
+#'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
+#'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "free_y")
+#'   \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
+#'   \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
+#'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
+#'   \item \code{split_by} - Split variable (UI: "Split by", default: "")
+#'   \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
+#'   \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
+#'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#' }
+#' 
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing new functionality or controlling plotly-specific features are also available:
+#' \itemize{
+#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
+#'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
+#'   \item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+#'   \item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+#'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
+#'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
+#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
+#'   \item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick label color", default: "black")
+#'   \item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick label font", default: "Arial")
+#'   \item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
+#'   \item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
+#'   \item \code{axis.ticks} - Position of tick marks (UI: "Tick position", default: "outside")
+#'   \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
+#'   \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
+#'   \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+#'   \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
+#'   \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
+#'   \item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line types", default: "dashed")
+#'   \item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+#'   \item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
+#'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
+#'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line types", default: "dashed")
+#'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#'   \item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+#'   \item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
+#'   \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
+#'   \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
+#'   \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' }
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A data frame used to populate input choices.
-#' @param defaults Named list of default input values.
-#' @param title Optional title for the input panel.
-#' @param columns Integer. Number of columns for organizing inputs.
+#' @param data The data frame used for plot generation.
+#' @param defaults A named list of default values for the inputs.
+#' @param title An optional title for the UI grid.
+#' @param columns Number of columns for the UI grid.
+#' @return A Shiny tagList containing the UI elements
 #'
-#' @return A Shiny UI element containing the inputs for SplitBarPlot.
-#'
+#' @importFrom colourpicker colourInput
 #' @import shiny
+#' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
 #' @author Jacob Martin
+#' @seealso [plotthis::SplitBarPlot()], [VizModules::organize_inputs()],
+#' [VizModules::plotthis_SplitBarPlotOutputUI()], [VizModules::plotthis_SplitBarPlotServer()], [VizModules::plotthis_SplitBarPlotApp()]
+#' @examples
+#' library(VizModules)
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#' plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
