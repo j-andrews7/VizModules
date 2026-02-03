@@ -20,6 +20,10 @@
 #' There are also a handful that are specific to the Shiny module that additionally modify the plotly output:
 #'
 #' - `id`: The ID for the Shiny module.
+#' - `marginal.plots`: Select types of marginal distribution plots to display (histogram, density, rug)
+#' - `marginal.sides`: Choose which sides to display marginal plots (top, right, or both)
+#' - `marginal.size`: Control the relative size of marginal plots (0.05-0.5)
+#' - `marginal.opacity`: Set the opacity of marginal plot elements (0-1)
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::scatterPlot()] parameters are superseded by the enhanced Lines tab:

@@ -1251,8 +1251,8 @@
 #'
 #' @return A plotly object with marginal plots
 #'
-#' @importFrom ggplot2 ggplot aes geom_histogram geom_density geom_rug theme_void coord_cartesian xlim ylim
-#' @importFrom plotly ggplotly subplot layout
+#' @importFrom ggplot2 ggplot aes_string geom_histogram geom_density geom_rug theme_void coord_cartesian
+#' @importFrom plotly ggplotly subplot layout plot_ly
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_add_marginal_plots
@@ -1289,7 +1289,7 @@
     
     # Build top marginal plot (x-axis distribution)
     if (show_top) {
-        top_plot <- ggplot(data, aes(x = .data[[x.col]])) +
+        top_plot <- ggplot(data, aes_string(x = x.col)) +
             theme_void() +
             coord_cartesian(xlim = x_range)
         
@@ -1320,7 +1320,7 @@
     
     # Build right marginal plot (y-axis distribution)
     if (show_right) {
-        right_plot <- ggplot(data, aes(x = .data[[y.col]])) +
+        right_plot <- ggplot(data, aes_string(x = y.col)) +
             theme_void() +
             coord_cartesian(xlim = y_range)
         
@@ -1369,7 +1369,7 @@
     # Combine plots using subplot
     if (show_top && show_right) {
         # Create a 2x2 grid with empty top-right corner
-        empty_plot <- plotly::plot_ly() %>%
+        empty_plot <- plot_ly() %>%
             layout(
                 xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE)
