@@ -20,7 +20,9 @@
 #' There are also a handful that are specific to the Shiny module that additionally modify the plotly output:
 #'
 #' - `id`: The ID for the Shiny module.
-#' - `marginal.plots`: Select types of marginal distribution plots to display (histogram, density, rug)
+#' - `marginal.plots`: Select types of marginal distribution plots to display (histogram, density, rug).
+#'   Note: Marginal plots work best without faceting (split.by). When faceting is used, marginals show
+#'   the combined distribution across all facets.
 #' - `marginal.sides`: Choose which sides to display marginal plots (top, right, or both)
 #' - `marginal.size`: Control the relative size of marginal plots (0.05-0.5)
 #' - `marginal.opacity`: Set the opacity of marginal plot elements (0-1)

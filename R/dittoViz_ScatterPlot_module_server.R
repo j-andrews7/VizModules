@@ -488,12 +488,27 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Handle marginal plots if requested
             if (has_marginals) {
                 # When marginals are requested, p$plot is a ggplot object (do.hover = FALSE)
+                # Use adjusted column names if they exist
+                x_col_for_marginal <- isolate_fn(input$x.by)
+                y_col_for_marginal <- isolate_fn(input$y.by)
+                
+                # Check if adjusted columns exist in the data
+                x_adj_col <- paste0(x_col_for_marginal, ".x.adj")
+                y_adj_col <- paste0(y_col_for_marginal, ".y.adj")
+                
+                if (x_adj_col %in% names(plot_data)) {
+                    x_col_for_marginal <- x_adj_col
+                }
+                if (y_adj_col %in% names(plot_data)) {
+                    y_col_for_marginal <- y_adj_col
+                }
+                
                 # Use helper function to add marginals and convert to plotly
                 fig <- .add_marginal_plots(
                     main_plot = p$plot,
                     data = plot_data,
-                    x.col = isolate_fn(input$x.by),
-                    y.col = isolate_fn(input$y.by),
+                    x.col = x_col_for_marginal,
+                    y.col = y_col_for_marginal,
                     marginal.types = marginal_types,
                     marginal.sides = isolate_fn(input$marginal.sides),
                     marginal.size = isolate_fn(input$marginal.size),
