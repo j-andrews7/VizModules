@@ -154,6 +154,7 @@ neg_log10 <- function(x) {
 #'
 #' @export
 #' @author Jared Andrews
+#' @seealso [VizModules::setup_auto_update_logic()], [VizModules::multiColorPicker()]
 #' @examples
 #' \dontrun{
 #' groups <- c("A", "B", "C")
@@ -226,6 +227,7 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #' @export
 #' @author Jared Andrews
+#' @seealso [VizModules::resolve_palette()], [VizModules::module_tack_ui()]
 #' @examples
 #' \dontrun{
 #' # In a module server function:

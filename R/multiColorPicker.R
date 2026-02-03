@@ -27,6 +27,8 @@
 #' @importFrom jsonlite toJSON
 #'
 #' @export
+#' @author Jacob Martin
+#' @seealso [VizModules::updateMultiColorPicker()], [VizModules::default_palettes()]
 #'
 #' @examples
 #' if (interactive()) {
@@ -213,6 +215,8 @@ multiColorPicker <- function(
 #'
 #' @import shiny
 #' @export
+#' @author Jacob Martin
+#' @seealso [VizModules::multiColorPicker()]
 #'
 #' @examples
 #' if (interactive()) {

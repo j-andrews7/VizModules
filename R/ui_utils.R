@@ -16,6 +16,7 @@
 #' @export
 #'
 #' @author Jared Andrews
+#' @seealso [VizModules::module_tack_ui()], [VizModules::default_palettes()]
 #' @examples
 #' library(VizModules)
 #' # Example 1: Basic usage with a simple grid
@@ -110,6 +111,7 @@ organize_inputs <- function(
 #' @importFrom dittoViz dittoColors
 #' @export
 #' @author Jared Andrews
+#' @seealso [VizModules::multiColorPicker()], [VizModules::resolve_palette()]
 default_palettes <- function() {
   pals <- list(
     choices = list(
@@ -194,6 +196,7 @@ default_palettes <- function() {
 #'
 #' @export
 #' @author Jared Andrews
+#' @seealso [VizModules::organize_inputs()], [VizModules::setup_auto_update_logic()]
 #' @examples
 #' library(VizModules)
 #' library(shiny)
