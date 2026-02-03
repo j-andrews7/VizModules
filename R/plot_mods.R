@@ -1234,3 +1234,179 @@
 
     fig
 }
+#' Add marginal distribution plots to a scatter plot
+#'
+#' This function creates marginal plots (histogram, density, or rug) and combines
+#' them with the main scatter plot using plotly subplots.
+#'
+#' @param main_plot A ggplot2 plot object (the main scatter plot)
+#' @param data A data frame containing the plot data
+#' @param x.col Character. Name of the x-axis column
+#' @param y.col Character. Name of the y-axis column
+#' @param marginal.types Character vector. Types of marginal plots: "histogram", "density", "rug"
+#' @param marginal.sides Character. Which sides to show marginals: "t" (top), "r" (right), "tr" (both)
+#' @param marginal.size Numeric. Relative size of marginal plots (0.05-0.5)
+#' @param marginal.opacity Numeric. Opacity of marginal plots (0-1)
+#' @param tooltip Character. Tooltip parameter for ggplotly
+#'
+#' @return A plotly object with marginal plots
+#'
+#' @importFrom ggplot2 ggplot aes geom_histogram geom_density geom_rug theme_void coord_cartesian xlim ylim
+#' @importFrom plotly ggplotly subplot layout
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_add_marginal_plots
+#' @keywords internal
+.add_marginal_plots <- function(main_plot, data, x.col, y.col, 
+                                marginal.types, marginal.sides,
+                                marginal.size, marginal.opacity,
+                                tooltip = "text") {
+    
+    # If no marginal plots requested, just convert main plot
+    if (length(marginal.types) == 0 || is.null(marginal.types)) {
+        return(ggplotly(main_plot, tooltip = tooltip))
+    }
+    
+    # Get x and y data
+    x_data <- data[[x.col]]
+    y_data <- data[[y.col]]
+    
+    # Get axis limits from main plot
+    x_range <- range(x_data, na.rm = TRUE)
+    y_range <- range(y_data, na.rm = TRUE)
+    
+    # Determine if we need top and/or right marginals
+    show_top <- grepl("t", marginal.sides)
+    show_right <- grepl("r", marginal.sides)
+    
+    # Convert main plot to plotly
+    main_plotly <- ggplotly(main_plot, tooltip = tooltip)
+    
+    # If no marginals requested, return main plot
+    if (!show_top && !show_right) {
+        return(main_plotly)
+    }
+    
+    # Build top marginal plot (x-axis distribution)
+    if (show_top) {
+        top_plot <- ggplot(data, aes(x = .data[[x.col]])) +
+            theme_void() +
+            coord_cartesian(xlim = x_range)
+        
+        # Add layers based on requested types
+        if ("histogram" %in% marginal.types) {
+            top_plot <- top_plot + 
+                geom_histogram(alpha = marginal.opacity, bins = 30, fill = "gray30")
+        }
+        if ("density" %in% marginal.types) {
+            top_plot <- top_plot + 
+                geom_density(alpha = marginal.opacity, fill = "gray50")
+        }
+        if ("rug" %in% marginal.types) {
+            top_plot <- top_plot + 
+                geom_rug(alpha = marginal.opacity, sides = "b")
+        }
+        
+        top_plotly <- ggplotly(top_plot, tooltip = "none") %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                showlegend = FALSE,
+                hovermode = FALSE
+            )
+    } else {
+        top_plotly <- NULL
+    }
+    
+    # Build right marginal plot (y-axis distribution)
+    if (show_right) {
+        right_plot <- ggplot(data, aes(x = .data[[y.col]])) +
+            theme_void() +
+            coord_cartesian(xlim = y_range)
+        
+        # Add layers based on requested types
+        if ("histogram" %in% marginal.types) {
+            right_plot <- right_plot + 
+                geom_histogram(alpha = marginal.opacity, bins = 30, fill = "gray30")
+        }
+        if ("density" %in% marginal.types) {
+            right_plot <- right_plot + 
+                geom_density(alpha = marginal.opacity, fill = "gray50")
+        }
+        if ("rug" %in% marginal.types) {
+            right_plot <- right_plot + 
+                geom_rug(alpha = marginal.opacity, sides = "b")
+        }
+        
+        right_plotly <- ggplotly(right_plot, tooltip = "none") %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                showlegend = FALSE,
+                hovermode = FALSE
+            )
+        
+        # Rotate for vertical orientation (swap x and y in the data)
+        # We need to manually flip the axes by modifying the plotly object
+        for (i in seq_along(right_plotly$x$data)) {
+            trace <- right_plotly$x$data[[i]]
+            # Swap x and y coordinates
+            temp_x <- trace$x
+            trace$x <- trace$y
+            trace$y <- temp_x
+            right_plotly$x$data[[i]] <- trace
+        }
+        
+        right_plotly <- right_plotly %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE)
+            )
+    } else {
+        right_plotly <- NULL
+    }
+    
+    # Combine plots using subplot
+    if (show_top && show_right) {
+        # Create a 2x2 grid with empty top-right corner
+        empty_plot <- plotly::plot_ly() %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE)
+            )
+        
+        combined <- subplot(
+            top_plotly, empty_plot,
+            main_plotly, right_plotly,
+            nrows = 2, ncols = 2,
+            heights = c(marginal.size, 1 - marginal.size),
+            widths = c(1 - marginal.size, marginal.size),
+            shareX = TRUE, shareY = TRUE,
+            margin = 0
+        )
+    } else if (show_top) {
+        # Only top marginal
+        combined <- subplot(
+            top_plotly,
+            main_plotly,
+            nrows = 2, ncols = 1,
+            heights = c(marginal.size, 1 - marginal.size),
+            shareX = TRUE,
+            margin = 0
+        )
+    } else if (show_right) {
+        # Only right marginal
+        combined <- subplot(
+            main_plotly, right_plotly,
+            nrows = 1, ncols = 2,
+            widths = c(1 - marginal.size, marginal.size),
+            shareY = TRUE,
+            margin = 0
+        )
+    } else {
+        # No marginals (shouldn't reach here)
+        combined <- main_plotly
+    }
+    
+    combined
+}

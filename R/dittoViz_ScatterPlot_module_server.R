@@ -390,6 +390,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             current_color_levels <- isolate_fn(color_levels())
             
             theme_style <- theme_bw() + theme(unlist(.create_ggplot_axis_style(input, isolate_fn = isolate_fn))) 
+            
+            # Check if marginal plots are requested
+            marginal_types <- isolate_fn(input$marginal.plots)
+            has_marginals <- !is.null(marginal_types) && length(marginal_types) > 0
 
             p <- dittoViz::scatterPlot(
                 data(),
@@ -424,7 +428,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 max.value = isolate_fn(input$max.value),
                 plot.order = isolate_fn(input$plot.order),
                 theme = theme_style,
-                do.hover = TRUE,
+                do.hover = !has_marginals,
                 hover.data = hover.data,
                 hover.round.digits = isolate_fn(input$hover.round.digits),
                 do.contour = isolate_fn(input$do.contour),
@@ -480,7 +484,28 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             } else {
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             }
-            fig <- do.call(config, c(list(p = p$plot), config_list))
+            
+            # Handle marginal plots if requested
+            if (has_marginals) {
+                # When marginals are requested, p$plot is a ggplot object (do.hover = FALSE)
+                # Use helper function to add marginals and convert to plotly
+                fig <- .add_marginal_plots(
+                    main_plot = p$plot,
+                    data = plot_data,
+                    x.col = isolate_fn(input$x.by),
+                    y.col = isolate_fn(input$y.by),
+                    marginal.types = marginal_types,
+                    marginal.sides = isolate_fn(input$marginal.sides),
+                    marginal.size = isolate_fn(input$marginal.size),
+                    marginal.opacity = isolate_fn(input$marginal.opacity),
+                    tooltip = "text"
+                )
+                # Apply config to the plotly object
+                fig <- do.call(config, c(list(p = fig), config_list))
+            } else {
+                # Normal conversion (p$plot is already a plotly object when do.hover = TRUE)
+                fig <- do.call(config, c(list(p = p$plot), config_list))
+            }
 
             # Apply single point color when color.by is not set
             if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {

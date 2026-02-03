@@ -519,6 +519,37 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ),
                 step = 1,
                 min = 1
+            ),
+            selectizeInput(ns("marginal.plots"), "Marginal Plots",
+                choices = c("histogram", "density", "rug"),
+                multiple = TRUE,
+                selected = ifelse("marginal.plots" %in% names(defaults),
+                    defaults[["marginal.plots"]], character(0)
+                )
+            ),
+            selectInput(ns("marginal.sides"), "Marginal Sides",
+                choices = c("top" = "t", "right" = "r", "both" = "tr"),
+                selected = ifelse("marginal.sides" %in% names(defaults),
+                    defaults[["marginal.sides"]], "tr"
+                )
+            ),
+            numericInput(ns("marginal.size"), "Marginal Size",
+                value = ifelse("marginal.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.size"]]), defaults[["marginal.size"]], 0.15),
+                    0.15
+                ),
+                min = 0.05,
+                max = 0.5,
+                step = 0.05
+            ),
+            numericInput(ns("marginal.opacity"), "Marginal Opacity",
+                value = ifelse("marginal.opacity" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.opacity"]]), defaults[["marginal.opacity"]], 0.6),
+                    0.6
+                ),
+                min = 0,
+                max = 1,
+                step = 0.1
             )
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
