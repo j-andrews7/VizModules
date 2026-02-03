@@ -104,7 +104,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$x.data) && input$x.data != "") {
-                    x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+                    x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale_factor, grouping = TRUE)
                     if (!is.null(x_range)) {
                         updateNumericInput(session, "x.max", value = x_range$max)
                         updateNumericInput(session, "x.min", value = -x_range$max)
@@ -128,7 +128,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+                x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale_factor, grouping = TRUE)
                 if (!is.null(x_range)) {
                     updateNumericInput(session, "x.max", value = x_range$max)
                     updateNumericInput(session, "x.min", value = -x_range$max)
@@ -147,7 +147,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             
-            x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale_factor, grouping = TRUE)
             if (!is.null(x_range)) {
                 min.x <- -x_range$max
                 max.x <- x_range$max
@@ -227,7 +227,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Update y-axis range when y data column is changed (when auto-update is off)
         observeEvent(input$x.data, {
-            x_range <- .calculate_range(df = data(), data_col = input$x.data, axis_scale_factor = axis_scale_factor)
+            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale_factor, grouping = TRUE)
             if (!is.null(x_range)) {
                 updateNumericInput(session, "x.max", value = x_range$max)
                 updateNumericInput(session, "x.min", value = -x_range$max)
@@ -292,7 +292,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 split_by = split.by,
                 bar_height = isolate_fn(input$bar.height)
             )
-
 
             fig <- ggplotly(p) |>
                 plotly::layout(

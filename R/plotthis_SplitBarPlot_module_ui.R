@@ -39,7 +39,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
       ),
       # Changed from group.by to fill.by
       selectInput(ns("fill.by"), "Fill by",
-        selected = char.choices[2], choices = char.choices
+        selected = choices[2], choices = choices
       )),
 
 

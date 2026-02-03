@@ -199,8 +199,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                scale_y = isolate_fn(input$scale.y),
-                legend_direction = isolate_fn(input$legend.direction)
+                scale_y = isolate_fn(input$scale.y)
             )
 
 

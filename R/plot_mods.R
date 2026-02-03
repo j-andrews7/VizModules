@@ -961,24 +961,47 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_calculate_y_range
-.calculate_range <- function(df, data_col, axis_scale_factor) {
-    if (is.null(data_col) || data_col == "") {
-        return(NULL)
+.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL, axis_scale_factor, grouping = FALSE) {
+    if (!is.null(data_col_x)) {
+        data_col <- data_col_x
     }
-
-    if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
-        return(NULL)
+    if (!is.null(data_col_y)) {
+        data_col <- data_col_y
     }
+    if (!grouping){
+        if (is.null(data_col) || data_col == "") {
+            return(NULL)
+        }
 
-    # Calculate min and max from raw data
-    min <- min(df[[data_col]], na.rm = TRUE)
-    max <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+        if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
+            return(NULL)
+        }
 
-    # Handle edge cases
-    if (!is.finite(min)) min <- 0
-    if (!is.finite(max)) max <- 1
+        # Calculate min and max from raw data
+        min <- min(df[[data_col]], na.rm = TRUE)
+        max <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
 
-    return(list(min = min, max = max))
+        # Handle edge cases
+        if (!is.finite(min)) min <- 0
+        if (!is.finite(max)) max <- 1
+
+        return(list(min = min, max = max))
+
+    } else {
+        if (is.numeric(df[[data_col_x]]))
+            numeric_list <- split(df[[data_col_x]], df[[data_col_y]])
+            values_list <- list()
+            for (i in seq_along(numeric_list)){
+                sum <- sum(abs(numeric_list[[i]]))
+                values_list <- append(values_list, sum)
+            }
+        
+            all_counts <- unlist(values_list)
+            max <- max(all_counts, na.rm = TRUE)
+            min <- min(all_counts, na.rm = TRUE)
+        
+            return(list(min = min, max = max)) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
+    }
 }
 
 #' Remove boxplot outliers from plotly figure
