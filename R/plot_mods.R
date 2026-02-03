@@ -1461,15 +1461,26 @@
                 yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE)
             )
         
+        # Use subplot without shareX/shareY to avoid conflicts with multiple traces
         combined <- subplot(
             top_plotly, empty_plot,
             main_plotly, right_plotly,
             nrows = 2, ncols = 2,
             heights = c(marginal.size, 1 - marginal.size),
             widths = c(1 - marginal.size, marginal.size),
-            shareX = TRUE, shareY = TRUE,
-            margin = 0
+            margin = 0.01
         )
+        
+        # Manually set axis ranges to ensure alignment
+        # The top marginal (subplot 1) should have the same x-range as main plot (subplot 3)
+        # The right marginal (subplot 4) should have the same y-range as main plot (subplot 3)
+        combined <- combined %>%
+            layout(
+                xaxis = list(range = x_range),    # Top marginal x-axis
+                xaxis3 = list(range = x_range),   # Main plot x-axis
+                yaxis3 = list(range = y_range),   # Main plot y-axis
+                yaxis4 = list(range = x_range)    # Right marginal x-axis (which is actually y data rotated)
+            )
     } else if (show_top) {
         # Only top marginal
         combined <- subplot(
@@ -1477,18 +1488,30 @@
             main_plotly,
             nrows = 2, ncols = 1,
             heights = c(marginal.size, 1 - marginal.size),
-            shareX = TRUE,
-            margin = 0
+            margin = 0.01
         )
+        
+        # Ensure x-axes are aligned
+        combined <- combined %>%
+            layout(
+                xaxis = list(range = x_range),
+                xaxis2 = list(range = x_range)
+            )
     } else if (show_right) {
         # Only right marginal
         combined <- subplot(
             main_plotly, right_plotly,
             nrows = 1, ncols = 2,
             widths = c(1 - marginal.size, marginal.size),
-            shareY = TRUE,
-            margin = 0
+            margin = 0.01
         )
+        
+        # Ensure y-axes are aligned
+        combined <- combined %>%
+            layout(
+                yaxis = list(range = y_range),
+                xaxis2 = list(range = x_range)  # Right marginal x-axis (rotated y data)
+            )
     } else {
         # No marginals (shouldn't reach here)
         combined <- main_plotly
