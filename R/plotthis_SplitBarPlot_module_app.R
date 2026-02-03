@@ -13,6 +13,8 @@
 #' @export
 #'
 #' @author Jacob Martin
+#' @seealso [plotthis::SplitBarPlot()], [VizModules::plotthis_SplitBarPlotInputsUI()],
+#' [VizModules::plotthis_SplitBarPlotOutputUI()], [VizModules::plotthis_SplitBarPlotServer()]
 #'
 #' @examples
 #' library(VizModules)

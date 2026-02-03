@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()]
 #'
 #' @examples
 #' library(VizModules)

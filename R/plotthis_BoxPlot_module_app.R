@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @author Jacob Martin
+#' @seealso [plotthis::BoxPlot()], [VizModules::plotthis_BoxPlotInputsUI()],
+#' [VizModules::plotthis_BoxPlotOutputUI()], [VizModules::plotthis_BoxPlotServer()]
 #' @examples
 #' library(VizModules)
 #' data_list <- list("sales" = example_sales, "population" = example_population)

@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @author Jacob Martin
+#' @seealso [plotthis::ViolinPlot()], [VizModules::plotthis_ViolinPlotInputsUI()],
+#' [VizModules::plotthis_ViolinPlotOutputUI()], [VizModules::plotthis_ViolinPlotServer()]
 #' @examples
 #' library(VizModules)
 #' data_list <- list("sales" = example_sales, "population" = example_population)

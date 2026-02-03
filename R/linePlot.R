@@ -43,6 +43,7 @@
 #' @import plotly
 #' 
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::linePlotInputsUI()], [VizModules::linePlotServer()], [VizModules::linePlotApp()]
 #' @export
 #'
 #' @examples

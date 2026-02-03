@@ -15,6 +15,8 @@
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @export
+#' @seealso [plotthis::DensityPlot()], [VizModules::plotthis_DensityPlotInputsUI()],
+#' [VizModules::plotthis_DensityPlotOutputUI()], [VizModules::plotthis_DensityPlotServer()]
 #' 
 #' @examples
 #' library(VizModules)

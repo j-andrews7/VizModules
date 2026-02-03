@@ -13,6 +13,8 @@
 #' @export
 #'
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
+#' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()]
 #'
 #' @examples
 #' library(VizModules)

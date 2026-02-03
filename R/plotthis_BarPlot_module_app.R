@@ -13,6 +13,8 @@
 #' @export
 #'
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::BarPlot()], [VizModules::plotthis_BarPlotInputsUI()], 
+#' [VizModules::plotthis_BarPlotOutputUI()], [VizModules::plotthis_BarPlotServer()]
 #
 #' @examples
 #' library(VizModules)

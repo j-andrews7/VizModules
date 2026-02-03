@@ -15,6 +15,8 @@
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @export
+#' @seealso [plotthis::Histogram()], [VizModules::plotthis_HistogramInputsUI()],
+#' [VizModules::plotthis_HistogramOutputUI()], [VizModules::plotthis_HistogramServer()]
 #' 
 #' @examples
 #' library(VizModules)

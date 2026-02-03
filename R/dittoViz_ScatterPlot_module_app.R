@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @author Jared Andrews
+#' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
+#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()]
 #'
 #' @examples
 #' library(VizModules)

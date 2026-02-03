@@ -12,6 +12,8 @@
 #' @export
 #'
 #' @author Jared Andrews
+#' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
+#' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotServer()]
 #' @examples
 #' library(VizModules)
 #' data_list <- list("sales" = example_sales, "population" = example_population)

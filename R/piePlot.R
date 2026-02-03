@@ -53,6 +53,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::piePlotInputsUI()], [VizModules::piePlotServer()], [VizModules::piePlotApp()]
 piePlot <- function(df, labels, values,
                     colors = NULL,
                     palette = NULL,
