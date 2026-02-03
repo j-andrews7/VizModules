@@ -1465,7 +1465,9 @@
         combined <- subplot(
             top_plotly, empty_plot,
             main_plotly, right_plotly,
-            nrows = 2, ncols = 2,
+            nrows = 2,
+            shareX = TRUE,
+            shareY = TRUE,
             heights = c(marginal.size, 1 - marginal.size),
             widths = c(1 - marginal.size, marginal.size),
             margin = 0.01
@@ -1486,8 +1488,10 @@
         combined <- subplot(
             top_plotly,
             main_plotly,
-            nrows = 2, ncols = 1,
+            nrows = 2, 
             heights = c(marginal.size, 1 - marginal.size),
+            shareX = TRUE,
+            shareY = TRUE,
             margin = 0.01
         )
         
@@ -1501,7 +1505,9 @@
         # Only right marginal
         combined <- subplot(
             main_plotly, right_plotly,
-            nrows = 1, ncols = 2,
+            nrows = 1,
+            shareX = TRUE,
+            shareY = TRUE,
             widths = c(1 - marginal.size, marginal.size),
             margin = 0.01
         )
