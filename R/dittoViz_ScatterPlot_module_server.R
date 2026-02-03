@@ -515,6 +515,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     marginal.opacity = isolate_fn(input$marginal.opacity),
                     marginal.bins = isolate_fn(input$marginal.bins),
                     marginal.fill = isolate_fn(input$marginal.fill),
+                    color.by = null.na.inputs$color.by,
+                    color.mapping = color_mapping,
                     tooltip = "text"
                 )
                 # Apply config to the plotly object

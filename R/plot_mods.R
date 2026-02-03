@@ -1249,11 +1249,13 @@
 #' @param marginal.opacity Numeric. Opacity of marginal plots (0-1)
 #' @param marginal.bins Numeric. Number of bins for histograms (default 30)
 #' @param marginal.fill Character. Fill color for marginal plots (default "gray50")
+#' @param color.by Character or NULL. Name of grouping variable for coloring (optional)
+#' @param color.mapping Named character vector or NULL. Color mapping for groups (optional)
 #' @param tooltip Character. Tooltip parameter for ggplotly
 #'
 #' @return A plotly object with marginal plots
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_histogram geom_density geom_rug theme_void coord_cartesian
+#' @importFrom ggplot2 ggplot aes_string geom_histogram geom_density geom_rug theme_void coord_cartesian scale_fill_manual scale_color_manual
 #' @importFrom plotly ggplotly subplot layout plot_ly
 #'
 #' @author Jared Andrews
@@ -1263,6 +1265,7 @@
                                 marginal.types, marginal.sides,
                                 marginal.size, marginal.opacity,
                                 marginal.bins = 30, marginal.fill = "gray50",
+                                color.by = NULL, color.mapping = NULL,
                                 tooltip = "text") {
     
     # If no marginal plots requested, just convert main plot
@@ -1292,22 +1295,62 @@
     
     # Build top marginal plot (x-axis distribution)
     if (show_top) {
-        top_plot <- ggplot(data, aes_string(x = x.col)) +
-            theme_void() +
-            coord_cartesian(xlim = x_range)
+        # Determine if we should use color grouping
+        if (!is.null(color.by) && color.by %in% names(data)) {
+            # Create plot with color aesthetic
+            top_plot <- ggplot(data, aes_string(x = x.col, fill = color.by)) +
+                theme_void() +
+                coord_cartesian(xlim = x_range)
+            
+            # Add color scale if color mapping is provided
+            if (!is.null(color.mapping) && length(color.mapping) > 0) {
+                top_plot <- top_plot + scale_fill_manual(values = color.mapping)
+            }
+        } else {
+            # No color grouping - use single color
+            top_plot <- ggplot(data, aes_string(x = x.col)) +
+                theme_void() +
+                coord_cartesian(xlim = x_range)
+        }
         
         # Add layers based on requested types
         if ("histogram" %in% marginal.types) {
-            top_plot <- top_plot + 
-                geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped histogram with color aesthetic
+                top_plot <- top_plot + 
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity")
+            } else {
+                # Single color histogram
+                top_plot <- top_plot + 
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+            }
         }
         if ("density" %in% marginal.types) {
-            top_plot <- top_plot + 
-                geom_density(alpha = marginal.opacity, fill = marginal.fill)
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped density with color aesthetic
+                top_plot <- top_plot + 
+                    geom_density(alpha = marginal.opacity)
+            } else {
+                # Single color density
+                top_plot <- top_plot + 
+                    geom_density(alpha = marginal.opacity, fill = marginal.fill)
+            }
         }
         if ("rug" %in% marginal.types) {
-            top_plot <- top_plot + 
-                geom_rug(alpha = marginal.opacity, sides = "b")
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped rug with color aesthetic (using color, not fill)
+                top_plot <- top_plot + 
+                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b")
+                
+                # Add color scale for rug if color mapping is provided
+                if (!is.null(color.mapping) && length(color.mapping) > 0) {
+                    top_plot <- top_plot + scale_color_manual(values = color.mapping)
+                }
+            } else {
+                # Single color rug
+                top_plot <- top_plot + 
+                    geom_rug(alpha = marginal.opacity, sides = "b")
+            }
         }
         
         top_plotly <- ggplotly(top_plot, tooltip = "none") %>%
@@ -1323,22 +1366,62 @@
     
     # Build right marginal plot (y-axis distribution)
     if (show_right) {
-        right_plot <- ggplot(data, aes_string(x = y.col)) +
-            theme_void() +
-            coord_cartesian(xlim = y_range)
+        # Determine if we should use color grouping
+        if (!is.null(color.by) && color.by %in% names(data)) {
+            # Create plot with color aesthetic
+            right_plot <- ggplot(data, aes_string(x = y.col, fill = color.by)) +
+                theme_void() +
+                coord_cartesian(xlim = y_range)
+            
+            # Add color scale if color mapping is provided
+            if (!is.null(color.mapping) && length(color.mapping) > 0) {
+                right_plot <- right_plot + scale_fill_manual(values = color.mapping)
+            }
+        } else {
+            # No color grouping - use single color
+            right_plot <- ggplot(data, aes_string(x = y.col)) +
+                theme_void() +
+                coord_cartesian(xlim = y_range)
+        }
         
         # Add layers based on requested types
         if ("histogram" %in% marginal.types) {
-            right_plot <- right_plot + 
-                geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped histogram with color aesthetic
+                right_plot <- right_plot + 
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, position = "identity")
+            } else {
+                # Single color histogram
+                right_plot <- right_plot + 
+                    geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
+            }
         }
         if ("density" %in% marginal.types) {
-            right_plot <- right_plot + 
-                geom_density(alpha = marginal.opacity, fill = marginal.fill)
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped density with color aesthetic
+                right_plot <- right_plot + 
+                    geom_density(alpha = marginal.opacity)
+            } else {
+                # Single color density
+                right_plot <- right_plot + 
+                    geom_density(alpha = marginal.opacity, fill = marginal.fill)
+            }
         }
         if ("rug" %in% marginal.types) {
-            right_plot <- right_plot + 
-                geom_rug(alpha = marginal.opacity, sides = "b")
+            if (!is.null(color.by) && color.by %in% names(data)) {
+                # Grouped rug with color aesthetic (using color, not fill)
+                right_plot <- right_plot + 
+                    geom_rug(aes_string(color = color.by), alpha = marginal.opacity, sides = "b")
+                
+                # Add color scale for rug if color mapping is provided
+                if (!is.null(color.mapping) && length(color.mapping) > 0) {
+                    right_plot <- right_plot + scale_color_manual(values = color.mapping)
+                }
+            } else {
+                # Single color rug
+                right_plot <- right_plot + 
+                    geom_rug(alpha = marginal.opacity, sides = "b")
+            }
         }
         
         right_plotly <- ggplotly(right_plot, tooltip = "none") %>%
