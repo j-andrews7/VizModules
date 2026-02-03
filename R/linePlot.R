@@ -3,40 +3,44 @@
 #' Generates a customizable interactive line plot using plotly, supporting grouping, faceting, axis adjustments, and color palettes.
 #'
 #' @param reactive.data A data.frame or tibble containing the data to plot.
-#' @param x Character vector of column name(s) for the x-axis.
-#' @param y Character vector of column name(s) for the y-axis.
-#' @param plot.mode Character, plotly mode (e.g., "lines", "markers", "lines+markers").
-#' @param line.type Character, line style (e.g., "solid", "dash").
-#' @param colour.group.by Character vector of column name(s) to group lines by color.
-#' @param palette.selection Character vector of colors or palette name for line colors.
-#' @param show.legend Logical, whether to display the legend.
-#' @param facet.by Optional character, column name to facet by.
-#' @param facet.scales Character, facet axis scaling ("fixed", "free", "free_x", "free_y").
-#' @param axis.showline Logical, show axis line.
-#' @param axis.mirror Logical, mirror axis lines.
-#' @param axis.linecolor Character, axis line color.
-#' @param axis.linewidth Numeric, axis line width.
-#' @param axis.tickfont.size Numeric, axis tick font size.
-#' @param axis.tickfont.color Character, axis tick font color.
-#' @param axis.tickfont.family Character, axis tick font family.
-#' @param axis.tickangle.x Numeric, x-axis tick angle.
-#' @param axis.tickangle.y Numeric, y-axis tick angle.
-#' @param axis.ticks Character, tick style ("outside", "inside", "none").
-#' @param axis.tickcolor Character, tick color.
-#' @param axis.ticklen Numeric, tick length.
-#' @param axis.tickwidth Numeric, tick width.
-#' @param title.text Character, plot title.
-#' @param title.font.size Numeric, title font size.
-#' @param title.font.family Character, title font family.
-#' @param title.text.color Character, title font color.
-#' @param y.title Character, y-axis label.
-#' @param x.title Character, x-axis label.
-#' @param flip.x Logical, reverse x-axis.
-#' @param flip.y Logical, reverse y-axis.
-#' @param x.adjustment Optional function or string, adjustment for x values.
-#' @param y.adjustment Optional function or string, adjustment for y values.
-#' @param color.adjustment Optional function or string, adjustment for color grouping.
-#' @param order.by Optional character vector, column(s) to order data by.
+#' @param x Character vector of column name(s) for the x-axis. Multiple columns create separate traces.
+#' @param y Character vector of column name(s) for the y-axis. Multiple columns create separate traces.
+#' @param plot.mode Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".
+#' @param line.type Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
+#' @param colour.group.by Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.
+#' @param palette.selection Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.
+#' @param show.legend Logical, whether to display the legend. Default: TRUE.
+#' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
+#' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
+#'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
+#' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
+#' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
+#' @param axis.linecolor Character, hex color for axis lines. Default: "black".
+#' @param axis.linewidth Numeric, width of axis lines in pixels. Default: 0.5.
+#' @param axis.tickfont.size Numeric, font size for axis tick labels. Default: 12.
+#' @param axis.tickfont.color Character, hex color for axis tick labels. Default: "black".
+#' @param axis.tickfont.family Character, font family for axis tick labels. Default: "Arial".
+#' @param axis.tickangle.x Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.
+#' @param axis.tickangle.y Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.
+#' @param axis.ticks Character, position of tick marks. Options: "outside", "inside", "none". Default: "outside".
+#' @param axis.tickcolor Character, hex color for tick marks. Default: "black".
+#' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
+#' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
+#' @param title.text Character, main title text for the plot. Default: "".
+#' @param title.font.size Numeric, font size for plot title. Default: 14.
+#' @param title.font.family Character, font family for plot title. Default: "Arial".
+#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
+#' @param flip.y Logical, whether to reverse the y-axis direction. Default: FALSE.
+#' @param x.adjustment Optional character or function, transformation to apply to x values.
+#'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
+#' @param y.adjustment Optional character or function, transformation to apply to y values.
+#'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
+#' @param color.adjustment Optional character or function, transformation to apply to color grouping variable.
+#'   Same options as x.adjustment and y.adjustment. Default: NULL.
 #'
 #' @return A plotly object representing the interactive line plot.
 #'

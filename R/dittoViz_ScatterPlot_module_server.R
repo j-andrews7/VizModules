@@ -1,4 +1,5 @@
 #' Server logic for scatterPlot module
+#'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
 #' @param hide.inputs A character vector of input IDs to hide.
@@ -16,8 +17,8 @@
 #' @importFrom ggplot2 theme_bw waiver
 #' @importFrom shinyjs hide runjs
 #'
-#' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
-#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
+#' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
+#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotApp()]
 #'
 #' @export
 #' @author Jared Andrews

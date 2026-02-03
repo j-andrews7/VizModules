@@ -13,6 +13,63 @@
 #' Nearly all parameters for [VizModules::linePlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
+#' @section Plot parameters and defaults:
+#' The following [VizModules::linePlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' \itemize{
+#'   \item \code{x} - X-axis variable(s) (UI: "Select X values", default: 1st column, multiple: TRUE)
+#'   \item \code{y} - Y-axis variable(s) (UI: "Select Y values", default: 2nd column, multiple: TRUE)
+#'   \item \code{group.by} - Grouping variable (UI: "Group by", default: 1st categorical variable)
+#'   \item \code{order.by} - Order by Y values (UI: "Order by Y", default: FALSE)
+#'   \item \code{x.adjustment} - X-axis adjustment function (UI: "X Adjustment", default: "")
+#'   \item \code{y.adjustment} - Y-axis adjustment function (UI: "Y Adjustment", default: "")
+#'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
+#'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
+#'   \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
+#'   \item \code{line.type} - Line type (UI: "Line type", default: "solid")
+#'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
+#'   \item \code{axis.showline} - Show axis lines (UI: via .uniform_axes_inputs_ui, default: TRUE)
+#'   \item \code{axis.mirror} - Mirror axis lines (UI: via .uniform_axes_inputs_ui, default: TRUE)
+#'   \item \code{axis.linecolor} - Axis line color (UI: via .uniform_axes_inputs_ui, default: "black")
+#'   \item \code{axis.linewidth} - Axis line width (UI: via .uniform_axes_inputs_ui, default: 0.5)
+#'   \item \code{axis.tickfont.size} - Tick font size (UI: via .uniform_axes_inputs_ui, default: 12)
+#'   \item \code{axis.tickfont.color} - Tick font color (UI: via .uniform_axes_inputs_ui, default: "black")
+#'   \item \code{axis.tickfont.family} - Tick font family (UI: via .uniform_axes_inputs_ui, default: "Arial")
+#'   \item \code{axis.tickangle.x} - X-axis tick angle (UI: via .uniform_axes_inputs_ui, default: 0)
+#'   \item \code{axis.tickangle.y} - Y-axis tick angle (UI: via .uniform_axes_inputs_ui, default: 0)
+#'   \item \code{axis.ticks} - Tick position (UI: via .uniform_axes_inputs_ui, default: "outside")
+#'   \item \code{axis.tickcolor} - Tick color (UI: via .uniform_axes_inputs_ui, default: "black")
+#'   \item \code{axis.ticklen} - Tick length (UI: via .uniform_axes_inputs_ui, default: 5)
+#'   \item \code{axis.tickwidth} - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)
+#'   \item \code{title.font.size} - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)
+#'   \item \code{title.font.family} - Title font family (UI: "Font", default: "Arial")
+#'   \item \code{title.text.color} - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")
+#'   \item \code{x.title} - X-axis title (auto-calculated from data)
+#'   \item \code{y.title} - Y-axis title (auto-calculated from data)
+#'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
+#'   \item \code{flip.y} - Flip Y-axis (UI: "Flip Y", default: FALSE)
+#' }
+#'
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing plotly-specific features are also available:
+#' \itemize{
+#'   \item \code{hline.intercepts} - Horizontal line Y-intercepts (UI: via .uniform_lines_inputs_ui, default: "")
+#'   \item \code{hline.colors} - Horizontal line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")
+#'   \item \code{hline.widths} - Horizontal line widths (UI: via .uniform_lines_inputs_ui, default: "1")
+#'   \item \code{hline.linetypes} - Horizontal line types (UI: via .uniform_lines_inputs_ui, default: "dashed")
+#'   \item \code{hline.opacities} - Horizontal line opacities (UI: via .uniform_lines_inputs_ui, default: "1")
+#'   \item \code{vline.intercepts} - Vertical line X-intercepts (UI: via .uniform_lines_inputs_ui, default: "")
+#'   \item \code{vline.colors} - Vertical line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")
+#'   \item \code{vline.widths} - Vertical line widths (UI: via .uniform_lines_inputs_ui, default: "1")
+#'   \item \code{vline.linetypes} - Vertical line types (UI: via .uniform_lines_inputs_ui, default: "dashed")
+#'   \item \code{vline.opacities} - Vertical line opacities (UI: via .uniform_lines_inputs_ui, default: "1")
+#'   \item \code{abline.slopes} - Diagonal line slopes (UI: via .uniform_lines_inputs_ui, default: "")
+#'   \item \code{abline.intercepts} - Diagonal line Y-intercepts (UI: via .uniform_lines_inputs_ui, default: "")
+#'   \item \code{abline.colors} - Diagonal line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")
+#'   \item \code{abline.widths} - Diagonal line widths (UI: via .uniform_lines_inputs_ui, default: "1")
+#'   \item \code{abline.linetypes} - Diagonal line types (UI: via .uniform_lines_inputs_ui, default: "dashed")
+#'   \item \code{abline.opacities} - Diagonal line opacities (UI: via .uniform_lines_inputs_ui, default: "1")
+#' }
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs.

@@ -1,4 +1,5 @@
 #' Server logic for linePlot module
+#'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
 #' @param hide.inputs A character vector of input IDs to hide.
@@ -13,8 +14,8 @@
 #' @import plotly
 #' @importFrom shinyjs hide
 #'
-#' @seealso [VizModules::linePlot()], [VizModules::organize_inputs()],
-#' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()], [VizModules::linePlotApp()]
+#' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotApp()]
 #'
 #' @export
 #' @author Jacob Martin

@@ -16,6 +16,9 @@
 #' @importFrom shinyjs hide
 #' @importFrom stats na.omit setNames
 #'
+#' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
+#' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
+#'
 #' @export
 #' @author Jacob Martin, Jared Andrews
 piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {

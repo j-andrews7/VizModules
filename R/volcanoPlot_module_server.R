@@ -5,16 +5,18 @@
 #'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
-#'   Must contain `padj` and `log2FoldChange` columns.
+#'   Must contain effect size (e.g., log2FoldChange) and significance (e.g., padj) columns.
 #' @param hide.inputs A character vector of input IDs to hide.
-#' @param hide.tabs A character vector of tab names to hide.
+#' @param hide.tabs A character vector of tab names to hide. Default hides: "Trajectory", "Facets", "Colors", "Legend/Scale".
 #' @return The `moduleServer` function for the volcanoPlot module.
 #'
 #' @import shiny
 #' @import plotly
+#'
+#' @seealso [VizModules::dittoViz_scatterPlotServer()], [VizModules::volcanoPlotInputsUI()],
+#' [VizModules::volcanoPlotOutputUI()], [VizModules::volcanoPlotApp()]
 #' 
 #' @export
-#' 
 #' @author Jared Andrews
 volcanoPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = c("Trajectory", "Facets", "Colors", "Legend/Scale")) {
     res <- moduleServer(id, function(input, output, session) {
