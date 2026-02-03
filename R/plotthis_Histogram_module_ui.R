@@ -4,6 +4,27 @@
 #' Generates the user interface for histogram configuration, including data selection,
 #' faceting options, aesthetic controls (bins, trend lines, alpha), and detailed axis styling.
 #'
+#' @details
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid.
+#'
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [plotthis::Histogram()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list.
+#' 
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [plotthis::Histogram()] parameters are not available via UI inputs:
+#' \itemize{
+#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{title} - Plot title (plotly allows interactive editing)
+#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
+#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+#'   \item \code{legend_direction} - Legend orientation (plotly allows interactive repositioning)
+#'   \item \code{palette} - Managed internally via the palette selection UI
+#' }
+#'
 #' @param id \code{character} unique ID for the shiny namespace.
 #' @param data \code{data.frame} The dataset used to populate column selection choices.
 #' @param defaults \code{list} Optional named list of default values for the inputs.
@@ -18,6 +39,12 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #' @export
+#' @seealso [plotthis::Histogram()], [VizModules::organize_inputs()],
+#' [VizModules::plotthis_HistogramOutputUI()], [VizModules::plotthis_HistogramServer()], [VizModules::plotthis_HistogramApp()]
+#' @examples
+#' library(VizModules)
+#' data(mtcars)
+#' plotthis_HistogramInputsUI("histogram", mtcars)
 plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 

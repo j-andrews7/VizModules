@@ -4,6 +4,27 @@
 #' Generates the user interface for density plot configuration, including data selection,
 #' faceting options, aesthetic controls (alpha, position), and detailed axis styling.
 #'
+#' @details
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid.
+#'
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [plotthis::DensityPlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list.
+#' 
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [plotthis::DensityPlot()] parameters are not available via UI inputs:
+#' \itemize{
+#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{title} - Plot title (plotly allows interactive editing)
+#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
+#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+#'   \item \code{legend_direction} - Legend orientation (plotly allows interactive repositioning)
+#'   \item \code{palette} - Managed internally via the palette selection UI
+#' }
+#'
 #' @param id \code{character} unique ID for the shiny namespace.
 #' @param data \code{data.frame} The dataset used to populate column selection choices.
 #' @param defaults \code{list} Optional named list of default values for the inputs.
@@ -17,8 +38,13 @@
 #' @importFrom colourpicker colourInput
 #' 
 #' @export
-#' 
 #' @author Jacob Martin, Jared Andrews
+#' @seealso [plotthis::DensityPlot()], [VizModules::organize_inputs()],
+#' [VizModules::plotthis_DensityPlotOutputUI()], [VizModules::plotthis_DensityPlotServer()], [VizModules::plotthis_DensityPlotApp()]
+#' @examples
+#' library(VizModules)
+#' data(mtcars)
+#' plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 

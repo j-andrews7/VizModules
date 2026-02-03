@@ -12,6 +12,19 @@
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Nearly all parameters for [plotthis::BoxPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
+#' 
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [plotthis::BoxPlot()] parameters are not available via UI inputs:
+#' \itemize{
+#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{title} - Plot title (plotly allows interactive editing)
+#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
+#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+#'   \item \code{legend_direction} - Legend orientation (plotly allows interactive repositioning)
+#'   \item \code{palette} - Managed internally via the palette selection UI
+#' }
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
