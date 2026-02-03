@@ -87,32 +87,6 @@
 
     fig
 }
-
-#' Remove ggplot panel borders from a ggplot object
-#'
-#' Removes panel borders from a ggplot object to prevent double borders when
-#' ggplot panel borders conflict with plotly's axis borders after ggplotly conversion.
-#'
-#' The ggplot panel borders are always removed to ensure that only plotly's
-#' showline and mirror settings control the axis borders. This prevents:
-#' - Double borders when axis borders are enabled
-#' - Residual ggplot borders when plotly borders are disabled
-#'
-#' @param p A ggplot object.
-#'
-#' @return The modified ggplot object with panel borders removed.
-#'
-#' @importFrom ggplot2 theme element_blank
-#'
-#' @author Jacob Martin
-#' @rdname INTERNAL_remove_ggplot_panel_borders
-#' @keywords internal
-.remove_ggplot_panel_borders <- function(p) {
-    # Always remove ggplot panel borders to prevent conflicts with plotly axis borders
-    # This ensures that only plotly's showline and mirror settings control the borders
-    p + ggplot2::theme(panel.border = ggplot2::element_blank())
-}
-
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.
