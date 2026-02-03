@@ -1247,6 +1247,8 @@
 #' @param marginal.sides Character. Which sides to show marginals: "t" (top), "r" (right), "tr" (both)
 #' @param marginal.size Numeric. Relative size of marginal plots (0.05-0.5)
 #' @param marginal.opacity Numeric. Opacity of marginal plots (0-1)
+#' @param marginal.bins Numeric. Number of bins for histograms (default 30)
+#' @param marginal.fill Character. Fill color for marginal plots (default "gray50")
 #' @param tooltip Character. Tooltip parameter for ggplotly
 #'
 #' @return A plotly object with marginal plots
@@ -1260,6 +1262,7 @@
 .add_marginal_plots <- function(main_plot, data, x.col, y.col, 
                                 marginal.types, marginal.sides,
                                 marginal.size, marginal.opacity,
+                                marginal.bins = 30, marginal.fill = "gray50",
                                 tooltip = "text") {
     
     # If no marginal plots requested, just convert main plot
@@ -1296,11 +1299,11 @@
         # Add layers based on requested types
         if ("histogram" %in% marginal.types) {
             top_plot <- top_plot + 
-                geom_histogram(alpha = marginal.opacity, bins = 30, fill = "gray30")
+                geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
         }
         if ("density" %in% marginal.types) {
             top_plot <- top_plot + 
-                geom_density(alpha = marginal.opacity, fill = "gray50")
+                geom_density(alpha = marginal.opacity, fill = marginal.fill)
         }
         if ("rug" %in% marginal.types) {
             top_plot <- top_plot + 
@@ -1327,11 +1330,11 @@
         # Add layers based on requested types
         if ("histogram" %in% marginal.types) {
             right_plot <- right_plot + 
-                geom_histogram(alpha = marginal.opacity, bins = 30, fill = "gray30")
+                geom_histogram(alpha = marginal.opacity, bins = marginal.bins, fill = marginal.fill)
         }
         if ("density" %in% marginal.types) {
             right_plot <- right_plot + 
-                geom_density(alpha = marginal.opacity, fill = "gray50")
+                geom_density(alpha = marginal.opacity, fill = marginal.fill)
         }
         if ("rug" %in% marginal.types) {
             right_plot <- right_plot + 

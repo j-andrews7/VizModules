@@ -26,6 +26,8 @@
 #' - `marginal.sides`: Choose which sides to display marginal plots (top, right, or both)
 #' - `marginal.size`: Control the relative size of marginal plots (0.05-0.5)
 #' - `marginal.opacity`: Set the opacity of marginal plot elements (0-1)
+#' - `marginal.bins`: Number of bins for marginal histograms (5-100, default 30)
+#' - `marginal.fill`: Fill color for marginal plots (default gray50)
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::scatterPlot()] parameters are superseded by the enhanced Lines tab:
@@ -556,6 +558,20 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 0,
                 max = 1,
                 step = 0.1
+            ),
+            numericInput(ns("marginal.bins"), "Marginal Histogram Bins",
+                value = ifelse("marginal.bins" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.bins"]]), defaults[["marginal.bins"]], 30),
+                    30
+                ),
+                min = 5,
+                max = 100,
+                step = 5
+            ),
+            colourInput(ns("marginal.fill"), "Marginal Fill Color",
+                value = ifelse("marginal.fill" %in% names(defaults),
+                    defaults[["marginal.fill"]], "gray50"
+                )
             )
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
