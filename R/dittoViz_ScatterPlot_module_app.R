@@ -9,10 +9,12 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
+#'
+#' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
+#' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()]
+#'
 #' @export
-#'
 #' @author Jared Andrews
-#'
 #' @examples
 #' library(VizModules)
 #' data_list <- list("sales" = example_sales, "population" = example_population)

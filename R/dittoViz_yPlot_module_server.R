@@ -16,6 +16,9 @@
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
+#' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
+#' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotApp()]
+#'
 #' @export
 #' @author Jared Andrews, Jacob Martin
 dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {

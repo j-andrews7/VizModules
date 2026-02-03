@@ -17,22 +17,136 @@
 #' is a text input for comma-separated integers, while the function expects a vector of integers.
 #' The module will parse such inputs into the appropriate format for [dittoViz::scatterPlot()] automatically.
 #'
-#' There are also a handful that are specific to the Shiny module that additionally modify the plotly output:
-#'
-#' - `id`: The ID for the Shiny module.
-#'
 #' @section Plot parameters not implemented or with altered functionality:
-#' The following [dittoViz::scatterPlot()] parameters are superseded by the enhanced Lines tab:
+#' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:
 #' \itemize{
+#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{main} - Plot title (plotly allows interactive editing)
+#'   \item \code{sub} - Plot subtitle (not supported in plotly)
+#'   \item \code{theme} - ggplot2 theme (not applicable to plotly)
+#'   \item \code{legend.title} - Legend title (managed by plotly interactively)
 #'   \item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
 #'   \item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
 #'   \item \code{xline.linetype} - Use \code{vline.linetypes} instead
 #'   \item \code{xline.color} - Use \code{vline.colors} instead
 #'   \item \code{yline.linetype} - Use \code{hline.linetypes} instead
 #'   \item \code{yline.color} - Use \code{hline.colors} instead
+#'   \item \code{do.letter} - Lettering subplots (not implemented for plotly)
+#'   \item \code{do.label} - Labeling points interactively (not compatible with plotly hover)
 #' }
 #' The new Lines tab provides enhanced functionality including multiple lines per type,
 #' individual line widths, opacities, and diagonal/ablines with slope control.
+#'
+#' @section Plot parameters and defaults:
+#' The following [dittoViz::scatterPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' \itemize{
+#'   \item \code{x.by} - X-axis variable (UI: "X Data", default: 2nd column)
+#'   \item \code{y.by} - Y-axis variable (UI: "Y Data", default: 3rd column)
+#'   \item \code{color.by} - Coloring variable (UI: "Color By", default: "")
+#'   \item \code{shape.by} - Shape variable (UI: "Shape By", default: "")
+#'   \item \code{split.by} - Faceting variable (UI: "Split By", default: "")
+#'   \item \code{rows.use} - Row filter expression (UI: "Rows Filter", default: "")
+#'   \item \code{x.adjustment} - X-axis adjustment (UI: "X Adjustment", default: "")
+#'   \item \code{y.adjustment} - Y-axis adjustment (UI: "Y Adjustment", default: "")
+#'   \item \code{color.adjustment} - Color adjustment (UI: "Color Adjustment", default: "")
+#'   \item \code{x.adj.fxn} - X adjustment function (UI: "X Adjustment Function", default: "")
+#'   \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
+#'   \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
+#'   \item \code{size} - Point size (UI: "Point Size", default: 1)
+#'   \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
+#'   \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
+#'   \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
+#'   \item \code{plot.order} - Plot order (UI: "Plot Order", default: "unordered")
+#'   \item \code{shape.panel} - Shape panel values (UI: "Shape Panel", default: "16, 15, 17, 23, 25, 8")
+#'   \item \code{min.color} - Minimum color (UI: "Min Color", default: "#F0E442")
+#'   \item \code{max.color} - Maximum color (UI: "Max Color", default: "#0072B2")
+#'   \item \code{contour.color} - Contour color (UI: "Contour Color", default: "black")
+#'   \item \code{contour.linetype} - Contour linetype (UI: "Contour Linetype", default: "solid")
+#'   \item \code{color.panel} - Custom color values (UI: color.panel.ui, derived from palette)
+#'   \item \code{split.nrow} - Number of split rows (UI: "Split Rows", default: NA)
+#'   \item \code{split.ncol} - Number of split columns (UI: "Split Columns", default: NA)
+#'   \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")
+#'   \item \code{split.adjust.scales} - Facet scales (UI: "Facet Scales", default: "fixed")
+#'   \item \code{annotate.by} - Annotate by column (UI: "Annotate By", default: "")
+#'   \item \code{highlight.points} - Points to highlight (UI: "Points to Highlight", default: "")
+#'   \item \code{highlight.color} - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
+#'   \item \code{highlight.size} - Highlight size (UI: "Highlight Size", default: 7)
+#'   \item \code{highlight.border.color} - Highlight border color (UI: "Highlight Border Color", default: "#000000")
+#'   \item \code{highlight.border.width} - Highlight border width (UI: "Highlight Border Width", default: 1)
+#'   \item \code{highlight.auto.annotate} - Auto-annotate highlights (UI: "Auto-annotate Highlights", default: TRUE)
+#'   \item \code{annotation.color} - Annotation color (UI: "Annotation Color", default: "black")
+#'   \item \code{annotation.ax} - Annotation X offset (UI: "Annotation X Offset", default: 20)
+#'   \item \code{annotation.ay} - Annotation Y offset (UI: "Annotation Y Offset", default: -20)
+#'   \item \code{annotation.size} - Annotation size (UI: "Annotation Size", default: 10)
+#'   \item \code{annotation.showarrow} - Show arrow (UI: "Show Arrow", default: TRUE)
+#'   \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
+#'   \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
+#'   \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+#'   \item \code{legend.show} - Show legend (UI: "Show Legend", default: TRUE)
+#'   \item \code{legend.color.title} - Legend title (UI: "Legend Title", default: "make")
+#'   \item \code{legend.color.size} - Legend color size (UI: "Legend Color Size", default: 5)
+#'   \item \code{legend.shape.size} - Legend shape size (UI: "Legend Shape Size", default: 5)
+#'   \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
+#'   \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
+#'   \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
+#'   \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
+#'   \item \code{add.trajectory.by.groups} - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
+#'   \item \code{trajectory.arrow.size} - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+#'   \item \code{do.ellipse} - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
+#'   \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
+#'   \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")
+#'   \item \code{hover.round.digits} - Hover round digits (UI: "Hover Round Digits", default: 5)
+#' }
+#'
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing new functionality or controlling plotly-specific features are also available:
+#' \itemize{
+#'   \item \code{webgl} - Plot with webGL (UI: "Plot with webGL", default: TRUE)
+#'   \item \code{shape.fill} - Shape fill color (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
+#'   \item \code{shape.line.color} - Shape line color (UI: "Shape Line Color", default: "black")
+#'   \item \code{shape.line.width} - Shape line width (UI: "Shape Line Width", default: 4)
+#'   \item \code{shape.linetype} - Shape linetype (UI: "Shape Linetype", default: "solid")
+#'   \item \code{shape.opacity} - Shape opacity (UI: "Shape Opacity", default: 1)
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.showline} - Show axis lines (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.mirror} - Mirror axis lines (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{show.major.grid.x} - Show X major gridlines (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{show.major.grid.y} - Show Y major gridlines (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.linecolor} - Axis line color (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.linewidth} - Axis line width (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickfont.size} - Tick label size (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickfont.color} - Tick label color (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickfont.family} - Tick label font (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickangle.x} - X-axis tick angle (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickangle.y} - Y-axis tick angle (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.ticks} - Tick position (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickcolor} - Tick mark color (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.ticklen} - Tick mark length (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{axis.tickwidth} - Tick mark width (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{hline.intercepts} - Horizontal line Y-intercepts (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{hline.colors} - Horizontal line colors (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{hline.widths} - Horizontal line widths (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{hline.linetypes} - Horizontal line types (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{hline.opacities} - Horizontal line opacities (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.intercepts} - Vertical line X-intercepts (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.colors} - Vertical line colors (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.widths} - Vertical line widths (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.linetypes} - Vertical line types (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.opacities} - Vertical line opacities (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.slopes} - Diagonal line slopes (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.intercepts} - Diagonal line Y-intercepts (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.colors} - Diagonal line colors (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.widths} - Diagonal line widths (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.linetypes} - Diagonal line types (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.opacities} - Diagonal line opacities (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{fit.line} - Fit line (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{fit.line.color} - Fit line color (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{fit.line.width} - Fit line width (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{fit.line.type} - Fit line type (UI: via .uniform_lines_inputs_ui)
+#' }
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

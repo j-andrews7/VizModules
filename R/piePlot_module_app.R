@@ -10,10 +10,12 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
+#'
+#' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
+#' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()]
+#'
 #' @export
-#'
 #' @author Jacob Martin, Jared Andrews
-#'
 #' @examples
 #' library(VizModules)
 #' sales_summary <- aggregate(revenue ~ region, example_sales, sum)

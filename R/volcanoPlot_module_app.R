@@ -1,15 +1,17 @@
 #' Create a standalone Shiny app for the volcanoPlot module
 #'
-#' @param df A data frame to plot. Must contain `padj` and `log2FoldChange` columns.
+#' @param df A data frame to plot. Must contain effect size (e.g., log2FoldChange)
+#'   and significance (e.g., padj) columns.
 #' @return A Shiny app object.
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #'
-#' @export
-#' @author Jared Andrews
 #' @seealso [VizModules::volcanoPlotInputsUI()], [VizModules::volcanoPlotOutputUI()],
 #' [VizModules::volcanoPlotServer()], [VizModules::airway_deseq2]
+#'
+#' @export
+#' @author Jared Andrews
 #' @examples
 #' library(VizModules)
 #' data(airway_deseq2)

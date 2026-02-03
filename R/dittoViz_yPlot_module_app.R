@@ -9,8 +9,11 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
-#' @export
 #'
+#' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
+#' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotServer()]
+#'
+#' @export
 #' @author Jared Andrews
 #' @examples
 #' library(VizModules)

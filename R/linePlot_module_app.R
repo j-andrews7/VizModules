@@ -9,10 +9,12 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
+#'
+#' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
+#' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()]
+#'
 #' @export
-#'
 #' @author Jacob Martin, Jared Andrews
-#'
 #' @examples
 #' library(VizModules)
 #' data_list <- list("sales" = example_sales, "population" = example_population)

@@ -10,8 +10,7 @@
 #' with `columns` controlling the number of columns in the grid.
 #'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
-#' Nearly all parameters for [dittoViz::scatterPlot()] can be set via these inputs, so see the help
-#' for that function for an exhaustive list.
+#' This module wraps [VizModules::dittoViz_scatterPlotInputsUI()] and adds volcano-specific controls.
 #'
 #' Additional inputs specific to volcano plots are added to control significance thresholds and colors:
 #' \itemize{
@@ -19,6 +18,27 @@
 #'   \item `fc.thresh`: Log2 fold change threshold (default 0)
 #'   \item `volcano.colors`: A multiColorPicker for Up/Down/n.s. group colors
 #'     (defaults: Up="red", Down="blue", n.s.="lightgray")
+#' }
+#'
+#' @section Plot parameters and defaults:
+#' The following parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' \itemize{
+#'   \item \code{x.by} - X-axis variable (auto-detected from effect size columns: log2FoldChange, LFC, logFC)
+#'   \item \code{y.by} - Y-axis variable (auto-detected from significance columns: padj, pval, adj.p, svalue, FDR, p)
+#'   \item \code{color.by} - Coloring variable (default: "group", auto-generated from thresholds)
+#'   \item \code{y.adj.fxn} - Y adjustment function (default: "neg_log10" for -log10(p-value))
+#'   \item \code{show.others} - Show others (default: FALSE)
+#'   \item \code{hover.data} - Hover data columns (default: c("symbol", x.by, y.by))
+#'   \item \code{sig.thresh} - Significance threshold (UI: "Significance Threshold", default: 0.05)
+#'   \item \code{fc.thresh} - Log2 fold change threshold (UI: "LFC Threshold (log2)", default: 0)
+#'   \item All other [dittoViz::scatterPlot()] parameters are also available via the wrapped UI
+#' }
+#'
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing volcano-specific features are also available:
+#' \itemize{
+#'   \item \code{volcano.colors} - Named color vector for Up/Down/n.s. groups (UI: "Group Colors" multiColorPicker)
+#'   \item \code{group} - Auto-generated grouping column based on sig.thresh and fc.thresh
 #' }
 #'
 #' @param id The ID for the Shiny module.
@@ -32,7 +52,7 @@
 #' 
 #' @export
 #' @author Jared Andrews
-#' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
+#' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
 #' [VizModules::volcanoPlotOutputUI()], [VizModules::volcanoPlotServer()],
 #' [VizModules::volcanoPlotApp()]
 #' @examples
