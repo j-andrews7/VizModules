@@ -1286,9 +1286,30 @@
     show_top <- grepl("t", marginal.sides)
     show_right <- grepl("r", marginal.sides)
     
-    # Convert main plot to plotly with default tooltips (not "text" since do.hover was FALSE)
-    # This will show x, y, and other mapped aesthetics
-    main_plotly <- ggplotly(main_plot)
+    # When do.hover = FALSE, dittoViz doesn't add text aesthetic
+    # Build hover text from data columns if not already present
+    if (!"hover.text" %in% names(data) && nrow(data) > 0) {
+        # Create basic hover text with x and y values
+        hover_lines <- paste0(
+            x.col, ": ", data[[x.col]],
+            "\n", y.col, ": ", data[[y.col]]
+        )
+        
+        # Add color grouping if present
+        if (!is.null(color.by) && color.by %in% names(data)) {
+            hover_lines <- paste0(hover_lines, "\n", color.by, ": ", data[[color.by]])
+        }
+        
+        data$hover.text <- hover_lines
+    }
+    
+    # Add text aesthetic to ggplot for hover tooltips
+    if ("hover.text" %in% names(data)) {
+        main_plot <- main_plot + aes_string(text = "hover.text")
+    }
+    
+    # Convert main plot to plotly with text tooltips
+    main_plotly <- ggplotly(main_plot, tooltip = tooltip)
     
     # If no marginals requested, return main plot
     if (!show_top && !show_right) {
@@ -1497,60 +1518,67 @@
                 paper_bgcolor = "rgba(0,0,0,0)"
             )
         
-        # Use subplot without shareX/shareY to avoid conflicts with multiple traces
+        # Use subplot with shareX/shareY for proper axis alignment
         combined <- subplot(
             top_plotly, empty_plot,
             main_plotly, right_plotly,
             nrows = 2,
+            shareX = TRUE,
+            shareY = TRUE,
             heights = c(marginal.size, 1 - marginal.size),
             widths = c(1 - marginal.size, marginal.size),
-            margin = 0.01
+            margin = 0.01,
+            titleX = FALSE,
+            titleY = FALSE
         )
         
-        # Manually set axis ranges and hide grid lines
+        # Apply layout settings that won't be overwritten
+        # Set showgrid = FALSE for marginal axes only
         combined <- combined %>%
             layout(
-                xaxis = list(range = x_range, showgrid = FALSE),    # Top marginal x-axis
-                yaxis = list(showgrid = FALSE),                      # Top marginal y-axis
-                xaxis2 = list(visible = FALSE, showgrid = FALSE),    # Empty plot x-axis
-                yaxis2 = list(visible = FALSE, showgrid = FALSE),    # Empty plot y-axis
-                xaxis3 = list(range = x_range),                      # Main plot x-axis (keep ticks)
-                yaxis3 = list(range = y_range),                      # Main plot y-axis (keep ticks)
-                xaxis4 = list(range = y_range, showgrid = FALSE),    # Right marginal x-axis (rotated y data)
-                yaxis4 = list(showgrid = FALSE)                      # Right marginal y-axis
+                xaxis = list(showgrid = FALSE, showticklabels = FALSE),    # Top marginal x-axis
+                yaxis = list(showgrid = FALSE, showticklabels = FALSE),    # Top marginal y-axis
+                xaxis2 = list(visible = FALSE, showgrid = FALSE),           # Empty plot x-axis
+                yaxis2 = list(visible = FALSE, showgrid = FALSE),           # Empty plot y-axis
+                yaxis4 = list(showgrid = FALSE, showticklabels = FALSE),   # Right marginal y-axis
+                xaxis4 = list(showgrid = FALSE, showticklabels = FALSE)    # Right marginal x-axis
             )
     } else if (show_top) {
         # Only top marginal
         combined <- subplot(
             top_plotly,
             main_plotly,
-            nrows = 2, 
+            nrows = 2,
+            shareX = TRUE,
             heights = c(marginal.size, 1 - marginal.size),
-            margin = 0.01
+            margin = 0.01,
+            titleX = FALSE,
+            titleY = FALSE
         )
         
-        # Set axis ranges and hide grid for marginal
+        # Apply layout settings for marginal axes
         combined <- combined %>%
             layout(
-                xaxis = list(range = x_range, showgrid = FALSE),
-                yaxis = list(showgrid = FALSE),
-                xaxis2 = list(range = x_range)  # Main plot keeps ticks
+                xaxis = list(showgrid = FALSE, showticklabels = FALSE),
+                yaxis = list(showgrid = FALSE, showticklabels = FALSE)
             )
     } else if (show_right) {
         # Only right marginal
         combined <- subplot(
             main_plotly, right_plotly,
             nrows = 1,
+            shareY = TRUE,
             widths = c(1 - marginal.size, marginal.size),
-            margin = 0.01
+            margin = 0.01,
+            titleX = FALSE,
+            titleY = FALSE
         )
         
-        # Set axis ranges and hide grid for marginal
+        # Apply layout settings for marginal axes
         combined <- combined %>%
             layout(
-                yaxis = list(range = y_range),  # Main plot keeps ticks
-                xaxis2 = list(range = y_range, showgrid = FALSE),  # Right marginal x-axis (rotated y data)
-                yaxis2 = list(showgrid = FALSE)
+                xaxis2 = list(showgrid = FALSE, showticklabels = FALSE),
+                yaxis2 = list(showgrid = FALSE, showticklabels = FALSE)
             )
             )
     } else {
