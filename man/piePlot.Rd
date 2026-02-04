@@ -40,9 +40,9 @@ piePlot(
 \item{df}{A data frame where each row already represents a summarized slice
 (e.g., counts per category) with label and value columns.}
 
-\item{labels}{Name of the column to use for the slice labels.}
+\item{labels}{Character, name of the column to use for the slice labels.}
 
-\item{values}{Name of the column to use for the aggregated values.}
+\item{values}{Character, name of the column to use for the aggregated values (slice sizes).}
 
 \item{colors}{Optional character vector of hex colors for the slices.
 If named, values are matched to the values in \code{labels}; otherwise colours
@@ -51,42 +51,58 @@ are recycled in data order.}
 \item{palette}{Optional character vector of fallback colors used when
 \code{colors} is not supplied or missing values are present.}
 
-\item{hole}{A numeric value between 0 and 1 for the hole size
-(0 for pie, >0 for donut).}
+\item{hole}{Numeric value between 0 and 1 for the hole size
+(0 for pie chart, >0 for donut chart). Default: 0.}
 
-\item{textinfo}{A character string for the text info to show.
+\item{textinfo}{Character string specifying the text info to show on slices.
 Any combination of "label", "text", "value", "percent" joined with a "+"
-or "none".}
+(e.g., "label+percent") or "none" to hide text. Default: "label+percent".}
 
-\item{textposition}{Position of the text relative to the slice: "auto",
-"inside", "outside", or "none".}
+\item{textposition}{Character, position of the text relative to the slice.
+Options: "auto", "inside", "outside", or "none". Default: "auto".}
 
-\item{insidetextorientation}{Orientation for inside text: "auto", "horizontal",
-"radial", or "tangential".}
+\item{insidetextorientation}{Character, orientation for inside text.
+Options: "auto", "horizontal", "radial", or "tangential". Default: "auto".}
 
-\item{sort}{Logical, whether to sort slices by their values.}
+\item{sort}{Logical, whether to sort slices by their values in descending order. Default: TRUE.}
 
-\item{direction}{Direction of slices: "counterclockwise" or "clockwise".}
+\item{direction}{Character, direction of slice progression. Options: "counterclockwise" or "clockwise". Default: "counterclockwise".}
 
-\item{rotation}{Starting angle of the first slice in degrees.}
+\item{rotation}{Numeric, starting angle of the first slice in degrees (0-360). Default: 0.}
 
-\item{show.legend}{Logical, whether to display the legend.}
+\item{show.legend}{Logical, whether to display the legend. Default: TRUE.}
 
-\item{legend.orientation}{Legend orientation, either "h" (horizontal) or "v" (vertical).}
+\item{legend.orientation}{Character, legend orientation. Options: "h" (horizontal) or "v" (vertical). Default: "h".}
 
-\item{legend.x, legend.y}{Numeric legend position offsets.}
+\item{legend.x}{Numeric, horizontal legend position offset (0-1, where 0=left, 1=right). Default: 0.5.}
 
-\item{legend.font.family, legend.font.size, legend.font.color}{Font settings for the legend text.}
+\item{legend.y}{Numeric, vertical legend position offset (-1 to 1). Default: -0.1.}
 
-\item{title.text}{Plot title text.}
+\item{legend.font.family}{Character, font family for the legend text. Default: "Arial".}
 
-\item{title.font.family, title.font.size, title.font.color}{Font settings for the title text.}
+\item{legend.font.size}{Numeric, font size for the legend text. Default: 12.}
 
-\item{title.x}{Horizontal position for the plot title (0 = left, 1 = right).}
+\item{legend.font.color}{Character, hex color for the legend text. Default: "#000000".}
 
-\item{text.font.family, text.font.size, text.font.color}{Font settings for the slice labels.}
+\item{title.text}{Character, main plot title text. Default: "".}
 
-\item{slice.line.color, slice.line.width}{Border styling for the slices.}
+\item{title.font.family}{Character, font family for the title text. Default: "Arial".}
+
+\item{title.font.size}{Numeric, font size for the title text. Default: 18.}
+
+\item{title.font.color}{Character, hex color for the title text. Default: "#000000".}
+
+\item{title.x}{Numeric, horizontal position for the plot title (0-1, where 0=left, 0.5=center, 1=right). Default: 0.5.}
+
+\item{text.font.family}{Character, font family for the slice labels. Default: "Arial".}
+
+\item{text.font.size}{Numeric, font size for the slice labels. Default: 12.}
+
+\item{text.font.color}{Character, hex color for the slice labels. Default: "#000000".}
+
+\item{slice.line.color}{Character, hex color for slice borders. Default: "#FFFFFF" (white).}
+
+\item{slice.line.width}{Numeric, width of slice borders in pixels. Set to 0 for no borders. Default: 0.}
 }
 \value{
 A plotly object.

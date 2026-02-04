@@ -35,6 +35,110 @@ Defaults can be set for each input by providing a named list of values to the \c
 Nearly all parameters for \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not available via UI inputs:
+\itemize{
+\item \code{xlab} - X-axis label (plotly allows interactive editing)
+\item \code{ylab} - Y-axis label (plotly allows interactive editing)
+\item \code{main} - Plot title (plotly allows interactive editing)
+\item \code{sub} - Plot subtitle (not supported in plotly)
+\item \code{theme} - ggplot2 theme (not applicable to plotly)
+\item \code{legend.title} - Legend title (managed by plotly interactively)
+\item \code{add.line} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
+\item \code{line.linetype} - Use \code{hline.linetypes} instead
+\item \code{line.color} - Use \code{hline.colors} instead
+}
+}
+
+\section{Plot parameters and defaults}{
+
+The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+\itemize{
+\item \code{var} - Y-axis variable (UI: "Y data (var)", default: 2nd numeric variable)
+\item \code{group.by} - Grouping variable for x-axis (UI: "Group by", default: 2nd categorical variable)
+\item \code{color.by} - Coloring variable (UI: "Color by", default: "")
+\item \code{shape.by} - Shape variable (UI: "Shape by", default: "")
+\item \code{split.by} - Faceting variable (UI: "Split by (facet)", default: "")
+\item \code{plots} - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
+\item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
+\item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
+\item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+\item \code{split.nrow} - Number of facet rows (UI: "Number of Rows", default: 4)
+\item \code{split.ncol} - Number of facet columns (UI: "Number of Columns", default: 4)
+\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "free")
+\item \code{do.raster} - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
+\item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
+\item \code{jitter.size} - Jitter point size (UI: "Jitter Point Size", default: 1)
+\item \code{jitter.width} - Jitter width (UI: "Jitter Width", default: 0.2)
+\item \code{jitter.color} - Jitter point color (UI: "Jitter Point Color", default: "#000000")
+\item \code{jitter.shape.legend.size} - Shape legend size (UI: "Shape Legend Size", default: 5)
+\item \code{jitter.shape.legend.show} - Show shape legend (UI: "Show Shape Legend", default: TRUE)
+\item \code{jitter.position.dodge} - Jitter position dodge (calculated from boxgap)
+\item \code{boxplot.show.outliers} - Show boxplot outliers (always TRUE in implementation)
+\item \code{boxplot.color} - Boxplot outline color (UI: "Boxplot Color", default: "#000000")
+\item \code{boxplot.fill} - Fill boxplot (UI: "Fill Boxplot", default: TRUE)
+\item \code{boxplot.lineweight} - Boxplot line weight (UI: "Boxplot Line Weight", default: 0.5)
+\item \code{vlnplot.lineweight} - Violin line weight (UI: "Violin Line Weight", default: 0.5)
+\item \code{vlnplot.scaling} - Violin scaling method (UI: "Violin Scaling", default: "area")
+\item \code{vlnplot.quantiles} - Violin quantiles (UI: "Violin Quantiles (0-1)", default: "")
+\item \code{vlnplot.width} - Violin width (calculated from boxgap)
+\item \code{ridgeplot.lineweight} - Ridge line weight (UI: "Ridge Line Weight", default: 0.5)
+\item \code{ridgeplot.scale} - Ridge overlap scale (UI: "Ridge Scale (overlap)", default: 1.25)
+\item \code{ridgeplot.ymax.expansion} - Ridge Y-max expansion (UI: "Ridge Y-max Expansion", default: NA)
+\item \code{ridgeplot.shape} - Ridge shape (UI: "Ridge Shape", default: "smooth")
+\item \code{ridgeplot.bins} - Ridge bins (UI: "Ridge Bins", default: 30)
+\item \code{ridgeplot.binwidth} - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)
+\item \code{legend.show} - Show legend (always TRUE in implementation)
+}
+}
+
+\section{Parameters controlling additional functionality}{
+
+The following parameters implementing new functionality or controlling plotly-specific features are also available:
+\itemize{
+\item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
+\item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
+\item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
+\item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+\item \code{text.colour} - Color for title text (UI: "Label colour", default: "#000000")
+\item \code{axis.title.font.size} - Axis title font size (UI: "Axis font size", default: 18)
+\item \code{axis.title.font.color} - Axis title font color (UI: "Axis title font color", default: "#000000")
+\item \code{axis.title.font.family} - Axis title font family (UI: "Axis title font family", default: "Arial")
+\item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
+\item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
+\item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+\item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+\item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
+\item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
+\item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
+\item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick label color", default: "black")
+\item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick label font", default: "Arial")
+\item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
+\item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
+\item \code{axis.ticks} - Position of tick marks (UI: "Tick position", default: "outside")
+\item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
+\item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
+\item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+\item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
+\item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
+\item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line types", default: "dashed")
+\item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+\item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+\item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
+\item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
+\item \code{vline.linetypes} - Line types for vertical lines (UI: "Line types", default: "dashed")
+\item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+\item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+\item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+\item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
+\item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
+\item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
+\item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+}
+}
+
 \examples{
 library(VizModules)
 data(mtcars)

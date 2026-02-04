@@ -26,6 +26,10 @@ data_list <- list("sales" = sales_summary, "population" = population_summary)
 app <- piePlotApp(data_list)
 if (interactive()) runApp(app)
 }
+\seealso{
+\code{\link[=piePlot]{piePlot()}}, \code{\link[=piePlotInputsUI]{piePlotInputsUI()}},
+\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotServer]{piePlotServer()}}
+}
 \author{
 Jacob Martin, Jared Andrews
 }

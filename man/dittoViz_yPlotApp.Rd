@@ -23,6 +23,10 @@ data_list <- list("sales" = example_sales, "population" = example_population)
 app <- dittoViz_yPlotApp(data_list)
 if (interactive()) runApp(app)
 }
+\seealso{
+\code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=dittoViz_yPlotInputsUI]{dittoViz_yPlotInputsUI()}},
+\code{\link[=dittoViz_yPlotOutputUI]{dittoViz_yPlotOutputUI()}}, \code{\link[=dittoViz_yPlotServer]{dittoViz_yPlotServer()}}
+}
 \author{
 Jared Andrews
 }

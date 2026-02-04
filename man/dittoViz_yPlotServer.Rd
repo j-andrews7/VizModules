@@ -25,6 +25,10 @@ The \code{moduleServer} function for the yPlot module.
 \description{
 Server logic for yPlot module
 }
+\seealso{
+\code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=dittoViz_yPlotInputsUI]{dittoViz_yPlotInputsUI()}},
+\code{\link[=dittoViz_yPlotOutputUI]{dittoViz_yPlotOutputUI()}}, \code{\link[=dittoViz_yPlotApp]{dittoViz_yPlotApp()}}
+}
 \author{
 Jared Andrews, Jacob Martin
 }

@@ -23,6 +23,10 @@ data_list <- list("sales" = example_sales, "population" = example_population)
 app <- linePlotApp(data_list)
 if (interactive()) runApp(app)
 }
+\seealso{
+\code{\link[=linePlot]{linePlot()}}, \code{\link[=linePlotInputsUI]{linePlotInputsUI()}},
+\code{\link[=linePlotOutputUI]{linePlotOutputUI()}}, \code{\link[=linePlotServer]{linePlotServer()}}
+}
 \author{
 Jacob Martin, Jared Andrews
 }

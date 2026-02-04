@@ -15,11 +15,11 @@ volcanoPlotServer(
 \item{id}{The ID for the Shiny module.}
 
 \item{data}{A \code{reactive} containing the data frame to plot.
-Must contain \code{padj} and \code{log2FoldChange} columns.}
+Must contain effect size (e.g., log2FoldChange) and significance (e.g., padj) columns.}
 
 \item{hide.inputs}{A character vector of input IDs to hide.}
 
-\item{hide.tabs}{A character vector of tab names to hide.}
+\item{hide.tabs}{A character vector of tab names to hide. Default hides: "Trajectory", "Facets", "Colors", "Legend/Scale".}
 }
 \value{
 The \code{moduleServer} function for the volcanoPlot module.
@@ -27,6 +27,10 @@ The \code{moduleServer} function for the volcanoPlot module.
 \description{
 This module builds upon the \code{\link[=dittoViz_scatterPlotServer]{dittoViz_scatterPlotServer()}} to provide a volcano plot
 with interactive significance and fold-change thresholding.
+}
+\seealso{
+\code{\link[=dittoViz_scatterPlotServer]{dittoViz_scatterPlotServer()}}, \code{\link[=volcanoPlotInputsUI]{volcanoPlotInputsUI()}},
+\code{\link[=volcanoPlotOutputUI]{volcanoPlotOutputUI()}}, \code{\link[=volcanoPlotApp]{volcanoPlotApp()}}
 }
 \author{
 Jared Andrews

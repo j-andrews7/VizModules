@@ -26,6 +26,10 @@ The \code{moduleServer} function for the piePlot module.
 \description{
 Server logic for piePlot module
 }
+\seealso{
+\code{\link[=piePlot]{piePlot()}}, \code{\link[=piePlotInputsUI]{piePlotInputsUI()}},
+\code{\link[=piePlotOutputUI]{piePlotOutputUI()}}, \code{\link[=piePlotApp]{piePlotApp()}}
+}
 \author{
 Jacob Martin, Jared Andrews
 }
