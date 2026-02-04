@@ -1257,3 +1257,382 @@
 
     fig
 }
+
+#' Add marginal plots to a scatter plot using plotly subplots
+#'
+#' Creates marginal density, histogram, or rug plots for the X and/or Y axes of a scatter plot
+#' and combines them using plotly's subplot functionality. Marginal plots respect grouping
+#' and color mappings from the main scatter plot.
+#'
+#' @param scatter_fig A plotly figure object containing the main scatter plot.
+#' @param plot_data Data frame containing the plot data with x, y, and optional grouping columns.
+#' @param x_col Character. Name of the X column in plot_data.
+#' @param y_col Character. Name of the Y column in plot_data.
+#' @param group_col Character or NULL. Name of the grouping column for colors/faceting.
+#' @param color_mapping Named character vector mapping group levels to colors, or NULL.
+#' @param show_x_marginal Logical. Show marginal plot for X axis?
+#' @param show_y_marginal Logical. Show marginal plot for Y axis?
+#' @param marginal_type Character. Type of marginal plot: "density", "histogram", "rug", or "densityrug".
+#' @param marginal_opacity Numeric. Opacity for marginal density/histogram plots (0-1).
+#' @param marginal_bins Integer. Number of bins for histogram marginals.
+#' @param marginal_rug_height Numeric. Height of rug marks relative to plot (0.01-0.2).
+#' @param marginal_size Numeric. Relative size of marginal plots (0.1-0.4).
+#'
+#' @return A plotly subplot figure with marginal plots attached.
+#'
+#' @importFrom plotly plot_ly add_trace add_histogram add_segments layout subplot
+#' @importFrom stats density
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_add_marginal_plots
+.add_marginal_plots <- function(scatter_fig,
+                                 plot_data,
+                                 x_col,
+                                 y_col,
+                                 group_col = NULL,
+                                 color_mapping = NULL,
+                                 show_x_marginal = FALSE,
+                                 show_y_marginal = FALSE,
+                                 marginal_type = "density",
+                                 marginal_opacity = 0.5,
+                                 marginal_bins = 30,
+                                 marginal_rug_height = 0.03,
+                                 marginal_size = 0.2) {
+    # If no marginals requested, return original figure
+    if (!show_x_marginal && !show_y_marginal) {
+        return(scatter_fig)
+    }
+
+    # Extract x and y data
+    x_data <- plot_data[[x_col]]
+    y_data <- plot_data[[y_col]]
+
+    # Determine if we have grouping
+    has_groups <- !is.null(group_col) && group_col != "" && group_col %in% names(plot_data)
+    if (has_groups) {
+        groups <- plot_data[[group_col]]
+        group_levels <- if (is.factor(groups)) levels(groups) else unique(groups)
+    } else {
+        group_levels <- NULL
+    }
+
+    # Helper function to create density trace
+    create_density_trace <- function(data_vec, axis = "x", group_name = NULL, color = NULL) {
+        if (length(data_vec) < 2) return(NULL)
+
+        dens <- density(data_vec, na.rm = TRUE)
+
+        if (axis == "x") {
+            trace <- list(
+                x = dens$x,
+                y = dens$y,
+                type = "scatter",
+                mode = "lines",
+                fill = "tozeroy",
+                fillcolor = if (!is.null(color)) paste0(color, sprintf("%02X", as.integer(marginal_opacity * 255))) else NULL,
+                line = list(color = color, width = 1),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        } else {  # y axis
+            trace <- list(
+                x = dens$y,
+                y = dens$x,
+                type = "scatter",
+                mode = "lines",
+                fill = "tozerox",
+                fillcolor = if (!is.null(color)) paste0(color, sprintf("%02X", as.integer(marginal_opacity * 255))) else NULL,
+                line = list(color = color, width = 1),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        }
+        return(trace)
+    }
+
+    # Helper function to create histogram trace
+    create_histogram_trace <- function(data_vec, axis = "x", group_name = NULL, color = NULL) {
+        if (axis == "x") {
+            trace <- list(
+                x = data_vec,
+                type = "histogram",
+                nbinsx = marginal_bins,
+                marker = list(
+                    color = if (!is.null(color)) paste0(color, sprintf("%02X", as.integer(marginal_opacity * 255))) else NULL,
+                    line = list(color = color, width = 1)
+                ),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        } else {  # y axis
+            trace <- list(
+                y = data_vec,
+                type = "histogram",
+                nbinsy = marginal_bins,
+                marker = list(
+                    color = if (!is.null(color)) paste0(color, sprintf("%02X", as.integer(marginal_opacity * 255))) else NULL,
+                    line = list(color = color, width = 1)
+                ),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        }
+        return(trace)
+    }
+
+    # Helper function to create rug trace with dodging
+    create_rug_trace <- function(data_vec, axis = "x", group_name = NULL, color = NULL, group_idx = 0, n_groups = 1) {
+        # Calculate dodge offset for this group
+        if (n_groups > 1) {
+            dodge_range <- marginal_rug_height * 0.8  # Use 80% of height for dodging
+            dodge_offset <- (group_idx / (n_groups - 1) - 0.5) * dodge_range
+        } else {
+            dodge_offset <- 0
+        }
+
+        base_pos <- -marginal_rug_height / 2 + dodge_offset
+
+        if (axis == "x") {
+            # Create vertical rug marks
+            x_vals <- rep(data_vec, each = 3)
+            y_vals <- rep(c(base_pos, base_pos + marginal_rug_height, NA), length(data_vec))
+
+            trace <- list(
+                x = x_vals,
+                y = y_vals,
+                type = "scatter",
+                mode = "lines",
+                line = list(color = color, width = 1),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        } else {  # y axis
+            # Create horizontal rug marks
+            x_vals <- rep(c(base_pos, base_pos + marginal_rug_height, NA), length(data_vec))
+            y_vals <- rep(data_vec, each = 3)
+
+            trace <- list(
+                x = x_vals,
+                y = y_vals,
+                type = "scatter",
+                mode = "lines",
+                line = list(color = color, width = 1),
+                name = group_name,
+                showlegend = FALSE,
+                hoverinfo = "skip"
+            )
+        }
+        return(trace)
+    }
+
+    # Create X marginal plot
+    x_marginal_fig <- NULL
+    if (show_x_marginal) {
+        x_marginal_fig <- plot_ly()
+
+        if (has_groups && !is.null(color_mapping)) {
+            # Create separate traces for each group
+            for (i in seq_along(group_levels)) {
+                group_level <- group_levels[i]
+                group_data <- x_data[groups == group_level]
+                group_color <- if (group_level %in% names(color_mapping)) {
+                    color_mapping[[group_level]]
+                } else {
+                    "#000000"
+                }
+
+                if (marginal_type %in% c("density", "densityrug")) {
+                    dens_trace <- create_density_trace(group_data, "x", group_level, group_color)
+                    if (!is.null(dens_trace)) {
+                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = dens_trace)
+                    }
+                }
+
+                if (marginal_type == "histogram") {
+                    hist_trace <- create_histogram_trace(group_data, "x", group_level, group_color)
+                    if (!is.null(hist_trace)) {
+                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = hist_trace)
+                    }
+                }
+
+                if (marginal_type %in% c("rug", "densityrug")) {
+                    rug_trace <- create_rug_trace(group_data, "x", group_level, group_color, i - 1, length(group_levels))
+                    if (!is.null(rug_trace)) {
+                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = rug_trace)
+                    }
+                }
+            }
+        } else {
+            # Single color, no grouping
+            single_color <- if (!is.null(color_mapping) && length(color_mapping) > 0) {
+                color_mapping[[1]]
+            } else {
+                "#000000"
+            }
+
+            if (marginal_type %in% c("density", "densityrug")) {
+                dens_trace <- create_density_trace(x_data, "x", NULL, single_color)
+                if (!is.null(dens_trace)) {
+                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = dens_trace)
+                }
+            }
+
+            if (marginal_type == "histogram") {
+                hist_trace <- create_histogram_trace(x_data, "x", NULL, single_color)
+                if (!is.null(hist_trace)) {
+                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = hist_trace)
+                }
+            }
+
+            if (marginal_type %in% c("rug", "densityrug")) {
+                rug_trace <- create_rug_trace(x_data, "x", NULL, single_color, 0, 1)
+                if (!is.null(rug_trace)) {
+                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = rug_trace)
+                }
+            }
+        }
+
+        # Configure X marginal layout
+        x_marginal_fig <- x_marginal_fig %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                showlegend = FALSE,
+                margin = list(l = 0, r = 0, t = 0, b = 0)
+            )
+    }
+
+    # Create Y marginal plot
+    y_marginal_fig <- NULL
+    if (show_y_marginal) {
+        y_marginal_fig <- plot_ly()
+
+        if (has_groups && !is.null(color_mapping)) {
+            # Create separate traces for each group
+            for (i in seq_along(group_levels)) {
+                group_level <- group_levels[i]
+                group_data <- y_data[groups == group_level]
+                group_color <- if (group_level %in% names(color_mapping)) {
+                    color_mapping[[group_level]]
+                } else {
+                    "#000000"
+                }
+
+                if (marginal_type %in% c("density", "densityrug")) {
+                    dens_trace <- create_density_trace(group_data, "y", group_level, group_color)
+                    if (!is.null(dens_trace)) {
+                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = dens_trace)
+                    }
+                }
+
+                if (marginal_type == "histogram") {
+                    hist_trace <- create_histogram_trace(group_data, "y", group_level, group_color)
+                    if (!is.null(hist_trace)) {
+                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = hist_trace)
+                    }
+                }
+
+                if (marginal_type %in% c("rug", "densityrug")) {
+                    rug_trace <- create_rug_trace(group_data, "y", group_level, group_color, i - 1, length(group_levels))
+                    if (!is.null(rug_trace)) {
+                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = rug_trace)
+                    }
+                }
+            }
+        } else {
+            # Single color, no grouping
+            single_color <- if (!is.null(color_mapping) && length(color_mapping) > 0) {
+                color_mapping[[1]]
+            } else {
+                "#000000"
+            }
+
+            if (marginal_type %in% c("density", "densityrug")) {
+                dens_trace <- create_density_trace(y_data, "y", NULL, single_color)
+                if (!is.null(dens_trace)) {
+                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = dens_trace)
+                }
+            }
+
+            if (marginal_type == "histogram") {
+                hist_trace <- create_histogram_trace(y_data, "y", NULL, single_color)
+                if (!is.null(hist_trace)) {
+                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = hist_trace)
+                }
+            }
+
+            if (marginal_type %in% c("rug", "densityrug")) {
+                rug_trace <- create_rug_trace(y_data, "y", NULL, single_color, 0, 1)
+                if (!is.null(rug_trace)) {
+                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = rug_trace)
+                }
+            }
+        }
+
+        # Configure Y marginal layout
+        y_marginal_fig <- y_marginal_fig %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                showlegend = FALSE,
+                margin = list(l = 0, r = 0, t = 0, b = 0)
+            )
+    }
+
+    # Combine using subplot
+    # Layout matrix depends on which marginals are shown
+    if (show_x_marginal && show_y_marginal) {
+        # Both marginals: 2x2 grid with empty top-right corner
+        empty_plot <- plot_ly() %>%
+            layout(
+                xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
+                yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
+                showlegend = FALSE,
+                margin = list(l = 0, r = 0, t = 0, b = 0)
+            )
+
+        combined_fig <- subplot(
+            x_marginal_fig, empty_plot,
+            scatter_fig, y_marginal_fig,
+            nrows = 2,
+            heights = c(marginal_size, 1 - marginal_size),
+            widths = c(1 - marginal_size, marginal_size),
+            shareX = TRUE,
+            shareY = TRUE,
+            titleX = FALSE,
+            titleY = FALSE,
+            margin = 0.01
+        )
+    } else if (show_x_marginal) {
+        # Only X marginal: 2x1 grid
+        combined_fig <- subplot(
+            x_marginal_fig,
+            scatter_fig,
+            nrows = 2,
+            heights = c(marginal_size, 1 - marginal_size),
+            shareX = TRUE,
+            titleX = FALSE,
+            titleY = FALSE,
+            margin = 0.01
+        )
+    } else {
+        # Only Y marginal: 1x2 grid
+        combined_fig <- subplot(
+            scatter_fig, y_marginal_fig,
+            nrows = 1,
+            widths = c(1 - marginal_size, marginal_size),
+            shareY = TRUE,
+            titleX = FALSE,
+            titleY = FALSE,
+            margin = 0.01
+        )
+    }
+
+    return(combined_fig)
+}

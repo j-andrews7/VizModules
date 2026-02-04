@@ -291,6 +291,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectizeInput(session, "hover.data", selected = "")
             updateNumericInput(session, "hover.round.digits", value = 5)
 
+            # Marginals
+            updateCheckboxInput(session, "show.x.marginal", value = FALSE)
+            updateCheckboxInput(session, "show.y.marginal", value = FALSE)
+            updateSelectInput(session, "marginal.type", selected = "density")
+            updateSliderInput(session, "marginal.opacity", value = 0.5)
+            updateNumericInput(session, "marginal.bins", value = 30)
+            updateNumericInput(session, "marginal.rug.height", value = 0.03)
+            updateSliderInput(session, "marginal.size", value = 0.2)
+
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
             updateTextInput(session, "hline.colors", value = "#000000")
@@ -327,6 +336,21 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
             updateNumericInput(session, "axis.ticklen", value = 5)
             updateNumericInput(session, "axis.tickwidth", value = 1)
+        })
+
+        # Observer to disable marginal plots when faceting is enabled
+        observeEvent(input$split.by, {
+            if (!is.null(input$split.by) && length(input$split.by) > 0 && any(nzchar(input$split.by))) {
+                # Faceting is enabled, disable marginal plots
+                updateCheckboxInput(session, "show.x.marginal", value = FALSE)
+                updateCheckboxInput(session, "show.y.marginal", value = FALSE)
+                shinyjs::disable("show.x.marginal")
+                shinyjs::disable("show.y.marginal")
+            } else {
+                # Faceting is disabled, enable marginal plot options
+                shinyjs::enable("show.x.marginal")
+                shinyjs::enable("show.y.marginal")
+            }
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -500,6 +524,39 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         }
                     }
                 }
+            }
+
+            # Add marginal plots if requested and faceting is not enabled
+            if ((isolate_fn(input$show.x.marginal) || isolate_fn(input$show.y.marginal)) &&
+                is.null(null.na.inputs$split.by)) {
+                # Determine color mapping for marginals
+                marginal_color_mapping <- if (!is.null(null.na.inputs$color.by)) {
+                    color_mapping
+                } else {
+                    # No grouping, use single point color
+                    single_pt_color <- isolate_fn(input$single.point.color)
+                    if (!is.null(single_pt_color) && nzchar(single_pt_color)) {
+                        stats::setNames(single_pt_color, "all")
+                    } else {
+                        stats::setNames("#000000", "all")
+                    }
+                }
+
+                fig <- .add_marginal_plots(
+                    scatter_fig = fig,
+                    plot_data = plot_data,
+                    x_col = isolate_fn(input$x.by),
+                    y_col = isolate_fn(input$y.by),
+                    group_col = null.na.inputs$color.by,
+                    color_mapping = marginal_color_mapping,
+                    show_x_marginal = isolate_fn(input$show.x.marginal),
+                    show_y_marginal = isolate_fn(input$show.y.marginal),
+                    marginal_type = isolate_fn(input$marginal.type),
+                    marginal_opacity = isolate_fn(input$marginal.opacity),
+                    marginal_bins = isolate_fn(input$marginal.bins),
+                    marginal_rug_height = isolate_fn(input$marginal.rug.height),
+                    marginal_size = isolate_fn(input$marginal.size)
+                )
             }
 
             # Add reference lines

@@ -97,6 +97,13 @@
 #'   \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
 #'   \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")
 #'   \item \code{hover.round.digits} - Hover round digits (UI: "Hover Round Digits", default: 5)
+#'   \item \code{show.x.marginal} - Show X-axis marginal plot (UI: "Show X Marginal", default: FALSE)
+#'   \item \code{show.y.marginal} - Show Y-axis marginal plot (UI: "Show Y Marginal", default: FALSE)
+#'   \item \code{marginal.type} - Type of marginal plot (UI: "Marginal Type", default: "density", choices: "density", "histogram", "rug", "densityrug")
+#'   \item \code{marginal.opacity} - Marginal plot opacity (UI: "Marginal Opacity", default: 0.5)
+#'   \item \code{marginal.bins} - Number of bins for histogram marginals (UI: "Histogram Bins", default: 30)
+#'   \item \code{marginal.rug.height} - Height of rug marks (UI: "Rug Height", default: 0.03)
+#'   \item \code{marginal.size} - Relative height of marginal plots (UI: "Marginal Plot Relative Height", default: 0.2)
 #' }
 #'
 #' @section Parameters controlling additional functionality:
@@ -633,6 +640,64 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ),
                 step = 1,
                 min = 1
+            )
+        ),
+        "Marginals" = tagList(
+            checkboxInput(ns("show.x.marginal"), "Show X Marginal",
+                value = ifelse("show.x.marginal" %in% names(defaults),
+                    ifelse(is.logical(defaults[["show.x.marginal"]]), defaults[["show.x.marginal"]], FALSE),
+                    FALSE
+                )
+            ),
+            checkboxInput(ns("show.y.marginal"), "Show Y Marginal",
+                value = ifelse("show.y.marginal" %in% names(defaults),
+                    ifelse(is.logical(defaults[["show.y.marginal"]]), defaults[["show.y.marginal"]], FALSE),
+                    FALSE
+                )
+            ),
+            selectInput(ns("marginal.type"), "Marginal Type",
+                choices = c("density", "histogram", "rug", "densityrug"),
+                selected = ifelse("marginal.type" %in% names(defaults),
+                    ifelse(defaults[["marginal.type"]] %in% c("density", "histogram", "rug", "densityrug"),
+                        defaults[["marginal.type"]], "density"),
+                    "density"
+                )
+            ),
+            sliderInput(ns("marginal.opacity"), "Marginal Opacity",
+                min = 0,
+                max = 1,
+                value = ifelse("marginal.opacity" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.opacity"]]), defaults[["marginal.opacity"]], 0.5),
+                    0.5
+                ),
+                step = 0.05
+            ),
+            numericInput(ns("marginal.bins"), "Histogram Bins",
+                value = ifelse("marginal.bins" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.bins"]]), defaults[["marginal.bins"]], 30),
+                    30
+                ),
+                min = 5,
+                max = 100,
+                step = 5
+            ),
+            numericInput(ns("marginal.rug.height"), "Rug Height",
+                value = ifelse("marginal.rug.height" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.rug.height"]]), defaults[["marginal.rug.height"]], 0.03),
+                    0.03
+                ),
+                min = 0.01,
+                max = 0.2,
+                step = 0.01
+            ),
+            sliderInput(ns("marginal.size"), "Marginal Plot Relative Height",
+                min = 0.1,
+                max = 0.4,
+                value = ifelse("marginal.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.size"]]), defaults[["marginal.size"]], 0.2),
+                    0.2
+                ),
+                step = 0.05
             )
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
