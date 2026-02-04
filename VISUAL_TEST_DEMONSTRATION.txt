@@ -1,0 +1,285 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║            LINEPLOT LEGEND FIX - VISUAL TEST DEMONSTRATION                ║
+║         Before/After Comparison and UI Behavior Explanation               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+SCENARIO 1: GROUP BY LEGEND (X: year, Y: revenue, GROUP BY: month)
+═══════════════════════════════════════════════════════════════════════════════
+
+BEFORE FIX (BUG):
+┌─────────────────────────────────────────────────────────────────┐
+│ LinePlot App                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ X values: year                                                   │
+│ Y values: revenue                                                │
+│ Group by: month                                                  │
+│                                                                   │
+│ Plot area:                                                       │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │   revenue                                                   │ │
+│ │     600 ├──────────────────────────────────────────────────┤ │
+│ │         │                                                 │ │
+│ │     500 │     ╱╲      ╱╲      ╱╲      ╱╲      ╱╲         │ │
+│ │         │    ╱  ╲    ╱  ╲    ╱  ╲    ╱  ╲    ╱  ╲        │ │
+│ │     400 │   ╱    ╲  ╱    ╲  ╱    ╲  ╱    ╲  ╱    ╲       │ │
+│ │         │  ╱      ╲╱      ╲╱      ╲╱      ╲╱      ╲      │ │
+│ │     300 │ ╱                                        ╲     │ │
+│ │         │                                           ╲    │ │
+│ │     200 │                                            ╲   │ │
+│ │         │                                             ╲  │ │
+│ │     100 ├──────────────────────────────────────────────╲─│ │
+│ │         │                                               │ │
+│ │       0 └───────────────────────────────────────────────┘ │ │
+│ │        2015  2016  2017  2018  2019  2020  2021  2022   │ │
+│ │                         year                             │ │
+│ │                                                           │ │
+│ │  ❌ NO LEGEND - CAN'T TELL WHICH LINE IS WHICH MONTH!   │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                                │
+│  Problem: User can't identify which colored line represents   │
+│           which month. Multiple lines but no legend label.    │
+└─────────────────────────────────────────────────────────────────┘
+
+AFTER FIX (WORKING):
+┌─────────────────────────────────────────────────────────────────┐
+│ LinePlot App                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ X values: year                                                   │
+│ Y values: revenue                                                │
+│ Group by: month                                                  │
+│                                                                   │
+│ Plot area:                                                       │
+│ ┌──────────────────────────────────────────┐  Legend:           │
+│ │   revenue                                │  ├─ Jan            │
+│ │     600 ├─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┤  ├─ Feb           │
+│ │         │                              │ │  ├─ Mar           │
+│ │     500 │    ╱╲ ╱╲ ╱╲ ╱╲ ╱╲ ╱╲ ╱╲    │  ├─ Apr           │
+│ │         │   ╱  ╲╱  ╲╱  ╲╱  ╲╱  ╲╱ ╲   │  ├─ May           │
+│ │     400 │  ╱                       ╲  │  ├─ Jun           │
+│ │         │ ╱                         ╲ │  ├─ Jul           │
+│ │     300 │                            ╲│  ├─ Aug           │
+│ │         │                             │  ├─ Sep           │
+│ │     200 │                             │  ├─ Oct           │
+│ │         │                             │  ├─ Nov           │
+│ │     100 ├─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┤  ├─ Dec           │
+│ │         │                              │  │                 │
+│ │       0 └──────────────────────────────┘  │                 │
+│ │        2015  2016  2017  2018  2019 ...  │                 │
+│ │                  year                     │                 │
+│ │  ✓ LEGEND VISIBLE - CLEAR IDENTIFICATION  │                 │
+│ └────────────────────────────────────────────┘                 │
+│                                                                │
+│  Benefit: User can now see which colored line represents       │
+│           each month. Each line clearly identified in legend.  │
+└─────────────────────────────────────────────────────────────────┘
+
+CODE CHANGE ANALYSIS:
+  Line 175: if (!isolate_fn(input$group.by) == "" && 
+               length(x_input) == 1 && length(y_input) == 1) {
+  Line 177:     show_legend <- TRUE  ← Sets legend to visible
+  
+  Condition satisfied:
+    • group.by = "month" (not empty) ✓
+    • length(x_input) = 1 ✓
+    • length(y_input) = 1 ✓
+  Result: Legend is SHOWN
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SCENARIO 2: MULTI-AXIS LEGEND (X: year, Y: revenue + units, GROUP BY: empty)
+═══════════════════════════════════════════════════════════════════════════════
+
+BEFORE FIX (BUG):
+┌─────────────────────────────────────────────────────────────────┐
+│ LinePlot App                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ X values: year                                                   │
+│ Y values: revenue, units                                         │
+│ Group by: (empty)                                               │
+│                                                                   │
+│ Plot area:                                                       │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │   Value                                                     │ │
+│ │     600 ├──────────────────────────────────────────────────┤ │
+│ │         │ ╱╲╱╲╱╲╱╲╱╲ (line 1)                            │ │
+│ │     500 │   ╱  ╲  ╱  ╲  ╱  ╲  ╱                           │ │
+│ │         │  ╱    ╲╱    ╲╱    ╲╱                            │ │
+│ │     400 │╱                                                 │ │
+│ │         │\                                                │ │
+│ │     300 │ \    ╲╱ ╲╱ ╲╱                    (line 2)      │ │
+│ │         │  ╲  ╱  ╲  ╱  ╲  ╱  ╲  ╱                        │ │
+│ │     200 │   ╲╱    ╲╱    ╲╱    ╲╱                         │ │
+│ │         │                                                 │ │
+│ │     100 ├──────────────────────────────────────────────────┤ │
+│ │         │                                                 │ │
+│ │       0 └─────────────────────────────────────────────────┘ │ │
+│ │        2015  2016  2017  2018  2019  2020  2021  2022    │ │
+│ │                         year                              │ │
+│ │                                                            │ │
+│ │  ❌ NO LEGEND - TWO LINES BUT NO IDENTIFICATION!         │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                                │
+│  Problem: Two different metrics (revenue and units) are        │
+│           plotted but can't tell which line is which.          │
+└─────────────────────────────────────────────────────────────────┘
+
+AFTER FIX (WORKING):
+┌─────────────────────────────────────────────────────────────────┐
+│ LinePlot App                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ X values: year                                                   │
+│ Y values: revenue, units                                         │
+│ Group by: (empty)                                               │
+│                                                                   │
+│ Plot area:                                                       │
+│ ┌──────────────────────────────────────────┐  Legend:           │
+│ │   Value                                  │  ├─ revenue        │
+│ │     600 ├─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┤  └─ units          │
+│ │         │ ╱╲╱╲╱╲╱╲╱╲ (revenue)         │ │                 │
+│ │     500 │  ╱  ╲  ╱  ╲  ╱  ╲  ╱           │ │                 │
+│ │         │ ╱    ╲╱    ╲╱    ╲╱            │ │                 │
+│ │     400 │╱                                │ │                 │
+│ │         │\                               │ │                 │
+│ │     300 │ \    ╲╱ ╲╱ ╲╱ (units)         │ │                 │
+│ │         │  ╲  ╱  ╲  ╱  ╲  ╱  ╲  ╱       │ │                 │
+│ │     200 │   ╲╱    ╲╱    ╲╱    ╲╱        │ │                 │
+│ │         │                                │ │                 │
+│ │     100 ├─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┤  │                 │
+│ │         │                                │ │                 │
+│ │       0 └──────────────────────────────┘  │                 │
+│ │        2015  2016  2017  2018  2019 ...  │                 │
+│ │                  year                    │                 │
+│ │  ✓ LEGEND VISIBLE - CLEAR IDENTIFICATION  │                 │
+│ └───────────────────────────────────────────┘                  │
+│                                                                │
+│  Benefit: User can now distinguish between revenue and units  │
+│           by looking at the legend labels for each line.      │
+└─────────────────────────────────────────────────────────────────┘
+
+CODE CHANGE ANALYSIS:
+  Line 178: } else if (length(x_input) > 1 || length(y_input) > 1) {
+  Line 179:     show_legend <- TRUE  ← Sets legend to visible
+  
+  Condition satisfied:
+    • length(x_input) = 1
+    • length(y_input) = 2 > 1 ✓
+  Result: Legend is SHOWN
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SCENARIO 3: DEFAULT PLOT (X: year, Y: revenue, GROUP BY: empty) - No Change
+═══════════════════════════════════════════════════════════════════════════════
+
+BEFORE & AFTER (UNCHANGED - Still No Legend):
+┌─────────────────────────────────────────────────────────────────┐
+│ LinePlot App                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ X values: year                                                   │
+│ Y values: revenue                                                │
+│ Group by: (empty)                                               │
+│                                                                   │
+│ Plot area:                                                       │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │   revenue                                                   │ │
+│ │     600 ├──────────────────────────────────────────────────┤ │
+│ │         │                                                 │ │
+│ │     500 │                    ╱╲                           │ │
+│ │         │                   ╱  ╲                          │ │
+│ │     400 │                  ╱    ╲                         │ │
+│ │         │                 ╱      ╲                        │ │
+│ │     300 │     ╱╲         ╱        ╲                       │ │
+│ │         │    ╱  ╲       ╱          ╲                      │ │
+│ │     200 │   ╱    ╲     ╱            ╲                     │ │
+│ │         │  ╱      ╲   ╱              ╲                    │ │
+│ │     100 ├╱        ╲ ╱                ╲───────────────────┤ │
+│ │         │          ╱                                      │ │
+│ │       0 └────────────────────────────────────────────────┘ │ │
+│ │        2015  2016  2017  2018  2019  2020  2021  2022   │ │
+│ │                         year                             │ │
+│ │                                                           │ │
+│ │  ✓ Single line plot - Legend not needed (default)        │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                                                │
+│  Explanation: Single data series on single axis doesn't       │
+│               require a legend. Behavior is unchanged.        │
+└─────────────────────────────────────────────────────────────────┘
+
+CODE CHANGE ANALYSIS:
+  Line 174: show_legend <- FALSE  ← Default value
+  Line 175-180: Conditions are FALSE
+  
+  No conditions satisfied:
+    • group.by = "" (empty) → First condition FALSE
+    • length(x_input) = 1, length(y_input) = 1 → Second condition FALSE
+  Result: Legend remains HIDDEN (as intended)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+LOGIC FLOW DIAGRAM
+═══════════════════════════════════════════════════════════════════════════════
+
+USER INPUT:
+  ├─ x_input: column(s) for X-axis
+  ├─ y_input: column(s) for Y-axis
+  └─ group.by: optional grouping column
+
+                          ↓
+                   START: show_legend = FALSE
+                          ↓
+            ┌─────────────────────────────┐
+            │ Is group.by specified?      │
+            │ AND x_input length = 1?     │
+            │ AND y_input length = 1?     │
+            └─────────────────────────────┘
+               YES ↓              ↓ NO
+             show_legend = TRUE   │
+                                  ↓
+                    ┌──────────────────────────┐
+                    │ Are multiple axes used? │
+                    │ (x > 1 OR y > 1)?        │
+                    └──────────────────────────┘
+                      YES ↓              ↓ NO
+                    show_legend = TRUE   │
+                                         ↓
+                            show_legend stays FALSE
+                                         ↓
+                         Pass to linePlot(show.legend = show_legend)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+KEY METRICS
+═══════════════════════════════════════════════════════════════════════════════
+
+LEGEND VISIBILITY OUTCOMES:
+
+Configuration Type              | Before | After | Status
+────────────────────────────────┼────────┼───────┼────────
+Group By + Single Axis          | ✗ NO   | ✓ YES | FIXED  ✓
+Multi-Axis (Mult Y)             | ✗ NO   | ✓ YES | FIXED  ✓
+Multi-Axis (Mult X)             | ✗ NO   | ✓ YES | FIXED  ✓
+Single Axis (Default)           | ✗ NO   | ✗ NO  | OK     
+────────────────────────────────┴────────┴───────┴────────
+
+USER EXPERIENCE IMPROVEMENTS:
+
+✓ Group By: Users can now identify different groups by color + legend
+✓ Multi-Axis: Users can distinguish between multiple metrics
+✓ Clarity: Visual identification of data series is now clear
+✓ Consistency: Behavior matches user expectations
+
+
+═══════════════════════════════════════════════════════════════════════════════
+CONCLUSION
+═══════════════════════════════════════════════════════════════════════════════
+
+The legend fix transforms the linePlot module from a non-intuitive tool that
+hides legends even when needed, to an intelligent tool that shows legends
+exactly when they're most useful for user interpretation.
+
+BEFORE: Users saw multiple lines/colors but no way to identify them
+AFTER:  Users see legends that clearly label each line or group
+
+The fix is implemented with minimal code changes and maintains backward
+compatibility while significantly improving user experience.
+

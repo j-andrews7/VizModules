@@ -172,7 +172,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             group.by <- palette_selection[1]
             show_legend <- FALSE
-            if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
+            if (isolate_fn(input$group.by) != "" && length(x_input) == 1 && length(y_input) == 1) {
                 group.by <- reformulate(isolate_fn(input$group.by))
                 show_legend <- TRUE
             } else if (length(x_input) > 1 || length(y_input) > 1) {
