@@ -90,6 +90,12 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         yaxis_style$autorange <- "reversed"
     }
 
+    # Clear per-axis titles when faceting - single titles added as annotations instead
+    if (!is.null(facet.by) && facet.by != "") {
+        xaxis_style$title <- NULL
+        yaxis_style$title <- NULL
+    }
+
     # Making axis adjustments if the parameters are not NULL
     if (!is.null(x.adjustment) && x.adjustment != "") {
         reactive.data <- .adjust_column_values(df = reactive.data, x.col = x, x.adj.fun = x.adjustment)
@@ -176,9 +182,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             shareY <- FALSE
         }
 
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE)
 
-        # Add subplot titles as annotations
+        # Add subplot titles as annotations plus single axis titles
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)
         # Plotly subplots have small gaps, so we adjust positioning
@@ -198,6 +204,31 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 font = list(size = 14)
             )
         })
+        # Add single X-axis title annotation at bottom center
+        annotations <- c(annotations, list(list(
+            x = 0.5,
+            y = -0.1,
+            xref = "paper",
+            yref = "paper",
+            text = x.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "top",
+            font = list(size = 14)
+        )))
+        # Add single Y-axis title annotation at left center (rotated)
+        annotations <- c(annotations, list(list(
+            x = -0.05,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            text = y.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "middle",
+            textangle = -90,
+            font = list(size = 14)
+        )))
         fig <- fig |> layout(annotations = annotations)
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
@@ -292,9 +323,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             
         }
         # Combining all elements of plots list into one plotly element
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE)
 
-        # Add subplot titles as annotations
+        # Add subplot titles as annotations plus single axis titles
         n_facets <- length(facet_levels)
         # Calculate subplot domain width (accounting for spacing between subplots)
         # Plotly subplots have small gaps, so we adjust positioning
@@ -314,6 +345,31 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 font = list(size = 14)
             )
         })
+        # Add single X-axis title annotation at bottom center
+        annotations <- c(annotations, list(list(
+            x = 0.5,
+            y = -0.1,
+            xref = "paper",
+            yref = "paper",
+            text = x.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "top",
+            font = list(size = 14)
+        )))
+        # Add single Y-axis title annotation at left center (rotated)
+        annotations <- c(annotations, list(list(
+            x = -0.05,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            text = y.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "middle",
+            textangle = -90,
+            font = list(size = 14)
+        )))
         fig <- fig |> layout(annotations = annotations)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace

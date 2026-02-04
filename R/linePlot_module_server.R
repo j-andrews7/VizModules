@@ -116,7 +116,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "x.adjustment", selected = "")
             updateSelectInput(session, "y.adjustment", selected = "")
 
-            # Axes:
+            # Axes
             updateNumericInput(session, "axis.title.font.size", value = 18)
             colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
             updateSelectInput(session, "axis.title.font.family", selected = "Arial")
@@ -148,7 +148,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "vline.widths", value = "1")
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
         })
 
         # Reactive expression to generate the plot (used by both output and download)

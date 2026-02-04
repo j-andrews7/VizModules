@@ -52,14 +52,14 @@
         textInput(ns("vline.opacities"), "Opacities (0-1)",
             value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
         ),
-        br(),
-        textInput(ns("abline.slopes"), "Slopes",
-            value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
-        )
+        br()
     )
 
     if (include.fit.lines) {
         fit_inputs <- tagList(
+            textInput(ns("abline.slopes"), "Slopes",
+                value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
+            ),
             materialSwitch(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
                 status = "success"
@@ -77,7 +77,8 @@
                 status = "success"
             )
         )
-        return(tagList(base_inputs, fit_inputs))
+
+        base_inputs <- tagList(base_inputs, fit_inputs)
     }
 
     base_inputs
