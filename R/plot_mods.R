@@ -1583,7 +1583,7 @@
                 xaxis2 = list(showgrid = FALSE, showticklabels = FALSE),
                 yaxis2 = list(showgrid = FALSE, showticklabels = FALSE)
             )
-            )
+
     } else {
         # No marginals (shouldn't reach here)
         combined <- main_plotly
