@@ -1450,21 +1450,21 @@
                 if (marginal_type %in% c("density", "densityrug")) {
                     dens_trace <- create_density_trace(group_data, "x", group_level, group_color)
                     if (!is.null(dens_trace)) {
-                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = dens_trace)
+                        x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), dens_trace))
                     }
                 }
 
                 if (marginal_type == "histogram") {
                     hist_trace <- create_histogram_trace(group_data, "x", group_level, group_color)
                     if (!is.null(hist_trace)) {
-                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = hist_trace)
+                        x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), hist_trace))
                     }
                 }
 
                 if (marginal_type %in% c("rug", "densityrug")) {
                     rug_trace <- create_rug_trace(group_data, "x", group_level, group_color, i - 1, length(group_levels))
                     if (!is.null(rug_trace)) {
-                        x_marginal_fig <- x_marginal_fig %>% add_trace(data = rug_trace)
+                        x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), rug_trace))
                     }
                 }
             }
@@ -1479,21 +1479,21 @@
             if (marginal_type %in% c("density", "densityrug")) {
                 dens_trace <- create_density_trace(x_data, "x", NULL, single_color)
                 if (!is.null(dens_trace)) {
-                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = dens_trace)
+                    x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), dens_trace))
                 }
             }
 
             if (marginal_type == "histogram") {
                 hist_trace <- create_histogram_trace(x_data, "x", NULL, single_color)
                 if (!is.null(hist_trace)) {
-                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = hist_trace)
+                    x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), hist_trace))
                 }
             }
 
             if (marginal_type %in% c("rug", "densityrug")) {
                 rug_trace <- create_rug_trace(x_data, "x", NULL, single_color, 0, 1)
                 if (!is.null(rug_trace)) {
-                    x_marginal_fig <- x_marginal_fig %>% add_trace(data = rug_trace)
+                    x_marginal_fig <- do.call(plotly::add_trace, c(list(p = x_marginal_fig), rug_trace))
                 }
             }
         }
@@ -1527,21 +1527,21 @@
                 if (marginal_type %in% c("density", "densityrug")) {
                     dens_trace <- create_density_trace(group_data, "y", group_level, group_color)
                     if (!is.null(dens_trace)) {
-                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = dens_trace)
+                        y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), dens_trace))
                     }
                 }
 
                 if (marginal_type == "histogram") {
                     hist_trace <- create_histogram_trace(group_data, "y", group_level, group_color)
                     if (!is.null(hist_trace)) {
-                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = hist_trace)
+                        y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), hist_trace))
                     }
                 }
 
                 if (marginal_type %in% c("rug", "densityrug")) {
                     rug_trace <- create_rug_trace(group_data, "y", group_level, group_color, i - 1, length(group_levels))
                     if (!is.null(rug_trace)) {
-                        y_marginal_fig <- y_marginal_fig %>% add_trace(data = rug_trace)
+                        y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), rug_trace))
                     }
                 }
             }
@@ -1556,21 +1556,21 @@
             if (marginal_type %in% c("density", "densityrug")) {
                 dens_trace <- create_density_trace(y_data, "y", NULL, single_color)
                 if (!is.null(dens_trace)) {
-                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = dens_trace)
+                    y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), dens_trace))
                 }
             }
 
             if (marginal_type == "histogram") {
                 hist_trace <- create_histogram_trace(y_data, "y", NULL, single_color)
                 if (!is.null(hist_trace)) {
-                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = hist_trace)
+                    y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), hist_trace))
                 }
             }
 
             if (marginal_type %in% c("rug", "densityrug")) {
                 rug_trace <- create_rug_trace(y_data, "y", NULL, single_color, 0, 1)
                 if (!is.null(rug_trace)) {
-                    y_marginal_fig <- y_marginal_fig %>% add_trace(data = rug_trace)
+                    y_marginal_fig <- do.call(plotly::add_trace, c(list(p = y_marginal_fig), rug_trace))
                 }
             }
         }
