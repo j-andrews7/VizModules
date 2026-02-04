@@ -1301,6 +1301,9 @@
         }
         
         data$hover.text <- hover_lines
+        
+        # Update the ggplot object's data to include hover.text
+        main_plot$data <- data
     }
     
     # Add text aesthetic to ggplot for hover tooltips
