@@ -103,7 +103,8 @@
 #'   \item \code{marginal.opacity} - Marginal plot opacity (UI: "Marginal Opacity", default: 0.5)
 #'   \item \code{marginal.bins} - Number of bins for histogram marginals (UI: "Histogram Bins", default: 30)
 #'   \item \code{marginal.rug.height} - Height of rug marks (UI: "Rug Height", default: 0.03)
-#'   \item \code{marginal.size} - Relative height of marginal plots (UI: "Marginal Plot Relative Height", default: 0.2)
+#'   \item \code{marginal.x.size} - Relative height of X marginal plot (UI: "X Marginal Height", default: 0.2)
+#'   \item \code{marginal.y.size} - Relative width of Y marginal plot (UI: "Y Marginal Width", default: 0.2)
 #' }
 #'
 #' @section Parameters controlling additional functionality:
@@ -663,13 +664,13 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     "density"
                 )
             ),
-            sliderInput(ns("marginal.opacity"), "Marginal Opacity",
-                min = 0,
-                max = 1,
+            numericInput(ns("marginal.opacity"), "Marginal Opacity",
                 value = ifelse("marginal.opacity" %in% names(defaults),
                     ifelse(is.numeric(defaults[["marginal.opacity"]]), defaults[["marginal.opacity"]], 0.5),
                     0.5
                 ),
+                min = 0,
+                max = 1,
                 step = 0.05
             ),
             numericInput(ns("marginal.bins"), "Histogram Bins",
@@ -690,13 +691,22 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 max = 0.2,
                 step = 0.01
             ),
-            sliderInput(ns("marginal.size"), "Marginal Plot Relative Height",
-                min = 0.1,
-                max = 0.4,
-                value = ifelse("marginal.size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["marginal.size"]]), defaults[["marginal.size"]], 0.2),
+            numericInput(ns("marginal.x.size"), "X Marginal Height",
+                value = ifelse("marginal.x.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.x.size"]]), defaults[["marginal.x.size"]], 0.2),
                     0.2
                 ),
+                min = 0.1,
+                max = 0.4,
+                step = 0.05
+            ),
+            numericInput(ns("marginal.y.size"), "Y Marginal Width",
+                value = ifelse("marginal.y.size" %in% names(defaults),
+                    ifelse(is.numeric(defaults[["marginal.y.size"]]), defaults[["marginal.y.size"]], 0.2),
+                    0.2
+                ),
+                min = 0.1,
+                max = 0.4,
                 step = 0.05
             )
         ),
