@@ -24,8 +24,8 @@ volcanoPlotServer(
 
 - data:
 
-  A `reactive` containing the data frame to plot. Must contain `padj`
-  and `log2FoldChange` columns.
+  A `reactive` containing the data frame to plot. Must contain effect
+  size (e.g., log2FoldChange) and significance (e.g., padj) columns.
 
 - hide.inputs:
 
@@ -33,11 +33,19 @@ volcanoPlotServer(
 
 - hide.tabs:
 
-  A character vector of tab names to hide.
+  A character vector of tab names to hide. Default hides: "Trajectory",
+  "Facets", "Colors", "Legend/Scale".
 
 ## Value
 
 The `moduleServer` function for the volcanoPlot module.
+
+## See also
+
+[`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md),
+[`volcanoPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotInputsUI.md),
+[`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md),
+[`volcanoPlotApp()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotApp.md)
 
 ## Author
 

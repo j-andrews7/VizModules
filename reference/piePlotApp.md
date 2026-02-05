@@ -23,6 +23,13 @@ piePlotApp(data_list)
 
 A Shiny app object.
 
+## See also
+
+[`piePlot()`](https://j-andrews7.github.io/VizModules/reference/piePlot.md),
+[`piePlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/piePlotInputsUI.md),
+[`piePlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/piePlotOutputUI.md),
+[`piePlotServer()`](https://j-andrews7.github.io/VizModules/reference/piePlotServer.md)
+
 ## Author
 
 Jacob Martin, Jared Andrews

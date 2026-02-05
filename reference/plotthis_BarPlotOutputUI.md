@@ -20,4 +20,4 @@ A Shiny plotlyOutput for the BarPlot
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews

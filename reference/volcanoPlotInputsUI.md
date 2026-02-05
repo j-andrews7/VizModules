@@ -55,10 +55,9 @@ The inputs will automatically be organized into a grid layout via the
 function, with `columns` controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values
-to the `defaults` argument. Nearly all parameters for
-[`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)
-can be set via these inputs, so see the help for that function for an
-exhaustive list.
+to the `defaults` argument. This module wraps
+[`dittoViz_scatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md)
+and adds volcano-specific controls.
 
 Additional inputs specific to volcano plots are added to control
 significance thresholds and colors:
@@ -70,10 +69,52 @@ significance thresholds and colors:
 - `volcano.colors`: A multiColorPicker for Up/Down/n.s. group colors
   (defaults: Up="red", Down="blue", n.s.="lightgray")
 
+## Plot parameters and defaults
+
+The following parameters can be accessed via UI inputs and/or the
+`defaults` argument:
+
+- `x.by` - X-axis variable (auto-detected from effect size columns:
+  log2FoldChange, LFC, logFC)
+
+- `y.by` - Y-axis variable (auto-detected from significance columns:
+  padj, pval, adj.p, svalue, FDR, p)
+
+- `color.by` - Coloring variable (default: "group", auto-generated from
+  thresholds)
+
+- `y.adj.fxn` - Y adjustment function (default: "neg_log10" for
+  -log10(p-value))
+
+- `show.others` - Show others (default: FALSE)
+
+- `hover.data` - Hover data columns (default: c("symbol", x.by, y.by))
+
+- `sig.thresh` - Significance threshold (UI: "Significance Threshold",
+  default: 0.05)
+
+- `fc.thresh` - Log2 fold change threshold (UI: "LFC Threshold (log2)",
+  default: 0)
+
+- All other
+  [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)
+  parameters are also available via the wrapped UI
+
+## Parameters controlling additional functionality
+
+The following parameters implementing volcano-specific features are also
+available:
+
+- `volcano.colors` - Named color vector for Up/Down/n.s. groups (UI:
+  "Group Colors" multiColorPicker)
+
+- `group` - Auto-generated grouping column based on sig.thresh and
+  fc.thresh
+
 ## See also
 
 [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
-[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md),
+[`dittoViz_scatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md),
 [`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md),
 [`volcanoPlotServer()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotServer.md),
 [`volcanoPlotApp()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotApp.md)
@@ -192,46 +233,46 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #> </div>
 #> <h3>Volcano Settings</h3>
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="3620">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="4780">
 #>     <li class="active">
-#>       <a href="#tab-3620-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4780-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-4780-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-4780-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-4780-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-4780-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-4780-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-4780-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-4780-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4780-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-4780-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4780-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3620-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4780-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3620">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3620-1">
+#>   <div class="tab-content" data-tabsetid="4780">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4780-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -323,7 +364,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-3620-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-4780-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -415,7 +456,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-3620-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-4780-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -473,7 +514,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-3620-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-4780-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -516,7 +557,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-3620-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-4780-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -556,7 +597,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-3620-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-4780-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -689,7 +730,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-3620-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-4780-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -745,7 +786,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-3620-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-4780-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -775,7 +816,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-3620-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4780-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -831,7 +872,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-3620-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-4780-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -881,7 +922,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3620-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4780-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -957,7 +998,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3620-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4780-12">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>

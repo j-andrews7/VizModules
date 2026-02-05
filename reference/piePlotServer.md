@@ -35,6 +35,13 @@ piePlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 The `moduleServer` function for the piePlot module.
 
+## See also
+
+[`piePlot()`](https://j-andrews7.github.io/VizModules/reference/piePlot.md),
+[`piePlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/piePlotInputsUI.md),
+[`piePlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/piePlotOutputUI.md),
+[`piePlotApp()`](https://j-andrews7.github.io/VizModules/reference/piePlotApp.md)
+
 ## Author
 
 Jacob Martin, Jared Andrews

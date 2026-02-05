@@ -34,6 +34,13 @@ dittoViz_yPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 The `moduleServer` function for the yPlot module.
 
+## See also
+
+[`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html),
+[`dittoViz_yPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotInputsUI.md),
+[`dittoViz_yPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotOutputUI.md),
+[`dittoViz_yPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.md)
+
 ## Author
 
 Jared Andrews, Jacob Martin

@@ -96,6 +96,145 @@ Nearly all parameters for <code><a href="https://pwwang.github.io/plotthis/refer
 for that function for an exhaustive list.</p>
     </div>
     <div class="section level2">
+    <h2 id="plot-parameters-not-implemented-or-with-altered-functionality">Plot parameters not implemented or with altered functionality<a class="anchor" aria-label="anchor" href="#plot-parameters-not-implemented-or-with-altered-functionality"></a></h2>
+
+
+<p>The following <code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::BoxPlot()</a></code> parameters are not available via UI inputs:</p><ul><li><p><code>xlab</code> - X-axis label (plotly allows interactive editing)</p></li>
+<li><p><code>ylab</code> - Y-axis label (plotly allows interactive editing)</p></li>
+<li><p><code>title</code> - Plot title (plotly allows interactive editing)</p></li>
+<li><p><code>subtitle</code> - Plot subtitle (not supported in plotly)</p></li>
+<li><p><code>aspect.ratio</code> - Aspect ratio control (handled by plotly layout)</p></li>
+<li><p><code>legend.position</code> - Legend positioning (plotly allows interactive repositioning)</p></li>
+<li><p><code>x_sep</code> - Separator for x columns (not applicable in UI context)</p></li>
+<li><p><code>in_form</code> - Data input format (not applicable - always long form)</p></li>
+<li><p><code>split_by</code> - Split variable (returns a patchwork object, not supported in plotly), use <code>facet_by</code> instead</p></li>
+<li><p><code>split_by_sep</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>symnum_args</code> - Significance symbol arguments (not implemented)</p></li>
+<li><p><code>flip</code> - Flip axes (not implemented in current UI)</p></li>
+<li><p><code>keep_empty</code> - Keep empty values (not implemented)</p></li>
+<li><p><code>keep_na</code> - Keep NA values (not implemented)</p></li>
+<li><p><code>group_by_sep</code> - Separator for group columns (not applicable in UI context)</p></li>
+<li><p><code>group_name</code> - Group legend name (handled by plotly)</p></li>
+<li><p><code>paired_by</code> - Pairing variable for paired tests (not implemented)</p></li>
+<li><p><code>x_text_angle</code> - X-axis text angle (handled by plotly axis settings)</p></li>
+<li><p><code>step_increase</code> - Step increase for significance brackets (not implemented)</p></li>
+<li><p><code>fill_mode</code> - Fill mode for grouped data (handled automatically)</p></li>
+<li><p><code>fill_reverse</code> - Reverse fill order (not implemented)</p></li>
+<li><p><code>theme</code> - ggplot2 theme (not applicable in plotly)</p></li>
+<li><p><code>theme_args</code> - Theme arguments (not applicable in plotly)</p></li>
+<li><p><code>palette</code> - Managed internally via the palette selection UI</p></li>
+<li><p><code>alpha</code> - Alpha transparency (not implemented in UI)</p></li>
+<li><p><code>stack</code> - Stack boxplots (not implemented)</p></li>
+<li><p><code>add_beeswarm</code> - Add beeswarm points (not implemented in UI)</p></li>
+<li><p><code>beeswarm_method</code> - Beeswarm arrangement method (not implemented)</p></li>
+<li><p><code>beeswarm_cex</code> - Beeswarm point size factor (not implemented)</p></li>
+<li><p><code>beeswarm_priority</code> - Beeswarm priority order (not implemented)</p></li>
+<li><p><code>beeswarm_dodge</code> - Beeswarm dodge width (not implemented)</p></li>
+<li><p><code>add_trend</code> - Add trend line (not implemented in UI)</p></li>
+<li><p><code>trend_color</code> - Trend line color (not implemented)</p></li>
+<li><p><code>trend_linewidth</code> - Trend line width (not implemented)</p></li>
+<li><p><code>trend_ptsize</code> - Trend point size (not implemented)</p></li>
+<li><p><code>add_stat</code> - Add statistical annotation (not implemented)</p></li>
+<li><p><code>stat_name</code> - Statistical test name (not implemented)</p></li>
+<li><p><code>stat_color</code> - Statistical annotation color (not implemented)</p></li>
+<li><p><code>stat_size</code> - Statistical annotation size (not implemented)</p></li>
+<li><p><code>stat_stroke</code> - Statistical annotation stroke (not implemented)</p></li>
+<li><p><code>stat_shape</code> - Statistical annotation shape (not implemented)</p></li>
+<li><p><code>add_bg</code> - Add background shading (not implemented)</p></li>
+<li><p><code>bg_palette</code> - Background palette (not implemented)</p></li>
+<li><p><code>bg_palcolor</code> - Background color (not implemented)</p></li>
+<li><p><code>bg_alpha</code> - Background transparency (not implemented)</p></li>
+<li><p><code>add_line</code> - Add horizontal line (not implemented in UI - use Lines tab)</p></li>
+<li><p><code>line_color</code> - Line color (not implemented)</p></li>
+<li><p><code>line_width</code> - Line width (not implemented)</p></li>
+<li><p><code>line_type</code> - Line type (not implemented)</p></li>
+<li><p><code>comparisons</code> - Group comparisons for significance tests (not implemented)</p></li>
+<li><p><code>ref_group</code> - Reference group for comparisons (not implemented)</p></li>
+<li><p><code>pairwise_method</code> - Pairwise test method (not implemented)</p></li>
+<li><p><code>multiplegroup_comparisons</code> - Multiple group comparison flag (not implemented)</p></li>
+<li><p><code>multiple_method</code> - Multiple group test method (not implemented)</p></li>
+<li><p><code>sig_label</code> - Significance label format (not implemented)</p></li>
+<li><p><code>sig_labelsize</code> - Significance label size (not implemented)</p></li>
+<li><p><code>hide_ns</code> - Hide non-significant comparisons (not implemented)</p></li>
+<li><p><code>seed</code> - Random seed (not applicable)</p></li>
+<li><p><code>combine</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>nrow</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>ncol</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>byrow</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>axes</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>axis_titles</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>guides</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>legend_direction</code> - Managed position of legend however this can be handled via plotly</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
+
+
+<p>The following <code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::BoxPlot()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>x</code> - X-axis variable (UI: "X data", default: 2nd categorical variable)</p></li>
+<li><p><code>y</code> - Y-axis variable (UI: "Y data", default: 2nd numeric variable)</p></li>
+<li><p><code>group_by</code> - Grouping variable (UI: "Group by", default: "")</p></li>
+<li><p><code>sort_x</code> - Sort X-axis by statistic (UI: "Sort X by", default: "")</p></li>
+<li><p><code>y_max</code> - Maximum Y-axis value (UI: "Max Value of Y Axis", default: calculated)</p></li>
+<li><p><code>y_min</code> - Minimum Y-axis value (UI: "Min Value of Y Axis", default: calculated)</p></li>
+<li><p><code>add_point</code> - Add jitter points (UI: "Add Jitter Points", default: FALSE)</p></li>
+<li><p><code>pt_size</code> - Point size (UI: "Point Size", default: 1)</p></li>
+<li><p><code>pt_alpha</code> - Point transparency (UI: "Point Alpha", default: 1)</p></li>
+<li><p><code>jitter_width</code> - Jitter width (UI: "Jitter Width", default: 0.3)</p></li>
+<li><p><code>pt_color</code> - Point outline color (UI: "Point Outline Colour", default: "#000000")</p></li>
+<li><p><code>highlight</code> - Highlight condition (UI: "Highlight", default: "")</p></li>
+<li><p><code>highlight_color</code> - Highlight color (UI: "Highlight Colour", default: "#000000")</p></li>
+<li><p><code>highlight_size</code> - Highlight size (UI: "Highlight Size", default: 1)</p></li>
+<li><p><code>highlight_alpha</code> - Highlight transparency (UI: "Highlight Alpha", default: 1)</p></li>
+<li><p><code>facet_by</code> - Faceting variable (UI: "Facet by", default: "")</p></li>
+<li><p><code>facet_scales</code> - Facet scale behavior (UI: "Facet Scale", default: "fixed")</p></li>
+<li><p><code>facet_ncol</code> - Number of facet columns (UI: "Columns", default: NULL)</p></li>
+<li><p><code>facet_nrow</code> - Number of facet rows (UI: "Rows", default: NULL)</p></li>
+<li><p><code>facet_byrow</code> - Facet ordering direction (UI: "Facet by Row", default: TRUE)</p></li>
+<li><p><code>palcolor</code> - Custom color values (UI: palette picker, derived from palette)</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="parameters-controlling-additional-functionality">Parameters controlling additional functionality<a class="anchor" aria-label="anchor" href="#parameters-controlling-additional-functionality"></a></h2>
+
+
+<p>The following parameters implementing new functionality or controlling plotly-specific features are also available:</p><ul><li><p><code>boxplot.width</code> - Width of boxplot (UI: "Boxplot Width", default: 0.8)</p></li>
+<li><p><code>show.outliers</code> - Show outlier points (UI: "Show Outliers", default: TRUE)</p></li>
+<li><p><code>axis.font.size</code> - Axis title font size (UI: "Axis font size", default: 18)</p></li>
+<li><p><code>title.font.size</code> - Plot title font size (UI: "Title font size", default: 28)</p></li>
+<li><p><code>font.type</code> - Font family for plot text (UI: "Font", default: "Arial")</p></li>
+<li><p><code>text.colour</code> - Color for axis labels (UI: "Label colour", default: "#000000")</p></li>
+<li><p><code>axis.showline</code> - Show axis border lines (UI: "Show axis lines", default: TRUE)</p></li>
+<li><p><code>axis.mirror</code> - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)</p></li>
+<li><p><code>show.major.grid.x</code> - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)</p></li>
+<li><p><code>show.major.grid.y</code> - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)</p></li>
+<li><p><code>axis.linecolor</code> - Color of axis lines (UI: "Axis line color", default: "black")</p></li>
+<li><p><code>axis.linewidth</code> - Width of axis lines (UI: "Axis line width", default: 0.5)</p></li>
+<li><p><code>axis.tickfont.size</code> - Size of tick labels (UI: "Tick label size", default: 12)</p></li>
+<li><p><code>axis.tickfont.color</code> - Color of tick labels (UI: "Tick label color", default: "black")</p></li>
+<li><p><code>axis.tickfont.family</code> - Font family for tick labels (UI: "Tick label font", default: "Arial")</p></li>
+<li><p><code>axis.tickangle.x</code> - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)</p></li>
+<li><p><code>axis.tickangle.y</code> - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)</p></li>
+<li><p><code>axis.ticks</code> - Position of tick marks (UI: "Tick position", default: "outside")</p></li>
+<li><p><code>axis.tickcolor</code> - Color of tick marks (UI: "Tick mark color", default: "black")</p></li>
+<li><p><code>axis.ticklen</code> - Length of tick marks (UI: "Tick mark length", default: 5)</p></li>
+<li><p><code>axis.tickwidth</code> - Width of tick marks (UI: "Tick mark width", default: 1)</p></li>
+<li><p><code>hline.intercepts</code> - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")</p></li>
+<li><p><code>hline.colors</code> - Colors for horizontal lines (UI: "Colors", default: "#000000")</p></li>
+<li><p><code>hline.widths</code> - Widths for horizontal lines (UI: "Widths", default: "1")</p></li>
+<li><p><code>hline.linetypes</code> - Line types for horizontal lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>hline.opacities</code> - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")</p></li>
+<li><p><code>vline.intercepts</code> - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")</p></li>
+<li><p><code>vline.colors</code> - Colors for vertical lines (UI: "Colors", default: "#000000")</p></li>
+<li><p><code>vline.widths</code> - Widths for vertical lines (UI: "Widths", default: "1")</p></li>
+<li><p><code>vline.linetypes</code> - Line types for vertical lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>vline.opacities</code> - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")</p></li>
+<li><p><code>abline.slopes</code> - Slopes for diagonal reference lines (UI: "Slopes", default: "")</p></li>
+<li><p><code>abline.intercepts</code> - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")</p></li>
+<li><p><code>abline.colors</code> - Colors for diagonal lines (UI: "Colors", default: "#000000")</p></li>
+<li><p><code>abline.widths</code> - Widths for diagonal lines (UI: "Widths", default: "1")</p></li>
+<li><p><code>abline.linetypes</code> - Line types for diagonal lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>abline.opacities</code> - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::BoxPlot()</a></code>, <code><a href="organize_inputs.html">organize_inputs()</a></code>,
 <code><a href="plotthis_BoxPlotOutputUI.html">plotthis_BoxPlotOutputUI()</a></code>, <code><a href="plotthis_BoxPlotServer.html">plotthis_BoxPlotServer()</a></code>, <code><a href="plotthis_BoxPlotApp.html">plotthis_BoxPlotApp()</a></code></p></div>
@@ -111,28 +250,28 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_BoxPlotInputsUI</span><span class="op">(</span><span class="st">"BoxPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="3486"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="8276"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight"&gt;Highlight&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight"&gt;Highlight&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3486-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8276-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="3486"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-3486-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="8276"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-8276-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -191,7 +330,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-3486-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-8276-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -269,7 +408,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Highlight" id="tab-3486-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Highlight" id="tab-8276-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -299,7 +438,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-3486-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-8276-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -350,7 +489,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-3486-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-8276-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -585,7 +724,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-3486-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-8276-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>

@@ -96,6 +96,63 @@ Nearly all parameters for <code><a href="linePlot.html">linePlot()</a></code> ca
 for that function for an exhaustive list.</p>
     </div>
     <div class="section level2">
+    <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
+
+
+<p>The following <code><a href="linePlot.html">linePlot()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>x</code> - X-axis variable(s) (UI: "Select X values", default: 1st column, multiple: TRUE)</p></li>
+<li><p><code>y</code> - Y-axis variable(s) (UI: "Select Y values", default: 2nd column, multiple: TRUE)</p></li>
+<li><p><code>group.by</code> - Grouping variable (UI: "Group by", default: 1st categorical variable)</p></li>
+<li><p><code>order.by</code> - Order by Y values (UI: "Order by Y", default: FALSE)</p></li>
+<li><p><code>x.adjustment</code> - X-axis adjustment function (UI: "X Adjustment", default: "")</p></li>
+<li><p><code>y.adjustment</code> - Y-axis adjustment function (UI: "Y Adjustment", default: "")</p></li>
+<li><p><code>facet.by</code> - Faceting variable (UI: "Facet by", default: "")</p></li>
+<li><p><code>facet.scales</code> - Facet scale behavior (UI: "Facet scales", default: "fixed")</p></li>
+<li><p><code>plot.mode</code> - Plot type (UI: "Plot type", default: "lines")</p></li>
+<li><p><code>line.type</code> - Line type (UI: "Line type", default: "solid")</p></li>
+<li><p><code>palette.selection</code> - Color palette (UI: palette picker, derived from palette)</p></li>
+<li><p><code>axis.showline</code> - Show axis lines (UI: via .uniform_axes_inputs_ui, default: TRUE)</p></li>
+<li><p><code>axis.mirror</code> - Mirror axis lines (UI: via .uniform_axes_inputs_ui, default: TRUE)</p></li>
+<li><p><code>axis.linecolor</code> - Axis line color (UI: via .uniform_axes_inputs_ui, default: "black")</p></li>
+<li><p><code>axis.linewidth</code> - Axis line width (UI: via .uniform_axes_inputs_ui, default: 0.5)</p></li>
+<li><p><code>axis.tickfont.size</code> - Tick font size (UI: via .uniform_axes_inputs_ui, default: 12)</p></li>
+<li><p><code>axis.tickfont.color</code> - Tick font color (UI: via .uniform_axes_inputs_ui, default: "black")</p></li>
+<li><p><code>axis.tickfont.family</code> - Tick font family (UI: via .uniform_axes_inputs_ui, default: "Arial")</p></li>
+<li><p><code>axis.tickangle.x</code> - X-axis tick angle (UI: via .uniform_axes_inputs_ui, default: 0)</p></li>
+<li><p><code>axis.tickangle.y</code> - Y-axis tick angle (UI: via .uniform_axes_inputs_ui, default: 0)</p></li>
+<li><p><code>axis.ticks</code> - Tick position (UI: via .uniform_axes_inputs_ui, default: "outside")</p></li>
+<li><p><code>axis.tickcolor</code> - Tick color (UI: via .uniform_axes_inputs_ui, default: "black")</p></li>
+<li><p><code>axis.ticklen</code> - Tick length (UI: via .uniform_axes_inputs_ui, default: 5)</p></li>
+<li><p><code>axis.tickwidth</code> - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)</p></li>
+<li><p><code>title.font.size</code> - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)</p></li>
+<li><p><code>title.font.family</code> - Title font family (UI: "Font", default: "Arial")</p></li>
+<li><p><code>title.text.color</code> - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")</p></li>
+<li><p><code>x.title</code> - X-axis title (auto-calculated from data)</p></li>
+<li><p><code>y.title</code> - Y-axis title (auto-calculated from data)</p></li>
+<li><p><code>flip.x</code> - Flip X-axis (UI: "Flip X", default: FALSE)</p></li>
+<li><p><code>flip.y</code> - Flip Y-axis (UI: "Flip Y", default: FALSE)</p></li>
+</ul></div>
+    <div class="section level2">
+    <h2 id="parameters-controlling-additional-functionality">Parameters controlling additional functionality<a class="anchor" aria-label="anchor" href="#parameters-controlling-additional-functionality"></a></h2>
+
+
+<p>The following parameters implementing plotly-specific features are also available:</p><ul><li><p><code>hline.intercepts</code> - Horizontal line Y-intercepts (UI: via .uniform_lines_inputs_ui, default: "")</p></li>
+<li><p><code>hline.colors</code> - Horizontal line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")</p></li>
+<li><p><code>hline.widths</code> - Horizontal line widths (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+<li><p><code>hline.linetypes</code> - Horizontal line types (UI: via .uniform_lines_inputs_ui, default: "dashed")</p></li>
+<li><p><code>hline.opacities</code> - Horizontal line opacities (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+<li><p><code>vline.intercepts</code> - Vertical line X-intercepts (UI: via .uniform_lines_inputs_ui, default: "")</p></li>
+<li><p><code>vline.colors</code> - Vertical line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")</p></li>
+<li><p><code>vline.widths</code> - Vertical line widths (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+<li><p><code>vline.linetypes</code> - Vertical line types (UI: via .uniform_lines_inputs_ui, default: "dashed")</p></li>
+<li><p><code>vline.opacities</code> - Vertical line opacities (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+<li><p><code>abline.slopes</code> - Diagonal line slopes (UI: via .uniform_lines_inputs_ui, default: "")</p></li>
+<li><p><code>abline.intercepts</code> - Diagonal line Y-intercepts (UI: via .uniform_lines_inputs_ui, default: "")</p></li>
+<li><p><code>abline.colors</code> - Diagonal line colors (UI: via .uniform_lines_inputs_ui, default: "#000000")</p></li>
+<li><p><code>abline.widths</code> - Diagonal line widths (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+<li><p><code>abline.linetypes</code> - Diagonal line types (UI: via .uniform_lines_inputs_ui, default: "dashed")</p></li>
+<li><p><code>abline.opacities</code> - Diagonal line opacities (UI: via .uniform_lines_inputs_ui, default: "1")</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="linePlot.html">linePlot()</a></code>, <code><a href="organize_inputs.html">organize_inputs()</a></code>,
 <code><a href="linePlotOutputUI.html">linePlotOutputUI()</a></code>, <code><a href="linePlotServer.html">linePlotServer()</a></code>, <code><a href="linePlotApp.html">linePlotApp()</a></code></p></div>
@@ -111,25 +168,25 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">linePlotInputsUI</span><span class="op">(</span><span class="st">"linePlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="1627"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="3014"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1627-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3014-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1627-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3014-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1627-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3014-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1627-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3014-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1627-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3014-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="1627"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-1627-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="3014"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-3014-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -227,7 +284,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-1627-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-3014-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -252,7 +309,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-1627-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-3014-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -286,7 +343,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-1627-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-3014-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;&lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
@@ -529,7 +586,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-1627-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-3014-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>

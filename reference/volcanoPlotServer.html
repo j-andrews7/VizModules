@@ -72,7 +72,7 @@ with interactive significance and fold-change thresholding.</p>
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A <code>reactive</code> containing the data frame to plot.
-Must contain <code>padj</code> and <code>log2FoldChange</code> columns.</p></dd>
+Must contain effect size (e.g., log2FoldChange) and significance (e.g., padj) columns.</p></dd>
 
 
 <dt id="arg-hide-inputs">hide.inputs<a class="anchor" aria-label="anchor" href="#arg-hide-inputs"></a></dt>
@@ -80,12 +80,17 @@ Must contain <code>padj</code> and <code>log2FoldChange</code> columns.</p></dd>
 
 
 <dt id="arg-hide-tabs">hide.tabs<a class="anchor" aria-label="anchor" href="#arg-hide-tabs"></a></dt>
-<dd><p>A character vector of tab names to hide.</p></dd>
+<dd><p>A character vector of tab names to hide. Default hides: "Trajectory", "Facets", "Colors", "Legend/Scale".</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The <code>moduleServer</code> function for the volcanoPlot module.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer()</a></code>, <code><a href="volcanoPlotInputsUI.html">volcanoPlotInputsUI()</a></code>,
+<code><a href="volcanoPlotOutputUI.html">volcanoPlotOutputUI()</a></code>, <code><a href="volcanoPlotApp.html">volcanoPlotApp()</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

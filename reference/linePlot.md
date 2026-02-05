@@ -53,139 +53,159 @@ linePlot(
 
 - x:
 
-  Character vector of column name(s) for the x-axis.
+  Character vector of column name(s) for the x-axis. Multiple columns
+  create separate traces.
 
 - y:
 
-  Character vector of column name(s) for the y-axis.
+  Character vector of column name(s) for the y-axis. Multiple columns
+  create separate traces.
 
 - plot.mode:
 
-  Character, plotly mode (e.g., "lines", "markers", "lines+markers").
+  Character, plotly mode for plot type. Options: "lines", "markers",
+  "lines+markers". Default: "lines".
 
 - line.type:
 
-  Character, line style (e.g., "solid", "dash").
+  Character, line style. Options: "solid", "dot", "dash", "longdash",
+  "dashdot", "longdashdot". Default: "solid".
 
 - colour.group.by:
 
-  Character vector of column name(s) to group lines by color.
+  Character or formula, column name(s) to group lines by color. Can be a
+  formula like `~ column_name`.
 
 - palette.selection:
 
-  Character vector of colors or palette name for line colors.
+  Character vector of hex colors or palette name for line colors. Used
+  to assign colors to groups or traces.
 
 - show.legend:
 
-  Logical, whether to display the legend.
+  Logical, whether to display the legend. Default: TRUE.
 
 - facet.by:
 
-  Optional character, column name to facet by.
+  Optional character, column name to facet plots by. Creates subplots
+  for each unique value. Default: NULL.
 
 - facet.scales:
 
-  Character, facet axis scaling ("fixed", "free", "free_x", "free_y").
+  Character, controls axis scaling across facets. Options: "fixed" (same
+  for all), "free" (independent), "free_x" (independent x-axis),
+  "free_y" (independent y-axis). Default: "fixed".
 
 - axis.showline:
 
-  Logical, show axis line.
+  Logical, whether to show axis border lines. Default: TRUE.
 
 - axis.mirror:
 
-  Logical, mirror axis lines.
+  Logical, whether to mirror axis lines on opposite side of plot.
+  Default: TRUE.
 
 - axis.linecolor:
 
-  Character, axis line color.
+  Character, hex color for axis lines. Default: "black".
 
 - axis.linewidth:
 
-  Numeric, axis line width.
+  Numeric, width of axis lines in pixels. Default: 0.5.
 
 - axis.tickfont.size:
 
-  Numeric, axis tick font size.
+  Numeric, font size for axis tick labels. Default: 12.
 
 - axis.tickfont.color:
 
-  Character, axis tick font color.
+  Character, hex color for axis tick labels. Default: "black".
 
 - axis.tickfont.family:
 
-  Character, axis tick font family.
+  Character, font family for axis tick labels. Default: "Arial".
 
 - axis.tickangle.x:
 
-  Numeric, x-axis tick angle.
+  Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.
 
 - axis.tickangle.y:
 
-  Numeric, y-axis tick angle.
+  Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.
 
 - axis.ticks:
 
-  Character, tick style ("outside", "inside", "none").
+  Character, position of tick marks. Options: "outside", "inside",
+  "none". Default: "outside".
 
 - axis.tickcolor:
 
-  Character, tick color.
+  Character, hex color for tick marks. Default: "black".
 
 - axis.ticklen:
 
-  Numeric, tick length.
+  Numeric, length of tick marks in pixels. Default: 5.
 
 - axis.tickwidth:
 
-  Numeric, tick width.
+  Numeric, width of tick marks in pixels. Default: 1.
 
 - title.text:
 
-  Character, plot title.
+  Character, main title text for the plot. Default: "".
 
 - title.font.size:
 
-  Numeric, title font size.
+  Numeric, font size for plot title. Default: 14.
 
 - title.font.family:
 
-  Character, title font family.
+  Character, font family for plot title. Default: "Arial".
 
 - title.text.color:
 
-  Character, title font color.
+  Character, hex color for plot title text. Default: "black".
 
 - y.title:
 
-  Character, y-axis label.
+  Optional character, label for y-axis. If NULL, auto-generated from
+  column name. Default: NULL.
 
 - x.title:
 
-  Character, x-axis label.
+  Optional character, label for x-axis. If NULL, auto-generated from
+  column name. Default: NULL.
 
 - flip.x:
 
-  Logical, reverse x-axis.
+  Logical, whether to reverse the x-axis direction. Default: FALSE.
 
 - flip.y:
 
-  Logical, reverse y-axis.
+  Logical, whether to reverse the y-axis direction. Default: FALSE.
 
 - x.adjustment:
 
-  Optional function or string, adjustment for x values.
+  Optional character or function, transformation to apply to x values.
+  Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor",
+  "abs", "sqrt", or custom function. Default: NULL.
 
 - y.adjustment:
 
-  Optional function or string, adjustment for y values.
+  Optional character or function, transformation to apply to y values.
+  Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor",
+  "abs", "sqrt", or custom function. Default: NULL.
 
 - color.adjustment:
 
-  Optional function or string, adjustment for color grouping.
+  Optional character or function, transformation to apply to color
+  grouping variable. Same options as x.adjustment and y.adjustment.
+  Default: NULL.
 
 - order.by:
 
-  Optional character vector, column(s) to order data by.
+  Optional character vector, column name(s) to order data by before
+  plotting. Default: NULL.
 
 ## Value
 

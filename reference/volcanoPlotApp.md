@@ -12,8 +12,8 @@ volcanoPlotApp(df)
 
 - df:
 
-  A data frame to plot. Must contain `padj` and `log2FoldChange`
-  columns.
+  A data frame to plot. Must contain effect size (e.g., log2FoldChange)
+  and significance (e.g., padj) columns.
 
 ## Value
 

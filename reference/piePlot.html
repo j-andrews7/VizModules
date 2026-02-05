@@ -94,11 +94,11 @@
 
 
 <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
-<dd><p>Name of the column to use for the slice labels.</p></dd>
+<dd><p>Character, name of the column to use for the slice labels.</p></dd>
 
 
 <dt id="arg-values">values<a class="anchor" aria-label="anchor" href="#arg-values"></a></dt>
-<dd><p>Name of the column to use for the aggregated values.</p></dd>
+<dd><p>Character, name of the column to use for the aggregated values (slice sizes).</p></dd>
 
 
 <dt id="arg-colors">colors<a class="anchor" aria-label="anchor" href="#arg-colors"></a></dt>
@@ -113,72 +113,104 @@ are recycled in data order.</p></dd>
 
 
 <dt id="arg-hole">hole<a class="anchor" aria-label="anchor" href="#arg-hole"></a></dt>
-<dd><p>A numeric value between 0 and 1 for the hole size
-(0 for pie, &gt;0 for donut).</p></dd>
+<dd><p>Numeric value between 0 and 1 for the hole size
+(0 for pie chart, &gt;0 for donut chart). Default: 0.</p></dd>
 
 
 <dt id="arg-textinfo">textinfo<a class="anchor" aria-label="anchor" href="#arg-textinfo"></a></dt>
-<dd><p>A character string for the text info to show.
+<dd><p>Character string specifying the text info to show on slices.
 Any combination of "label", "text", "value", "percent" joined with a "+"
-or "none".</p></dd>
+(e.g., "label+percent") or "none" to hide text. Default: "label+percent".</p></dd>
 
 
 <dt id="arg-textposition">textposition<a class="anchor" aria-label="anchor" href="#arg-textposition"></a></dt>
-<dd><p>Position of the text relative to the slice: "auto",
-"inside", "outside", or "none".</p></dd>
+<dd><p>Character, position of the text relative to the slice.
+Options: "auto", "inside", "outside", or "none". Default: "auto".</p></dd>
 
 
 <dt id="arg-insidetextorientation">insidetextorientation<a class="anchor" aria-label="anchor" href="#arg-insidetextorientation"></a></dt>
-<dd><p>Orientation for inside text: "auto", "horizontal",
-"radial", or "tangential".</p></dd>
+<dd><p>Character, orientation for inside text.
+Options: "auto", "horizontal", "radial", or "tangential". Default: "auto".</p></dd>
 
 
 <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
-<dd><p>Logical, whether to sort slices by their values.</p></dd>
+<dd><p>Logical, whether to sort slices by their values in descending order. Default: TRUE.</p></dd>
 
 
 <dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
-<dd><p>Direction of slices: "counterclockwise" or "clockwise".</p></dd>
+<dd><p>Character, direction of slice progression. Options: "counterclockwise" or "clockwise". Default: "counterclockwise".</p></dd>
 
 
 <dt id="arg-rotation">rotation<a class="anchor" aria-label="anchor" href="#arg-rotation"></a></dt>
-<dd><p>Starting angle of the first slice in degrees.</p></dd>
+<dd><p>Numeric, starting angle of the first slice in degrees (0-360). Default: 0.</p></dd>
 
 
 <dt id="arg-show-legend">show.legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
-<dd><p>Logical, whether to display the legend.</p></dd>
+<dd><p>Logical, whether to display the legend. Default: TRUE.</p></dd>
 
 
 <dt id="arg-legend-orientation">legend.orientation<a class="anchor" aria-label="anchor" href="#arg-legend-orientation"></a></dt>
-<dd><p>Legend orientation, either "h" (horizontal) or "v" (vertical).</p></dd>
+<dd><p>Character, legend orientation. Options: "h" (horizontal) or "v" (vertical). Default: "h".</p></dd>
 
 
-<dt id="arg-legend-x-legend-y">legend.x, legend.y<a class="anchor" aria-label="anchor" href="#arg-legend-x-legend-y"></a></dt>
-<dd><p>Numeric legend position offsets.</p></dd>
+<dt id="arg-legend-x">legend.x<a class="anchor" aria-label="anchor" href="#arg-legend-x"></a></dt>
+<dd><p>Numeric, horizontal legend position offset (0-1, where 0=left, 1=right). Default: 0.5.</p></dd>
 
 
-<dt id="arg-legend-font-family-legend-font-size-legend-font-color">legend.font.family, legend.font.size, legend.font.color<a class="anchor" aria-label="anchor" href="#arg-legend-font-family-legend-font-size-legend-font-color"></a></dt>
-<dd><p>Font settings for the legend text.</p></dd>
+<dt id="arg-legend-y">legend.y<a class="anchor" aria-label="anchor" href="#arg-legend-y"></a></dt>
+<dd><p>Numeric, vertical legend position offset (-1 to 1). Default: -0.1.</p></dd>
+
+
+<dt id="arg-legend-font-family">legend.font.family<a class="anchor" aria-label="anchor" href="#arg-legend-font-family"></a></dt>
+<dd><p>Character, font family for the legend text. Default: "Arial".</p></dd>
+
+
+<dt id="arg-legend-font-size">legend.font.size<a class="anchor" aria-label="anchor" href="#arg-legend-font-size"></a></dt>
+<dd><p>Numeric, font size for the legend text. Default: 12.</p></dd>
+
+
+<dt id="arg-legend-font-color">legend.font.color<a class="anchor" aria-label="anchor" href="#arg-legend-font-color"></a></dt>
+<dd><p>Character, hex color for the legend text. Default: "#000000".</p></dd>
 
 
 <dt id="arg-title-text">title.text<a class="anchor" aria-label="anchor" href="#arg-title-text"></a></dt>
-<dd><p>Plot title text.</p></dd>
+<dd><p>Character, main plot title text. Default: "".</p></dd>
 
 
-<dt id="arg-title-font-family-title-font-size-title-font-color">title.font.family, title.font.size, title.font.color<a class="anchor" aria-label="anchor" href="#arg-title-font-family-title-font-size-title-font-color"></a></dt>
-<dd><p>Font settings for the title text.</p></dd>
+<dt id="arg-title-font-family">title.font.family<a class="anchor" aria-label="anchor" href="#arg-title-font-family"></a></dt>
+<dd><p>Character, font family for the title text. Default: "Arial".</p></dd>
+
+
+<dt id="arg-title-font-size">title.font.size<a class="anchor" aria-label="anchor" href="#arg-title-font-size"></a></dt>
+<dd><p>Numeric, font size for the title text. Default: 18.</p></dd>
+
+
+<dt id="arg-title-font-color">title.font.color<a class="anchor" aria-label="anchor" href="#arg-title-font-color"></a></dt>
+<dd><p>Character, hex color for the title text. Default: "#000000".</p></dd>
 
 
 <dt id="arg-title-x">title.x<a class="anchor" aria-label="anchor" href="#arg-title-x"></a></dt>
-<dd><p>Horizontal position for the plot title (0 = left, 1 = right).</p></dd>
+<dd><p>Numeric, horizontal position for the plot title (0-1, where 0=left, 0.5=center, 1=right). Default: 0.5.</p></dd>
 
 
-<dt id="arg-text-font-family-text-font-size-text-font-color">text.font.family, text.font.size, text.font.color<a class="anchor" aria-label="anchor" href="#arg-text-font-family-text-font-size-text-font-color"></a></dt>
-<dd><p>Font settings for the slice labels.</p></dd>
+<dt id="arg-text-font-family">text.font.family<a class="anchor" aria-label="anchor" href="#arg-text-font-family"></a></dt>
+<dd><p>Character, font family for the slice labels. Default: "Arial".</p></dd>
 
 
-<dt id="arg-slice-line-color-slice-line-width">slice.line.color, slice.line.width<a class="anchor" aria-label="anchor" href="#arg-slice-line-color-slice-line-width"></a></dt>
-<dd><p>Border styling for the slices.</p></dd>
+<dt id="arg-text-font-size">text.font.size<a class="anchor" aria-label="anchor" href="#arg-text-font-size"></a></dt>
+<dd><p>Numeric, font size for the slice labels. Default: 12.</p></dd>
+
+
+<dt id="arg-text-font-color">text.font.color<a class="anchor" aria-label="anchor" href="#arg-text-font-color"></a></dt>
+<dd><p>Character, hex color for the slice labels. Default: "#000000".</p></dd>
+
+
+<dt id="arg-slice-line-color">slice.line.color<a class="anchor" aria-label="anchor" href="#arg-slice-line-color"></a></dt>
+<dd><p>Character, hex color for slice borders. Default: "#FFFFFF" (white).</p></dd>
+
+
+<dt id="arg-slice-line-width">slice.line.width<a class="anchor" aria-label="anchor" href="#arg-slice-line-width"></a></dt>
+<dd><p>Numeric, width of slice borders in pixels. Set to 0 for no borders. Default: 0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -206,7 +238,7 @@ or "none".</p></dd>
 <span class="r-in"><span>    title.text <span class="op">=</span> <span class="st">"Genes by status"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"visdat":{"224051202d95":["function () ","plotlyVisDat"]},"cur_data":"224051202d95","attrs":{"224051202d95":{"labels":{},"values":{},"hole":0,"sort":false,"direction":"counterclockwise","rotation":0,"textinfo":"label+percent","textposition":"auto","insidetextorientation":"auto","marker":{"colors":["#1B9E77","#D95F02","#7570B3"],"line":{"color":"#FFFFFF","width":0}},"textfont":{"family":"Arial","size":12,"color":"#000000"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":80,"r":10},"title":{"text":"Genes by status","font":{"family":"Arial","size":18,"color":"#000000"},"x":0.5,"xanchor":"center","y":0.94999999999999996,"yanchor":"top","pad":{"t":20}},"showlegend":true,"legend":{"orientation":"h","x":0.5,"y":-0.10000000000000001,"font":{"family":"Arial","size":12,"color":"#000000"}},"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Upregulated","Downregulated","Not significant"],"values":[12,7,3],"hole":0,"sort":false,"direction":"counterclockwise","rotation":0,"textinfo":"label+percent","textposition":["auto","auto","auto"],"insidetextorientation":"auto","marker":{"color":"rgba(31,119,180,1)","colors":["#1B9E77","#D95F02","#7570B3"],"line":{"color":"#FFFFFF","width":0}},"textfont":{"family":"Arial","size":12,"color":"#000000"},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script><span class="r-in"><span></span></span>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"visdat":{"22a71b632d3":["function () ","plotlyVisDat"]},"cur_data":"22a71b632d3","attrs":{"22a71b632d3":{"labels":{},"values":{},"hole":0,"sort":false,"direction":"counterclockwise","rotation":0,"textinfo":"label+percent","textposition":"auto","insidetextorientation":"auto","marker":{"colors":["#1B9E77","#D95F02","#7570B3"],"line":{"color":"#FFFFFF","width":0}},"textfont":{"family":"Arial","size":12,"color":"#000000"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":80,"r":10},"title":{"text":"Genes by status","font":{"family":"Arial","size":18,"color":"#000000"},"x":0.5,"xanchor":"center","y":0.94999999999999996,"yanchor":"top","pad":{"t":20}},"showlegend":true,"legend":{"orientation":"h","x":0.5,"y":-0.10000000000000001,"font":{"family":"Arial","size":12,"color":"#000000"}},"hovermode":"closest"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"labels":["Upregulated","Downregulated","Not significant"],"values":[12,7,3],"hole":0,"sort":false,"direction":"counterclockwise","rotation":0,"textinfo":"label+percent","textposition":["auto","auto","auto"],"insidetextorientation":"auto","marker":{"color":"rgba(31,119,180,1)","colors":["#1B9E77","#D95F02","#7570B3"],"line":{"color":"#FFFFFF","width":0}},"textfont":{"family":"Arial","size":12,"color":"#000000"},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script><span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

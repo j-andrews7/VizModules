@@ -97,6 +97,35 @@ Nearly all parameters for <code><a href="piePlot.html">piePlot()</a></code> can 
 for that function for an exhaustive list.</p>
     </div>
     <div class="section level2">
+    <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
+
+
+<p>The following <code><a href="piePlot.html">piePlot()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>labels</code> - Label column (UI: "Label column (summary data)", default: 2nd categorical column)</p></li>
+<li><p><code>values</code> - Aggregated value column (UI: "Aggregated value column", default: 2nd numeric column)</p></li>
+<li><p><code>sort</code> - Sort slices by value (UI: "Sort slices by value", default: TRUE)</p></li>
+<li><p><code>direction</code> - Slice direction (UI: "Slice direction", default: "counterclockwise")</p></li>
+<li><p><code>rotation</code> - Start angle in degrees (UI: "Start angle (degrees)", default: 0)</p></li>
+<li><p><code>hole</code> - Center hole size for donut chart (UI: "Center hole size", default: 0)</p></li>
+<li><p><code>colors</code> - Slice colors (UI: color picker, derived from palette)</p></li>
+<li><p><code>slice.line.color</code> - Slice border color (UI: "Slice border color", default: "#FFFFFF")</p></li>
+<li><p><code>slice.line.width</code> - Slice border width (UI: "Slice border width", default: 0)</p></li>
+<li><p><code>textinfo</code> - Text to show on slices (UI: "Text to show on slices", default: c("label", "value", "percent"))</p></li>
+<li><p><code>textposition</code> - Text position (UI: "Text position", default: "auto")</p></li>
+<li><p><code>insidetextorientation</code> - Inside text orientation (UI: "Inside text orientation", default: "auto")</p></li>
+<li><p><code>text.font.size</code> - Slice text size (UI: "Slice text size", default: 12)</p></li>
+<li><p><code>text.font.family</code> - Slice text font (UI: "Slice text font", default: "Arial")</p></li>
+<li><p><code>text.font.color</code> - Slice text color (UI: "Slice text color", default: "#000000")</p></li>
+<li><p><code>title.x</code> - Title horizontal position (UI: "Title horizontal position", default: 0.5)</p></li>
+<li><p><code>title.font.size</code> - Title font size (UI: "Title font size", default: 28)</p></li>
+<li><p><code>title.font.family</code> - Title font (UI: "Title font", default: "Arial")</p></li>
+<li><p><code>title.font.color</code> - Title font color (UI: "Title font color", default: "#000000")</p></li>
+<li><p><code>show.legend</code> - Show legend (UI: "Show legend", default: TRUE)</p></li>
+<li><p><code>legend.orientation</code> - Legend orientation (UI: "Legend orientation", default: "h")</p></li>
+<li><p><code>legend.font.family</code> - Legend font (UI: "Legend font", default: "Arial")</p></li>
+<li><p><code>legend.font.size</code> - Legend font size (UI: "Legend font size", default: 12)</p></li>
+<li><p><code>legend.font.color</code> - Legend font color (UI: "Legend font color", default: "#000000")</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="piePlot.html">piePlot()</a></code>, <code><a href="organize_inputs.html">organize_inputs()</a></code>,
 <code><a href="piePlotOutputUI.html">piePlotOutputUI()</a></code>, <code><a href="piePlotServer.html">piePlotServer()</a></code>, <code><a href="piePlotApp.html">piePlotApp()</a></code></p></div>
@@ -113,22 +142,22 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pie_df</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Count"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">piePlotInputsUI</span><span class="op">(</span><span class="st">"piePlot"</span>, <span class="va">pie_df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="8595"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="2584"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8595-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2584-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8595-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors"&gt;Colors&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2584-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors"&gt;Colors&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8595-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp;amp; Text"&gt;Labels &amp;amp; Text&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2584-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp;amp; Text"&gt;Labels &amp;amp; Text&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-8595-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp;amp; Legend"&gt;Title &amp;amp; Legend&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2584-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp;amp; Legend"&gt;Title &amp;amp; Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="8595"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-8595-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="2584"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-2584-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -188,7 +217,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Colors" id="tab-8595-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Colors" id="tab-2584-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="piePlot-color.picker" class="shiny-html-output"&gt;&lt;/div&gt;</span>
@@ -209,7 +238,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Labels &amp;amp; Text" id="tab-8595-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Labels &amp;amp; Text" id="tab-2584-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -290,7 +319,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Title &amp;amp; Legend" id="tab-8595-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Title &amp;amp; Legend" id="tab-2584-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>

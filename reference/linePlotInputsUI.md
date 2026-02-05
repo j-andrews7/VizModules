@@ -54,6 +54,149 @@ to the `defaults` argument. Nearly all parameters for
 can be set via these inputs, so see the help for that function for an
 exhaustive list.
 
+## Plot parameters and defaults
+
+The following
+[`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
+parameters can be accessed via UI inputs and/or the `defaults` argument:
+
+- `x` - X-axis variable(s) (UI: "Select X values", default: 1st column,
+  multiple: TRUE)
+
+- `y` - Y-axis variable(s) (UI: "Select Y values", default: 2nd column,
+  multiple: TRUE)
+
+- `group.by` - Grouping variable (UI: "Group by", default: 1st
+  categorical variable)
+
+- `order.by` - Order by Y values (UI: "Order by Y", default: FALSE)
+
+- `x.adjustment` - X-axis adjustment function (UI: "X Adjustment",
+  default: "")
+
+- `y.adjustment` - Y-axis adjustment function (UI: "Y Adjustment",
+  default: "")
+
+- `facet.by` - Faceting variable (UI: "Facet by", default: "")
+
+- `facet.scales` - Facet scale behavior (UI: "Facet scales", default:
+  "fixed")
+
+- `plot.mode` - Plot type (UI: "Plot type", default: "lines")
+
+- `line.type` - Line type (UI: "Line type", default: "solid")
+
+- `palette.selection` - Color palette (UI: palette picker, derived from
+  palette)
+
+- `axis.showline` - Show axis lines (UI: via .uniform_axes_inputs_ui,
+  default: TRUE)
+
+- `axis.mirror` - Mirror axis lines (UI: via .uniform_axes_inputs_ui,
+  default: TRUE)
+
+- `axis.linecolor` - Axis line color (UI: via .uniform_axes_inputs_ui,
+  default: "black")
+
+- `axis.linewidth` - Axis line width (UI: via .uniform_axes_inputs_ui,
+  default: 0.5)
+
+- `axis.tickfont.size` - Tick font size (UI: via
+  .uniform_axes_inputs_ui, default: 12)
+
+- `axis.tickfont.color` - Tick font color (UI: via
+  .uniform_axes_inputs_ui, default: "black")
+
+- `axis.tickfont.family` - Tick font family (UI: via
+  .uniform_axes_inputs_ui, default: "Arial")
+
+- `axis.tickangle.x` - X-axis tick angle (UI: via
+  .uniform_axes_inputs_ui, default: 0)
+
+- `axis.tickangle.y` - Y-axis tick angle (UI: via
+  .uniform_axes_inputs_ui, default: 0)
+
+- `axis.ticks` - Tick position (UI: via .uniform_axes_inputs_ui,
+  default: "outside")
+
+- `axis.tickcolor` - Tick color (UI: via .uniform_axes_inputs_ui,
+  default: "black")
+
+- `axis.ticklen` - Tick length (UI: via .uniform_axes_inputs_ui,
+  default: 5)
+
+- `axis.tickwidth` - Tick width (UI: via .uniform_axes_inputs_ui,
+  default: 1)
+
+- `title.font.size` - Title font size (UI: via .uniform_axes_inputs_ui,
+  default: 28)
+
+- `title.font.family` - Title font family (UI: "Font", default: "Arial")
+
+- `title.text.color` - Title text color (UI: via
+  .uniform_axes_inputs_ui, default: "#000000")
+
+- `x.title` - X-axis title (auto-calculated from data)
+
+- `y.title` - Y-axis title (auto-calculated from data)
+
+- `flip.x` - Flip X-axis (UI: "Flip X", default: FALSE)
+
+- `flip.y` - Flip Y-axis (UI: "Flip Y", default: FALSE)
+
+## Parameters controlling additional functionality
+
+The following parameters implementing plotly-specific features are also
+available:
+
+- `hline.intercepts` - Horizontal line Y-intercepts (UI: via
+  .uniform_lines_inputs_ui, default: "")
+
+- `hline.colors` - Horizontal line colors (UI: via
+  .uniform_lines_inputs_ui, default: "#000000")
+
+- `hline.widths` - Horizontal line widths (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
+- `hline.linetypes` - Horizontal line types (UI: via
+  .uniform_lines_inputs_ui, default: "dashed")
+
+- `hline.opacities` - Horizontal line opacities (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
+- `vline.intercepts` - Vertical line X-intercepts (UI: via
+  .uniform_lines_inputs_ui, default: "")
+
+- `vline.colors` - Vertical line colors (UI: via
+  .uniform_lines_inputs_ui, default: "#000000")
+
+- `vline.widths` - Vertical line widths (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
+- `vline.linetypes` - Vertical line types (UI: via
+  .uniform_lines_inputs_ui, default: "dashed")
+
+- `vline.opacities` - Vertical line opacities (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
+- `abline.slopes` - Diagonal line slopes (UI: via
+  .uniform_lines_inputs_ui, default: "")
+
+- `abline.intercepts` - Diagonal line Y-intercepts (UI: via
+  .uniform_lines_inputs_ui, default: "")
+
+- `abline.colors` - Diagonal line colors (UI: via
+  .uniform_lines_inputs_ui, default: "#000000")
+
+- `abline.widths` - Diagonal line widths (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
+- `abline.linetypes` - Diagonal line types (UI: via
+  .uniform_lines_inputs_ui, default: "dashed")
+
+- `abline.opacities` - Diagonal line opacities (UI: via
+  .uniform_lines_inputs_ui, default: "1")
+
 ## See also
 
 [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md),
@@ -73,25 +216,25 @@ library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="1627">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="3014">
 #>     <li class="active">
-#>       <a href="#tab-1627-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3014-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1627-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3014-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1627-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3014-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1627-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3014-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1627-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3014-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1627">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1627-1">
+#>   <div class="tab-content" data-tabsetid="3014">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3014-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -189,7 +332,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1627-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3014-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -214,7 +357,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1627-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3014-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -248,7 +391,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1627-4">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3014-4">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -491,7 +634,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-1627-5">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3014-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

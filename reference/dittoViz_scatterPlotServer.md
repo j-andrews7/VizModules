@@ -48,9 +48,8 @@ The `moduleServer` function for the scatterPlot module.
 ## See also
 
 [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
-[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md),
+[`dittoViz_scatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md),
 [`dittoViz_scatterPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotOutputUI.md),
-`dittoViz_scatterPlotServer()`,
 [`dittoViz_scatterPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.md)
 
 ## Author

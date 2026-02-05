@@ -54,6 +54,250 @@ to the `defaults` argument. Nearly all parameters for
 be set via these inputs, so see the help for that function for an
 exhaustive list.
 
+## Plot parameters not implemented or with altered functionality
+
+The following
+[`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)
+parameters are not available via UI inputs:
+
+- `xlab` - X-axis label (plotly allows interactive editing)
+
+- `ylab` - Y-axis label (plotly allows interactive editing)
+
+- `main` - Plot title (plotly allows interactive editing)
+
+- `sub` - Plot subtitle (not supported in plotly)
+
+- `theme` - ggplot2 theme (not applicable to plotly)
+
+- `legend.title` - Legend title (managed by plotly interactively)
+
+- `add.line` - Use `hline.intercepts` instead for horizontal lines with
+  full styling options
+
+- `line.linetype` - Use `hline.linetypes` instead
+
+- `line.color` - Use `hline.colors` instead
+
+## Plot parameters and defaults
+
+The following
+[`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)
+parameters can be accessed via UI inputs and/or the `defaults` argument:
+
+- `var` - Y-axis variable (UI: "Y data (var)", default: 2nd numeric
+  variable)
+
+- `group.by` - Grouping variable for x-axis (UI: "Group by", default:
+  2nd categorical variable)
+
+- `color.by` - Coloring variable (UI: "Color by", default: "")
+
+- `shape.by` - Shape variable (UI: "Shape by", default: "")
+
+- `split.by` - Faceting variable (UI: "Split by (facet)", default: "")
+
+- `plots` - Plot types to show (UI: "Plots to show", default:
+  c("boxplot", "jitter"))
+
+- `color.panel` - Custom color values (UI: palette picker, derived from
+  palette)
+
+- `min` - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
+
+- `max` - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+
+- `split.nrow` - Number of facet rows (UI: "Number of Rows", default: 4)
+
+- `split.ncol` - Number of facet columns (UI: "Number of Columns",
+  default: 4)
+
+- `split.adjust` - Facet scale behavior (UI: "Facet Scaling", default:
+  "free")
+
+- `do.raster` - Rasterize jitter points (UI: "Rasterize Jitter",
+  default: FALSE)
+
+- `raster.dpi` - DPI for rasterization (UI: "Raster DPI", default: 600)
+
+- `jitter.size` - Jitter point size (UI: "Jitter Point Size", default:
+  1)
+
+- `jitter.width` - Jitter width (UI: "Jitter Width", default: 0.2)
+
+- `jitter.color` - Jitter point color (UI: "Jitter Point Color",
+  default: "#000000")
+
+- `jitter.shape.legend.size` - Shape legend size (UI: "Shape Legend
+  Size", default: 5)
+
+- `jitter.shape.legend.show` - Show shape legend (UI: "Show Shape
+  Legend", default: TRUE)
+
+- `jitter.position.dodge` - Jitter position dodge (calculated from
+  boxgap)
+
+- `boxplot.show.outliers` - Show boxplot outliers (always TRUE in
+  implementation)
+
+- `boxplot.color` - Boxplot outline color (UI: "Boxplot Color", default:
+  "#000000")
+
+- `boxplot.fill` - Fill boxplot (UI: "Fill Boxplot", default: TRUE)
+
+- `boxplot.lineweight` - Boxplot line weight (UI: "Boxplot Line Weight",
+  default: 0.5)
+
+- `vlnplot.lineweight` - Violin line weight (UI: "Violin Line Weight",
+  default: 0.5)
+
+- `vlnplot.scaling` - Violin scaling method (UI: "Violin Scaling",
+  default: "area")
+
+- `vlnplot.quantiles` - Violin quantiles (UI: "Violin Quantiles (0-1)",
+  default: "")
+
+- `vlnplot.width` - Violin width (calculated from boxgap)
+
+- `ridgeplot.lineweight` - Ridge line weight (UI: "Ridge Line Weight",
+  default: 0.5)
+
+- `ridgeplot.scale` - Ridge overlap scale (UI: "Ridge Scale (overlap)",
+  default: 1.25)
+
+- `ridgeplot.ymax.expansion` - Ridge Y-max expansion (UI: "Ridge Y-max
+  Expansion", default: NA)
+
+- `ridgeplot.shape` - Ridge shape (UI: "Ridge Shape", default: "smooth")
+
+- `ridgeplot.bins` - Ridge bins (UI: "Ridge Bins", default: 30)
+
+- `ridgeplot.binwidth` - Ridge binwidth (UI: "Ridge Binwidth", default:
+  NULL)
+
+- `legend.show` - Show legend (always TRUE in implementation)
+
+## Parameters controlling additional functionality
+
+The following parameters implementing new functionality or controlling
+plotly-specific features are also available:
+
+- `boxmode` - Boxplot mode grouping (calculated: "group" or "overlay"
+  based on color.by)
+
+- `boxgap` - Boxplot position dodge (UI: "Boxplot Position Dodge",
+  default: 0.3)
+
+- `boxgroupgap` - Boxplot group dodge (UI: "Boxplot Group Dodge",
+  default: 0.2)
+
+- `font.type` - Font family for plot text (UI: "Font", default: "Arial")
+
+- `text.colour` - Color for title text (UI: "Label colour", default:
+  "#000000")
+
+- `axis.title.font.size` - Axis title font size (UI: "Axis font size",
+  default: 18)
+
+- `axis.title.font.color` - Axis title font color (UI: "Axis title font
+  color", default: "#000000")
+
+- `axis.title.font.family` - Axis title font family (UI: "Axis title
+  font family", default: "Arial")
+
+- `axis.showline` - Show axis border lines (UI: "Show axis lines",
+  default: TRUE)
+
+- `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
+  lines", default: TRUE)
+
+- `show.major.grid.x` - Show X-axis major gridlines (UI: "Show X major
+  gridlines", default: TRUE)
+
+- `show.major.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
+  gridlines", default: TRUE)
+
+- `axis.linecolor` - Color of axis lines (UI: "Axis line color",
+  default: "black")
+
+- `axis.linewidth` - Width of axis lines (UI: "Axis line width",
+  default: 0.5)
+
+- `axis.tickfont.size` - Size of tick labels (UI: "Tick label size",
+  default: 12)
+
+- `axis.tickfont.color` - Color of tick labels (UI: "Tick label color",
+  default: "black")
+
+- `axis.tickfont.family` - Font family for tick labels (UI: "Tick label
+  font", default: "Arial")
+
+- `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI:
+  "X-axis tick label angle", default: 0)
+
+- `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI:
+  "Y-axis tick label angle", default: 0)
+
+- `axis.ticks` - Position of tick marks (UI: "Tick position", default:
+  "outside")
+
+- `axis.tickcolor` - Color of tick marks (UI: "Tick mark color",
+  default: "black")
+
+- `axis.ticklen` - Length of tick marks (UI: "Tick mark length",
+  default: 5)
+
+- `axis.tickwidth` - Width of tick marks (UI: "Tick mark width",
+  default: 1)
+
+- `hline.intercepts` - Y-coordinates for horizontal reference lines (UI:
+  "Y-intercepts", default: "")
+
+- `hline.colors` - Colors for horizontal lines (UI: "Colors", default:
+  "#000000")
+
+- `hline.widths` - Widths for horizontal lines (UI: "Widths", default:
+  "1")
+
+- `hline.linetypes` - Line types for horizontal lines (UI: "Line types",
+  default: "dashed")
+
+- `hline.opacities` - Opacities for horizontal lines (UI: "Opacities
+  (0-1)", default: "1")
+
+- `vline.intercepts` - X-coordinates for vertical reference lines (UI:
+  "X-intercepts", default: "")
+
+- `vline.colors` - Colors for vertical lines (UI: "Colors", default:
+  "#000000")
+
+- `vline.widths` - Widths for vertical lines (UI: "Widths", default:
+  "1")
+
+- `vline.linetypes` - Line types for vertical lines (UI: "Line types",
+  default: "dashed")
+
+- `vline.opacities` - Opacities for vertical lines (UI: "Opacities
+  (0-1)", default: "1")
+
+- `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes",
+  default: "")
+
+- `abline.intercepts` - Y-intercepts for diagonal lines (UI:
+  "Y-intercepts", default: "")
+
+- `abline.colors` - Colors for diagonal lines (UI: "Colors", default:
+  "#000000")
+
+- `abline.widths` - Widths for diagonal lines (UI: "Widths", default:
+  "1")
+
+- `abline.linetypes` - Line types for diagonal lines (UI: "Line types",
+  default: "dashed")
+
+- `abline.opacities` - Opacities for diagonal lines (UI: "Opacities
+  (0-1)", default: "1")
+
 ## See also
 
 [`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html),
@@ -73,40 +317,40 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="3062">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="4692">
 #>     <li class="active">
-#>       <a href="#tab-3062-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4692-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-4692-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-4692-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-4692-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-4692-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-4692-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-4692-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4692-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4692-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3062-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4692-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3062">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3062-1">
+#>   <div class="tab-content" data-tabsetid="4692">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4692-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -166,7 +410,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-3062-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-4692-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -185,7 +429,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-3062-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-4692-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -218,7 +462,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-3062-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-4692-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -259,7 +503,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-3062-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-4692-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -309,7 +553,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-3062-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-4692-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -338,7 +582,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-3062-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-4692-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -386,7 +630,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-3062-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4692-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -452,7 +696,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3062-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4692-9">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -679,7 +923,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3062-10">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4692-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

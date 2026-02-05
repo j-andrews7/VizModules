@@ -56,6 +56,80 @@ with columns for labels and aggregated values. Nearly all parameters for
 can be set via these inputs, so see the help for that function for an
 exhaustive list.
 
+## Plot parameters and defaults
+
+The following
+[`piePlot()`](https://j-andrews7.github.io/VizModules/reference/piePlot.md)
+parameters can be accessed via UI inputs and/or the `defaults` argument:
+
+- `labels` - Label column (UI: "Label column (summary data)", default:
+  2nd categorical column)
+
+- `values` - Aggregated value column (UI: "Aggregated value column",
+  default: 2nd numeric column)
+
+- `sort` - Sort slices by value (UI: "Sort slices by value", default:
+  TRUE)
+
+- `direction` - Slice direction (UI: "Slice direction", default:
+  "counterclockwise")
+
+- `rotation` - Start angle in degrees (UI: "Start angle (degrees)",
+  default: 0)
+
+- `hole` - Center hole size for donut chart (UI: "Center hole size",
+  default: 0)
+
+- `colors` - Slice colors (UI: color picker, derived from palette)
+
+- `slice.line.color` - Slice border color (UI: "Slice border color",
+  default: "#FFFFFF")
+
+- `slice.line.width` - Slice border width (UI: "Slice border width",
+  default: 0)
+
+- `textinfo` - Text to show on slices (UI: "Text to show on slices",
+  default: c("label", "value", "percent"))
+
+- `textposition` - Text position (UI: "Text position", default: "auto")
+
+- `insidetextorientation` - Inside text orientation (UI: "Inside text
+  orientation", default: "auto")
+
+- `text.font.size` - Slice text size (UI: "Slice text size", default:
+  12)
+
+- `text.font.family` - Slice text font (UI: "Slice text font", default:
+  "Arial")
+
+- `text.font.color` - Slice text color (UI: "Slice text color", default:
+  "#000000")
+
+- `title.x` - Title horizontal position (UI: "Title horizontal
+  position", default: 0.5)
+
+- `title.font.size` - Title font size (UI: "Title font size", default:
+  28)
+
+- `title.font.family` - Title font (UI: "Title font", default: "Arial")
+
+- `title.font.color` - Title font color (UI: "Title font color",
+  default: "#000000")
+
+- `show.legend` - Show legend (UI: "Show legend", default: TRUE)
+
+- `legend.orientation` - Legend orientation (UI: "Legend orientation",
+  default: "h")
+
+- `legend.font.family` - Legend font (UI: "Legend font", default:
+  "Arial")
+
+- `legend.font.size` - Legend font size (UI: "Legend font size",
+  default: 12)
+
+- `legend.font.color` - Legend font color (UI: "Legend font color",
+  default: "#000000")
+
 ## See also
 
 [`piePlot()`](https://j-andrews7.github.io/VizModules/reference/piePlot.md),
@@ -76,22 +150,22 @@ pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="8595">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="2584">
 #>     <li class="active">
-#>       <a href="#tab-8595-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2584-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8595-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-2584-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8595-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
+#>       <a href="#tab-2584-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8595-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-2584-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8595">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8595-1">
+#>   <div class="tab-content" data-tabsetid="2584">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2584-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -151,7 +225,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-8595-2">
+#>     <div class="tab-pane" data-value="Colors" id="tab-2584-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="piePlot-color.picker" class="shiny-html-output"></div>
@@ -172,7 +246,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-8595-3">
+#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-2584-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -253,7 +327,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-8595-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-2584-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

@@ -37,9 +37,8 @@ The `moduleServer` function for the linePlot module.
 ## See also
 
 [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md),
-[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md),
+[`linePlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/linePlotInputsUI.md),
 [`linePlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/linePlotOutputUI.md),
-`linePlotServer()`,
 [`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md)
 
 ## Author

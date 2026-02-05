@@ -99,139 +99,143 @@
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>Character vector of column name(s) for the x-axis.</p></dd>
+<dd><p>Character vector of column name(s) for the x-axis. Multiple columns create separate traces.</p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
-<dd><p>Character vector of column name(s) for the y-axis.</p></dd>
+<dd><p>Character vector of column name(s) for the y-axis. Multiple columns create separate traces.</p></dd>
 
 
 <dt id="arg-plot-mode">plot.mode<a class="anchor" aria-label="anchor" href="#arg-plot-mode"></a></dt>
-<dd><p>Character, plotly mode (e.g., "lines", "markers", "lines+markers").</p></dd>
+<dd><p>Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".</p></dd>
 
 
 <dt id="arg-line-type">line.type<a class="anchor" aria-label="anchor" href="#arg-line-type"></a></dt>
-<dd><p>Character, line style (e.g., "solid", "dash").</p></dd>
+<dd><p>Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".</p></dd>
 
 
 <dt id="arg-colour-group-by">colour.group.by<a class="anchor" aria-label="anchor" href="#arg-colour-group-by"></a></dt>
-<dd><p>Character vector of column name(s) to group lines by color.</p></dd>
+<dd><p>Character or formula, column name(s) to group lines by color. Can be a formula like <code>~ column_name</code>.</p></dd>
 
 
 <dt id="arg-palette-selection">palette.selection<a class="anchor" aria-label="anchor" href="#arg-palette-selection"></a></dt>
-<dd><p>Character vector of colors or palette name for line colors.</p></dd>
+<dd><p>Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.</p></dd>
 
 
 <dt id="arg-show-legend">show.legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
-<dd><p>Logical, whether to display the legend.</p></dd>
+<dd><p>Logical, whether to display the legend. Default: TRUE.</p></dd>
 
 
 <dt id="arg-facet-by">facet.by<a class="anchor" aria-label="anchor" href="#arg-facet-by"></a></dt>
-<dd><p>Optional character, column name to facet by.</p></dd>
+<dd><p>Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.</p></dd>
 
 
 <dt id="arg-facet-scales">facet.scales<a class="anchor" aria-label="anchor" href="#arg-facet-scales"></a></dt>
-<dd><p>Character, facet axis scaling ("fixed", "free", "free_x", "free_y").</p></dd>
+<dd><p>Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
+"free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".</p></dd>
 
 
 <dt id="arg-axis-showline">axis.showline<a class="anchor" aria-label="anchor" href="#arg-axis-showline"></a></dt>
-<dd><p>Logical, show axis line.</p></dd>
+<dd><p>Logical, whether to show axis border lines. Default: TRUE.</p></dd>
 
 
 <dt id="arg-axis-mirror">axis.mirror<a class="anchor" aria-label="anchor" href="#arg-axis-mirror"></a></dt>
-<dd><p>Logical, mirror axis lines.</p></dd>
+<dd><p>Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.</p></dd>
 
 
 <dt id="arg-axis-linecolor">axis.linecolor<a class="anchor" aria-label="anchor" href="#arg-axis-linecolor"></a></dt>
-<dd><p>Character, axis line color.</p></dd>
+<dd><p>Character, hex color for axis lines. Default: "black".</p></dd>
 
 
 <dt id="arg-axis-linewidth">axis.linewidth<a class="anchor" aria-label="anchor" href="#arg-axis-linewidth"></a></dt>
-<dd><p>Numeric, axis line width.</p></dd>
+<dd><p>Numeric, width of axis lines in pixels. Default: 0.5.</p></dd>
 
 
 <dt id="arg-axis-tickfont-size">axis.tickfont.size<a class="anchor" aria-label="anchor" href="#arg-axis-tickfont-size"></a></dt>
-<dd><p>Numeric, axis tick font size.</p></dd>
+<dd><p>Numeric, font size for axis tick labels. Default: 12.</p></dd>
 
 
 <dt id="arg-axis-tickfont-color">axis.tickfont.color<a class="anchor" aria-label="anchor" href="#arg-axis-tickfont-color"></a></dt>
-<dd><p>Character, axis tick font color.</p></dd>
+<dd><p>Character, hex color for axis tick labels. Default: "black".</p></dd>
 
 
 <dt id="arg-axis-tickfont-family">axis.tickfont.family<a class="anchor" aria-label="anchor" href="#arg-axis-tickfont-family"></a></dt>
-<dd><p>Character, axis tick font family.</p></dd>
+<dd><p>Character, font family for axis tick labels. Default: "Arial".</p></dd>
 
 
 <dt id="arg-axis-tickangle-x">axis.tickangle.x<a class="anchor" aria-label="anchor" href="#arg-axis-tickangle-x"></a></dt>
-<dd><p>Numeric, x-axis tick angle.</p></dd>
+<dd><p>Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.</p></dd>
 
 
 <dt id="arg-axis-tickangle-y">axis.tickangle.y<a class="anchor" aria-label="anchor" href="#arg-axis-tickangle-y"></a></dt>
-<dd><p>Numeric, y-axis tick angle.</p></dd>
+<dd><p>Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.</p></dd>
 
 
 <dt id="arg-axis-ticks">axis.ticks<a class="anchor" aria-label="anchor" href="#arg-axis-ticks"></a></dt>
-<dd><p>Character, tick style ("outside", "inside", "none").</p></dd>
+<dd><p>Character, position of tick marks. Options: "outside", "inside", "none". Default: "outside".</p></dd>
 
 
 <dt id="arg-axis-tickcolor">axis.tickcolor<a class="anchor" aria-label="anchor" href="#arg-axis-tickcolor"></a></dt>
-<dd><p>Character, tick color.</p></dd>
+<dd><p>Character, hex color for tick marks. Default: "black".</p></dd>
 
 
 <dt id="arg-axis-ticklen">axis.ticklen<a class="anchor" aria-label="anchor" href="#arg-axis-ticklen"></a></dt>
-<dd><p>Numeric, tick length.</p></dd>
+<dd><p>Numeric, length of tick marks in pixels. Default: 5.</p></dd>
 
 
 <dt id="arg-axis-tickwidth">axis.tickwidth<a class="anchor" aria-label="anchor" href="#arg-axis-tickwidth"></a></dt>
-<dd><p>Numeric, tick width.</p></dd>
+<dd><p>Numeric, width of tick marks in pixels. Default: 1.</p></dd>
 
 
 <dt id="arg-title-text">title.text<a class="anchor" aria-label="anchor" href="#arg-title-text"></a></dt>
-<dd><p>Character, plot title.</p></dd>
+<dd><p>Character, main title text for the plot. Default: "".</p></dd>
 
 
 <dt id="arg-title-font-size">title.font.size<a class="anchor" aria-label="anchor" href="#arg-title-font-size"></a></dt>
-<dd><p>Numeric, title font size.</p></dd>
+<dd><p>Numeric, font size for plot title. Default: 14.</p></dd>
 
 
 <dt id="arg-title-font-family">title.font.family<a class="anchor" aria-label="anchor" href="#arg-title-font-family"></a></dt>
-<dd><p>Character, title font family.</p></dd>
+<dd><p>Character, font family for plot title. Default: "Arial".</p></dd>
 
 
 <dt id="arg-title-text-color">title.text.color<a class="anchor" aria-label="anchor" href="#arg-title-text-color"></a></dt>
-<dd><p>Character, title font color.</p></dd>
+<dd><p>Character, hex color for plot title text. Default: "black".</p></dd>
 
 
 <dt id="arg-y-title">y.title<a class="anchor" aria-label="anchor" href="#arg-y-title"></a></dt>
-<dd><p>Character, y-axis label.</p></dd>
+<dd><p>Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.</p></dd>
 
 
 <dt id="arg-x-title">x.title<a class="anchor" aria-label="anchor" href="#arg-x-title"></a></dt>
-<dd><p>Character, x-axis label.</p></dd>
+<dd><p>Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.</p></dd>
 
 
 <dt id="arg-flip-x">flip.x<a class="anchor" aria-label="anchor" href="#arg-flip-x"></a></dt>
-<dd><p>Logical, reverse x-axis.</p></dd>
+<dd><p>Logical, whether to reverse the x-axis direction. Default: FALSE.</p></dd>
 
 
 <dt id="arg-flip-y">flip.y<a class="anchor" aria-label="anchor" href="#arg-flip-y"></a></dt>
-<dd><p>Logical, reverse y-axis.</p></dd>
+<dd><p>Logical, whether to reverse the y-axis direction. Default: FALSE.</p></dd>
 
 
 <dt id="arg-x-adjustment">x.adjustment<a class="anchor" aria-label="anchor" href="#arg-x-adjustment"></a></dt>
-<dd><p>Optional function or string, adjustment for x values.</p></dd>
+<dd><p>Optional character or function, transformation to apply to x values.
+Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.</p></dd>
 
 
 <dt id="arg-y-adjustment">y.adjustment<a class="anchor" aria-label="anchor" href="#arg-y-adjustment"></a></dt>
-<dd><p>Optional function or string, adjustment for y values.</p></dd>
+<dd><p>Optional character or function, transformation to apply to y values.
+Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.</p></dd>
 
 
 <dt id="arg-color-adjustment">color.adjustment<a class="anchor" aria-label="anchor" href="#arg-color-adjustment"></a></dt>
-<dd><p>Optional function or string, adjustment for color grouping.</p></dd>
+<dd><p>Optional character or function, transformation to apply to color grouping variable.
+Same options as x.adjustment and y.adjustment. Default: NULL.</p></dd>
 
 
 <dt id="arg-order-by">order.by<a class="anchor" aria-label="anchor" href="#arg-order-by"></a></dt>
-<dd><p>Optional character vector, column(s) to order data by.</p></dd>
+<dd><p>Optional character vector, column name(s) to order data by before plotting. Default: NULL.</p></dd>
 
 </dl></div>
     <div class="section level2">

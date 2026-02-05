@@ -23,6 +23,13 @@ linePlotApp(data_list)
 
 A Shiny app object.
 
+## See also
+
+[`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md),
+[`linePlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/linePlotInputsUI.md),
+[`linePlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/linePlotOutputUI.md),
+[`linePlotServer()`](https://j-andrews7.github.io/VizModules/reference/linePlotServer.md)
+
 ## Author
 
 Jacob Martin, Jared Andrews
