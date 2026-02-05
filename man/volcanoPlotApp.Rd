@@ -7,7 +7,8 @@
 volcanoPlotApp(df)
 }
 \arguments{
-\item{df}{A data frame to plot. Must contain \code{padj} and \code{log2FoldChange} columns.}
+\item{df}{A data frame to plot. Must contain effect size (e.g., log2FoldChange)
+and significance (e.g., padj) columns.}
 }
 \value{
 A Shiny app object.

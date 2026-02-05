@@ -14,7 +14,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom dittoViz scatterPlot colLevels
-#' @importFrom ggplot2 theme_bw waiver
+#' @importFrom ggplot2 theme_bw waiver theme
 #' @importFrom shinyjs hide runjs
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],

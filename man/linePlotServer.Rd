@@ -26,8 +26,8 @@ The \code{moduleServer} function for the linePlot module.
 Server logic for linePlot module
 }
 \seealso{
-\code{\link[=linePlot]{linePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=linePlotOutputUI]{linePlotOutputUI()}}, \code{\link[=linePlotServer]{linePlotServer()}}, \code{\link[=linePlotApp]{linePlotApp()}}
+\code{\link[=linePlot]{linePlot()}}, \code{\link[=linePlotInputsUI]{linePlotInputsUI()}},
+\code{\link[=linePlotOutputUI]{linePlotOutputUI()}}, \code{\link[=linePlotApp]{linePlotApp()}}
 }
 \author{
 Jacob Martin

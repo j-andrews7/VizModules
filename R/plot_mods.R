@@ -302,7 +302,7 @@
         config <- list(
             edits = list(
                 axisTitleText = FALSE,
-                titleText = FALSE,
+                titleText = TRUE,
                 annotationText = TRUE,
                 legendText = TRUE,
                 legendPosition = TRUE,
@@ -423,7 +423,6 @@
 #'
 #' @param input Shiny input object containing axis styling parameters.
 #' @param isolate_fn Function to use for isolating reactive values (default: isolate).
-#' @param facet.by Character or NULL. The faceting variable name. If NULL, no faceting.
 #'
 #' @return A named list of ggplot2 theme arguments to be passed to theme_args parameter.
 #'
@@ -943,8 +942,8 @@
 #' for deriving dynamic axis limits directly from the underlying data.
 #'
 #' @param df Data frame. The data containing the Y variable.
-#' @param data_col Character. Name of the column in \code{df} to use for
-#'   calculating the Y-axis range.
+#' @param data_col_y name of the y data column as a string 
+#' @param data_col_x name of the x data column as a string 
 #' @param axis_scale_factor Numeric. Multiplicative factor applied to the
 #'   maximum Y value to provide additional headroom on the axis.
 #'
@@ -988,7 +987,7 @@
         return(list(min = min, max = max))
 
     } else {
-        if (is.numeric(df[[data_col_x]]))
+        if (is.numeric(df[[data_col_x]])) {
             numeric_list <- split(df[[data_col_x]], df[[data_col_y]])
             values_list <- list()
             for (i in seq_along(numeric_list)){
@@ -1001,6 +1000,7 @@
             min <- min(all_counts, na.rm = TRUE)
         
             return(list(min = min, max = max)) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
+        }
     }
 }
 

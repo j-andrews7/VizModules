@@ -45,73 +45,77 @@ linePlot(
 \arguments{
 \item{reactive.data}{A data.frame or tibble containing the data to plot.}
 
-\item{x}{Character vector of column name(s) for the x-axis.}
+\item{x}{Character vector of column name(s) for the x-axis. Multiple columns create separate traces.}
 
-\item{y}{Character vector of column name(s) for the y-axis.}
+\item{y}{Character vector of column name(s) for the y-axis. Multiple columns create separate traces.}
 
-\item{plot.mode}{Character, plotly mode (e.g., "lines", "markers", "lines+markers").}
+\item{plot.mode}{Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".}
 
-\item{line.type}{Character, line style (e.g., "solid", "dash").}
+\item{line.type}{Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".}
 
-\item{colour.group.by}{Character vector of column name(s) to group lines by color.}
+\item{colour.group.by}{Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.}
 
-\item{palette.selection}{Character vector of colors or palette name for line colors.}
+\item{palette.selection}{Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.}
 
-\item{show.legend}{Logical, whether to display the legend.}
+\item{show.legend}{Logical, whether to display the legend. Default: TRUE.}
 
-\item{facet.by}{Optional character, column name to facet by.}
+\item{facet.by}{Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.}
 
-\item{facet.scales}{Character, facet axis scaling ("fixed", "free", "free_x", "free_y").}
+\item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
+"free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
 
-\item{axis.showline}{Logical, show axis line.}
+\item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 
-\item{axis.mirror}{Logical, mirror axis lines.}
+\item{axis.mirror}{Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.}
 
-\item{axis.linecolor}{Character, axis line color.}
+\item{axis.linecolor}{Character, hex color for axis lines. Default: "black".}
 
-\item{axis.linewidth}{Numeric, axis line width.}
+\item{axis.linewidth}{Numeric, width of axis lines in pixels. Default: 0.5.}
 
-\item{axis.tickfont.size}{Numeric, axis tick font size.}
+\item{axis.tickfont.size}{Numeric, font size for axis tick labels. Default: 12.}
 
-\item{axis.tickfont.color}{Character, axis tick font color.}
+\item{axis.tickfont.color}{Character, hex color for axis tick labels. Default: "black".}
 
-\item{axis.tickfont.family}{Character, axis tick font family.}
+\item{axis.tickfont.family}{Character, font family for axis tick labels. Default: "Arial".}
 
-\item{axis.tickangle.x}{Numeric, x-axis tick angle.}
+\item{axis.tickangle.x}{Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.}
 
-\item{axis.tickangle.y}{Numeric, y-axis tick angle.}
+\item{axis.tickangle.y}{Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.}
 
-\item{axis.ticks}{Character, tick style ("outside", "inside", "none").}
+\item{axis.ticks}{Character, position of tick marks. Options: "outside", "inside", "none". Default: "outside".}
 
-\item{axis.tickcolor}{Character, tick color.}
+\item{axis.tickcolor}{Character, hex color for tick marks. Default: "black".}
 
-\item{axis.ticklen}{Numeric, tick length.}
+\item{axis.ticklen}{Numeric, length of tick marks in pixels. Default: 5.}
 
-\item{axis.tickwidth}{Numeric, tick width.}
+\item{axis.tickwidth}{Numeric, width of tick marks in pixels. Default: 1.}
 
-\item{title.text}{Character, plot title.}
+\item{title.text}{Character, main title text for the plot. Default: "".}
 
-\item{title.font.size}{Numeric, title font size.}
+\item{title.font.size}{Numeric, font size for plot title. Default: 14.}
 
-\item{title.font.family}{Character, title font family.}
+\item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
-\item{title.text.color}{Character, title font color.}
+\item{title.text.color}{Character, hex color for plot title text. Default: "black".}
 
-\item{y.title}{Character, y-axis label.}
+\item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 
-\item{x.title}{Character, x-axis label.}
+\item{x.title}{Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.}
 
-\item{flip.x}{Logical, reverse x-axis.}
+\item{flip.x}{Logical, whether to reverse the x-axis direction. Default: FALSE.}
 
-\item{flip.y}{Logical, reverse y-axis.}
+\item{flip.y}{Logical, whether to reverse the y-axis direction. Default: FALSE.}
 
-\item{x.adjustment}{Optional function or string, adjustment for x values.}
+\item{x.adjustment}{Optional character or function, transformation to apply to x values.
+Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.}
 
-\item{y.adjustment}{Optional function or string, adjustment for y values.}
+\item{y.adjustment}{Optional character or function, transformation to apply to y values.
+Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.}
 
-\item{color.adjustment}{Optional function or string, adjustment for color grouping.}
+\item{color.adjustment}{Optional character or function, transformation to apply to color grouping variable.
+Same options as x.adjustment and y.adjustment. Default: NULL.}
 
-\item{order.by}{Optional character vector, column(s) to order data by.}
+\item{order.by}{Optional character vector, column name(s) to order data by before plotting. Default: NULL.}
 }
 \value{
 A plotly object representing the interactive line plot.

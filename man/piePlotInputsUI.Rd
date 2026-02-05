@@ -36,6 +36,37 @@ Provide summarized data (one row per slice) with columns for labels and aggregat
 Nearly all parameters for \code{\link[=piePlot]{piePlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
+\section{Plot parameters and defaults}{
+
+The following \code{\link[=piePlot]{piePlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+\itemize{
+\item \code{labels} - Label column (UI: "Label column (summary data)", default: 2nd categorical column)
+\item \code{values} - Aggregated value column (UI: "Aggregated value column", default: 2nd numeric column)
+\item \code{sort} - Sort slices by value (UI: "Sort slices by value", default: TRUE)
+\item \code{direction} - Slice direction (UI: "Slice direction", default: "counterclockwise")
+\item \code{rotation} - Start angle in degrees (UI: "Start angle (degrees)", default: 0)
+\item \code{hole} - Center hole size for donut chart (UI: "Center hole size", default: 0)
+\item \code{colors} - Slice colors (UI: color picker, derived from palette)
+\item \code{slice.line.color} - Slice border color (UI: "Slice border color", default: "#FFFFFF")
+\item \code{slice.line.width} - Slice border width (UI: "Slice border width", default: 0)
+\item \code{textinfo} - Text to show on slices (UI: "Text to show on slices", default: c("label", "value", "percent"))
+\item \code{textposition} - Text position (UI: "Text position", default: "auto")
+\item \code{insidetextorientation} - Inside text orientation (UI: "Inside text orientation", default: "auto")
+\item \code{text.font.size} - Slice text size (UI: "Slice text size", default: 12)
+\item \code{text.font.family} - Slice text font (UI: "Slice text font", default: "Arial")
+\item \code{text.font.color} - Slice text color (UI: "Slice text color", default: "#000000")
+\item \code{title.x} - Title horizontal position (UI: "Title horizontal position", default: 0.5)
+\item \code{title.font.size} - Title font size (UI: "Title font size", default: 28)
+\item \code{title.font.family} - Title font (UI: "Title font", default: "Arial")
+\item \code{title.font.color} - Title font color (UI: "Title font color", default: "#000000")
+\item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
+\item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
+\item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
+\item \code{legend.font.size} - Legend font size (UI: "Legend font size", default: 12)
+\item \code{legend.font.color} - Legend font color (UI: "Legend font color", default: "#000000")
+}
+}
+
 \examples{
 library(VizModules)
 pie_df <- as.data.frame(table(iris$Species))

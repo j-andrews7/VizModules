@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotthis_Histogram_module_ui.R
 \name{plotthis_HistogramInputsUI}
 \alias{plotthis_HistogramInputsUI}
-\title{Histogram Plot Input UI Module}
+\title{Input UI components for the Histogram module}
 \usage{
 plotthis_HistogramInputsUI(
   id,
@@ -13,22 +13,146 @@ plotthis_HistogramInputsUI(
 )
 }
 \arguments{
-\item{id}{\code{character} unique ID for the shiny namespace.}
+\item{id}{The ID for the Shiny module.}
 
-\item{data}{\code{data.frame} The dataset used to populate column selection choices.}
+\item{data}{The data frame used for plot generation.}
 
-\item{defaults}{\code{list} Optional named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs.}
 
-\item{title}{\code{character} Optional title for the input panel.}
+\item{title}{An optional title for the UI grid.}
 
-\item{columns}{\code{numeric} Number of columns to organize the inputs into. Default is 2.}
+\item{columns}{Number of columns for the UI grid.}
 }
 \value{
-A \code{tagList} containing the organized UI elements.
+A Shiny tagList containing the UI elements
 }
 \description{
-Generates the user interface for histogram configuration, including data selection,
-faceting options, aesthetic controls (bins, trend lines, alpha), and detailed axis styling.
+This should be placed in the UI where the inputs should be shown, with an \code{id}
+that matches the \code{id} used in the \code{plotthis_HistogramServer()} and \code{plotthis_HistogramOutputUI()} functions.
+}
+\details{
+The user inputs for this module are separated from the outputs to allow for
+more flexible UI design.
+
+The inputs will automatically be organized into a grid layout via the \code{organize_inputs()} function,
+with \code{columns} controlling the number of columns in the grid.
+
+Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
+Nearly all parameters for \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} can be set via these inputs, so see the help
+for that function for an exhaustive list.
+}
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} parameters are not available via UI inputs:
+\itemize{
+\item \code{xlab} - X-axis label (plotly allows interactive editing)
+\item \code{ylab} - Y-axis label (plotly allows interactive editing)
+\item \code{title} - Plot title (plotly allows interactive editing)
+\item \code{subtitle} - Plot subtitle (not supported in plotly)
+\item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
+\item \code{group_by_sep} - Separator for group columns (not applicable in UI context)
+\item \code{group_name} - Group legend name (handled by plotly)
+\item \code{xtrans} - X-axis transformation (not implemented in UI)
+\item \code{ytrans} - Y-axis transformation (not implemented in UI)
+\item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
+\item \code{split_by_sep} - Only applies if \code{split_by} is used
+\item \code{flip} - Flip axes (not implemented in current UI)
+\item \code{theme} - ggplot2 theme (not applicable in plotly)
+\item \code{theme_args} - Theme arguments (not applicable in plotly)
+\item \code{palette} - Managed internally via the palette selection UI
+\item \code{expand} - Axis expansion (not implemented)
+\item \code{seed} - Random seed (not applicable)
+\item \code{combine} - Only applies if \code{split_by} is used
+\item \code{nrow} - Only applies if \code{split_by} is used
+\item \code{ncol} - Only applies if \code{split_by} is used
+\item \code{byrow} - Only applies if \code{split_by} is used
+\item \code{axes} - Only applies if \code{split_by} is used
+\item \code{axis_titles} - Only applies if \code{split_by} is used
+\item \code{guides} - Only applies if \code{split_by} is used
+\item \code{design} - Only applies if \code{split_by} is used
+\item \code{legend_direction} - Managed position of legend however this can be handled via plotly
+}
+}
+
+\section{Plot parameters and defaults}{
+
+The following \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+\itemize{
+\item \code{x} - X-axis variable (UI: "X Data", default: 2nd numeric variable)
+\item \code{group_by} - Grouping variable (UI: "Group By", default: "")
+\item \code{bins} - Number of bins (UI: "Number of Bins", default: NA)
+\item \code{binwidth} - Width of bins (UI: "Bin Width", default: NA)
+\item \code{use_trend} - Show only trend line (UI: "Trend Line Only", default: FALSE)
+\item \code{add_trend} - Add trend line to histogram (UI: "Add Trend to Histogram", default: FALSE)
+\item \code{trend_skip_zero} - Skip zero values in trend (UI: "Skip Zero Values", default: FALSE)
+\item \code{trend_alpha} - Trend line transparency (UI: "Trend Line Alpha", default: 1)
+\item \code{trend_linewidth} - Trend line width (UI: "Trend Line Width", default: 0.8)
+\item \code{trend_pt_size} - Trend point size (UI: "Trend Point Size", default: 1.5)
+\item \code{position} - Position adjustment (UI: "Position", default: "identity")
+\item \code{alpha} - Histogram fill transparency (UI: "Plot Alpha", default: 1)
+\item \code{add_bars} - Add rug plot (UI: "Add Rug Plot", default: FALSE)
+\item \code{bar_height} - Rug bar height (UI: "Rug Bar Height", default: 0.04)
+\item \code{bar_alpha} - Rug bar transparency (UI: "Rug Bar Alpha", default: 1)
+\item \code{bar_width} - Rug bar width (UI: "Rug Bar Width", default: 1)
+\item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
+\item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
+\item \code{facet_ncol} - Number of facet columns (UI: "Number of Columns", default: NULL)
+\item \code{facet_nrow} - Number of facet rows (UI: "Number of Rows", default: NULL)
+\item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
+\item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+}
+}
+
+\section{Parameters controlling additional functionality}{
+
+The following parameters implementing new functionality or controlling plotly-specific features are also available:
+\itemize{
+\item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
+\item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+\item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+\item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+\item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
+\item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
+\item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+\item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+\item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
+\item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
+\item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
+\item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick label color", default: "black")
+\item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick label font", default: "Arial")
+\item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
+\item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
+\item \code{axis.ticks} - Position of tick marks (UI: "Tick position", default: "outside")
+\item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
+\item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
+\item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+\item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
+\item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
+\item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line types", default: "dashed")
+\item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+\item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+\item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
+\item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
+\item \code{vline.linetypes} - Line types for vertical lines (UI: "Line types", default: "dashed")
+\item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+\item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+\item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+\item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
+\item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
+\item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
+\item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+}
+}
+
+\examples{
+library(VizModules)
+data(mtcars)
+plotthis_HistogramInputsUI("histogram", mtcars)
+}
+\seealso{
+\code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[=plotthis_HistogramOutputUI]{plotthis_HistogramOutputUI()}}, \code{\link[=plotthis_HistogramServer]{plotthis_HistogramServer()}}, \code{\link[=plotthis_HistogramApp]{plotthis_HistogramApp()}}
 }
 \author{
 Jacob Martin, Jared Andrews

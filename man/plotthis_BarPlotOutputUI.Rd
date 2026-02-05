@@ -16,5 +16,5 @@ A Shiny plotlyOutput for the BarPlot
 This should be placed in the UI where the plot should be shown.
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -34,8 +34,8 @@ The \code{moduleServer} function for the scatterPlot module.
 Server logic for scatterPlot module
 }
 \seealso{
-\code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=dittoViz_scatterPlotOutputUI]{dittoViz_scatterPlotOutputUI()}}, \code{\link[=dittoViz_scatterPlotServer]{dittoViz_scatterPlotServer()}}, \code{\link[=dittoViz_scatterPlotApp]{dittoViz_scatterPlotApp()}}
+\code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=dittoViz_scatterPlotInputsUI]{dittoViz_scatterPlotInputsUI()}},
+\code{\link[=dittoViz_scatterPlotOutputUI]{dittoViz_scatterPlotOutputUI()}}, \code{\link[=dittoViz_scatterPlotApp]{dittoViz_scatterPlotApp()}}
 }
 \author{
 Jared Andrews

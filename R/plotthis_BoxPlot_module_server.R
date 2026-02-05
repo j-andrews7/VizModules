@@ -178,7 +178,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, y_axis_scale_factor = 1.11)
+            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.11, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
