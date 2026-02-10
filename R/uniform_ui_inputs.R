@@ -14,7 +14,10 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #'
+#' @author Jared Andrews
+#' 
 #' @keywords internal
+#' @rdname INTERNAL_uniform_lines_inputs_ui
 .uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
     base_inputs <- tagList(
         textInput(ns("hline.intercepts"), "Y-intercepts",
@@ -98,10 +101,12 @@
 #'
 #' @importFrom shiny numericInput checkboxInput selectInput tagList
 #' @importFrom colourpicker colourInput
-#'
 #' @importFrom shinyWidgets materialSwitch
 #'
+#' @author Jared Andrews
+#' 
 #' @keywords internal
+#' @rdname INTERNAL_uniform_axes_inputs_ui
 .uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
     font_choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
@@ -155,7 +160,7 @@
                 "Arial"
             )
         ),
-        colourInput(ns("text.colour"), "Title Color",
+        colorpicker::colourInput(ns("text.colour"), "Title Color",
             value = ifelse("text.colour" %in% names(defaults),
                 defaults[["text.colour"]], "#000000"
             )
@@ -168,7 +173,7 @@
             min = 1,
             step = 1
         ),
-        colourInput(ns("axis.title.font.color"), "Axis Title Color",
+        colorpicker::colourInput(ns("axis.title.font.color"), "Axis Title Color",
             value = ifelse("axis.title.font.color" %in% names(defaults),
                 defaults[["axis.title.font.color"]], "#000000"
             )
@@ -206,7 +211,7 @@
                 TRUE
             )
         ),
-        colourInput(ns("axis.linecolor"), "Axis Line Color",
+        colorpicker::colourInput(ns("axis.linecolor"), "Axis Line Color",
             value = ifelse("axis.linecolor" %in% names(defaults),
                 defaults[["axis.linecolor"]], "black"
             )
@@ -227,7 +232,7 @@
             min = 1,
             step = 1
         ),
-        colourInput(ns("axis.tickfont.color"), "Tick Label Color",
+        colorpicker::colourInput(ns("axis.tickfont.color"), "Tick Label Color",
             value = ifelse("axis.tickfont.color" %in% names(defaults),
                 defaults[["axis.tickfont.color"]], "black"
             )
@@ -268,7 +273,7 @@
                 "outside"
             )
         ),
-        colourInput(ns("axis.tickcolor"), "Tick Mark Color",
+        colorpicker::colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = ifelse("axis.tickcolor" %in% names(defaults),
                 defaults[["axis.tickcolor"]], "black"
             )

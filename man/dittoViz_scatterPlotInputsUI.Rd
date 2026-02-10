@@ -128,6 +128,14 @@ The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parame
 \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
 \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")
 \item \code{hover.round.digits} - Hover round digits (UI: "Hover Round Digits", default: 5)
+\item \code{show.x.marginal} - Show X-axis marginal plot (UI: "Show X Marginal", default: FALSE)
+\item \code{show.y.marginal} - Show Y-axis marginal plot (UI: "Show Y Marginal", default: FALSE)
+\item \code{marginal.type} - Type of marginal plot (UI: "Marginal Type", default: "density", choices: "density", "histogram", "rug", "densityrug")
+\item \code{marginal.opacity} - Marginal plot opacity (UI: "Marginal Opacity", default: 0.5)
+\item \code{marginal.bins} - Number of bins for histogram marginals (UI: "Histogram Bins", default: 30)
+\item \code{marginal.rug.height} - Height of rug marks (UI: "Rug Height", default: 0.03)
+\item \code{marginal.x.size} - Relative height of X marginal plot (UI: "X Marginal Height", default: 0.2)
+\item \code{marginal.y.size} - Relative width of Y marginal plot (UI: "Y Marginal Width", default: 0.2)
 }
 }
 
