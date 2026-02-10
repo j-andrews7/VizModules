@@ -63,6 +63,8 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 \item \code{axis.tickcolor} - Tick color (UI: via .uniform_axes_inputs_ui, default: "black")
 \item \code{axis.ticklen} - Tick length (UI: via .uniform_axes_inputs_ui, default: 5)
 \item \code{axis.tickwidth} - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)
+\item \code{show.grid.x} - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
+\item \code{show.grid.y} - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
 \item \code{title.font.size} - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)
 \item \code{title.font.family} - Title font family (UI: "Font", default: "Arial")
 \item \code{title.text.color} - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")

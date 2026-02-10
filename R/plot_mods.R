@@ -344,8 +344,8 @@
 #'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
 #'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
 #'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
-#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.major.grid.x},
-#'   and \code{show.major.grid.y}.
+#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.grid.x},
+#'   and \code{show.grid.y}.
 #' @param axis_side Character. Which axis to style, either \code{"x"} or
 #'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
 #'   \code{axis.tickangle.y} is used for the tick angle, and which
@@ -373,8 +373,8 @@
     # Determine gridline visibility based on axis side
     # Use defaults if inputs are not present (for backwards compatibility)
     show_grid <- ifelse(axis_side == "x",
-        isolate_fn(input$show.major.grid.x),
-        isolate_fn(input$show.major.grid.y)
+        isolate_fn(input$show.grid.x),
+        isolate_fn(input$show.grid.y)
     )
     style <- list(
         title = list(

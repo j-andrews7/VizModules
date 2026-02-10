@@ -122,8 +122,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "axis.title.font.family", selected = "Arial")
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
+            updateCheckboxInput(session, "show.grid.x", value = TRUE)
+            updateCheckboxInput(session, "show.grid.y", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateNumericInput(session, "axis.tickfont.size", value = 12)
@@ -260,6 +260,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 axis.tickcolor = isolate_fn(input$axis.tickcolor),
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                show.grid.x = isolate_fn(input$show.grid.x),
+                show.grid.y = isolate_fn(input$show.grid.y),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$font.type),
                 title.text.color = isolate_fn(input$text.colour),

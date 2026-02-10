@@ -27,6 +27,8 @@
 #' @param axis.tickcolor Character, hex color for tick marks. Default: "black".
 #' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
 #' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
+#' @param show.grid.x Logical, whether to show gridlines on the x-axis. Default: TRUE.
+#' @param show.grid.y Logical, whether to show gridlines on the y-axis. Default: TRUE.
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 14.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
@@ -61,12 +63,12 @@
 #'   palette.selection = palette,
 #'   show.legend = TRUE
 #'   )
-
 linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
                      facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
-                     axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
+                     axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
+                     title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL) {
     # Unique x axis styling for linePlot:
@@ -74,13 +76,14 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
-        title = x.title, autorange = TRUE
+        title = x.title, autorange = TRUE, showgrid = show.grid.x
     )
 
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
     yaxis_style$tickangle <- axis.tickangle.y
     yaxis_style$title <- y.title
+    yaxis_style$showgrid <- show.grid.y
 
     if (flip.x) {
         xaxis_style$autorange <- "reversed"

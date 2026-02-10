@@ -28,6 +28,8 @@ linePlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
@@ -89,6 +91,10 @@ linePlot(
 \item{axis.ticklen}{Numeric, length of tick marks in pixels. Default: 5.}
 
 \item{axis.tickwidth}{Numeric, width of tick marks in pixels. Default: 1.}
+
+\item{show.grid.x}{Logical, whether to show gridlines on the x-axis. Default: TRUE.}
+
+\item{show.grid.y}{Logical, whether to show gridlines on the y-axis. Default: TRUE.}
 
 \item{title.text}{Character, main title text for the plot. Default: "".}
 
