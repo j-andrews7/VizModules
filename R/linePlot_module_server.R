@@ -260,6 +260,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 axis.tickcolor = isolate_fn(input$axis.tickcolor),
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                show.major.grid.x = isolate_fn(input$show.major.grid.x),
+                show.major.grid.y = isolate_fn(input$show.major.grid.y),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$font.type),
                 title.text.color = isolate_fn(input$text.colour),
