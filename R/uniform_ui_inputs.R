@@ -194,15 +194,15 @@
                 TRUE
             )
         ),
-        checkboxInput(ns("show.major.grid.x"), "Show X Gridlines",
-            value = ifelse("show.major.grid.x" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.major.grid.x"]]), defaults[["show.major.grid.x"]], TRUE),
+        checkboxInput(ns("show.grid.x"), "Show X Gridlines",
+            value = ifelse("show.grid.x" %in% names(defaults),
+                ifelse(is.logical(defaults[["show.grid.x"]]), defaults[["show.grid.x"]], TRUE),
                 TRUE
             )
         ),
-        checkboxInput(ns("show.major.grid.y"), "Show Y Gridlines",
-            value = ifelse("show.major.grid.y" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.major.grid.y"]]), defaults[["show.major.grid.y"]], TRUE),
+        checkboxInput(ns("show.grid.y"), "Show Y Gridlines",
+            value = ifelse("show.grid.y" %in% names(defaults),
+                ifelse(is.logical(defaults[["show.grid.y"]]), defaults[["show.grid.y"]], TRUE),
                 TRUE
             )
         ),
