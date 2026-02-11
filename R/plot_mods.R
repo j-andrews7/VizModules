@@ -1744,11 +1744,26 @@
     # Layout matrix depends on which marginals are shown and marginal type
     
     # Create legend placeholder (used in multi-panel layouts)
+    # This should be completely blank (no gridlines, no axes, no background elements)
     legend_plot <- plot_ly() %>%
         layout(
-            xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
-            yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
+            xaxis = list(
+                showticklabels = FALSE, 
+                showgrid = FALSE, 
+                zeroline = FALSE, 
+                showline = FALSE,
+                visible = FALSE  # Completely hide the axis
+            ),
+            yaxis = list(
+                showticklabels = FALSE, 
+                showgrid = FALSE, 
+                zeroline = FALSE, 
+                showline = FALSE,
+                visible = FALSE  # Completely hide the axis
+            ),
             showlegend = legend_show,  # Respect legend setting
+            plot_bgcolor = "rgba(0,0,0,0)",  # Transparent background
+            paper_bgcolor = "rgba(0,0,0,0)",  # Transparent paper
             margin = list(l = 0, r = 0, t = 0, b = 0)
         )
     
