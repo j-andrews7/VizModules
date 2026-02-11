@@ -105,6 +105,8 @@
 #'   \item \code{marginal.rug.height} - Height of rug marks (UI: "Rug Height", default: 0.03)
 #'   \item \code{marginal.x.size} - Relative height of X marginal plot (UI: "X Marginal Height", default: 0.2)
 #'   \item \code{marginal.y.size} - Relative width of Y marginal plot (UI: "Y Marginal Width", default: 0.2)
+#'   \item \code{marginal.show.ticks} - Show axis ticks in marginal plots (UI: "Show Marginal Axis Ticks", default: FALSE)
+#'   \item \code{marginal.show.labels} - Show axis labels in marginal plots (UI: "Show Marginal Axis Labels", default: FALSE)
 #' }
 #'
 #' @section Parameters controlling additional functionality:
@@ -708,6 +710,18 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 0.1,
                 max = 0.4,
                 step = 0.05
+            ),
+            checkboxInput(ns("marginal.show.ticks"), "Show Marginal Axis Ticks",
+                value = ifelse("marginal.show.ticks" %in% names(defaults),
+                    ifelse(is.logical(defaults[["marginal.show.ticks"]]), defaults[["marginal.show.ticks"]], FALSE),
+                    FALSE
+                )
+            ),
+            checkboxInput(ns("marginal.show.labels"), "Show Marginal Axis Labels",
+                value = ifelse("marginal.show.labels" %in% names(defaults),
+                    ifelse(is.logical(defaults[["marginal.show.labels"]]), defaults[["marginal.show.labels"]], FALSE),
+                    FALSE
+                )
             )
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),

@@ -1278,6 +1278,8 @@
 #' @param marginal_rug_height Numeric. Height of rug marks relative to plot (0.01-0.2).
 #' @param marginal_x_size Numeric. Relative height of X marginal plot (0.1-0.4).
 #' @param marginal_y_size Numeric. Relative width of Y marginal plot (0.1-0.4).
+#' @param marginal_show_ticks Logical. Show axis ticks in marginal plots?
+#' @param marginal_show_labels Logical. Show axis labels in marginal plots?
 #'
 #' @return A plotly subplot figure with marginal plots attached.
 #'
@@ -1300,7 +1302,9 @@
                                  marginal_bins = 30,
                                  marginal_rug_height = 0.03,
                                  marginal_x_size = 0.2,
-                                 marginal_y_size = 0.2) {
+                                 marginal_y_size = 0.2,
+                                 marginal_show_ticks = FALSE,
+                                 marginal_show_labels = FALSE) {
     # If no marginals requested, return original figure
     if (!show_x_marginal && !show_y_marginal) {
         return(scatter_fig)
@@ -1389,12 +1393,11 @@
 
     # Helper function to create rug trace with proper dodging
     create_rug_trace <- function(data_vec, axis = "x", group_name = NULL, color = NULL, group_idx = 0, n_groups = 1) {
-        # Calculate position for this group - spread groups across the rug space
+        # Calculate position for this group - stack groups tightly with no whitespace
         if (n_groups > 1) {
-            # Position groups at different heights within the rug area
-            rug_thickness <- 0.015  # Each rug line thickness (smaller for multiple groups)
-            spacing <- marginal_rug_height / n_groups
-            base_pos <- group_idx * spacing
+            # Each group gets equal space, stacked from bottom to top
+            rug_thickness <- marginal_rug_height / n_groups
+            base_pos <- group_idx * rug_thickness
         } else {
             rug_thickness <- marginal_rug_height
             base_pos <- 0
@@ -1488,16 +1491,16 @@
             # Configure layouts
             x_dens_fig <- x_dens_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                    xaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
+                    yaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
                     showlegend = FALSE,
                     margin = list(l = 0, r = 0, t = 0, b = 0)
                 )
             
             x_rug_fig <- x_rug_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0, marginal_rug_height)),
+                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, ticks = ""),
+                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, ticks = "", range = c(0, marginal_rug_height), fixedrange = TRUE),
                     showlegend = FALSE,
                     margin = list(l = 0, r = 0, t = 0, b = 0)
                 )
@@ -1570,8 +1573,10 @@
             # Configure X marginal layout
             x_marginal_fig <- x_marginal_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                    xaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
+                    yaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else "", 
+                                 range = if (marginal_type == "rug") c(0, marginal_rug_height) else NULL, 
+                                 fixedrange = if (marginal_type == "rug") TRUE else FALSE),
                     showlegend = FALSE,
                     barmode = "overlay",  # Overlay histograms instead of stacking
                     margin = list(l = 0, r = 0, t = 0, b = 0)
@@ -1633,16 +1638,16 @@
             # Configure layouts
             y_dens_fig <- y_dens_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                    xaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
+                    yaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
                     showlegend = FALSE,
                     margin = list(l = 0, r = 0, t = 0, b = 0)
                 )
             
             y_rug_fig <- y_rug_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, range = c(0, marginal_rug_height)),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, ticks = "", range = c(0, marginal_rug_height), fixedrange = TRUE),
+                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, ticks = ""),
                     showlegend = FALSE,
                     margin = list(l = 0, r = 0, t = 0, b = 0)
                 )
@@ -1715,8 +1720,10 @@
             # Configure Y marginal layout
             y_marginal_fig <- y_marginal_fig %>%
                 layout(
-                    xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
-                    yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE),
+                    xaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else "",
+                                 range = if (marginal_type == "rug") c(0, marginal_rug_height) else NULL,
+                                 fixedrange = if (marginal_type == "rug") TRUE else FALSE),
+                    yaxis = list(showticklabels = marginal_show_labels, showgrid = FALSE, zeroline = FALSE, ticks = if (marginal_show_ticks) "outside" else ""),
                     showlegend = FALSE,
                     barmode = "overlay",  # Overlay histograms instead of stacking
                     margin = list(l = 0, r = 0, t = 0, b = 0)
@@ -1754,7 +1761,8 @@
                 titleX = FALSE,
                 titleY = FALSE,
                 margin = 0.01
-            )
+            ) %>%
+            layout(showlegend = TRUE)  # Ensure legend is shown
         } else {
             # Both marginals, non-densityrug: 2x2 grid with legend space in top-right
             combined_fig <- subplot(
@@ -1768,6 +1776,10 @@
                 titleX = FALSE,
                 titleY = FALSE,
                 margin = 0.01
+            ) %>%
+            layout(
+                barmode = "overlay",  # Apply barmode for histograms
+                showlegend = TRUE  # Ensure legend is shown
             )
         }
     } else if (show_x_marginal) {
@@ -1798,7 +1810,8 @@
                 titleX = FALSE,
                 titleY = FALSE,
                 margin = 0.01
-            )
+            ) %>%
+            layout(barmode = "overlay")  # Apply barmode for histograms
         }
     } else {
         # Only Y marginal
@@ -1826,7 +1839,8 @@
                 titleX = FALSE,
                 titleY = FALSE,
                 margin = 0.01
-            )
+            ) %>%
+            layout(barmode = "overlay")  # Apply barmode for histograms
         }
     }
 

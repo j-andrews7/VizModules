@@ -300,6 +300,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "marginal.rug.height", value = 0.03)
             updateNumericInput(session, "marginal.x.size", value = 0.2)
             updateNumericInput(session, "marginal.y.size", value = 0.2)
+            updateCheckboxInput(session, "marginal.show.ticks", value = FALSE)
+            updateCheckboxInput(session, "marginal.show.labels", value = FALSE)
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
@@ -557,7 +559,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     marginal_bins = isolate_fn(input$marginal.bins),
                     marginal_rug_height = isolate_fn(input$marginal.rug.height),
                     marginal_x_size = isolate_fn(input$marginal.x.size),
-                    marginal_y_size = isolate_fn(input$marginal.y.size)
+                    marginal_y_size = isolate_fn(input$marginal.y.size),
+                    marginal_show_ticks = isolate_fn(input$marginal.show.ticks),
+                    marginal_show_labels = isolate_fn(input$marginal.show.labels)
                 )
             }
 
