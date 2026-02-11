@@ -561,7 +561,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     marginal_x_size = isolate_fn(input$marginal.x.size),
                     marginal_y_size = isolate_fn(input$marginal.y.size),
                     marginal_show_ticks = isolate_fn(input$marginal.show.ticks),
-                    marginal_show_labels = isolate_fn(input$marginal.show.labels)
+                    marginal_show_labels = isolate_fn(input$marginal.show.labels),
+                    legend_show = isolate_fn(input$legend.show)
                 )
             }
 

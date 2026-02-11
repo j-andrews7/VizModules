@@ -1280,6 +1280,7 @@
 #' @param marginal_y_size Numeric. Relative width of Y marginal plot (0.1-0.4).
 #' @param marginal_show_ticks Logical. Show axis ticks in marginal plots?
 #' @param marginal_show_labels Logical. Show axis labels in marginal plots?
+#' @param legend_show Logical. Show legend in the combined plot?
 #'
 #' @return A plotly subplot figure with marginal plots attached.
 #'
@@ -1304,11 +1305,17 @@
                                  marginal_x_size = 0.2,
                                  marginal_y_size = 0.2,
                                  marginal_show_ticks = FALSE,
-                                 marginal_show_labels = FALSE) {
+                                 marginal_show_labels = FALSE,
+                                 legend_show = TRUE) {
     # If no marginals requested, return original figure
     if (!show_x_marginal && !show_y_marginal) {
         return(scatter_fig)
     }
+
+    # Extract title and axis titles from original scatter plot to preserve them
+    original_title <- if (!is.null(scatter_fig$x$layout$title)) scatter_fig$x$layout$title else NULL
+    original_xaxis_title <- if (!is.null(scatter_fig$x$layout$xaxis$title)) scatter_fig$x$layout$xaxis$title else NULL
+    original_yaxis_title <- if (!is.null(scatter_fig$x$layout$yaxis$title)) scatter_fig$x$layout$yaxis$title else NULL
 
     # Extract x and y data
     x_data <- plot_data[[x_col]]
@@ -1739,7 +1746,7 @@
         layout(
             xaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
             yaxis = list(showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE),
-            showlegend = TRUE,  # Allow legend in this space
+            showlegend = legend_show,  # Respect legend setting
             margin = list(l = 0, r = 0, t = 0, b = 0)
         )
     
@@ -1758,11 +1765,9 @@
                 widths = c(1 - marginal_y_size - marginal_rug_height, marginal_rug_height, marginal_y_size),
                 shareX = TRUE,
                 shareY = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             ) %>%
-            layout(showlegend = TRUE)  # Ensure legend is shown
+            layout(showlegend = legend_show)  # Respect legend setting
         } else {
             # Both marginals, non-densityrug: 2x2 grid with legend space in top-right
             combined_fig <- subplot(
@@ -1773,13 +1778,11 @@
                 widths = c(1 - marginal_y_size, marginal_y_size),
                 shareX = TRUE,
                 shareY = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             ) %>%
             layout(
                 barmode = "overlay",  # Apply barmode for histograms
-                showlegend = TRUE  # Ensure legend is shown
+                showlegend = legend_show  # Respect legend setting
             )
         }
     } else if (show_x_marginal) {
@@ -1795,8 +1798,6 @@
                 nrows = 3,
                 heights = c(marginal_x_size - marginal_rug_height, marginal_rug_height, 1 - marginal_x_size),
                 shareX = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             )
         } else {
@@ -1807,8 +1808,6 @@
                 nrows = 2,
                 heights = c(marginal_x_size, 1 - marginal_x_size),
                 shareX = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             ) %>%
             layout(barmode = "overlay")  # Apply barmode for histograms
@@ -1825,8 +1824,6 @@
                 nrows = 1,
                 widths = c(1 - marginal_y_size - marginal_rug_height, marginal_rug_height, marginal_y_size),
                 shareY = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             )
         } else {
@@ -1836,12 +1833,135 @@
                 nrows = 1,
                 widths = c(1 - marginal_y_size, marginal_y_size),
                 shareY = TRUE,
-                titleX = FALSE,
-                titleY = FALSE,
                 margin = 0.01
             ) %>%
             layout(barmode = "overlay")  # Apply barmode for histograms
         }
+    }
+
+    # Restore plot title and axis titles that may have been lost in subplot
+    layout_updates <- list()
+    if (!is.null(original_title)) {
+        layout_updates$title <- original_title
+    }
+    
+    # Restore axis titles to the main scatter plot axes
+    # For both-marginal case, scatter is at position (2,1) which is xaxis2/yaxis2
+    # For X-only, scatter is at position 2, which is xaxis2/yaxis2
+    # For Y-only, scatter is at position 1, which is xaxis/yaxis
+    if (show_x_marginal && show_y_marginal) {
+        # Scatter plot is in position (2,1) - xaxis2/yaxis2
+        if (!is.null(original_xaxis_title)) {
+            layout_updates$xaxis2 <- list(title = original_xaxis_title)
+        }
+        if (!is.null(original_yaxis_title)) {
+            layout_updates$yaxis2 <- list(title = original_yaxis_title)
+        }
+    } else if (show_x_marginal) {
+        # Scatter plot is in position 2 (or 3 for densityrug) - xaxis2/yaxis2 (or xaxis3/yaxis3)
+        axis_num <- if (marginal_type == "densityrug") "3" else "2"
+        if (!is.null(original_xaxis_title)) {
+            layout_updates[[paste0("xaxis", axis_num)]] <- list(title = original_xaxis_title)
+        }
+        if (!is.null(original_yaxis_title)) {
+            layout_updates[[paste0("yaxis", axis_num)]] <- list(title = original_yaxis_title)
+        }
+    } else {
+        # Scatter plot is in position 1 - xaxis/yaxis
+        if (!is.null(original_xaxis_title)) {
+            layout_updates$xaxis <- list(title = original_xaxis_title)
+        }
+        if (!is.null(original_yaxis_title)) {
+            layout_updates$yaxis <- list(title = original_yaxis_title)
+        }
+    }
+    
+    # Apply marginal axis tick/label settings to marginal plot axes
+    # X marginal axes
+    if (show_x_marginal) {
+        if (marginal_type == "densityrug") {
+            # X density is axis 1, X rug is axis 2
+            layout_updates$xaxis <- c(layout_updates$xaxis, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            layout_updates$yaxis <- c(layout_updates$yaxis, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            layout_updates$xaxis2 <- c(layout_updates$xaxis2, list(
+                showticklabels = FALSE,
+                ticks = ""
+            ))
+            layout_updates$yaxis2 <- c(layout_updates$yaxis2, list(
+                showticklabels = FALSE,
+                ticks = "",
+                range = c(0, marginal_rug_height),
+                fixedrange = TRUE
+            ))
+        } else {
+            # X marginal is axis 1
+            layout_updates$xaxis <- c(layout_updates$xaxis, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            layout_updates$yaxis <- c(layout_updates$yaxis, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            if (marginal_type == "rug") {
+                layout_updates$yaxis <- c(layout_updates$yaxis, list(
+                    range = c(0, marginal_rug_height),
+                    fixedrange = TRUE
+                ))
+            }
+        }
+    }
+    
+    # Y marginal axes
+    if (show_y_marginal && !show_x_marginal) {
+        if (marginal_type == "densityrug") {
+            # Y rug is axis 2, Y density is axis 3
+            layout_updates$xaxis2 <- c(layout_updates$xaxis2, list(
+                showticklabels = FALSE,
+                ticks = "",
+                range = c(0, marginal_rug_height),
+                fixedrange = TRUE
+            ))
+            layout_updates$yaxis2 <- c(layout_updates$yaxis2, list(
+                showticklabels = FALSE,
+                ticks = ""
+            ))
+            layout_updates$xaxis3 <- c(layout_updates$xaxis3, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            layout_updates$yaxis3 <- c(layout_updates$yaxis3, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+        } else {
+            # Y marginal is axis 2
+            layout_updates$xaxis2 <- c(layout_updates$xaxis2, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            layout_updates$yaxis2 <- c(layout_updates$yaxis2, list(
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else ""
+            ))
+            if (marginal_type == "rug") {
+                layout_updates$xaxis2 <- c(layout_updates$xaxis2, list(
+                    range = c(0, marginal_rug_height),
+                    fixedrange = TRUE
+                ))
+            }
+        }
+    }
+    
+    # Apply all layout updates
+    if (length(layout_updates) > 0) {
+        combined_fig <- do.call(plotly::layout, c(list(p = combined_fig), layout_updates))
     }
 
     return(combined_fig)
