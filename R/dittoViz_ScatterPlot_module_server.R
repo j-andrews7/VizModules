@@ -297,6 +297,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "marginal.type", selected = "density")
             updateNumericInput(session, "marginal.opacity", value = 0.5)
             updateNumericInput(session, "marginal.bins", value = 30)
+            updateSelectInput(session, "marginal.histogram.mode", selected = "overlay")
             updateNumericInput(session, "marginal.rug.height", value = 0.03)
             updateNumericInput(session, "marginal.x.size", value = 0.2)
             updateNumericInput(session, "marginal.y.size", value = 0.2)
@@ -557,6 +558,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     marginal_type = isolate_fn(input$marginal.type),
                     marginal_opacity = isolate_fn(input$marginal.opacity),
                     marginal_bins = isolate_fn(input$marginal.bins),
+                    marginal_histogram_mode = isolate_fn(input$marginal.histogram.mode),
                     marginal_rug_height = isolate_fn(input$marginal.rug.height),
                     marginal_x_size = isolate_fn(input$marginal.x.size),
                     marginal_y_size = isolate_fn(input$marginal.y.size),

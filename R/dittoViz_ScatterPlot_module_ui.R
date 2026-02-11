@@ -102,6 +102,7 @@
 #'   \item \code{marginal.type} - Type of marginal plot (UI: "Marginal Type", default: "density", choices: "density", "histogram", "rug", "densityrug")
 #'   \item \code{marginal.opacity} - Marginal plot opacity (UI: "Marginal Opacity", default: 0.5)
 #'   \item \code{marginal.bins} - Number of bins for histogram marginals (UI: "Histogram Bins", default: 30)
+#'   \item \code{marginal.histogram.mode} - Histogram mode (UI: "Histogram Mode", default: "overlay", choices: "overlay", "stack")
 #'   \item \code{marginal.rug.height} - Height of rug marks (UI: "Rug Height", default: 0.03)
 #'   \item \code{marginal.x.size} - Relative height of X marginal plot (UI: "X Marginal Height", default: 0.2)
 #'   \item \code{marginal.y.size} - Relative width of Y marginal plot (UI: "Y Marginal Width", default: 0.2)
@@ -683,6 +684,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 5,
                 max = 100,
                 step = 5
+            ),
+            selectInput(ns("marginal.histogram.mode"), "Histogram Mode",
+                choices = c("overlay", "stack"),
+                selected = ifelse("marginal.histogram.mode" %in% names(defaults),
+                    ifelse(defaults[["marginal.histogram.mode"]] %in% c("overlay", "stack"),
+                        defaults[["marginal.histogram.mode"]], "overlay"),
+                    "overlay"
+                )
             ),
             numericInput(ns("marginal.rug.height"), "Rug Height",
                 value = ifelse("marginal.rug.height" %in% names(defaults),
