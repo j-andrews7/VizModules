@@ -160,7 +160,7 @@
                 "Arial"
             )
         ),
-        colorpicker::colourInput(ns("text.colour"), "Title Color",
+        colourpicker::colourInput(ns("text.colour"), "Title Color",
             value = ifelse("text.colour" %in% names(defaults),
                 defaults[["text.colour"]], "#000000"
             )
@@ -173,7 +173,7 @@
             min = 1,
             step = 1
         ),
-        colorpicker::colourInput(ns("axis.title.font.color"), "Axis Title Color",
+        colourpicker::colourInput(ns("axis.title.font.color"), "Axis Title Color",
             value = ifelse("axis.title.font.color" %in% names(defaults),
                 defaults[["axis.title.font.color"]], "#000000"
             )
@@ -211,7 +211,7 @@
                 TRUE
             )
         ),
-        colorpicker::colourInput(ns("axis.linecolor"), "Axis Line Color",
+        colourpicker::colourInput(ns("axis.linecolor"), "Axis Line Color",
             value = ifelse("axis.linecolor" %in% names(defaults),
                 defaults[["axis.linecolor"]], "black"
             )
@@ -232,7 +232,7 @@
             min = 1,
             step = 1
         ),
-        colorpicker::colourInput(ns("axis.tickfont.color"), "Tick Label Color",
+        colourpicker::colourInput(ns("axis.tickfont.color"), "Tick Label Color",
             value = ifelse("axis.tickfont.color" %in% names(defaults),
                 defaults[["axis.tickfont.color"]], "black"
             )
@@ -273,7 +273,7 @@
                 "outside"
             )
         ),
-        colorpicker::colourInput(ns("axis.tickcolor"), "Tick Mark Color",
+        colourpicker::colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = ifelse("axis.tickcolor" %in% names(defaults),
                 defaults[["axis.tickcolor"]], "black"
             )
