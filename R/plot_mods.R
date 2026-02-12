@@ -1865,176 +1865,184 @@
         }
     }
 
-    # Restore plot title and axis titles that may have been lost in subplot
-    layout_updates <- list()
-    if (!is.null(original_title)) {
-        layout_updates$title <- original_title
+    # Get the current layout to avoid overwriting existing settings
+    current_layout <- combined_fig$x$layout
+    
+    # Helper function to safely update axis properties without overwriting existing ones
+    update_axis <- function(axis_name, updates) {
+        existing_axis <- current_layout[[axis_name]]
+        if (is.null(existing_axis)) {
+            existing_axis <- list()
+        }
+        # Merge updates into existing axis, updates take precedence
+        utils::modifyList(existing_axis, updates)
     }
     
-    # Restore axis titles to the main scatter plot axes AND apply marginal settings
-    # For both-marginal case, scatter is at position (2,1) which is xaxis2/yaxis2
-    # For X-only, scatter is at position 2 (or 3 for densityrug), which is xaxis2/yaxis2 (or xaxis3/yaxis3)
-    # For Y-only, scatter is at position 1, which is xaxis/yaxis
+    # Restore plot title if it was lost
+    if (!is.null(original_title)) {
+        combined_fig <- combined_fig %>% plotly::layout(title = original_title)
+    }
+    
+    # Configure axes based on marginal configuration
+    # Key insight: subplot shares axes between plots in same row/column
+    # - X marginal and scatter share xaxis
+    # - Y marginal and scatter share yaxis (for Y-only) OR get new axes (for both-marginal)
     
     if (show_x_marginal && show_y_marginal) {
-        # Both marginals: 2x2 grid or 3x3 for densityrug
-        # Position (1,1) = X marginal (xaxis, yaxis)
-        # Position (1,2) = legend (xaxis2, yaxis)  [shared Y with X marginal]
-        # Position (2,1) = scatter (xaxis [shared], yaxis2)
-        # Position (2,2) = Y marginal (xaxis2 [shared], yaxis2 [shared]) -> actually gets NEW axes: xaxis4, yaxis4
+        # Both marginals: 2x2 grid
+        # Row 1: X marginal (xaxis, yaxis) | Legend space (xaxis2, yaxis)
+        # Row 2: Scatter (xaxis, yaxis2) | Y marginal (xaxis4, yaxis4)
         
-        # Scatter plot axes
-        if (!is.null(original_xaxis_title) || !is.null(original_yaxis_title)) {
-            # Scatter is on xaxis (shared with X marginal), yaxis2
-            if (!is.null(original_xaxis_title)) {
-                if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-                layout_updates$xaxis$title <- original_xaxis_title
-            }
-            if (!is.null(original_yaxis_title)) {
-                if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
-                layout_updates$yaxis2$title <- original_yaxis_title
-            }
-        }
+        # X marginal (xaxis, yaxis)
+        combined_fig <- combined_fig %>%
+            plotly::layout(
+                yaxis = update_axis("yaxis", list(
+                    title = "Density",
+                    showticklabels = marginal_show_labels,
+                    ticks = if (marginal_show_ticks) "outside" else "",
+                    showgrid = if (!marginal_show_ticks) FALSE else NULL
+                )),
+                xaxis = update_axis("xaxis", list(
+                    title = if (!is.null(original_xaxis_title)) original_xaxis_title else NULL,
+                    showticklabels = marginal_show_labels,
+                    ticks = if (marginal_show_ticks) "outside" else "",
+                    showgrid = if (!marginal_show_ticks) FALSE else NULL
+                ))
+            )
         
-        # X marginal axes (xaxis, yaxis)
-        if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
-        layout_updates$yaxis$title <- "Density"
-        layout_updates$yaxis$showticklabels <- marginal_show_labels
-        layout_updates$yaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        # Scatter (xaxis shared, yaxis2)
+        combined_fig <- combined_fig %>%
+            plotly::layout(
+                yaxis2 = update_axis("yaxis2", list(
+                    title = if (!is.null(original_yaxis_title)) original_yaxis_title else NULL
+                ))
+            )
         
-        if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-        # X-axis title already set above if scatter has title, don't overwrite
-        layout_updates$xaxis$showticklabels <- marginal_show_labels
-        layout_updates$xaxis$ticks <- if (marginal_show_ticks) "outside" else ""
-        
-        # Y marginal axes (xaxis4, yaxis4 for non-densityrug OR xaxis3, yaxis3 for densityrug)
-        if (marginal_type == "densityrug") {
-            # xaxis3, yaxis3
-            if (is.null(layout_updates$xaxis3)) layout_updates$xaxis3 <- list()
-            layout_updates$xaxis3$title <- "Density"
-            layout_updates$xaxis3$showticklabels <- marginal_show_labels
-            layout_updates$xaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
+        # Y marginal (xaxis4, yaxis4)
+        combined_fig <- combined_fig %>%
+            plotly::layout(
+                xaxis4 = update_axis("xaxis4", list(
+                    title = "Density",
+                    showticklabels = marginal_show_labels,
+                    ticks = if (marginal_show_ticks) "outside" else "",
+                    showgrid = if (!marginal_show_ticks) FALSE else NULL
+                )),
+                yaxis4 = update_axis("yaxis4", list(
+                    showticklabels = marginal_show_labels,
+                    ticks = if (marginal_show_ticks) "outside" else "",
+                    showgrid = if (!marginal_show_ticks) FALSE else NULL
+                ))
+            )
             
-            if (is.null(layout_updates$yaxis3)) layout_updates$yaxis3 <- list()
-            layout_updates$yaxis3$showticklabels <- marginal_show_labels
-            layout_updates$yaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
-        } else {
-            # xaxis4, yaxis4
-            if (is.null(layout_updates$xaxis4)) layout_updates$xaxis4 <- list()
-            layout_updates$xaxis4$title <- "Density"
-            layout_updates$xaxis4$showticklabels <- marginal_show_labels
-            layout_updates$xaxis4$ticks <- if (marginal_show_ticks) "outside" else ""
-            
-            if (is.null(layout_updates$yaxis4)) layout_updates$yaxis4 <- list()
-            # Y-axis title already set above for scatter on yaxis2
-            layout_updates$yaxis4$showticklabels <- marginal_show_labels
-            layout_updates$yaxis4$ticks <- if (marginal_show_ticks) "outside" else ""
-        }
-        
     } else if (show_x_marginal) {
-        # X-only: 2x1 grid (or 3x1 for densityrug)
-        # Position 1 = X marginal (xaxis, yaxis)
-        # Position 2 = scatter (xaxis [shared], yaxis2) for non-densityrug
-        # Position 3 = scatter (xaxis [shared], yaxis3) for densityrug (position 2 is rug)
+        # X-only: 2x1 or 3x1 grid for densityrug
+        # Position 1: X marginal (xaxis, yaxis)
+        # Position 2: X rug for densityrug (xaxis, yaxis2) OR scatter for others (xaxis, yaxis2)
+        # Position 3: scatter for densityrug (xaxis, yaxis3)
         
         axis_num <- if (marginal_type == "densityrug") "3" else "2"
         
-        # Scatter plot axes
-        if (!is.null(original_xaxis_title)) {
-            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-            layout_updates$xaxis$title <- original_xaxis_title
-        }
-        if (!is.null(original_yaxis_title)) {
-            layout_updates[[paste0("yaxis", axis_num)]] <- list(title = original_yaxis_title)
-        }
-        
-        # X marginal axes (xaxis, yaxis)
-        if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
-        layout_updates$yaxis$title <- "Density"
-        layout_updates$yaxis$showticklabels <- marginal_show_labels
-        layout_updates$yaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        # X marginal (xaxis, yaxis)
+        marginal_updates <- list(
+            title = "Density",
+            showticklabels = marginal_show_labels,
+            ticks = if (marginal_show_ticks) "outside" else "",
+            showgrid = if (!marginal_show_ticks) FALSE else NULL
+        )
         if (marginal_type == "rug") {
-            layout_updates$yaxis$range <- c(0, marginal_rug_height)
-            layout_updates$yaxis$fixedrange <- TRUE
+            marginal_updates$range <- c(0, marginal_rug_height)
+            marginal_updates$fixedrange <- TRUE
         }
         
-        if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-        # X-axis title already set above if scatter has title
-        layout_updates$xaxis$showticklabels <- marginal_show_labels
-        layout_updates$xaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        combined_fig <- combined_fig %>%
+            plotly::layout(
+                yaxis = update_axis("yaxis", marginal_updates),
+                xaxis = update_axis("xaxis", list(
+                    title = if (!is.null(original_xaxis_title)) original_xaxis_title else NULL,
+                    showticklabels = marginal_show_labels,
+                    ticks = if (marginal_show_ticks) "outside" else "",
+                    showgrid = if (!marginal_show_ticks) FALSE else NULL
+                ))
+            )
         
-        # Handle densityrug rug plot (xaxis2, yaxis2)
+        # Scatter plot axes
+        scatter_yaxis <- paste0("yaxis", axis_num)
+        scatter_xaxis <- paste0("xaxis", axis_num)
+        scatter_updates <- list()
+        scatter_updates[[scatter_yaxis]] <- update_axis(scatter_yaxis, list(
+            title = if (!is.null(original_yaxis_title)) original_yaxis_title else NULL
+        ))
+        # xaxis is shared with marginal, don't update it for scatter
+        combined_fig <- do.call(plotly::layout, c(list(p = combined_fig), scatter_updates))
+        
+        # Handle densityrug rug plot (position 2)
         if (marginal_type == "densityrug") {
-            if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
-            layout_updates$xaxis2$showticklabels <- FALSE
-            layout_updates$xaxis2$ticks <- ""
-            
-            if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
-            layout_updates$yaxis2$showticklabels <- FALSE
-            layout_updates$yaxis2$ticks <- ""
-            layout_updates$yaxis2$range <- c(0, marginal_rug_height)
-            layout_updates$yaxis2$fixedrange <- TRUE
+            combined_fig <- combined_fig %>%
+                plotly::layout(
+                    yaxis2 = update_axis("yaxis2", list(
+                        showticklabels = FALSE,
+                        ticks = "",
+                        range = c(0, marginal_rug_height),
+                        fixedrange = TRUE,
+                        showgrid = FALSE
+                    ))
+                )
         }
         
     } else {
-        # Y-only: 1x2 grid (or 1x3 for densityrug)
-        # Position 1 = scatter (xaxis, yaxis)
-        # Position 2 = Y marginal (xaxis2, yaxis [shared]) for non-densityrug
-        # Position 3 = Y density (xaxis3, yaxis [shared]) for densityrug (position 2 is rug)
+        # Y-only: 1x2 or 1x3 grid for densityrug
+        # Position 1: scatter (xaxis, yaxis)
+        # Position 2: Y rug for densityrug (xaxis2, yaxis) OR Y marginal for others (xaxis2, yaxis)
+        # Position 3: Y density for densityrug (xaxis3, yaxis)
         
-        # Scatter plot axes
-        if (!is.null(original_xaxis_title)) {
-            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-            layout_updates$xaxis$title <- original_xaxis_title
-        }
-        if (!is.null(original_yaxis_title)) {
-            if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
-            layout_updates$yaxis$title <- original_yaxis_title
-        }
+        # Scatter plot (xaxis, yaxis)
+        combined_fig <- combined_fig %>%
+            plotly::layout(
+                xaxis = update_axis("xaxis", list(
+                    title = if (!is.null(original_xaxis_title)) original_xaxis_title else NULL
+                )),
+                yaxis = update_axis("yaxis", list(
+                    title = if (!is.null(original_yaxis_title)) original_yaxis_title else NULL
+                ))
+            )
         
-        # Y marginal axes
         if (marginal_type == "densityrug") {
-            # Y rug is xaxis2, yaxis2; Y density is xaxis3, yaxis3
-            if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
-            layout_updates$xaxis2$showticklabels <- FALSE
-            layout_updates$xaxis2$ticks <- ""
-            layout_updates$xaxis2$range <- c(0, marginal_rug_height)
-            layout_updates$xaxis2$fixedrange <- TRUE
-            
-            if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
-            layout_updates$yaxis2$showticklabels <- FALSE
-            layout_updates$yaxis2$ticks <- ""
-            
-            if (is.null(layout_updates$xaxis3)) layout_updates$xaxis3 <- list()
-            layout_updates$xaxis3$title <- "Density"
-            layout_updates$xaxis3$showticklabels <- marginal_show_labels
-            layout_updates$xaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
-            
-            if (is.null(layout_updates$yaxis3)) layout_updates$yaxis3 <- list()
-            # Y-axis title already set above for scatter
-            layout_updates$yaxis3$showticklabels <- marginal_show_labels
-            layout_updates$yaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
+            # Y rug is xaxis2, yaxis (shared with scatter)
+            # Y density is xaxis3, yaxis (shared with scatter)
+            combined_fig <- combined_fig %>%
+                plotly::layout(
+                    xaxis2 = update_axis("xaxis2", list(
+                        showticklabels = FALSE,
+                        ticks = "",
+                        range = c(0, marginal_rug_height),
+                        fixedrange = TRUE,
+                        showgrid = FALSE
+                    )),
+                    xaxis3 = update_axis("xaxis3", list(
+                        title = "Density",
+                        showticklabels = marginal_show_labels,
+                        ticks = if (marginal_show_ticks) "outside" else "",
+                        showgrid = if (!marginal_show_ticks) FALSE else NULL
+                    ))
+                )
         } else {
-            # Y marginal is xaxis2, yaxis2
-            if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
-            layout_updates$xaxis2$title <- "Density"
-            layout_updates$xaxis2$showticklabels <- marginal_show_labels
-            layout_updates$xaxis2$ticks <- if (marginal_show_ticks) "outside" else ""
+            # Y marginal is xaxis2, yaxis (shared with scatter)
+            marginal_updates <- list(
+                title = "Density",
+                showticklabels = marginal_show_labels,
+                ticks = if (marginal_show_ticks) "outside" else "",
+                showgrid = if (!marginal_show_ticks) FALSE else NULL
+            )
             if (marginal_type == "rug") {
-                layout_updates$xaxis2$range <- c(0, marginal_rug_height)
-                layout_updates$xaxis2$fixedrange <- TRUE
+                marginal_updates$range <- c(0, marginal_rug_height)
+                marginal_updates$fixedrange <- TRUE
             }
             
-            if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
-            # Y-axis title already set above for scatter
-            layout_updates$yaxis2$showticklabels <- marginal_show_labels
-            layout_updates$yaxis2$ticks <- if (marginal_show_ticks) "outside" else ""
+            combined_fig <- combined_fig %>%
+                plotly::layout(
+                    xaxis2 = update_axis("xaxis2", marginal_updates)
+                )
         }
-    }
-    
-    # Apply all layout updates
-    if (length(layout_updates) > 0) {
-        combined_fig <- do.call(plotly::layout, c(list(p = combined_fig), layout_updates))
     }
 
     return(combined_fig)
