@@ -1871,64 +1871,100 @@
         layout_updates$title <- original_title
     }
     
-    # Restore axis titles to the main scatter plot axes
+    # Restore axis titles to the main scatter plot axes AND apply marginal settings
     # For both-marginal case, scatter is at position (2,1) which is xaxis2/yaxis2
-    # For X-only, scatter is at position 2, which is xaxis2/yaxis2
+    # For X-only, scatter is at position 2 (or 3 for densityrug), which is xaxis2/yaxis2 (or xaxis3/yaxis3)
     # For Y-only, scatter is at position 1, which is xaxis/yaxis
+    
     if (show_x_marginal && show_y_marginal) {
-        # Scatter plot is in position (2,1) - xaxis2/yaxis2
-        if (!is.null(original_xaxis_title)) {
-            layout_updates$xaxis2 <- list(title = original_xaxis_title)
+        # Both marginals: 2x2 grid or 3x3 for densityrug
+        # Position (1,1) = X marginal (xaxis, yaxis)
+        # Position (1,2) = legend (xaxis2, yaxis)  [shared Y with X marginal]
+        # Position (2,1) = scatter (xaxis [shared], yaxis2)
+        # Position (2,2) = Y marginal (xaxis2 [shared], yaxis2 [shared]) -> actually gets NEW axes: xaxis4, yaxis4
+        
+        # Scatter plot axes
+        if (!is.null(original_xaxis_title) || !is.null(original_yaxis_title)) {
+            # Scatter is on xaxis (shared with X marginal), yaxis2
+            if (!is.null(original_xaxis_title)) {
+                if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
+                layout_updates$xaxis$title <- original_xaxis_title
+            }
+            if (!is.null(original_yaxis_title)) {
+                if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
+                layout_updates$yaxis2$title <- original_yaxis_title
+            }
         }
-        if (!is.null(original_yaxis_title)) {
-            layout_updates$yaxis2 <- list(title = original_yaxis_title)
+        
+        # X marginal axes (xaxis, yaxis)
+        if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
+        layout_updates$yaxis$title <- "Density"
+        layout_updates$yaxis$showticklabels <- marginal_show_labels
+        layout_updates$yaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        
+        if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
+        # X-axis title already set above if scatter has title, don't overwrite
+        layout_updates$xaxis$showticklabels <- marginal_show_labels
+        layout_updates$xaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        
+        # Y marginal axes (xaxis4, yaxis4 for non-densityrug OR xaxis3, yaxis3 for densityrug)
+        if (marginal_type == "densityrug") {
+            # xaxis3, yaxis3
+            if (is.null(layout_updates$xaxis3)) layout_updates$xaxis3 <- list()
+            layout_updates$xaxis3$title <- "Density"
+            layout_updates$xaxis3$showticklabels <- marginal_show_labels
+            layout_updates$xaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
+            
+            if (is.null(layout_updates$yaxis3)) layout_updates$yaxis3 <- list()
+            layout_updates$yaxis3$showticklabels <- marginal_show_labels
+            layout_updates$yaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
+        } else {
+            # xaxis4, yaxis4
+            if (is.null(layout_updates$xaxis4)) layout_updates$xaxis4 <- list()
+            layout_updates$xaxis4$title <- "Density"
+            layout_updates$xaxis4$showticklabels <- marginal_show_labels
+            layout_updates$xaxis4$ticks <- if (marginal_show_ticks) "outside" else ""
+            
+            if (is.null(layout_updates$yaxis4)) layout_updates$yaxis4 <- list()
+            # Y-axis title already set above for scatter on yaxis2
+            layout_updates$yaxis4$showticklabels <- marginal_show_labels
+            layout_updates$yaxis4$ticks <- if (marginal_show_ticks) "outside" else ""
         }
+        
     } else if (show_x_marginal) {
-        # Scatter plot is in position 2 (or 3 for densityrug) - xaxis2/yaxis2 (or xaxis3/yaxis3)
+        # X-only: 2x1 grid (or 3x1 for densityrug)
+        # Position 1 = X marginal (xaxis, yaxis)
+        # Position 2 = scatter (xaxis [shared], yaxis2) for non-densityrug
+        # Position 3 = scatter (xaxis [shared], yaxis3) for densityrug (position 2 is rug)
+        
         axis_num <- if (marginal_type == "densityrug") "3" else "2"
+        
+        # Scatter plot axes
         if (!is.null(original_xaxis_title)) {
-            layout_updates[[paste0("xaxis", axis_num)]] <- list(title = original_xaxis_title)
+            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
+            layout_updates$xaxis$title <- original_xaxis_title
         }
         if (!is.null(original_yaxis_title)) {
             layout_updates[[paste0("yaxis", axis_num)]] <- list(title = original_yaxis_title)
         }
-    } else {
-        # Scatter plot is in position 1 - xaxis/yaxis
-        if (!is.null(original_xaxis_title)) {
-            layout_updates$xaxis <- list(title = original_xaxis_title)
+        
+        # X marginal axes (xaxis, yaxis)
+        if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
+        layout_updates$yaxis$title <- "Density"
+        layout_updates$yaxis$showticklabels <- marginal_show_labels
+        layout_updates$yaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        if (marginal_type == "rug") {
+            layout_updates$yaxis$range <- c(0, marginal_rug_height)
+            layout_updates$yaxis$fixedrange <- TRUE
         }
-        if (!is.null(original_yaxis_title)) {
-            layout_updates$yaxis <- list(title = original_yaxis_title)
-        }
-    }
-    
-    # Apply marginal axis tick/label settings to marginal plot axes
-    # We need to be careful not to overwrite scatter plot axis settings
-    # X marginal axes
-    if (show_x_marginal) {
+        
+        if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
+        # X-axis title already set above if scatter has title
+        layout_updates$xaxis$showticklabels <- marginal_show_labels
+        layout_updates$xaxis$ticks <- if (marginal_show_ticks) "outside" else ""
+        
+        # Handle densityrug rug plot (xaxis2, yaxis2)
         if (marginal_type == "densityrug") {
-            # X density is axis 1, X rug is axis 2
-            # For X density
-            if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
-            layout_updates$yaxis$title <- "Density"
-            layout_updates$yaxis$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis$ticks <- "outside"
-            } else {
-                layout_updates$yaxis$ticks <- ""
-                layout_updates$yaxis$showgrid <- FALSE
-            }
-            
-            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-            layout_updates$xaxis$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis$ticks <- "outside"
-            } else {
-                layout_updates$xaxis$ticks <- ""
-                layout_updates$xaxis$showgrid <- FALSE
-            }
-            
-            # For X rug
             if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
             layout_updates$xaxis2$showticklabels <- FALSE
             layout_updates$xaxis2$ticks <- ""
@@ -1938,37 +1974,27 @@
             layout_updates$yaxis2$ticks <- ""
             layout_updates$yaxis2$range <- c(0, marginal_rug_height)
             layout_updates$yaxis2$fixedrange <- TRUE
-        } else {
-            # X marginal is axis 1
-            if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
-            layout_updates$yaxis$title <- "Density"
-            layout_updates$yaxis$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis$ticks <- "outside"
-            } else {
-                layout_updates$yaxis$ticks <- ""
-                layout_updates$yaxis$showgrid <- FALSE
-            }
-            if (marginal_type == "rug") {
-                layout_updates$yaxis$range <- c(0, marginal_rug_height)
-                layout_updates$yaxis$fixedrange <- TRUE
-            }
-            
-            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
-            layout_updates$xaxis$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis$ticks <- "outside"
-            } else {
-                layout_updates$xaxis$ticks <- ""
-                layout_updates$xaxis$showgrid <- FALSE
-            }
         }
-    }
-    
-    # Y marginal axes (only when X marginal is not shown, otherwise handled in both-marginal section)
-    if (show_y_marginal && !show_x_marginal) {
+        
+    } else {
+        # Y-only: 1x2 grid (or 1x3 for densityrug)
+        # Position 1 = scatter (xaxis, yaxis)
+        # Position 2 = Y marginal (xaxis2, yaxis [shared]) for non-densityrug
+        # Position 3 = Y density (xaxis3, yaxis [shared]) for densityrug (position 2 is rug)
+        
+        # Scatter plot axes
+        if (!is.null(original_xaxis_title)) {
+            if (is.null(layout_updates$xaxis)) layout_updates$xaxis <- list()
+            layout_updates$xaxis$title <- original_xaxis_title
+        }
+        if (!is.null(original_yaxis_title)) {
+            if (is.null(layout_updates$yaxis)) layout_updates$yaxis <- list()
+            layout_updates$yaxis$title <- original_yaxis_title
+        }
+        
+        # Y marginal axes
         if (marginal_type == "densityrug") {
-            # Y rug is axis 2, Y density is axis 3
+            # Y rug is xaxis2, yaxis2; Y density is xaxis3, yaxis3
             if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
             layout_updates$xaxis2$showticklabels <- FALSE
             layout_updates$xaxis2$ticks <- ""
@@ -1982,90 +2008,27 @@
             if (is.null(layout_updates$xaxis3)) layout_updates$xaxis3 <- list()
             layout_updates$xaxis3$title <- "Density"
             layout_updates$xaxis3$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis3$ticks <- "outside"
-            } else {
-                layout_updates$xaxis3$ticks <- ""
-                layout_updates$xaxis3$showgrid <- FALSE
-            }
+            layout_updates$xaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
             
             if (is.null(layout_updates$yaxis3)) layout_updates$yaxis3 <- list()
+            # Y-axis title already set above for scatter
             layout_updates$yaxis3$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis3$ticks <- "outside"
-            } else {
-                layout_updates$yaxis3$ticks <- ""
-                layout_updates$yaxis3$showgrid <- FALSE
-            }
+            layout_updates$yaxis3$ticks <- if (marginal_show_ticks) "outside" else ""
         } else {
-            # Y marginal is axis 2
+            # Y marginal is xaxis2, yaxis2
             if (is.null(layout_updates$xaxis2)) layout_updates$xaxis2 <- list()
             layout_updates$xaxis2$title <- "Density"
             layout_updates$xaxis2$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis2$ticks <- "outside"
-            } else {
-                layout_updates$xaxis2$ticks <- ""
-                layout_updates$xaxis2$showgrid <- FALSE
-            }
+            layout_updates$xaxis2$ticks <- if (marginal_show_ticks) "outside" else ""
             if (marginal_type == "rug") {
                 layout_updates$xaxis2$range <- c(0, marginal_rug_height)
                 layout_updates$xaxis2$fixedrange <- TRUE
             }
             
             if (is.null(layout_updates$yaxis2)) layout_updates$yaxis2 <- list()
+            # Y-axis title already set above for scatter
             layout_updates$yaxis2$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis2$ticks <- "outside"
-            } else {
-                layout_updates$yaxis2$ticks <- ""
-                layout_updates$yaxis2$showgrid <- FALSE
-            }
-        }
-    }
-    
-    # Both marginals case - handle Y marginal axes and ticks
-    if (show_x_marginal && show_y_marginal) {
-        if (marginal_type == "densityrug") {
-            # Y density is axis 3, need to set title and tick settings
-            if (is.null(layout_updates$xaxis3)) layout_updates$xaxis3 <- list()
-            layout_updates$xaxis3$title <- "Density"
-            layout_updates$xaxis3$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis3$ticks <- "outside"
-            } else {
-                layout_updates$xaxis3$ticks <- ""
-                layout_updates$xaxis3$showgrid <- FALSE
-            }
-            
-            if (is.null(layout_updates$yaxis3)) layout_updates$yaxis3 <- list()
-            layout_updates$yaxis3$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis3$ticks <- "outside"
-            } else {
-                layout_updates$yaxis3$ticks <- ""
-                layout_updates$yaxis3$showgrid <- FALSE
-            }
-        } else {
-            # Y marginal is on axis 4 in both-marginal case
-            if (is.null(layout_updates$xaxis4)) layout_updates$xaxis4 <- list()
-            layout_updates$xaxis4$title <- "Density"
-            layout_updates$xaxis4$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$xaxis4$ticks <- "outside"
-            } else {
-                layout_updates$xaxis4$ticks <- ""
-                layout_updates$xaxis4$showgrid <- FALSE
-            }
-            
-            if (is.null(layout_updates$yaxis4)) layout_updates$yaxis4 <- list()
-            layout_updates$yaxis4$showticklabels <- marginal_show_labels
-            if (marginal_show_ticks) {
-                layout_updates$yaxis4$ticks <- "outside"
-            } else {
-                layout_updates$yaxis4$ticks <- ""
-                layout_updates$yaxis4$showgrid <- FALSE
-            }
+            layout_updates$yaxis2$ticks <- if (marginal_show_ticks) "outside" else ""
         }
     }
     
