@@ -1,3 +1,64 @@
+#' Input UI components for the dumbellPlot module
+#'
+#' This should be placed in the UI where the inputs should be shown, with an `id`
+#' that matches the `id` used in the `dumbellPlotServer()` and `dumbellPlotOutputUI()` functions.
+#'
+#' @details The user inputs for this module are separated from the outputs to allow for
+#' more flexible UI design.
+#'
+#' The inputs will automatically be organized into a grid layout via the `organize_inputs()` function,
+#' with `columns` controlling the number of columns in the grid.
+#'
+#' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
+#' Nearly all parameters for [VizModules::dumbellPlot()] can be set via these inputs, so see the help
+#' for that function for an exhaustive list.
+#'
+#' @section Plot parameters and defaults:
+#' The following [VizModules::dumbellPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' \itemize{
+#'   \item \code{x} - X-axis start values (UI: "Select X start values", multiple: TRUE)
+#'   \item \code{x_end} - X-axis end values (UI: "Select X end values", multiple: TRUE)
+#'   \item \code{y} - Y-axis variable(s) (UI: "Select Y values", multiple: TRUE)
+#'   \item \code{group.by} - Grouping variable (UI: "Group by")
+#'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
+#'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
+#'   \item \code{line.colour} - Color of connecting lines (UI: "Colour Of conectors", default: "red")
+#'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
+#'   \item \code{axis.*} - Various axis styling options (UI: via .uniform_axes_inputs_ui)
+#'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
+#'   \item \code{flip.y} - Flip Y-axis (UI: "Flip Y", default: FALSE)
+#' }
+#'
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing plotly-specific features are also available:
+#' \itemize{
+#'   \item \code{hline.*} - Horizontal reference lines (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{vline.*} - Vertical reference lines (UI: via .uniform_lines_inputs_ui)
+#'   \item \code{abline.*} - Diagonal reference lines (UI: via .uniform_lines_inputs_ui)
+#' }
+#'
+#' @param id The ID for the Shiny module.
+#' @param data The data frame used for plot generation.
+#' @param defaults A named list of default values for the inputs.
+#' @param title An optional title for the UI grid.
+#' @param columns Number of columns for the UI grid.
+#' @return A Shiny tagList containing the UI elements
+#'
+#' @import shiny
+#' @importFrom colourpicker colourInput
+#'
+#' @export
+#' @author Jacob Martin, Jared Andrews
+#' @seealso [VizModules::dumbellPlot()], [VizModules::organize_inputs()],
+#' [VizModules::dumbellPlotOutputUI()], [VizModules::dumbellPlotServer()], [VizModules::dumbellPlotApp()]
+#' @examples
+#' library(VizModules)
+#' data <- data.frame(
+#'   School = c("School A", "School B", "School C"),
+#'   Women = c(30, 35, 40),
+#'   Men = c(50, 55, 60)
+#' )
+#' dumbellPlotInputsUI("dumbellPlot", data)
 dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -69,7 +130,20 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
 
 
-
+#' Output UI components for the dumbellPlot module
+#'
+#' This should be placed in the UI where the plot should be shown.
+#'
+#' @param id The ID for the Shiny module.
+#'
+#' @return A Shiny plotlyOutput for the dumbellPlot
+#'
+#' @import shiny
+#' @import plotly
+#' @importFrom shinyjqui jqui_resizable
+#'
+#' @export
+#' @author Jacob Martin, Jared Andrews
 dumbellPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(

@@ -1,3 +1,72 @@
+#' Create an Interactive Dumbbell Plot with plotly
+#'
+#' Generates a customizable interactive dumbbell plot using plotly, supporting grouping, faceting, multi-axis, and color palettes.
+#' Dumbbell plots are useful for comparing two values for the same category, showing the start and end points connected by a line.
+#'
+#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param x Character vector of column name(s) for the x-axis start values. Multiple columns create separate dumbbell sets.
+#' @param x_end Character vector of column name(s) for the x-axis end values. Must match length of x parameter.
+#' @param y Character vector of column name(s) for the y-axis. Multiple columns create separate dumbbell sets.
+#' @param colour.group.by Character or formula, column name(s) to group by color. Can be a formula like \code{~ column_name}.
+#' @param palette.selection Character vector of hex colors or palette name for marker colors.
+#' @param show.legend Logical, whether to display the legend. Default: TRUE.
+#' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
+#' @param line.colour Character, hex color for the connecting lines between start and end points. Default: "red".
+#' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
+#'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
+#' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
+#' @param axis.linecolor Character, hex color for axis lines. Default: "black".
+#' @param axis.linewidth Numeric, width of axis lines in pixels. Default: 0.5.
+#' @param axis.tickfont.size Numeric, font size for axis tick labels. Default: 12.
+#' @param axis.tickfont.color Character, hex color for axis tick labels. Default: "black".
+#' @param axis.tickfont.family Character, font family for axis tick labels. Default: "Arial".
+#' @param axis.tickangle.x Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.
+#' @param axis.tickangle.y Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.
+#' @param axis.ticks Character, position of tick marks. Options: "outside", "inside", "none". Default: "outside".
+#' @param axis.tickcolor Character, hex color for tick marks. Default: "black".
+#' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
+#' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
+#' @param title.text Character, main title text for the plot. Default: "".
+#' @param title.font.size Numeric, font size for plot title. Default: 14.
+#' @param title.font.family Character, font family for plot title. Default: "Arial".
+#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
+#' @param flip.y Logical, whether to reverse the y-axis direction. Default: FALSE.
+#' @param x.adjustment Optional character or function, transformation to apply to x values.
+#'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
+#' @param y.adjustment Optional character or function, transformation to apply to y values.
+#'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
+#' @param color.adjustment Optional character or function, transformation to apply to color grouping variable.
+#'   Same options as x.adjustment and y.adjustment. Default: NULL.
+#' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
+#'
+#' @return A plotly object representing the interactive dumbbell plot.
+#'
+#' @import plotly
+#' 
+#' @author Jacob Martin, Jared Andrews
+#' @export
+#'
+#' @examples
+#' # Basic dumbbell plot
+#' data <- data.frame(
+#'   School = c("School A", "School B", "School C"),
+#'   Women = c(30, 35, 40),
+#'   Men = c(50, 55, 60)
+#' )
+#' fig <- dumbellPlot(
+#'   reactive.data = data,
+#'   x = "Women",
+#'   x_end = "Men",
+#'   y = "School",
+#'   colour.group.by = "Women",
+#'   palette.selection = c("pink", "blue"),
+#'   show.legend = TRUE,
+#'   line.colour = "gray"
+#' )
 dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.selection, show.legend, facet.by = NULL, line.colour = "red",
                      facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
