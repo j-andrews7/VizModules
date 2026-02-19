@@ -1,3 +1,24 @@
+#' Server logic for dumbellPlot module
+#'
+#' @param id The ID for the Shiny module.
+#' @param data A `reactive` containing the data frame to plot.
+#' @param hide.inputs A character vector of input IDs to hide.
+#'   These will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @param hide.tabs A character vector of tab names to hide.
+#'   Inputs in these tabs will still be initialized and their values passed to the plot function,
+#'   but the user will not be able to see/adjust them in the UI.
+#' @return The `moduleServer` function for the dumbellPlot module.
+#'
+#' @import shiny
+#' @import plotly
+#' @importFrom shinyjs hide
+#'
+#' @seealso [VizModules::dumbellPlot()], [VizModules::dumbellPlotInputsUI()],
+#' [VizModules::dumbellPlotOutputUI()], [VizModules::dumbellPlotApp()]
+#'
+#' @export
+#' @author Jacob Martin, Jared Andrews
 dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
@@ -32,33 +53,35 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             x_vals <- input$x.value
-            y_vals <- input$y.value
-            group_col <- input$group.by
-            multi_axis <- xor(length(x_vals) > 1, length(y_vals) > 1)
+            y_val <- input$y.value
+            colour_by <- input$colour.by
+            
+            # Ensure max 2 x values
+            if (!is.null(x_vals) && length(x_vals) > 2) {
+                x_vals <- x_vals[1:2]
+            }
 
-            if (multi_axis) {
-                if (length(x_vals) > 1) {
+            if (!is.null(colour_by) && colour_by == "X variables") {
+                # Color by X variables
+                if (!is.null(x_vals) && length(x_vals) > 0) {
                     return(x_vals)
                 }
-                if (length(y_vals) > 1) {
-                    return(y_vals)
+            } else {
+                # Color by Y variables
+                if (!is.null(y_val) && nzchar(y_val) && y_val %in% names(df)) {
+                    return(unique(stats::na.omit(as.character(df[[y_val]]))))
                 }
-            }
-
-            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                return(unique(stats::na.omit(as.character(df[[group_col]]))))
-            }
-
-            if (!is.null(x_vals) && length(x_vals) > 0) {
-                return(x_vals[1])
-            }
-
-            if (!is.null(y_vals) && length(y_vals) > 0) {
-                return(y_vals[1])
             }
 
             character(0)
         })
+
+        # Enforce max 2 x values
+        observeEvent(input$x.value, {
+            if (!is.null(input$x.value) && length(input$x.value) > 2) {
+                updateSelectInput(session, "x.value", selected = input$x.value[1:2])
+            }
+        }, ignoreNULL = FALSE)
 
         output$palette.selection <- renderUI({
             groups <- palette_groups()
@@ -129,9 +152,13 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             x_input <- isolate_fn(input$x.value)
             y_input <- isolate_fn(input$y.value)
-            x_end_input <- isolate_fn(input$x_end.value)
+            
+            # Ensure max 2 x values
+            if (!is.null(x_input) && length(x_input) > 2) {
+                x_input <- x_input[1:2]
+            }
 
-            # Sets the colouring to the first item in the selected palette unless group.by is selected
+            # Sets the colouring based on colour.by selection
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
@@ -142,63 +169,37 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 palette_selection <- default_palette_values
             }
 
-            group.by <- palette_selection[1]
-            if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
-                group.by <- reformulate(isolate_fn(input$group.by))
-            }
-
-            # Making multiple lines on the axis. e.g 3x and 1y
-            # Determining axis min and max
-            # Checking if the axis is a category and non continious
-            # And axis ordering
-            axis_min_x <- NULL
-            axis_max_x <- NULL
+            colour_by <- isolate_fn(input$colour.by)
 
             # Axis title:
-            x_title <- x_input[1]
-            if (length(x_input) > 1) {
-                x_title <- "Value"
+            x_title <- if (length(x_input) == 1) x_input[1] else "Value"
+            y_title <- y_input
+
+            x.adjustment <- NULL
+            if (!isolate_fn(input$x.adjustment) == "") {
+                x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
-            y_title <- y_input[1]
-            if (length(y_input) > 1) {
-                y_title <- "Value"
-            }
-
-            # y.adjustment <- NULL
-            # if (!isolate_fn(input$y.adjustment) == "") {
-            #     y.adjustment <- isolate_fn(input$y.adjustment)
-            # }
-
-            # x.adjustment <- NULL
-            # if (!isolate_fn(input$x.adjustment) == "") {
-            #     x.adjustment <- isolate_fn(input$x.adjustment)
-            # }
-
-            # Checking that all columns are numeric for x and y adjustment to be available
-            # TODO: remove sapply usage here
-            if (!all(sapply(d[x_input], is.numeric))) {
+            # Checking that all columns are numeric for x adjustment to be available
+            if (!is.null(x_input) && length(x_input) > 0 && !all(vapply(d[x_input], is.numeric, logical(1)))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
-            if (!all(sapply(d[y_input], is.numeric))) {
-                updateSelectInput(session, "y.adjustment", selected = "")
-                y.adjustment <- NULL
-            }
+            
             facet.by <- NULL 
             if (!isolate_fn(input$facet.by) == ""){
                 facet.by <- isolate_fn(input$facet.by)
             }
+            
             fig <- dumbellPlot(
                 reactive.data = d,
                 x = x_input,
                 y = y_input,
-                x_end = x_end_input,
                 line.colour = isolate_fn(input$line.colour),
-                colour.group.by = group.by,
+                colour.by = colour_by,
                 palette.selection = palette_selection,
-                show.legend = FALSE,
-                facet.by = isolate_fn(input$facet.by),
+                show.legend = TRUE,
+                facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 axis.showline = isolate_fn(input$axis.showline),
                 axis.mirror = isolate_fn(input$axis.mirror),
@@ -219,9 +220,8 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.title = x_title,
                 y.title = y_title,
                 flip.x = isolate_fn(input$flip.x),
-                flip.y = isolate_fn(input$flip.y)
-                # x.adjustment = x.adjustment,
-                # y.adjustment = y.adjustment
+                flip.y = isolate_fn(input$flip.y),
+                x.adjustment = x.adjustment
             )
 
             # Add reference lines
