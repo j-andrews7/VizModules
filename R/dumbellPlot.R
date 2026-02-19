@@ -161,7 +161,7 @@ dumbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.
             create_dumbbell_plot(facet_data, x, y, colour.by, palette.selection, line.colour, show.legend)
         })
         
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE, margin = 0.06)
         
         # Add subplot titles as annotations
         n_facets <- length(facet_levels)
