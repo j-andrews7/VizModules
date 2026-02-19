@@ -1,0 +1,372 @@
+---
+title: "Understanding Colour Picker Inputs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Understanding Colour Picker Inputs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    eval = FALSE
+)
+```
+
+## Introduction
+
+VizModules uses colour picker inputs extensively to allow users to customize plot aesthetics.
+This vignette explains the two types of colour pickers used in the package, their output formats,
+and how to work with them in your Shiny modules.
+
+## Types of Colour Pickers
+
+VizModules uses two different colour picker implementations:
+
+1. **`colourpicker::colourInput()`** - For single colour selection
+2. **`multiColorPicker()`** - For selecting colours for multiple discrete groups
+
+## Single Colour Picker: `colourpicker::colourInput()`
+
+### Usage
+
+The `colourpicker::colourInput()` widget is used throughout VizModules for selecting individual colours
+such as axis line colors, title colors, annotation colors, and gradient endpoints.
+
+```{r colourpicker-usage}
+library(shiny)
+library(colourpicker)
+
+ui <- fluidPage(
+    colourInput("my_color", "Choose a color", value = "#F0E442"),
+    textOutput("color_value")
+)
+
+server <- function(input, output, session) {
+    output$color_value <- renderText({
+        paste("Selected color:", input$my_color)
+    })
+}
+```
+
+### Output Format
+
+The colour picker returns a **character string** in **hexadecimal (HEX) format**:
+
+- **Format**: `"#RRGGBB"` where RR, GG, BB are two-digit hexadecimal values (00-FF)
+- **Examples**: `"#F0E442"`, `"#0072B2"`, `"#000000"`, `"#FFFFFF"`
+- **Case**: Can be uppercase or lowercase (VizModules normalizes to uppercase)
+
+### Accessing in Server Code
+
+In server functions, access the colour value via `input$<inputId>`:
+
+```{r accessing-color}
+# Basic access
+my_color <- input$my_color  # Returns "#F0E442"
+
+# With isolation (recommended in VizModules)
+isolate_fn <- setup_auto_update_logic(input)
+my_color <- isolate_fn(input$my_color)
+
+# Direct use in plotting
+plot(x, y, col = input$my_color)
+```
+
+### Common Use Cases in VizModules
+
+VizModules uses `colourInput()` for:
+
+1. **Gradient colors** (scatter plots with continuous color scales):
+   ```{r gradient-example}
+   colourpicker::colourInput(ns("min.color"), "Minimum color", value = "#F0E442")
+   colourpicker::colourInput(ns("max.color"), "Maximum color", value = "#0072B2")
+   
+   # In server:
+   min.color = isolate_fn(input$min.color)  # "#F0E442"
+   max.color = isolate_fn(input$max.color)  # "#0072B2"
+   ```
+
+2. **Axis and title styling**:
+   ```{r axis-styling}
+   colourInput(ns("text.colour"), "Title Color", value = "#000000")
+   colourInput(ns("axis.linecolor"), "Axis Line Color", value = "black")
+   colourInput(ns("axis.tickcolor"), "Tick Mark Color", value = "black")
+   
+   # In server:
+   text.colour = isolate_fn(input$text.colour)          # "#000000"
+   axis.linecolor = isolate_fn(input$axis.linecolor)    # "black"
+   ```
+
+3. **Plot-specific colors**:
+   ```{r plot-colors}
+   # Contour color for density overlays
+   colourInput(ns("contour.color"), "Contour color", value = "black")
+   
+   # Line of best fit
+   colourInput(ns("line.best.colour"), "Line of best fit colour", value = "#000000")
+   
+   # Pie chart elements
+   colourInput(ns("slice.border.color"), "Slice Border Color", value = "#FFFFFF")
+   ```
+
+### Updating Programmatically
+
+You can update colour pickers from the server using `colourpicker::updateColourInput()`:
+
+```{r update-color}
+# Reset to default value
+colourpicker::updateColourInput(session, "min.color", value = "#F0E442")
+
+# Change based on user action
+observeEvent(input$preset_palette, {
+    if (input$preset_palette == "warm") {
+        colourpicker::updateColourInput(session, "my_color", value = "#FF6B6B")
+    } else if (input$preset_palette == "cool") {
+        colourpicker::updateColourInput(session, "my_color", value = "#4ECDC4")
+    }
+})
+```
+
+## Multi-Group Colour Picker: `multiColorPicker()`
+
+### Usage
+
+The `multiColorPicker()` widget is a custom VizModules component for selecting colours for multiple
+discrete groups simultaneously. It's primarily used for categorical color mappings in scatter plots
+and other plots that color by discrete variables.
+
+```{r multicolor-usage}
+library(VizModules)
+
+# In UI
+multiColorPicker(
+    ns("color.panel"),
+    label = "Color palette",
+    groups = c("setosa", "versicolor", "virginica"),
+    palette_options = default_palettes()[["choices"]],
+    selected_palette = "dittoColors",
+    colors = NULL,  # Optional: pre-set colors as named vector
+    compact = TRUE
+)
+```
+
+### Output Format
+
+The multi-group colour picker returns a **named character vector** where:
+
+- **Names**: The group/category names
+- **Values**: HEX color codes for each group
+- **Format**: `c(group1 = "#RRGGBB", group2 = "#RRGGBB", ...)`
+
+**Example output:**
+```{r multicolor-output}
+# Example: Species coloring for iris data
+color_mapping <- input$color.panel
+# Returns:
+# c(setosa = "#E69F00", versicolor = "#56B4E9", virginica = "#009E73")
+
+# Accessing individual colors
+setosa_color <- color_mapping["setosa"]  # "#E69F00"
+```
+
+### Accessing in Server Code
+
+```{r accessing-multicolor}
+# In dittoViz_ScatterPlot module:
+color.panel <- reactive({
+    isolate_fn <- setup_auto_update_logic(input)
+    levels <- color_levels()  # Get current color groups
+    
+    # Access the multiColorPicker values
+    picker_values <- isolate_fn(input$color.panel)
+    
+    # Returns a named vector like:
+    # c(GroupA = "#E69F00", GroupB = "#56B4E9", GroupC = "#009E73")
+    
+    picker_values
+})
+
+# Use in plotting
+dittoViz::scatterPlot(
+    data(),
+    color.by = "Species",
+    color.panel = unname(color.panel()),  # Pass unnamed vector to dittoViz
+    colors = seq_len(length(color.panel()))
+)
+```
+
+### Dynamic Group Updates
+
+The `multiColorPicker` automatically updates when the groups change (e.g., when a different
+categorical variable is selected for coloring):
+
+```{r dynamic-groups}
+# Reactive to detect color groups
+color_levels <- reactive({
+    df <- data()
+    color_by <- input$color.by
+    
+    if (is.null(df) || is.null(color_by) || color_by == "") {
+        return(character(0))
+    }
+    
+    # For factors, preserve order; for character, alphabetize
+    if (is.factor(df[[color_by]])) {
+        levels(df[[color_by]])
+    } else {
+        levels(as.factor(df[[color_by]]))
+    }
+})
+
+# Render UI with current groups
+output$color.panel.ui <- renderUI({
+    groups <- color_levels()
+    
+    if (length(groups) == 0) {
+        # No discrete groups - fall back to single color picker
+        colourpicker::colourInput(ns("single.point.color"), 
+                                   label = "Point color",
+                                   value = "#000000")
+    } else {
+        # Show multi-group picker
+        multiColorPicker(
+            ns("color.panel"),
+            label = "Color palette",
+            groups = groups,  # Dynamic groups
+            palette_options = default_palettes()[["choices"]],
+            selected_palette = "dittoColors"
+        )
+    }
+})
+```
+
+## Uniform Color Inputs
+
+VizModules provides uniform color inputs across all modules via the `.uniform_axes_inputs_ui()`
+and `.uniform_lines_inputs_ui()` helper functions defined in `uniform_ui_inputs.R`.
+
+These helpers ensure consistent styling options across all plot types:
+
+```{r uniform-inputs}
+# From .uniform_axes_inputs_ui():
+colourInput(ns("text.colour"), "Title Color", value = "#000000")
+colourInput(ns("axis.title.font.color"), "Axis Title Color", value = "#000000")
+colourInput(ns("axis.linecolor"), "Axis Line Color", value = "black")
+colourInput(ns("axis.tickcolor"), "Tick Mark Color", value = "black")
+colourInput(ns("axis.tickfont.color"), "Tick Label Color", value = "black")
+
+# From .uniform_lines_inputs_ui():
+colourInput(ns("line.best.colour"), "Line of best fit colour", value = "#000000")
+```
+
+All of these return standard HEX color strings when accessed via `input$<id>`.
+
+## Practical Examples
+
+### Example 1: Custom Color Scheme for Scatter Plot
+
+```{r example1}
+library(VizModules)
+library(shiny)
+
+ui <- fluidPage(
+    sidebarLayout(
+        sidebarPanel(
+            dittoViz_ScatterPlotInputsUI("scatter", iris,
+                defaults = list(
+                    x.by = "Sepal.Length",
+                    y.by = "Sepal.Width",
+                    color.by = "Species"
+                )
+            )
+        ),
+        mainPanel(
+            dittoViz_ScatterPlotOutputUI("scatter")
+        )
+    )
+)
+
+server <- function(input, output, session) {
+    # Provide manual colors as a named vector
+    manual_colors <- c(
+        setosa = "#E31A1C",
+        versicolor = "#1F78B4",
+        virginica = "#33A02C"
+    )
+    
+    dittoViz_ScatterPlotServer("scatter", 
+                                data = reactive(iris),
+                                manual.colors = manual_colors)
+}
+
+shinyApp(ui, server)
+```
+
+### Example 2: Programmatic Color Updates
+
+```{r example2}
+server <- function(input, output, session) {
+    # Update colors based on a theme selector
+    observeEvent(input$theme, {
+        if (input$theme == "dark") {
+            # Dark theme colors
+            colourpicker::updateColourInput(session, "text.colour", value = "#FFFFFF")
+            colourpicker::updateColourInput(session, "axis.linecolor", value = "#CCCCCC")
+        } else {
+            # Light theme colors
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            colourpicker::updateColourInput(session, "axis.linecolor", value = "#000000")
+        }
+    })
+}
+```
+
+### Example 3: Extracting Colors from multiColorPicker
+
+```{r example3}
+# In your module server:
+observe({
+    colors <- input$color.panel
+    
+    # Colors is a named character vector
+    # c(GroupA = "#E69F00", GroupB = "#56B4E9", ...)
+    
+    # Get color for specific group
+    group_a_color <- colors["GroupA"]
+    
+    # Get all colors as unnamed vector
+    color_values <- unname(colors)
+    
+    # Get all group names
+    group_names <- names(colors)
+    
+    print(paste("Groups:", paste(group_names, collapse = ", ")))
+    print(paste("Colors:", paste(color_values, collapse = ", ")))
+})
+```
+
+## Summary
+
+- **`colourpicker::colourInput()`**: Returns a single HEX color string (`"#RRGGBB"`)
+  - Used for: single colors, gradients, axis styling, annotations
+  - Accessed via: `input$<id>` returns character string
+  - Updated via: `colourpicker::updateColourInput(session, id, value)`
+
+- **`multiColorPicker()`**: Returns a named character vector (`c(group1="#...", group2="#...")`)
+  - Used for: discrete group color mappings in categorical plots
+  - Accessed via: `input$<id>` returns named character vector
+  - Updated automatically: when groups change, widget re-renders with new groups
+
+Both types integrate seamlessly with R plotting functions that expect color parameters.
+The HEX format is universally supported by base R graphics, ggplot2, plotly, and all
+major visualization packages.
+
+## See Also
+
+- `vignette("custom-modules")` - Building wrapper modules with custom inputs
+- `vignette("quick-start")` - Getting started with VizModules
+- `?colourpicker::colourInput` - Documentation for the colourpicker package
+- `?VizModules::multiColorPicker` - VizModules custom color picker
