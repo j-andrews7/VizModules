@@ -15,14 +15,17 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
     inputs <- list(
         "Data" = tagList(
-          selectInput(ns("x.value"), "Select X values:",
-          selected = num.choices[2], choices = num.choices, multiple = TRUE
+          selectInput(ns("x.value"), "Select X start values:",
+          selected = if (length(num.choices) > 1) num.choices[2] else "",
+          choices = num.choices, multiple = TRUE
           ),
           selectInput(ns("x_end.value"), "Select X end values:",
-          selected = num.choices[3], choices = num.choices, multiple = TRUE
+          selected = if (length(num.choices) > 2) num.choices[3] else "",
+          choices = num.choices, multiple = TRUE
           ),
           selectInput(ns("y.value"), "Select Y values:",
-          selected = cat.choices[2], choices = cat.choices, multiple = TRUE
+          selected = if (length(cat.choices) > 1) cat.choices[2] else "",
+          choices = choices, multiple = TRUE
           ),
           selectInput(ns("group.by"), "Group by:",
             selected = cat.choices[1], choices = cat.choices

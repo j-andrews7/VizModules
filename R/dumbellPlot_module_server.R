@@ -32,16 +32,19 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             x_vals <- input$x.value
+            x_end_vals <- input$x_end.value
             y_vals <- input$y.value
             group_col <- input$group.by
             multi_axis <- xor(length(x_vals) > 1, length(y_vals) > 1)
 
             if (multi_axis) {
                 if (length(x_vals) > 1) {
-                    return(x_vals)
+                    # For multiple x values, include both start and end in palette
+                    return(c(x_vals, x_end_vals))
                 }
                 if (length(y_vals) > 1) {
-                    return(y_vals)
+                    # For multiple y values, return y values combined with x and x_end labels
+                    return(c(paste(y_vals, "-", x_vals[1]), paste(y_vals, "-", x_end_vals[1])))
                 }
             }
 
@@ -49,12 +52,9 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 return(unique(stats::na.omit(as.character(df[[group_col]]))))
             }
 
-            if (!is.null(x_vals) && length(x_vals) > 0) {
-                return(x_vals[1])
-            }
-
-            if (!is.null(y_vals) && length(y_vals) > 0) {
-                return(y_vals[1])
+            # Default: return start and end markers
+            if (!is.null(x_vals) && length(x_vals) > 0 && !is.null(x_end_vals) && length(x_end_vals) > 0) {
+                return(c(x_vals[1], x_end_vals[1]))
             }
 
             character(0)

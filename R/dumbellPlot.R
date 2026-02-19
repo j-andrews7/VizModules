@@ -72,67 +72,256 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
 
-  #IF FACET = ON and MULTI AXIS = FALSE
+    # Determine shareX and shareY based on facet.scales
+    shareX <- TRUE
+    shareY <- TRUE
+    if (facet.scales == "free") {
+        shareX <- FALSE
+        shareY <- FALSE
+    } else if (facet.scales == "free_x") {
+        shareX <- FALSE
+        shareY <- TRUE
+    } else if (facet.scales == "free_y") {
+        shareX <- TRUE
+        shareY <- FALSE
+    }
+
+    # FACETING WITH SINGLE AXIS
     if (!is.null(facet.by) && facet.by != "" && !multi_axis) {
+        facet_levels <- unique(plot_data[[facet.by]])
 
+        plots <- lapply(facet_levels, function(level) {
+            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
+            # Create initial plot with line color
+            fig <- plot_ly(facet_data, color = I(line.colour))
+            # Add segments (dumbbells)
+            fig <- fig %>% add_segments(
+                x = facet_data[[x[1]]],
+                xend = facet_data[[x_end[1]]],
+                y = facet_data[[y[1]]],
+                yend = facet_data[[y[1]]],
+                showlegend = FALSE
+            )
+            # Add start markers
+            fig <- fig %>% add_markers(
+                x = facet_data[[x[1]]],
+                y = facet_data[[y[1]]],
+                name = x[1],
+                marker = list(color = palette.selection[1])
+            )
+            # Add end markers
+            fig <- fig %>% add_markers(
+                x = facet_data[[x_end[1]]],
+                y = facet_data[[y[1]]],
+                name = x_end[1],
+                marker = list(color = palette.selection[min(2, length(palette.selection))])
+            )
+            return(fig)
+        })
 
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
 
-      facet_levels <- unique(plot_data[[facet.by]])
+        # Add subplot titles as annotations
+        n_facets <- length(facet_levels)
+        subplot_width <- 1.0 / n_facets
+        annotations <- lapply(seq_along(facet_levels), function(i) {
+            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+            list(
+                x = x_pos,
+                y = 1.05,
+                xref = "paper",
+                yref = "paper",
+                text = as.character(facet_levels[i]),
+                showarrow = FALSE,
+                xanchor = "center",
+                yanchor = "bottom",
+                font = list(size = 14)
+            )
+        })
+        fig <- fig |> layout(annotations = annotations)
+    } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
+        # FACETING WITH MULTI-AXIS
+        facet_levels <- unique(plot_data[[facet.by]])
+        plots <- list()
+        first_facet <- TRUE
 
-      plots <- lapply(facet_levels, function(level) {
-          facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-          # Build plot parameters conditionally
-                    # Split data by facet variable
-          fig <- plot_ly(facet_data, color = I(line.colour)) # Creating intial Plot 
-        
-          fig <- fig %>% add_segments(x = ~x, xend = ~x_end, y = ~y, yend = ~y, showlegend = FALSE)
-          fig <- fig %>% add_markers(x = ~x, y = ~y, name = x, color = I(palette.selection))
-          return(fig)
-      })
-  
-              # Determine shareX and shareY based on facet.scales
-      shareX <- TRUE
-      shareY <- TRUE
-      if (facet.scales == "free") {
-          shareX <- FALSE
-          shareY <- FALSE
-      } else if (facet.scales == "free_x") {
-          shareX <- FALSE
-          shareY <- TRUE
-      } else if (facet.scales == "free_y") {
-          shareX <- TRUE
-          shareY <- FALSE
-      }
+        for (n in seq_along(facet_levels)) {
+            facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[n], ]
+            # Initialize empty plot for this facet
+            facet_fig <- plot_ly(data = facet_data, type = "scatter")
 
-      fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+            # Handle multiple x values
+            if (length(x) > 1 && length(x_end) > 1) {
+                for (i in seq_along(x)) {
+                    # Add segments
+                    facet_fig <- facet_fig %>% add_segments(
+                        x = facet_data[[x[i]]],
+                        xend = facet_data[[x_end[i]]],
+                        y = facet_data[[y[1]]],
+                        yend = facet_data[[y[1]]],
+                        line = list(color = line.colour),
+                        showlegend = FALSE
+                    )
+                    # Add start markers
+                    facet_fig <- facet_fig %>% add_markers(
+                        x = facet_data[[x[i]]],
+                        y = facet_data[[y[1]]],
+                        name = x[i],
+                        marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                        showlegend = first_facet
+                    )
+                    # Add end markers
+                    facet_fig <- facet_fig %>% add_markers(
+                        x = facet_data[[x_end[i]]],
+                        y = facet_data[[y[1]]],
+                        name = x_end[i],
+                        marker = list(color = palette.selection[min(i + length(x), length(palette.selection))]),
+                        showlegend = first_facet
+                    )
+                }
+            } else if (length(y) > 1) {
+                # Handle multiple y values
+                for (i in seq_along(y)) {
+                    # Add segments
+                    facet_fig <- facet_fig %>% add_segments(
+                        x = facet_data[[x[1]]],
+                        xend = facet_data[[x_end[1]]],
+                        y = facet_data[[y[i]]],
+                        yend = facet_data[[y[i]]],
+                        line = list(color = line.colour),
+                        showlegend = FALSE
+                    )
+                    # Add start markers
+                    facet_fig <- facet_fig %>% add_markers(
+                        x = facet_data[[x[1]]],
+                        y = facet_data[[y[i]]],
+                        name = paste(y[i], "-", x[1]),
+                        marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                        showlegend = first_facet
+                    )
+                    # Add end markers
+                    facet_fig <- facet_fig %>% add_markers(
+                        x = facet_data[[x_end[1]]],
+                        y = facet_data[[y[i]]],
+                        name = paste(y[i], "-", x_end[1]),
+                        marker = list(color = palette.selection[min(i + length(y), length(palette.selection))]),
+                        showlegend = first_facet
+                    )
+                }
+            }
+            plots[[length(plots) + 1]] <- facet_fig
+            first_facet <- FALSE
+        }
 
-      # Add subplot titles as annotations
-      n_facets <- length(facet_levels)
-      # Calculate subplot domain width (accounting for spacing between subplots)
-      # Plotly subplots have small gaps, so we adjust positioning
-      subplot_width <- 1.0 / n_facets
-      annotations <- lapply(seq_along(facet_levels), function(i) {
-          # Position at center of each subplot's domain
-          x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
-          list(
-              x = x_pos,
-              y = 1.05,
-              xref = "paper",
-              yref = "paper",
-              text = as.character(facet_levels[i]),
-              showarrow = FALSE,
-              xanchor = "center",
-              yanchor = "bottom",
-              font = list(size = 14)
-          )
-      })
-      fig <- fig |> layout(annotations = annotations)
-    } 
-  
-  
-  
-  
-  
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE)
+
+        # Add subplot titles as annotations
+        n_facets <- length(facet_levels)
+        subplot_width <- 1.0 / n_facets
+        annotations <- lapply(seq_along(facet_levels), function(i) {
+            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+            list(
+                x = x_pos,
+                y = 1.05,
+                xref = "paper",
+                yref = "paper",
+                text = as.character(facet_levels[i]),
+                showarrow = FALSE,
+                xanchor = "center",
+                yanchor = "bottom",
+                font = list(size = 14)
+            )
+        })
+        fig <- fig |> layout(annotations = annotations)
+    } else if (multi_axis) {
+        # MULTI-AXIS WITHOUT FACETING
+        fig <- plot_ly(data = plot_data, type = "scatter")
+
+        # Handle multiple x values
+        if (length(x) > 1 && length(x_end) > 1) {
+            for (i in seq_along(x)) {
+                # Add segments
+                fig <- fig %>% add_segments(
+                    x = plot_data[[x[i]]],
+                    xend = plot_data[[x_end[i]]],
+                    y = plot_data[[y[1]]],
+                    yend = plot_data[[y[1]]],
+                    line = list(color = line.colour),
+                    showlegend = FALSE
+                )
+                # Add start markers
+                fig <- fig %>% add_markers(
+                    x = plot_data[[x[i]]],
+                    y = plot_data[[y[1]]],
+                    name = x[i],
+                    marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                    showlegend = TRUE
+                )
+                # Add end markers
+                fig <- fig %>% add_markers(
+                    x = plot_data[[x_end[i]]],
+                    y = plot_data[[y[1]]],
+                    name = x_end[i],
+                    marker = list(color = palette.selection[min(i + length(x), length(palette.selection))]),
+                    showlegend = TRUE
+                )
+            }
+        } else if (length(y) > 1) {
+            # Handle multiple y values
+            for (i in seq_along(y)) {
+                # Add segments
+                fig <- fig %>% add_segments(
+                    x = plot_data[[x[1]]],
+                    xend = plot_data[[x_end[1]]],
+                    y = plot_data[[y[i]]],
+                    yend = plot_data[[y[i]]],
+                    line = list(color = line.colour),
+                    showlegend = FALSE
+                )
+                # Add start markers
+                fig <- fig %>% add_markers(
+                    x = plot_data[[x[1]]],
+                    y = plot_data[[y[i]]],
+                    name = paste(y[i], "-", x[1]),
+                    marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                    showlegend = TRUE
+                )
+                # Add end markers
+                fig <- fig %>% add_markers(
+                    x = plot_data[[x_end[1]]],
+                    y = plot_data[[y[i]]],
+                    name = paste(y[i], "-", x_end[1]),
+                    marker = list(color = palette.selection[min(i + length(y), length(palette.selection))]),
+                    showlegend = TRUE
+                )
+            }
+        }
+    } else {
+        # SINGLE AXIS WITHOUT FACETING
+        fig <- plot_ly(plot_data, color = I(line.colour))
+        # Add segments (dumbbells)
+        fig <- fig %>% add_segments(
+            x = plot_data[[x[1]]],
+            xend = plot_data[[x_end[1]]],
+            y = plot_data[[y[1]]],
+            yend = plot_data[[y[1]]],
+            showlegend = FALSE
+        )
+        # Add start markers
+        fig <- fig %>% add_markers(
+            x = plot_data[[x[1]]],
+            y = plot_data[[y[1]]],
+            name = x[1],
+            marker = list(color = palette.selection[1])
+        )
+        # Add end markers
+        fig <- fig %>% add_markers(
+            x = plot_data[[x_end[1]]],
+            y = plot_data[[y[1]]],
+            name = x_end[1],
+            marker = list(color = palette.selection[min(2, length(palette.selection))])
+        )
+    }
 
     fig <- fig |> layout(
         title = list(
