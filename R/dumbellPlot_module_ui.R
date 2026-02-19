@@ -22,7 +22,7 @@
 #'   \item \code{group.by} - Grouping variable (UI: "Group by")
 #'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-#'   \item \code{line.colour} - Color of connecting lines (UI: "Colour Of conectors", default: "red")
+#'   \item \code{line.colour} - Color of connecting lines (UI: "Colour Of connectors", default: "red")
 #'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
 #'   \item \code{axis.*} - Various axis styling options (UI: via .uniform_axes_inputs_ui)
 #'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
@@ -110,7 +110,7 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
         "Aesthetics" = tagList(
           uiOutput(ns("palette.selection")),
-          colourpicker::colourInput(ns("line.colour"), "Colour Of conectors", value = "red")
+          colourpicker::colourInput(ns("line.colour"), "Colour Of connectors", value = "red")
         ),
 
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
