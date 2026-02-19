@@ -60,11 +60,12 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             if (multi_axis) {
                 if (length(x_vals) > 1) {
-                    # For multiple x values, include both start and end in palette
+                    # For multiple x values, palette needs colors for both start and end markers
+                    # Return x values followed by x_end values for color mapping
                     return(c(x_vals, x_end_vals))
                 }
                 if (length(y_vals) > 1) {
-                    # For multiple y values, return y values combined with x and x_end labels
+                    # For multiple y values, create labels combining y with x and x_end
                     return(c(paste(y_vals, "-", x_vals[1]), paste(y_vals, "-", x_end_vals[1])))
                 }
             }

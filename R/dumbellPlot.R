@@ -183,7 +183,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                 x = facet_data[[x_end[1]]],
                 y = facet_data[[y[1]]],
                 name = x_end[1],
-                marker = list(color = palette.selection[min(2, length(palette.selection))])
+                marker = list(color = palette.selection[if (length(palette.selection) > 1) 2 else 1])
             )
             return(fig)
         })
@@ -236,7 +236,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                         x = facet_data[[x[i]]],
                         y = facet_data[[y[1]]],
                         name = x[i],
-                        marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                        marker = list(color = palette.selection[((i - 1) %% length(palette.selection)) + 1]),
                         showlegend = first_facet
                     )
                     # Add end markers
@@ -244,7 +244,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                         x = facet_data[[x_end[i]]],
                         y = facet_data[[y[1]]],
                         name = x_end[i],
-                        marker = list(color = palette.selection[min(i + length(x), length(palette.selection))]),
+                        marker = list(color = palette.selection[((i + length(x) - 1) %% length(palette.selection)) + 1]),
                         showlegend = first_facet
                     )
                 }
@@ -265,7 +265,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                         x = facet_data[[x[1]]],
                         y = facet_data[[y[i]]],
                         name = paste(y[i], "-", x[1]),
-                        marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                        marker = list(color = palette.selection[((i - 1) %% length(palette.selection)) + 1]),
                         showlegend = first_facet
                     )
                     # Add end markers
@@ -273,7 +273,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                         x = facet_data[[x_end[1]]],
                         y = facet_data[[y[i]]],
                         name = paste(y[i], "-", x_end[1]),
-                        marker = list(color = palette.selection[min(i + length(y), length(palette.selection))]),
+                        marker = list(color = palette.selection[((i + length(y) - 1) %% length(palette.selection)) + 1]),
                         showlegend = first_facet
                     )
                 }
@@ -323,7 +323,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                     x = plot_data[[x[i]]],
                     y = plot_data[[y[1]]],
                     name = x[i],
-                    marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                    marker = list(color = palette.selection[((i - 1) %% length(palette.selection)) + 1]),
                     showlegend = TRUE
                 )
                 # Add end markers
@@ -331,7 +331,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                     x = plot_data[[x_end[i]]],
                     y = plot_data[[y[1]]],
                     name = x_end[i],
-                    marker = list(color = palette.selection[min(i + length(x), length(palette.selection))]),
+                    marker = list(color = palette.selection[((i + length(x) - 1) %% length(palette.selection)) + 1]),
                     showlegend = TRUE
                 )
             }
@@ -352,7 +352,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                     x = plot_data[[x[1]]],
                     y = plot_data[[y[i]]],
                     name = paste(y[i], "-", x[1]),
-                    marker = list(color = palette.selection[min(i, length(palette.selection))]),
+                    marker = list(color = palette.selection[((i - 1) %% length(palette.selection)) + 1]),
                     showlegend = TRUE
                 )
                 # Add end markers
@@ -360,7 +360,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
                     x = plot_data[[x_end[1]]],
                     y = plot_data[[y[i]]],
                     name = paste(y[i], "-", x_end[1]),
-                    marker = list(color = palette.selection[min(i + length(y), length(palette.selection))]),
+                    marker = list(color = palette.selection[((i + length(y) - 1) %% length(palette.selection)) + 1]),
                     showlegend = TRUE
                 )
             }
@@ -388,7 +388,7 @@ dumbellPlot <- function(reactive.data, x, x_end, y, colour.group.by, palette.sel
             x = plot_data[[x_end[1]]],
             y = plot_data[[y[1]]],
             name = x_end[1],
-            marker = list(color = palette.selection[min(2, length(palette.selection))])
+            marker = list(color = palette.selection[if (length(palette.selection) > 1) 2 else 1])
         )
     }
 
