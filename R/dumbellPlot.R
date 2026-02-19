@@ -1,3 +1,79 @@
+#' Create an Interactive Dumbbell Plot with plotly
+#'
+#' Generates a customizable interactive dumbbell plot using plotly. Supports single dot mode (1 x variable)
+#' or dumbbell mode (2 x variables), with flexible coloring by either X or Y variables, faceting, and transformations.
+#'
+#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param x Character vector of column name(s) for x-axis values. Maximum 2 values allowed.
+#'   If 1 value: creates single dot plot. If 2 values: creates dumbbell plot with connecting segments.
+#' @param y Character, column name for the y-axis (categorical variable recommended).
+#' @param colour.by Character, how to color the markers. Options: "X variables" (different colors for each x variable)
+#'   or "Y variables" (different colors for each y category). Default: "X variables".
+#' @param palette.selection Character vector of hex colors for marker colors.
+#' @param show.legend Logical, whether to display the legend. Default: TRUE.
+#' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
+#' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
+#' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
+#'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
+#' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
+#' @param axis.linecolor Character, hex color for axis lines. Default: "black".
+#' @param axis.linewidth Numeric, width of axis lines in pixels. Default: 0.5.
+#' @param axis.tickfont.size Numeric, font size for axis tick labels. Default: 12.
+#' @param axis.tickfont.color Character, hex color for axis tick labels. Default: "black".
+#' @param axis.tickfont.family Character, font family for axis tick labels. Default: "Arial".
+#' @param axis.tickangle.x Numeric, rotation angle for x-axis tick labels in degrees. Default: 0.
+#' @param axis.tickangle.y Numeric, rotation angle for y-axis tick labels in degrees. Default: 0.
+#' @param axis.ticks Character, position of tick marks. Options: "outside", "inside", "none". Default: "outside".
+#' @param axis.tickcolor Character, hex color for tick marks. Default: "black".
+#' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
+#' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
+#' @param title.text Character, main title text for the plot. Default: "".
+#' @param title.font.size Numeric, font size for plot title. Default: 14.
+#' @param title.font.family Character, font family for plot title. Default: "Arial".
+#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
+#' @param flip.y Logical, whether to reverse the y-axis direction. Default: FALSE.
+#' @param x.adjustment Optional character or function, transformation to apply to x values.
+#'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
+#' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
+#'
+#' @return A plotly object representing the interactive dumbbell plot.
+#'
+#' @details
+#' The dumbbell plot is designed for comparing two values across categories. 
+#' 
+#' **Modes:**
+#' - **Single dot mode** (1 x variable): Shows one marker per y category
+#' - **Dumbbell mode** (2 x variables): Shows two markers connected by a line per y category
+#' 
+#' **Coloring options:**
+#' - **By X variables**: Each x variable gets a different color (e.g., Male=blue, Female=pink)
+#' - **By Y variables**: Each y category gets a different color (e.g., School A=red, School B=blue)
+#'
+#' @import plotly
+#' 
+#' @author Jacob Martin, Jared Andrews
+#' @export
+#'
+#' @examples
+#' # Dumbbell plot comparing Women vs Men earnings by School
+#' data <- data.frame(
+#'   School = c("MIT", "Stanford", "Harvard"),
+#'   Women = c(94, 96, 112),
+#'   Men = c(152, 151, 165)
+#' )
+#' fig <- dumbellPlot(
+#'   reactive.data = data,
+#'   x = c("Women", "Men"),
+#'   y = "School",
+#'   colour.by = "X variables",
+#'   palette.selection = c("pink", "blue"),
+#'   show.legend = TRUE,
+#'   line.colour = "gray80"
+#' )
 dumbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
