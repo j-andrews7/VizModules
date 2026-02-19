@@ -28,6 +28,7 @@ devtools::install_github("j-andrews7/VizModules")
 - Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - See the vignette for a full walkthrough: `vignette("quick-start", package = "VizModules")`
+- Learn about colour picker inputs: `vignette("colour-pickers", package = "VizModules")`
 
 ```r
 library(VizModules)
@@ -201,7 +202,7 @@ shinyApp(ui, server)
 
 3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
 
-For more details, see `vignette("custom-modules", package = "VizModules")`.
+For more details, see `vignette("custom-modules", package = "VizModules")`. To understand how colour picker inputs work in modules, see `vignette("colour-pickers", package = "VizModules")`.
 
 ## Modules Provided
 
