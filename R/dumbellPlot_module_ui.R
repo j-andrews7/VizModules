@@ -86,7 +86,7 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
           ),
           selectInput(ns("y.value"), "Select Y values:",
           selected = if (length(cat.choices) > 1) cat.choices[2] else "",
-          choices = cat.choices, multiple = TRUE
+          choices = cat.choices, multiple = FALSE
           ),
           selectInput(ns("group.by"), "Group by:",
             selected = cat.choices[1], choices = cat.choices
