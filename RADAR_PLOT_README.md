@@ -37,9 +37,10 @@ The radar plot module provides interactive, customizable radar charts for visual
 library(VizModules)
 
 # Single trace example
+# Note: Polygon is automatically closed by the function
 skills <- data.frame(
-    category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
-    value = c(8, 6, 7, 9, 8)
+    category = c("Speed", "Strength", "Defense", "Stamina"),
+    value = c(8, 6, 7, 9)
 )
 
 fig <- radarPlot(
@@ -54,10 +55,11 @@ fig <- radarPlot(
 
 ```r
 # Multiple trace example
+# Note: Polygon is automatically closed for each trace
 team_stats <- data.frame(
-    category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
-    value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
-    player = rep(c("Player A", "Player B"), each = 5)
+    category = rep(c("Speed", "Strength", "Defense", "Stamina"), 2),
+    value = c(8, 6, 7, 9, 5, 9, 8, 6),
+    player = rep(c("Player A", "Player B"), each = 4)
 )
 
 fig <- radarPlot(
@@ -95,7 +97,7 @@ Key parameters for the `radarPlot()` function:
 - `r`: Column name for radial values
 - `group`: Optional column for grouping (multiple traces)
 - `colors`: Color vector for traces
-- `fill`: Fill area under trace ("toself", "tonext", or FALSE)
+- `fill`: Fill area under trace ("toself" or FALSE)
 - `line.width`: Width of trace lines
 - `line.dash`: Line style (solid, dot, dash, etc.)
 - `marker.size`: Size of markers
@@ -117,7 +119,7 @@ Data should have three columns:
 - One for values (r/radial)
 - One for grouping (creates separate traces)
 
-**Important**: To close the radar polygon, repeat the first category at the end.
+**Note**: The function automatically closes the radar polygon by adding the first point to the end.
 
 ## Examples
 

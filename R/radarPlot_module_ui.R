@@ -108,8 +108,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
         "Trace Style" = tagList(
             selectInput(ns("fill"), "Fill area:",
                 choices = c(
-                    "Fill to self" = "toself",
-                    "Fill to next trace" = "tonext",
+                    "Fill" = "toself",
                     "No fill" = "none"
                 ),
                 selected = ifelse("fill" %in% names(defaults),

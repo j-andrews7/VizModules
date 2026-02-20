@@ -2,8 +2,7 @@
 #'
 #' @param df A data frame containing the data to plot. For a single trace, provide columns for
 #'   categories (theta) and values (r). For multiple traces, include a grouping column.
-#'   **Important**: To close the radar polygon, the first category value must be repeated
-#'   as the last row in each trace/group.
+#'   The function automatically closes the radar polygon by adding the first point to the end.
 #' @param theta Character, name of the column to use for the angular categories (axes).
 #' @param r Character, name of the column to use for the radial values.
 #' @param group Optional character, name of the column to use for grouping multiple traces.
@@ -13,8 +12,7 @@
 #' @param palette Optional character vector of fallback colors used when
 #'   \code{colors} is not supplied or missing values are present.
 #' @param fill Logical or character, whether to fill the area under each trace.
-#'   Use "toself" to fill to the first point, "tonext" to fill to the next trace,
-#'   or FALSE for no fill. Default: "toself".
+#'   Use "toself" to fill to the first point, or FALSE for no fill. Default: "toself".
 #' @param line.width Numeric, width of the trace lines in pixels. Default: 2.
 #' @param line.dash Character, line dash style. Options: "solid", "dot", "dash",
 #'   "longdash", "dashdot", "longdashdot". Default: "solid".
@@ -50,10 +48,10 @@
 #'
 #' @examples
 #' # Single trace radar chart
-#' # Note: First category "Speed" is repeated at end to close the polygon
+#' # Note: Polygon is automatically closed by the function
 #' skills <- data.frame(
-#'     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
-#'     value = c(8, 6, 7, 9, 8)
+#'     category = c("Speed", "Strength", "Defense", "Stamina"),
+#'     value = c(8, 6, 7, 9)
 #' )
 #'
 #' radarPlot(
@@ -64,11 +62,11 @@
 #' )
 #'
 #' # Multiple trace radar chart
-#' # Note: Each trace repeats its first category at end to close the polygon
+#' # Note: Polygon is automatically closed for each trace
 #' team_stats <- data.frame(
-#'     category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
-#'     value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
-#'     player = rep(c("Player A", "Player B"), each = 5)
+#'     category = rep(c("Speed", "Strength", "Defense", "Stamina"), 2),
+#'     value = c(8, 6, 7, 9, 5, 9, 8, 6),
+#'     player = rep(c("Player A", "Player B"), each = 4)
 #' )
 #'
 #' radarPlot(
@@ -153,6 +151,10 @@ radarPlot <- function(df, theta, r,
     # Handle single vs multiple traces
     if (is.null(group)) {
         # Single trace
+        # Automatically close the polygon by adding first point to the end
+        first_row <- df[1, , drop = FALSE]
+        df_closed <- rbind(df, first_row)
+        
         colour_value <- if (!is.null(colors) && length(colors) > 0) {
             colors[1]
         } else {
@@ -161,7 +163,7 @@ radarPlot <- function(df, theta, r,
 
         fig <- fig %>%
             add_trace(
-                data = df,
+                data = df_closed,
                 r = reformulate(r),
                 theta = reformulate(theta),
                 mode = "lines+markers",
@@ -206,10 +208,14 @@ radarPlot <- function(df, theta, r,
         for (i in seq_along(group_values)) {
             group_val <- group_values[i]
             group_data <- df[df[[group]] == group_val, ]
+            
+            # Automatically close the polygon by adding first point to the end
+            first_row <- group_data[1, , drop = FALSE]
+            group_data_closed <- rbind(group_data, first_row)
 
             fig <- fig %>%
                 add_trace(
-                    data = group_data,
+                    data = group_data_closed,
                     r = reformulate(r),
                     theta = reformulate(theta),
                     name = as.character(group_val),
