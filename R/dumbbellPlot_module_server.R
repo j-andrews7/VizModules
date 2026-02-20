@@ -105,43 +105,67 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Reset functionality
         observeEvent(input$reset, {
 
-          # Reset Data columns to default. First and second index of data named list
-        
+            choices <- c("", names(data()))
+
+            # Get numeric variables of data.
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            cat.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+
+            # Reset Data columns to default. First and second index of data named list
+
+            # Data tab
+            updateSelectInput(session, "x.value", selected = num.choices[2])  
+            updateSelectInput(session, "y.value", selected = cat.choices[2])  
+            
+            updateSelectInput(session, "x.adjustment", selected = "")
+            updateSelectInput(session, "colour.by", selected = "X variables")
+            
+            # Facet tab  
+            updateSelectInput(session, "facet.by", selected = "")
+            updateSelectInput(session, "facet.scales", selected = "fixed")
+            
+            # Aesthetics tab
+            colourpicker::updateColourInput(session, "line.colour", value = "red")
+            
+
+            shinyjs::click("reset_palette")
 
 
-          # Axes:
-          updateNumericInput(session, "axis.title.font.size", value = 18)
-          colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-          updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-          updateCheckboxInput(session, "axis.showline", value = TRUE)
-          updateCheckboxInput(session, "axis.mirror", value = TRUE)
-          updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-          updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-          colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-          updateNumericInput(session, "axis.linewidth", value = 0.5)
-          updateNumericInput(session, "axis.tickfont.size", value = 12)
-          colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-          updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-          updateNumericInput(session, "axis.tickangle.x", value = 0)
-          updateNumericInput(session, "axis.tickangle.y", value = 0)
-          updateSelectInput(session, "axis.ticks", selected = "outside")
-          colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-          updateNumericInput(session, "axis.ticklen", value = 5)
-          updateNumericInput(session, "axis.tickwidth", value = 1)
-          colourpicker::updateColourInput(session, "text.colour", value = "#000000")
 
-          # Lines
-          updateTextInput(session, "hline.intercepts", value = "")
-          updateTextInput(session, "hline.colors", value = "#000000")
-          updateTextInput(session, "hline.widths", value = "1")
-          updateTextInput(session, "hline.linetypes", value = "dashed")
-          updateTextInput(session, "hline.opacities", value = "1")
-          updateTextInput(session, "vline.intercepts", value = "")
-          updateTextInput(session, "vline.colors", value = "#000000")
-          updateTextInput(session, "vline.widths", value = "1")
-          updateTextInput(session, "vline.linetypes", value = "dashed")
-          updateTextInput(session, "vline.opacities", value = "1")
-          updateTextInput(session, "abline.slopes", value = "")
+
+            # Axes:
+            updateNumericInput(session, "axis.title.font.size", value = 18)
+            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
+            updateCheckboxInput(session, "axis.showline", value = TRUE)
+            updateCheckboxInput(session, "axis.mirror", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
+            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
+            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
+            updateNumericInput(session, "axis.linewidth", value = 0.5)
+            updateNumericInput(session, "axis.tickfont.size", value = 12)
+            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
+            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
+            updateNumericInput(session, "axis.tickangle.x", value = 0)
+            updateNumericInput(session, "axis.tickangle.y", value = 0)
+            updateSelectInput(session, "axis.ticks", selected = "outside")
+            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
+            updateNumericInput(session, "axis.ticklen", value = 5)
+            updateNumericInput(session, "axis.tickwidth", value = 1)
+            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+
+            # Lines
+            updateTextInput(session, "hline.intercepts", value = "")
+            updateTextInput(session, "hline.colors", value = "#000000")
+            updateTextInput(session, "hline.widths", value = "1")
+            updateTextInput(session, "hline.linetypes", value = "dashed")
+            updateTextInput(session, "hline.opacities", value = "1")
+            updateTextInput(session, "vline.intercepts", value = "")
+            updateTextInput(session, "vline.colors", value = "#000000")
+            updateTextInput(session, "vline.widths", value = "1")
+            updateTextInput(session, "vline.linetypes", value = "dashed")
+            updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
       })
 
         # Reactive expression to generate the plot (used by both output and download)
