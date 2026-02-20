@@ -132,10 +132,14 @@ radarPlot <- function(df, theta, r,
         fallback_palette <- tryCatch(plotthis::palette_list[[1]], error = function(...) NULL)
     }
     if (is.null(fallback_palette)) {
-        fallback_palette <- default_palettes()$choices$Defaults$dittoColors
+        fallback_palette <- tryCatch(
+            default_palettes()$choices$Defaults$dittoColors,
+            error = function(...) NULL
+        )
     }
     if (is.null(fallback_palette) || length(fallback_palette) == 0) {
-        fallback_palette <- c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD")
+        fallback_palette <- c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+                              "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")
     }
     fallback_palette <- unname(fallback_palette)
 
@@ -156,6 +160,7 @@ radarPlot <- function(df, theta, r,
                 data = df,
                 r = reformulate(r),
                 theta = reformulate(theta),
+                mode = "lines+markers",
                 fill = fill,
                 fillcolor = colour_value,
                 line = list(
@@ -204,6 +209,7 @@ radarPlot <- function(df, theta, r,
                     r = reformulate(r),
                     theta = reformulate(theta),
                     name = as.character(group_val),
+                    mode = "lines+markers",
                     fill = fill,
                     fillcolor = colour_vector[i],
                     line = list(
