@@ -85,7 +85,7 @@
 #' @import plotly
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 radarPlot <- function(df, theta, r,
                       group = NULL,
                       colors = NULL,

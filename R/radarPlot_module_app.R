@@ -16,7 +16,7 @@
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotServer()]
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @examples
 #' library(VizModules)
 #' 

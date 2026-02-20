@@ -63,7 +63,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @seealso [VizModules::radarPlot()], [VizModules::organize_inputs()],
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotServer()], [VizModules::radarPlotApp()]
 #' @examples

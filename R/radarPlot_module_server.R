@@ -21,7 +21,7 @@
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotApp()]
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
