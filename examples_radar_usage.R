@@ -5,6 +5,7 @@ library(VizModules)
 
 # Example 1: Single trace radar chart
 # Create player skills data
+# NOTE: To close the radar polygon, the first category must be repeated at the end
 skills <- data.frame(
     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
     value = c(8, 6, 7, 9, 8)
@@ -21,6 +22,7 @@ print(fig)
 
 # Example 2: Multiple trace radar chart
 # Create team comparison data
+# NOTE: Each trace must repeat its first category at the end to close the polygon
 team_stats <- data.frame(
     category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
     value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),

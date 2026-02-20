@@ -2,6 +2,8 @@
 #'
 #' @param df A data frame containing the data to plot. For a single trace, provide columns for
 #'   categories (theta) and values (r). For multiple traces, include a grouping column.
+#'   **Important**: To close the radar polygon, the first category value must be repeated
+#'   as the last row in each trace/group.
 #' @param theta Character, name of the column to use for the angular categories (axes).
 #' @param r Character, name of the column to use for the radial values.
 #' @param group Optional character, name of the column to use for grouping multiple traces.
@@ -48,6 +50,7 @@
 #'
 #' @examples
 #' # Single trace radar chart
+#' # Note: First category "Speed" is repeated at end to close the polygon
 #' skills <- data.frame(
 #'     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
 #'     value = c(8, 6, 7, 9, 8)
@@ -61,6 +64,7 @@
 #' )
 #'
 #' # Multiple trace radar chart
+#' # Note: Each trace repeats its first category at end to close the polygon
 #' team_stats <- data.frame(
 #'     category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
 #'     value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
