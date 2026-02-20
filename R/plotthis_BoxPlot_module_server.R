@@ -308,7 +308,15 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BoxPlot <- renderPlotly({
-            generate_BoxPlot()
+            width <- session$clientData$output_BoxPlot_width
+            height <- session$clientData$output_BoxPlot_height
+            
+            generate_BoxPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

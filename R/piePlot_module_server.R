@@ -189,7 +189,15 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$piePlot <- renderPlotly({
-            generate_piePlot()
+            width <- session$clientData$output_piePlot_width
+            height <- session$clientData$output_piePlot_height
+            
+            generate_piePlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

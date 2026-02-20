@@ -276,7 +276,15 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$dumbbellPlot <- renderPlotly({
-            generate_dumbbellPlot()
+            width <- session$clientData$output_dumbbellPlot_width
+            height <- session$clientData$output_dumbbellPlot_height
+            
+            generate_dumbbellPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

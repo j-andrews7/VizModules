@@ -292,7 +292,15 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
-            generate_BarPlot()
+            width <- session$clientData$output_BarPlot_width
+            height <- session$clientData$output_BarPlot_height
+            
+            generate_BarPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot
