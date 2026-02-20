@@ -371,7 +371,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            generate_yPlot()
+            width <- session$clientData$output_yPlot_width
+            height <- session$clientData$output_yPlot_height
+            
+            generate_yPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

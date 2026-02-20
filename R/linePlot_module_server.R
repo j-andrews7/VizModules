@@ -296,7 +296,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$linePlot <- renderPlotly({
-            generate_linePlot()
+            width <- session$clientData$output_linePlot_width
+            height <- session$clientData$output_linePlot_height
+            
+            generate_linePlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

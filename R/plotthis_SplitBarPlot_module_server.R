@@ -335,7 +335,15 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Render the plot output
         output$SplitBarPlot <- renderPlotly({
-            generate_SplitBarPlot()
+            width <- session$clientData$output_SplitBarPlot_width
+            height <- session$clientData$output_SplitBarPlot_height
+            
+            generate_SplitBarPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

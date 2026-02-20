@@ -303,7 +303,15 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Render the plot output
         output$ViolinPlot <- renderPlotly({
-            generate_ViolinPlot()
+            width <- session$clientData$output_ViolinPlot_width
+            height <- session$clientData$output_ViolinPlot_height
+            
+            generate_ViolinPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

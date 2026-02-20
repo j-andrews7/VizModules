@@ -242,16 +242,15 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$ternaryPlot <- renderPlotly({
-            width <- session$clientData$output_myplot_width
-            height <- session$clientData$output_myplot_height
+            width <- session$clientData$output_ternaryPlot_width
+            height <- session$clientData$output_ternaryPlot_height
             
             generate_ternaryPlot() %>%  
                 layout(
-                width = as.numeric(width),
-                height = as.numeric(height) * 0.9,
-                margin = list(t = 100, autoexpand = TRUE)
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
                 )
-            
         })
 
         # Download handler for interactive plot

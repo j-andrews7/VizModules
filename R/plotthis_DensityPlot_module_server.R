@@ -268,7 +268,15 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$DensityPlot <- renderPlotly({
-            generate_DensityPlot()
+            width <- session$clientData$output_DensityPlot_width
+            height <- session$clientData$output_DensityPlot_height
+            
+            generate_DensityPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot
