@@ -1,4 +1,4 @@
-#' Server logic for dumbellPlot module
+#' Server logic for dumbbellPlot module
 #'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot.
@@ -8,18 +8,18 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @return The `moduleServer` function for the dumbellPlot module.
+#' @return The `moduleServer` function for the dumbbellPlot module.
 #'
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
 #'
-#' @seealso [VizModules::dumbellPlot()], [VizModules::dumbellPlotInputsUI()],
-#' [VizModules::dumbellPlotOutputUI()], [VizModules::dumbellPlotApp()]
+#' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
+#' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -34,7 +34,7 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "dumbellPlotTabsetPanel", target = tab.name)
+                hideTab(inputId = "dumbbellPlotTabsetPanel", target = tab.name)
             })
         }
 
@@ -145,7 +145,7 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
       })
 
         # Reactive expression to generate the plot (used by both output and download)
-        generate_dumbellPlot <- reactive({
+        generate_dumbbellPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
@@ -191,7 +191,7 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             
-            fig <- dumbellPlot(
+            fig <- dumbbellPlot(
                 reactive.data = d,
                 x = x_input,
                 y = y_input,
@@ -251,14 +251,14 @@ dumbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         # Render the plot output
-        output$dumbellPlot <- renderPlotly({
-            generate_dumbellPlot()
+        output$dumbbellPlot <- renderPlotly({
+            generate_dumbbellPlot()
         })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_dumbellPlot,
-            filename_base = "dumbellPlot"
+            plot_reactive = generate_dumbbellPlot,
+            filename_base = "dumbbellPlot"
         )
     })
 }

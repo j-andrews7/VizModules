@@ -65,7 +65,7 @@
 #'   Women = c(94, 96, 112),
 #'   Men = c(152, 151, 165)
 #' )
-#' fig <- dumbellPlot(
+#' fig <- dumbbellPlot(
 #'   reactive.data = data,
 #'   x = c("Women", "Men"),
 #'   y = "School",
@@ -74,7 +74,7 @@
 #'   show.legend = TRUE,
 #'   line.colour = "gray80"
 #' )
-dumbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
+dumbbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
@@ -91,7 +91,7 @@ dumbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.
         x <- x[1:2]
     }
     
-    # Unique x axis styling for dumbellPlot:
+    # Unique x axis styling for dumbbellPlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
@@ -155,11 +155,22 @@ dumbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.
     if (!is.null(facet.by) && facet.by != "") {
         # WITH FACETING
         facet_levels <- unique(plot_data[[facet.by]])
-        
-        plots <- lapply(facet_levels, function(level) {
+
+        # plots <- lapply(facet_levels, function(level) {
+        #     facet_data <- plot_data[plot_data[[facet.by]] == level, ]
+        #     create_dumbbell_plot(facet_data, x, y, colour.by, palette.selection, line.colour, show.legend = first)
+        #     # first <- FALSE
+        # })
+        plots <- list()
+        first <- TRUE  # Ensure figure legend only added to the first subplot
+        for (level in facet_levels) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-            create_dumbbell_plot(facet_data, x, y, colour.by, palette.selection, line.colour, show.legend)
-        })
+            plots[[length(plots) + 1]] <- create_dumbbell_plot(
+                facet_data, x, y, colour.by, palette.selection, 
+                line.colour, show.legend = first
+            )
+            first <- FALSE  
+        }
         
         fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE, margin = 0.06)
         

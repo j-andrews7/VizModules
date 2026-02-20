@@ -1,7 +1,7 @@
 #' Create a Shiny App for Dumbbell Plots
 #'
 #' Creates a Shiny application for generating interactive dumbbell plots.
-#' This is a standalone app that demonstrates the dumbellPlot module functionality.
+#' This is a standalone app that demonstrates the dumbbellPlot module functionality.
 #'
 #' @param data_list A named list of data frames to plot. Each data frame will get its own
 #'   set of inputs and output in the app.
@@ -14,8 +14,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-#' @seealso [VizModules::dumbellPlot()], [VizModules::dumbellPlotInputsUI()],
-#' [VizModules::dumbellPlotOutputUI()], [VizModules::dumbellPlotServer()]
+#' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
+#' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotServer()]
 #'
 #' @examples
 #' \dontrun{
@@ -25,9 +25,9 @@
 #'   Men = c(152, 151, 165),
 #'   Group = c("A", "B", "A")
 #' )
-#' dumbellPlotApp(list("School Earnings" = data))
+#' dumbbellPlotApp(list("School Earnings" = data))
 #' }
-dumbellPlotApp <- function(data_list) {
+dumbbellPlotApp <- function(data_list) {
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
@@ -36,13 +36,13 @@ dumbellPlotApp <- function(data_list) {
 
     ui <- fluidPage(
         useShinyjs(),
-        titlePanel("Modular dumbellPlots"),
+        titlePanel("Modular dumbbellPlots"),
         sidebarLayout(
             sidebarPanel(
                 # Add the module inputs UI for each data frame
                 lapply(names(data_list), function(name) {
                     tagList(
-                        dumbellPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                        dumbbellPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
                         hr()
                     )
                 })
@@ -50,7 +50,7 @@ dumbellPlotApp <- function(data_list) {
             mainPanel(
                 # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(dumbellPlotOutputUI(name), br())
+                    tagList(dumbbellPlotOutputUI(name), br())
                 })
             )
         )
@@ -59,7 +59,7 @@ dumbellPlotApp <- function(data_list) {
     server <- function(input, output, session) {
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            dumbellPlotServer(name, data = reactive(data_list[[name]]))
+            dumbbellPlotServer(name, data = reactive(data_list[[name]]))
         })
     }
 

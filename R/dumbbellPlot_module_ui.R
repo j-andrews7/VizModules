@@ -1,7 +1,7 @@
-#' Input UI components for the dumbellPlot module
+#' Input UI components for the dumbbellPlot module
 #'
 #' This should be placed in the UI where the inputs should be shown, with an `id`
-#' that matches the `id` used in the `dumbellPlotServer()` and `dumbellPlotOutputUI()` functions.
+#' that matches the `id` used in the `dumbbellPlotServer()` and `dumbbellPlotOutputUI()` functions.
 #'
 #' @details The user inputs for this module are separated from the outputs to allow for
 #' more flexible UI design.
@@ -12,7 +12,7 @@
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #'
 #' @section Plot parameters and defaults:
-#' The following [VizModules::dumbellPlot()] parameters can be accessed via UI inputs:
+#' The following [VizModules::dumbbellPlot()] parameters can be accessed via UI inputs:
 #' \itemize{
 #'   \item \code{x} - X values (UI: "Select X values (max 2)", multiple: TRUE, max 2 enforced)
 #'   \item \code{y} - Y value (UI: "Select Y value", single selection)
@@ -39,8 +39,8 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-#' @seealso [VizModules::dumbellPlot()], [VizModules::organize_inputs()],
-#' [VizModules::dumbellPlotOutputUI()], [VizModules::dumbellPlotServer()], [VizModules::dumbellPlotApp()]
+#' @seealso [VizModules::dumbbellPlot()], [VizModules::organize_inputs()],
+#' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotServer()], [VizModules::dumbbellPlotApp()]
 #' @examples
 #' library(VizModules)
 #' data <- data.frame(
@@ -48,8 +48,8 @@
 #'   Women = c(94, 96, 112),
 #'   Men = c(152, 151, 165)
 #' )
-#' dumbellPlotInputsUI("dumbellPlot", data)
-dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+#' dumbbellPlotInputsUI("dumbbellPlot", data)
+dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -114,7 +114,7 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
     organize_inputs(
         inputs,
-        id = ns("dumbellPlotTabsetPanel"),
+        id = ns("dumbbellPlotTabsetPanel"),
         title = title,
         tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
@@ -124,13 +124,13 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
 
 
-#' Output UI components for the dumbellPlot module
+#' Output UI components for the dumbbellPlot module
 #'
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
 #'
-#' @return A Shiny plotlyOutput for the dumbellPlot
+#' @return A Shiny plotlyOutput for the dumbbellPlot
 #'
 #' @import shiny
 #' @import plotly
@@ -138,9 +138,9 @@ dumbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-dumbellPlotOutputUI <- function(id) {
+dumbbellPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("dumbellPlot"))
+        plotlyOutput(ns("dumbbellPlot"))
     )
 }
