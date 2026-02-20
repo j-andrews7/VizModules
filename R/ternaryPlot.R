@@ -109,7 +109,7 @@
 #' @import plotly
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 ternaryPlot <- function(df, a, b, c,
                         group = NULL,
                         colors = NULL,
@@ -351,7 +351,8 @@ ternaryPlot <- function(df, a, b, c,
                 size = title.font.size,
                 color = title.font.color
             ),
-            x = title.x
+            x = title.x, 
+            automargin = TRUE
         ),
         ternary = list(
             sum = sum,

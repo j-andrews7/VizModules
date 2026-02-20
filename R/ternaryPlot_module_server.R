@@ -21,7 +21,7 @@
 #' [VizModules::ternaryPlotOutputUI()], [VizModules::ternaryPlotApp()]
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
@@ -242,7 +242,16 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$ternaryPlot <- renderPlotly({
-            generate_ternaryPlot()
+            width <- session$clientData$output_myplot_width
+            height <- session$clientData$output_myplot_height
+            
+            generate_ternaryPlot() %>%  
+                layout(
+                width = as.numeric(width),
+                height = as.numeric(height) * 0.9,
+                margin = list(t = 100, autoexpand = TRUE)
+                )
+            
         })
 
         # Download handler for interactive plot

@@ -67,7 +67,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @seealso [VizModules::ternaryPlot()], [VizModules::organize_inputs()],
 #' [VizModules::ternaryPlotOutputUI()], [VizModules::ternaryPlotServer()], [VizModules::ternaryPlotApp()]
 #' @examples
@@ -129,7 +129,6 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             selectInput(ns("mode"), "Mode:",
                 choices = c(
                     "Markers" = "markers",
-                    "Lines" = "lines",
                     "Lines + Markers" = "lines+markers"
                 ),
                 selected = ifelse("mode" %in% names(defaults),
@@ -362,6 +361,6 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 ternaryPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
-        plotlyOutput(ns("ternaryPlot"))
+        plotlyOutput(ns("ternaryPlot"), height = "100%", width = "100%")
     )
 }

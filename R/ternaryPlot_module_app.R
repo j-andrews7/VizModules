@@ -16,7 +16,7 @@
 #' [VizModules::ternaryPlotOutputUI()], [VizModules::ternaryPlotServer()]
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @examples
 #' library(VizModules)
 #'
