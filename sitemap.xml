@@ -1,7 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://j-andrews7.github.io/VizModules/404.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/CHANGE_SUMMARY.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/IMPLEMENTATION_SUMMARY.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/LICENSE-text.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/LICENSE.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/POLYGON_CLOSING_UPDATE.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/RADAR_PLOT_README.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/articles/custom-modules.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/articles/index.html</loc></url>
@@ -74,6 +78,11 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlot.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotInputsUI.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotOutputUI.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/resolve_palette.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.html</loc></url>

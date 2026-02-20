@@ -416,6 +416,16 @@ guidelines:
   : Output UI components for the ViolinPlot module
 - [`plotthis_ViolinPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotServer.md)
   : Server logic for ViolinPlot module
+- [`radarPlot()`](https://j-andrews7.github.io/VizModules/reference/radarPlot.md)
+  : Create a plotly radar chart
+- [`radarPlotApp()`](https://j-andrews7.github.io/VizModules/reference/radarPlotApp.md)
+  : Create an example Modular radarPlot Shiny Application
+- [`radarPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/radarPlotInputsUI.md)
+  : Input UI components for the radarPlot module
+- [`radarPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/radarPlotOutputUI.md)
+  : Output UI components for the radarPlot module
+- [`radarPlotServer()`](https://j-andrews7.github.io/VizModules/reference/radarPlotServer.md)
+  : Server logic for radarPlot module
 - [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
   : Resolve a color palette for plot groups
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
