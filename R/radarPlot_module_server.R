@@ -132,8 +132,14 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             group_col <- isolate_fn(input$group)
 
             validate(
-                need(!is.null(theta_col) && theta_col %in% names(d), "Select a category column for theta (angular axes)."),
-                need(!is.null(r_col) && r_col %in% names(d), "Select a numeric column for r (radial values)."),
+                need(
+                    !is.null(theta_col) && theta_col %in% names(d),
+                    "Select a category column for theta (angular axes)."
+                ),
+                need(
+                    !is.null(r_col) && r_col %in% names(d),
+                    "Select a numeric column for r (radial values)."
+                ),
                 need(is.numeric(d[[r_col]]), "The r column must contain numeric data.")
             )
 
@@ -211,7 +217,10 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 polar.bgcolor = isolate_fn(input$polar.bgcolor)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE)
+            config_list <- .add_plot_config(
+                download.format = isolate_fn(input$download.type),
+                include.modebar.buttons = TRUE
+            )
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

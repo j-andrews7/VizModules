@@ -16,9 +16,11 @@
 #' for that function for an exhaustive list.
 #'
 #' @section Plot parameters and defaults:
-#' The following [VizModules::radarPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+#' The following [VizModules::radarPlot()] parameters can be accessed via UI inputs
+#' and/or the \code{defaults} argument:
 #' \itemize{
-#'   \item \code{theta} - Category column for angular axes (UI: "Category column (theta)", default: 1st categorical column)
+#'   \item \code{theta} - Category column for angular axes
+#'     (UI: "Category column (theta)", default: 1st categorical column)
 #'   \item \code{r} - Values column for radial distance (UI: "Values column (r)", default: 1st numeric column)
 #'   \item \code{group} - Optional grouping column for multiple traces (UI: "Group column", default: NULL)
 #'   \item \code{fill} - Fill area under trace (UI: "Fill area", default: "toself")
@@ -256,7 +258,9 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ),
             selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
-                selected = ifelse("title.font.family" %in% names(defaults) && defaults[["title.font.family"]] %in% font.choices,
+                selected = ifelse(
+                    "title.font.family" %in% names(defaults) &&
+                        defaults[["title.font.family"]] %in% font.choices,
                     defaults[["title.font.family"]],
                     "Arial"
                 )
@@ -282,7 +286,9 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ),
             selectInput(ns("legend.font.family"), "Legend font:",
                 choices = font.choices,
-                selected = ifelse("legend.font.family" %in% names(defaults) && defaults[["legend.font.family"]] %in% font.choices,
+                selected = ifelse(
+                    "legend.font.family" %in% names(defaults) &&
+                        defaults[["legend.font.family"]] %in% font.choices,
                     defaults[["legend.font.family"]],
                     "Arial"
                 )
