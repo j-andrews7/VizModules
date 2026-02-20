@@ -18,7 +18,7 @@
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
 #'
 #' @export
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data

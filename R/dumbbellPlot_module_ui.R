@@ -38,7 +38,7 @@
 #' @importFrom colourpicker colourInput
 #'
 #' @export
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotServer()], [VizModules::dumbbellPlotApp()]
 #' @examples

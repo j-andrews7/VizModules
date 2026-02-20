@@ -13,7 +13,7 @@
 #' @importFrom shinyjs useShinyjs
 #'
 #' @export
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotServer()]
 #'

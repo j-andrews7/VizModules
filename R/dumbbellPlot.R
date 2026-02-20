@@ -55,7 +55,7 @@
 #'
 #' @import plotly
 #' 
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @export
 #'
 #' @examples
