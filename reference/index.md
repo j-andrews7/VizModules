@@ -26,6 +26,16 @@
   : Output UI components for the yPlot module
 - [`dittoViz_yPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.md)
   : Server logic for yPlot module
+- [`dumbbellPlot()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.md)
+  : Create an Interactive Dumbbell Plot with plotly
+- [`dumbbellPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.md)
+  : Create a Shiny App for Dumbbell Plots
+- [`dumbbellPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotInputsUI.md)
+  : Input UI components for the dumbbellPlot module
+- [`dumbbellPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotOutputUI.md)
+  : Output UI components for the dumbbellPlot module
+- [`dumbbellPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotServer.md)
+  : Server logic for dumbbellPlot module
 - [`example_population`](https://j-andrews7.github.io/VizModules/reference/example_population.md)
   : Example population dataset for module apps
 - [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
