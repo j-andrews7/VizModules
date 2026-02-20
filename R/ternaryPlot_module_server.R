@@ -25,7 +25,7 @@
 ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
-    
+
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
@@ -33,7 +33,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 hide(input.name)
             })
         }
-        
+
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
@@ -41,11 +41,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
         ns <- session$ns
-        
+
         output$color.picker <- renderUI({
             d <- data_reactive()
             grp <- input$group
-            
+
             # Only show color picker if group is selected
             if (is.null(grp) || grp == "" || !grp %in% names(d)) {
                 return(tagList(
@@ -54,12 +54,12 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     )
                 ))
             }
-            
+
             groups <- unique(stats::na.omit(as.character(d[[grp]])))
             if (length(groups) == 0) {
                 return(NULL)
             }
-            
+
             multiColorPicker(
                 ns("trace.colors"),
                 label = "Trace colors",
@@ -68,24 +68,24 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 compact = TRUE
             )
         })
-        
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- c("", names(data_reactive())[vapply(data_reactive(), is.numeric, logical(1))])
             all.choices <- c("", names(data_reactive()))
-            
+
             # Set default selections for a, b, c axes (first 3 numeric columns)
             default_a <- if (length(numeric.data) > 1) numeric.data[2] else ""
             default_b <- if (length(numeric.data) > 2) numeric.data[3] else ""
             default_c <- if (length(numeric.data) > 3) numeric.data[4] else ""
-            
+
             # Data
             updateSelectInput(session, "a", selected = default_a)
             updateSelectInput(session, "b", selected = default_b)
             updateSelectInput(session, "c", selected = default_c)
             updateSelectInput(session, "group", selected = "")
             updateNumericInput(session, "sum", value = 100)
-            
+
             # Trace style
             updateSelectInput(session, "mode", selected = "markers")
             updateNumericInput(session, "marker.size", value = 8)
@@ -95,7 +95,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "line.width", value = 2)
             updateSelectInput(session, "line.dash", selected = "solid")
             updateSliderInput(session, "opacity", value = 1)
-            
+
             # Axes
             updateTextInput(session, "a.title", value = "")
             updateTextInput(session, "b.title", value = "")
@@ -106,35 +106,35 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "a.gridcolor", value = "#EEEEEE")
             colourpicker::updateColourInput(session, "b.gridcolor", value = "#EEEEEE")
             colourpicker::updateColourInput(session, "c.gridcolor", value = "#EEEEEE")
-            
+
             # Title
             updateNumericInput(session, "title.font.size", value = 18)
             updateSelectInput(session, "title.font.family", selected = "Arial")
             colourpicker::updateColourInput(session, "title.font.color", value = "#000000")
-            
+
             # Legend
             updateCheckboxInput(session, "show.legend", value = TRUE)
             updateSelectInput(session, "legend.orientation", selected = "h")
             updateSelectInput(session, "legend.font.family", selected = "Arial")
             updateNumericInput(session, "legend.font.size", value = 12)
             colourpicker::updateColourInput(session, "legend.font.color", value = "#000000")
-            
+
             # Background
             colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
         })
-        
+
         # Reactive expression to generate the plot (used by both output and download)
         generate_ternaryPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
-            
+
             d <- data_reactive()
             req(nrow(d) > 0)
-            
+
             a_col <- isolate_fn(input$a)
             b_col <- isolate_fn(input$b)
             c_col <- isolate_fn(input$c)
             group_col <- isolate_fn(input$group)
-            
+
             validate(
                 need(
                     !is.null(a_col) && a_col != "" && a_col %in% names(d),
@@ -152,12 +152,12 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 need(is.numeric(d[[b_col]]), "The b-axis column must contain numeric data."),
                 need(is.numeric(d[[c_col]]), "The c-axis column must contain numeric data.")
             )
-            
+
             # Handle group column
             if (!is.null(group_col) && group_col == "") {
                 group_col <- NULL
             }
-            
+
             # Get colors
             color_map <- NULL
             if (is.null(group_col) || !group_col %in% names(d)) {
@@ -178,23 +178,23 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                     )
                 }
             }
-            
+
             # Get axis titles (use column names if not specified)
             a_title <- isolate_fn(input$a.title)
             if (is.null(a_title) || a_title == "") {
                 a_title <- a_col
             }
-            
+
             b_title <- isolate_fn(input$b.title)
             if (is.null(b_title) || b_title == "") {
                 b_title <- b_col
             }
-            
+
             c_title <- isolate_fn(input$c.title)
             if (is.null(c_title) || c_title == "") {
                 c_title <- c_col
             }
-            
+
             fig <- ternaryPlot(
                 df = d,
                 a = a_col,
@@ -230,21 +230,21 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 title.font.color = isolate_fn(input$title.font.color),
                 bgcolor = isolate_fn(input$bgcolor)
             )
-            
+
             config_list <- .add_plot_config(
                 download.format = isolate_fn(input$download.type),
                 include.modebar.buttons = TRUE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            
+
             return(fig)
         })
-        
+
         # Render the plot output
         output$ternaryPlot <- renderPlotly({
             generate_ternaryPlot()
         })
-        
+
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
             plot_reactive = generate_ternaryPlot,

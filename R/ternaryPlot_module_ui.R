@@ -80,22 +80,22 @@
 #' ternaryPlotInputsUI("ternaryPlot", df)
 ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
-    
+
     # Get variable choices
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     all.choices <- c("", names(data))
-    
+
     # Set default selections for a, b, c axes (first 3 numeric columns)
     default_a <- if (length(num.choices) > 1) num.choices[2] else ""
     default_b <- if (length(num.choices) > 2) num.choices[3] else ""
     default_c <- if (length(num.choices) > 3) num.choices[4] else ""
-    
+
     font.choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
         "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
         "sans-serif", "serif", "monospace"
     )
-    
+
     inputs <- list(
         "Data" = tagList(
             selectInput(ns("a"), "A-axis column:",
@@ -334,7 +334,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             )
         )
     )
-    
+
     organize_inputs(
         inputs,
         id = ns("ternaryPlotTabsetPanel"),

@@ -69,9 +69,9 @@
 #' designer <- c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70)
 #' label <- c("point 1", "point 2", "point 3", "point 4", "point 5", "point 6",
 #'            "point 7", "point 8", "point 9", "point 10", "point 11")
-#' 
+#'
 #' df <- data.frame(journalist, developer, designer, label)
-#' 
+#'
 #' ternaryPlot(
 #'     df = df,
 #'     a = "journalist",
@@ -160,7 +160,7 @@ ternaryPlot <- function(df, a, b, c,
                         title.font.color = "#000000",
                         title.x = 0.5,
                         bgcolor = "#FFFFFF") {
-    
+
     # Validate inputs
     if (!a %in% names(df)) {
         stop(paste("Column", a, "not found in data frame"))
@@ -171,7 +171,7 @@ ternaryPlot <- function(df, a, b, c,
     if (!c %in% names(df)) {
         stop(paste("Column", c, "not found in data frame"))
     }
-    
+
     # Ensure numeric columns
     if (!is.numeric(df[[a]])) {
         stop(paste("Column", a, "must be numeric"))
@@ -182,7 +182,7 @@ ternaryPlot <- function(df, a, b, c,
     if (!is.numeric(df[[c]])) {
         stop(paste("Column", c, "must be numeric"))
     }
-    
+
     # Helper function for creating axis configuration
     axis_config <- function(title, titlefont.size, titlefont.family, titlefont.color,
                            tickfont.size, tickcolor, ticklen, gridcolor) {
@@ -201,7 +201,7 @@ ternaryPlot <- function(df, a, b, c,
             gridcolor = gridcolor
         )
     }
-    
+
     # Configure axes
     aaxis <- axis_config(a.title, a.titlefont.size, a.titlefont.family, a.titlefont.color,
                         a.tickfont.size, a.tickcolor, a.ticklen, a.gridcolor)
@@ -209,15 +209,15 @@ ternaryPlot <- function(df, a, b, c,
                         b.tickfont.size, b.tickcolor, b.ticklen, b.gridcolor)
     caxis <- axis_config(c.title, c.titlefont.size, c.titlefont.family, c.titlefont.color,
                         c.tickfont.size, c.tickcolor, c.ticklen, c.gridcolor)
-    
+
     # Initialize plot
     fig <- plot_ly()
-    
+
     # Handle grouping
     if (!is.null(group) && group != "" && group %in% names(df)) {
         # Multiple traces
         group_values <- unique(df[[group]])
-        
+
         # Prepare colors
         if (is.null(colors) || length(colors) == 0) {
             if (!is.null(palette) && length(palette) > 0) {
@@ -228,7 +228,7 @@ ternaryPlot <- function(df, a, b, c,
                 colors <- rep_len(default_cols, length(group_values))
             }
         }
-        
+
         # If colors is a named vector, preserve names
         if (!is.null(names(colors))) {
             color_map <- colors
@@ -238,17 +238,17 @@ ternaryPlot <- function(df, a, b, c,
                 as.character(group_values)
             )
         }
-        
+
         for (i in seq_along(group_values)) {
             grp <- group_values[i]
             subset_data <- df[df[[group]] == grp, ]
-            
+
             trace_color <- if (as.character(grp) %in% names(color_map)) {
                 color_map[[as.character(grp)]]
             } else {
                 color_map[[i]]
             }
-            
+
             # Build marker list
             marker_list <- list(
                 size = marker.size,
@@ -257,17 +257,17 @@ ternaryPlot <- function(df, a, b, c,
                 opacity = opacity,
                 line = list(width = marker.line.width, color = marker.line.color)
             )
-            
+
             # Build line list (only used if mode includes "lines")
             line_list <- list(
                 width = line.width,
                 dash = line.dash,
                 color = trace_color
             )
-            
+
             # Add trace
             if (grepl("lines", mode, fixed = TRUE)) {
-                fig <- fig %>% add_trace(
+                fig <- fig |> add_trace(
                     type = "scatterternary",
                     mode = mode,
                     a = subset_data[[a]],
@@ -279,7 +279,7 @@ ternaryPlot <- function(df, a, b, c,
                     showlegend = show.legend
                 )
             } else {
-                fig <- fig %>% add_trace(
+                fig <- fig |> add_trace(
                     type = "scatterternary",
                     mode = mode,
                     a = subset_data[[a]],
@@ -300,7 +300,7 @@ ternaryPlot <- function(df, a, b, c,
         } else {
             "#1F77B4"
         }
-        
+
         # Build marker list
         marker_list <- list(
             size = marker.size,
@@ -309,17 +309,17 @@ ternaryPlot <- function(df, a, b, c,
             opacity = opacity,
             line = list(width = marker.line.width, color = marker.line.color)
         )
-        
+
         # Build line list (only used if mode includes "lines")
         line_list <- list(
             width = line.width,
             dash = line.dash,
             color = trace_color
         )
-        
+
         # Add trace
         if (grepl("lines", mode, fixed = TRUE)) {
-            fig <- fig %>% add_trace(
+            fig <- fig |> add_trace(
                 type = "scatterternary",
                 mode = mode,
                 a = df[[a]],
@@ -330,7 +330,7 @@ ternaryPlot <- function(df, a, b, c,
                 showlegend = FALSE
             )
         } else {
-            fig <- fig %>% add_trace(
+            fig <- fig |> add_trace(
                 type = "scatterternary",
                 mode = mode,
                 a = df[[a]],
@@ -341,9 +341,9 @@ ternaryPlot <- function(df, a, b, c,
             )
         }
     }
-    
+
     # Configure layout
-    fig <- fig %>% layout(
+    fig <- fig |> layout(
         title = list(
             text = title.text,
             font = list(
@@ -372,6 +372,6 @@ ternaryPlot <- function(df, a, b, c,
         ),
         paper_bgcolor = bgcolor
     )
-    
+
     return(fig)
 }
