@@ -163,6 +163,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ),
             uiOutput(ns("palette.selection")),
+            materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE ),
             colourpicker::colourInput(ns("errorBarColour"), "Error Bar Colour", value = "#000000"),
             numericInput(ns("errorBarWidth"), "Error Bar Width", value = 1, min = 0.1)
         ),

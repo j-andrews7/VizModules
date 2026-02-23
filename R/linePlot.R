@@ -41,6 +41,9 @@
 #'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
 #' @param color.adjustment Optional character or function, transformation to apply to color grouping variable.
 #'   Same options as x.adjustment and y.adjustment. Default: NULL.
+#' @param error.width numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable
+#' @param error.colour hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable
+#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
@@ -69,7 +72,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
-                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL) {
+                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -199,7 +202,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 showlegend = show.legend
             )
             # Only add error_y if sd_y exists and has non-NA values
-            if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y))) {
+            if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y)) && error.bar) {
                 plot_params$error_y <- list(array = facet_data$sd_y, color = error.colour, thickness = error.width)
             }
             # Only add line parameter if mode is "lines" or "lines+markers"
@@ -379,7 +382,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         )
 
         # Only add error_y if sd_y exists and has non-NA values
-        if ("sd_y" %in% names(plot_data) && any(!is.na(plot_data$sd_y))) {
+        if ("sd_y" %in% names(plot_data) && any(!is.na(plot_data$sd_y)) && error.bar) {
             plot_params$error_y <- list(array = plot_data$sd_y, color = error.colour, thickness = error.width)
         }
         # Only add line parameter if mode is "lines" or "lines+markers"

@@ -115,6 +115,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scales", selected = "fixed")
             updateSelectInput(session, "x.adjustment", selected = "")
             updateSelectInput(session, "y.adjustment", selected = "")
+            updateMaterialSwitch(session, "errorBar", value = TRUE)
+            updateNumericInput(session, "errorBarWidth", value = 1)
+            colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
 
             # Axes:
             updateNumericInput(session, "axis.title.font.size", value = 18)
@@ -267,7 +270,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 x.adjustment = x.adjustment,
                 y.adjustment = y.adjustment, 
                 error.colour = isolate_fn(input$errorBarColour),
-                error.width = isolate_fn(input$errorBarWidth)
+                error.width = isolate_fn(input$errorBarWidth),
+                error.bar = isolate_fn(input$errorBar)
             )
 
             # Add reference lines

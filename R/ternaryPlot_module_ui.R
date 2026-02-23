@@ -357,7 +357,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #' @importFrom shinyjqui jqui_resizable
 #'
 #' @export
-#' @author Jared Andrews
+#' @author Jacob Martin
 ternaryPlotOutputUI <- function(id) {
     ns <- NS(id)
     jqui_resizable(
