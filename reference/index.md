@@ -56,6 +56,16 @@
   : Compact multi-group color picker input
 - [`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
+- [`parallelCoordinatesPlot()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlot.md)
+  : Create an Interactive Parallel Coordinates Plot with plotly
+- [`parallelCoordinatesPlotApp()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.md)
+  : Create an example Modular parallelCoordinatesPlot Shiny Application
+- [`parallelCoordinatesPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotInputsUI.md)
+  : Input UI components for the parallelCoordinatesPlot module
+- [`parallelCoordinatesPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotOutputUI.md)
+  : Output UI components for the parallelCoordinatesPlot module
+- [`parallelCoordinatesPlotServer()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotServer.md)
+  : Server logic for parallelCoordinatesPlot module
 - [`piePlot()`](https://j-andrews7.github.io/VizModules/reference/piePlot.md)
   : Create a plotly pie chart
 - [`piePlotApp()`](https://j-andrews7.github.io/VizModules/reference/piePlotApp.md)
