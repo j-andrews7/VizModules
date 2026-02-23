@@ -86,7 +86,10 @@
 <span>  x.adjustment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  y.adjustment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  color.adjustment <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  order.by <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  order.by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error.colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error.width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error.bar <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -236,6 +239,18 @@ Same options as x.adjustment and y.adjustment. Default: NULL.</p></dd>
 
 <dt id="arg-order-by">order.by<a class="anchor" aria-label="anchor" href="#arg-order-by"></a></dt>
 <dd><p>Optional character vector, column name(s) to order data by before plotting. Default: NULL.</p></dd>
+
+
+<dt id="arg-error-colour">error.colour<a class="anchor" aria-label="anchor" href="#arg-error-colour"></a></dt>
+<dd><p>hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable</p></dd>
+
+
+<dt id="arg-error-width">error.width<a class="anchor" aria-label="anchor" href="#arg-error-width"></a></dt>
+<dd><p>numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable</p></dd>
+
+
+<dt id="arg-error-bar">error.bar<a class="anchor" aria-label="anchor" href="#arg-error-bar"></a></dt>
+<dd><p>Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable</p></dd>
 
 </dl></div>
     <div class="section level2">

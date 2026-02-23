@@ -430,6 +430,16 @@ guidelines:
   : Resolve a color palette for plot groups
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
+- [`ternaryPlot()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlot.md)
+  : Create a plotly ternary plot
+- [`ternaryPlotApp()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.md)
+  : Create an example Modular ternaryPlot Shiny Application
+- [`ternaryPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlotInputsUI.md)
+  : Input UI components for the ternaryPlot module
+- [`ternaryPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlotOutputUI.md)
+  : Output UI components for the ternaryPlot module
+- [`ternaryPlotServer()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlotServer.md)
+  : Server logic for ternaryPlot module
 - [`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md)
   : Update a multiColorPicker input on the client
 - [`volcanoPlotApp()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotApp.md)
