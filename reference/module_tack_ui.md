@@ -50,14 +50,10 @@ module_tack_ui(ns)
 #>     </div>
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button">
-#>       <span class="action-label">Update</span>
-#>     </button>
+#>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button">
-#>       <span class="action-label">Reset</span>
-#>     </button>
+#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
 #>   </div>
 #>   <div class="col-sm-3" style="margin-top: 25px;">
 #>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -91,14 +87,10 @@ module_tack_ui(ns, defaults = list(download.format = "png"))
 #>     </div>
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button">
-#>       <span class="action-label">Update</span>
-#>     </button>
+#>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button">
-#>       <span class="action-label">Reset</span>
-#>     </button>
+#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
 #>   </div>
 #>   <div class="col-sm-3" style="margin-top: 25px;">
 #>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.interactive" tabindex="-1" target="_blank" width="100%">
