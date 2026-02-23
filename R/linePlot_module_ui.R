@@ -162,7 +162,9 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             selected = "solid",
             choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ),
-            uiOutput(ns("palette.selection"))
+            uiOutput(ns("palette.selection")),
+            colourpicker::colourInput(ns("errorBarColour"), "Error Bar Colour", value = "#000000"),
+            numericInput(ns("errorBarWidth"), "Error Bar Width", value = 1, min = 0.1)
         ),
 
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
