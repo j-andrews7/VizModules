@@ -45,6 +45,7 @@
 #' @return A plotly object representing the interactive line plot.
 #'
 #' @import plotly
+#' @importFrom dplyr group_by summarise across all_of mutate
 #' 
 #' @author Jacob Martin, Jared Andrews
 #' @export
@@ -96,27 +97,27 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     #     }
     # }
 
-    if (x %in% cat.choices) {
-        # ADD standard Deviation to data frame 
-            ex <- reactive.data %>%
-                group_by(.data[[x]]) %>%
-                summarise(
-                    across(
-                        all_of(y),
-                        list(mean = ~mean(.x, na.rm = TRUE)),
-                        .names = "{.col}"
-                    ),
-                    sd_y = if (length(y) == 1) sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
-                    .groups = "drop"
-                )
-            reactive
-
+    if (length(x) == 1 && x %in% cat.choices) {
+        # Compute per-group mean and SD for error bars
+        group_vars <- x
+        if (!is.null(facet.by) && nzchar(facet.by)) {
+            group_vars <- c(facet.by, x)
+        }
+        ex <- reactive.data |>
+            dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
+            dplyr::summarise(
+                sd_y = if (length(y) == 1) stats::sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
+                dplyr::across(
+                    dplyr::all_of(y),
+                    list(mean = ~mean(.x, na.rm = TRUE)),
+                    .names = "{.col}"
+                ),
+                .groups = "drop"
+            )
         reactive.data <- ex
     } else {
-        for (i in y){
-            reactive.data <- reactive.data |>
-                mutate(sd_y = NA)
-        }
+        reactive.data <- reactive.data |>
+            dplyr::mutate(sd_y = NA)
     }
 
     # Y axis styling by editing unique aspects of the x axis styling
