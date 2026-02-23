@@ -77,6 +77,48 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         title = x.title, autorange = TRUE
     )
 
+    #Error Bars Mean Logic: 
+    multi_axis <- xor(length(x) > 1, length(y) > 1)
+
+
+    cat.choices <- c("", names(reactive.data)[unlist(lapply(reactive.data, function(x) !is.numeric(x)), use.names = FALSE)])
+    # if (x %in% cat.choices ){
+    #     for (i in y){
+    #         reactive.data <- reactive.data %>%
+    #         dplyr::group_by(.data[[x]]) %>%      
+    #         dplyr::mutate(
+    #             ymean = mean(.data[[i]], na.rm = TRUE)        
+    #         ) %>%
+    #             dplyr::ungroup()
+
+    #         reactive.data[[i]] <- reactive.data$ymean
+    #         reactive.data$ymean <- NULL
+    #     }
+    # }
+
+    if (x %in% cat.choices) {
+        # ADD standard Deviation to data frame 
+            ex <- reactive.data %>%
+                group_by(.data[[x]]) %>%
+                summarise(
+                    across(
+                        all_of(y),
+                        list(mean = ~mean(.x, na.rm = TRUE)),
+                        .names = "{.col}"
+                    ),
+                    sd_y = if (length(y) == 1) sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
+                    .groups = "drop"
+                )
+            reactive
+
+        reactive.data <- ex
+    } else {
+        for (i in y){
+            reactive.data <- reactive.data |>
+                mutate(sd_y = NA)
+        }
+    }
+
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
     yaxis_style$tickangle <- axis.tickangle.y
@@ -155,6 +197,10 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 colors = palette.selection,
                 showlegend = show.legend
             )
+            # Only add error_y if sd_y exists and has non-NA values
+            if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y))) {
+                plot_params$error_y <- list(array = facet_data$sd_y, color = "#666", thickness = 2)
+            }
             # Only add line parameter if mode is "lines" or "lines+markers"
             if (plot.mode %in% c("lines", "lines+markers")) {
                 plot_params$line <- list(dash = line.type)
@@ -330,6 +376,11 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             colors = palette.selection,
             showlegend = show.legend
         )
+
+        # Only add error_y if sd_y exists and has non-NA values
+        if ("sd_y" %in% names(plot_data) && any(!is.na(plot_data$sd_y))) {
+            plot_params$error_y <- list(array = plot_data$sd_y, color = "#666", thickness = 2)
+        }
         # Only add line parameter if mode is "lines" or "lines+markers"
         if (plot.mode %in% c("lines", "lines+markers")) {
             plot_params$line <- list(dash = line.type)
@@ -416,4 +467,4 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
-}
+    }
