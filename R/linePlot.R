@@ -69,7 +69,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
-                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL) {
+                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL) {
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -200,7 +200,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             )
             # Only add error_y if sd_y exists and has non-NA values
             if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y))) {
-                plot_params$error_y <- list(array = facet_data$sd_y, color = "#666", thickness = 2)
+                plot_params$error_y <- list(array = facet_data$sd_y, color = error.colour, thickness = error.width)
             }
             # Only add line parameter if mode is "lines" or "lines+markers"
             if (plot.mode %in% c("lines", "lines+markers")) {
@@ -380,7 +380,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
 
         # Only add error_y if sd_y exists and has non-NA values
         if ("sd_y" %in% names(plot_data) && any(!is.na(plot_data$sd_y))) {
-            plot_params$error_y <- list(array = plot_data$sd_y, color = "#666", thickness = 2)
+            plot_params$error_y <- list(array = plot_data$sd_y, color = error.colour, thickness = error.width)
         }
         # Only add line parameter if mode is "lines" or "lines+markers"
         if (plot.mode %in% c("lines", "lines+markers")) {

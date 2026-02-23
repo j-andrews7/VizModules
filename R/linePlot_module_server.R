@@ -265,7 +265,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 flip.x = isolate_fn(input$flip.x),
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
-                y.adjustment = y.adjustment
+                y.adjustment = y.adjustment, 
+                error.colour = isolate_fn(input$errorBarColour),
+                error.width = isolate_fn(input$errorBarWidth)
             )
 
             # Add reference lines
