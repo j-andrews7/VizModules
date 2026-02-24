@@ -24,6 +24,8 @@ Depends:
     R (>= 3.5)
 Imports:
     colourpicker,
+    dplyr,
+    DT,
     shinyjs,
     scales,
     shinyjqui,

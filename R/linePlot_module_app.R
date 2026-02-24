@@ -21,38 +21,53 @@
 #' app <- linePlotApp(data_list)
 #' if (interactive()) runApp(app)
 linePlotApp <- function(data_list) {
-    # Validate input
+    # Validate input (unchanged)
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
         stopifnot(is.data.frame(data))
     })
+    ui <- navbarPage(  # Remove fluidPage + titlePanel wrapper
+        title = "Modular linePlots",  # title here instead
+        useShinyjs(),  # moves to navbarPage
 
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular linePlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        linePlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
+        tabPanel("Filter",
             mainPanel(
-                # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(linePlotOutputUI(name), br())
+                    tagList(dataFilterUI(paste0("filter_", name)))
                 })
             )
+        ),
+        
+        # Plots tab
+        tabPanel("Plots",  
+                sidebarLayout(
+                    sidebarPanel(
+                        lapply(names(data_list), function(name) {
+                            tagList(
+                                linePlotInputsUI(name, data_list[[name]], 
+                                                title = h3(paste(name, "Settings"))),
+                                hr()
+                            )
+                        })
+                    ),
+                    mainPanel(
+                        lapply(names(data_list), function(name) {
+                            tagList(linePlotOutputUI(name), br())
+                        })
+                    )
+                )
         )
     )
 
+
     server <- function(input, output, session) {
-        # Add the module server for each data frame
+        filtered_list <- lapply(names(data_list), function(name) {
+            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
+        })
+        names(filtered_list) <- names(data_list)
+
         lapply(names(data_list), function(name) {
-            linePlotServer(name, data = reactive(data_list[[name]]))
+            linePlotServer(name, data = filtered_list[[name]])
         })
     }
 

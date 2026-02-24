@@ -193,7 +193,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Update y-axis range when var (y data) column is changed
         observeEvent(input$var, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$var, y_axis_scale_factor = 1.11)
+            y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = 1.11, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -316,7 +316,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE
+                legend.show = TRUE, 
+                theme = theme_bw()
             )
 
             fig <- p |>
@@ -331,8 +332,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 )
 
             # Apply axis styling
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
@@ -370,7 +371,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            generate_yPlot()
+            width <- session$clientData$output_yPlot_width
+            height <- session$clientData$output_yPlot_height
+            
+            generate_yPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

@@ -251,7 +251,15 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Render the plot output
         output$AreaPlot <- renderPlotly({
-            generate_AreaPlot()
+            width <- session$clientData$output_AreaPlot_width
+            height <- session$clientData$output_AreaPlot_height
+            
+            generate_AreaPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

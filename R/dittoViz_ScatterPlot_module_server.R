@@ -14,7 +14,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom dittoViz scatterPlot colLevels
-#' @importFrom ggplot2 theme_bw waiver
+#' @importFrom ggplot2 theme_bw waiver theme
 #' @importFrom shinyjs hide runjs
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
@@ -792,7 +792,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            generate_scatterPlot()
+            width <- session$clientData$output_scatterPlot_width
+            height <- session$clientData$output_scatterPlot_height
+            
+            generate_scatterPlot() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

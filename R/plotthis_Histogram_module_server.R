@@ -296,8 +296,16 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         })
 
         # Render the plot output
-        output$Histogram <- renderPlotly({
-            generate_Histogram()
+        output$histogramPlot <- renderPlotly({
+            width <- session$clientData$output_histogramPlot_width
+            height <- session$clientData$output_histogramPlot_height
+            
+            generate_Histogram() %>%
+                layout(
+                    width = as.numeric(width),
+                    height = as.numeric(height) * 0.9,
+                    margin = list(t = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot
