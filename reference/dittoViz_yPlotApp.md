@@ -39,5 +39,6 @@ Jared Andrews
 library(VizModules)
 data_list <- list("sales" = example_sales, "population" = example_population)
 app <- dittoViz_yPlotApp(data_list)
+#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
 if (interactive()) runApp(app)
 ```

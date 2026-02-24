@@ -42,5 +42,6 @@ sales_summary <- aggregate(revenue ~ region, example_sales, sum)
 population_summary <- aggregate(count ~ age_group, example_population, sum)
 data_list <- list("sales" = sales_summary, "population" = population_summary)
 app <- piePlotApp(data_list)
+#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
 if (interactive()) runApp(app)
 ```
