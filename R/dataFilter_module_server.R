@@ -76,7 +76,8 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             if (is.null(rows)) {
                 return(d)
             }
-            d[rows, , drop = FALSE]
+            d <- d[rows, , drop = FALSE]
+            droplevels(d)
         })
 
         return(filtered_data)
