@@ -12,7 +12,7 @@
 #' @importFrom DT dataTableOutput
 #'
 #' @export
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @seealso [dataFilterServer()]
 #' @examples
 #' library(VizModules)

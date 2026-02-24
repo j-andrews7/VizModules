@@ -53,5 +53,5 @@ if (interactive()) shinyApp(ui, server)
 \code{\link[=dataFilterUI]{dataFilterUI()}}
 }
 \author{
-Jacob Martin, Jared Andrews
+Jacob Martin
 }

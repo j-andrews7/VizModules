@@ -24,7 +24,7 @@
 #' @importFrom DT renderDataTable datatable
 #'
 #' @export
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @seealso [dataFilterUI()]
 #' @examples
 #' library(shiny)

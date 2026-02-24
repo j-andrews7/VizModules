@@ -47,22 +47,22 @@ so see the help for that function for an exhaustive list.
 The following \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} parameters can be accessed via UI inputs
 and/or the \code{defaults} argument:
 \itemize{
-  \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
-  \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
-  \item \code{color.scale} - Colorscale for lines (UI: "Color scale", default: "Viridis")
-  \item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
-  \item \code{line.width} - Line width (UI: "Line width", default: 1)
-  \item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
-  \item \code{label.font.size} - Dimension label font size (UI: "Label font size", default: 12)
-  \item \code{label.font.color} - Dimension label font color (UI: "Label font color", default: "black")
-  \item \code{label.font.family} - Dimension label font family (UI: "Label font", default: "Arial")
-  \item \code{tick.font.size} - Tick label font size (UI: "Tick font size", default: 10)
-  \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
-  \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
-  \item \code{title.font.size} - Title font size (UI: "Title font size", default: 16)
-  \item \code{title.font.family} - Title font family (UI: "Title font", default: "Arial")
-  \item \code{title.text.color} - Title text color (UI: "Title color", default: "black")
-  \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
+\item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
+\item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
+\item \code{color.scale} - Colorscale for lines (UI: "Color scale", default: "Viridis")
+\item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
+\item \code{line.width} - Line width (UI: "Line width", default: 1)
+\item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
+\item \code{label.font.size} - Dimension label font size (UI: "Label font size", default: 12)
+\item \code{label.font.color} - Dimension label font color (UI: "Label font color", default: "black")
+\item \code{label.font.family} - Dimension label font family (UI: "Label font", default: "Arial")
+\item \code{tick.font.size} - Tick label font size (UI: "Tick font size", default: 10)
+\item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
+\item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
+\item \code{title.font.size} - Title font size (UI: "Title font size", default: 16)
+\item \code{title.font.family} - Title font family (UI: "Title font", default: "Arial")
+\item \code{title.text.color} - Title text color (UI: "Title color", default: "black")
+\item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
 }
 }
 
@@ -72,8 +72,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 }
 \seealso{
 \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}},
-\code{\link[=parallelCoordinatesPlotServer]{parallelCoordinatesPlotServer()}},
+\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}}, \code{\link[=parallelCoordinatesPlotServer]{parallelCoordinatesPlotServer()}},
 \code{\link[=parallelCoordinatesPlotApp]{parallelCoordinatesPlotApp()}}
 }
 \author{

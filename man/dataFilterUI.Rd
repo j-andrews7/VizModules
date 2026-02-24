@@ -25,5 +25,5 @@ dataFilterUI("myFilter")
 \code{\link[=dataFilterServer]{dataFilterServer()}}
 }
 \author{
-Jacob Martin, Jared Andrews
+Jacob Martin
 }

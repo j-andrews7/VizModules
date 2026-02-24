@@ -22,6 +22,7 @@
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
+    
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
