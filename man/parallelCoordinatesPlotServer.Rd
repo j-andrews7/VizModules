@@ -26,10 +26,8 @@ The \code{moduleServer} function for the parallelCoordinatesPlot module.
 Server logic for parallelCoordinatesPlot module
 }
 \seealso{
-\code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}},
-\code{\link[=parallelCoordinatesPlotInputsUI]{parallelCoordinatesPlotInputsUI()}},
-\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}},
-\code{\link[=parallelCoordinatesPlotApp]{parallelCoordinatesPlotApp()}}
+\code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}}, \code{\link[=parallelCoordinatesPlotInputsUI]{parallelCoordinatesPlotInputsUI()}},
+\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}}, \code{\link[=parallelCoordinatesPlotApp]{parallelCoordinatesPlotApp()}}
 }
 \author{
 Jacob Martin, Jared Andrews

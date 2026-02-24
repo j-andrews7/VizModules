@@ -26,10 +26,8 @@ app <- parallelCoordinatesPlotApp(data_list)
 if (interactive()) runApp(app)
 }
 \seealso{
-\code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}},
-\code{\link[=parallelCoordinatesPlotInputsUI]{parallelCoordinatesPlotInputsUI()}},
-\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}},
-\code{\link[=parallelCoordinatesPlotServer]{parallelCoordinatesPlotServer()}}
+\code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}}, \code{\link[=parallelCoordinatesPlotInputsUI]{parallelCoordinatesPlotInputsUI()}},
+\code{\link[=parallelCoordinatesPlotOutputUI]{parallelCoordinatesPlotOutputUI()}}, \code{\link[=parallelCoordinatesPlotServer]{parallelCoordinatesPlotServer()}}
 }
 \author{
 Jacob Martin, Jared Andrews
