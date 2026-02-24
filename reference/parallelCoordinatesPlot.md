@@ -43,8 +43,8 @@ parallelCoordinatesPlot(
 - color.by:
 
   Optional character, column name to color lines by. Numeric columns use
-  a continuous colorscale; categorical columns are mapped to integers
-  and displayed with the same colorscale. Default: NULL.
+  a continuous colorscale; categorical columns are assigned distinct
+  colors and the colorbar shows category labels. Default: NULL.
 
 - color.scale:
 
