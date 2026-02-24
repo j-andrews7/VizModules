@@ -122,7 +122,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 layout(
                     width = as.numeric(width),
                     height = as.numeric(height) * 0.9,
-                    margin = list(t = 100, autoexpand = TRUE)
+                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
         })
 
