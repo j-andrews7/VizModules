@@ -24,32 +24,48 @@ plotthis_ViolinPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- fluidPage(
+    ui <- navbarPage(
+        title = "Modular ViolinPlots",
         useShinyjs(),
-        titlePanel("Modular ViolinPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_ViolinPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
+
+        tabPanel("Filter",
             mainPanel(
-                # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(plotthis_ViolinPlotOutputUI(name), br())
+                    tagList(dataFilterUI(paste0("filter_", name)))
                 })
+            )
+        ),
+
+        tabPanel("Plots",
+            sidebarLayout(
+                sidebarPanel(
+                    # Add the module inputs UI for each data frame
+                    lapply(names(data_list), function(name) {
+                        tagList(
+                            plotthis_ViolinPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                            hr()
+                        )
+                    })
+                ),
+                mainPanel(
+                    # Add the module output UI for each data frame
+                    lapply(names(data_list), function(name) {
+                        tagList(plotthis_ViolinPlotOutputUI(name), br())
+                    })
+                )
             )
         )
     )
 
     server <- function(input, output, session) {
+        filtered_list <- lapply(names(data_list), function(name) {
+            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
+        })
+        names(filtered_list) <- names(data_list)
+
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            plotthis_ViolinPlotServer(name, data = reactive(data_list[[name]]))
+            plotthis_ViolinPlotServer(name, data = filtered_list[[name]])
         })
     }
 
