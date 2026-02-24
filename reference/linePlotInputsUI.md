@@ -222,25 +222,25 @@ library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="2034">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="3257">
 #>     <li class="active">
-#>       <a href="#tab-2034-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3257-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2034-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3257-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2034-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3257-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2034-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3257-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2034-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3257-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2034">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2034-1">
+#>   <div class="tab-content" data-tabsetid="3257">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3257-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -294,14 +294,23 @@ linePlotInputsUI("linePlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="material-switch">
+#>               <label for="linePlot-errorBar" style="padding-right: 10px;">Error Bars:</label>
+#>               <input id="linePlot-errorBar" type="checkbox" checked="checked"/>
+#>               <label class="switch label-default bg-default" for="linePlot-errorBar"></label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="material-switch">
 #>               <label for="linePlot-order.by" style="padding-right: 10px;">Order by Y</label>
 #>               <input id="linePlot-order.by" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="linePlot-order.by"></label>
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="linePlot-x.adjustment-label" for="linePlot-x.adjustment">X Adjustment</label>
@@ -319,6 +328,8 @@ linePlotInputsUI("linePlot", mtcars)
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="linePlot-y.adjustment-label" for="linePlot-y.adjustment">Y Adjustment</label>
@@ -338,7 +349,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2034-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3257-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -363,7 +374,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2034-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3257-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -396,22 +407,13 @@ linePlotInputsUI("linePlot", mtcars)
 #>           <div id="linePlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <div class="material-switch">
-#>               <label for="linePlot-errorBar" style="padding-right: 10px;">Error Bars:</label>
-#>               <input id="linePlot-errorBar" type="checkbox" checked="checked"/>
-#>               <label class="switch label-default bg-default" for="linePlot-errorBar"></label>
-#>             </div>
-#>           </div>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="linePlot-errorBarColour">Error Bar Colour</label>
 #>             <input id="linePlot-errorBarColour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="linePlot-errorBarWidth-label" for="linePlot-errorBarWidth">Error Bar Width</label>
@@ -420,7 +422,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2034-4">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3257-4">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -663,7 +665,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2034-5">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3257-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
