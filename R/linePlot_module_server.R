@@ -154,6 +154,28 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "vline.opacities", value = "1")
         })
 
+        # observeEvent(list(input$x.value, input$y.value), {
+
+        #     num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+        #     cat.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+
+        #     if (length(input$x.value) == 1){
+        #         if (is.factor(data()[[input$x.value]]) || is.character(data()[[input$x.value]])){
+        #             if (!is.numeric(data()[[input$y.value]])){
+        #                 updateSelectInput(session, "y.value",  choices = num.choices)
+        #             }
+        #         }
+        #     }
+
+        #     if (length(input$y.value) == 1){
+        #         if (is.factor(data()[[input$y.value]]) || is.character(data()[[input$y.value]])){
+        #             if (!is.numeric(data()[[input$x.value]])){
+        #                 updateSelectInput(session, "x.value",  choices = num.choices)
+        #             }
+        #         }
+        #     }
+        # })
+
         # Reactive expression to generate the plot (used by both output and download)
         generate_linePlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
