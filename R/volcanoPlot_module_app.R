@@ -22,24 +22,34 @@ volcanoPlotApp <- function(df) {
     # Validate input
     stopifnot(is.data.frame(df))
 
-    ui <- fluidPage(
+    ui <- navbarPage(
+        title = "Modular Volcano Plot",
         useShinyjs(),
-        titlePanel("Modular Volcano Plot"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                volcanoPlotInputsUI("volc", df)
-            ),
+
+        tabPanel("Filter",
             mainPanel(
-                # Add the module output UI for each data frame
-                volcanoPlotOutputUI("volc")
+                dataFilterUI("filter_volc")
+            )
+        ),
+
+        tabPanel("Plots",
+            sidebarLayout(
+                sidebarPanel(
+                    # Add the module inputs UI for each data frame
+                    volcanoPlotInputsUI("volc", df)
+                ),
+                mainPanel(
+                    # Add the module output UI for each data frame
+                    volcanoPlotOutputUI("volc")
+                )
             )
         )
     )
 
     server <- function(input, output, session) {
+        filtered_data <- dataFilterServer("filter_volc", reactive(df))
         # Add the module server for each data frame
-        volcanoPlotServer("volc", data = reactive(df))
+        volcanoPlotServer("volc", data = filtered_data)
     }
 
     shinyApp(ui, server)

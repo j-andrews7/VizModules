@@ -26,29 +26,45 @@ plotthis_BarPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- fluidPage(
+    ui <- navbarPage(
+        title = "Modular BarPlots",
         useShinyjs(),
-        titlePanel("Modular BarPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_BarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
+
+        tabPanel("Filter",
             mainPanel(
                 lapply(names(data_list), function(name) {
-                    tagList(plotthis_BarPlotOutputUI(name), br())
+                    tagList(dataFilterUI(paste0("filter_", name)))
                 })
+            )
+        ),
+
+        tabPanel("Plots",
+            sidebarLayout(
+                sidebarPanel(
+                    lapply(names(data_list), function(name) {
+                        tagList(
+                            plotthis_BarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                            hr()
+                        )
+                    })
+                ),
+                mainPanel(
+                    lapply(names(data_list), function(name) {
+                        tagList(plotthis_BarPlotOutputUI(name), br())
+                    })
+                )
             )
         )
     )
 
     server <- function(input, output, session) {
+        filtered_list <- lapply(names(data_list), function(name) {
+            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
+        })
+        names(filtered_list) <- names(data_list)
+
         lapply(names(data_list), function(name) {
-            plotthis_BarPlotServer(name, data = reactive(data_list[[name]]))
+            plotthis_BarPlotServer(name, data = filtered_list[[name]])
         })
     }
 

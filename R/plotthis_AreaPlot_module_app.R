@@ -25,32 +25,48 @@ plotthis_AreaPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- fluidPage(
+    ui <- navbarPage(
+        title = "Modular AreaPlots",
         useShinyjs(),
-        titlePanel("Modular AreaPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_AreaPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
+
+        tabPanel("Filter",
             mainPanel(
-                # Add the module output UI for each data frame
                 lapply(names(data_list), function(name) {
-                    tagList(plotthis_AreaPlotOutputUI(name), br())
+                    tagList(dataFilterUI(paste0("filter_", name)))
                 })
+            )
+        ),
+
+        tabPanel("Plots",
+            sidebarLayout(
+                sidebarPanel(
+                    # Add the module inputs UI for each data frame
+                    lapply(names(data_list), function(name) {
+                        tagList(
+                            plotthis_AreaPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                            hr()
+                        )
+                    })
+                ),
+                mainPanel(
+                    # Add the module output UI for each data frame
+                    lapply(names(data_list), function(name) {
+                        tagList(plotthis_AreaPlotOutputUI(name), br())
+                    })
+                )
             )
         )
     )
 
     server <- function(input, output, session) {
+        filtered_list <- lapply(names(data_list), function(name) {
+            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
+        })
+        names(filtered_list) <- names(data_list)
+
         # Add the module server for each data frame
         lapply(names(data_list), function(name) {
-            plotthis_AreaPlotServer(name, data = reactive(data_list[[name]]))
+            plotthis_AreaPlotServer(name, data = filtered_list[[name]])
         })
     }
 

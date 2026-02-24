@@ -26,29 +26,45 @@ plotthis_SplitBarPlotApp <- function(data_list) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- fluidPage(
+    ui <- navbarPage(
+        title = "Modular SplitBarPlots",
         useShinyjs(),
-        titlePanel("Modular SplitBarPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_SplitBarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
+
+        tabPanel("Filter",
             mainPanel(
                 lapply(names(data_list), function(name) {
-                    tagList(plotthis_SplitBarPlotOutputUI(name), br())
+                    tagList(dataFilterUI(paste0("filter_", name)))
                 })
+            )
+        ),
+
+        tabPanel("Plots",
+            sidebarLayout(
+                sidebarPanel(
+                    lapply(names(data_list), function(name) {
+                        tagList(
+                            plotthis_SplitBarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
+                            hr()
+                        )
+                    })
+                ),
+                mainPanel(
+                    lapply(names(data_list), function(name) {
+                        tagList(plotthis_SplitBarPlotOutputUI(name), br())
+                    })
+                )
             )
         )
     )
 
     server <- function(input, output, session) {
+        filtered_list <- lapply(names(data_list), function(name) {
+            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
+        })
+        names(filtered_list) <- names(data_list)
+
         lapply(names(data_list), function(name) {
-            plotthis_SplitBarPlotServer(name, data = reactive(data_list[[name]]))
+            plotthis_SplitBarPlotServer(name, data = filtered_list[[name]])
         })
     }
 
