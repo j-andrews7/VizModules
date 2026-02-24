@@ -126,8 +126,8 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             updateCheckboxInput(session, "axis.showline", value = TRUE)
             updateCheckboxInput(session, "axis.mirror",  value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
+            updateCheckboxInput(session, "show.grid.x", value = TRUE)
+            updateCheckboxInput(session, "show.grid.y", value = TRUE)
             colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
             updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateMaterialSwitch(session, "scale.y", value = FALSE)
