@@ -32,8 +32,8 @@ parallelCoordinatesPlot(
 Must contain at least two columns. Non-numeric columns are mapped to integers.}
 
 \item{color.by}{Optional character, column name to color lines by.
-Numeric columns use a continuous colorscale; categorical columns are mapped
-to integers and displayed with the same colorscale. Default: NULL.}
+Numeric columns use a continuous colorscale; categorical columns are assigned
+distinct colors and the colorbar shows category labels. Default: NULL.}
 
 \item{color.scale}{Character, plotly colorscale name for line coloring.
 Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
