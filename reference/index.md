@@ -8,6 +8,10 @@
   : Example edgeR results from airway dataset
 - [`airway_voom`](https://j-andrews7.github.io/VizModules/reference/airway_voom.md)
   : Example limma-voom results from airway dataset
+- [`dataFilterServer()`](https://j-andrews7.github.io/VizModules/reference/dataFilterServer.md)
+  : Server logic for the dataFilter module
+- [`dataFilterUI()`](https://j-andrews7.github.io/VizModules/reference/dataFilterUI.md)
+  : UI component for the dataFilter module
 - [`default_palettes()`](https://j-andrews7.github.io/VizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
 - [`dittoViz_scatterPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.md)
