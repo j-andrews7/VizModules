@@ -211,10 +211,10 @@ plotly-specific features are also available:
 - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
   lines", default: TRUE)
 
-- `show.major.grid.x` - Show X-axis major gridlines (UI: "Show X major
+- `show.grid.x` - Show X-axis major gridlines (UI: "Show X major
   gridlines", default: TRUE)
 
-- `show.major.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
+- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
   gridlines", default: TRUE)
 
 - `axis.linecolor` - Color of axis lines (UI: "Axis line color",
@@ -317,40 +317,40 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="5678">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="1315">
 #>     <li class="active">
-#>       <a href="#tab-5678-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1315-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-1315-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-1315-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-1315-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-1315-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-1315-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-1315-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1315-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1315-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5678-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1315-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5678">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5678-1">
+#>   <div class="tab-content" data-tabsetid="1315">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1315-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -410,7 +410,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-5678-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-1315-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -429,7 +429,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5678-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-1315-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -462,7 +462,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-5678-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-1315-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -503,7 +503,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-5678-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-1315-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -553,7 +553,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-5678-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-1315-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -582,7 +582,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-5678-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-1315-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -630,7 +630,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5678-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1315-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -696,7 +696,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5678-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1315-9">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -803,7 +803,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="yPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="yPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show X Gridlines</span>
 #>               </label>
 #>             </div>
@@ -813,7 +813,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="yPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="yPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show Y Gridlines</span>
 #>               </label>
 #>             </div>
@@ -923,7 +923,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5678-10">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1315-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1000,14 +1000,6 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <br/>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-abline.slopes-label" for="yPlot-abline.slopes">Slopes</label>
-#>             <input id="yPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>           </div>
 #>         </div>
 #>       </div>
 #>     </div>

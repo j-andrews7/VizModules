@@ -160,10 +160,10 @@ plotly-specific features are also available:
 - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
   lines", default: TRUE)
 
-- `show.major.grid.x` - Show X-axis major gridlines (UI: "Show X major
+- `show.grid.x` - Show X-axis major gridlines (UI: "Show X major
   gridlines", default: TRUE)
 
-- `show.major.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
+- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
   gridlines", default: TRUE)
 
 - `axis.linecolor` - Color of axis lines (UI: "Axis line color",
@@ -268,25 +268,25 @@ mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="9094">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="1022">
 #>     <li class="active">
-#>       <a href="#tab-9094-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1022-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9094-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1022-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9094-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-1022-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9094-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1022-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9094-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1022-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9094">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9094-1">
+#>   <div class="tab-content" data-tabsetid="1022">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1022-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -341,7 +341,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9094-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1022-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -393,7 +393,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9094-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1022-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="areaPlot-palette.selection" class="shiny-html-output"></div>
@@ -406,7 +406,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9094-4">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1022-4">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -513,7 +513,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="areaPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="areaPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show X Gridlines</span>
 #>               </label>
 #>             </div>
@@ -523,7 +523,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="areaPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="areaPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show Y Gridlines</span>
 #>               </label>
 #>             </div>
@@ -633,7 +633,7 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9094-5">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1022-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -710,14 +710,6 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <br/>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="areaPlot-abline.slopes-label" for="areaPlot-abline.slopes">Slopes</label>
-#>             <input id="areaPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>           </div>
 #>         </div>
 #>       </div>
 #>     </div>

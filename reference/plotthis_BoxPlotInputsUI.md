@@ -285,10 +285,10 @@ plotly-specific features are also available:
 - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
   lines", default: TRUE)
 
-- `show.major.grid.x` - Show X-axis major gridlines (UI: "Show X major
+- `show.grid.x` - Show X-axis major gridlines (UI: "Show X major
   gridlines", default: TRUE)
 
-- `show.major.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
+- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
   gridlines", default: TRUE)
 
 - `axis.linecolor` - Color of axis lines (UI: "Axis line color",
@@ -391,28 +391,28 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="6933">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="9271">
 #>     <li class="active">
-#>       <a href="#tab-6933-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9271-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6933-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-9271-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6933-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-9271-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6933-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9271-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6933-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9271-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6933-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9271-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6933">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6933-1">
+#>   <div class="tab-content" data-tabsetid="9271">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9271-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -471,7 +471,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-6933-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9271-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -549,7 +549,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-6933-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-9271-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -579,7 +579,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6933-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9271-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -630,7 +630,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6933-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9271-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -745,7 +745,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="BoxPlot-show.major.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="BoxPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show X Gridlines</span>
 #>               </label>
 #>             </div>
@@ -755,7 +755,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
-#>                 <input id="BoxPlot-show.major.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <input id="BoxPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
 #>                 <span>Show Y Gridlines</span>
 #>               </label>
 #>             </div>
@@ -865,7 +865,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-6933-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9271-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -942,14 +942,6 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <br/>
-#>         </div>
-#>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="BoxPlot-abline.slopes-label" for="BoxPlot-abline.slopes">Slopes</label>
-#>             <input id="BoxPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>           </div>
 #>         </div>
 #>       </div>
 #>     </div>

@@ -30,6 +30,8 @@ linePlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
@@ -153,6 +155,14 @@ linePlot(
 
   Numeric, width of tick marks in pixels. Default: 1.
 
+- show.grid.x:
+
+  Logical, whether to show gridlines on the x-axis. Default: TRUE.
+
+- show.grid.y:
+
+  Logical, whether to show gridlines on the y-axis. Default: TRUE.
+
 - title.text:
 
   Character, main title text for the plot. Default: "".
@@ -209,21 +219,6 @@ linePlot(
 
   Optional character vector, column name(s) to order data by before
   plotting. Default: NULL.
-
-- error.colour:
-
-  hex colour input to set the colour of the error bars on a plot with a
-  categorical X axis and only 1 Y axis variable
-
-- error.width:
-
-  numeric input to set the width of the error bars on a plot with a
-  categorical X axis and only 1 Y axis variable
-
-- error.bar:
-
-  Boolean value to determine if error bars will be on or off on a plot
-  with a categorical X axis and only 1 Y axis variable
 
 ## Value
 
