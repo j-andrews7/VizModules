@@ -7,8 +7,8 @@
 #' @param dimensions Character vector of column names to use as dimensions (axes).
 #'   Must contain at least two columns. Non-numeric columns are mapped to integers.
 #' @param color.by Optional character, column name to color lines by.
-#'   Numeric columns use a continuous colorscale; categorical columns are mapped
-#'   to integers and displayed with the same colorscale. Default: NULL.
+#'   Numeric columns use a continuous colorscale; categorical columns are assigned
+#'   distinct colors and the colorbar shows category labels. Default: NULL.
 #' @param color.scale Character, plotly colorscale name for line coloring.
 #'   Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
 #'   "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral",
@@ -31,6 +31,7 @@
 #' @return A plotly object representing the interactive parallel coordinates plot.
 #'
 #' @import plotly
+#' @importFrom scales hue_pal
 #'
 #' @author Jacob Martin, Jared Andrews
 #' @export
@@ -87,20 +88,58 @@ parallelCoordinatesPlot <- function(
     if (!is.null(color.by) && nzchar(color.by) && color.by %in% names(df)) {
         color_vals <- df[[color.by]]
 
-        # Map categorical color column to integers
         if (!is.numeric(color_vals)) {
+            # Categorical: assign distinct colors and build a discrete step colorscale
             lvls <- sort(unique(as.character(color_vals)))
+            n <- length(lvls)
             color_vals <- match(as.character(color_vals), lvls)
+
+            # Generate n distinct colors using the hue palette
+            pal_colors <- scales::hue_pal()(n)
+
+            # Build a step colorscale: each category occupies a band of width 1/n.
+            # A tiny offset (epsilon) is used to create sharp color boundaries
+            # instead of blended gradients at each band edge.
+            step <- 1 / n
+            cs <- list()
+            for (i in seq_len(n)) {
+                lo <- (i - 1) * step
+                hi <- i * step
+                cs <- c(cs, list(c(lo, pal_colors[i])))
+                if (i < n) {
+                    cs <- c(cs, list(c(hi - 1e-10, pal_colors[i])))
+                    cs <- c(cs, list(c(hi, pal_colors[i + 1])))
+                } else {
+                    cs <- c(cs, list(c(1.0, pal_colors[i])))
+                }
+            }
+
+            line_spec <- list(
+                color = color_vals,
+                colorscale = cs,
+                showscale = show.colorbar,
+                opacity = line.opacity,
+                cmin = 0.5,
+                cmax = n + 0.5,
+                colorbar = list(
+                    tickvals = seq_len(n),
+                    ticktext = lvls,
+                    title = color.by
+                )
+            )
+        } else {
+            # Numeric: use a continuous colorscale
+            line_spec <- list(
+                color = color_vals,
+                colorscale = color.scale,
+                showscale = show.colorbar,
+                opacity = line.opacity,
+                cmin = min(color_vals, na.rm = TRUE),
+                cmax = max(color_vals, na.rm = TRUE),
+                colorbar = list(title = color.by)
+            )
         }
 
-        line_spec <- list(
-            color = color_vals,
-            colorscale = color.scale,
-            showscale = show.colorbar,
-            opacity = line.opacity,
-            cmin = min(color_vals, na.rm = TRUE),
-            cmax = max(color_vals, na.rm = TRUE)
-        )
         if (line.width != 1) {
             line_spec$width <- line.width
         }
