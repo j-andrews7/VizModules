@@ -74,6 +74,7 @@
 #'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 #'   \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
 #'   \item \code{group_by} - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)
+#'   \item \code{fill_by} - Variable for gradient fill color when numeric (UI: "Fill by (numeric gradient)", default: "")
 #'   \item \code{split_by} - Split variable for separate plots (UI: "Split by", default: "")
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
@@ -81,6 +82,8 @@
 #'   \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#'   \item \code{fill.color.min} - Minimum gradient color when \code{fill_by} is numeric (UI: "Fill color (min)", default: "#F0E442")
+#'   \item \code{fill.color.max} - Maximum gradient color when \code{fill_by} is numeric (UI: "Fill color (max)", default: "#0072B2")
 #'   \item \code{alpha} - Bar fill transparency (UI: "Alpha", default: 1)
 #'   \item \code{width} - Bar width (UI: "Width", default: NA)
 #'   \item \code{expand} - Axis expansion values (UI: "Expand", default: "")
@@ -173,6 +176,9 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ),
         selectInput(ns("group.by"), "Group by:",
         selected = char.choices[2], choices = char.choices
+        ),
+        selectInput(ns("fill.by"), "Fill by (numeric gradient):",
+        selected = "", choices = choices
         )
     ),
 

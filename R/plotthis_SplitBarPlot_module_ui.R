@@ -68,6 +68,8 @@
 #'   \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 #'   \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#'   \item \code{fill.color.min} - Minimum gradient color when \code{fill_by} is numeric (UI: "Fill color (min)", default: "#F0E442")
+#'   \item \code{fill.color.max} - Maximum gradient color when \code{fill_by} is numeric (UI: "Fill color (max)", default: "#0072B2")
 #' }
 #' 
 #' @section Parameters controlling additional functionality:

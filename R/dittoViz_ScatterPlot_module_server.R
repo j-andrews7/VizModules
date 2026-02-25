@@ -81,8 +81,34 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
+        # Reactive to check if color.by is a numeric column
+        is_color_by_numeric <- reactive({
+            df <- data()
+            color_by <- input$color.by
+            if (is.null(df) || is.null(color_by) || color_by == "" || !color_by %in% names(df)) {
+                return(FALSE)
+            }
+            is.numeric(df[[color_by]])
+        })
+
+        # Show/hide min/max color inputs based on whether color.by is numeric
+        observe({
+            if (is_color_by_numeric()) {
+                shinyjs::show("min.color")
+                shinyjs::show("max.color")
+            } else {
+                shinyjs::hide("min.color")
+                shinyjs::hide("max.color")
+            }
+        })
+
         # Render the multiColorPicker for discrete color mappings or single colourInput
         output$color.panel.ui <- renderUI({
+            # When color.by is numeric, gradient is handled by min/max color inputs
+            if (is_color_by_numeric()) {
+                return(NULL)
+            }
+
             groups <- color_levels()
 
             if (length(groups) == 0) {
