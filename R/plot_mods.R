@@ -402,6 +402,7 @@
         ticklen = isolate_fn(input$axis.ticklen),
         tickwidth = isolate_fn(input$axis.tickwidth),
         showgrid = show_grid
+        
     )
     if (!ggplot.axis.styling){
         style$showline <- isolate_fn(input$axis.showline)

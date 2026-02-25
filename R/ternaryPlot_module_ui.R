@@ -110,7 +110,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 selected = ifelse("c" %in% names(defaults), defaults[["c"]], default_c),
                 choices = num.choices
             ),
-            selectInput(ns("group"), "Group column (optional):",
+            selectInput(ns("group"), "Colour By:",
                 selected = ifelse("group" %in% names(defaults),
                     defaults[["group"]],
                     ""

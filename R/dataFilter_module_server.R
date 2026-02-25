@@ -77,7 +77,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
                 return(d)
             }
             d <- d[rows, , drop = FALSE]
-            droplevels(d)
+            droplevels(d) # Drop un unused levels so that they dont get plotted
         })
 
         return(filtered_data)

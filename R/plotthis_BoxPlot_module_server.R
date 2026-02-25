@@ -222,6 +222,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
+            #Fill By colour grading 
+            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            fill.by <- NULL
+            if (group.by %in% num.choices){
+                fill.by <- group.by
+                group.by <- NULL
+            } 
             p <- plotthis::BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),

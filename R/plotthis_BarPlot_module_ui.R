@@ -139,6 +139,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @import shiny
 #' @importFrom plotthis BarPlot
+#' @importFrom shinyBS bsTooltip
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -172,7 +173,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selected = num.choices[2], choices = num.choices
         ),
         selectInput(ns("group.by"), "Group by:",
-        selected = char.choices[2], choices = char.choices
+        selected = names(data)[1], choices = names(data)
         )
     ),
 
@@ -180,6 +181,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selectInput(ns("facet.by"), "Facet by:",
         selected = "", choices = c(char.choices, "")
         ),
+        # bsTooltip(id = ns("facet.by"), title = "TEST", placement = "bottom", trigger = "hover"),
         selectInput(ns("facet.scale"), "Facet scale:",
         selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
         ),
