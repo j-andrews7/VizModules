@@ -1262,3 +1262,91 @@
 
     fig
 }
+
+#' Create an empty ggplot2 plot or plotly plot with input text
+#'
+#' This function creates an empty ggplot2 or plotly plot and places a user-provided text
+#' string in the middle of the plot.
+#'
+#' @param text Character scalar to show in plot area.
+#' @param plotly Boolean indicating whether to return a plotly object.
+#' @return Either a ggplot object or a plotly object if \code{plotly = TRUE}.
+#'
+#' @author Jared Andrews
+#'
+#' @rdname INTERNAL_empty_plot
+#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
+#' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
+#' @importFrom plotly ggplotly layout %>%
+.empty_plot <- function(text = NULL, plotly = FALSE) {
+    plot <- ggplot() +
+        theme_void() +
+        theme(plot.margin = margin(1, 1, 1, 1, "cm")) +
+        geom_text(aes(x = 0.5, y = 0.5, label = text),
+            inherit.aes = FALSE, check_overlap = TRUE
+        )
+
+    if (plotly) {
+        plot <- ggplotly(plot)
+        plot <- plot %>% layout(
+            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
+            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
+            plot_bgcolor = "white",
+            showlegend = FALSE,
+            autosize = TRUE,
+            margin = list(l = 0, r = 0, b = 0, t = 0)
+        )
+    }
+
+    return(plot)
+}
+
+#' Check if column inputs contain mixed data types
+#'
+#' This function validates that a vector of column names from a data frame contains
+#' columns of only one data type category: either all numeric OR all categorical 
+#' (factor/character). Returns \code{FALSE} for mixed numeric + categorical columns.
+#' Single columns always return \code{TRUE}. Used for Shiny plotting module input validation.
+#'
+#' @param inputs Character vector of column names to validate.
+#' @param d Data frame containing the columns specified in \code{inputs}.
+#'
+#' @return Logical scalar: \code{TRUE} if all numeric OR all categorical (factor/character);
+#'   \code{FALSE} if mixed numeric + categorical/factor detected.
+#'
+#' @author Jacob Martin
+#'
+#' @examples
+#' df <- data.frame(num1 = 1:3, num2 = 4:6, cat1 = letters[1:3], fac1 = factor(1:3))
+#' is_pure_type(c("num1", "num2"), df)    # TRUE (all numeric)
+#' is_pure_type(c("cat1", "fac1"), df)    # TRUE (all categorical)
+#' is_pure_type(c("num1"), df)            # TRUE (single)
+#' is_pure_type(c("num1", "cat1"), df)    # FALSE (mixed numeric + cat)
+#'
+#' @rdname is_pure_type
+#' @seealso \code{\link[base]{for}}
+#' @importFrom base nzchar names length unique
+#' @export
+is_pure_type <- function(inputs, d) {
+    cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
+    
+    # Single column or empty always pure
+    if (length(cols) <= 1) return(TRUE)
+    
+    # Classify first column to establish reference type
+    first_col <- d[[cols[1]]]
+    ref_type <- if (is.numeric(first_col)) "numeric" 
+                else if (is.factor(first_col) || is.character(first_col)) "categorical"
+    
+    # Check all remaining columns match reference
+    for (i in 2:length(cols)) {
+        col <- d[[cols[i]]]
+        col_type <- if (is.numeric(col)) "numeric" 
+                   else if (is.factor(col) || is.character(col)) "categorical"
+        
+        if (col_type != ref_type) return(FALSE)
+    }
+    
+    TRUE
+}
+

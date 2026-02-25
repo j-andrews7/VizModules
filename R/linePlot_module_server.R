@@ -154,27 +154,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "vline.opacities", value = "1")
         })
 
-        # observeEvent(list(input$x.value, input$y.value), {
-
-        #     num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
-        #     cat.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-
-        #     if (length(input$x.value) == 1){
-        #         if (is.factor(data()[[input$x.value]]) || is.character(data()[[input$x.value]])){
-        #             if (!is.numeric(data()[[input$y.value]])){
-        #                 updateSelectInput(session, "y.value",  choices = num.choices)
-        #             }
-        #         }
-        #     }
-
-        #     if (length(input$y.value) == 1){
-        #         if (is.factor(data()[[input$y.value]]) || is.character(data()[[input$y.value]])){
-        #             if (!is.numeric(data()[[input$x.value]])){
-        #                 updateSelectInput(session, "x.value",  choices = num.choices)
-        #             }
-        #         }
-        #     }
-        # })
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_linePlot <- reactive({
@@ -333,13 +312,49 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             width <- session$clientData$output_linePlot_width
             height <- session$clientData$output_linePlot_height
             
-            generate_linePlot() %>%
-                layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.8,
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
-                )
-        })
+            d <- data_reactive()
+            x_input <- input$x.value
+            y_input <- input$y.value
+
+
+            # Section is for catching errors and displaying an empty plot with a warning message if any error conditions are met.
+            #Ensures a clean method for dealing with errors and instructing the user on next steps to resolve the issue 
+            #Error Prone conditions
+            x_is_cat <- length(x_input) == 1 && nzchar(x_input) && !is.numeric(d[[x_input]])
+            y_is_cat <- length(y_input) == 1 && nzchar(y_input) && !is.numeric(d[[y_input]])
+            x_not_0 <- length(x_input) == 0
+            y_not_0 <- length(y_input) == 0
+
+            x_pure <- is_pure_type(c(x_input), d)
+            y_pure <- is_pure_type(c(y_input), d)
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (x_is_cat && y_is_cat) {
+                return_empty <- TRUE
+                txt <- c(txt, "X and Y categories cannot both be discrete data types")
+            } else if (x_not_0 || y_not_0){
+                return_empty <- TRUE
+                txt <- c(txt, "Both X and Y variable inputs must not be empty. Please select a variable input.")
+            } else if (!x_pure || !y_pure){
+                return_empty <- TRUE
+                txt <- c(txt, "Cant have a discrete and non discrete data input on the same axis.")
+            }
+
+            if (return_empty){
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_linePlot() %>%
+                    layout(
+                        width = as.numeric(width),
+                        height = as.numeric(height) * 0.8,
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
+            })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(
