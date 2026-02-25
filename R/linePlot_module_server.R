@@ -185,6 +185,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             x_input <- isolate_fn(input$x.value)
             y_input <- isolate_fn(input$y.value)
 
+            # Prevent two categorical variables from being used on both axes simultaneously
+            x_is_cat <- length(x_input) == 1 && !is.numeric(d[[x_input]])
+            y_is_cat <- length(y_input) == 1 && !is.numeric(d[[y_input]])
+            validate(
+                need(!(x_is_cat && y_is_cat),
+                    "Both X and Y cannot be categorical variables. Please select a numeric variable for at least one axis.")
+            )
+
             # Sets the colouring to the first item in the selected palette unless group.by is selected
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
