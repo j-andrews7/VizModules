@@ -64,35 +64,59 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             fill_col <- input$fill.by
             y_col <- input$y.data
 
+            # If fill_by is numeric, return empty to signal gradient mode
             if (!is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[fill_col]])))
-            } else if (!is.null(y_col) && nzchar(y_col) && y_col %in% names(df)) {
+                if (is.numeric(df[[fill_col]])) {
+                    return(character(0))
+                }
+                return(unique(stats::na.omit(as.character(df[[fill_col]]))))
+            }
+
+            if (!is.null(y_col) && nzchar(y_col) && y_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[y_col]])))
             } else {
                 character(0)
             }
         })
 
+        fill_by_is_numeric <- reactive({
+            df <- data()
+            fill_col <- input$fill.by
+            !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df) && is.numeric(df[[fill_col]])
+        })
+
         # Track initialization
         initialized <- reactiveVal(FALSE)
 
         output$palette.selection <- renderUI({
-            groups <- palette_groups()
-            if (length(groups) == 0) {
-                return(NULL)
+            if (fill_by_is_numeric()) {
+                selectInput(ns("palette.name"), "Gradient Palette",
+                    choices = list(
+                        "Diverging" = c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral"),
+                        "Sequential" = c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges", "OrRd",
+                            "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
+                        "Viridis" = c("viridis", "magma", "inferno", "plasma", "cividis")
+                    ),
+                    selected = "Spectral"
+                )
+            } else {
+                groups <- palette_groups()
+                if (length(groups) == 0) {
+                    return(NULL)
+                }
+
+                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+                multiColorPicker(
+                    ns("palette.colours"),
+                    label = "Plot colors",
+                    groups = groups,
+                    palette_options = default_palettes()[["choices"]],
+                    selected_palette = default_palette_name,
+                    colors = initial_colors,
+                    compact = TRUE
+                )
             }
-
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
-
-            multiColorPicker(
-                ns("palette.colours"),
-                label = "Plot colors",
-                groups = groups,
-                palette_options = default_palettes()[["choices"]],
-                selected_palette = default_palette_name,
-                colors = initial_colors,
-                compact = TRUE
-            )
         })
 
         # Initialize y-axis range on startup
@@ -256,11 +280,24 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
-            palette_values <- resolve_palette(
-                isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
-            )
+
+            # Determine if fill_by is a numeric column
+            fill_is_numeric <- !is.null(fill.by) && fill.by %in% names(data()) && is.numeric(data()[[fill.by]])
+
+            # Palette handling: gradient for numeric fill_by, discrete otherwise
+            if (fill_is_numeric) {
+                palette.arg <- isolate_fn(input$palette.name)
+                if (is.null(palette.arg) || !nzchar(palette.arg)) palette.arg <- "Spectral"
+                palcolor.arg <- NULL
+            } else {
+                palette.arg <- "Spectral"
+                palette_values <- resolve_palette(
+                    isolate_fn(palette_groups()),
+                    isolate_fn(input$palette.colours),
+                    default_palette_values
+                )
+                palcolor.arg <- unname(palette_values)
+            }
             alpha.by <- NULL
             if (!isolate_fn(input$alpha.by) == ""){
               alpha.by <- isolate_fn(input$alpha.by)
@@ -281,7 +318,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palcolor = unname(palette_values),
+                palette = palette.arg,
+                palcolor = palcolor.arg,
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
                 theme = "theme_this",

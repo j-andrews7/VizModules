@@ -54,7 +54,9 @@
 #' The following [plotthis::SplitBarPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 #' \itemize{
 #'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd numeric variable)
-#'   \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable)
+#'   \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable).
+#'     Accepts numeric columns (gradient coloring) or categorical columns (discrete coloring).
+#'     When numeric, a gradient palette selector is shown instead of the discrete color picker.
 #'   \item \code{alpha_by} - Variable for alpha transparency (UI: "Alpha by", default: "")
 #'   \item \code{alpha_reverse} - Reverse alpha order (UI: "Alpha reverse", default: FALSE)
 #'   \item \code{alpha_name} - Alpha legend name (UI: "Alpha name", default: "")
@@ -67,7 +69,7 @@
 #'   \item \code{split_by} - Split variable (UI: "Split by", default: "")
 #'   \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 #'   \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
-#'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette; only for categorical \code{fill_by})
 #' }
 #' 
 #' @section Parameters controlling additional functionality:

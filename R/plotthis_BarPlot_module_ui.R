@@ -28,7 +28,8 @@
 #'   \item \code{group_by_sep} - Separator for multiple group_by columns (not yet implemented)
 #'   \item \code{split_by_sep} - Separator for multiple split_by columns (not yet implemented)
 #'   \item \code{flip} - Flip axes (not yet implemented)
-#'   \item \code{fill_by_x_if_no_group} - Fill bars by x values (not yet implemented)
+#'   \item \code{fill_by_sep} - Separator for multiple fill_by columns (not yet implemented)
+#'   \item \code{fill_name} - Legend name for fill_by (not yet implemented)
 #'   \item \code{line_name} - Name of line (not yet implemented)
 #'   \item \code{label} - Bar labels on top (not yet implemented)
 #'   \item \code{label_nudge} - Label nudge distance (not yet implemented)
@@ -73,7 +74,12 @@
 #' \itemize{
 #'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 #'   \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
-#'   \item \code{group_by} - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)
+#'   \item \code{group_by} - Grouping variable for bar fill (UI: "Group by", default: "").
+#'     Mutually exclusive with \code{fill_by}: when \code{fill_by} is set, \code{group_by} is ignored.
+#'   \item \code{fill_by} - Variable used to color bars (UI: "Fill by", default: "").
+#'     Accepts numeric columns (gradient coloring) or categorical columns (discrete coloring).
+#'     Mutually exclusive with \code{group_by}: takes priority when both are set.
+#'     When empty, bars are colored by x values (or by \code{group_by} if set).
 #'   \item \code{split_by} - Split variable for separate plots (UI: "Split by", default: "")
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
@@ -173,7 +179,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selected = num.choices[2], choices = num.choices
         ),
         selectInput(ns("group.by"), "Group by:",
-        selected = names(data)[1], choices = names(data)
+        selected = "", choices = c("", names(data))
+        ),
+        selectInput(ns("fill.by"), "Fill by (numeric gradient or categorical; disables Group by):",
+        selected = "", choices = c("", names(data))
         )
     ),
 
