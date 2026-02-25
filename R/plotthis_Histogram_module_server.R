@@ -299,13 +299,33 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         output$histogramPlot <- renderPlotly({
             width <- session$clientData$output_histogramPlot_width
             height <- session$clientData$output_histogramPlot_height
-            
-            generate_Histogram() %>%
-                layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
-                )
+
+            d <- data()
+            x_input <- input$x.data
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(x_input) == 0 || !nzchar(x_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.")
+            } else if (!is.numeric(d[[x_input]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable must be numeric. Please select a numeric column.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_Histogram() %>%
+                    layout(
+                        width = as.numeric(width),
+                        height = as.numeric(height) * 0.9,
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

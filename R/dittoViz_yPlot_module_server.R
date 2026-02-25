@@ -373,13 +373,33 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         output$yPlot <- renderPlotly({
             width <- session$clientData$output_yPlot_width
             height <- session$clientData$output_yPlot_height
-            
-            generate_yPlot() %>%
-                layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
-                )
+
+            d <- data()
+            var_input <- input$var
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(var_input) == 0 || !nzchar(var_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            } else if (!is.numeric(d[[var_input]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable must be numeric. Please select a numeric column.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_yPlot() %>%
+                    layout(
+                        width = as.numeric(width),
+                        height = as.numeric(height) * 0.9,
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot
