@@ -483,7 +483,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             }
         }
         if (length(y) > 1) {
-            for (i in 1:length(y)) {
+            for (i in seq_along(y)) {
                 trace_data <- reactive.data
                 sort_column <- order.cols[1]
                 if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
