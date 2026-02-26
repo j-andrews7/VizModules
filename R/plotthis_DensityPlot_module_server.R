@@ -271,7 +271,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             width <- session$clientData$output_DensityPlot_width
             height <- session$clientData$output_DensityPlot_height
 
-            d <- data()
             x_input <- input$x.data
 
             return_empty <- FALSE
@@ -280,9 +279,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             if (length(x_input) == 0 || !nzchar(x_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.")
-            } else if (!is.numeric(d[[x_input]])) {
-                return_empty <- TRUE
-                txt <- c(txt, "X variable must be numeric. Please select a numeric column.")
             }
 
             if (return_empty) {

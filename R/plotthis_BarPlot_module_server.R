@@ -301,7 +301,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             width <- session$clientData$output_BarPlot_width
             height <- session$clientData$output_BarPlot_height
 
-            d <- data()
             x_input <- input$x.data
             y_input <- input$y.data
 
@@ -316,9 +315,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            } else if (nzchar(y_input) && !is.numeric(d[[y_input]])) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable must be numeric. Please select a numeric column.")
             }
 
             if (return_empty) {

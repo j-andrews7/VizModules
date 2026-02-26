@@ -279,7 +279,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             width <- session$clientData$output_dumbbellPlot_width
             height <- session$clientData$output_dumbbellPlot_height
 
-            d <- data_reactive()
             x_input <- input$x.value
             y_input <- input$y.value
 
@@ -289,9 +288,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (length(x_input) == 0) {
                 return_empty <- TRUE
                 txt <- c(txt, "X variable input must not be empty. Please select at least one numeric variable.")
-            } else if (!is.null(x_input) && length(x_input) > 0 && !all(vapply(d[x_input], is.numeric, logical(1)))) {
-                return_empty <- TRUE
-                txt <- c(txt, "X variable(s) must be numeric. Please select numeric column(s).")
             }
 
             if (length(y_input) == 0 || !nzchar(y_input)) {

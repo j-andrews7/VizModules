@@ -374,7 +374,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             width <- session$clientData$output_yPlot_width
             height <- session$clientData$output_yPlot_height
 
-            d <- data()
             var_input <- input$var
 
             return_empty <- FALSE
@@ -383,9 +382,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             if (length(var_input) == 0 || !nzchar(var_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            } else if (!is.numeric(d[[var_input]])) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable must be numeric. Please select a numeric column.")
             }
 
             if (return_empty) {

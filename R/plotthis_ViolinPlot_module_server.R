@@ -306,7 +306,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             width <- session$clientData$output_ViolinPlot_width
             height <- session$clientData$output_ViolinPlot_height
 
-            d <- data()
             x_input <- input$x.data
             y_input <- input$y.data
 
@@ -321,9 +320,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            } else if (nzchar(y_input) && !is.numeric(d[[y_input]])) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable must be numeric. Please select a numeric column.")
             }
 
             if (return_empty) {
