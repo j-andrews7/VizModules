@@ -218,7 +218,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$group.by) == ""){
                 group.by <- isolate_fn(input$group.by)
             }
-
+            
+            fill.by <- isolate_fn(input$fill.by)
+          
+          
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
@@ -249,10 +252,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
-                fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
-                split_by = split.by
+                split_by = split.by,
+                fill_by = fill.by
             )
 
             fig <- ggplotly(p) |>

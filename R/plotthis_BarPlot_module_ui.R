@@ -173,8 +173,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selected = num.choices[2], choices = num.choices
         ),
         selectInput(ns("group.by"), "Group by:",
-        selected = names(data)[1], choices = names(data)
-        )
+        selected = char.choices[2], choices = names(data)
+        ), 
+        selectInput(ns("fill.by"), "Fill by:", 
+        selected = char.choices[2], choices = names(data))
     ),
 
     "Facet" = tagList(
