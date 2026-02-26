@@ -75,7 +75,8 @@ The following \code{\link[plotthis:barplot]{plotthis::BarPlot()}} parameters are
 \item \code{trend_ptsize} - Trend point size (not yet implemented)
 \item \code{theme} - ggplot2 theme (managed internally)
 \item \code{theme_args} - Theme arguments (not yet implemented)
-\item \code{palette} - Managed internally via the palette selection UI
+\item \code{palette} - When \code{fill_by} is a numeric column, a palette name dropdown replaces the
+color picker in the Aesthetics tab. When \code{fill_by} is categorical, the color picker is shown instead.
 \item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
 \item \code{legend.direction} - Legend orientation (plotly allows interactive adjustment)
 \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
@@ -106,6 +107,8 @@ The following \code{\link[plotthis:barplot]{plotthis::BarPlot()}} parameters can
 \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
 \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+\item \code{palette} - Color palette name for numeric fill.by (UI: "Color Palette" dropdown, default: "viridis")
+\item \code{fill_by} - Column to use for bar fill coloring (UI: "Fill by", default: 2nd column)
 \item \code{alpha} - Bar fill transparency (UI: "Alpha", default: 1)
 \item \code{width} - Bar width (UI: "Width", default: NA)
 \item \code{expand} - Axis expansion values (UI: "Expand", default: "")
