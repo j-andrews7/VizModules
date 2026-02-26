@@ -130,7 +130,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
-            updateSelectInput(session, "group.by", selected = char.choices[2])
+            updateSelectInput(session, "group.by", selected = "")
+            updateSelectInput(session, "fill.by", selected = "")
 
 
             # Facet
@@ -239,7 +240,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 group.by <- isolate_fn(input$group.by)
             }
             
-            fill.by <- isolate_fn(input$fill.by)
+            # Mutual exclusion: fill.by takes priority over group.by
+            fill_by_input <- isolate_fn(input$fill.by)
+            if (nzchar(fill_by_input)) {
+                fill.by <- fill_by_input
+                group.by <- NULL
+            } else {
+                fill.by <- FALSE
+            }
 
             if (isolate_fn(fill_numeric())) {
                 palette_arg <- isolate_fn(input$palette.name)
