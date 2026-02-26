@@ -390,8 +390,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
             
-            theme_style <- theme_bw() + theme(unlist(.create_ggplot_axis_style(input, isolate_fn = isolate_fn))) 
-
+            additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_style <- theme_bw() + theme(panel.border = additional_theme$panel.border, axis.line = additional_theme$axis.line, axis.ticks = additional_theme$axis.ticks)
+                
             p <- dittoViz::scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),

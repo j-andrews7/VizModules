@@ -437,33 +437,38 @@
 #' @rdname INTERNAL_create_ggplot_axis_style
 #' @keywords internal
 .create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
-        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
-            # Return full axis border when both show line and mirror are on
-            theme_args <- list(
-                panel.border = ggplot2::element_rect(
-                    colour = isolate_fn(input$axis.linecolor),
-                    fill = NA,
-                    linewidth = isolate_fn(input$axis.linewidth)
-                )
-            )
-            return(theme_args)
-        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
-            # Set it so the axis line is only shown on x and y axis
-            theme_args <- list(
-                axis.line = ggplot2::element_line(
-                    colour = isolate_fn(input$axis.linecolor),
-                    linewidth = isolate_fn(input$axis.linewidth)   
-                ),
-                panel.border = element_blank()
-            )
-            return(theme_args)
-        } else {
-            # No borders when axis.showline is FALSE
-            theme_args <- list(
-                panel.border = ggplot2::element_blank()
-            )
-            return(theme_args)
-        }
+    if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
+        # Return full axis border when both show line and mirror are on
+        theme_args <- list(
+            panel.border = ggplot2::element_rect(
+                colour = isolate_fn(input$axis.linecolor),
+                fill = NA,
+                linewidth = isolate_fn(input$axis.linewidth)
+            ),
+            axis.line = element_blank(),
+            axis.ticks = element_blank()
+        )
+        
+    } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
+        # Set it so the axis line is only shown on x and y axis
+        theme_args <- list(
+            axis.line = ggplot2::element_line(
+                colour = isolate_fn(input$axis.linecolor),
+                linewidth = isolate_fn(input$axis.linewidth)   
+            ),
+            panel.border = element_blank(),
+            axis.ticks = element_blank()
+        )
+        
+    } else {
+        # No borders when axis.showline is FALSE
+        theme_args <- list(
+            panel.border = element_blank(),
+            axis.line = element_blank(),
+            axis.ticks = element_blank()
+        )
+    }
+    return(theme_args)
 }
 
 #' Parse comma-separated numeric string to vector
