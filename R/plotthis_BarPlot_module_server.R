@@ -244,8 +244,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             # fill_by and group_by are mutually exclusive: fill_by takes priority
-            fill.by.input <- isolate_fn(input$fill.by)
-            fill.by <- if (!is.null(fill.by.input) && nzchar(fill.by.input)) fill.by.input else NULL
+            fill.by <- FALSE
+            if (!isolate_fn(input$fill.by) == ""){
+              fill.by <- isolate_fn(input$fill.by)
+            }
 
             group.by <- NULL
             if (is.null(fill.by)) {
@@ -254,6 +256,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     group.by <- group.by.input
                 }
             }
+            
 
             # Determine if fill_by is a numeric column
             fill_is_numeric <- !is.null(fill.by) && fill.by %in% names(data()) && is.numeric(data()[[fill.by]])
@@ -280,6 +283,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Create ggplot theme arguments based on faceting and axis border settings
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
+            if (!isFALSE(fill.by)){
+              group.by <- NULL
+            }
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -287,7 +293,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$rotate),
                 group_by = group.by,
-                fill_by = if (!is.null(fill.by)) fill.by else TRUE,
+                fill_by = fill.by,
                 palette = palette.arg,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
@@ -302,7 +308,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 alpha = isolate_fn(input$alpha),
                 expand = expand,
                 width = width,
-                split_by = split.by
+                split_by = split.by,
+                fill_by_x_if_no_group = TRUE
             )
 
             fig <- ggplotly(p) |>
@@ -348,6 +355,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
+
             width <- session$clientData$output_BarPlot_width
             height <- session$clientData$output_BarPlot_height
             

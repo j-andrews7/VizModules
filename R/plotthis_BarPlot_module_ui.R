@@ -181,7 +181,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selectInput(ns("group.by"), "Group by:",
         selected = "", choices = c("", names(data))
         ),
-        selectInput(ns("fill.by"), "Fill by (numeric gradient or categorical; disables Group by):",
+        selectInput(ns("fill.by"), "Fill by:",
         selected = "", choices = c("", names(data))
         )
     ),
