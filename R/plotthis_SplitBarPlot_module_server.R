@@ -311,12 +311,18 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             x <- isolate_fn(input$x.data)
 
             # Remove the original geom_text layer added by plotthis::SplitBarPlot
-            # to avoid duplicate category labels
+            # to replace it with user-controlled positioning. This is necessary because
+            # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
+            # category labels at x=0 that cannot be controlled through its parameters.
             p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
             if (isTRUE(isolate_fn(input$label.on.y.axis))) {
-                # Show category labels on the Y axis via scale_y_discrete
-                p <- p + ggplot2::scale_y_discrete(labels = function(labels) labels)
+                # Show category labels on the Y axis by re-enabling axis text
+                # that plotthis::SplitBarPlot() hides internally
+                p <- p + ggplot2::theme(
+                    axis.text.y = ggplot2::element_text(),
+                    axis.ticks.y = ggplot2::element_line()
+                )
             } else {
                 # Show category labels at the slider-controlled position
                 position <- isolate_fn(input$text.position)
