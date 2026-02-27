@@ -13,7 +13,7 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' 
 #' @export
 #'
@@ -48,6 +48,15 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
             })
         }
+
+        # Toggle text.position slider visibility based on label.on.y.axis switch
+        observeEvent(input$label.on.y.axis, {
+            if (isTRUE(input$label.on.y.axis)) {
+                shinyjs::hide("text.position")
+            } else {
+                shinyjs::show("text.position")
+            }
+        })
 
         ns <- session$ns
         default_palette_name <- "dittoColors"
@@ -181,6 +190,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateTextInput(session, "alpha.name", value = "")
             updateNumericInput(session, "bar.height", value = 0.9)
             updateNumericInput(session, "line.height", value = 0.5)
+            updateMaterialSwitch(session, "label.on.y.axis", value = FALSE)
             # Axes
             updateMaterialSwitch(session, "flip", value = FALSE)
             updateNumericInput(session, "x.max", value = max.x)
@@ -297,37 +307,41 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 bar_height = isolate_fn(input$bar.height)
             )
 
-            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
-            position <- isolate_fn(input$text.position)
             y <- isolate_fn(input$y.data)
             x <- isolate_fn(input$x.data)
-            lineheight <- 0.5
-          
-          
-            # p <- p + theme(
-            # axis.text.y = element_blank(),
-            # axis.ticks.y = element_blank(),
-   
-            # axis.text.x.top = element_blank()
-            # )
-          
 
-            p <-
-            p <- p + geom_text(
-            aes(
-                x = position, y = !!sym(y), 
-                label = ifelse(is.na(!!sym(y)), " NA ", ifelse(.data[[x]] >= 0, gsub("(\\n|$)", " \\1", !!sym(y)), gsub("(^|\\n)", "\\1 ", !!sym(y)))),
-                hjust = ifelse(.data[[x]] >= 0, 1, 0)
-            ),
-            color = "black", 
-            lineheight = lineheight,
-            inherit.aes = FALSE  
-            ) +
-            ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+            # Remove the original geom_text layer added by plotthis::SplitBarPlot
+            # to avoid duplicate category labels
+            p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
-          
-          
-          
+            if (isTRUE(isolate_fn(input$label.on.y.axis))) {
+                # Show category labels on the Y axis via scale_y_discrete
+                p <- p + ggplot2::scale_y_discrete(labels = function(labels) labels)
+            } else {
+                # Show category labels at the slider-controlled position
+                position <- isolate_fn(input$text.position)
+                lineheight <- 0.5
+
+                p <- p + geom_text(
+                    aes(
+                        x = position, y = !!sym(y),
+                        label = ifelse(
+                            is.na(!!sym(y)), " NA ",
+                            ifelse(
+                                .data[[x]] >= 0,
+                                gsub("(\\n|$)", " \\1", !!sym(y)),
+                                gsub("(^|\\n)", "\\1 ", !!sym(y))
+                            )
+                        ),
+                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                    ),
+                    color = "black",
+                    lineheight = lineheight,
+                    inherit.aes = FALSE
+                ) +
+                ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+            }
+
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
