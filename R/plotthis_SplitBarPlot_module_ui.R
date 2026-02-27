@@ -182,7 +182,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
         materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
         textInput(ns("alpha.name"), "Alpha name", value = ""),
-        numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0)
+        numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+        sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
+        sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = -100, max = 100)
+
     ),
 
     "Adjustments" = tagList(

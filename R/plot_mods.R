@@ -1006,7 +1006,7 @@
             }
         
             all_counts <- unlist(values_list)
-            max <- max(all_counts, na.rm = TRUE)
+            max <- max(all_counts, na.rm = TRUE) * axis_scale_factor
             min <- min(all_counts, na.rm = TRUE)
         
             return(list(min = min, max = max)) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
