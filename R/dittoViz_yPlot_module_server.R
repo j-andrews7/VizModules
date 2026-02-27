@@ -371,8 +371,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            width <- session$clientData$output_yPlot_width
-            height <- session$clientData$output_yPlot_height
 
             var_input <- input$var
 
@@ -389,8 +387,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             } else {
                 fig <- generate_yPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

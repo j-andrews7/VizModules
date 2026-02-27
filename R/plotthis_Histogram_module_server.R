@@ -297,8 +297,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
         # Render the plot output
         output$histogramPlot <- renderPlotly({
-            width <- session$clientData$output_histogramPlot_width
-            height <- session$clientData$output_histogramPlot_height
 
             x_input <- input$x.data
 
@@ -315,8 +313,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             } else {
                 fig <- generate_Histogram() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

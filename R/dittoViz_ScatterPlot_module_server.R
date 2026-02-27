@@ -793,13 +793,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            width <- session$clientData$output_scatterPlot_width
-            height <- session$clientData$output_scatterPlot_height
             
             generate_scatterPlot() %>%
                 layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
         })

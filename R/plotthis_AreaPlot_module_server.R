@@ -251,8 +251,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Render the plot output
         output$AreaPlot <- renderPlotly({
-            width <- session$clientData$output_AreaPlot_width
-            height <- session$clientData$output_AreaPlot_height
 
             x_input <- input$x.data
             y_input <- input$y.data
@@ -275,8 +273,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             } else {
                 fig <- generate_AreaPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
