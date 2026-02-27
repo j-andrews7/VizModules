@@ -118,10 +118,17 @@
     # Collect domain bottoms for each y-axis
     all_bottoms <- vapply(yaxis_names, function(name) {
         domain <- fig$x$layout[[name]]$domain
-        if (is.null(domain)) 0 else domain[1]
+        if (is.null(domain)) NA_real_ else domain[1]
     }, numeric(1))
 
     # Round to avoid floating point issues and find unique rows
+    # Filter out any axes with missing domains
+    valid <- !is.na(all_bottoms)
+    yaxis_names <- yaxis_names[valid]
+    all_bottoms <- all_bottoms[valid]
+
+    if (length(yaxis_names) <= 1) return(fig)
+
     rounded_bottoms <- round(all_bottoms, 3)
     unique_rows <- sort(unique(rounded_bottoms))
     n_rows <- length(unique_rows)
@@ -178,6 +185,8 @@
             anno <- fig$x$layout$annotations[[k]]
             if (!is.null(anno$y)) {
                 # Find which row this annotation belongs to
+                # Tolerances account for annotations positioned slightly outside domain bounds:
+                # bottom tolerance (-0.01) for rounding, top tolerance (+0.05) for strip labels above panels
                 for (mapping in old_to_new) {
                     if (anno$y >= mapping$old_bottom - 0.01 && anno$y <= mapping$old_top + 0.05) {
                         # Scale annotation y position proportionally
