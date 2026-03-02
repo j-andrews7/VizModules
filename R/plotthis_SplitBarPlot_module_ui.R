@@ -160,47 +160,47 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
       "Data" = tagList(
       tipify(selectInput(ns("x.data"), "X values",
         selected = num.choices[2], choices = num.choices
-      ), documentParameters$x),
+      ), documentParameters$x, placement = "top"),
       selectInput(ns("y.data"), "Y values",
         selected = char.choices[2], choices = char.choices
       ),
       # Changed from group.by to fill.by
       tipify(selectInput(ns("fill.by"), "Fill by",
         selected = choices[2], choices = choices
-      ), documentParameters$fill_by)),
+      ), documentParameters$fill_by, placement = "top")),
 
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet by",
         selected = "", choices = c(char.choices, "")
-        ), documentParameters$facet_by),
+        ), documentParameters$facet_by, placement = "top"),
         tipify(selectInput(ns("facet.scale"), "Facet scale",
         selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
-        ), documentParameters$facet_scales),
+        ), documentParameters$facet_scales, placement = "top"),
         tipify(numericInput(ns("facet.ncol"), "Facet number of columns",
         value = NULL, min = 0, max = 20
-        ), documentParameters$facet_ncol),
+        ), documentParameters$facet_ncol, placement = "top"),
         tipify(numericInput(ns("facet.nrow"), "Facet number of rows",
         value = NULL, min = 0, max = 20
-        ), documentParameters$facet_nrow),
+        ), documentParameters$facet_nrow, placement = "top"),
         tipify(materialSwitch(ns("facet.by.row"), "Facet by row",
         value = TRUE, status = "success"),
-            documentParameters$facet_byrow),
+            documentParameters$facet_byrow, placement = "top"),
         tipify(selectInput(ns("split.by"), "Split by",
         selected = "", choices = c(char.choices, "")
-        ), documentParameters$split_by)
+        ), documentParameters$split_by, placement = "top")
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
         tipify(selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
-            documentParameters$alpha_by),
+            documentParameters$alpha_by, placement = "top"),
         tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
-            documentParameters$alpha_reverse),
+            documentParameters$alpha_reverse, placement = "top"),
         tipify(textInput(ns("alpha.name"), "Alpha name", value = ""),
-            documentParameters$alpha_name),
+            documentParameters$alpha_name, placement = "top"),
         tipify(numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
-            documentParameters$bar_height),
+            documentParameters$bar_height, placement = "top"),
         sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
         materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
         sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = -100, max = 100)
@@ -210,10 +210,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     "Adjustments" = tagList(
         tipify(numericInput(ns("x.min"), "X-axis min:",
             value = min.x
-        ), documentParameters$x_min),
+        ), documentParameters$x_min, placement = "top"),
         tipify(numericInput(ns("x.max"), "X-axis max:",
             value = max.x
-        ), documentParameters$x_max)
+        ), documentParameters$x_max, placement = "top")
     ),
 
 

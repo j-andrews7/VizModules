@@ -176,57 +176,57 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     "Data" = tagList(
         tipify(selectInput(ns("x.data"), "X values:",
         selected = char.choices[2], choices = char.choices
-        ), documentParameters$x),
+        ), documentParameters$x, placement = "top"),
         tipify(selectInput(ns("y.data"), "Y values:",
         selected = num.choices[2], choices = num.choices
-        ), documentParameters$y),
+        ), documentParameters$y, placement = "top"),
         tipify(selectInput(ns("group.by"), "Group by:",
         selected = char.choices[2], choices = names(data)
-        ), documentParameters$group_by),
+        ), documentParameters$group_by, placement = "top"),
         tipify(selectInput(ns("fill.by"), "Fill by:",
         selected = char.choices[2], choices = names(data)),
-            documentParameters$fill_by)
+            documentParameters$fill_by, placement = "top")
     ),
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet by:",
         selected = "", choices = c(char.choices, "")
-        ), documentParameters$facet_by),
+        ), documentParameters$facet_by, placement = "top"),
         tipify(selectInput(ns("facet.scale"), "Facet scale:",
         selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
-        ), documentParameters$facet_scales),
+        ), documentParameters$facet_scales, placement = "top"),
         tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",
         value = NULL, min = 0, max = 20
-        ), documentParameters$facet_ncol),
+        ), documentParameters$facet_ncol, placement = "top"),
         tipify(numericInput(ns("facet.nrow"), "Facet number of rows:",
         value = NULL, min = 0, max = 20
-        ), documentParameters$facet_nrow),
+        ), documentParameters$facet_nrow, placement = "top"),
         tipify(materialSwitch(ns("facet.by.row"), "Facet by row:",
         value = TRUE, status = "success"),
-            documentParameters$facet_byrow),
+            documentParameters$facet_byrow, placement = "top"),
         tipify(selectInput(ns("split.by"), "Split by:",
         selected = "", choices = c(char.choices, "")
-        ), documentParameters$split_by)
+        ), documentParameters$split_by, placement = "top")
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
         tipify(numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
-            documentParameters$alpha),
+            documentParameters$alpha, placement = "top"),
         tipify(numericInput(ns("width"), "Width", value = NA),
-            documentParameters$width),
+            documentParameters$width, placement = "top"),
         tipify(textInput(ns("expand"), "Expand", value = "",
         placeholder = "e.g. 1,2,3,4"
-        ), documentParameters$expand)
+        ), documentParameters$expand, placement = "top")
     ),
 
     "Adjustments" = tagList(
         tipify(numericInput(ns("y.min"), "Y-axis min:",
             value = min.y
-        ), documentParameters$y_min),
+        ), documentParameters$y_min, placement = "top"),
         tipify(numericInput(ns("y.max"), "Y-axis max:",
             value = max.y
-        ), documentParameters$y_max)
+        ), documentParameters$y_max, placement = "top")
     ),
 
     "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
