@@ -21,7 +21,8 @@ Depends:
     plotthis,
     dittoViz,
     plotly,
-    R (>= 3.5)
+    R (>= 3.5),
+    shinyBS
 Imports:
     bslib,
     DT,

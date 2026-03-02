@@ -187,10 +187,22 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
         "Data" = tagList(
-            tooltip(
-                selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
-                "TEST"
-            ),
+            # tooltip(
+            #     selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2], selectize = FALSE),
+            #     "TEST", id = ns("tip.x.data"), placement = "right"
+            # ),
+            div(
+                style = "display: flex; align-items: center; gap: 4px;",
+                div(
+                    style = "flex: 1;",  # Takes remaining space
+                    selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2])
+                ),
+                actionButton(ns("tip_x"), HTML("ℹ"), 
+                            class = "btn-xs btn-link p-0", 
+                            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+                            `data-bs-toggle` = "tooltip")
+                ),
+      
             selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
             selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
             materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),

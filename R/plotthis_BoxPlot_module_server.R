@@ -23,8 +23,15 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
+        selected <- c("x")
         
-        # Hide individual inputs if specified
+        documentParameters <- .get_documentation(package_name = "plotthis::BoxPlot", type = "param", selected = selected, cap = TRUE)
+        
+        observeEvent(input$tip_x, {
+            showModal(modalDialog(documentParameters$x, easyClose = TRUE))
+        })
+
+
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
                 hide(input.name)
@@ -83,6 +90,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
         })
 
+        observe({
+            req(input$tip.x.data)  # Now namespaced
+            showNotification(paste("Tooltip state:", input$tip.x.data))
+        })
 
         # Reset functionality
         observeEvent(input$reset, {

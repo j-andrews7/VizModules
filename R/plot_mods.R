@@ -1380,11 +1380,11 @@ is_pure_type <- function(inputs, d) {
 #'
 #' @keywords internal
 #' @noRd
-.get_documentation <- function(package_name, type = "param", selected, cap = TRUE, ui_name){
+.get_documentation <- function(package_name, type = "param", selected, cap = TRUE){
     doc_list <- list()
     for (i in seq_along(selected)){
         doc <- extract_roc_text(package_name, type = type, select = selected[i], capitalize = cap)
-        doc_list[ui_name[i]] <- doc
+        doc_list[selected[i]] <- doc
     }
     return(doc_list)
 }
