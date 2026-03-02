@@ -44,6 +44,8 @@
   : Example population dataset for module apps
 - [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
   : Example sales dataset for module apps
+- [`is_pure_type()`](https://j-andrews7.github.io/VizModules/reference/is_pure_type.md)
+  : Check if column inputs contain mixed data types
 - [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
   : Create an Interactive Line Plot with plotly
 - [`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md)

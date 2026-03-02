@@ -220,6 +220,21 @@ linePlot(
   Optional character vector, column name(s) to order data by before
   plotting. Default: NULL.
 
+- error.colour:
+
+  hex colour input to set the colour of the error bars on a plot with a
+  categorical X axis and only 1 Y axis variable
+
+- error.width:
+
+  numeric input to set the width of the error bars on a plot with a
+  categorical X axis and only 1 Y axis variable
+
+- error.bar:
+
+  Boolean value to determine if error bars will be on or off on a plot
+  with a categorical X axis and only 1 Y axis variable
+
 ## Value
 
 A plotly object representing the interactive line plot.
