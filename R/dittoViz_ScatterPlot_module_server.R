@@ -734,8 +734,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
-            # Increase vertical spacing between subplot rows for faceted plots
-            fig <- .adjust_subplot_vertical_spacing(fig, spacing = 0.08)
 
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
