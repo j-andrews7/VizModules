@@ -24,9 +24,9 @@ Depends:
     R (>= 3.5),
     shinyBS
 Imports:
+    DT,
     colourpicker,
     dplyr,
-    DT,
     shinyjs,
     scales,
     shinyjqui,
