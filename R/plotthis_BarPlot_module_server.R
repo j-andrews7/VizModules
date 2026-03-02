@@ -24,9 +24,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
   
     moduleServer(id, function(input, output, session) {
       
-        # local({
-        #     addTooltip(session, "facet.by", "TEST", placement = "right")
-        # })
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
         

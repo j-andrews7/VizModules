@@ -24,6 +24,7 @@ Depends:
     R (>= 3.5),
     shinyBS
 Imports:
+    bslib,
     DT,
     colourpicker,
     dplyr,
