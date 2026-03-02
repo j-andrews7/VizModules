@@ -87,6 +87,7 @@
 
     fig
 }
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.

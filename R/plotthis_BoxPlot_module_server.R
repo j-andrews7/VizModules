@@ -316,8 +316,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BoxPlot <- renderPlotly({
-            width <- session$clientData$output_BoxPlot_width
-            height <- session$clientData$output_BoxPlot_height
 
             x_input <- input$x.data
             y_input <- input$y.data

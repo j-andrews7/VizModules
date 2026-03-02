@@ -303,8 +303,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Render the plot output
         output$ViolinPlot <- renderPlotly({
-            width <- session$clientData$output_ViolinPlot_width
-            height <- session$clientData$output_ViolinPlot_height
 
             x_input <- input$x.data
             y_input <- input$y.data
@@ -327,8 +325,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             } else {
                 fig <- generate_ViolinPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
