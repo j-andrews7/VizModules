@@ -185,55 +185,116 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor ( Allows the top of the graph to not reach the top of the axes)
     min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     inputs <- list(
         "Data" = tagList(
-            # tooltip(
-            #     selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2], selectize = FALSE),
-            #     "TEST", id = ns("tip.x.data"), placement = "right"
-            # ),
-            div(
-                style = "display: flex; align-items: center; gap: 4px;",
-                div(
-                    style = "flex: 1;",  # Takes remaining space
-                    selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2])
-                ),
-                actionButton(ns("tip_x"), HTML("ℹ"), 
-                            class = "btn-xs btn-link p-0", 
-                            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
-                            `data-bs-toggle` = "tooltip")
-                ),
-      
-            selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
+            tip_wrap(
+                selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
+                tip_btn(ns, "tip_x")
+            ),
+            tip_wrap(
+                selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
+                tip_btn(ns, "tip_y")
+            ),
+            tip_wrap(
+                selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_group_by")
+            ),
             materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
             numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
-            selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
-                "mean_asc", "mean_desc", "mean", "median_asc",
-                "median_desc", "median"
-            )),
-            numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
-            numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),
-            materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
-            numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
-            numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.3, step = 0.05),
-            colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000")
+            tip_wrap(
+                selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
+                    "mean_asc", "mean_desc", "mean", "median_asc",
+                    "median_desc", "median"
+                )),
+                tip_btn(ns, "tip_sort_x")
+            ),
+            tip_wrap(
+                numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
+                tip_btn(ns, "tip_y_max")
+            ),
+            tip_wrap(
+                numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),
+                tip_btn(ns, "tip_y_min")
+            ),
+            tip_wrap(
+                materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_add_point")
+            ),
+            tip_wrap(
+                numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
+                tip_btn(ns, "tip_pt_size")
+            ),
+            tip_wrap(
+                numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
+                tip_btn(ns, "tip_pt_alpha")
+            ),
+            tip_wrap(
+                numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.3, step = 0.05),
+                tip_btn(ns, "tip_jitter_width")
+            ),
+            tip_wrap(
+                colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000"),
+                tip_btn(ns, "tip_pt_color")
+            )
         ),
         "Highlight" = tagList(
-            textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. col name > 0"),
-            colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
-            numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
-            numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1)
+            tip_wrap(
+                textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. col name > 0"),
+                tip_btn(ns, "tip_highlight")
+            ),
+            tip_wrap(
+                colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
+                tip_btn(ns, "tip_highlight_color")
+            ),
+            tip_wrap(
+                numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
+                tip_btn(ns, "tip_highlight_size")
+            ),
+            tip_wrap(
+                numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1),
+                tip_btn(ns, "tip_highlight_alpha")
+            )
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
-            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
-            numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
-            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
+            tip_wrap(
+                selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
+                tip_btn(ns, "tip_facet_by")
+            ),
+            tip_wrap(
+                selectInput(ns("facet.scale"), "Facet Scale",
+                    selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+                tip_btn(ns, "tip_facet_scales")
+            ),
+            tip_wrap(
+                numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
+                tip_btn(ns, "tip_facet_ncol")
+            ),
+            tip_wrap(
+                numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
+                tip_btn(ns, "tip_facet_nrow")
+            ),
+            tip_wrap(
+                materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
+                tip_btn(ns, "tip_facet_byrow")
+            )
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

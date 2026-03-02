@@ -22,13 +22,23 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
-        # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
-        selected <- c("x")
-        
-        documentParameters <- .get_documentation(package_name = "plotthis::BoxPlot", type = "param", selected = selected, cap = TRUE)
-        
-        observeEvent(input$tip_x, {
-            showModal(modalDialog(documentParameters$x, easyClose = TRUE))
+        # Documentation tooltips for all BoxPlot parameters with UI inputs
+        selected <- c("x", "y", "group_by", "sort_x", "y_max", "y_min",
+            "add_point", "pt_size", "pt_alpha", "jitter_width", "pt_color",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "highlight", "highlight_color", "highlight_size", "highlight_alpha")
+
+        #Retrieves paramater documentation from docs of function 
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::BoxPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        #Adds custom label to each tool tip
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
         })
 
 
@@ -88,11 +98,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 colors = initial_colors,
                 compact = TRUE
             )
-        })
-
-        observe({
-            req(input$tip.x.data)  # Now namespaced
-            showNotification(paste("Tooltip state:", input$tip.x.data))
         })
 
         # Reset functionality
