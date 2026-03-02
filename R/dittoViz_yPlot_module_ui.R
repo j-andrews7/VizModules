@@ -143,70 +143,166 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
     min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("var"), "Y data (var)", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
-            selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
+            tip_wrap(
+                selectInput(ns("var"), "Y data (var)", choices = num.choices, selected = num.choices[2]),
+                tip_btn(ns, "tip_var")
+            ),
+            tip_wrap(
+                selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
+                tip_btn(ns, "tip_group.by")
+            ),
+            tip_wrap(
+                selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_color.by")
+            ),
+            tip_wrap(
+                selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_shape.by")
+            ),
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
-            selectInput(
-                ns("plots"),
-                "Plots to show:",
-                choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
-                selected = c("boxplot", "jitter"), multiple = TRUE
+            tip_wrap(
+                selectInput(
+                    ns("plots"),
+                    "Plots to show:",
+                    choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
+                    selected = c("boxplot", "jitter"), multiple = TRUE
+                ),
+                tip_btn(ns, "tip_plots")
             ),
             helpText("Order not currently respected")
         ),
         "Adjustments" = tagList(
-            numericInput(ns("y.max"), "Y Axis Max", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Y Axis Min", value = min.y, min = -1000, max = 1000),
-            materialSwitch(ns("do.raster"), "Rasterize Jitter", value = FALSE, status = "success"),
-            numericInput(ns("raster.dpi"), "Raster DPI", value = 600, min = 100, max = 1200)
+            tip_wrap(
+                numericInput(ns("y.max"), "Y Axis Max", value = max.y, min = -1000, max = 1000),
+                tip_btn(ns, "tip_max")
+            ),
+            tip_wrap(
+                numericInput(ns("y.min"), "Y Axis Min", value = min.y, min = -1000, max = 1000),
+                tip_btn(ns, "tip_min")
+            ),
+            tip_wrap(
+                materialSwitch(ns("do.raster"), "Rasterize Jitter", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_do.raster")
+            ),
+            tip_wrap(
+                numericInput(ns("raster.dpi"), "Raster DPI", value = 600, min = 100, max = 1200),
+                tip_btn(ns, "tip_raster.dpi")
+            )
         ),
         "Jitter" = tagList(
-            numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.2, step = 0.05),
-            colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
-            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
-                value = 5, min = 0, max = 20),
-            materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
-                value = TRUE, status = "success")
+            tip_wrap(
+                numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1, value = 1),
+                tip_btn(ns, "tip_jitter.size")
+            ),
+            tip_wrap(
+                numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.2, step = 0.05),
+                tip_btn(ns, "tip_jitter.width")
+            ),
+            tip_wrap(
+                colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
+                tip_btn(ns, "tip_jitter.color")
+            ),
+            tip_wrap(
+                numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
+                    value = 5, min = 0, max = 20),
+                tip_btn(ns, "tip_jitter.shape.legend.size")
+            ),
+            tip_wrap(
+                materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
+                    value = TRUE, status = "success"),
+                tip_btn(ns, "tip_jitter.shape.legend.show")
+            )
         ),
         "Box" = tagList(
             materialSwitch(ns("show.outliers"), "Show Outliers",
                 value = FALSE, status = "success"),
-            colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
-            numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+            tip_wrap(
+                colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
+                tip_btn(ns, "tip_boxplot.color")
+            ),
+            tip_wrap(
+                materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
+                tip_btn(ns, "tip_boxplot.fill")
+            ),
+            tip_wrap(
+                numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                tip_btn(ns, "tip_boxplot.lineweight")
+            ),
             numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),
             numericInput(ns("boxgroupgap"), "Boxplot Group Dodge", value = 0.2, min = 0, max = 1, step = 0.05)
         ),
         "Violin" = tagList(
-            numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
-            selectInput(ns("vlnplot.scaling"), "Violin Scaling",
-                selected = "area",
-                choices = c("area", "count", "width")),
-            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
-                value = "", placeholder = "e.g., 0.25, 0.5, 0.75")
+            tip_wrap(
+                numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                tip_btn(ns, "tip_vlnplot.lineweight")
+            ),
+            tip_wrap(
+                selectInput(ns("vlnplot.scaling"), "Violin Scaling",
+                    selected = "area",
+                    choices = c("area", "count", "width")),
+                tip_btn(ns, "tip_vlnplot.scaling")
+            ),
+            tip_wrap(
+                textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
+                    value = "", placeholder = "e.g., 0.25, 0.5, 0.75"),
+                tip_btn(ns, "tip_vlnplot.quantiles")
+            )
         ),
         "Ridge" = tagList(
-            numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
-            numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)", value = 1.25, min = 0.5, max = 3),
-            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
-                value = NA, min = 0, max = 1),
-            selectInput(ns("ridgeplot.shape"), "Ridge Shape",
-                selected = "smooth",
-                choices = c("smooth", "hist")),
-            numericInput(ns("ridgeplot.bins"), "Ridge Bins",
-                value = 30, min = 5, max = 100),
-            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
-                value = NULL, min = 0)
+            tip_wrap(
+                numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                tip_btn(ns, "tip_ridgeplot.lineweight")
+            ),
+            tip_wrap(
+                numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)", value = 1.25, min = 0.5, max = 3),
+                tip_btn(ns, "tip_ridgeplot.scale")
+            ),
+            tip_wrap(
+                numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
+                    value = NA, min = 0, max = 1),
+                tip_btn(ns, "tip_ridgeplot.ymax.expansion")
+            ),
+            tip_wrap(
+                selectInput(ns("ridgeplot.shape"), "Ridge Shape",
+                    selected = "smooth",
+                    choices = c("smooth", "hist")),
+                tip_btn(ns, "tip_ridgeplot.shape")
+            ),
+            tip_wrap(
+                numericInput(ns("ridgeplot.bins"), "Ridge Bins",
+                    value = 30, min = 5, max = 100),
+                tip_btn(ns, "tip_ridgeplot.bins")
+            ),
+            tip_wrap(
+                numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
+                    value = NULL, min = 0),
+                tip_btn(ns, "tip_ridgeplot.binwidth")
+            )
         ),
         "Facet" = tagList(
-            selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
+            tip_wrap(
+                selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_split.by")
+            ),
             selectInput(ns("split.adjust"), "Facet Scaling", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
             selectInput(ns("split.ncol"), "Number of Columns", selected = 4, choices = c("", 1:10)),
             selectInput(ns("split.nrow"), "Number of Rows", selected = 4, choices = c("", 1:10))

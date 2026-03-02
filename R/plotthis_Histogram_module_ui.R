@@ -144,43 +144,122 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
     min.y <- min(numeric.data, na.rm = TRUE)
 
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X Data",
-                    selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
-                    defaults[["x.data"]], num.choices[2]
-                ),
-                choices = num.choices),
-            selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices))
+            tip_wrap(
+                selectInput(ns("x.data"), "X Data",
+                        selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
+                        defaults[["x.data"]], num.choices[2]
+                    ),
+                    choices = num.choices),
+                tip_btn(ns, "tip_x")
+            ),
+            tip_wrap(
+                selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_group_by")
+            )
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
+            tip_wrap(
+                selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
+                tip_btn(ns, "tip_facet_by")
+            ),
+            tip_wrap(
+                selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+                tip_btn(ns, "tip_facet_scales")
+            ),
+            tip_wrap(
+                numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+                tip_btn(ns, "tip_facet_ncol")
+            ),
+            tip_wrap(
+                numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+                tip_btn(ns, "tip_facet_nrow")
+            ),
+            tip_wrap(
+                materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
+                tip_btn(ns, "tip_facet_byrow")
+            )
         ),
         "Aesthetics" = tagList(
-            numericInput(ns("bins"), "Number of Bins", value = NA, min = 0),
-            numericInput(ns("bin.width"), "Bin Width", value = NA, min = 0),
-            materialSwitch(ns("use.trend"), "Trend Line Only", value = FALSE, status = "success"),
-            materialSwitch(ns("trend.skip.zero"), "Skip Zero Values", value = FALSE, status = "success"),
-            materialSwitch(ns("add.trend"), "Add Trend to Histogram", value = FALSE, status = "success"),
-            sliderInput(ns("trend.alpha"), "Trend Line Alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
-            numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
-            sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
+            tip_wrap(
+                numericInput(ns("bins"), "Number of Bins", value = NA, min = 0),
+                tip_btn(ns, "tip_bins")
+            ),
+            tip_wrap(
+                numericInput(ns("bin.width"), "Bin Width", value = NA, min = 0),
+                tip_btn(ns, "tip_binwidth")
+            ),
+            tip_wrap(
+                materialSwitch(ns("use.trend"), "Trend Line Only", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_use_trend")
+            ),
+            tip_wrap(
+                materialSwitch(ns("trend.skip.zero"), "Skip Zero Values", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_trend_skip_zero")
+            ),
+            tip_wrap(
+                materialSwitch(ns("add.trend"), "Add Trend to Histogram", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_add_trend")
+            ),
+            tip_wrap(
+                sliderInput(ns("trend.alpha"), "Trend Line Alpha", min = 0, max = 1, value = 1),
+                tip_btn(ns, "tip_trend_alpha")
+            ),
+            tip_wrap(
+                numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
+                tip_btn(ns, "tip_trend_linewidth")
+            ),
+            tip_wrap(
+                numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
+                tip_btn(ns, "tip_trend_pt_size")
+            ),
+            tip_wrap(
+                sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
+                tip_btn(ns, "tip_alpha")
+            ),
             uiOutput(ns("palette.selection")),
-            selectInput(ns("position"), "Position", selected = "identity",
-            choices = c("identity", "stack", "dodge", "fill")
+            tip_wrap(
+                selectInput(ns("position"), "Position", selected = "identity",
+                choices = c("identity", "stack", "dodge", "fill")
+                ),
+                tip_btn(ns, "tip_position")
             )
         ),
         "Rug" = tagList(
-            materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-            numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-            sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-            numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05)
+            tip_wrap(
+                materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
+                tip_btn(ns, "tip_add_bars")
+            ),
+            tip_wrap(
+                numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
+                tip_btn(ns, "tip_bar_height")
+            ),
+            tip_wrap(
+                sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
+                tip_btn(ns, "tip_bar_alpha")
+            ),
+            tip_wrap(
+                numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
+                tip_btn(ns, "tip_bar_width")
+            )
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

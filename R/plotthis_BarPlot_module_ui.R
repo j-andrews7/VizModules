@@ -163,56 +163,116 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     min.y <- 0
   
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     inputs <- list(
     "Data" = tagList(
-        selectInput(ns("x.data"), "X values:",
-        selected = char.choices[2], choices = char.choices
+        tip_wrap(
+            selectInput(ns("x.data"), "X values:",
+            selected = char.choices[2], choices = char.choices
+            ),
+            tip_btn(ns, "tip_x")
         ),
-        selectInput(ns("y.data"), "Y values:",
-        selected = num.choices[2], choices = num.choices
+        tip_wrap(
+            selectInput(ns("y.data"), "Y values:",
+            selected = num.choices[2], choices = num.choices
+            ),
+            tip_btn(ns, "tip_y")
         ),
-        selectInput(ns("group.by"), "Group by:",
-        selected = char.choices[2], choices = names(data)
-        ), 
-        selectInput(ns("fill.by"), "Fill by:", 
-        selected = char.choices[2], choices = names(data))
+        tip_wrap(
+            selectInput(ns("group.by"), "Group by:",
+            selected = char.choices[2], choices = names(data)
+            ),
+            tip_btn(ns, "tip_group_by")
+        ),
+        tip_wrap(
+            selectInput(ns("fill.by"), "Fill by:", 
+            selected = char.choices[2], choices = names(data)),
+            tip_btn(ns, "tip_fill_by")
+        )
     ),
 
     "Facet" = tagList(
-        selectInput(ns("facet.by"), "Facet by:",
-        selected = "", choices = c(char.choices, "")
+        tip_wrap(
+            selectInput(ns("facet.by"), "Facet by:",
+            selected = "", choices = c(char.choices, "")
+            ),
+            tip_btn(ns, "tip_facet_by")
         ),
-        selectInput(ns("facet.scale"), "Facet scale:",
-        selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
+        tip_wrap(
+            selectInput(ns("facet.scale"), "Facet scale:",
+            selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
+            ),
+            tip_btn(ns, "tip_facet_scales")
         ),
-        numericInput(ns("facet.ncol"), "Facet number of columns:",
-        value = NULL, min = 0, max = 20
+        tip_wrap(
+            numericInput(ns("facet.ncol"), "Facet number of columns:",
+            value = NULL, min = 0, max = 20
+            ),
+            tip_btn(ns, "tip_facet_ncol")
         ),
-        numericInput(ns("facet.nrow"), "Facet number of rows:",
-        value = NULL, min = 0, max = 20
+        tip_wrap(
+            numericInput(ns("facet.nrow"), "Facet number of rows:",
+            value = NULL, min = 0, max = 20
+            ),
+            tip_btn(ns, "tip_facet_nrow")
         ),
-        materialSwitch(ns("facet.by.row"), "Facet by row:",
-        value = TRUE, status = "success"),
-        selectInput(ns("split.by"), "Split by:",
-        selected = "", choices = c(char.choices, "")
+        tip_wrap(
+            materialSwitch(ns("facet.by.row"), "Facet by row:",
+            value = TRUE, status = "success"),
+            tip_btn(ns, "tip_facet_byrow")
+        ),
+        tip_wrap(
+            selectInput(ns("split.by"), "Split by:",
+            selected = "", choices = c(char.choices, "")
+            ),
+            tip_btn(ns, "tip_split_by")
         )
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
-        numericInput(ns("width"), "Width", value = NA),
-        textInput(ns("expand"), "Expand", value = "",
-        placeholder = "e.g. 1,2,3,4"
+        tip_wrap(
+            numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
+            tip_btn(ns, "tip_alpha")
+        ),
+        tip_wrap(
+            numericInput(ns("width"), "Width", value = NA),
+            tip_btn(ns, "tip_width")
+        ),
+        tip_wrap(
+            textInput(ns("expand"), "Expand", value = "",
+            placeholder = "e.g. 1,2,3,4"
+            ),
+            tip_btn(ns, "tip_expand")
         )
     ),
 
     "Adjustments" = tagList(
-        numericInput(ns("y.min"), "Y-axis min:",
-            value = min.y
+        tip_wrap(
+            numericInput(ns("y.min"), "Y-axis min:",
+                value = min.y
+            ),
+            tip_btn(ns, "tip_y_min")
         ),
-        numericInput(ns("y.max"), "Y-axis max:",
-            value = max.y
+        tip_wrap(
+            numericInput(ns("y.max"), "Y-axis max:",
+                value = max.y
+            ),
+            tip_btn(ns, "tip_y_max")
         )
     ),
 

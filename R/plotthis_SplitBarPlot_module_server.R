@@ -32,6 +32,23 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             axis_scale_factor <- input$axis.scale.factor
         })
 
+        # Documentation tooltips for SplitBarPlot parameters with UI inputs
+        selected <- c("x", "y", "fill_by", "split_by",
+            "alpha_by", "alpha_reverse", "alpha_name", "bar_height",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "x_min", "x_max")
+
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::SplitBarPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
+
 
         
         # Hide individual inputs if specified

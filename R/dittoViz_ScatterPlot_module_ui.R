@@ -187,112 +187,167 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.by"), "X Data",
-                choices = choices,
-                selected = ifelse("x.by" %in% names(defaults),
-                    ifelse(defaults[["x.by"]] %in% choices, defaults[["x.by"]], choices[2]),
-                    choices[2]
-                )
-            ),
-            selectInput(ns("y.by"), "Y Data",
-                choices = choices,
-                selected = ifelse("y.by" %in% names(defaults),
-                    ifelse(defaults[["y.by"]] %in% choices, defaults[["y.by"]], choices[3]),
-                    choices[3]
-                )
-            ),
-            selectInput(ns("color.by"), "Color By",
-                choices = choices,
-                selected = ifelse("color.by" %in% names(defaults),
-                    ifelse(defaults[["color.by"]] %in% choices, defaults[["color.by"]], ""),
-                    ""
-                )
-            ),
-            selectInput(ns("shape.by"), "Shape By",
-                choices = cat.choices,
-                selected = ifelse("shape.by" %in% names(defaults),
-                    ifelse(defaults[["shape.by"]] %in% cat.choices, defaults[["shape.by"]], ""),
-                    ""
-                )
-            ),
-            selectizeInput(ns("split.by"), "Split By",
-                choices = cat.choices,
-                selected = ifelse("split.by" %in% names(defaults),
-                    ifelse(all(defaults[["split.by"]] %in% cat.choices), defaults[["split.by"]], ""),
-                    ""
+            tip_wrap(
+                selectInput(ns("x.by"), "X Data",
+                    choices = choices,
+                    selected = ifelse("x.by" %in% names(defaults),
+                        ifelse(defaults[["x.by"]] %in% choices, defaults[["x.by"]], choices[2]),
+                        choices[2]
+                    )
                 ),
-                multiple = TRUE,
-                options = list(maxItems = 2)
+                tip_btn(ns, "tip_x.by")
             ),
-            textInput(ns("rows.use"), "Rows Filter",
-                placeholder = "Filter expression, e.g. Sepal.Length > 5",
-                value = ifelse("rows.use" %in% names(defaults), defaults[["rows.use"]], "")
+            tip_wrap(
+                selectInput(ns("y.by"), "Y Data",
+                    choices = choices,
+                    selected = ifelse("y.by" %in% names(defaults),
+                        ifelse(defaults[["y.by"]] %in% choices, defaults[["y.by"]], choices[3]),
+                        choices[3]
+                    )
+                ),
+                tip_btn(ns, "tip_y.by")
+            ),
+            tip_wrap(
+                selectInput(ns("color.by"), "Color By",
+                    choices = choices,
+                    selected = ifelse("color.by" %in% names(defaults),
+                        ifelse(defaults[["color.by"]] %in% choices, defaults[["color.by"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_color.by")
+            ),
+            tip_wrap(
+                selectInput(ns("shape.by"), "Shape By",
+                    choices = cat.choices,
+                    selected = ifelse("shape.by" %in% names(defaults),
+                        ifelse(defaults[["shape.by"]] %in% cat.choices, defaults[["shape.by"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_shape.by")
+            ),
+            tip_wrap(
+                selectizeInput(ns("split.by"), "Split By",
+                    choices = cat.choices,
+                    selected = ifelse("split.by" %in% names(defaults),
+                        ifelse(all(defaults[["split.by"]] %in% cat.choices), defaults[["split.by"]], ""),
+                        ""
+                    ),
+                    multiple = TRUE,
+                    options = list(maxItems = 2)
+                ),
+                tip_btn(ns, "tip_split.by")
+            ),
+            tip_wrap(
+                textInput(ns("rows.use"), "Rows Filter",
+                    placeholder = "Filter expression, e.g. Sepal.Length > 5",
+                    value = ifelse("rows.use" %in% names(defaults), defaults[["rows.use"]], "")
+                ),
+                tip_btn(ns, "tip_rows.use")
             )
         ),
         "Adjustments" = tagList(
-            selectInput(ns("x.adjustment"), "X Adjustment",
-                choices = adj.choices,
-                selected = ifelse("x.adjustment" %in% names(defaults),
-                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
+            tip_wrap(
+                selectInput(ns("x.adjustment"), "X Adjustment",
+                    choices = adj.choices,
+                    selected = ifelse("x.adjustment" %in% names(defaults),
+                        ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
                     ""
                 )
             ),
-            selectInput(ns("y.adjustment"), "Y Adjustment",
-                choices = adj.choices,
-                selected = ifelse("y.adjustment" %in% names(defaults),
-                    ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
-                    ""
-                )
+            tip_wrap(
+                selectInput(ns("y.adjustment"), "Y Adjustment",
+                    choices = adj.choices,
+                    selected = ifelse("y.adjustment" %in% names(defaults),
+                        ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_y.adjustment")
             ),
-            selectInput(ns("color.adjustment"), "Color Adjustment",
-                choices = adj.choices,
-                selected = ifelse("color.adjustment" %in% names(defaults),
-                    ifelse(defaults[["color.adjustment"]] %in% adj.choices, defaults[["color.adjustment"]], ""),
-                    ""
-                )
+            tip_wrap(
+                selectInput(ns("color.adjustment"), "Color Adjustment",
+                    choices = adj.choices,
+                    selected = ifelse("color.adjustment" %in% names(defaults),
+                        ifelse(defaults[["color.adjustment"]] %in% adj.choices, defaults[["color.adjustment"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_color.adjustment")
             ),
-            selectInput(ns("x.adj.fxn"), "X Adjustment Function",
-                choices = adj.fxn.choices,
-                selected = ifelse("x.adj.fxn" %in% names(defaults),
-                    ifelse(defaults[["x.adj.fxn"]] %in% adj.fxn.choices, defaults[["x.adj.fxn"]], ""),
-                    ""
-                )
+            tip_wrap(
+                selectInput(ns("x.adj.fxn"), "X Adjustment Function",
+                    choices = adj.fxn.choices,
+                    selected = ifelse("x.adj.fxn" %in% names(defaults),
+                        ifelse(defaults[["x.adj.fxn"]] %in% adj.fxn.choices, defaults[["x.adj.fxn"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_x.adj.fxn")
             ),
-            selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
-                choices = adj.fxn.choices,
-                selected = ifelse("y.adj.fxn" %in% names(defaults),
-                    ifelse(defaults[["y.adj.fxn"]] %in% adj.fxn.choices, defaults[["y.adj.fxn"]], ""),
-                    ""
-                )
+            tip_wrap(
+                selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
+                    choices = adj.fxn.choices,
+                    selected = ifelse("y.adj.fxn" %in% names(defaults),
+                        ifelse(defaults[["y.adj.fxn"]] %in% adj.fxn.choices, defaults[["y.adj.fxn"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_y.adj.fxn")
             ),
-            selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
-                choices = adj.fxn.choices,
-                selected = ifelse("color.adj.fxn" %in% names(defaults),
-                    ifelse(defaults[["color.adj.fxn"]] %in% adj.fxn.choices, defaults[["color.adj.fxn"]], ""),
-                    ""
-                )
+            tip_wrap(
+                selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
+                    choices = adj.fxn.choices,
+                    selected = ifelse("color.adj.fxn" %in% names(defaults),
+                        ifelse(defaults[["color.adj.fxn"]] %in% adj.fxn.choices, defaults[["color.adj.fxn"]], ""),
+                        ""
+                    )
+                ),
+                tip_btn(ns, "tip_color.adj.fxn")
             )
         ),
         "Points" = tagList(
-            numericInput(ns("size"), "Point Size",
-                value = ifelse("size" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["size"]]), defaults[["size"]], 1),
-                    1
+            tip_wrap(
+                numericInput(ns("size"), "Point Size",
+                    value = ifelse("size" %in% names(defaults),
+                        ifelse(is.numeric(defaults[["size"]]), defaults[["size"]], 1),
+                        1
+                    ),
+                    min = 0.1
                 ),
-                min = 0.1
+                tip_btn(ns, "tip_size")
             ),
-            numericInput(ns("opacity"), "Point Opacity",
-                value = ifelse("opacity" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["opacity"]]), defaults[["opacity"]], 1),
-                    1
+            tip_wrap(
+                numericInput(ns("opacity"), "Point Opacity",
+                    value = ifelse("opacity" %in% names(defaults),
+                        ifelse(is.numeric(defaults[["opacity"]]), defaults[["opacity"]], 1),
+                        1
+                    ),
+                    max = 1,
+                    min = 0,
+                    step = 0.05
                 ),
-                max = 1,
-                min = 0,
-                step = 0.05
+                tip_btn(ns, "tip_opacity")
             ),
             checkboxInput(ns("show.others"), "Show Others",
                 value = ifelse("show.others" %in% names(defaults),

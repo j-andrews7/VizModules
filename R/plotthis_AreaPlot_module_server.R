@@ -22,6 +22,22 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Documentation tooltips for AreaPlot parameters with UI inputs
+        selected <- c("x", "y", "group_by", "scale_y",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "alpha")
+
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::AreaPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {

@@ -27,6 +27,23 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+
+        # Documentation tooltips for scatterPlot parameters with UI inputs
+        selected <- c("x.by", "y.by", "color.by", "shape.by", "split.by",
+            "rows.use", "x.adjustment", "y.adjustment", "color.adjustment",
+            "x.adj.fxn", "y.adj.fxn", "color.adj.fxn", "size", "opacity")
+
+        documentParameters <- .get_documentation(
+            package_name = "dittoViz::scatterPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {

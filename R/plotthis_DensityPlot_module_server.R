@@ -21,6 +21,22 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Documentation tooltips for DensityPlot parameters with UI inputs
+        selected <- c("x", "group_by", "position", "alpha",
+            "add_bars", "bar_height", "bar_alpha", "bar_width",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
+
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::DensityPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {

@@ -26,6 +26,22 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
       
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
+
+        # Documentation tooltips for BarPlot parameters with UI inputs
+        selected <- c("x", "y", "group_by", "fill_by", "split_by",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "alpha", "width", "expand", "y_min", "y_max")
+
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::BarPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
         
         
         # Hide individual inputs if specified

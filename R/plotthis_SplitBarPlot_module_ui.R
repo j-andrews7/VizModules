@@ -147,46 +147,99 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     min.x <- min(numeric.data, na.rm = TRUE)
   
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     inputs <- list(
       "Data" = tagList(
-      selectInput(ns("x.data"), "X values",
-        selected = num.choices[2], choices = num.choices
+      tip_wrap(
+          selectInput(ns("x.data"), "X values",
+            selected = num.choices[2], choices = num.choices
+          ),
+          tip_btn(ns, "tip_x")
       ),
-      selectInput(ns("y.data"), "Y values",
-        selected = char.choices[2], choices = char.choices
+      tip_wrap(
+          selectInput(ns("y.data"), "Y values",
+            selected = char.choices[2], choices = char.choices
+          ),
+          tip_btn(ns, "tip_y")
       ),
-      # Changed from group.by to fill.by
-      selectInput(ns("fill.by"), "Fill by",
-        selected = choices[2], choices = choices
+      tip_wrap(
+          selectInput(ns("fill.by"), "Fill by",
+            selected = choices[2], choices = choices
+          ),
+          tip_btn(ns, "tip_fill_by")
       )),
 
 
     "Facet" = tagList(
-        selectInput(ns("facet.by"), "Facet by",
-        selected = "", choices = c(char.choices, "")
+        tip_wrap(
+            selectInput(ns("facet.by"), "Facet by",
+            selected = "", choices = c(char.choices, "")
+            ),
+            tip_btn(ns, "tip_facet_by")
         ),
-        selectInput(ns("facet.scale"), "Facet scale",
-        selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
+        tip_wrap(
+            selectInput(ns("facet.scale"), "Facet scale",
+            selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
+            ),
+            tip_btn(ns, "tip_facet_scales")
         ),
-        numericInput(ns("facet.ncol"), "Facet number of columns",
-        value = NULL, min = 0, max = 20
+        tip_wrap(
+            numericInput(ns("facet.ncol"), "Facet number of columns",
+            value = NULL, min = 0, max = 20
+            ),
+            tip_btn(ns, "tip_facet_ncol")
         ),
-        numericInput(ns("facet.nrow"), "Facet number of rows",
-        value = NULL, min = 0, max = 20
+        tip_wrap(
+            numericInput(ns("facet.nrow"), "Facet number of rows",
+            value = NULL, min = 0, max = 20
+            ),
+            tip_btn(ns, "tip_facet_nrow")
         ),
-        materialSwitch(ns("facet.by.row"), "Facet by row",
-        value = TRUE, status = "success"),
-        selectInput(ns("split.by"), "Split by",
-        selected = "", choices = c(char.choices, "")
+        tip_wrap(
+            materialSwitch(ns("facet.by.row"), "Facet by row",
+            value = TRUE, status = "success"),
+            tip_btn(ns, "tip_facet_byrow")
+        ),
+        tip_wrap(
+            selectInput(ns("split.by"), "Split by",
+            selected = "", choices = c(char.choices, "")
+            ),
+            tip_btn(ns, "tip_split_by")
         )
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
-        materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
-        textInput(ns("alpha.name"), "Alpha name", value = ""),
-        numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+        tip_wrap(
+            selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
+            tip_btn(ns, "tip_alpha_by")
+        ),
+        tip_wrap(
+            materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
+            tip_btn(ns, "tip_alpha_reverse")
+        ),
+        tip_wrap(
+            textInput(ns("alpha.name"), "Alpha name", value = ""),
+            tip_btn(ns, "tip_alpha_name")
+        ),
+        tip_wrap(
+            numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+            tip_btn(ns, "tip_bar_height")
+        ),
         sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
         materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
         sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = -100, max = 100)
@@ -194,11 +247,17 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     ),
 
     "Adjustments" = tagList(
-        numericInput(ns("x.min"), "X-axis min:",
-            value = min.x
+        tip_wrap(
+            numericInput(ns("x.min"), "X-axis min:",
+                value = min.x
+            ),
+            tip_btn(ns, "tip_x_min")
         ),
-        numericInput(ns("x.max"), "X-axis max:",
-            value = max.x
+        tip_wrap(
+            numericInput(ns("x.max"), "X-axis max:",
+                value = max.x
+            ),
+            tip_btn(ns, "tip_x_max")
         )
     ),
 

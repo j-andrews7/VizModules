@@ -128,75 +128,120 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     min.y <- min(numeric.data, na.rm = TRUE)
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
 
+    tip_btn <- function(ns, tip_id) {
+        actionButton(ns(tip_id), HTML("\u2139"),
+            class = "btn-xs btn-link p-0",
+            style = "box-shadow: none; border: none; background: transparent; line-height: 1.2;",
+            `data-bs-toggle` = "tooltip")
+    }
+
+    tip_wrap <- function(input_el, tip_el) {
+        div(
+            style = "display: flex; align-items: center; gap: 4px;",
+            div(style = "flex: 1;", input_el),
+            tip_el
+        )
+    }
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X values:",
-                selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% cat.choices,
-                    defaults[["x.data"]], cat.choices[2]
+            tip_wrap(
+                selectInput(ns("x.data"), "X values:",
+                    selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% cat.choices,
+                        defaults[["x.data"]], cat.choices[2]
+                    ),
+                    choices = cat.choices
                 ),
-                choices = cat.choices
+                tip_btn(ns, "tip_x")
             ),
-            selectInput(ns("y.data"), "Y values:",
-                selected = ifelse("y.data" %in% names(defaults) && defaults[["y.data"]] %in% num.choices,
-                    defaults[["y.data"]], num.choices[2]
+            tip_wrap(
+                selectInput(ns("y.data"), "Y values:",
+                    selected = ifelse("y.data" %in% names(defaults) && defaults[["y.data"]] %in% num.choices,
+                        defaults[["y.data"]], num.choices[2]
+                    ),
+                    choices = num.choices
                 ),
-                choices = num.choices
+                tip_btn(ns, "tip_y")
             ),
-            selectInput(ns("group.by"), "Group by:",
-                selected = ifelse("group.by" %in% names(defaults) && defaults[["group.by"]] %in% c("", group_facet_choices),
-                    defaults[["group.by"]], cat.choices[3]
+            tip_wrap(
+                selectInput(ns("group.by"), "Group by:",
+                    selected = ifelse("group.by" %in% names(defaults) && defaults[["group.by"]] %in% c("", group_facet_choices),
+                        defaults[["group.by"]], cat.choices[3]
+                    ),
+                    choices = c("", group_facet_choices)
                 ),
-                choices = c("", group_facet_choices)
+                tip_btn(ns, "tip_group_by")
             ),
-            materialSwitch(ns("scale.y"), "Scale y-axis by total:",
-                value = ifelse("scale.y" %in% names(defaults),
-                    ifelse(is.logical(defaults[["scale.y"]]), defaults[["scale.y"]], FALSE),
-                    FALSE
+            tip_wrap(
+                materialSwitch(ns("scale.y"), "Scale y-axis by total:",
+                    value = ifelse("scale.y" %in% names(defaults),
+                        ifelse(is.logical(defaults[["scale.y"]]), defaults[["scale.y"]], FALSE),
+                        FALSE
+                    ),
+                    status = "success"
                 ),
-                status = "success"
+                tip_btn(ns, "tip_scale_y")
             )
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:",
-                selected = ifelse("facet.by" %in% names(defaults) && defaults[["facet.by"]] %in% c(group_facet_choices, ""),
-                    defaults[["facet.by"]], ""
+            tip_wrap(
+                selectInput(ns("facet.by"), "Facet by:",
+                    selected = ifelse("facet.by" %in% names(defaults) && defaults[["facet.by"]] %in% c(group_facet_choices, ""),
+                        defaults[["facet.by"]], ""
+                    ),
+                    choices = c(group_facet_choices, "")
                 ),
-                choices = c(group_facet_choices, "")
+                tip_btn(ns, "tip_facet_by")
             ),
-            selectInput(ns("facet.scale"), "Facet scale:",
-                selected = ifelse("facet.scale" %in% names(defaults) && defaults[["facet.scale"]] %in% c("fixed", "free", "free_x", "free_y"),
-                    defaults[["facet.scale"]], "fixed"
+            tip_wrap(
+                selectInput(ns("facet.scale"), "Facet scale:",
+                    selected = ifelse("facet.scale" %in% names(defaults) && defaults[["facet.scale"]] %in% c("fixed", "free", "free_x", "free_y"),
+                        defaults[["facet.scale"]], "fixed"
+                    ),
+                    choices = c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y")
+                tip_btn(ns, "tip_facet_scales")
             ),
-            numericInput(ns("facet.ncol"), "Facet number of columns:",
-                value = ifelse("facet.ncol" %in% names(defaults) && is.numeric(defaults[["facet.ncol"]]),
-                    defaults[["facet.ncol"]], NA
+            tip_wrap(
+                numericInput(ns("facet.ncol"), "Facet number of columns:",
+                    value = ifelse("facet.ncol" %in% names(defaults) && is.numeric(defaults[["facet.ncol"]]),
+                        defaults[["facet.ncol"]], NA
+                    ),
+                    min = 0, max = 20
                 ),
-                min = 0, max = 20
+                tip_btn(ns, "tip_facet_ncol")
             ),
-            numericInput(ns("facet.nrow"), "Facet number of rows:",
-                value = ifelse("facet.nrow" %in% names(defaults) && is.numeric(defaults[["facet.nrow"]]),
-                    defaults[["facet.nrow"]], NA
+            tip_wrap(
+                numericInput(ns("facet.nrow"), "Facet number of rows:",
+                    value = ifelse("facet.nrow" %in% names(defaults) && is.numeric(defaults[["facet.nrow"]]),
+                        defaults[["facet.nrow"]], NA
+                    ),
+                    min = 0, max = 20
                 ),
-                min = 0, max = 20
+                tip_btn(ns, "tip_facet_nrow")
             ),
-            materialSwitch(ns("facet.by.row"), "Facet by row",
-                value = ifelse("facet.by.row" %in% names(defaults),
-                    ifelse(is.logical(defaults[["facet.by.row"]]), defaults[["facet.by.row"]], TRUE),
-                    TRUE
+            tip_wrap(
+                materialSwitch(ns("facet.by.row"), "Facet by row",
+                    value = ifelse("facet.by.row" %in% names(defaults),
+                        ifelse(is.logical(defaults[["facet.by.row"]]), defaults[["facet.by.row"]], TRUE),
+                        TRUE
+                    ),
+                    status = "success"
                 ),
-                status = "success"
+                tip_btn(ns, "tip_facet_byrow")
             )
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            numericInput(ns("alpha"), "Alpha:",
-                value = ifelse("alpha" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["alpha"]]), defaults[["alpha"]], 1),
-                    1
+            tip_wrap(
+                numericInput(ns("alpha"), "Alpha:",
+                    value = ifelse("alpha" %in% names(defaults),
+                        ifelse(is.numeric(defaults[["alpha"]]), defaults[["alpha"]], 1),
+                        1
+                    ),
+                    min = 0, max = 1
                 ),
-                min = 0, max = 1
+                tip_btn(ns, "tip_alpha")
             )
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults),

@@ -22,6 +22,23 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Documentation tooltips for ViolinPlot parameters with UI inputs
+        selected <- c("x", "y", "group_by", "sort_x", "y_max", "y_min",
+            "add_point", "pt_size", "pt_alpha", "jitter_width", "jitter_height", "pt_color",
+            "add_box", "box_color", "box_width", "box_ptsize",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "highlight", "highlight_color", "highlight_size", "highlight_alpha")
+
+        documentParameters <- .get_documentation(
+            package_name = "plotthis::ViolinPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {

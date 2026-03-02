@@ -25,6 +25,28 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        # Documentation tooltips for yPlot parameters with UI inputs
+        selected <- c("var", "group.by", "color.by", "shape.by", "split.by",
+            "plots", "min", "max", "do.raster", "raster.dpi",
+            "jitter.size", "jitter.width", "jitter.color",
+            "jitter.shape.legend.size", "jitter.shape.legend.show",
+            "boxplot.color", "boxplot.fill", "boxplot.lineweight",
+            "vlnplot.lineweight", "vlnplot.scaling", "vlnplot.quantiles",
+            "ridgeplot.lineweight", "ridgeplot.scale",
+            "ridgeplot.ymax.expansion", "ridgeplot.shape",
+            "ridgeplot.bins", "ridgeplot.binwidth")
+
+        documentParameters <- .get_documentation(
+            package_name = "dittoViz::yPlot", type = "param",
+            selected = selected, cap = TRUE
+        )
+
+        lapply(selected, function(param) {
+            observeEvent(input[[paste0("tip_", param)]], {
+                showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
+            })
+        })
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
