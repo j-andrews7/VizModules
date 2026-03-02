@@ -137,6 +137,7 @@
 #'
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #' @import shiny
 #' @importFrom plotthis BarPlot
 #'
@@ -161,60 +162,71 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     #Axis range values 
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE)
     min.y <- 0
-  
+
+    selected <- c("x", "y", "group_by", "fill_by",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "split_by", "alpha", "width", "expand", "y_min", "y_max")
+
+    documentParameters <- .get_documentation(
+        package_name = "plotthis::BarPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
 
     inputs <- list(
     "Data" = tagList(
-        selectInput(ns("x.data"), "X values:",
+        tipify(selectInput(ns("x.data"), "X values:",
         selected = char.choices[2], choices = char.choices
-        ),
-        selectInput(ns("y.data"), "Y values:",
+        ), documentParameters$x),
+        tipify(selectInput(ns("y.data"), "Y values:",
         selected = num.choices[2], choices = num.choices
-        ),
-        selectInput(ns("group.by"), "Group by:",
+        ), documentParameters$y),
+        tipify(selectInput(ns("group.by"), "Group by:",
         selected = char.choices[2], choices = names(data)
-        ), 
-        selectInput(ns("fill.by"), "Fill by:", 
-        selected = char.choices[2], choices = names(data))
+        ), documentParameters$group_by),
+        tipify(selectInput(ns("fill.by"), "Fill by:",
+        selected = char.choices[2], choices = names(data)),
+            documentParameters$fill_by)
     ),
 
     "Facet" = tagList(
-        selectInput(ns("facet.by"), "Facet by:",
+        tipify(selectInput(ns("facet.by"), "Facet by:",
         selected = "", choices = c(char.choices, "")
-        ),
-        # bsTooltip(id = ns("facet.by"), title = "TEST", placement = "bottom", trigger = "hover"),
-        selectInput(ns("facet.scale"), "Facet scale:",
+        ), documentParameters$facet_by),
+        tipify(selectInput(ns("facet.scale"), "Facet scale:",
         selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
-        ),
-        numericInput(ns("facet.ncol"), "Facet number of columns:",
+        ), documentParameters$facet_scales),
+        tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",
         value = NULL, min = 0, max = 20
-        ),
-        numericInput(ns("facet.nrow"), "Facet number of rows:",
+        ), documentParameters$facet_ncol),
+        tipify(numericInput(ns("facet.nrow"), "Facet number of rows:",
         value = NULL, min = 0, max = 20
-        ),
-        materialSwitch(ns("facet.by.row"), "Facet by row:",
+        ), documentParameters$facet_nrow),
+        tipify(materialSwitch(ns("facet.by.row"), "Facet by row:",
         value = TRUE, status = "success"),
-        selectInput(ns("split.by"), "Split by:",
+            documentParameters$facet_byrow),
+        tipify(selectInput(ns("split.by"), "Split by:",
         selected = "", choices = c(char.choices, "")
-        )
+        ), documentParameters$split_by)
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
-        numericInput(ns("width"), "Width", value = NA),
-        textInput(ns("expand"), "Expand", value = "",
+        tipify(numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
+            documentParameters$alpha),
+        tipify(numericInput(ns("width"), "Width", value = NA),
+            documentParameters$width),
+        tipify(textInput(ns("expand"), "Expand", value = "",
         placeholder = "e.g. 1,2,3,4"
-        )
+        ), documentParameters$expand)
     ),
 
     "Adjustments" = tagList(
-        numericInput(ns("y.min"), "Y-axis min:",
+        tipify(numericInput(ns("y.min"), "Y-axis min:",
             value = min.y
-        ),
-        numericInput(ns("y.max"), "Y-axis max:",
+        ), documentParameters$y_min),
+        tipify(numericInput(ns("y.max"), "Y-axis max:",
             value = max.y
-        )
+        ), documentParameters$y_max)
     ),
 
     "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
