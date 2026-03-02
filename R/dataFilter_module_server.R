@@ -21,7 +21,6 @@
 #'   sync with the table filters.
 #'
 #' @import shiny
-#' @importFrom DT renderDataTable datatable
 #'
 #' @export
 #' @author Jacob Martin
