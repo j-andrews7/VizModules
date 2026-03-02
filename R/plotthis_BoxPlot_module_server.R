@@ -15,6 +15,7 @@
 #' @importFrom plotthis BoxPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom shinyBS addTooltip
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -24,8 +25,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
         
+        #Tooltips
+        addTooltip(session, "x.data", "TEST")
 
-        
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {

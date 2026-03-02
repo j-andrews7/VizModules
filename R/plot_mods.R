@@ -1349,3 +1349,42 @@ is_pure_type <- function(inputs, d) {
     TRUE
 }
 
+#' Extract roxygen documentation for UI tooltips/labels
+#'
+#' Retrieves documentation text from a package function(s) using `roclang::extract_roc_texts()`
+#' for selected sections/parameters. Useful for dynamically generating Shiny UI tooltips or
+#' help text from package docs (e.g., `plotthis::BoxPlot()` params).
+#'
+#' @param package_name `character(1)`: Name of package (unquoted, e.g., `plotthis`).
+#' @param type `character(1)`: Documentation type to extract.
+#'   `"param"` (default), `"section"`, `"dot_params"`, `"general"`, etc.
+#'   See `?roclang::extract_roc_texts`.
+#' @param selected `character` vector: Specific items to extract (e.g., `c("x", "y")`).
+#' @param cap `logical(1)`: Capitalize first letter? `TRUE`/`FALSE`.
+#' @param ui_name `character(1)`: Name/label for returned list element.
+#'
+#' @return Named `list`: Documentation text(s), keyed by `ui_name`.
+#'
+#' @examples
+#' # Extract BoxPlot param docs for tooltips
+#' tooltips <- .get_documentation(
+#'   plotthis, "param",
+#'   selected = c("x", "y"),
+#'   ui_name = "boxplot_params"
+#' )
+#'
+#' @author Jacob Martin
+#'
+#' @importFrom roclang extract_roc_text
+#' @importFrom rlang sym
+#'
+#' @keywords internal
+#' @noRd
+.get_documentation <- function(package_name, type = "param", selected, cap = TRUE, ui_name){
+    doc_list <- list()
+    for (i in seq_along(selected)){
+        doc <- extract_roc_text(package_name, type = type, select = selected[i], capitalize = cap)
+        doc_list[ui_name[i]] <- doc
+    }
+    return(doc_list)
+}
