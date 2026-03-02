@@ -14,7 +14,6 @@
 #' @import plotly
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
-#' @importFrom stats aggregate
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews

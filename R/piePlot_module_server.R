@@ -14,7 +14,6 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom stats na.omit setNames
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]

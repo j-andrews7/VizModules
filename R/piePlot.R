@@ -56,7 +56,6 @@
 #'
 #' @return A plotly object.
 #'
-#' @importFrom stats reformulate
 #' @import plotly
 #'
 #' @export

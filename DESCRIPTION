@@ -21,8 +21,7 @@ Depends:
     plotthis,
     dittoViz,
     plotly,
-    R (>= 3.5),
-    shinyBS
+    R (>= 3.5)
 Imports:
     colourpicker,
     dplyr,

@@ -15,7 +15,6 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom stats na.omit setNames
 #'
 #' @seealso [VizModules::radarPlot()], [VizModules::radarPlotInputsUI()],
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotApp()]

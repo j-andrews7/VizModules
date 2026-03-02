@@ -14,7 +14,6 @@
 #' 
 #' @import shiny
 #' @import plotly
-#' @importFrom stats na.omit setNames 
 #' 
 #' @export
 #' 
