@@ -28,11 +28,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
             "highlight", "highlight_color", "highlight_size", "highlight_alpha")
 
+        #Retrieves paramater documentation from docs of function 
         documentParameters <- .get_documentation(
             package_name = "plotthis::BoxPlot", type = "param",
             selected = selected, cap = TRUE
         )
 
+        #Adds custom label to each tool tip
         lapply(selected, function(param) {
             observeEvent(input[[paste0("tip_", param)]], {
                 showModal(modalDialog(documentParameters[[param]], easyClose = TRUE))
