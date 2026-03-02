@@ -273,6 +273,11 @@ setup_auto_update_logic <- function(input) {
     if (length(parts) != 2) {
         stop("package_name must be in 'package::function' format")
     }
+
+    if (type != "param") {
+        stop("Only 'param' type is currently supported")
+    }
+
     pkg <- parts[1]
     fn <- parts[2]
 
@@ -282,33 +287,52 @@ setup_auto_update_logic <- function(input) {
     )
 
     tryCatch({
-        # Get the Rd object for the function
-        rd <- utils:::.getHelpFile(help(fn, package = (pkg)))
-
-        if (type == "param") {
-            # Find \\arguments sections
-            for (item in rd) {
+        # Get the Rd database for the package and find the relevant topic
+        rd_db <- tools::Rd_db(pkg)
+        rd <- NULL
+        for (rd_name in names(rd_db)) {
+            rd_obj <- rd_db[[rd_name]]
+            # Check if any \\alias matches the function name
+            for (item in rd_obj) {
                 tag <- attr(item, "Rd_tag")
-                if (!is.null(tag) && tag == "\\arguments") {
-                    # Each child of \\arguments is an \\item
-                    for (arg_item in item) {
-                        arg_tag <- attr(arg_item, "Rd_tag")
-                        if (!is.null(arg_tag) && arg_tag == "\\item") {
-                            # First element is param name, rest is description
-                            if (length(arg_item) >= 2) {
-                                param_name <- paste(unlist(arg_item[[1]]), collapse = "")
-                                param_desc <- paste(unlist(arg_item[[2]]), collapse = "")
-                                param_desc <- trimws(gsub("\\s+", " ", param_desc))
+                if (!is.null(tag) && tag == "\\alias") {
+                    alias <- paste(unlist(item), collapse = "")
+                    if (trimws(alias) == fn) {
+                        rd <- rd_obj
+                        break
+                    }
+                }
+            }
+            if (!is.null(rd)) break
+        }
 
-                                if (param_name %in% selected) {
-                                    if (cap && nzchar(param_desc)) {
-                                        param_desc <- paste0(
-                                            toupper(substring(param_desc, 1, 1)),
-                                            substring(param_desc, 2)
-                                        )
-                                    }
-                                    result[[param_name]] <- param_desc
+        if (is.null(rd)) {
+            warning(paste("Could not find documentation for", package_name))
+            return(result)
+        }
+
+        # Find \\arguments sections
+        for (item in rd) {
+            tag <- attr(item, "Rd_tag")
+            if (!is.null(tag) && tag == "\\arguments") {
+                # Each child of \\arguments is an \\item
+                for (arg_item in item) {
+                    arg_tag <- attr(arg_item, "Rd_tag")
+                    if (!is.null(arg_tag) && arg_tag == "\\item") {
+                        # First element is param name, rest is description
+                        if (length(arg_item) >= 2) {
+                            param_name <- paste(unlist(arg_item[[1]]), collapse = "")
+                            param_desc <- paste(unlist(arg_item[[2]]), collapse = "")
+                            param_desc <- trimws(gsub("\\s+", " ", param_desc))
+
+                            if (param_name %in% selected) {
+                                if (cap && nzchar(param_desc)) {
+                                    param_desc <- paste0(
+                                        toupper(substring(param_desc, 1, 1)),
+                                        substring(param_desc, 2)
+                                    )
                                 }
+                                result[[param_name]] <- param_desc
                             }
                         }
                     }
