@@ -276,8 +276,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$dumbbellPlot <- renderPlotly({
-            width <- session$clientData$output_dumbbellPlot_width
-            height <- session$clientData$output_dumbbellPlot_height
 
             x_input <- input$x.value
             y_input <- input$y.value
@@ -300,8 +298,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             } else {
                 fig <- generate_dumbbellPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

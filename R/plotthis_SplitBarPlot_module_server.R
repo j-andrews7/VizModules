@@ -390,8 +390,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Render the plot output
         output$SplitBarPlot <- renderPlotly({
-            width <- session$clientData$output_SplitBarPlot_width
-            height <- session$clientData$output_SplitBarPlot_height
 
             x_input <- input$x.data
             y_input <- input$y.data
@@ -414,8 +412,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             } else {
                 fig <- generate_SplitBarPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

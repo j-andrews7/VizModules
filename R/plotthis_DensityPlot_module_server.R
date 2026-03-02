@@ -14,7 +14,6 @@
 #' 
 #' @import shiny
 #' @import plotly
-#' @importFrom stats na.omit setNames
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -268,8 +267,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$DensityPlot <- renderPlotly({
-            width <- session$clientData$output_DensityPlot_width
-            height <- session$clientData$output_DensityPlot_height
 
             x_input <- input$x.data
 
@@ -286,8 +283,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             } else {
                 fig <- generate_DensityPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

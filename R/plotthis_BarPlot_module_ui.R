@@ -139,7 +139,6 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @import shiny
 #' @importFrom plotthis BarPlot
-#' @importFrom shinyBS bsTooltip
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews

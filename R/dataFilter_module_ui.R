@@ -9,7 +9,6 @@
 #' @return A Shiny `tagList` containing the DT table output.
 #'
 #' @import shiny
-#' @importFrom DT dataTableOutput
 #'
 #' @export
 #' @author Jacob Martin

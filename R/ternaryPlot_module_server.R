@@ -15,7 +15,6 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom stats na.omit setNames
 #'
 #' @seealso [VizModules::ternaryPlot()], [VizModules::ternaryPlotInputsUI()],
 #' [VizModules::ternaryPlotOutputUI()], [VizModules::ternaryPlotApp()]
@@ -242,13 +241,9 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$ternaryPlot <- renderPlotly({
-            width <- session$clientData$output_ternaryPlot_width
-            height <- session$clientData$output_ternaryPlot_height
             
             generate_ternaryPlot() %>%  
                 layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
         })

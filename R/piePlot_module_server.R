@@ -14,7 +14,6 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom stats na.omit setNames
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
@@ -189,13 +188,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$piePlot <- renderPlotly({
-            width <- session$clientData$output_piePlot_width
-            height <- session$clientData$output_piePlot_height
             
             generate_piePlot() %>%
                 layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
         })

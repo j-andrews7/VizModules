@@ -309,8 +309,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$linePlot <- renderPlotly({
-            width <- session$clientData$output_linePlot_width
-            height <- session$clientData$output_linePlot_height
             
             d <- data_reactive()
             x_input <- input$x.value
@@ -347,8 +345,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             } else {
                 fig <- generate_linePlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.8,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }

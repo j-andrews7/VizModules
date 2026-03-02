@@ -125,6 +125,12 @@ Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt
 Same options as x.adjustment and y.adjustment. Default: NULL.}
 
 \item{order.by}{Optional character vector, column name(s) to order data by before plotting. Default: NULL.}
+
+\item{error.colour}{hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+
+\item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+
+\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable}
 }
 \value{
 A plotly object representing the interactive line plot.

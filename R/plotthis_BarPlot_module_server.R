@@ -14,7 +14,6 @@
 #' @import plotly
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
-#' @importFrom stats aggregate
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -301,8 +300,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
-            width <- session$clientData$output_BarPlot_width
-            height <- session$clientData$output_BarPlot_height
 
             x_input <- input$x.data
             y_input <- input$y.data
@@ -325,9 +322,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BarPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
-                        margin = list(t = 50, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
 

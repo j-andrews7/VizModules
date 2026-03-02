@@ -106,6 +106,10 @@ The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameter
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
+\item \code{label.on.y.axis} - Show category labels on the Y axis instead of on the plot (UI: "Labels on Y axis", default: FALSE).
+When enabled, the text position slider is hidden and labels appear as Y-axis tick labels.
+\item \code{text.position} - Position of category labels along the X axis (UI: "Position of category labels", default: 0).
+Only visible when \code{label.on.y.axis} is FALSE.
 \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
 \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")

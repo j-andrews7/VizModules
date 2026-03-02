@@ -734,6 +734,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
+
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
                 # Layers with a single text element (length == 1) are typically background/other layers
@@ -793,13 +794,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            width <- session$clientData$output_scatterPlot_width
-            height <- session$clientData$output_scatterPlot_height
             
             generate_scatterPlot() %>%
                 layout(
-                    width = as.numeric(width),
-                    height = as.numeric(height) * 0.9,
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
         })
