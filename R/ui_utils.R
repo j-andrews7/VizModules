@@ -12,7 +12,6 @@
 #'   nested inside a tabsetPanel.
 #'
 #' @import shiny
-#' @importFrom methods is
 #' @export
 #'
 #' @author Jared Andrews

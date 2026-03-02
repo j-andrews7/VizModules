@@ -11,8 +11,6 @@
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
 #'
-#' @importFrom utils modifyList
-#'
 #' @author Jared Andrews
 #' @rdname INTERNAL_apply_subplot_axis_styling
 #' @keywords internal
@@ -103,8 +101,6 @@
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
 #'
-#' @importFrom stats lm coef
-#'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_linear_fit
 #' @keywords internal
@@ -157,8 +153,6 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#'
-#' @importFrom stats loess predict
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_loess_fit
@@ -1331,7 +1325,6 @@
 #'
 #' @rdname is_pure_type
 #' @seealso \code{\link[base]{for}}
-#' @importFrom base nzchar names length unique
 #' @export
 is_pure_type <- function(inputs, d) {
     cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
