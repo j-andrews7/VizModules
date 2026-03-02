@@ -199,7 +199,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-            sort.x <- "none"
+            sort.x <- NULL
             if (!isolate_fn(input$sort_x) == "") {
                 sort.x <- isolate_fn(input$sort_x)
             }
@@ -226,10 +226,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             fill.by <- NULL
-            if (group.by %in% num.choices){
+            if (!is.null(group.by) && group.by %in% num.choices) {
                 fill.by <- group.by
                 group.by <- NULL
-            } 
+            }
             p <- plotthis::BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
@@ -340,8 +340,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BoxPlot() %>%
                     layout(
-                        width = as.numeric(width),
-                        height = as.numeric(height) * 0.9,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
