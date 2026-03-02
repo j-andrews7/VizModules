@@ -199,7 +199,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-            sort.x <- "none"
+            sort.x <- NULL
             if (!isolate_fn(input$sort_x) == "") {
                 sort.x <- isolate_fn(input$sort_x)
             }
@@ -340,8 +340,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BoxPlot() %>%
                     layout(
-                        width = if (!is.null(width)) as.numeric(width) else NULL,
-                        height = if (!is.null(height)) as.numeric(height) * 0.9 else NULL,
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
