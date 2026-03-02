@@ -113,7 +113,7 @@
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
-#' @shinyBS tipify
+#' @importFrom shinyBS tipify
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -151,27 +151,38 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     defaults[["x.data"]], num.choices[2]
                 ),
                 choices = num.choices), documentParameters$x),
-            selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices))
+            tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
+                documentParameters$group_by)
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
+            tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
+                documentParameters$facet_by),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+                documentParameters$facet_scales),
+            tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+                documentParameters$facet_ncol),
+            tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+                documentParameters$facet_nrow),
+            tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
+                documentParameters$facet_byrow)
         ),
         "Aesthetics" = tagList(
-            numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
+            tipify(numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
+                documentParameters$alpha),
             uiOutput(ns("palette.selection")),
-            selectInput(ns("position"), "Position", selected = "identity",
-            choices = c("identity", "stack", "dodge", "fill")
-            )
+            tipify(selectInput(ns("position"), "Position", selected = "identity",
+                choices = c("identity", "stack", "dodge", "fill")
+            ), documentParameters$position)
         ),
         "Rug" = tagList(
-            materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-            numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-            sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-            numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05)
+            tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
+                documentParameters$add_bars),
+            tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
+                documentParameters$bar_height),
+            tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
+                documentParameters$bar_alpha),
+            tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
+                documentParameters$bar_width)
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
