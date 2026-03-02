@@ -162,6 +162,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom bslib tooltip
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -186,7 +187,10 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
+            tooltip(
+                selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
+                "TEST"
+            ),
             selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
             selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
             materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),

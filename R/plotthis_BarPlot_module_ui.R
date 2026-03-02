@@ -182,7 +182,6 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selectInput(ns("facet.by"), "Facet by:",
         selected = "", choices = c(char.choices, "")
         ),
-        # bsTooltip(id = ns("facet.by"), title = "TEST", placement = "bottom", trigger = "hover"),
         selectInput(ns("facet.scale"), "Facet scale:",
         selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
         ),

@@ -15,7 +15,6 @@
 #' @importFrom dittoViz yPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
-#' @importFrom shinyBS addTooltip
 #'
 #' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
 #' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotApp()]
@@ -24,8 +23,6 @@
 #' @author Jared Andrews, Jacob Martin
 dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
-
-    #ToolTips  
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
