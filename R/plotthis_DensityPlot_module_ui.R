@@ -113,6 +113,7 @@
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
+#' @shinyBS tipify
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -135,12 +136,21 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+    selected <- c("x", "group_by", "position", "alpha",
+            "add_bars", "bar_height", "bar_alpha", "bar_width",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
+
+    documentParameters <- .get_documentation(
+        package_name = "plotthis::DensityPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X Data", selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
+            tipify(selectInput(ns("x.data"), "X Data", selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
                     defaults[["x.data"]], num.choices[2]
                 ),
-                choices = num.choices),
+                choices = num.choices), documentParameters$x),
             selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices))
         ),
         "Facet" = tagList(
