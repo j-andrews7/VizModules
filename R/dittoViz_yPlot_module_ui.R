@@ -121,6 +121,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jared Andrews, Jacob Martin
@@ -143,73 +144,120 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
     min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
 
+    selected <- c("var", "group.by", "color.by", "shape.by",
+            "plots", "min", "max", "split.by", "split.nrow", "split.ncol",
+            "split.adjust", "do.raster", "raster.dpi",
+            "jitter.size", "jitter.width", "jitter.color",
+            "jitter.shape.legend.size", "jitter.shape.legend.show",
+            "boxplot.show.outliers", "boxplot.color", "boxplot.fill",
+            "boxplot.lineweight",
+            "vlnplot.lineweight", "vlnplot.scaling", "vlnplot.quantiles",
+            "ridgeplot.lineweight", "ridgeplot.scale",
+            "ridgeplot.ymax.expansion", "ridgeplot.shape",
+            "ridgeplot.bins", "ridgeplot.binwidth")
+
+    documentParameters <- .get_documentation(
+        package_name = "dittoViz::yPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("var"), "Y data (var)", choices = num.choices, selected = num.choices[2]),
-            selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
-            selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("var"), "Y data (var)", choices = num.choices, selected = num.choices[2]),
+                documentParameters$var, placement = "top"),
+            tipify(selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
+                documentParameters$group.by, placement = "top"),
+            tipify(selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
+                documentParameters$color.by, placement = "top"),
+            tipify(selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
+                documentParameters$shape.by, placement = "top"),
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
-            selectInput(
+            tipify(selectInput(
                 ns("plots"),
                 "Plots to show:",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
                 selected = c("boxplot", "jitter"), multiple = TRUE
-            ),
+            ), documentParameters$plots, placement = "top"),
             helpText("Order not currently respected")
         ),
         "Adjustments" = tagList(
-            numericInput(ns("y.max"), "Y Axis Max", value = max.y, min = -1000, max = 1000),
-            numericInput(ns("y.min"), "Y Axis Min", value = min.y, min = -1000, max = 1000),
-            materialSwitch(ns("do.raster"), "Rasterize Jitter", value = FALSE, status = "success"),
-            numericInput(ns("raster.dpi"), "Raster DPI", value = 600, min = 100, max = 1200)
+            tipify(numericInput(ns("y.max"), "Y Axis Max", value = max.y, min = -1000, max = 1000),
+                documentParameters$max, placement = "top"),
+            tipify(numericInput(ns("y.min"), "Y Axis Min", value = min.y, min = -1000, max = 1000),
+                documentParameters$min, placement = "top"),
+            tipify(materialSwitch(ns("do.raster"), "Rasterize Jitter", value = FALSE, status = "success"),
+                documentParameters$do.raster, placement = "top"),
+            tipify(numericInput(ns("raster.dpi"), "Raster DPI", value = 600, min = 100, max = 1200),
+                documentParameters$raster.dpi, placement = "top")
         ),
         "Jitter" = tagList(
-            numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1, value = 1),
-            numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.2, step = 0.05),
-            colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
-            numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
+            tipify(numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1, value = 1),
+                documentParameters$jitter.size, placement = "top"),
+            tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.2, step = 0.05),
+                documentParameters$jitter.width, placement = "top"),
+            tipify(colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color", value = "#000000"),
+                documentParameters$jitter.color, placement = "top"),
+            tipify(numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
                 value = 5, min = 0, max = 20),
-            materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
-                value = TRUE, status = "success")
+                documentParameters$jitter.shape.legend.size, placement = "top"),
+            tipify(materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
+                value = TRUE, status = "success"),
+                documentParameters$jitter.shape.legend.show, placement = "top")
         ),
         "Box" = tagList(
-            materialSwitch(ns("show.outliers"), "Show Outliers",
+            tipify(materialSwitch(ns("show.outliers"), "Show Outliers",
                 value = FALSE, status = "success"),
-            colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
-            materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
-            numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                documentParameters$boxplot.show.outliers, placement = "top"),
+            tipify(colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color", value = "#000000"),
+                documentParameters$boxplot.color, placement = "top"),
+            tipify(materialSwitch(ns("boxplot.fill"), "Fill Boxplot", value = TRUE, status = "success"),
+                documentParameters$boxplot.fill, placement = "top"),
+            tipify(numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                documentParameters$boxplot.lineweight, placement = "top"),
             numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),
             numericInput(ns("boxgroupgap"), "Boxplot Group Dodge", value = 0.2, min = 0, max = 1, step = 0.05)
         ),
         "Violin" = tagList(
-            numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
-            selectInput(ns("vlnplot.scaling"), "Violin Scaling",
+            tipify(numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                documentParameters$vlnplot.lineweight, placement = "top"),
+            tipify(selectInput(ns("vlnplot.scaling"), "Violin Scaling",
                 selected = "area",
                 choices = c("area", "count", "width")),
-            textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
-                value = "", placeholder = "e.g., 0.25, 0.5, 0.75")
+                documentParameters$vlnplot.scaling, placement = "top"),
+            tipify(textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
+                value = "", placeholder = "e.g., 0.25, 0.5, 0.75"),
+                documentParameters$vlnplot.quantiles, placement = "top")
         ),
         "Ridge" = tagList(
-            numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
-            numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)", value = 1.25, min = 0.5, max = 3),
-            numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
+            tipify(numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
+                documentParameters$ridgeplot.lineweight, placement = "top"),
+            tipify(numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)", value = 1.25, min = 0.5, max = 3),
+                documentParameters$ridgeplot.scale, placement = "top"),
+            tipify(numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
                 value = NA, min = 0, max = 1),
-            selectInput(ns("ridgeplot.shape"), "Ridge Shape",
+                documentParameters$ridgeplot.ymax.expansion, placement = "top"),
+            tipify(selectInput(ns("ridgeplot.shape"), "Ridge Shape",
                 selected = "smooth",
                 choices = c("smooth", "hist")),
-            numericInput(ns("ridgeplot.bins"), "Ridge Bins",
+                documentParameters$ridgeplot.shape, placement = "top"),
+            tipify(numericInput(ns("ridgeplot.bins"), "Ridge Bins",
                 value = 30, min = 5, max = 100),
-            numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
-                value = NULL, min = 0)
+                documentParameters$ridgeplot.bins, placement = "top"),
+            tipify(numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
+                value = NULL, min = 0),
+                documentParameters$ridgeplot.binwidth, placement = "top")
         ),
         "Facet" = tagList(
-            selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("split.adjust"), "Facet Scaling", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
-            selectInput(ns("split.ncol"), "Number of Columns", selected = 4, choices = c("", 1:10)),
-            selectInput(ns("split.nrow"), "Number of Rows", selected = 4, choices = c("", 1:10))
+            tipify(selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
+                documentParameters$split.by, placement = "top"),
+            tipify(selectInput(ns("split.adjust"), "Facet Scaling", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
+                documentParameters$split.adjust, placement = "top"),
+            tipify(selectInput(ns("split.ncol"), "Number of Columns", selected = 4, choices = c("", 1:10)),
+                documentParameters$split.ncol, placement = "top"),
+            tipify(selectInput(ns("split.nrow"), "Number of Rows", selected = 4, choices = c("", 1:10)),
+                documentParameters$split.nrow, placement = "top")
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

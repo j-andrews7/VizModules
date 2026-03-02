@@ -158,6 +158,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jared Andrews
@@ -187,39 +188,59 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
+    selected <- c("x.by", "y.by", "color.by", "shape.by", "split.by",
+            "rows.use", "x.adjustment", "y.adjustment", "color.adjustment",
+            "x.adj.fxn", "y.adj.fxn", "color.adj.fxn",
+            "size", "opacity", "show.others", "split.show.all.others",
+            "plot.order", "shape.panel",
+            "min.color", "max.color", "contour.color", "contour.linetype",
+            "split.nrow", "split.ncol", "multivar.split.dir",
+            "do.ellipse", "do.contour",
+            "hover.data", "hover.round.digits",
+            "legend.show", "legend.color.title", "legend.color.size",
+            "legend.shape.size", "legend.color.breaks",
+            "min.value", "max.value",
+            "trajectory.group.by", "add.trajectory.by.groups",
+            "trajectory.arrow.size")
+
+    documentParameters <- .get_documentation(
+        package_name = "dittoViz::scatterPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.by"), "X Data",
+            tipify(selectInput(ns("x.by"), "X Data",
                 choices = choices,
                 selected = ifelse("x.by" %in% names(defaults),
                     ifelse(defaults[["x.by"]] %in% choices, defaults[["x.by"]], choices[2]),
                     choices[2]
                 )
-            ),
-            selectInput(ns("y.by"), "Y Data",
+            ), documentParameters$x.by, placement = "top"),
+            tipify(selectInput(ns("y.by"), "Y Data",
                 choices = choices,
                 selected = ifelse("y.by" %in% names(defaults),
                     ifelse(defaults[["y.by"]] %in% choices, defaults[["y.by"]], choices[3]),
                     choices[3]
                 )
-            ),
-            selectInput(ns("color.by"), "Color By",
+            ), documentParameters$y.by, placement = "top"),
+            tipify(selectInput(ns("color.by"), "Color By",
                 choices = choices,
                 selected = ifelse("color.by" %in% names(defaults),
                     ifelse(defaults[["color.by"]] %in% choices, defaults[["color.by"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("shape.by"), "Shape By",
+            ), documentParameters$color.by, placement = "top"),
+            tipify(selectInput(ns("shape.by"), "Shape By",
                 choices = cat.choices,
                 selected = ifelse("shape.by" %in% names(defaults),
                     ifelse(defaults[["shape.by"]] %in% cat.choices, defaults[["shape.by"]], ""),
                     ""
                 )
-            ),
-            selectizeInput(ns("split.by"), "Split By",
+            ), documentParameters$shape.by, placement = "top"),
+            tipify(selectizeInput(ns("split.by"), "Split By",
                 choices = cat.choices,
                 selected = ifelse("split.by" %in% names(defaults),
                     ifelse(all(defaults[["split.by"]] %in% cat.choices), defaults[["split.by"]], ""),
@@ -227,65 +248,65 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ),
                 multiple = TRUE,
                 options = list(maxItems = 2)
-            ),
-            textInput(ns("rows.use"), "Rows Filter",
+            ), documentParameters$split.by, placement = "top"),
+            tipify(textInput(ns("rows.use"), "Rows Filter",
                 placeholder = "Filter expression, e.g. Sepal.Length > 5",
                 value = ifelse("rows.use" %in% names(defaults), defaults[["rows.use"]], "")
-            )
+            ), documentParameters$rows.use, placement = "top")
         ),
         "Adjustments" = tagList(
-            selectInput(ns("x.adjustment"), "X Adjustment",
+            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = ifelse("x.adjustment" %in% names(defaults),
                     ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("y.adjustment"), "Y Adjustment",
+            ), documentParameters$x.adjustment, placement = "top"),
+            tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
                 selected = ifelse("y.adjustment" %in% names(defaults),
                     ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("color.adjustment"), "Color Adjustment",
+            ), documentParameters$y.adjustment, placement = "top"),
+            tipify(selectInput(ns("color.adjustment"), "Color Adjustment",
                 choices = adj.choices,
                 selected = ifelse("color.adjustment" %in% names(defaults),
                     ifelse(defaults[["color.adjustment"]] %in% adj.choices, defaults[["color.adjustment"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("x.adj.fxn"), "X Adjustment Function",
+            ), documentParameters$color.adjustment, placement = "top"),
+            tipify(selectInput(ns("x.adj.fxn"), "X Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = ifelse("x.adj.fxn" %in% names(defaults),
                     ifelse(defaults[["x.adj.fxn"]] %in% adj.fxn.choices, defaults[["x.adj.fxn"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
+            ), documentParameters$x.adj.fxn, placement = "top"),
+            tipify(selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = ifelse("y.adj.fxn" %in% names(defaults),
                     ifelse(defaults[["y.adj.fxn"]] %in% adj.fxn.choices, defaults[["y.adj.fxn"]], ""),
                     ""
                 )
-            ),
-            selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
+            ), documentParameters$y.adj.fxn, placement = "top"),
+            tipify(selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = ifelse("color.adj.fxn" %in% names(defaults),
                     ifelse(defaults[["color.adj.fxn"]] %in% adj.fxn.choices, defaults[["color.adj.fxn"]], ""),
                     ""
                 )
-            )
+            ), documentParameters$color.adj.fxn, placement = "top")
         ),
         "Points" = tagList(
-            numericInput(ns("size"), "Point Size",
+            tipify(numericInput(ns("size"), "Point Size",
                 value = ifelse("size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["size"]]), defaults[["size"]], 1),
                     1
                 ),
                 min = 0.1
-            ),
-            numericInput(ns("opacity"), "Point Opacity",
+            ), documentParameters$size, placement = "top"),
+            tipify(numericInput(ns("opacity"), "Point Opacity",
                 value = ifelse("opacity" %in% names(defaults),
                     ifelse(is.numeric(defaults[["opacity"]]), defaults[["opacity"]], 1),
                     1
@@ -293,21 +314,21 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 max = 1,
                 min = 0,
                 step = 0.05
-            ),
-            checkboxInput(ns("show.others"), "Show Others",
+            ), documentParameters$opacity, placement = "top"),
+            tipify(checkboxInput(ns("show.others"), "Show Others",
                 value = ifelse("show.others" %in% names(defaults),
                     ifelse(is.logical(defaults[["show.others"]]), defaults[["show.others"]], TRUE),
                     TRUE
                 )
-            ),
-            checkboxInput(ns("split.show.all.others"),
+            ), documentParameters$show.others, placement = "top"),
+            tipify(checkboxInput(ns("split.show.all.others"),
                 "Show Split Others",
                 value = ifelse("split.show.all.others" %in% names(defaults),
                     ifelse(is.logical(defaults[["split.show.all.others"]]), defaults[["split.show.all.others"]], TRUE),
                     TRUE
                 )
-            ),
-            selectInput(ns("plot.order"), "Plot Order",
+            ), documentParameters$split.show.all.others, placement = "top"),
+            tipify(selectInput(ns("plot.order"), "Plot Order",
                 choices = c("unordered", "increasing", "decreasing", "randomize"),
                 selected = ifelse("plot.order" %in% names(defaults),
                     ifelse(defaults[["plot.order"]] %in% c(
@@ -315,30 +336,30 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ), defaults[["plot.order"]], "unordered"),
                     "unordered"
                 )
-            ),
-            textInput(ns("shape.panel"), "Shape Panel",
+            ), documentParameters$plot.order, placement = "top"),
+            tipify(textInput(ns("shape.panel"), "Shape Panel",
                 value = ifelse("shape.panel" %in% names(defaults),
                     defaults[["shape.panel"]], "16, 15, 17, 23, 25, 8"
                 )
-            )
+            ), documentParameters$shape.panel, placement = "top")
         ),
         "Colors" = tagList(
-            colourInput(ns("min.color"), "Min Color",
+            tipify(colourInput(ns("min.color"), "Min Color",
                 value = ifelse("min.color" %in% names(defaults),
                     defaults[["min.color"]], "#F0E442"
                 )
-            ),
-            colourInput(ns("max.color"), "Max Color",
+            ), documentParameters$min.color, placement = "top"),
+            tipify(colourInput(ns("max.color"), "Max Color",
                 value = ifelse("max.color" %in% names(defaults),
                     defaults[["max.color"]], "#0072B2"
                 )
-            ),
-            colourInput(ns("contour.color"), "Contour Color",
+            ), documentParameters$max.color, placement = "top"),
+            tipify(colourInput(ns("contour.color"), "Contour Color",
                 value = ifelse("contour.color" %in% names(defaults),
                     defaults[["contour.color"]], "black"
                 )
-            ),
-            selectInput(ns("contour.linetype"), "Contour Linetype",
+            ), documentParameters$contour.color, placement = "top"),
+            tipify(selectInput(ns("contour.linetype"), "Contour Linetype",
                 choices = c(
                     "solid", "dashed", "dotted", "dotdash",
                     "longdash", "twodash"
@@ -350,25 +371,25 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ), defaults[["contour.linetype"]], "solid"),
                     "solid"
                 )
-            ),
+            ), documentParameters$contour.linetype, placement = "top"),
             uiOutput(ns("color.panel.ui"))
         ),
         "Facets" = tagList(
-            numericInput(ns("split.nrow"), "Split Rows",
+            tipify(numericInput(ns("split.nrow"), "Split Rows",
                 step = 1, min = 0,
                 value = ifelse("split.nrow" %in% names(defaults) & is.numeric(defaults[["split.nrow"]]),
                     ifelse(is.numeric(defaults[["split.nrow"]]), defaults[["split.nrow"]], NA),
                     NA
                 )
-            ),
-            numericInput(ns("split.ncol"), "Split Columns",
+            ), documentParameters$split.nrow, placement = "top"),
+            tipify(numericInput(ns("split.ncol"), "Split Columns",
                 step = 1, min = 0,
                 value = ifelse("split.ncol" %in% names(defaults),
                     ifelse(is.numeric(defaults[["split.ncol"]]), defaults[["split.ncol"]], NA),
                     NA
                 )
-            ),
-            selectInput(ns("multivar.split.dir"), "Multivar Split Dir",
+            ), documentParameters$split.ncol, placement = "top"),
+            tipify(selectInput(ns("multivar.split.dir"), "Multivar Split Dir",
                 choices = c("col", "row"),
                 selected = ifelse("multivar.split.dir" %in% names(defaults),
                     ifelse(defaults[["multivar.split.dir"]] %in% c("col", "row"),
@@ -376,7 +397,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ),
                     "col"
                 )
-            ),
+            ), documentParameters$multivar.split.dir, placement = "top"),
             selectInput(ns("split.adjust.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = ifelse("split.adjust.scales" %in% names(defaults),
@@ -487,73 +508,73 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             actionButton(ns("annotation.clear"), "Clear Annotations")
         ),
         "Legend/Scale" = tagList(
-            checkboxInput(ns("legend.show"), "Show Legend",
+            tipify(checkboxInput(ns("legend.show"), "Show Legend",
                 value = ifelse("legend.show" %in% names(defaults),
                     ifelse(is.logical(defaults[["legend.show"]]), defaults[["legend.show"]], TRUE),
                     TRUE
                 )
-            ),
-            textInput(ns("legend.color.title"), "Legend Title",
+            ), documentParameters$legend.show, placement = "top"),
+            tipify(textInput(ns("legend.color.title"), "Legend Title",
                 value = ifelse("legend.color.title" %in% names(defaults),
                     defaults[["legend.color.title"]], "make"
                 )
-            ),
-            numericInput(ns("legend.color.size"), "Legend Color Size",
+            ), documentParameters$legend.color.title, placement = "top"),
+            tipify(numericInput(ns("legend.color.size"), "Legend Color Size",
                 min = 1,
                 value = ifelse("legend.color.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["legend.color.size"]]), defaults[["legend.color.size"]], 5),
                     5
                 )
-            ),
-            numericInput(ns("legend.shape.size"), "Legend Shape Size",
+            ), documentParameters$legend.color.size, placement = "top"),
+            tipify(numericInput(ns("legend.shape.size"), "Legend Shape Size",
                 min = 1,
                 value = ifelse("legend.shape.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["legend.shape.size"]]), defaults[["legend.shape.size"]], 5),
                     5
                 )
-            ),
-            textInput(ns("legend.color.breaks"), "Legend Tick Breaks",
+            ), documentParameters$legend.shape.size, placement = "top"),
+            tipify(textInput(ns("legend.color.breaks"), "Legend Tick Breaks",
                 placeholder = "e.g. -3, 0, 3",
                 value = ifelse("legend.color.breaks" %in% names(defaults),
                     ifelse(is.character(defaults[["legend.color.breaks"]]), defaults[["legend.color.breaks"]], ""),
                     ""
                 )
-            ),
-            numericInput(ns("min.value"), "Min Value",
+            ), documentParameters$legend.color.breaks, placement = "top"),
+            tipify(numericInput(ns("min.value"), "Min Value",
                 value = ifelse("min.value" %in% names(defaults),
                     ifelse(is.numeric(defaults[["min.value"]]), defaults[["min.value"]], NA),
                     NA
                 )
-            ),
-            numericInput(ns("max.value"), "Max Value",
+            ), documentParameters$min.value, placement = "top"),
+            tipify(numericInput(ns("max.value"), "Max Value",
                 value = ifelse("max.value" %in% names(defaults),
                     ifelse(is.numeric(defaults[["max.value"]]), defaults[["max.value"]], NA),
                     NA
                 )
-            )
+            ), documentParameters$max.value, placement = "top")
         ),
         "Trajectory" = tagList(
-            selectInput(ns("trajectory.group.by"), "Trajectory Group By",
+            tipify(selectInput(ns("trajectory.group.by"), "Trajectory Group By",
                 choices = cat.choices,
                 selected = ifelse("trajectory.group.by" %in% names(defaults),
                     ifelse(defaults[["trajectory.group.by"]] %in% cat.choices, defaults[["trajectory.group.by"]], ""),
                     ""
                 )
-            ),
-            textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
+            ), documentParameters$trajectory.group.by, placement = "top"),
+            tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
                 placeholder = "e.g. [A,B],[C,D,E]",
                 value = ifelse("add.trajectory.by.groups" %in% names(defaults),
                     defaults[["add.trajectory.by.groups"]], ""
                 )
-            ),
-            numericInput(ns("trajectory.arrow.size"), "Trajectory Arrow Size",
+            ), documentParameters$add.trajectory.by.groups, placement = "top"),
+            tipify(numericInput(ns("trajectory.arrow.size"), "Trajectory Arrow Size",
                 value = ifelse("trajectory.arrow.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["trajectory.arrow.size"]]), defaults[["trajectory.arrow.size"]], 0.15),
                     0.15
                 ),
                 min = 0,
                 step = 0.05
-            )
+            ), documentParameters$trajectory.arrow.size, placement = "top")
         ),
         "Plotly" = tagList(
             checkboxInput(ns("webgl"), "Plot with webGL",
@@ -606,34 +627,34 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             )
         ),
         "Extras" = tagList(
-            checkboxInput(ns("do.ellipse"), "Enable Ellipses",
+            tipify(checkboxInput(ns("do.ellipse"), "Enable Ellipses",
                 value = ifelse("do.ellipse" %in% names(defaults),
                     ifelse(is.logical(defaults[["do.ellipse"]]), defaults[["do.ellipse"]], FALSE),
                     FALSE
                 )
-            ),
-            checkboxInput(ns("do.contour"), "Enable Contour",
+            ), documentParameters$do.ellipse, placement = "top"),
+            tipify(checkboxInput(ns("do.contour"), "Enable Contour",
                 value = ifelse("do.contour" %in% names(defaults),
                     ifelse(is.logical(defaults[["do.contour"]]), defaults[["do.contour"]], FALSE),
                     FALSE
                 )
-            ),
-            selectizeInput(ns("hover.data"), "Hover Data",
+            ), documentParameters$do.contour, placement = "top"),
+            tipify(selectizeInput(ns("hover.data"), "Hover Data",
                 choices = choices,
                 multiple = TRUE,
                 selected = ifelse("hover.data" %in% names(defaults),
                     ifelse(all(defaults[["hover.data"]] %in% choices), defaults[["hover.data"]], ""),
                     ""
                 )
-            ),
-            numericInput(ns("hover.round.digits"), "Hover Round Digits",
+            ), documentParameters$hover.data, placement = "top"),
+            tipify(numericInput(ns("hover.round.digits"), "Hover Round Digits",
                 value = ifelse("hover.round.digits" %in% names(defaults),
                     ifelse(is.numeric(defaults[["hover.round.digits"]]), defaults[["hover.round.digits"]], 5),
                     5
                 ),
                 step = 1,
                 min = 1
-            )
+            ), documentParameters$hover.round.digits, placement = "top")
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults)
