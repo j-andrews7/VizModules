@@ -318,40 +318,43 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # to replace it with user-controlled positioning. This is necessary because
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
-            p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
+            
 
-            if (isTRUE(isolate_fn(input$label.on.y.axis))) {
-                # Show category labels on the Y axis by re-enabling axis text
-                # that plotthis::SplitBarPlot() hides internally
-                p <- p + ggplot2::theme(
-                    axis.text.y = ggplot2::element_text(),
-                    axis.ticks.y = ggplot2::element_line()
-                )
-            } else {
-                # Show category labels at the slider-controlled position
-                position <- isolate_fn(input$text.position)
-                lineheight <- 0.5
+            if (!isolate_fn(input$rotate)) {
+                p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
+                if (isTRUE(isolate_fn(input$label.on.y.axis))) {
+                    # Show category labels on the Y axis by re-enabling axis text
+                    # that plotthis::SplitBarPlot() hides internally
+                    p <- p + ggplot2::theme(
+                        axis.text.y = ggplot2::element_text(),
+                        axis.ticks.y = ggplot2::element_line()
+                    )
+                } else {
+                    # Show category labels at the slider-controlled position
+                    position <- isolate_fn(input$text.position)
+                    lineheight <- 0.5
 
-                p <- p + geom_text(
-                    aes(
-                        x = position, y = !!sym(y),
-                        label = ifelse(
-                            is.na(!!sym(y)), " NA ",
-                            ifelse(
-                                .data[[x]] >= 0,
-                                gsub("(\\n|$)", " \\1", !!sym(y)),
-                                gsub("(^|\\n)", "\\1 ", !!sym(y))
-                            )
+
+                    p <- p + geom_text(
+                        aes(
+                            x = position, y = !!sym(y),
+                            label = ifelse(
+                                is.na(!!sym(y)), " NA ",
+                                ifelse(
+                                    .data[[x]] >= 0,
+                                    gsub("(\\n|$)", " \\1", !!sym(y)),
+                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
+                                )
+                            ),
+                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
                         ),
-                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
-                    ),
-                    color = "black",
-                    lineheight = lineheight,
-                    inherit.aes = FALSE
-                ) +
-                ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                        color = "black",
+                        lineheight = lineheight,
+                        inherit.aes = FALSE
+                    ) +
+                    ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                }
             }
-
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
