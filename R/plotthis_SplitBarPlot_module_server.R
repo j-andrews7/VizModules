@@ -307,8 +307,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     }
                 }
             } else {
-                # Categorical fill_by: use individual color pickers, no palette
-                palette_arg <- NULL
+                # Categorical fill_by: use individual color pickers
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
                     isolate_fn(input$palette.colours),
