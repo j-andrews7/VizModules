@@ -317,43 +317,43 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="5346">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="5436">
 #>     <li class="active">
-#>       <a href="#tab-5346-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5436-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-5436-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-5436-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-5436-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-5436-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-5436-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-5436-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-5436-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5436-9" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5346-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-5436-10" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5346">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5346-1">
+#>   <div class="tab-content" data-tabsetid="5436">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5436-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify7727303">
 #>             <label class="control-label" id="yPlot-var-label" for="yPlot-var">Y data (var)</label>
 #>             <div>
 #>               <select id="yPlot-var" class="shiny-input-select"><option value=""></option>
@@ -371,20 +371,22 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-var">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7727303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string representing the name of a column of data_frame to be used as the primary, y-axis, data. Alternatively, a string vector naming multiple such columns of data to plot at once. See the input multivar.aes to understand or tweak how multiple var-data will be shown.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify3833707">
 #>             <label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by">Group by</label>
 #>             <div>
 #>               <select id="yPlot-group.by" class="shiny-input-select"><option value=""></option></select>
 #>               <script type="application/json" data-for="yPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3833707', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string representing the name of a column of data_frame containing discrete data to use for separating the data points into groups.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify9996524">
 #>             <label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by">Color by</label>
 #>             <div>
 #>               <select id="yPlot-color.by" class="shiny-input-select"><option value="" selected></option>
@@ -392,9 +394,10 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-color.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9996524', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string representing the name of a column of data_frame containing discrete data to use for setting data representation color fills. This data does not need to be the same as group.by, which is great for highlighting supersets or subgroups when wanted, but it defaults to group.by so the input can often be skipped.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify3492991">
 #>             <label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by">Shape by</label>
 #>             <div>
 #>               <select id="yPlot-shape.by" class="shiny-input-select"><option value="" selected></option>
@@ -402,6 +405,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-shape.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3492991', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string representing the name of a column of data_frame containing discrete data to use for setting shapes of the jitter points. When not provided, all jitter points will be dots.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -410,10 +414,10 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-5346-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-5436-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify9473182">
 #>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plots to show:</label>
 #>             <div>
 #>               <select id="yPlot-plots" class="shiny-input-select" multiple="multiple"><option value="vlnplot">Violin</option>
@@ -423,119 +427,133 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-plots">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9473182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector which sets the types of plots to include: possibilities = "jitter", "boxplot", "vlnplot", "ridgeplot". Order matters: c("vlnplot", "boxplot", "jitter") will put a violin plot in the back, boxplot in the middle, and then individual dots in the front. See details section for more info.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <span class="help-block">Order not currently respected</span>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5346-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-5436-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2161000">
 #>             <label class="control-label" id="yPlot-y.max-label" for="yPlot-y.max">Y Axis Max</label>
 #>             <input id="yPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2161000', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify320928">
 #>             <label class="control-label" id="yPlot-y.min-label" for="yPlot-y.min">Y Axis Min</label>
 #>             <input id="yPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-1000" max="1000"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify320928', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify1453159">
 #>             <div class="material-switch">
 #>               <label for="yPlot-do.raster" style="padding-right: 10px;">Rasterize Jitter</label>
 #>               <input id="yPlot-do.raster" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="yPlot-do.raster"></label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1453159', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. When set to TRUE, rasterizes the jitter plot layer, changing it from individually encoded points to a flattened set of pixels. This can be useful for editing in external programs (e.g. Illustrator) when there are many thousands of data points.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8543839">
 #>             <label class="control-label" id="yPlot-raster.dpi-label" for="yPlot-raster.dpi">Raster DPI</label>
 #>             <input id="yPlot-raster.dpi" type="number" class="shiny-input-number form-control" value="600" data-update-on="change" min="100" max="1200"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8543839', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number indicating dots/pixels per inch (dpi) to use for rasterization. Default = 300.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-5346-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-5436-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2131493">
 #>             <label class="control-label" id="yPlot-jitter.size-label" for="yPlot-jitter.size">Jitter Point Size</label>
 #>             <input id="yPlot-jitter.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="10"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2131493', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which sets the size of the jitter shapes.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2103108">
 #>             <label class="control-label" id="yPlot-jitter.width-label" for="yPlot-jitter.width">Jitter Width</label>
 #>             <input id="yPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.2" data-update-on="change" min="0" max="1" step="0.05"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2103108', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar that sets the width/spread of the jitter in the x direction. Ignored in ridgeplots. Note for when color.by is used to split x-axis groupings into additional bins: ggplot does not shrink jitter widths accordingly, so be sure to do so yourself! Ideally, needs to be 0.5/num_subgroups.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify395207">
 #>             <label class="control-label" for="yPlot-jitter.color">Jitter Point Color</label>
 #>             <input id="yPlot-jitter.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify395207', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String which sets the color of the jitter shapes'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify9447748">
 #>             <label class="control-label" id="yPlot-jitter.shape.legend.size-label" for="yPlot-jitter.shape.legend.size">Shape Legend Size</label>
 #>             <input id="yPlot-jitter.shape.legend.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" max="20"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9447748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which changes the size of the shape key in the legend. If set to NA, jitter.size is used.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2449280">
 #>             <div class="material-switch">
 #>               <label for="yPlot-jitter.shape.legend.show" style="padding-right: 10px;">Show Shape Legend</label>
 #>               <input id="yPlot-jitter.shape.legend.show" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="yPlot-jitter.shape.legend.show"></label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2449280', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical which sets whether the shapes legend will be shown when its shape is determined by shape.by.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-5346-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-5436-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify7811225">
 #>             <div class="material-switch">
 #>               <label for="yPlot-show.outliers" style="padding-right: 10px;">Show Outliers</label>
 #>               <input id="yPlot-show.outliers" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="yPlot-show.outliers"></label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7811225', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether outliers should by including in the boxplot. Default is FALSE when there is a jitter plotted, TRUE if there is no jitter.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2882372">
 #>             <label class="control-label" for="yPlot-boxplot.color">Boxplot Color</label>
 #>             <input id="yPlot-boxplot.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2882372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String which sets the color of the lines of the boxplot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8753579">
 #>             <div class="material-switch">
 #>               <label for="yPlot-boxplot.fill" style="padding-right: 10px;">Fill Boxplot</label>
 #>               <input id="yPlot-boxplot.fill" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="yPlot-boxplot.fill"></label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8753579', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether the boxplot should be filled in or not. Known bug: when boxplot fill is turned off, outliers do not render.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2957501">
 #>             <label class="control-label" id="yPlot-boxplot.lineweight-label" for="yPlot-boxplot.lineweight">Boxplot Line Weight</label>
 #>             <input id="yPlot-boxplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2957501', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which adjusts the thickness of boxplot lines.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -553,16 +571,17 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-5346-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-5436-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify9835254">
 #>             <label class="control-label" id="yPlot-vlnplot.lineweight-label" for="yPlot-vlnplot.lineweight">Violin Line Weight</label>
 #>             <input id="yPlot-vlnplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9835254', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which sets the thickness of the line that outlines the violin plots.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify5898375">
 #>             <label class="control-label" id="yPlot-vlnplot.scaling-label" for="yPlot-vlnplot.scaling">Violin Scaling</label>
 #>             <div>
 #>               <select id="yPlot-vlnplot.scaling" class="shiny-input-select"><option value="area" selected>area</option>
@@ -571,41 +590,46 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-vlnplot.scaling" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5898375', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String which sets how the widths of the of violin plots are set in relation to each other. Options are "area", "count", and "width". If the default is not right for your data, I recommend trying "width". For an explanation of each, see geom_violin.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify7591584">
 #>             <label class="control-label" id="yPlot-vlnplot.quantiles-label" for="yPlot-vlnplot.quantiles">Violin Quantiles (0-1)</label>
 #>             <input id="yPlot-vlnplot.quantiles" type="text" class="shiny-input-text form-control" value="" placeholder="e.g., 0.25, 0.5, 0.75" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7591584', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single number or numeric vector of values in [0,1] naming quantiles at which to draw a horizontal line within each violin plot. Example: c(0.1, 0.5, 0.9)'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-5346-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-5436-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8360753">
 #>             <label class="control-label" id="yPlot-ridgeplot.lineweight-label" for="yPlot-ridgeplot.lineweight">Ridge Line Weight</label>
 #>             <input id="yPlot-ridgeplot.lineweight" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="5" step="0.1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8360753', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which sets the thickness of the ridgeplot outline.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify7628194">
 #>             <label class="control-label" id="yPlot-ridgeplot.scale-label" for="yPlot-ridgeplot.scale">Ridge Scale (overlap)</label>
 #>             <input id="yPlot-ridgeplot.scale" type="number" class="shiny-input-number form-control" value="1.25" data-update-on="change" min="0.5" max="3"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7628194', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which sets the distance/overlap between ridgeplots. A value of 1 means the tallest density curve just touches the baseline of the next higher one. Higher numbers lead to greater overlap. Default = 1.25'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify4172699">
 #>             <label class="control-label" id="yPlot-ridgeplot.ymax.expansion-label" for="yPlot-ridgeplot.ymax.expansion">Ridge Y-max Expansion</label>
 #>             <input id="yPlot-ridgeplot.ymax.expansion" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4172699', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scalar which adjusts the minimal space between the topmost grouping and the top of the plot in order to ensure the curve is not cut off by the plotting grid. The larger the value, the greater the space requested. When left as NA, dittoViz will attempt to determine an ideal value itself based on the number of groups & linear interpolation between these goal posts: #groups of 3 or fewer: 0.6; #groups=12: 0.1; #groups or 34 or greater: 0.05.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify1380749">
 #>             <label class="control-label" id="yPlot-ridgeplot.shape-label" for="yPlot-ridgeplot.shape">Ridge Shape</label>
 #>             <div>
 #>               <select id="yPlot-ridgeplot.shape" class="shiny-input-select"><option value="smooth" selected>smooth</option>
@@ -613,27 +637,30 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-ridgeplot.shape" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1380749', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Either "smooth" or "hist", sets whether ridges will be smoothed (the typical, and default) versus rectangular like a histogram. (Note: as of the time shape "hist" was added, combination of jittered points is not supported by the stat_binline that dittoViz relies on.)'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify808450">
 #>             <label class="control-label" id="yPlot-ridgeplot.bins-label" for="yPlot-ridgeplot.bins">Ridge Bins</label>
 #>             <input id="yPlot-ridgeplot.bins" type="number" class="shiny-input-number form-control" value="30" data-update-on="change" min="5" max="100"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify808450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer which sets how many chunks to break the x-axis into when ridgeplot.shape = "hist". Overridden by ridgeplot.binwidth when that input is provided.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify6559826">
 #>             <label class="control-label" id="yPlot-ridgeplot.binwidth-label" for="yPlot-ridgeplot.binwidth">Ridge Binwidth</label>
 #>             <input id="yPlot-ridgeplot.binwidth" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6559826', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer which sets the width of chunks to break the x-axis into when ridgeplot.shape = "hist". Takes precedence over ridgeplot.bins when provided.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5346-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-5436-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify6020038">
 #>             <label class="control-label" id="yPlot-split.by-label" for="yPlot-split.by">Split by (facet)</label>
 #>             <div>
 #>               <select id="yPlot-split.by" class="shiny-input-select"><option value="" selected></option>
@@ -641,9 +668,10 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-split.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6020038', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': '1 or 2 strings denoting the name(s) of column(s) of data_frame containing discrete data to use for faceting / separating data points into separate plots. When 2 columns are named, c(row,col), the first is used as rows and the second is used for columns of the resulting facet grid. When 1 column is named, shape control can be achieved with split.nrow and split.ncol'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify6569958">
 #>             <label class="control-label" id="yPlot-split.adjust-label" for="yPlot-split.adjust">Facet Scaling</label>
 #>             <div>
 #>               <select id="yPlot-split.adjust" class="shiny-input-select"><option value="fixed">fixed</option>
@@ -653,11 +681,12 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-split.adjust" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6569958', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A named list which allows extra parameters to be pushed through to the faceting function call. List elements should be valid inputs to the faceting functions, e.g. `list(scales = "free")`. For options, when giving 1 column to split.by, see facet_wrap, OR when giving 2 columns to split.by, see facet_grid.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify3293172">
 #>             <label class="control-label" id="yPlot-split.ncol-label" for="yPlot-split.ncol">Number of Columns</label>
 #>             <div>
 #>               <select id="yPlot-split.ncol" class="shiny-input-select"><option value=""></option>
@@ -674,9 +703,10 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-split.ncol">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3293172', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify9794742">
 #>             <label class="control-label" id="yPlot-split.nrow-label" for="yPlot-split.nrow">Number of Rows</label>
 #>             <div>
 #>               <select id="yPlot-split.nrow" class="shiny-input-select"><option value=""></option>
@@ -693,10 +723,11 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>               <script type="application/json" data-for="yPlot-split.nrow">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9794742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5346-9">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5436-9">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -923,7 +954,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5346-10">
+#>     <div class="tab-pane" data-value="Lines" id="tab-5436-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
