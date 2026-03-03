@@ -66,6 +66,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
         }
 
+        fill_by_is_numeric <- reactive({
+            df <- data()
+            fill_col <- input$fill.by
+            if (!is.null(df) && !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
+                is.numeric(df[[fill_col]])
+            } else {
+                FALSE
+            }
+        })
+
         palette_groups <- reactive({
             df <- data()
             if (is.null(df)) {
@@ -88,22 +98,34 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         initialized <- reactiveVal(FALSE)
 
         output$palette.selection <- renderUI({
-            groups <- palette_groups()
-            if (length(groups) == 0) {
-                return(NULL)
+            if (fill_by_is_numeric()) {
+                # Numeric fill_by: show palette selector for gradient
+                palette_choices <- default_palettes()[["choices"]]
+                selectInput(
+                    ns("gradient.palette"),
+                    "Color palette",
+                    choices = palette_choices,
+                    selected = "Spectral"
+                )
+            } else {
+                # Categorical fill_by: show multi-color picker
+                groups <- palette_groups()
+                if (length(groups) == 0) {
+                    return(NULL)
+                }
+
+                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+                multiColorPicker(
+                    ns("palette.colours"),
+                    label = "Plot colors",
+                    groups = groups,
+                    palette_options = default_palettes()[["choices"]],
+                    selected_palette = default_palette_name,
+                    colors = initial_colors,
+                    compact = TRUE
+                )
             }
-
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
-
-            multiColorPicker(
-                ns("palette.colours"),
-                label = "Plot colors",
-                groups = groups,
-                palette_options = default_palettes()[["choices"]],
-                selected_palette = default_palette_name,
-                colors = initial_colors,
-                compact = TRUE
-            )
         })
 
         # Initialize y-axis range on startup
@@ -270,15 +292,31 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
-            palette_values <- resolve_palette(
-                isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
-            )
+
+            # Determine palette/palcolor based on fill_by type
             palcolor_arg <- NULL
-            if (!is.null(palette_values) && length(palette_values) > 0) {
-                palcolor_arg <- as.list(palette_values)
+            palette_arg <- "Spectral"
+            if (isolate_fn(fill_by_is_numeric())) {
+                # Numeric fill_by: use gradient palette
+                sel_palette <- isolate_fn(input$gradient.palette)
+                if (!is.null(sel_palette) && nzchar(sel_palette)) {
+                    pal_colors <- palette_lookup[[sel_palette]]
+                    if (!is.null(pal_colors) && length(pal_colors) > 0) {
+                        palette_arg <- pal_colors
+                    }
+                }
+            } else {
+                # Categorical fill_by: use individual color pickers
+                palette_values <- resolve_palette(
+                    isolate_fn(palette_groups()),
+                    isolate_fn(input$palette.colours),
+                    default_palette_values
+                )
+                if (!is.null(palette_values) && length(palette_values) > 0) {
+                    palcolor_arg <- as.list(palette_values)
+                }
             }
+
             alpha.by <- NULL
             if (!isolate_fn(input$alpha.by) == ""){
               alpha.by <- isolate_fn(input$alpha.by)
@@ -300,6 +338,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
                 palcolor = palcolor_arg,
+                palette = palette_arg,
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
                 theme = "theme_this",
