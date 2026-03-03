@@ -49,7 +49,8 @@
 #' @return A Shiny tagList containing the UI elements
 #'
 #' @import shiny
-#' 
+#' @importFrom shinyBS tipify
+#'
 #' @export
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
@@ -112,17 +113,19 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
     )
 
     extras <- tagList(
-        numericInput(ns("sig.thresh"), "Significance Threshold:",
+        tipify(numericInput(ns("sig.thresh"), "Significance Threshold:",
             value = defaults[["sig.thresh"]],
             max = 1,
             min = 0,
             step = 0.01
-        ),
-        numericInput(ns("fc.thresh"), "LFC Threshold (log2):",
+        ), "Significance threshold for grouping genes as Up/Down/n.s.",
+            placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("fc.thresh"), "LFC Threshold (log2):",
             value = defaults[["fc.thresh"]],
             min = 0,
             step = 0.25
-        ),
+        ), "Log2 fold change threshold for grouping genes as Up/Down/n.s.",
+            placement = "top", options = list(container = "body")),
         multiColorPicker(
             inputId = ns("volcano.colors"),
             label = "Group Colors",
