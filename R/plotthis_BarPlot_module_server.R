@@ -229,7 +229,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-            
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            }
+
             # Create ggplot theme arguments based on faceting and axis border settings
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             
@@ -245,7 +249,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palcolor = unname(palette_values),
+                palcolor = palcolor_arg,
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = "theme_this",

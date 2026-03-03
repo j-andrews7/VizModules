@@ -182,7 +182,11 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-            
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            }
+
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::AreaPlot(
@@ -192,7 +196,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 group_by = group.by,
                 theme = "theme_this",
                 theme_args = theme_args,
-                palcolor = unname(palette_values),
+                palcolor = palcolor_arg,
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
