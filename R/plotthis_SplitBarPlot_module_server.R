@@ -172,7 +172,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     updateNumericInput(session, "x.min", value = -x_range$max)
                 }
             }
-          updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
+          updateSliderInput(session, "text.position", min = 0, max = x_range$max)
         })
 
         # Reset functionality
@@ -271,7 +271,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!is.null(x_range)) {
                 updateNumericInput(session, "x.max", value = x_range$max)
                 updateNumericInput(session, "x.min", value = -x_range$max)
-                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
+                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
             }
         })
 
@@ -366,6 +366,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             if (!isolate_fn(input$rotate)) {
                 p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
+
                 if (isTRUE(isolate_fn(input$label.on.y.axis))) {
                     # Show category labels on the Y axis by re-enabling axis text
                     # that plotthis::SplitBarPlot() hides internally
@@ -374,14 +375,45 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         axis.ticks.y = ggplot2::element_line()
                     )
                 } else {
+                    # #Determining wether each y value is positive or negative 
+                    # y_down <- c()
+                    # y_up <- c()
+                    # for (i in seq_along(unique(data()[[x]]))){
+                    #     if (data()[[x]][i] > 0){
+                    #         y_up <- c(y_up, data()[[y]][i])
+                    #     } else {
+                    #         y_down <- c(y_down, data()[[y]][i])
+                    #     }
+                    # }
                     # Show category labels at the slider-controlled position
                     position <- isolate_fn(input$text.position)
                     lineheight <- 0.5
 
 
                     p <- p + geom_text(
+                        data = ~ dplyr::filter(.x, .data[[x]] >= 0),
                         aes(
                             x = position, y = !!sym(y),
+                            label = ifelse(
+                                is.na(!!sym(y)), " NA ",
+                                ifelse(
+                                    .data[[x]] >= 0,
+                                    gsub("(\\n|$)", " \\1", !!sym(y)),
+                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
+                                )
+                            ),
+                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                        ),
+                        color = "black",
+                        lineheight = lineheight,
+                        inherit.aes = FALSE
+                    ) +
+                    ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                    
+                    p <- p + geom_text(
+                        data = ~ dplyr::filter(.x, .data[[x]] < 0),
+                        aes(
+                            x = -position, y = !!sym(y),
                             label = ifelse(
                                 is.na(!!sym(y)), " NA ",
                                 ifelse(

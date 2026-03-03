@@ -203,7 +203,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             documentParameters$bar_height, placement = "top", options = list(container = "body")),
         sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
         materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
-        sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = -100, max = 100)
+        sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100)
 
     ),
 
