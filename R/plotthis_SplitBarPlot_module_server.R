@@ -302,13 +302,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             palcolor_arg <- NULL
             palette_arg <- default_gradient_palette
             if (isolate_fn(fill_by_is_numeric())) {
-                # Numeric fill_by: use gradient palette
+                # Numeric fill_by: pass palette name for gradient color scale
                 sel_palette <- isolate_fn(input$gradient.palette)
                 if (!is.null(sel_palette) && nzchar(sel_palette)) {
-                    pal_colors <- palette_lookup[[sel_palette]]
-                    if (!is.null(pal_colors) && length(pal_colors) > 0) {
-                        palette_arg <- pal_colors
-                    }
+                    palette_arg <- sel_palette
                 }
             } else {
                 # Categorical fill_by: use individual color pickers
