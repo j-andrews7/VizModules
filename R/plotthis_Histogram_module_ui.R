@@ -161,56 +161,56 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                     selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
                     defaults[["x.data"]], num.choices[2]
                 ),
-                choices = num.choices), documentParameters$x, placement = "top"),
+                choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
-                documentParameters$group_by, placement = "top")
+                documentParameters$group_by, placement = "top", options = list(container = "body"))
         ),
 
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-                documentParameters$facet_by, placement = "top"),
+                documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-                documentParameters$facet_scales, placement = "top"),
+                documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-                documentParameters$facet_ncol, placement = "top"),
+                documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-                documentParameters$facet_nrow, placement = "top"),
+                documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
-                documentParameters$facet_byrow, placement = "top")
+                documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             tipify(numericInput(ns("bins"), "Number of Bins", value = NA, min = 0),
-                documentParameters$bins, placement = "top"),
+                documentParameters$bins, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("bin.width"), "Bin Width", value = NA, min = 0),
-                documentParameters$binwidth, placement = "top"),
+                documentParameters$binwidth, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("use.trend"), "Trend Line Only", value = FALSE, status = "success"),
-                documentParameters$use_trend, placement = "top"),
+                documentParameters$use_trend, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("trend.skip.zero"), "Skip Zero Values", value = FALSE, status = "success"),
-                documentParameters$trend_skip_zero, placement = "top"),
+                documentParameters$trend_skip_zero, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("add.trend"), "Add Trend to Histogram", value = FALSE, status = "success"),
-                documentParameters$add_trend, placement = "top"),
+                documentParameters$add_trend, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("trend.alpha"), "Trend Line Alpha", min = 0, max = 1, value = 1),
-                documentParameters$trend_alpha, placement = "top"),
+                documentParameters$trend_alpha, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
-                documentParameters$trend_linewidth, placement = "top"),
+                documentParameters$trend_linewidth, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
-                documentParameters$trend_pt_size, placement = "top"),
+                documentParameters$trend_pt_size, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
-                documentParameters$alpha, placement = "top"),
+                documentParameters$alpha, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
             tipify(selectInput(ns("position"), "Position", selected = "identity",
                 choices = c("identity", "stack", "dodge", "fill")
-            ), documentParameters$position, placement = "top")
+            ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
             tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-                documentParameters$add_bars, placement = "top"),
+                documentParameters$add_bars, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-                documentParameters$bar_height, placement = "top"),
+                documentParameters$bar_height, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-                documentParameters$bar_alpha, placement = "top"),
+                documentParameters$bar_alpha, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
-                documentParameters$bar_width, placement = "top")
+                documentParameters$bar_width, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

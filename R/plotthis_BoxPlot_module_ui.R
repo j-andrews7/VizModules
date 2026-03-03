@@ -199,11 +199,11 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
-                documentParameters$x, placement = "top"),
+                documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
-                documentParameters$y, placement = "top"),
+                documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
-                documentParameters$group_by, placement = "top"),
+                documentParameters$group_by, placement = "top", options = list(container = "body")),
             materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
             uiOutput(ns("palette.selection"))
         ),
@@ -212,43 +212,43 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
                 "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"
-            )), documentParameters$sort_x, placement = "top"),
+            )), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
-                documentParameters$y_max, placement = "top"),
+                documentParameters$y_max, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),
-                documentParameters$y_min, placement = "top"),
+                documentParameters$y_min, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
-                documentParameters$add_point, placement = "top"),
+                documentParameters$add_point, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
-                documentParameters$pt_size, placement = "top"),
+                documentParameters$pt_size, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
-                documentParameters$pt_alpha, placement = "top"),
+                documentParameters$pt_alpha, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.3, step = 0.05),
-                documentParameters$jitter_width, placement = "top"),
+                documentParameters$jitter_width, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000"),
-                documentParameters$pt_color, placement = "top")
+                documentParameters$pt_color, placement = "top", options = list(container = "body"))
         ),
         "Highlight" = tagList(
             tipify(textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. col name > 0"),
-                documentParameters$highlight, placement = "top"),
+                documentParameters$highlight, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
-                documentParameters$highlight_color, placement = "top"),
+                documentParameters$highlight_color, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
-                documentParameters$highlight_size, placement = "top"),
+                documentParameters$highlight_size, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1),
-                documentParameters$highlight_alpha, placement = "top")
+                documentParameters$highlight_alpha, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
-                documentParameters$facet_by, placement = "top"),
+                documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-                documentParameters$facet_scales, placement = "top"),
+                documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
-                documentParameters$facet_ncol, placement = "top"),
+                documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
-                documentParameters$facet_nrow, placement = "top"),
+                documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
-                documentParameters$facet_byrow, placement = "top")
+                documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
