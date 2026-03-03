@@ -60,6 +60,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         ns <- session$ns
         default_palette_name <- "dittoColors"
+        default_gradient_palette <- "Spectral"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
@@ -105,7 +106,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = "Spectral"
+                    selected = default_gradient_palette
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
@@ -295,7 +296,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Determine palette/palcolor based on fill_by type
             palcolor_arg <- NULL
-            palette_arg <- "Spectral"
+            palette_arg <- default_gradient_palette
             if (isolate_fn(fill_by_is_numeric())) {
                 # Numeric fill_by: use gradient palette
                 sel_palette <- isolate_fn(input$gradient.palette)
@@ -306,7 +307,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     }
                 }
             } else {
-                # Categorical fill_by: use individual color pickers
+                # Categorical fill_by: use individual color pickers, no palette
+                palette_arg <- NULL
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
                     isolate_fn(input$palette.colours),
