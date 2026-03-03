@@ -101,7 +101,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         output$palette.selection <- renderUI({
             if (fill_by_is_numeric()) {
                 # Numeric fill_by: show palette selector for gradient
-                palette_choices <- default_palettes()[["choices"]]
+                # Build choices with palette names as values (selectInput needs atomic values)
+                raw_choices <- default_palettes()[["choices"]]
+                palette_choices <- lapply(raw_choices, function(group) {
+                    stats::setNames(names(group), names(group))
+                })
                 selectInput(
                     ns("gradient.palette"),
                     "Color palette",
