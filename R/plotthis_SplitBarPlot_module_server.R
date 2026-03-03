@@ -376,22 +376,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     )
                 } else {
                     # #Determining wether each y value is positive or negative 
-                    # y_down <- c()
-                    # y_up <- c()
-                    # for (i in seq_along(unique(data()[[x]]))){
-                    #     if (data()[[x]][i] > 0){
-                    #         y_up <- c(y_up, data()[[y]][i])
-                    #     } else {
-                    #         y_down <- c(y_down, data()[[y]][i])
-                    #     }
-                    # }
-                    # Show category labels at the slider-controlled position
+                    # Show category labels at the slider-controlled position on the x axis
                     position <- isolate_fn(input$text.position)
                     lineheight <- 0.5
 
 
                     p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] >= 0),
+                        data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers 
                         aes(
                             x = position, y = !!sym(y),
                             label = ifelse(
@@ -411,9 +402,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                     
                     p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] < 0),
+                        data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers 
                         aes(
-                            x = -position, y = !!sym(y),
+                            x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction 
                             label = ifelse(
                                 is.na(!!sym(y)), " NA ",
                                 ifelse(
