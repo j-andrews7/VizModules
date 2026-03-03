@@ -150,39 +150,39 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(selectInput(ns("x.data"), "X Data", selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
                     defaults[["x.data"]], num.choices[2]
                 ),
-                choices = num.choices), documentParameters$x, placement = "top"),
+                choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
-                documentParameters$group_by, placement = "top")
+                documentParameters$group_by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-                documentParameters$facet_by, placement = "top"),
+                documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-                documentParameters$facet_scales, placement = "top"),
+                documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-                documentParameters$facet_ncol, placement = "top"),
+                documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-                documentParameters$facet_nrow, placement = "top"),
+                documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
-                documentParameters$facet_byrow, placement = "top")
+                documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             tipify(numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
-                documentParameters$alpha, placement = "top"),
+                documentParameters$alpha, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
             tipify(selectInput(ns("position"), "Position", selected = "identity",
                 choices = c("identity", "stack", "dodge", "fill")
-            ), documentParameters$position, placement = "top")
+            ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
             tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-                documentParameters$add_bars, placement = "top"),
+                documentParameters$add_bars, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-                documentParameters$bar_height, placement = "top"),
+                documentParameters$bar_height, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-                documentParameters$bar_alpha, placement = "top"),
+                documentParameters$bar_alpha, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
-                documentParameters$bar_width, placement = "top")
+                documentParameters$bar_width, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
