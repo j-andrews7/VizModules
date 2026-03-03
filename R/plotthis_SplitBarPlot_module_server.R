@@ -275,6 +275,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            }
             alpha.by <- NULL
             if (!isolate_fn(input$alpha.by) == ""){
               alpha.by <- isolate_fn(input$alpha.by)
@@ -295,7 +299,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palcolor = unname(palette_values),
+                palcolor = palcolor_arg,
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
                 theme = "theme_this",
