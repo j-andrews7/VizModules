@@ -400,28 +400,28 @@ library(VizModules)
 data(mtcars)
 plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="3626">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="6254">
 #>     <li class="active">
-#>       <a href="#tab-3626-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6254-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3626-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6254-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3626-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-6254-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3626-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6254-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3626-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6254-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3626-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6254-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3626">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3626-1">
+#>   <div class="tab-content" data-tabsetid="6254">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6254-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5459154">
@@ -472,21 +472,12 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-3626-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6254-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6476439">
 #>             <label class="control-label" id="ViolinPlot-sort_x-label" for="ViolinPlot-sort_x">Sort X By</label>
-#>             <div>
-#>               <select id="ViolinPlot-sort_x" class="shiny-input-select"><option value="none" selected>none</option>
-#> <option value="mean_asc">mean_asc</option>
-#> <option value="mean_desc">mean_desc</option>
-#> <option value="mean">mean</option>
-#> <option value="median_asc">median_asc</option>
-#> <option value="median_desc">median_desc</option>
-#> <option value="median">median</option></select>
-#>               <script type="application/json" data-for="ViolinPlot-sort_x" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
+#>             <input id="ViolinPlot-sort_x" type="text" class="shiny-input-text form-control" value="" placeholder="mean(y) or mean(-y)" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6476439', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the sorting of x-axis, chosen from "none", "mean_asc", "mean_desc", "mean", "median_asc", "median_desc", "median". none means no sorting (as-is). mean_asc sorts the x-axis by ascending mean of y-values. mean_desc sorts the x-axis by descending mean of y-values. mean is an alias for mean_asc. median_asc sorts the x-axis by ascending median of y-values. median_desc sorts the x-axis by descending median of y-values. median is an alias for median_asc.'})}, 500)});</script>
 #>         </div>
@@ -594,7 +585,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-3626-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-6254-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify990097">
@@ -628,7 +619,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-3626-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6254-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9349984">
@@ -684,7 +675,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3626-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6254-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -919,7 +910,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3626-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6254-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

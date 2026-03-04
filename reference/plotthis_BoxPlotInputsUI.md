@@ -391,28 +391,28 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="7024">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="6964">
 #>     <li class="active">
-#>       <a href="#tab-7024-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6964-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7024-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6964-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7024-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-6964-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7024-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6964-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7024-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6964-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7024-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6964-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7024">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7024-1">
+#>   <div class="tab-content" data-tabsetid="6964">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6964-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8809331">
@@ -475,7 +475,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7024-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6964-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1454074">
@@ -486,17 +486,8 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4511203">
-#>             <label class="control-label" id="BoxPlot-sort_x-label" for="BoxPlot-sort_x">Sort X by</label>
-#>             <div>
-#>               <select id="BoxPlot-sort_x" class="shiny-input-select"><option value="" selected></option>
-#> <option value="mean_asc">mean_asc</option>
-#> <option value="mean_desc">mean_desc</option>
-#> <option value="mean">mean</option>
-#> <option value="median_asc">median_asc</option>
-#> <option value="median_desc">median_desc</option>
-#> <option value="median">median</option></select>
-#>               <script type="application/json" data-for="BoxPlot-sort_x">{"plugins":["selectize-plugin-a11y"]}</script>
-#>             </div>
+#>             <label class="control-label" id="BoxPlot-sort_x-label" for="BoxPlot-sort_x">Sort X By</label>
+#>             <input id="BoxPlot-sort_x" type="text" class="shiny-input-text form-control" value="" placeholder="mean(y data col name)" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4511203', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the sorting of x-axis, chosen from "none", "mean_asc", "mean_desc", "mean", "median_asc", "median_desc", "median". none means no sorting (as-is). mean_asc sorts the x-axis by ascending mean of y-values. mean_desc sorts the x-axis by descending mean of y-values. mean is an alias for mean_asc. median_asc sorts the x-axis by ascending median of y-values. median_desc sorts the x-axis by descending median of y-values. median is an alias for median_asc.'})}, 500)});</script>
 #>         </div>
@@ -562,7 +553,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-7024-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-6964-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6511186">
@@ -596,7 +587,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7024-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6964-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1090488">
@@ -652,7 +643,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7024-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6964-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -887,7 +878,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7024-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6964-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
