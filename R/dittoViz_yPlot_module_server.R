@@ -272,10 +272,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 default_palette_values
             )
 
-            # dittoViz yPlot expects color.panel to be a vector of colors
+            # Keep names so scale_fill_manual matches colors to groups by name,
+            # making the mapping independent of positional order.
             color.panel.arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
-                color.panel.arg <- as.vector(palette_values)
+                color.panel.arg <- palette_values
             }
 
             # Set default color.by to group.by if not specified
