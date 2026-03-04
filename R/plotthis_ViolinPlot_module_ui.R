@@ -211,10 +211,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            tipify(shiny::selectInput(ns("sort_x"), "Sort X By", c(
-                "none", "mean_asc", "mean_desc", "mean", "median_asc",
-                "median_desc", "median"
-            ), selected = "none"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+            tipify(shiny::textInput(ns("sort_x"), "Sort X By", value = "", placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Y Max", value = max.y),
                 documentParameters$y_max, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.min"), "Y Min", value = min.y),
