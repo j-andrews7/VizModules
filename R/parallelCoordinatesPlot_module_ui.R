@@ -89,7 +89,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         "tick.font.size", "tick.font.color", "tick.font.family",
         "title.font.size", "title.font.family", "title.text.color", "bgcolor")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::parallelCoordinatesPlot", type = "param",
         selected = selected, cap = TRUE
     )

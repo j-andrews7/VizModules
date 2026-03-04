@@ -68,7 +68,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
     selected <- c("x", "y", "x.adjustment", "colour.by",
         "facet.by", "facet.scales", "line.colour")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::dumbbellPlot", type = "param",
         selected = selected, cap = TRUE
     )

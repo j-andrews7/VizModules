@@ -150,7 +150,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
             "add_bars", "bar_height", "bar_alpha", "bar_width",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::Histogram", type = "param",
         selected = selected, cap = TRUE
     )

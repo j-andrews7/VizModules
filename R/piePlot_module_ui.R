@@ -84,7 +84,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "show.legend", "legend.orientation", "legend.font.family",
         "legend.font.size", "legend.font.color")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::piePlot", type = "param",
         selected = selected, cap = TRUE
     )

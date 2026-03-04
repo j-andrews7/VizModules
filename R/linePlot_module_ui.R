@@ -111,7 +111,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
         "plot.mode", "line.type", "error.colour", "error.width")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::linePlot", type = "param",
         selected = selected, cap = TRUE
     )

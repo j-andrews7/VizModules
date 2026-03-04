@@ -203,7 +203,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             "trajectory.group.by", "add.trajectory.by.groups",
             "trajectory.arrow.size")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "dittoViz::scatterPlot", type = "param",
         selected = selected, cap = TRUE
     )

@@ -195,7 +195,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             "highlight", "highlight_color", "highlight_size", "highlight_alpha",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::ViolinPlot", type = "param",
         selected = selected, cap = TRUE
     )

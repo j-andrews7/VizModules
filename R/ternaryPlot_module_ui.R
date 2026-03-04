@@ -107,7 +107,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "show.legend", "legend.orientation", "legend.font.family",
         "legend.font.size", "legend.font.color", "bgcolor")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::ternaryPlot", type = "param",
         selected = selected, cap = TRUE
     )

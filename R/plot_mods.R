@@ -1349,3 +1349,99 @@ is_pure_type <- function(inputs, d) {
     TRUE
 }
 
+#' Extract parameter documentation from an R function help page
+#'
+#' Parses the Rd documentation for a given function and extracts
+#' parameter descriptions for specified parameter names.
+#'
+#' @param package_name A string in the format "package::function" indicating
+#'   which function's documentation to parse.
+#' @param type The type of documentation section to extract. Currently only
+#'   "param" is supported.
+#' @param selected A character vector of parameter names to extract.
+#' @param cap Logical; if TRUE, capitalize the first letter of each description.
+#'
+#' @return A named list where names are parameter names and values are
+#'   their documentation strings. Returns empty strings for parameters
+#'   not found in the documentation.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @export
+get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
+    # Parse package::function format
+    parts <- strsplit(package_name, "::")[[1]]
+    if (length(parts) != 2) {
+        stop("package_name must be in 'package::function' format")
+    }
+
+    if (type != "param") {
+        stop("Only 'param' type is currently supported")
+    }
+
+    pkg <- parts[1]
+    fn <- parts[2]
+
+    result <- stats::setNames(
+        as.list(rep("", length(selected))),
+        selected
+    )
+
+    tryCatch({
+        # Get the Rd database for the package and find the relevant topic
+        rd_db <- tools::Rd_db(pkg)
+        rd <- NULL
+        for (rd_name in names(rd_db)) {
+            rd_obj <- rd_db[[rd_name]]
+            # Check if any \\alias matches the function name
+            for (item in rd_obj) {
+                tag <- attr(item, "Rd_tag")
+                if (!is.null(tag) && tag == "\\alias") {
+                    alias <- paste(unlist(item), collapse = "")
+                    if (trimws(alias) == fn) {
+                        rd <- rd_obj
+                        break
+                    }
+                }
+            }
+            if (!is.null(rd)) break
+        }
+
+        if (is.null(rd)) {
+            warning(paste("Could not find documentation for", package_name))
+            return(result)
+        }
+
+        # Find \\arguments sections
+        for (item in rd) {
+            tag <- attr(item, "Rd_tag")
+            if (!is.null(tag) && tag == "\\arguments") {
+                # Each child of \\arguments is an \\item
+                for (arg_item in item) {
+                    arg_tag <- attr(arg_item, "Rd_tag")
+                    if (!is.null(arg_tag) && arg_tag == "\\item") {
+                        # First element is param name, rest is description
+                        if (length(arg_item) >= 2) {
+                            param_name <- paste(unlist(arg_item[[1]]), collapse = "")
+                            param_desc <- paste(unlist(arg_item[[2]]), collapse = "")
+                            param_desc <- trimws(gsub("\\s+", " ", param_desc))
+
+                            if (param_name %in% selected) {
+                                if (cap && nzchar(param_desc)) {
+                                    param_desc <- paste0(
+                                        toupper(substring(param_desc, 1, 1)),
+                                        substring(param_desc, 2)
+                                    )
+                                }
+                                result[[param_name]] <- param_desc
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }, error = function(e) {
+        warning(paste("Could not extract documentation for", package_name, ":", e$message))
+    })
+
+    result
+}

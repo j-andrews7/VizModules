@@ -96,7 +96,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
         "show.legend", "legend.orientation", "legend.font.family",
         "legend.font.size", "legend.font.color", "bgcolor", "polar.bgcolor")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "VizModules::radarPlot", type = "param",
         selected = selected, cap = TRUE
     )

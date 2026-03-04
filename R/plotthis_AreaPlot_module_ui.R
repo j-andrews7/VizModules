@@ -133,7 +133,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
             "alpha")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::AreaPlot", type = "param",
         selected = selected, cap = TRUE
     )

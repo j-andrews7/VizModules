@@ -151,7 +151,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
             "facet_byrow", "split_by", "x_min", "x_max")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::SplitBarPlot", type = "param",
         selected = selected, cap = TRUE
     )
