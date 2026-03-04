@@ -153,6 +153,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "vline.widths", value = "1")
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
         })
 
 
