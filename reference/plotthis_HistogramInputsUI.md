@@ -311,31 +311,31 @@ library(VizModules)
 data(mtcars)
 plotthis_HistogramInputsUI("histogram", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="2402">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="7056">
 #>     <li class="active">
-#>       <a href="#tab-2402-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7056-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2402-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7056-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2402-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7056-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2402-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-7056-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2402-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7056-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2402-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7056-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2402">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2402-1">
+#>   <div class="tab-content" data-tabsetid="7056">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7056-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3072738">
+#>           <div class="form-group shiny-input-container" id="tipify6000373">
 #>             <label class="control-label" id="histogram-x.data-label" for="histogram-x.data">X Data</label>
 #>             <div>
 #>               <select id="histogram-x.data" class="shiny-input-select"><option value=""></option>
@@ -353,10 +353,10 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>               <script type="application/json" data-for="histogram-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3072738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6000373', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9931180">
+#>           <div class="form-group shiny-input-container" id="tipify4327882">
 #>             <label class="control-label" id="histogram-group.by-label" for="histogram-group.by">Group By</label>
 #>             <div>
 #>               <select id="histogram-group.by" class="shiny-input-select"><option value="" selected></option>
@@ -364,14 +364,14 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>               <script type="application/json" data-for="histogram-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9931180', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using group_by_sep as the separator'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4327882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using group_by_sep as the separator'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2402-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7056-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1163092">
+#>           <div class="form-group shiny-input-container" id="tipify9202758">
 #>             <label class="control-label" id="histogram-facet.by-label" for="histogram-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="histogram-facet.by" class="shiny-input-select"><option value="" selected></option>
@@ -379,10 +379,10 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>               <script type="application/json" data-for="histogram-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1163092', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9202758', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7154231">
+#>           <div class="form-group shiny-input-container" id="tipify6160144">
 #>             <label class="control-label" id="histogram-facet.scale-label" for="histogram-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select id="histogram-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
@@ -392,119 +392,119 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>               <script type="application/json" data-for="histogram-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7154231', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6160144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2261088">
+#>           <div class="form-group shiny-input-container" id="tipify4357182">
 #>             <label class="control-label" id="histogram-facet.ncol-label" for="histogram-facet.ncol">Number of Columns</label>
 #>             <input id="histogram-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2261088', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4357182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1333486">
+#>           <div class="form-group shiny-input-container" id="tipify8973044">
 #>             <label class="control-label" id="histogram-facet.nrow-label" for="histogram-facet.nrow">Number of Rows</label>
 #>             <input id="histogram-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1333486', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8973044', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9272817">
+#>           <div class="form-group shiny-input-container" id="tipify7690135">
 #>             <div class="material-switch">
 #>               <label for="histogram-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="histogram-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="histogram-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7690135', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2402-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7056-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8941226">
+#>           <div class="form-group shiny-input-container" id="tipify1281158">
 #>             <label class="control-label" id="histogram-bins-label" for="histogram-bins">Number of Bins</label>
 #>             <input id="histogram-bins" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of bins for the histogram.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1281158', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of bins for the histogram.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2036644">
+#>           <div class="form-group shiny-input-container" id="tipify5386331">
 #>             <label class="control-label" id="histogram-bin.width-label" for="histogram-bin.width">Bin Width</label>
 #>             <input id="histogram-bin.width" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bins for the histogram.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5386331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bins for the histogram.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2569829">
+#>           <div class="form-group shiny-input-container" id="tipify1290163">
 #>             <div class="material-switch">
 #>               <label for="histogram-use.trend" style="padding-right: 10px;">Trend Line Only</label>
 #>               <input id="histogram-use.trend" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-use.trend"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, use trend line instead of histogram.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1290163', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, use trend line instead of histogram.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6140056">
+#>           <div class="form-group shiny-input-container" id="tipify5109649">
 #>             <div class="material-switch">
 #>               <label for="histogram-trend.skip.zero" style="padding-right: 10px;">Skip Zero Values</label>
 #>               <input id="histogram-trend.skip.zero" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-trend.skip.zero"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, skip the zero count when drawing the trend line.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5109649', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, skip the zero count when drawing the trend line.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4414992">
+#>           <div class="form-group shiny-input-container" id="tipify5437927">
 #>             <div class="material-switch">
 #>               <label for="histogram-add.trend" style="padding-right: 10px;">Add Trend to Histogram</label>
 #>               <input id="histogram-add.trend" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-add.trend"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add trend line to the histogram.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5437927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add trend line to the histogram.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3155947">
+#>           <div class="form-group shiny-input-container" id="tipify2417761">
 #>             <label class="control-label" id="histogram-trend.alpha-label" for="histogram-trend.alpha">Trend Line Alpha</label>
 #>             <input class="js-range-slider" id="histogram-trend.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the trend line and points'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2417761', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the trend line and points'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1013138">
+#>           <div class="form-group shiny-input-container" id="tipify8031441">
 #>             <label class="control-label" id="histogram-trend.linewidth-label" for="histogram-trend.linewidth">Trend Line Width</label>
 #>             <input id="histogram-trend.linewidth" type="number" class="shiny-input-number form-control" value="0.8" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the trend line'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8031441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the trend line'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2726462">
+#>           <div class="form-group shiny-input-container" id="tipify9479137">
 #>             <label class="control-label" id="histogram-trend.pt.size-label" for="histogram-trend.pt.size">Trend Point Size</label>
 #>             <input id="histogram-trend.pt.size" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the size of the trend points'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9479137', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the size of the trend points'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6536994">
+#>           <div class="form-group shiny-input-container" id="tipify4073614">
 #>             <label class="control-label" id="histogram-plot.alpha-label" for="histogram-plot.alpha">Plot Alpha</label>
 #>             <input class="js-range-slider" id="histogram-plot.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4073614', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div id="histogram-palette.selection" class="shiny-html-output"></div>
@@ -512,7 +512,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9278701">
+#>           <div class="form-group shiny-input-container" id="tipify5147446">
 #>             <label class="control-label" id="histogram-position-label" for="histogram-position">Position</label>
 #>             <div>
 #>               <select id="histogram-position" class="shiny-input-select"><option value="identity" selected>identity</option>
@@ -522,48 +522,48 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>               <script type="application/json" data-for="histogram-position" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How should we position the values in each bin? Default is "identity". Unlike the default position = "stack" in ggplot2::geom_histogram or ggplot2::geom_density, the default position is "identity" to show the actual count or density for each group.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5147446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How should we position the values in each bin? Default is "identity". Unlike the default position = "stack" in ggplot2::geom_histogram or ggplot2::geom_density, the default position is "identity" to show the actual count or density for each group.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-2402-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-7056-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify266247">
+#>           <div class="form-group shiny-input-container" id="tipify9815418">
 #>             <div class="material-switch">
 #>               <label for="histogram-add.bars" style="padding-right: 10px;">Add Rug Plot</label>
 #>               <input id="histogram-add.bars" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-add.bars"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add lines to the plot to show the data distribution on the bottom.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add lines to the plot to show the data distribution on the bottom.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5594912">
+#>           <div class="form-group shiny-input-container" id="tipify3541867">
 #>             <label class="control-label" id="histogram-bar.height-label" for="histogram-bar.height">Rug Bar Height</label>
 #>             <input id="histogram-bar.height" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height of the bars. The actual height will be calculated based on the maximum density or count.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3541867', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height of the bars. The actual height will be calculated based on the maximum density or count.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8541736">
+#>           <div class="form-group shiny-input-container" id="tipify4558402">
 #>             <label class="control-label" id="histogram-bar.alpha-label" for="histogram-bar.alpha">Rug Bar Alpha</label>
 #>             <input class="js-range-slider" id="histogram-bar.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the bars.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4558402', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the bars.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify758831">
+#>           <div class="form-group shiny-input-container" id="tipify2200247">
 #>             <label class="control-label" id="histogram-bar.width-label" for="histogram-bar.width">Rug Bar Width</label>
 #>             <input id="histogram-bar.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.05"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2200247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2402-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7056-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -798,7 +798,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2402-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7056-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">

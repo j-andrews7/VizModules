@@ -338,6 +338,8 @@ guidelines:
   : Example population dataset for module apps
 - [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
   : Example sales dataset for module apps
+- [`get_documentation()`](https://j-andrews7.github.io/VizModules/reference/get_documentation.md)
+  : Extract parameter documentation from an R function help page
 - [`is_pure_type()`](https://j-andrews7.github.io/VizModules/reference/is_pure_type.md)
   : Check if column inputs contain mixed data types
 - [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
