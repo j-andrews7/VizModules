@@ -216,8 +216,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$boxplot.fill, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),
                 documentParameters$boxplot.lineweight, placement = "top", options = list(container = "body")),
-            numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),
-            numericInput(ns("boxgroupgap"), "Boxplot Group Dodge", value = 0.2, min = 0, max = 1, step = 0.05)
+            tipify(numericInput(ns("boxgap"), "Boxplot Position Dodge", value = 0.3, min = 0, max = 1, step = 0.05),
+                "Set the gap between boxplots within the same group, controlling how closely boxes are spaced",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("boxgroupgap"), "Boxplot Group Dodge", value = 0.2, min = 0, max = 1, step = 0.05),
+                "Set the gap between groups of boxplots when a color.by variable is used",
+                placement = "top", options = list(container = "body"))
         ),
         "Violin" = tagList(
             tipify(numericInput(ns("vlnplot.lineweight"), "Violin Line Weight", value = 0.5, min = 0, max = 5, step = 0.1),

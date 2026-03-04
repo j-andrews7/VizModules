@@ -204,11 +204,15 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body")),
-            materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
+            tipify(materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
+                "Toggle whether outlier points beyond the whiskers are displayed on the boxplot",
+                placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
+            tipify(numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
+                "Set the relative width of each boxplot, where 1 fills the entire available space",
+                placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
                 "mean_asc", "mean_desc", "mean", "median_asc",
                 "median_desc", "median"

@@ -161,9 +161,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
       tipify(selectInput(ns("x.data"), "X values",
         selected = num.choices[2], choices = num.choices
       ), documentParameters$x, placement = "top", options = list(container = "body")),
-      selectInput(ns("y.data"), "Y values",
+      tipify(selectInput(ns("y.data"), "Y values",
         selected = char.choices[2], choices = char.choices
-      ),
+      ), "Select the categorical column to use for the Y axis groupings",
+        placement = "top", options = list(container = "body")),
       # Changed from group.by to fill.by
       tipify(selectInput(ns("fill.by"), "Fill by",
         selected = choices[2], choices = choices
@@ -201,9 +202,15 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             documentParameters$alpha_name, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
             documentParameters$bar_height, placement = "top", options = list(container = "body")),
-        sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
-        materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
-        sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100)
+        tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
+            "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
+            placement = "top", options = list(container = "body")),
+        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
+            "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
+            placement = "top", options = list(container = "body")),
+        tipify(sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100),
+            "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
+            placement = "top", options = list(container = "body"))
 
     ),
 
