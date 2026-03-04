@@ -126,14 +126,15 @@ volcanoPlotInputsUI <- function(id, data, defaults = NULL, title = "Volcano Sett
             step = 0.25
         ), "Log2 fold change threshold for grouping genes as Up/Down/n.s.",
             placement = "top", options = list(container = "body")),
-        multiColorPicker(
+        tipify(multiColorPicker(
             inputId = ns("volcano.colors"),
             label = "Group Colors",
             groups = c("Up", "Down", "n.s."),
             colors = initial_colors,
             palette_options = default_palettes()[["choices"]],
             compact = TRUE
-        )
+        ), "Select colors for each significance group (Up-regulated, Down-regulated, and non-significant)",
+            placement = "top", options = list(container = "body"))
     )
 
     extras <- organize_inputs(extras, columns = columns)

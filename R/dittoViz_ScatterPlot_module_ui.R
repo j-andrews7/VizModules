@@ -398,7 +398,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     "col"
                 )
             ), documentParameters$multivar.split.dir, placement = "top", options = list(container = "body")),
-            selectInput(ns("split.adjust.scales"), "Facet Scales",
+            tipify(selectInput(ns("split.adjust.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = ifelse("split.adjust.scales" %in% names(defaults),
                     ifelse(defaults[["split.adjust.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
@@ -406,106 +406,124 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ),
                     "fixed"
                 )
-            )
+            ), "Control whether facet panels share the same axis scales or allow them to vary independently",
+                placement = "top", options = list(container = "body"))
         ),
         "Annotations" = tagList(
-            selectInput(ns("annotate.by"), "Annotate By",
+            tipify(selectInput(ns("annotate.by"), "Annotate By",
                 choices = choices,
                 selected = ifelse("annotate.by" %in% names(defaults),
                     ifelse(defaults[["annotate.by"]] %in% choices, defaults[["annotate.by"]], ""),
                     ""
                 )
-            ),
-            textAreaInput(ns("highlight.points"), "Points to Highlight",
+            ), "Select a column whose values will be used to identify points for highlighting and annotation",
+                placement = "top", options = list(container = "body")),
+            tipify(textAreaInput(ns("highlight.points"), "Points to Highlight",
                 placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
                 value = ifelse("highlight.points" %in% names(defaults),
                     defaults[["highlight.points"]], ""
                 ),
                 rows = 3
-            ),
-            colourInput(ns("highlight.color"), "Highlight Fill",
+            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("highlight.color"), "Highlight Fill",
                 value = ifelse("highlight.color" %in% names(defaults),
                     defaults[["highlight.color"]], "#00FFF7"
                 ),
                 allowTransparent = TRUE
-            ),
-            numericInput(ns("highlight.size"), "Highlight Size",
+            ), "Choose the fill color for highlighted points",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("highlight.size"), "Highlight Size",
                 min = 0.1, step = 0.5,
                 value = ifelse("highlight.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["highlight.size"]]), defaults[["highlight.size"]], 7),
                     7
                 )
-            ),
-            colourInput(ns("highlight.border.color"), "Highlight Border Color",
+            ), "Set the size of highlighted points on the plot",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("highlight.border.color"), "Highlight Border Color",
                 value = ifelse("highlight.border.color" %in% names(defaults),
                     defaults[["highlight.border.color"]], "#000000"
                 )
-            ),
-            numericInput(ns("highlight.border.width"), "Highlight Border Width",
+            ), "Choose the border color for highlighted points",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("highlight.border.width"), "Highlight Border Width",
                 min = 0, step = 0.25,
                 value = ifelse("highlight.border.width" %in% names(defaults),
                     ifelse(is.numeric(defaults[["highlight.border.width"]]), defaults[["highlight.border.width"]], 0.5),
                     1
                 )
-            ),
-            checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
+            ), "Set the width of the border around highlighted points",
+                placement = "top", options = list(container = "body")),
+            tipify(checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
                 value = ifelse("highlight.auto.annotate" %in% names(defaults),
                     ifelse(is.logical(defaults[["highlight.auto.annotate"]]), defaults[["highlight.auto.annotate"]], TRUE),
                     TRUE
                 )
-            ),
-            colourInput(ns("annotation.color"), "Annotation Color",
+            ), "When enabled, automatically adds text labels to highlighted points using their 'Annotate By' values",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("annotation.color"), "Annotation Color",
                 value = ifelse("annotation.color" %in% names(defaults),
                     defaults[["annotation.color"]], "black"
                 )
-            ),
-            numericInput(ns("annotation.ax"), "Annotation X Offset",
+            ), "Set the text color for annotation labels",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("annotation.ax"), "Annotation X Offset",
                 step = 1,
                 value = ifelse("annotation.ax" %in% names(defaults),
                     ifelse(is.numeric(defaults[["annotation.ax"]]), defaults[["annotation.ax"]], 20),
                     20
                 )
-            ),
-            numericInput(ns("annotation.ay"), "Annotation Y Offset",
+            ), "Horizontal pixel offset of annotation labels from their target points",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("annotation.ay"), "Annotation Y Offset",
                 step = 1,
                 value = ifelse("annotation.ay" %in% names(defaults),
                     ifelse(is.numeric(defaults[["annotation.ay"]]), defaults[["annotation.ay"]], -20),
                     -20
                 )
-            ),
-            numericInput(ns("annotation.size"), "Annotation Size",
+            ), "Vertical pixel offset of annotation labels from their target points (negative values move up)",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("annotation.size"), "Annotation Size",
                 min = 1, step = 0.5,
                 value = ifelse("annotation.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["annotation.size"]]), defaults[["annotation.size"]], 10),
                     10
                 )
-            ),
-            checkboxInput(ns("annotation.showarrow"), "Show Arrow",
+            ), "Set the font size of annotation text labels in points",
+                placement = "top", options = list(container = "body")),
+            tipify(checkboxInput(ns("annotation.showarrow"), "Show Arrow",
                 value = ifelse("annotation.showarrow" %in% names(defaults),
                     ifelse(is.logical(defaults[["annotation.showarrow"]]), defaults[["annotation.showarrow"]], TRUE),
                     TRUE
                 )
-            ),
-            colourInput(ns("annotation.arrowcolor"), "Arrow Color",
+            ), "Toggle whether an arrow is drawn from the annotation label to the target point",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("annotation.arrowcolor"), "Arrow Color",
                 value = ifelse("annotation.arrowcolor" %in% names(defaults),
                     defaults[["annotation.arrowcolor"]], "black"
                 )
-            ),
-            numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
+            ), "Set the color of the annotation arrow connecting the label to the point",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
                 min = 0, step = 1, max = 7,
                 value = ifelse("annotation.arrowhead" %in% names(defaults),
                     ifelse(is.numeric(defaults[["annotation.arrowhead"]]), defaults[["annotation.arrowhead"]], 2),
                     2
                 )
-            ),
-            numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
+            ), "Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
                 min = 0.1, step = 0.25,
                 value = ifelse("annotation.arrowwidth" %in% names(defaults),
                     ifelse(is.numeric(defaults[["annotation.arrowwidth"]]), defaults[["annotation.arrowwidth"]], 1.5),
                     1.5
                 )
-            ),
-            actionButton(ns("annotation.clear"), "Clear Annotations")
+            ), "Set the line width of the annotation arrow",
+                placement = "top", options = list(container = "body")),
+            tipify(actionButton(ns("annotation.clear"), "Clear Annotations"),
+                "Remove all annotation labels and arrows from the current plot",
+                placement = "top", options = list(container = "body"))
         ),
         "Legend/Scale" = tagList(
             tipify(checkboxInput(ns("legend.show"), "Show Legend",
@@ -577,33 +595,37 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
         ),
         "Plotly" = tagList(
-            checkboxInput(ns("webgl"), "Plot with webGL",
+            tipify(checkboxInput(ns("webgl"), "Plot with webGL",
                 value = ifelse("webgl" %in% names(defaults),
                     ifelse(is.logical(defaults[["webgl"]]), defaults[["webgl"]], TRUE),
                     TRUE
                 )
-            ),
-            colourInput(ns("shape.fill"), "Shape Fill",
+            ), "Enable WebGL rendering for improved performance with large datasets at the cost of some visual features",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
                 value = ifelse("shape.fill" %in% names(defaults),
                     defaults[["shape.fill"]], "rgba(0, 0, 0, 0)"
                 )
-            ),
-            colourInput(ns("shape.line.color"), "Shape Line Color",
+            ), "Set the interior fill color for plotly marker shapes. Use transparent for unfilled markers",
+                placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("shape.line.color"), "Shape Line Color",
                 allowTransparent = TRUE,
                 value = ifelse("shape.line.color" %in% names(defaults),
                     defaults[["shape.line.color"]], "black"
                 )
-            ),
-            numericInput(ns("shape.line.width"), "Shape Line Width",
+            ), "Set the outline color for plotly marker shapes",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("shape.line.width"), "Shape Line Width",
                 value = ifelse("shape.line.width" %in% names(defaults),
                     ifelse(is.numeric(defaults[["shape.line.width"]]), defaults[["shape.line.width"]], 4),
                     4
                 ),
                 min = 0,
                 step = 0.25
-            ),
-            selectInput(ns("shape.linetype"), "Shape Linetype",
+            ), "Set the outline width for plotly marker shapes",
+                placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("shape.linetype"), "Shape Linetype",
                 choices = c(
                     "solid", "dot", "dash", "longdash",
                     "dashdot", "longdashdot"
@@ -615,8 +637,9 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ), defaults[["shape.linetype"]], "solid"),
                     "solid"
                 )
-            ),
-            numericInput(ns("shape.opacity"), "Shape Opacity",
+            ), "Choose the line dash style for plotly marker shape outlines",
+                placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("shape.opacity"), "Shape Opacity",
                 value = ifelse("shape.opacity" %in% names(defaults),
                     ifelse(is.numeric(defaults[["shape.opacity"]]), defaults[["shape.opacity"]], 1),
                     1
@@ -624,7 +647,8 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 0,
                 max = 1,
                 step = 0.01
-            )
+            ), "Set the opacity of plotly marker shapes, where 0 is fully transparent and 1 is fully opaque",
+                placement = "top", options = list(container = "body"))
         ),
         "Extras" = tagList(
             tipify(checkboxInput(ns("do.ellipse"), "Enable Ellipses",
