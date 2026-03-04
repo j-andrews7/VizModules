@@ -1443,11 +1443,12 @@ get_documentation <- function(package_name, type = "param", selected = NULL, cap
         # Package not installed; will try local man/ fallback below
     })
 
-    # Fallback: read from local man/ directory (for dev mode / devtools::load_all)
+    # Fallback: read from local man/ directory (for dev mode / devtools::load_all).
+    # When using devtools::load_all(), the working directory is the package source root,
+    # so the relative "man/" path will resolve correctly.
     if (!rd_found) {
         rd_file <- file.path(system.file(package = pkg), "man", paste0(fn, ".Rd"))
         if (!file.exists(rd_file)) {
-            # Also try relative to package source root
             rd_file <- file.path("man", paste0(fn, ".Rd"))
         }
         if (file.exists(rd_file)) {
