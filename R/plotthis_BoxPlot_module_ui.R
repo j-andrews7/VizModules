@@ -213,10 +213,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1, value = 0.8, step = 0.05),
                 "Set the relative width of each boxplot, where 1 fills the entire available space",
                 placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("sort_x"), "Sort X by", selected = "", choices = c("",
-                "mean_asc", "mean_desc", "mean", "median_asc",
-                "median_desc", "median"
-            )), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+            tipify(shiny::textInput(ns("sort_x"), "Sort X By", value = "", placeholder = "mean(y data col name)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Max Value of Y Axis", value = max.y, min = -Inf, max = Inf),
                 documentParameters$y_max, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.min"), "Min Value of Y Axis", value = min.y, min = -Inf, max = Inf),

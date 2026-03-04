@@ -98,7 +98,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = "none")
+            updateSelectInput(session, "sort_x", selected = "")
             updateMaterialSwitch(session, "flip", value = FALSE)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
@@ -213,7 +213,10 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 # plotthis::ViolinPlot expects a named list for palcolor when manually setting colors
                 palcolor_arg <- as.list(palette_values)
             }
-
+            sort.x <- NULL 
+            if (!isolate_fn(input$sort_x) == ""){
+                sort.x <- isolate_fn(input$sort_x)
+            }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::ViolinPlot(
@@ -222,7 +225,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
                 flip = isolate_fn(input$rotate),
-                sort_x = isolate_fn(input$sort_x),
+                sort_x = sort.x,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
                 add_point = isolate_fn(input$add.points),
