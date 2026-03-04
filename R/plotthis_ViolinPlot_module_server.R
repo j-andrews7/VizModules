@@ -98,7 +98,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = "none")
+            updateSelectInput(session, "sort_x", selected = "")
             updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
