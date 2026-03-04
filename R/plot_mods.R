@@ -1386,40 +1386,15 @@ get_documentation <- function(package_name, type = "param", selected = NULL, cap
         selected
     )
 
-    tryCatch({
-        # Get the Rd database for the package and find the relevant topic
-        rd_db <- tools::Rd_db(pkg)
-        rd <- NULL
-        for (rd_name in names(rd_db)) {
-            rd_obj <- rd_db[[rd_name]]
-            # Check if any \\alias matches the function name
-            for (item in rd_obj) {
-                tag <- attr(item, "Rd_tag")
-                if (!is.null(tag) && tag == "\\alias") {
-                    alias <- paste(unlist(item), collapse = "")
-                    if (trimws(alias) == fn) {
-                        rd <- rd_obj
-                        break
-                    }
-                }
-            }
-            if (!is.null(rd)) break
-        }
-
-        if (is.null(rd)) {
-            warning(paste("Could not find documentation for", package_name))
-            return(result)
-        }
-
-        # Find \\arguments sections
+    # Helper to extract params from a parsed Rd object
+    .extract_params <- function(rd, selected, cap) {
+        extracted <- list()
         for (item in rd) {
             tag <- attr(item, "Rd_tag")
             if (!is.null(tag) && tag == "\\arguments") {
-                # Each child of \\arguments is an \\item
                 for (arg_item in item) {
                     arg_tag <- attr(arg_item, "Rd_tag")
                     if (!is.null(arg_tag) && arg_tag == "\\item") {
-                        # First element is param name, rest is description
                         if (length(arg_item) >= 2) {
                             param_name <- paste(unlist(arg_item[[1]]), collapse = "")
                             param_desc <- paste(unlist(arg_item[[2]]), collapse = "")
@@ -1432,16 +1407,66 @@ get_documentation <- function(package_name, type = "param", selected = NULL, cap
                                         substring(param_desc, 2)
                                     )
                                 }
-                                result[[param_name]] <- param_desc
+                                extracted[[param_name]] <- param_desc
                             }
                         }
                     }
                 }
             }
         }
+        extracted
+    }
+
+    # Try installed package Rd database first
+    rd_found <- FALSE
+    tryCatch({
+        rd_db <- tools::Rd_db(pkg)
+        for (rd_name in names(rd_db)) {
+            rd_obj <- rd_db[[rd_name]]
+            for (item in rd_obj) {
+                tag <- attr(item, "Rd_tag")
+                if (!is.null(tag) && tag == "\\alias") {
+                    alias <- paste(unlist(item), collapse = "")
+                    if (trimws(alias) == fn) {
+                        extracted <- .extract_params(rd_obj, selected, cap)
+                        for (n in names(extracted)) {
+                            result[[n]] <- extracted[[n]]
+                        }
+                        rd_found <- TRUE
+                        break
+                    }
+                }
+            }
+            if (rd_found) break
+        }
     }, error = function(e) {
-        warning(paste("Could not extract documentation for", package_name, ":", e$message))
+        # Package not installed; will try local man/ fallback below
     })
+
+    # Fallback: read from local man/ directory (for dev mode / devtools::load_all)
+    if (!rd_found) {
+        rd_file <- file.path(system.file(package = pkg), "man", paste0(fn, ".Rd"))
+        if (!file.exists(rd_file)) {
+            # Also try relative to package source root
+            rd_file <- file.path("man", paste0(fn, ".Rd"))
+        }
+        if (file.exists(rd_file)) {
+            tryCatch({
+                rd_obj <- tools::parse_Rd(rd_file)
+                extracted <- .extract_params(rd_obj, selected, cap)
+                for (n in names(extracted)) {
+                    result[[n]] <- extracted[[n]]
+                }
+                rd_found <- TRUE
+            }, error = function(e) {
+                warning(paste("Could not parse local Rd file for", fn, ":", e$message))
+            })
+        }
+    }
+
+    if (!rd_found) {
+        warning(paste("Could not find documentation for", package_name))
+    }
 
     result
 }
