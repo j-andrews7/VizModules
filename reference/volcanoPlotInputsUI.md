@@ -131,18 +131,18 @@ data(airway_deseq2)
 volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #> <div class="row">
 #>   <div class="col-sm-6">
-#>     <div class="form-group shiny-input-container" id="tipify5454252">
+#>     <div class="form-group shiny-input-container" id="tipify5215289">
 #>       <label class="control-label" id="volcanoPlot-sig.thresh-label" for="volcanoPlot-sig.thresh">Significance Threshold:</label>
 #>       <input id="volcanoPlot-sig.thresh" type="number" class="shiny-input-number form-control" value="0.05" data-update-on="change" min="0" max="1" step="0.01"/>
 #>     </div>
-#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5454252', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Significance threshold for grouping genes as Up/Down/n.s.'})}, 500)});</script>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5215289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Significance threshold for grouping genes as Up/Down/n.s.'})}, 500)});</script>
 #>   </div>
 #>   <div class="col-sm-6">
-#>     <div class="form-group shiny-input-container" id="tipify7596779">
+#>     <div class="form-group shiny-input-container" id="tipify9634940">
 #>       <label class="control-label" id="volcanoPlot-fc.thresh-label" for="volcanoPlot-fc.thresh">LFC Threshold (log2):</label>
 #>       <input id="volcanoPlot-fc.thresh" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.25"/>
 #>     </div>
-#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7596779', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Log2 fold change threshold for grouping genes as Up/Down/n.s.'})}, 500)});</script>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9634940', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Log2 fold change threshold for grouping genes as Up/Down/n.s.'})}, 500)});</script>
 #>   </div>
 #> </div>
 #> <div class="row">
@@ -231,53 +231,54 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('volcanoPlot-volcano.colors', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Select colors for each significance group (Up-regulated, Down-regulated, and non-significant)'})}, 500)});</script>
 #>   </div>
 #> </div>
 #> <h3>Volcano Settings</h3>
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="4273">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="volcanoPlot-scatterPlotTabsetPanel" data-tabsetid="8682">
 #>     <li class="active">
-#>       <a href="#tab-4273-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8682-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-8682-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-8682-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-8682-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
+#>       <a href="#tab-8682-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facets">Facets</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-8682-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-8682-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-8682-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8682-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-8682-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8682-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4273-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8682-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="4273">
-#>     <div class="tab-pane active" data-value="Data" id="tab-4273-1">
+#>   <div class="tab-content" data-tabsetid="8682">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8682-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2129675">
+#>           <div class="form-group shiny-input-container" id="tipify8878725">
 #>             <label class="control-label" id="volcanoPlot-x.by-label" for="volcanoPlot-x.by">X Data</label>
 #>             <div>
 #>               <select id="volcanoPlot-x.by" class="shiny-input-select"><option value=""></option>
@@ -293,10 +294,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-x.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2129675', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8878725', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8392650">
+#>           <div class="form-group shiny-input-container" id="tipify6364466">
 #>             <label class="control-label" id="volcanoPlot-y.by-label" for="volcanoPlot-y.by">Y Data</label>
 #>             <div>
 #>               <select id="volcanoPlot-y.by" class="shiny-input-select"><option value=""></option>
@@ -312,12 +313,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-y.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8392650', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6364466', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4066971">
+#>           <div class="form-group shiny-input-container" id="tipify3293803">
 #>             <label class="control-label" id="volcanoPlot-color.by-label" for="volcanoPlot-color.by">Color By</label>
 #>             <div>
 #>               <select id="volcanoPlot-color.by" class="shiny-input-select"><option value=""></option>
@@ -333,10 +334,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-color.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4066971', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string denoting the name of a column of data_frame to use for setting the color of plotted points. Alternatively, a string vector naming multiple such columns of data to plot at once.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3293803', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string denoting the name of a column of data_frame to use for setting the color of plotted points. Alternatively, a string vector naming multiple such columns of data to plot at once.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8737398">
+#>           <div class="form-group shiny-input-container" id="tipify6022224">
 #>             <label class="control-label" id="volcanoPlot-shape.by-label" for="volcanoPlot-shape.by">Shape By</label>
 #>             <div>
 #>               <select id="volcanoPlot-shape.by" class="shiny-input-select"><option value="" selected></option>
@@ -346,12 +347,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-shape.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8737398', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string denoting the name of a column of data_frame containing discrete data to use for setting the shape of plotted points.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6022224', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Single string denoting the name of a column of data_frame containing discrete data to use for setting the shape of plotted points.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8821565">
+#>           <div class="form-group shiny-input-container" id="tipify7721615">
 #>             <label class="control-label" id="volcanoPlot-split.by-label" for="volcanoPlot-split.by">Split By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="volcanoPlot-split.by" multiple="multiple"><option value="" selected></option>
@@ -361,21 +362,21 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-split.by">{"maxItems":2,"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8821565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': '1 or 2 strings denoting the name(s) of column(s) of data_frame containing discrete data to use for faceting / separating data points into separate plots. When 2 columns are named, c(row,col), the first is used as rows and the second is used for columns of the resulting facet grid. When 1 column is named, shape control can be achieved with split.nrow and split.ncol'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7721615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': '1 or 2 strings denoting the name(s) of column(s) of data_frame containing discrete data to use for faceting / separating data points into separate plots. When 2 columns are named, c(row,col), the first is used as rows and the second is used for columns of the resulting facet grid. When 1 column is named, shape control can be achieved with split.nrow and split.ncol'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1076894">
+#>           <div class="form-group shiny-input-container" id="tipify2101353">
 #>             <label class="control-label" id="volcanoPlot-rows.use-label" for="volcanoPlot-rows.use">Rows Filter</label>
 #>             <input id="volcanoPlot-rows.use" type="text" class="shiny-input-text form-control" value="" placeholder="Filter expression, e.g. Sepal.Length &gt; 5" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1076894', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector of rownames of data_frame OR an integer vector specifying the row-indices of data points which should be plotted. Alternatively, a Logical vector, the same length as the number of rows in data_frame, where TRUE values indicate which rows to plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2101353', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector of rownames of data_frame OR an integer vector specifying the row-indices of data points which should be plotted. Alternatively, a Logical vector, the same length as the number of rows in data_frame, where TRUE values indicate which rows to plot.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-4273-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-8682-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5745444">
+#>           <div class="form-group shiny-input-container" id="tipify5843084">
 #>             <label class="control-label" id="volcanoPlot-x.adjustment-label" for="volcanoPlot-x.adjustment">X Adjustment</label>
 #>             <div>
 #>               <select id="volcanoPlot-x.adjustment" class="shiny-input-select"><option value="" selected></option>
@@ -384,10 +385,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-x.adjustment">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5745444', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5843084', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9960333">
+#>           <div class="form-group shiny-input-container" id="tipify5420758">
 #>             <label class="control-label" id="volcanoPlot-y.adjustment-label" for="volcanoPlot-y.adjustment">Y Adjustment</label>
 #>             <div>
 #>               <select id="volcanoPlot-y.adjustment" class="shiny-input-select"><option value="" selected></option>
@@ -396,12 +397,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-y.adjustment">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9960333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5420758', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8505534">
+#>           <div class="form-group shiny-input-container" id="tipify923967">
 #>             <label class="control-label" id="volcanoPlot-color.adjustment-label" for="volcanoPlot-color.adjustment">Color Adjustment</label>
 #>             <div>
 #>               <select id="volcanoPlot-color.adjustment" class="shiny-input-select"><option value="" selected></option>
@@ -410,10 +411,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-color.adjustment">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8505534', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify923967', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4376551">
+#>           <div class="form-group shiny-input-container" id="tipify3693408">
 #>             <label class="control-label" id="volcanoPlot-x.adj.fxn-label" for="volcanoPlot-x.adj.fxn">X Adjustment Function</label>
 #>             <div>
 #>               <select id="volcanoPlot-x.adj.fxn" class="shiny-input-select"><option value="" selected></option>
@@ -428,12 +429,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-x.adj.fxn">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4376551', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3693408', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3264299">
+#>           <div class="form-group shiny-input-container" id="tipify9524294">
 #>             <label class="control-label" id="volcanoPlot-y.adj.fxn-label" for="volcanoPlot-y.adj.fxn">Y Adjustment Function</label>
 #>             <div>
 #>               <select id="volcanoPlot-y.adj.fxn" class="shiny-input-select"><option value=""></option>
@@ -448,10 +449,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-y.adj.fxn">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3264299', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9524294', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3359689">
+#>           <div class="form-group shiny-input-container" id="tipify9496892">
 #>             <label class="control-label" id="volcanoPlot-color.adj.fxn-label" for="volcanoPlot-color.adj.fxn">Color Adjustment Function</label>
 #>             <div>
 #>               <select id="volcanoPlot-color.adj.fxn" class="shiny-input-select"><option value="" selected></option>
@@ -466,30 +467,30 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-color.adj.fxn">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3359689', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9496892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-4273-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-8682-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2392738">
+#>           <div class="form-group shiny-input-container" id="tipify4497768">
 #>             <label class="control-label" id="volcanoPlot-size-label" for="volcanoPlot-size">Point Size</label>
 #>             <input id="volcanoPlot-size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2392738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number which sets the size of data points. Default = 1. Alternatively, a single string denoting the name of a column of data_frame to use for setting the size of plotted points. NOTE: When providing a column name and using do.hover = TRUE, the legend will not include meaningful size encoding information.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4497768', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number which sets the size of data points. Default = 1. Alternatively, a single string denoting the name of a column of data_frame to use for setting the size of plotted points. NOTE: When providing a column name and using do.hover = TRUE, the legend will not include meaningful size encoding information.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4213711">
+#>           <div class="form-group shiny-input-container" id="tipify2598183">
 #>             <label class="control-label" id="volcanoPlot-opacity-label" for="volcanoPlot-opacity">Point Opacity</label>
 #>             <input id="volcanoPlot-opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.05"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4213711', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number between 0 and 1. 1 = opaque. 0 = invisible. Default = 1. (In terms of typical ggplot variables, = alpha) Alternatively, a single string denoting the name of a column of data_frame to use for setting the opacity of plotted points. NOTE: When providing a column name and using do.hover = TRUE, the legend will not include meaningful opacity encoding information.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2598183', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number between 0 and 1. 1 = opaque. 0 = invisible. Default = 1. (In terms of typical ggplot variables, = alpha) Alternatively, a single string denoting the name of a column of data_frame to use for setting the opacity of plotted points. NOTE: When providing a column name and using do.hover = TRUE, the legend will not include meaningful opacity encoding information.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5121368">
+#>           <div class="form-group shiny-input-container" id="tipify189062">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-show.others" type="checkbox" class="shiny-input-checkbox"/>
@@ -497,10 +498,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5121368', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. TRUE by default, whether rows not targeted by rows.use should be shown in the background in light gray.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify189062', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. TRUE by default, whether rows not targeted by rows.use should be shown in the background in light gray.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1854464">
+#>           <div class="form-group shiny-input-container" id="tipify7214050">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-split.show.all.others" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -508,12 +509,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1854464', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical which sets whether gray "others" points of facets should include all points of other facets (TRUE) versus just points left out by rows.use which would exist in the current facet (FALSE).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7214050', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical which sets whether gray "others" points of facets should include all points of other facets (TRUE) versus just points left out by rows.use which would exist in the current facet (FALSE).'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3264005">
+#>           <div class="form-group shiny-input-container" id="tipify9528096">
 #>             <label class="control-label" id="volcanoPlot-plot.order-label" for="volcanoPlot-plot.order">Plot Order</label>
 #>             <div>
 #>               <select id="volcanoPlot-plot.order" class="shiny-input-select"><option value="unordered" selected>unordered</option>
@@ -523,44 +524,44 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-plot.order" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3264005', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String. If the data should be plotted based on the order of the color data, sets whether to plot in "increasing", "decreasing", or "randomize"d order.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9528096', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String. If the data should be plotted based on the order of the color data, sets whether to plot in "increasing", "decreasing", or "randomize"d order.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8170736">
+#>           <div class="form-group shiny-input-container" id="tipify4402233">
 #>             <label class="control-label" id="volcanoPlot-shape.panel-label" for="volcanoPlot-shape.panel">Shape Panel</label>
 #>             <input id="volcanoPlot-shape.panel" type="text" class="shiny-input-text form-control" value="16, 15, 17, 23, 25, 8" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8170736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vector of integers, corresponding to ggplot shapes, which sets what shapes to use in conjunction with shape.by. When nothing is supplied to shape.by, only the first value is used. Default is a set of 6, c(16,15,17,23,25,8), the first being a simple, solid, circle.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4402233', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vector of integers, corresponding to ggplot shapes, which sets what shapes to use in conjunction with shape.by. When nothing is supplied to shape.by, only the first value is used. Default is a set of 6, c(16,15,17,23,25,8), the first being a simple, solid, circle.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-4273-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-8682-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7487380">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5040124">
 #>             <label class="control-label" for="volcanoPlot-min.color">Min Color</label>
 #>             <input id="volcanoPlot-min.color" type="text" class="form-control shiny-colour-input" data-init-value="#F0E442" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7487380', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for min value of numeric color.by-data. Default = yellow'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5040124', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for min value of numeric color.by-data. Default = yellow'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5317419">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify435570">
 #>             <label class="control-label" for="volcanoPlot-max.color">Max Color</label>
 #>             <input id="volcanoPlot-max.color" type="text" class="form-control shiny-colour-input" data-init-value="#0072B2" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5317419', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for max value of numeric color.by-data. Default = blue'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify435570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for max value of numeric color.by-data. Default = blue'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9615713">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9224744">
 #>             <label class="control-label" for="volcanoPlot-contour.color">Contour Color</label>
 #>             <input id="volcanoPlot-contour.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9615713', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String that sets the color of the do.contour contours.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9224744', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String that sets the color of the do.contour contours.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1040464">
+#>           <div class="form-group shiny-input-container" id="tipify9237895">
 #>             <label class="control-label" id="volcanoPlot-contour.linetype-label" for="volcanoPlot-contour.linetype">Contour Linetype</label>
 #>             <div>
 #>               <select id="volcanoPlot-contour.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
@@ -572,7 +573,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-contour.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1040464', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String or numeric which sets the type of line used for do.contour contours. Defaults to "solid", but see linetype for other options.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9237895', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String or numeric which sets the type of line used for do.contour contours. Defaults to "solid", but see linetype for other options.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -581,26 +582,26 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facets" id="tab-4273-5">
+#>     <div class="tab-pane" data-value="Facets" id="tab-8682-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7371236">
+#>           <div class="form-group shiny-input-container" id="tipify6056477">
 #>             <label class="control-label" id="volcanoPlot-split.nrow-label" for="volcanoPlot-split.nrow">Split Rows</label>
 #>             <input id="volcanoPlot-split.nrow" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7371236', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6056477', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8474799">
+#>           <div class="form-group shiny-input-container" id="tipify40820">
 #>             <label class="control-label" id="volcanoPlot-split.ncol-label" for="volcanoPlot-split.ncol">Split Columns</label>
 #>             <input id="volcanoPlot-split.ncol" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8474799', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify40820', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6437387">
+#>           <div class="form-group shiny-input-container" id="tipify6568564">
 #>             <label class="control-label" id="volcanoPlot-multivar.split.dir-label" for="volcanoPlot-multivar.split.dir">Multivar Split Dir</label>
 #>             <div>
 #>               <select id="volcanoPlot-multivar.split.dir" class="shiny-input-select"><option value="col" selected>col</option>
@@ -608,10 +609,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-multivar.split.dir" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6437387', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': '"row" or "col", sets the direction of faceting used for &#39;var&#39; values when: var is given multiple column names AND split.by is used to provide an additional feature to facet by'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6568564', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': '"row" or "col", sets the direction of faceting used for &#39;var&#39; values when: var is given multiple column names AND split.by is used to provide an additional feature to facet by'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify1509290">
 #>             <label class="control-label" id="volcanoPlot-split.adjust.scales-label" for="volcanoPlot-split.adjust.scales">Facet Scales</label>
 #>             <div>
 #>               <select id="volcanoPlot-split.adjust.scales" class="shiny-input-select"><option value="fixed" selected>fixed</option>
@@ -621,13 +622,14 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-split.adjust.scales" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1509290', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Control whether facet panels share the same axis scales or allow them to vary independently'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-4273-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-8682-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify1991607">
 #>             <label class="control-label" id="volcanoPlot-annotate.by-label" for="volcanoPlot-annotate.by">Annotate By</label>
 #>             <div>
 #>               <select id="volcanoPlot-annotate.by" class="shiny-input-select"><option value="" selected></option>
@@ -643,45 +645,51 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-annotate.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1991607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Select a column whose values will be used to identify points for highlighting and annotation'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="shiny-input-textarea form-group shiny-input-container">
+#>           <div class="shiny-input-textarea form-group shiny-input-container" id="tipify2396384">
 #>             <label class="control-label" id="volcanoPlot-highlight.points-label" for="volcanoPlot-highlight.points">Points to Highlight</label>
 #>             <textarea id="volcanoPlot-highlight.points" class="form-control" placeholder="Values from &#39;Annotate by&#39; column&#10;(comma, space, or newline delimited)" rows="3" data-update-on="change"></textarea>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2396384', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Enter specific values from the &#39;Annotate By&#39; column to highlight those points on the plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6615740">
 #>             <label class="control-label" for="volcanoPlot-highlight.color">Highlight Fill</label>
 #>             <input id="volcanoPlot-highlight.color" type="text" class="form-control shiny-colour-input" data-init-value="#00FFF7" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6615740', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Choose the fill color for highlighted points'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2417888">
 #>             <label class="control-label" id="volcanoPlot-highlight.size-label" for="volcanoPlot-highlight.size">Highlight Size</label>
 #>             <input id="volcanoPlot-highlight.size" type="number" class="shiny-input-number form-control" value="7" data-update-on="change" min="0.1" step="0.5"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2417888', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the size of highlighted points on the plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify715498">
 #>             <label class="control-label" for="volcanoPlot-highlight.border.color">Highlight Border Color</label>
 #>             <input id="volcanoPlot-highlight.border.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify715498', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Choose the border color for highlighted points'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify7046719">
 #>             <label class="control-label" id="volcanoPlot-highlight.border.width-label" for="volcanoPlot-highlight.border.width">Highlight Border Width</label>
 #>             <input id="volcanoPlot-highlight.border.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7046719', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the width of the border around highlighted points'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify3153969">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-highlight.auto.annotate" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -689,37 +697,42 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3153969', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'When enabled, automatically adds text labels to highlighted points using their &#39;Annotate By&#39; values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3758752">
 #>             <label class="control-label" for="volcanoPlot-annotation.color">Annotation Color</label>
 #>             <input id="volcanoPlot-annotation.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3758752', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the text color for annotation labels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8150977">
 #>             <label class="control-label" id="volcanoPlot-annotation.ax-label" for="volcanoPlot-annotation.ax">Annotation X Offset</label>
 #>             <input id="volcanoPlot-annotation.ax" type="number" class="shiny-input-number form-control" value="20" data-update-on="change" step="1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8150977', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal pixel offset of annotation labels from their target points'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2005600">
 #>             <label class="control-label" id="volcanoPlot-annotation.ay-label" for="volcanoPlot-annotation.ay">Annotation Y Offset</label>
 #>             <input id="volcanoPlot-annotation.ay" type="number" class="shiny-input-number form-control" value="-20" data-update-on="change" step="1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2005600', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical pixel offset of annotation labels from their target points (negative values move up)'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify3019302">
 #>             <label class="control-label" id="volcanoPlot-annotation.size-label" for="volcanoPlot-annotation.size">Annotation Size</label>
 #>             <input id="volcanoPlot-annotation.size" type="number" class="shiny-input-number form-control" value="10" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3019302', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the font size of annotation text labels in points'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify877203">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-annotation.showarrow" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -727,38 +740,43 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify877203', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Toggle whether an arrow is drawn from the annotation label to the target point'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1833202">
 #>             <label class="control-label" for="volcanoPlot-annotation.arrowcolor">Arrow Color</label>
 #>             <input id="volcanoPlot-annotation.arrowcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1833202', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the color of the annotation arrow connecting the label to the point'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2068019">
 #>             <label class="control-label" id="volcanoPlot-annotation.arrowhead-label" for="volcanoPlot-annotation.arrowhead">Arrowhead Style</label>
 #>             <input id="volcanoPlot-annotation.arrowhead" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" max="7" step="1"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2068019', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8549595">
 #>             <label class="control-label" id="volcanoPlot-annotation.arrowwidth-label" for="volcanoPlot-annotation.arrowwidth">Arrow Linewidth</label>
 #>             <input id="volcanoPlot-annotation.arrowwidth" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change" min="0.1" step="0.25"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8549595', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the line width of the annotation arrow'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <button id="volcanoPlot-annotation.clear" type="button" class="btn btn-default action-button"><span class="action-label">Clear Annotations</span></button>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('volcanoPlot-annotation.clear', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Remove all annotation labels and arrows from the current plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-4273-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-8682-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2324572">
+#>           <div class="form-group shiny-input-container" id="tipify2629099">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-legend.show" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -766,62 +784,62 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2324572', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether any legend should be displayed. Default = TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2629099', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether any legend should be displayed. Default = TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9162295">
+#>           <div class="form-group shiny-input-container" id="tipify9453342">
 #>             <label class="control-label" id="volcanoPlot-legend.color.title-label" for="volcanoPlot-legend.color.title">Legend Title</label>
 #>             <input id="volcanoPlot-legend.color.title" type="text" class="shiny-input-text form-control" value="make" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9162295', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9453342', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4245976">
+#>           <div class="form-group shiny-input-container" id="tipify7927354">
 #>             <label class="control-label" id="volcanoPlot-legend.color.size-label" for="volcanoPlot-legend.color.size">Legend Color Size</label>
 #>             <input id="volcanoPlot-legend.color.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4245976', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7927354', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1929435">
+#>           <div class="form-group shiny-input-container" id="tipify8315819">
 #>             <label class="control-label" id="volcanoPlot-legend.shape.size-label" for="volcanoPlot-legend.shape.size">Legend Shape Size</label>
 #>             <input id="volcanoPlot-legend.shape.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1929435', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8315819', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7015503">
+#>           <div class="form-group shiny-input-container" id="tipify6189772">
 #>             <label class="control-label" id="volcanoPlot-legend.color.breaks-label" for="volcanoPlot-legend.color.breaks">Legend Tick Breaks</label>
 #>             <input id="volcanoPlot-legend.color.breaks" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. -3, 0, 3" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7015503', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric vector which sets the discrete values to label in the color-scale legend for color.by-data.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6189772', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric vector which sets the discrete values to label in the color-scale legend for color.by-data.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9925807">
+#>           <div class="form-group shiny-input-container" id="tipify4437336">
 #>             <label class="control-label" id="volcanoPlot-min.value-label" for="volcanoPlot-min.value">Min Value</label>
 #>             <input id="volcanoPlot-min.value" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9925807', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4437336', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7089125">
+#>           <div class="form-group shiny-input-container" id="tipify9646256">
 #>             <label class="control-label" id="volcanoPlot-max.value-label" for="volcanoPlot-max.value">Max Value</label>
 #>             <input id="volcanoPlot-max.value" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7089125', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9646256', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-4273-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-8682-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5174852">
+#>           <div class="form-group shiny-input-container" id="tipify1621987">
 #>             <label class="control-label" id="volcanoPlot-trajectory.group.by-label" for="volcanoPlot-trajectory.group.by">Trajectory Group By</label>
 #>             <div>
 #>               <select id="volcanoPlot-trajectory.group.by" class="shiny-input-select"><option value="" selected></option>
@@ -831,30 +849,30 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-trajectory.group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5174852', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String denoting the name of a column of data_frame to use for generating trajectories from data point groups.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1621987', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String denoting the name of a column of data_frame to use for generating trajectories from data point groups.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7087320">
+#>           <div class="form-group shiny-input-container" id="tipify1856538">
 #>             <label class="control-label" id="volcanoPlot-add.trajectory.by.groups-label" for="volcanoPlot-add.trajectory.by.groups">Add Trajectory By Groups</label>
 #>             <input id="volcanoPlot-add.trajectory.by.groups" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. [A,B],[C,D,E]" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7087320', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'List of vectors representing trajectory paths, each from start-group to end-group, where vector contents are the group-names indicated by the trajectory.group.by column of data_frame.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1856538', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'List of vectors representing trajectory paths, each from start-group to end-group, where vector contents are the group-names indicated by the trajectory.group.by column of data_frame.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3751405">
+#>           <div class="form-group shiny-input-container" id="tipify6131014">
 #>             <label class="control-label" id="volcanoPlot-trajectory.arrow.size-label" for="volcanoPlot-trajectory.arrow.size">Trajectory Arrow Size</label>
 #>             <input id="volcanoPlot-trajectory.arrow.size" type="number" class="shiny-input-number form-control" value="0.15" data-update-on="change" min="0" step="0.05"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3751405', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number representing the size of trajectory arrows, in inches. Default = 0.15.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6131014', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number representing the size of trajectory arrows, in inches. Default = 0.15.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-4273-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8682-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify4814845">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-webgl" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -862,31 +880,35 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4814845', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Enable WebGL rendering for improved performance with large datasets at the cost of some visual features'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3961379">
 #>             <label class="control-label" for="volcanoPlot-shape.fill">Shape Fill</label>
 #>             <input id="volcanoPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3961379', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the interior fill color for plotly marker shapes. Use transparent for unfilled markers'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3187564">
 #>             <label class="control-label" for="volcanoPlot-shape.line.color">Shape Line Color</label>
 #>             <input id="volcanoPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3187564', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the outline color for plotly marker shapes'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify8383750">
 #>             <label class="control-label" id="volcanoPlot-shape.line.width-label" for="volcanoPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="volcanoPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8383750', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the outline width for plotly marker shapes'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify2992035">
 #>             <label class="control-label" id="volcanoPlot-shape.linetype-label" for="volcanoPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
 #>               <select id="volcanoPlot-shape.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
@@ -898,19 +920,21 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-shape.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2992035', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Choose the line dash style for plotly marker shape outlines'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" id="tipify6160618">
 #>             <label class="control-label" id="volcanoPlot-shape.opacity-label" for="volcanoPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="volcanoPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6160618', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the opacity of plotly marker shapes, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-4273-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-8682-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2547738">
+#>           <div class="form-group shiny-input-container" id="tipify4621038">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-do.ellipse" type="checkbox" class="shiny-input-checkbox"/>
@@ -918,10 +942,10 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2547738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether color.by groups should be surrounded by median-centered ellipses.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4621038', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether color.by groups should be surrounded by median-centered ellipses.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9964129">
+#>           <div class="form-group shiny-input-container" id="tipify9392059">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="volcanoPlot-do.contour" type="checkbox" class="shiny-input-checkbox"/>
@@ -929,12 +953,12 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9964129', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether density-based contours should be displayed.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9392059', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether density-based contours should be displayed.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5228954">
+#>           <div class="form-group shiny-input-container" id="tipify62914">
 #>             <label class="control-label" id="volcanoPlot-hover.data-label" for="volcanoPlot-hover.data">Hover Data</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="volcanoPlot-hover.data" multiple="multiple"><option value=""></option>
@@ -950,18 +974,18 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>               <script type="application/json" data-for="volcanoPlot-hover.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5228954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector which denotes what data to show for each data point, upon hover, when do.hover is set to TRUE. Defaults to all data expected to be useful. Only values present in the plotting data are actually used. These can be column names of data_frame and any column names which will be created to accommodate multivar and data adjustment functionality. You can run the function with data.out = TRUE and inspect the $Target_data output&#39;s columns to view your available options.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify62914', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector which denotes what data to show for each data point, upon hover, when do.hover is set to TRUE. Defaults to all data expected to be useful. Only values present in the plotting data are actually used. These can be column names of data_frame and any column names which will be created to accommodate multivar and data adjustment functionality. You can run the function with data.out = TRUE and inspect the $Target_data output&#39;s columns to view your available options.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7158094">
+#>           <div class="form-group shiny-input-container" id="tipify3494275">
 #>             <label class="control-label" id="volcanoPlot-hover.round.digits-label" for="volcanoPlot-hover.round.digits">Hover Round Digits</label>
 #>             <input id="volcanoPlot-hover.round.digits" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="1" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7158094', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer number specifying the number of decimal digits to round displayed numeric values to, when do.hover is set to TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3494275', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer number specifying the number of decimal digits to round displayed numeric values to, when do.hover is set to TRUE.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-4273-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8682-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1037,7 +1061,7 @@ volcanoPlotInputsUI("volcanoPlot", airway_deseq2)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-4273-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8682-12">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
