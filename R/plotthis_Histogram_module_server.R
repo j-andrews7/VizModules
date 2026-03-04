@@ -105,7 +105,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "bins", value = NA)
             updateNumericInput(session, "bin.width", value = NA)
             updateMaterialSwitch(session, "use.trend", value = FALSE)

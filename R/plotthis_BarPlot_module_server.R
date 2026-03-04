@@ -110,6 +110,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             updateSelectInput(session, "group.by", selected = char.choices[2])
+            updateSelectInput(session, "fill.by", selected = char.choices[2])
 
 
             # Facet
@@ -134,7 +135,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateTextInput(session, "line.name", value = "")
 
             # Axes
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.max", value = max.y)
             updateNumericInput(session, "y.min", value = min.y)
 

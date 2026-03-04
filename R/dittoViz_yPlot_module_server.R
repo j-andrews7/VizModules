@@ -131,6 +131,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
             updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
             updateNumericInput(session, "boxplot.lineweight", value = 1)
+            updateNumericInput(session, "boxgap", value = 0.3)
+            updateNumericInput(session, "boxgroupgap", value = 0.2)
 
             # Violin
             updateNumericInput(session, "vlnplot.lineweight", value = 1)

@@ -13,13 +13,22 @@
 #' @importFrom shiny textInput br tagList numericInput
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
 #'
 #' @keywords internal
 .uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
+    intercept_tip <- paste(
+        "For categorical or factor axes, enter the index (position) of the",
+        "category rather than its name. For example, if the axis categories",
+        "are 'Audi', 'Mercedes', 'Bugatti', enter 2 to place a line at 'Mercedes'."
+    )
     base_inputs <- tagList(
-        textInput(ns("hline.intercepts"), "Y-intercepts",
-            placeholder = "e.g. 2, -2",
-            value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
+        tipify(
+            textInput(ns("hline.intercepts"), "Y-intercepts",
+                placeholder = "e.g. 2, -2",
+                value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
+            ),
+            intercept_tip, placement = "top", options = list(container = "body")
         ),
         textInput(ns("hline.colors"), "Colors",
             value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
@@ -35,9 +44,12 @@
             value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
         ),
         br(),
-        textInput(ns("vline.intercepts"), "X-intercepts",
-            placeholder = "e.g. 2, -2",
-            value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
+        tipify(
+            textInput(ns("vline.intercepts"), "X-intercepts",
+                placeholder = "e.g. 2, -2",
+                value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
+            ),
+            intercept_tip, placement = "top", options = list(container = "body")
         ),
         textInput(ns("vline.colors"), "Colors",
             value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
