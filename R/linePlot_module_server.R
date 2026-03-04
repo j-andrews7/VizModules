@@ -121,6 +121,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
 
             # Axes
+            updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.title.font.size", value = 18)
             colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
             updateSelectInput(session, "axis.title.font.family", selected = "Arial")
@@ -152,6 +153,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateTextInput(session, "vline.widths", value = "1")
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
+            updateTextInput(session, "abline.slopes", value = "")
         })
 
 

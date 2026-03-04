@@ -105,7 +105,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Adjustments
             updateSelectInput(session, "sort_x", selected = "none")
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
 
@@ -114,6 +114,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "pt.size", value = 1)
             updateNumericInput(session, "pt.alpha", value = 1)
             updateNumericInput(session, "jitter.width", value = 0.3)
+            updateNumericInput(session, "boxplot.width", value = 0.8)
 
             # Colors
             colourpicker::updateColourInput(session, "pt.color", value = "#000000")

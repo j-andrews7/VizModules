@@ -104,7 +104,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateMaterialSwitch(session, "add.bars", value = FALSE)
             updateNumericInput(session, "bar.height", value = 0.04)
             updateSliderInput(session, "bar.alpha", value = 1)

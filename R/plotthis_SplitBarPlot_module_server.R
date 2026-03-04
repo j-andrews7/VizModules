@@ -218,8 +218,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "bar.height", value = 0.9)
             updateNumericInput(session, "line.height", value = 0.5)
             updateMaterialSwitch(session, "label.on.y.axis", value = FALSE)
+            updateSliderInput(session, "axis.scale.factor", value = 1.2)
+            updateSliderInput(session, "text.position", value = 0)
             # Axes
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "x.max", value = max.x)
             updateNumericInput(session, "x.min", value = min.x)
 
