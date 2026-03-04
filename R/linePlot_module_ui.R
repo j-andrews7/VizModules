@@ -120,7 +120,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
         "Data" = tagList(
             tipify(selectInput(ns("x.value"), "Select X values:",
                 selected = names(data)[1], choices = names(data), multiple = TRUE
-            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Select Y values:",
                 selected = names(data)[2], choices = names(data), multiple = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),

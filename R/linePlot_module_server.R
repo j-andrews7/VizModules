@@ -26,6 +26,21 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
+        
+        observeEvent(input$x.value, {
+            if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
+                hide("errorBarWidth")
+                hide("errorBarColour")
+                hide("errorBar")
+            } else {
+                show("errorBar")
+                show("errorBarWidth")
+                show("errorBarColour")
+            }
+        }) 
+
+
+
         if (!is.null(hide.inputs)) {
             lapply(hide.inputs, function(input.name) {
                 hide(input.name)
@@ -39,7 +54,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             })
         }
 
-        ns <- session$ns
+        
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -83,6 +98,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         output$palette.selection <- renderUI({
+            ns <- session$ns
             groups <- palette_groups()
             if (length(groups) == 0) {
                 return(NULL)
@@ -324,12 +340,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             y_is_cat <- length(y_input) == 1 && nzchar(y_input) && !is.numeric(d[[y_input]])
             x_not_0 <- length(x_input) == 0
             y_not_0 <- length(y_input) == 0
-
+            multi_axis <- xor(length(x_input) > 1, length(y_input) > 1)
+            dual_multiAxis <- length(x_input) > 1 && length(y_input) > 1
             x_pure <- is_pure_type(c(x_input), d)
             y_pure <- is_pure_type(c(y_input), d)
 
             return_empty <- FALSE
             txt <- c()
+
+            
 
             if (x_is_cat && y_is_cat) {
                 return_empty <- TRUE
@@ -340,8 +359,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             } else if (!x_pure || !y_pure){
                 return_empty <- TRUE
                 txt <- c(txt, "Cant have a discrete and non discrete data input on the same axis.")
+            } else if (dual_multiAxis) {
+                return_empty <- TRUE
+                txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
+            } else if (multi_axis && !(input$group.by == "")){
+                return_empty <- TRUE
+                txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }
-
             if (return_empty){
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
@@ -352,7 +376,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             return(fig)
-            })
+        })
 
         # Download handler for interactive plot
         output$download.interactive <- .create_plot_download_handler(

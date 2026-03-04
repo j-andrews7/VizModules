@@ -235,7 +235,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             shareY <- FALSE
         }
 
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.06)
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.05)
 
         # Add subplot titles as annotations plus single axis titles
         n_facets <- length(facet_levels)
@@ -376,7 +376,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             
         }
         # Combining all elements of plots list into one plotly element
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.06)
+        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.05)
 
         # Add subplot titles as annotations plus single axis titles
         n_facets <- length(facet_levels)
@@ -520,7 +520,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
             font = list(size = title.font.size, family = title.font.family, color = title.text.color),
             x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
-        margin = list(t = 80),
+        margin = list(t = 70),
         showlegend = TRUE,
         xaxis = xaxis_style,
         yaxis = yaxis_style

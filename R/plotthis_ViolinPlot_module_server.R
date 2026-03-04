@@ -323,6 +323,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
             }
 
+           
+
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
