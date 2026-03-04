@@ -21,12 +21,12 @@ Depends:
     plotthis,
     dittoViz,
     plotly,
-    R (>= 3.5)
+    R (>= 3.5),
+    shinyBS
 Imports:
     colourpicker,
     dplyr,
     DT,
-    shinyBS,
     shinyjs,
     scales,
     shinyjqui,
