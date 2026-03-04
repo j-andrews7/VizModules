@@ -46,6 +46,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -82,118 +83,129 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         all.choices
     }
 
+    selected <- c("dimensions", "color.by", "color.scale",
+        "line.opacity", "line.width", "show.colorbar",
+        "label.font.size", "label.font.color", "label.font.family",
+        "tick.font.size", "tick.font.color", "tick.font.family",
+        "title.font.size", "title.font.family", "title.text.color", "bgcolor")
+
+    documentParameters <- get_documentation(
+        package_name = "VizModules::parallelCoordinatesPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("dimensions"), "Select dimensions:",
+            tipify(selectInput(ns("dimensions"), "Select dimensions:",
                 choices = all.choices,
                 selected = default_dims,
                 multiple = TRUE
-            ),
-            selectInput(ns("color.by"), "Color by:",
+            ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("color.by"), "Color by:",
                 choices = all.with.empty,
                 selected = ifelse("color.by" %in% names(defaults), defaults[["color.by"]], "")
-            )
+            ), documentParameters$color.by, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            selectInput(ns("color.scale"), "Color scale:",
+            tipify(selectInput(ns("color.scale"), "Color scale:",
                 choices = colorscale.choices,
                 selected = ifelse(
                     "color.scale" %in% names(defaults) && defaults[["color.scale"]] %in% colorscale.choices,
                     defaults[["color.scale"]],
                     "Viridis"
                 )
-            ),
-            sliderInput(ns("line.opacity"), "Line opacity:",
+            ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("line.opacity"), "Line opacity:",
                 min = 0, max = 1,
                 value = ifelse("line.opacity" %in% names(defaults),
                     ifelse(is.numeric(defaults[["line.opacity"]]), defaults[["line.opacity"]], 0.5),
                     0.5
                 ),
                 step = 0.05
-            ),
-            numericInput(ns("line.width"), "Line width:",
+            ), documentParameters$line.opacity, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("line.width"), "Line width:",
                 value = ifelse("line.width" %in% names(defaults),
                     ifelse(is.numeric(defaults[["line.width"]]), defaults[["line.width"]], 1),
                     1
                 ),
                 min = 0.5,
                 step = 0.5
-            ),
-            checkboxInput(ns("show.colorbar"), "Show colorbar",
+            ), documentParameters$line.width, placement = "top", options = list(container = "body")),
+            tipify(checkboxInput(ns("show.colorbar"), "Show colorbar",
                 value = ifelse("show.colorbar" %in% names(defaults),
                     isTRUE(defaults[["show.colorbar"]]),
                     TRUE
                 )
-            )
+            ), documentParameters$show.colorbar, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
-            numericInput(ns("label.font.size"), "Label font size:",
+            tipify(numericInput(ns("label.font.size"), "Label font size:",
                 value = ifelse("label.font.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["label.font.size"]]), defaults[["label.font.size"]], 12),
                     12
                 ),
                 min = 1, step = 1
-            ),
-            colourpicker::colourInput(ns("label.font.color"), "Label font color:",
+            ), documentParameters$label.font.size, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("label.font.color"), "Label font color:",
                 value = ifelse("label.font.color" %in% names(defaults),
                     defaults[["label.font.color"]], "black"
                 )
-            ),
-            selectInput(ns("label.font.family"), "Label font:",
+            ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("label.font.family"), "Label font:",
                 choices = font.choices,
                 selected = ifelse(
                     "label.font.family" %in% names(defaults) &&
                         defaults[["label.font.family"]] %in% font.choices,
                     defaults[["label.font.family"]], "Arial"
                 )
-            ),
-            numericInput(ns("tick.font.size"), "Tick font size:",
+            ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("tick.font.size"), "Tick font size:",
                 value = ifelse("tick.font.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["tick.font.size"]]), defaults[["tick.font.size"]], 10),
                     10
                 ),
                 min = 1, step = 1
-            ),
-            colourpicker::colourInput(ns("tick.font.color"), "Tick font color:",
+            ), documentParameters$tick.font.size, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("tick.font.color"), "Tick font color:",
                 value = ifelse("tick.font.color" %in% names(defaults),
                     defaults[["tick.font.color"]], "black"
                 )
-            ),
-            selectInput(ns("tick.font.family"), "Tick font:",
+            ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("tick.font.family"), "Tick font:",
                 choices = font.choices,
                 selected = ifelse(
                     "tick.font.family" %in% names(defaults) &&
                         defaults[["tick.font.family"]] %in% font.choices,
                     defaults[["tick.font.family"]], "Arial"
                 )
-            )
+            ), documentParameters$tick.font.family, placement = "top", options = list(container = "body"))
         ),
         "Title & Background" = tagList(
-            numericInput(ns("title.font.size"), "Title font size:",
+            tipify(numericInput(ns("title.font.size"), "Title font size:",
                 value = ifelse("title.font.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["title.font.size"]]), defaults[["title.font.size"]], 16),
                     16
                 ),
                 min = 1, step = 1
-            ),
-            selectInput(ns("title.font.family"), "Title font:",
+            ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
                 selected = ifelse(
                     "title.font.family" %in% names(defaults) &&
                         defaults[["title.font.family"]] %in% font.choices,
                     defaults[["title.font.family"]], "Arial"
                 )
-            ),
-            colourpicker::colourInput(ns("title.text.color"), "Title color:",
+            ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("title.text.color"), "Title color:",
                 value = ifelse("title.text.color" %in% names(defaults),
                     defaults[["title.text.color"]], "black"
                 )
-            ),
-            colourpicker::colourInput(ns("bgcolor"), "Background color:",
+            ), documentParameters$title.text.color, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("bgcolor"), "Background color:",
                 value = ifelse("bgcolor" %in% names(defaults),
                     defaults[["bgcolor"]], "#FFFFFF"
                 )
-            )
+            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         )
     )
 

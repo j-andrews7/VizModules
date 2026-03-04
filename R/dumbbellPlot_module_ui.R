@@ -36,6 +36,7 @@
 #'
 #' @import shiny
 #' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jacob Martin
@@ -64,47 +65,56 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
+    selected <- c("x", "y", "x.adjustment", "colour.by",
+        "facet.by", "facet.scales", "line.colour")
+
+    documentParameters <- get_documentation(
+        package_name = "VizModules::dumbbellPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-          selectInput(ns("x.value"), "Select X values (max 2):",
-          selected = if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
-          choices = num.choices, multiple = TRUE
-          ),
-          selectInput(ns("y.value"), "Select Y value:",
-          selected = if (length(cat.choices) > 1) cat.choices[2] else "",
-          choices = cat.choices, multiple = FALSE
-          ),
-          selectInput(ns("x.adjustment"), "X Adjustment:",
-            choices = adj.choices,
-            selected = ifelse("x.adjustment" %in% names(defaults),
-                ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
-                ""
-            )
-          ),
-          selectInput(ns("colour.by"), "Colour by:",
-            choices = c("X variables", "Y variables"),
-            selected = "X variables"
-          )
+            tipify(selectInput(ns("x.value"), "Select X values (max 2):",
+                selected = if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
+                choices = num.choices, multiple = TRUE
+            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("y.value"), "Select Y value:",
+                selected = if (length(cat.choices) > 1) cat.choices[2] else "",
+                choices = cat.choices, multiple = FALSE
+            ), documentParameters$y, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("x.adjustment"), "X Adjustment:",
+                choices = adj.choices,
+                selected = ifelse("x.adjustment" %in% names(defaults),
+                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
+                    ""
+                )
+            ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("colour.by"), "Colour by:",
+                choices = c("X variables", "Y variables"),
+                selected = "X variables"
+            ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:",
-            selected = "", choices = cat.choices
-            ),
-            selectInput(ns("facet.scales"), "Facet scales",
-            choices   = c("fixed", "free", "free_x", "free_y"),
-            selected  = ifelse("facet.scales" %in% names(defaults),
-                ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
-                defaults[["facet.scales"]], "fixed"
-                ),
-                "fixed"
-            )
-            )
+            tipify(selectInput(ns("facet.by"), "Facet by:",
+                selected = "", choices = cat.choices
+            ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scales"), "Facet scales",
+                choices   = c("fixed", "free", "free_x", "free_y"),
+                selected  = ifelse("facet.scales" %in% names(defaults),
+                    ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
+                    defaults[["facet.scales"]], "fixed"
+                    ),
+                    "fixed"
+                )
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
 
         "Aesthetics" = tagList(
-          uiOutput(ns("palette.selection")),
-          colourpicker::colourInput(ns("line.colour"), "Colour Of conectors", value = "red")
+            uiOutput(ns("palette.selection")),
+            tipify(colourpicker::colourInput(ns("line.colour"), "Colour Of conectors", value = "red"),
+                documentParameters$line.colour, placement = "top", options = list(container = "body"))
         ),
 
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),

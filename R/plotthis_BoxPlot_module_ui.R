@@ -191,7 +191,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             "highlight", "highlight_color", "highlight_size", "highlight_alpha",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::BoxPlot", type = "param",
         selected = selected, cap = TRUE
     )

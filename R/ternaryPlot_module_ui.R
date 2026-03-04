@@ -65,6 +65,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jacob Martin
@@ -96,37 +97,52 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "sans-serif", "serif", "monospace"
     )
 
+    selected <- c("a", "b", "c", "group", "sum", "mode",
+        "marker.size", "marker.symbol", "marker.line.width", "marker.line.color",
+        "line.width", "line.dash", "opacity",
+        "a.title", "b.title", "c.title",
+        "a.titlefont.size", "b.titlefont.size", "c.titlefont.size",
+        "a.gridcolor", "b.gridcolor", "c.gridcolor",
+        "title.font.size", "title.font.family", "title.font.color",
+        "show.legend", "legend.orientation", "legend.font.family",
+        "legend.font.size", "legend.font.color", "bgcolor")
+
+    documentParameters <- get_documentation(
+        package_name = "VizModules::ternaryPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("a"), "A-axis column:",
+            tipify(selectInput(ns("a"), "A-axis column:",
                 selected = ifelse("a" %in% names(defaults), defaults[["a"]], default_a),
                 choices = num.choices
-            ),
-            selectInput(ns("b"), "B-axis column:",
+            ), documentParameters$a, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("b"), "B-axis column:",
                 selected = ifelse("b" %in% names(defaults), defaults[["b"]], default_b),
                 choices = num.choices
-            ),
-            selectInput(ns("c"), "C-axis column:",
+            ), documentParameters$b, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("c"), "C-axis column:",
                 selected = ifelse("c" %in% names(defaults), defaults[["c"]], default_c),
                 choices = num.choices
-            ),
-            selectInput(ns("group"), "Colour By:",
+            ), documentParameters$c, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("group"), "Colour By:",
                 selected = ifelse("group" %in% names(defaults),
                     defaults[["group"]],
                     ""
                 ),
                 choices = all.choices
-            ),
-            numericInput(ns("sum"), "Sum:",
+            ), documentParameters$group, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("sum"), "Sum:",
                 value = ifelse("sum" %in% names(defaults),
                     ifelse(is.numeric(defaults[["sum"]]), defaults[["sum"]], 100),
                     100
                 ),
                 min = 0
-            )
+            ), documentParameters$sum, placement = "top", options = list(container = "body"))
         ),
         "Trace Style" = tagList(
-            selectInput(ns("mode"), "Mode:",
+            tipify(selectInput(ns("mode"), "Mode:",
                 choices = c(
                     "Markers" = "markers",
                     "Lines + Markers" = "lines+markers"
@@ -135,16 +151,16 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["mode"]],
                     "markers"
                 )
-            ),
-            numericInput(ns("marker.size"), "Marker size:",
+            ), documentParameters$mode, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marker.size"), "Marker size:",
                 value = ifelse("marker.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["marker.size"]]), defaults[["marker.size"]], 8),
                     8
                 ),
                 min = 0,
                 step = 1
-            ),
-            selectInput(ns("marker.symbol"), "Marker symbol:",
+            ), documentParameters$marker.size, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("marker.symbol"), "Marker symbol:",
                 choices = c(
                     "Circle" = "circle",
                     "Square" = "square",
@@ -158,30 +174,30 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["marker.symbol"]],
                     "circle"
                 )
-            ),
-            numericInput(ns("marker.line.width"), "Marker border width:",
+            ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marker.line.width"), "Marker border width:",
                 value = ifelse("marker.line.width" %in% names(defaults),
                     ifelse(is.numeric(defaults[["marker.line.width"]]), defaults[["marker.line.width"]], 0),
                     0
                 ),
                 min = 0,
                 step = 0.5
-            ),
-            colourpicker::colourInput(ns("marker.line.color"), "Marker border color:",
+            ), documentParameters$marker.line.width, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("marker.line.color"), "Marker border color:",
                 value = ifelse("marker.line.color" %in% names(defaults),
                     defaults[["marker.line.color"]],
                     "#000000"
                 )
-            ),
-            numericInput(ns("line.width"), "Line width:",
+            ), documentParameters$marker.line.color, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("line.width"), "Line width:",
                 value = ifelse("line.width" %in% names(defaults),
                     ifelse(is.numeric(defaults[["line.width"]]), defaults[["line.width"]], 2),
                     2
                 ),
                 min = 0,
                 step = 0.5
-            ),
-            selectInput(ns("line.dash"), "Line style:",
+            ), documentParameters$line.width, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("line.dash"), "Line style:",
                 choices = c(
                     "Solid" = "solid",
                     "Dot" = "dot",
@@ -194,85 +210,85 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["line.dash"]],
                     "solid"
                 )
-            ),
-            sliderInput(ns("opacity"), "Opacity:",
+            ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("opacity"), "Opacity:",
                 min = 0, max = 1,
                 value = ifelse("opacity" %in% names(defaults),
                     defaults[["opacity"]],
                     1
                 ),
                 step = 0.05
-            ),
+            ), documentParameters$opacity, placement = "top", options = list(container = "body")),
             uiOutput(ns("color.picker"))
         ),
         "Axes" = tagList(
-            textInput(ns("a.title"), "A-axis title:",
+            tipify(textInput(ns("a.title"), "A-axis title:",
                 value = ifelse("a.title" %in% names(defaults),
                     defaults[["a.title"]],
                     ""
                 )
-            ),
-            textInput(ns("b.title"), "B-axis title:",
+            ), documentParameters$a.title, placement = "top", options = list(container = "body")),
+            tipify(textInput(ns("b.title"), "B-axis title:",
                 value = ifelse("b.title" %in% names(defaults),
                     defaults[["b.title"]],
                     ""
                 )
-            ),
-            textInput(ns("c.title"), "C-axis title:",
+            ), documentParameters$b.title, placement = "top", options = list(container = "body")),
+            tipify(textInput(ns("c.title"), "C-axis title:",
                 value = ifelse("c.title" %in% names(defaults),
                     defaults[["c.title"]],
                     ""
                 )
-            ),
-            numericInput(ns("a.titlefont.size"), "A-axis title size:",
+            ), documentParameters$c.title, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("a.titlefont.size"), "A-axis title size:",
                 value = ifelse("a.titlefont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["a.titlefont.size"]]), defaults[["a.titlefont.size"]], 16),
                     16
                 ),
                 min = 0
-            ),
-            numericInput(ns("b.titlefont.size"), "B-axis title size:",
+            ), documentParameters$a.titlefont.size, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("b.titlefont.size"), "B-axis title size:",
                 value = ifelse("b.titlefont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["b.titlefont.size"]]), defaults[["b.titlefont.size"]], 16),
                     16
                 ),
                 min = 0
-            ),
-            numericInput(ns("c.titlefont.size"), "C-axis title size:",
+            ), documentParameters$b.titlefont.size, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("c.titlefont.size"), "C-axis title size:",
                 value = ifelse("c.titlefont.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["c.titlefont.size"]]), defaults[["c.titlefont.size"]], 16),
                     16
                 ),
                 min = 0
-            ),
-            colourpicker::colourInput(ns("a.gridcolor"), "A-axis grid color:",
+            ), documentParameters$c.titlefont.size, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("a.gridcolor"), "A-axis grid color:",
                 value = ifelse("a.gridcolor" %in% names(defaults),
                     defaults[["a.gridcolor"]],
                     "#EEEEEE"
                 )
-            ),
-            colourpicker::colourInput(ns("b.gridcolor"), "B-axis grid color:",
+            ), documentParameters$a.gridcolor, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("b.gridcolor"), "B-axis grid color:",
                 value = ifelse("b.gridcolor" %in% names(defaults),
                     defaults[["b.gridcolor"]],
                     "#EEEEEE"
                 )
-            ),
-            colourpicker::colourInput(ns("c.gridcolor"), "C-axis grid color:",
+            ), documentParameters$b.gridcolor, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("c.gridcolor"), "C-axis grid color:",
                 value = ifelse("c.gridcolor" %in% names(defaults),
                     defaults[["c.gridcolor"]],
                     "#EEEEEE"
                 )
-            )
+            ), documentParameters$c.gridcolor, placement = "top", options = list(container = "body"))
         ),
         "Title & Legend" = tagList(
-            numericInput(ns("title.font.size"), "Title font size:",
+            tipify(numericInput(ns("title.font.size"), "Title font size:",
                 value = ifelse("title.font.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["title.font.size"]]), defaults[["title.font.size"]], 18),
                     18
                 ),
                 min = 0
-            ),
-            selectInput(ns("title.font.family"), "Title font:",
+            ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
                 selected = ifelse(
                     "title.font.family" %in% names(defaults) &&
@@ -280,27 +296,27 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["title.font.family"]],
                     "Arial"
                 )
-            ),
-            colourpicker::colourInput(ns("title.font.color"), "Title font color:",
+            ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
                 value = ifelse("title.font.color" %in% names(defaults),
                     defaults[["title.font.color"]],
                     "#000000"
                 )
-            ),
-            checkboxInput(ns("show.legend"), "Show legend",
+            ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
+            tipify(checkboxInput(ns("show.legend"), "Show legend",
                 value = ifelse("show.legend" %in% names(defaults),
                     isTRUE(defaults[["show.legend"]]),
                     TRUE
                 )
-            ),
-            selectInput(ns("legend.orientation"), "Legend orientation:",
+            ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("legend.orientation"), "Legend orientation:",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
                 selected = ifelse("legend.orientation" %in% names(defaults),
                     defaults[["legend.orientation"]],
                     "h"
                 )
-            ),
-            selectInput(ns("legend.font.family"), "Legend font:",
+            ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("legend.font.family"), "Legend font:",
                 choices = font.choices,
                 selected = ifelse(
                     "legend.font.family" %in% names(defaults) &&
@@ -308,29 +324,29 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     defaults[["legend.font.family"]],
                     "Arial"
                 )
-            ),
-            numericInput(ns("legend.font.size"), "Legend font size:",
+            ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("legend.font.size"), "Legend font size:",
                 value = ifelse("legend.font.size" %in% names(defaults),
                     ifelse(is.numeric(defaults[["legend.font.size"]]), defaults[["legend.font.size"]], 12),
                     12
                 ),
                 min = 1,
                 step = 1
-            ),
-            colourpicker::colourInput(ns("legend.font.color"), "Legend font color:",
+            ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
+            tipify(colourpicker::colourInput(ns("legend.font.color"), "Legend font color:",
                 value = ifelse("legend.font.color" %in% names(defaults),
                     defaults[["legend.font.color"]],
                     "#000000"
                 )
-            )
+            ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
         "Background" = tagList(
-            colourpicker::colourInput(ns("bgcolor"), "Background color:",
+            tipify(colourpicker::colourInput(ns("bgcolor"), "Background color:",
                 value = ifelse("bgcolor" %in% names(defaults),
                     defaults[["bgcolor"]],
                     "#FFFFFF"
                 )
-            )
+            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         )
     )
 

@@ -167,7 +167,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
             "split_by", "alpha", "width", "expand", "y_min", "y_max")
 
-    documentParameters <- .get_documentation(
+    documentParameters <- get_documentation(
         package_name = "plotthis::BarPlot", type = "param",
         selected = selected, cap = TRUE
     )
