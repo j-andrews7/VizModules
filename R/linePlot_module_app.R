@@ -87,7 +87,7 @@ linePlotApp <- function(data_list = NULL) {
 
         rv <- reactiveValues(datasets = data_list)
 
-        # Explicit reactive that updates on BOTH dataset switch and cell edits
+        # Reactive that tracks the active data for the plot module
         active_data <- reactiveVal(NULL)
 
         # Update active_data whenever the selected dataset changes
@@ -96,14 +96,18 @@ linePlotApp <- function(data_list = NULL) {
             active_data(rv$datasets[[input$plot_select]])
         })
 
-        # Cell edits write back AND explicitly push updated data into active_data
+        # Proxy for updating the table without a full re-render
+        proxy <- DT::dataTableProxy("data_table")
+
+        # Cell edits write back and push updated data to trigger plot re-render
         observeEvent(input$data_table_cell_edit, {
             info <- input$data_table_cell_edit
             name <- input$plot_select
             d <- rv$datasets[[name]]
             d[info$row, info$col + 1L] <- DT::coerceValue(info$value, d[info$row, info$col + 1L])
             rv$datasets[[name]] <- d
-            active_data(d)  # <-- explicitly push updated data to trigger plot re-render
+            DT::replaceData(proxy, d, resetPaging = FALSE, rownames = FALSE)
+            active_data(d)
         })
 
         # ---- Data Import ----
@@ -134,9 +138,12 @@ linePlotApp <- function(data_list = NULL) {
         })
 
         # ---- Table ----
+        # Full render only on dataset switch; cell edits update via proxy
         output$data_table <- DT::renderDataTable({
-            req(active_data())
-            DT::datatable(active_data(),
+            req(input$plot_select)
+            d <- isolate(rv$datasets[[input$plot_select]])
+            req(d)
+            DT::datatable(d,
                 editable = TRUE,
                 filter = "top",
                 rownames = FALSE,
@@ -145,9 +152,12 @@ linePlotApp <- function(data_list = NULL) {
         })
 
         # ---- Plot Settings UI ----
+        # Only re-render when the dataset selection changes, not on cell edits
         output$plot_inputs_ui <- renderUI({
-            req(active_data())
-            linePlotInputsUI("active_plot", active_data(),
+            req(input$plot_select)
+            d <- isolate(rv$datasets[[input$plot_select]])
+            req(d)
+            linePlotInputsUI("active_plot", d,
                 title = h3(paste(input$plot_select, "Settings"))
             )
         })
@@ -155,5 +165,5 @@ linePlotApp <- function(data_list = NULL) {
         # ---- Plot Module ----
         linePlotServer("active_plot", data = active_data)
     }
-shinyApp(ui, server)
+    shinyApp(ui, server)
 }
