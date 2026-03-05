@@ -49,46 +49,46 @@ linePlotApp <- function(data_list = NULL) {
         title = "Modular linePlots",
         useShinyjs(),
 
-        # --- Data Input tab ---
-        tabPanel("Data Input",
+        tabPanel("App",
             sidebarLayout(
                 sidebarPanel(
+
+                    # --- Data Import ---
+                    h4("Data Import"),
                     fileInput("file_upload", "Upload Excel File",
                         accept = c(".xlsx", ".xls")
                     ),
-                    actionButton("load_data", "Load Data", class = "btn-primary")
-                ),
-                mainPanel(
-                    h4("Available Datasets"),
-                    uiOutput("dataset_info")
-                )
-            )
-        ),
+                    actionButton("load_data", "Load Data", class = "btn-primary"),
+                    hr(),
 
-        # --- Table tab ---
-        tabPanel("Table",
-            fluidRow(
-                column(4,
-                    selectInput("table_select", "Select Dataset:", choices = names(data_list))
-                )
-            ),
-            DT::dataTableOutput("data_table")
-        ),
-
-        # --- Plots tab ---
-        tabPanel("Plots",
-            sidebarLayout(
-                sidebarPanel(
+                    # --- Dataset Selection ---
+                    h4("Plot Settings"),
                     selectInput("plot_select", "Select Dataset:", choices = names(data_list)),
                     helpText("Plot settings reset when switching datasets."),
                     uiOutput("plot_inputs_ui")
+
                 ),
                 mainPanel(
-                    linePlotOutputUI("active_plot")
+
+                    # --- Plot ---
+                    h4("Plot"),
+                    linePlotOutputUI("active_plot"),
+                    hr(),
+
+                    # --- Table ---
+                    h4("Data Table"),
+                    fluidRow(
+                        column(4,
+                            selectInput("table_select", "Select Dataset:", choices = names(data_list))
+                        )
+                    ),
+                    DT::dataTableOutput("data_table")
+
                 )
             )
         )
     )
+
 
     server <- function(input, output, session) {
         # Reactive store for all datasets
