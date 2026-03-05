@@ -45,11 +45,11 @@ linePlotApp <- function(data_list = NULL) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- navbarPage(
+    ui <- fluidPage(
         title = "Modular linePlots",
         useShinyjs(),
 
-        tabPanel("App",
+        
             sidebarLayout(
                 sidebarPanel(
 
@@ -71,12 +71,15 @@ linePlotApp <- function(data_list = NULL) {
                 mainPanel(
 
                     # --- Plot ---
-                    h4("Plot"),
+                    h4(),
                     linePlotOutputUI("active_plot"),
                     hr(),
 
                     # --- Table ---
                     h4("Data Table"),
+                        p("Filtering of the data table will result in changes to the plot",
+                        style = "color: grey; font-size: 12px;"),
+
                     fluidRow(
                         column(4,
                             selectInput("table_select", "Select Dataset:", choices = names(data_list))
@@ -87,7 +90,7 @@ linePlotApp <- function(data_list = NULL) {
                 )
             )
         )
-    )
+    
 
 
     server <- function(input, output, session) {
