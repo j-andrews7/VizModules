@@ -246,6 +246,76 @@ To contribute a new module to the package, see the vignette for guidelines: `vig
 
 ### Examples of Plots:
 
-LinePlot:
+['LinePlot:'][1]
 
 ![](man/PlotImages/LinePlot.png)
+
+['AreaPlot:'][2]
+
+![](man/PlotImages/AreaPlot.png)
+
+['BoxPlot:'][3]
+
+![](man/PlotImages/BoxPlot.png)
+
+['DensityPlot:'][4]
+
+![](man/PlotImages/DensityPlot.png)
+
+['DumbellPlot:'][5]
+
+![](man/PlotImages/DumbellPlot.png)
+
+['HistogramPlot:'][6]
+
+![](man/PlotImages/HistogramPlot.png)
+
+['ParallelCoordinatePlot:'][7]
+
+![](man/PlotImages/ParallelPlot.png)
+
+['PiePlot:'][8]
+
+![](man/PlotImages/PiePlot.png)
+
+['RadarPlot:'][9]
+
+![](man/PlotImages/RadarPlot.png)
+
+['ScatterPlot:'][10]
+
+![](man/PlotImages/ScatterPlot.png)
+
+['SplitBarPlot:'][11]
+
+![](man/PlotImages/SplitBarPlot.png)
+
+['TernaryPlot:'][12]
+
+![](man/PlotImages/ternaryPlot.png)
+
+['ViolinPlot:'][13]
+
+![](man/PlotImages/ViolinPlot.png)
+
+['yPlot:'][14]
+
+![](man/PlotImages/yPlot.png)
+
+
+
+
+[1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
+[2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
+[3]: https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html
+[4]: https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html
+[5]:https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html
+[6]:https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html
+[7]:https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html
+[8]:https://j-andrews7.github.io/VizModules/reference/piePlotApp.html
+[9]:https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
+[10]:https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
+[11]:https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
+[12]:https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
+[13]:https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
+[14]:https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
