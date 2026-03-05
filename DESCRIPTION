@@ -27,6 +27,7 @@ Imports:
     colourpicker,
     dplyr,
     DT,
+    readxl,
     shinyjs,
     scales,
     shinyjqui,

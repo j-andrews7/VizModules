@@ -4,24 +4,37 @@
 \alias{linePlotApp}
 \title{Create an example Modular linePlot Shiny Application}
 \usage{
-linePlotApp(data_list)
+linePlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which linePlot modules will be created.
-That is, UI inputs and a line plot will be generated for each.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("iris" = iris, "mtcars" = mtcars)} is used as example data.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[=linePlot]{linePlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features three tabs: a \strong{Data Input} tab for uploading Excel spreadsheets,
+a \strong{Table} tab for viewing and editing the active dataset, and a \strong{Plots} tab
+for configuring and displaying an interactive line plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{iris} and \code{mtcars} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- linePlotApp(data_list)
+# Launch with default example data (iris & mtcars):
+app <- linePlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- linePlotApp(list("cars" = mtcars))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[=linePlot]{linePlot()}}, \code{\link[=linePlotInputsUI]{linePlotInputsUI()}},
