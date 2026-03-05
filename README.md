@@ -246,6 +246,6 @@ To contribute a new module to the package, see the vignette for guidelines: `vig
 
 ### Examples of Plots:
 
-['LinePlot']
+LinePlot:
 
 ![](man/PlotImages/LinePlot.png)
