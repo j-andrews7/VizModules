@@ -940,85 +940,99 @@
     )
 }
 
-#' Calculate Y-axis range from data
+#' Calculate axis range from data
 #'
-#' Computes a numeric range for the Y-axis based on a specified column in a
-#' data frame, applying a scaling factor to the maximum value. This is useful
-#' for deriving dynamic axis limits directly from the underlying data.
+#' Computes a numeric range for the Y-axis based on specified columns in a
+#' data frame, applying a scaling factor to the maximum value. Handles both
+#' simple (non-stacked) and stacked bar scenarios, where stacking occurs when
+#' \code{group.by} or \code{fill.by} is numeric.
 #'
-#' @param df Data frame. The data containing the Y variable.
-#' @param data_col_y name of the y data column as a string 
-#' @param data_col_x name of the x data column as a string 
+#' @param df Data frame. The data containing the variables to range over.
+#' @param data_col_y Character string. Name of the numeric Y-axis data column.
+#'   Takes priority over \code{data_col_x} if both are provided.
+#' @param data_col_x Character string. Name of the X-axis data column. Required
+#'   when \code{grouping = TRUE} or \code{stack_by} is specified, as it defines
+#'   the groups over which Y values are summed.
 #' @param axis_scale_factor Numeric. Multiplicative factor applied to the
 #'   maximum Y value to provide additional headroom on the axis.
+#' @param grouping Logical. If \code{TRUE}, bars are treated as stacked and the
+#'   maximum is derived from the sum of Y values within each X group rather than
+#'   the raw maximum. Defaults to \code{FALSE}.
+#' @param stack_by Character string or \code{NULL}. Name of the column used for
+#'   stacking (i.e. \code{group.by} or \code{fill.by}). When this column is
+#'   numeric, bars are stacked and Y values are summed per X category before
+#'   computing the maximum. Ignored if \code{NULL} or if the column is
+#'   categorical. Defaults to \code{NULL}.
 #'
 #' @return A named list with components \code{min} and \code{max} giving the
-#'   lower and upper limits for the Y-axis, or \code{NULL} if the input column
-#'   is missing, non-numeric, or otherwise invalid.
+#'   lower and upper limits for the Y-axis, or \code{NULL} if any required
+#'   column is missing, non-numeric, or otherwise invalid.
 #'
-#' @details The function first validates that \code{data_col} is specified
-#'   and corresponds to a numeric column in \code{df}. It then computes the
-#'   minimum and maximum of that column, ignoring \code{NA} values, and scales
-#'   the maximum by \code{axis_scale_factor}. Non-finite results are replaced
-#'   by default values of 0 for the minimum and 1 for the maximum.
+#' @details
+#' The function resolves the primary data column from \code{data_col_y} or
+#' \code{data_col_x} and validates that it exists and is numeric in \code{df}.
+#'
+#' Behaviour depends on whether bars are stacked:
+#' \itemize{
+#'   \item \strong{Non-stacked} (\code{grouping = FALSE}, categorical or absent
+#'     \code{stack_by}): the Y range is computed directly from the raw column
+#'     values using \code{min()} and \code{max()}.
+#'   \item \strong{Stacked} (\code{grouping = TRUE} or \code{stack_by} is
+#'     numeric): Y values are summed within each unique X category using
+#'     \code{tapply()}, and the maximum of those sums is used. The minimum is
+#'     fixed at 0 since stacked bars always originate from zero.
+#' }
+#'
+#' Non-finite results (e.g. from empty or all-\code{NA} columns) are replaced
+#' with default values of 0 for the minimum and 1 for the maximum.
 #'
 #' @author Jacob Martin
 #' @keywords internal
-#' @rdname INTERNAL_calculate_y_range
-.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL, axis_scale_factor, grouping = FALSE, sum = FALSE, group.by = NULL) {
-    if (!is.null(data_col_x)) {
-        data_col <- data_col_x
-    }
-    if (!is.null(data_col_y)) {
-        data_col <- data_col_y
-    }
-    if (!grouping){
-        if (is.null(data_col) || data_col == "") {
-            list<- NULL
-        }
+#' @rdname INTERNAL_calculate_range
+.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL,
+                              axis_scale_factor, grouping = FALSE,
+                              stack_by = NULL) {
+  # Resolve primary data column
+  data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
 
-        if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
-            list <- NULL
-        }
+  # Basic guards
+  if (is.null(data_col) || !nzchar(data_col)) return(NULL)
+  if (!data_col %in% names(df)) return(NULL)
+  if (!is.numeric(df[[data_col]])) return(NULL)
 
-        # Calculate min and max from raw data
-        min <- min(df[[data_col]], na.rm = TRUE)
-        max <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-
-        # Handle edge cases
-        if (!is.finite(min)) min <- 0
-        if (!is.finite(max)) max <- 1
-
-        list <- list(min = min, max = max)
-
-    } else if (grouping && !sum){
-        if (is.numeric(df[[data_col_x]])) {
-            numeric_list <- split(df[[data_col_x]], df[[data_col_y]])
-            values_list <- list()
-            for (i in seq_along(numeric_list)){
-                sum <- sum(abs(numeric_list[[i]]))
-                values_list <- append(values_list, sum)
-            }
-        
-            all_counts <- unlist(values_list)
-            max <- max(all_counts, na.rm = TRUE) * axis_scale_factor
-            min <- min(all_counts, na.rm = TRUE)
-        
-            list <- list(min = min, max = max) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
-        }
-    } else if (sum && !grouping && !is.null(group.by)){
-        if (!group.by %in% names(df) || !data_col_y %in% names(df) || !data_col_x %in% names(df)) return(NULL)
-        
-        # For each unique x value, sum all y values across all groups
-        x_sums <- tapply(df[[data_col_y]], df[[data_col_x]], function(x) sum(x, na.rm = TRUE))
-        
-        max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
-        
-        return(list(min = 0, max = max_val))
+  if (!grouping) {
+    # --- Non-stacked: bars are NOT stacked, just find the max single value ---
+    # If stack_by is provided and numeric, bars ARE stacked → sum per x group
+    if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
+      # Numeric stack_by: stacked bars, sum y per x category
+      if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
+      x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+      max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+      min_val <- 0
+    } else {
+      # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+      max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+      min_val <- min(df[[data_col]], na.rm = TRUE)
     }
 
-    return(list)
+    if (!is.finite(min_val)) min_val <- 0
+    if (!is.finite(max_val)) max_val <- 1
+
+    return(list(min = min_val, max = max_val))
+
+  } else {
+    # --- Stacked grouping: sum y values per x group ---
+    if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
+    x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+    max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+    min_val <- 0
+
+    if (!is.finite(max_val)) max_val <- 1
+
+    return(list(min = min_val, max = max_val))
+  }
 }
+
 
 #' Remove boxplot outliers from plotly figure
 #'

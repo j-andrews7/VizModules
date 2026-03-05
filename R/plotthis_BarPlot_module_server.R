@@ -130,7 +130,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
-            updateSelectInput(session, "group.by", selected = "")
+            updateSelectInput(session, "group.by", selected = char.choices[2])
             updateSelectInput(session, "fill.by", selected = "")
 
 
@@ -203,24 +203,39 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
-        observeEvent(list(input$y.data, input$group.by), {
-            if (!is.numeric(data()[[input$group.by]])) {
-                y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.18, grouping = FALSE)
-                if (!is.null(y_range)) {
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
-                }
-            } else {
-                message("Grouped = numeric ")
-                y_range <- .calculate_range(df = data(), data_col_y = input$y.data, data_col_x = input$x.data, axis_scale_factor = 1.18, grouping = FALSE, sum = TRUE, group.by = input$group.by)
-                if (!is.null(y_range)) {
-                    message("not  null")
-                    message(y_range$max)
-                    updateNumericInput(session, "y.max", value = y_range$max)
-                    updateNumericInput(session, "y.min", value = y_range$min)
-                }
+        observeEvent(list(input$y.data, input$group.by, input$fill.by), {
+            req(input$y.data, input$x.data)
+            req(input$y.data %in% names(data()))
+            req(input$x.data %in% names(data()))
+
+            group_by_val <- if (nzchar(input$group.by)) input$group.by else NULL
+            fill_by_val  <- if (nzchar(input$fill.by))  input$fill.by  else NULL
+
+            # Determine if stacking is happening:
+            # Stacked when group.by is numeric OR fill.by is numeric
+            group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
+            fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
+
+            is_stacked <- group_is_numeric || fill_is_numeric
+
+            # Pick which column is doing the stacking (for tapply grouping by x)
+            stack_col <- if (group_is_numeric) group_by_val else if (fill_is_numeric) fill_by_val else NULL
+
+            y_range <- .calculate_range(
+                df                = data(),
+                data_col_x        = input$x.data,
+                data_col_y        = input$y.data,
+                axis_scale_factor = 1.18,
+                grouping          = is_stacked,
+                stack_by          = stack_col
+            )
+
+            if (!is.null(y_range)) {
+                updateNumericInput(session, "y.max", value = y_range$max)
+                updateNumericInput(session, "y.min", value = y_range$min)
             }
-            })
+        })
+
 
 
         generate_BarPlot <- reactive({
