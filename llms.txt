@@ -294,59 +294,59 @@ guidelines:
 
 ### Examples of Plots:
 
-[‘LinePlot:’](https://j-andrews7.github.io/VizModules/reference/linePlotApp.html)
+[linePlot:](https://j-andrews7.github.io/VizModules/reference/linePlotApp.html)
 
 ![](man/PlotImages/LinePlot.png)
 
-[‘AreaPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html)
+[AreaPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html)
 
 ![](man/PlotImages/AreaPlot.png)
 
-[‘BoxPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html)
+[BoxPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html)
 
 ![](man/PlotImages/BoxPlot.png)
 
-[‘DensityPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html)
+[DensityPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html)
 
 ![](man/PlotImages/DensityPlot.png)
 
-[‘DumbellPlot:’](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html)
+[dumbellPlot:](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html)
 
 ![](man/PlotImages/DumbellPlot.png)
 
-[‘HistogramPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
+[HistogramPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
 
 ![](man/PlotImages/HistogramPlot.png)
 
-[‘ParallelCoordinatePlot:’](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html)
+[parallelCoordinatePlot:](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html)
 
 ![](man/PlotImages/ParallelPlot.png)
 
-[‘PiePlot:’](https://j-andrews7.github.io/VizModules/reference/piePlotApp.html)
+[piePlot:](https://j-andrews7.github.io/VizModules/reference/piePlotApp.html)
 
 ![](man/PlotImages/PiePlot.png)
 
-[‘RadarPlot:’](https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html)
+[radarPlot:](https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html)
 
 ![](man/PlotImages/RadarPlot.png)
 
-[‘ScatterPlot:’](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
+[ScatterPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
 
 ![](man/PlotImages/ScatterPlot.png)
 
-[‘SplitBarPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html)
+[SplitBarPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html)
 
 ![](man/PlotImages/SplitBarPlot.png)
 
-[‘TernaryPlot:’](https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html)
+[ternaryPlot:](https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html)
 
 ![](man/PlotImages/ternaryPlot.png)
 
-[‘ViolinPlot:’](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
+[ViolinPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
 
 ![](man/PlotImages/ViolinPlot.png)
 
-[‘yPlot:’](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
+[yPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
 
 ![](man/PlotImages/yPlot.png)
 
