@@ -291,3 +291,9 @@ created as more visualization functions are added.
 To contribute a new module to the package, see the vignette for
 guidelines:
 [`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.md).
+
+### Examples of Plots:
+
+\[‘LinePlot’\]
+
+![](man/PlotImages/LinePlot.png)
