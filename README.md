@@ -242,3 +242,10 @@ dittoViz is under active development, so additional modules will be created as m
 ## Contributing a New Module
 
 To contribute a new module to the package, see the vignette for guidelines: `vignette("adding-a-new-module", package = "VizModules")`.
+
+
+### Examples of Plots:
+
+['LinePlot']
+
+![](man/PlotImages/LinePlot.png)
