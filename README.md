@@ -246,59 +246,59 @@ To contribute a new module to the package, see the vignette for guidelines: `vig
 
 ### Examples of Plots:
 
-['LinePlot:'][1]
+[linePlot:][1]
 
 ![](man/PlotImages/LinePlot.png)
 
-['AreaPlot:'][2]
+[AreaPlot:][2]
 
 ![](man/PlotImages/AreaPlot.png)
 
-['BoxPlot:'][3]
+[BoxPlot:][3]
 
 ![](man/PlotImages/BoxPlot.png)
 
-['DensityPlot:'][4]
+[DensityPlot:][4]
 
 ![](man/PlotImages/DensityPlot.png)
 
-['DumbellPlot:'][5]
+[dumbellPlot:][5]
 
 ![](man/PlotImages/DumbellPlot.png)
 
-['HistogramPlot:'][6]
+[HistogramPlot:][6]
 
 ![](man/PlotImages/HistogramPlot.png)
 
-['ParallelCoordinatePlot:'][7]
+[parallelCoordinatePlot:][7]
 
 ![](man/PlotImages/ParallelPlot.png)
 
-['PiePlot:'][8]
+[piePlot:][8]
 
 ![](man/PlotImages/PiePlot.png)
 
-['RadarPlot:'][9]
+[radarPlot:][9]
 
 ![](man/PlotImages/RadarPlot.png)
 
-['ScatterPlot:'][10]
+[ScatterPlot:][10]
 
 ![](man/PlotImages/ScatterPlot.png)
 
-['SplitBarPlot:'][11]
+[SplitBarPlot:][11]
 
 ![](man/PlotImages/SplitBarPlot.png)
 
-['TernaryPlot:'][12]
+[ternaryPlot:][12]
 
 ![](man/PlotImages/ternaryPlot.png)
 
-['ViolinPlot:'][13]
+[ViolinPlot:][13]
 
 ![](man/PlotImages/ViolinPlot.png)
 
-['yPlot:'][14]
+[yPlot:][14]
 
 ![](man/PlotImages/yPlot.png)
 
