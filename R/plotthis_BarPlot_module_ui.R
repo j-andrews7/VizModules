@@ -181,10 +181,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         selected = num.choices[2], choices = num.choices
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("group.by"), "Group by:",
-        selected = char.choices[2], choices = names(data)
+        selected = char.choices[2], choices = c("", names(data))
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill by:",
-        selected = char.choices[2], choices = names(data)),
+        selected = "", choices = c("", names(data))),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 

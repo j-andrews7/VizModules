@@ -53,16 +53,27 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
         }
 
+
+        fill_numeric <- reactive({
+            df <- data()
+            fill_col <- input$fill.by
+            !is.null(fill_col) && nzchar(fill_col) &&
+                fill_col %in% names(df) && is.numeric(df[[fill_col]])
+        })
+
         palette_groups <- reactive({
             df <- data()
             if (is.null(df)) {
                 return(character(0))
             }
+            fill_col <- input$fill.by
 
             group_col <- input$group.by
             x_col <- input$x.data
 
-            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
+            if (!fill_numeric() && !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
+                unique(stats::na.omit(as.character(df[[fill_col]])))
+            } else if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[x_col]])))
@@ -75,22 +86,32 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         initialized <- reactiveVal(FALSE)
 
         output$palette.selection <- renderUI({
-            groups <- palette_groups()
-            if (length(groups) == 0) {
-                return(NULL)
+            if (fill_numeric()) {
+                palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+                selectInput(
+                    ns("palette.name"),
+                    "Color Palette",
+                    choices = palette_names,
+                    selected = "viridis"
+                )
+            } else {
+                groups <- palette_groups()
+                if (length(groups) == 0) {
+                    return(NULL)
+                }
+
+                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+                multiColorPicker(
+                    ns("palette.colours"),
+                    label = "Plot colors",
+                    groups = groups,
+                    palette_options = default_palettes()[["choices"]],
+                    selected_palette = default_palette_name,
+                    colors = initial_colors,
+                    compact = TRUE
+                )
             }
-
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
-
-            multiColorPicker(
-                ns("palette.colours"),
-                label = "Plot colors",
-                groups = groups,
-                palette_options = default_palettes()[["choices"]],
-                selected_palette = default_palette_name,
-                colors = initial_colors,
-                compact = TRUE
-            )
         })
 
   
@@ -109,8 +130,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Data
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
-            updateSelectInput(session, "group.by", selected = char.choices[2])
-            updateSelectInput(session, "fill.by", selected = char.choices[2])
+            updateSelectInput(session, "group.by", selected = "")
+            updateSelectInput(session, "fill.by", selected = "")
 
 
             # Facet
@@ -182,13 +203,24 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
-        observeEvent(input$y.data, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.18, grouping = FALSE)
-            if (!is.null(y_range)) {
-                updateNumericInput(session, "y.max", value = y_range$max)
-                updateNumericInput(session, "y.min", value = y_range$min)
+        observeEvent(list(input$y.data, input$group.by), {
+            if (!is.numeric(data()[[input$group.by]])) {
+                y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.18, grouping = FALSE)
+                if (!is.null(y_range)) {
+                    updateNumericInput(session, "y.max", value = y_range$max)
+                    updateNumericInput(session, "y.min", value = y_range$min)
+                }
+            } else {
+                message("Grouped = numeric ")
+                y_range <- .calculate_range(df = data(), data_col_y = input$y.data, data_col_x = input$x.data, axis_scale_factor = 1.18, grouping = FALSE, sum = TRUE, group.by = input$group.by)
+                if (!is.null(y_range)) {
+                    message("not  null")
+                    message(y_range$max)
+                    updateNumericInput(session, "y.max", value = y_range$max)
+                    updateNumericInput(session, "y.min", value = y_range$min)
+                }
             }
-        })
+            })
 
 
         generate_BarPlot <- reactive({
@@ -218,26 +250,36 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$group.by) == ""){
                 group.by <- isolate_fn(input$group.by)
             }
-            
-            fill.by <- isolate_fn(input$fill.by)
-          
-          
+
+
+
+            fill_by_input <- isolate_fn(input$fill.by)
+            if (nzchar(fill_by_input)) {
+                fill.by <- fill_by_input
+                group.by <- NULL
+            } else {
+                fill.by <- FALSE
+            }
+
+            if (isolate_fn(fill_numeric())) {
+                palette_arg <- isolate_fn(input$palette.name)
+                if (is.null(palette_arg) || !nzchar(palette_arg)) palette_arg <- "viridis"
+                palcolor_arg <- NULL
+            } else {
+                palette_arg <- NULL
+                palette_values <- resolve_palette(
+                    isolate_fn(palette_groups()),
+                    isolate_fn(input$palette.colours),
+                    default_palette_values
+                )
+                palcolor_arg <- unname(palette_values)
+            }
+
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
-            palette_values <- resolve_palette(
-                isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
-            )
-            palcolor_arg <- NULL
-            if (!is.null(palette_values) && length(palette_values) > 0) {
-                palcolor_arg <- as.list(palette_values)
-            }
 
-            # Create ggplot theme arguments based on faceting and axis border settings
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -250,6 +292,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
+                palette = palette_arg,
                 palcolor = palcolor_arg,
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),

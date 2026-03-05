@@ -965,7 +965,7 @@
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_calculate_y_range
-.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL, axis_scale_factor, grouping = FALSE) {
+.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL, axis_scale_factor, grouping = FALSE, sum = FALSE, group.by = NULL) {
     if (!is.null(data_col_x)) {
         data_col <- data_col_x
     }
@@ -974,11 +974,11 @@
     }
     if (!grouping){
         if (is.null(data_col) || data_col == "") {
-            return(NULL)
+            list<- NULL
         }
 
         if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
-            return(NULL)
+            list <- NULL
         }
 
         # Calculate min and max from raw data
@@ -989,9 +989,9 @@
         if (!is.finite(min)) min <- 0
         if (!is.finite(max)) max <- 1
 
-        return(list(min = min, max = max))
+        list <- list(min = min, max = max)
 
-    } else {
+    } else if (grouping && !sum){
         if (is.numeric(df[[data_col_x]])) {
             numeric_list <- split(df[[data_col_x]], df[[data_col_y]])
             values_list <- list()
@@ -1004,9 +1004,20 @@
             max <- max(all_counts, na.rm = TRUE) * axis_scale_factor
             min <- min(all_counts, na.rm = TRUE)
         
-            return(list(min = min, max = max)) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
+            list <- list(min = min, max = max) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
         }
+    } else if (sum && !grouping && !is.null(group.by)){
+        if (!group.by %in% names(df) || !data_col_y %in% names(df) || !data_col_x %in% names(df)) return(NULL)
+        
+        # For each unique x value, sum all y values across all groups
+        x_sums <- tapply(df[[data_col_y]], df[[data_col_x]], function(x) sum(x, na.rm = TRUE))
+        
+        max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+        
+        return(list(min = 0, max = max_val))
     }
+
+    return(list)
 }
 
 #' Remove boxplot outliers from plotly figure
