@@ -209,24 +209,105 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### `dittoViz`
 
-* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`).
-* `dittoViz_yPlot` - Multi-variate Y-axis plots (wraps `dittoViz::yPlot`).
+#### `dittoViz_scatterPlot` – x/y coordinate plots with color and shape encodings (wraps `dittoViz::scatterPlot`)
+
+| Color by group | Shape + color encoding | Facetted |
+|:-:|:-:|:-:|
+| <img src="man/figures/scatterplot_1_colored.png" width="280" /> | <img src="man/figures/scatterplot_2_shape.png" width="280" /> | <img src="man/figures/scatterplot_3_facetted.png" width="280" /> |
+
+#### `dittoViz_yPlot` – Multi-variate Y-axis plots (wraps `dittoViz::yPlot`)
+
+| Box plot | Violin + jitter | Ridge plot |
+|:-:|:-:|:-:|
+| <img src="man/figures/yplot_1_boxplot.png" width="280" /> | <img src="man/figures/yplot_2_violin_jitter.png" width="280" /> | <img src="man/figures/yplot_3_ridgeplot.png" width="280" /> |
 
 ### `plotthis`
 
-* `plotthis_AreaPlot` - Stacked area charts (wraps `plotthis::AreaPlot`).
-* `plotthis_ViolinPlot` - Violin plots (wraps `plotthis::ViolinPlot`).
-* `plotthis_BoxPlot` - Box plots (wraps `plotthis::BoxPlot`).
-* `plotthis_BarPlot` - Bar charts (wraps `plotthis::BarPlot`).
-* `plotthis_SplitBarPlot` - Split bar charts (wraps `plotthis::SplitBarPlot`).
-* `plotthis_DensityPlot` - Density plots (wraps `plotthis::DensityPlot`).
-* `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
+#### `plotthis_AreaPlot` – Stacked area charts (wraps `plotthis::AreaPlot`)
+
+| Stacked by region | Population by age group | Facetted |
+|:-:|:-:|:-:|
+| <img src="man/figures/areaplot_1_stacked.png" width="280" /> | <img src="man/figures/areaplot_2_population.png" width="280" /> | <img src="man/figures/areaplot_3_facetted.png" width="280" /> |
+
+#### `plotthis_BarPlot` – Bar charts (wraps `plotthis::BarPlot`)
+
+| Basic | Grouped | Flipped |
+|:-:|:-:|:-:|
+| <img src="man/figures/barplot_1_basic.png" width="280" /> | <img src="man/figures/barplot_2_grouped.png" width="280" /> | <img src="man/figures/barplot_3_flipped.png" width="280" /> |
+
+#### `plotthis_SplitBarPlot` – Split bar charts (wraps `plotthis::SplitBarPlot`)
+
+| Basic split | Alpha encoding | Gene pathway |
+|:-:|:-:|:-:|
+| <img src="man/figures/splitbarplot_1_basic.png" width="280" /> | <img src="man/figures/splitbarplot_2_alpha.png" width="280" /> | <img src="man/figures/splitbarplot_3_genes.png" width="280" /> |
+
+#### `plotthis_BoxPlot` – Box plots (wraps `plotthis::BoxPlot`)
+
+| Basic | With points | Grouped |
+|:-:|:-:|:-:|
+| <img src="man/figures/boxplot_1_basic.png" width="280" /> | <img src="man/figures/boxplot_2_points.png" width="280" /> | <img src="man/figures/boxplot_3_grouped.png" width="280" /> |
+
+#### `plotthis_ViolinPlot` – Violin plots (wraps `plotthis::ViolinPlot`)
+
+| Basic | Box + jitter overlay | Grouped |
+|:-:|:-:|:-:|
+| <img src="man/figures/violinplot_1_basic.png" width="280" /> | <img src="man/figures/violinplot_2_box_jitter.png" width="280" /> | <img src="man/figures/violinplot_3_grouped.png" width="280" /> |
+
+#### `plotthis_DensityPlot` – Density plots (wraps `plotthis::DensityPlot`)
+
+| Overlaid | Filled | Facetted |
+|:-:|:-:|:-:|
+| <img src="man/figures/densityplot_1_basic.png" width="280" /> | <img src="man/figures/densityplot_2_filled.png" width="280" /> | <img src="man/figures/densityplot_3_facetted.png" width="280" /> |
+
+#### `plotthis_Histogram` – Histograms (wraps `plotthis::Histogram`)
+
+| Basic | Grouped | Facetted |
+|:-:|:-:|:-:|
+| <img src="man/figures/histogram_1_basic.png" width="280" /> | <img src="man/figures/histogram_2_grouped.png" width="280" /> | <img src="man/figures/histogram_3_facetted.png" width="280" /> |
 
 ### Defined in VizModules
 
-* `linePlot` - Line plots with customizable trajectories.
-* `piePlot` - Pie and donut charts.
-* `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`).
+#### `linePlot` – Line plots with customizable trajectories
+
+| Multi-line by group | Smooth single line | Dash styles |
+|:-:|:-:|:-:|
+| <img src="man/figures/lineplot_1_multiline.png" width="280" /> | <img src="man/figures/lineplot_2_smooth.png" width="280" /> | <img src="man/figures/lineplot_3_dashed.png" width="280" /> |
+
+#### `piePlot` – Pie and donut charts
+
+| Pie chart | Donut chart | Styled with borders |
+|:-:|:-:|:-:|
+| <img src="man/figures/pieplot_1_basic.png" width="280" /> | <img src="man/figures/pieplot_2_donut.png" width="280" /> | <img src="man/figures/pieplot_3_styled.png" width="280" /> |
+
+#### `volcanoPlot` – Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`)
+
+| Classic thresholds | Alternative palette | Labeled top genes |
+|:-:|:-:|:-:|
+| <img src="man/figures/volcanoplot_1_classic.png" width="280" /> | <img src="man/figures/volcanoplot_2_styled.png" width="280" /> | <img src="man/figures/volcanoplot_3_labeled.png" width="280" /> |
+
+#### `radarPlot` – Radar (spider) charts for multi-dimensional comparison
+
+| Single trace | Multi-group | Styled comparison |
+|:-:|:-:|:-:|
+| <img src="man/figures/radarplot_1_single.png" width="280" /> | <img src="man/figures/radarplot_2_multigroup.png" width="280" /> | <img src="man/figures/radarplot_3_styled.png" width="280" /> |
+
+#### `ternaryPlot` – Ternary (triangular) composition plots
+
+| Basic scatter | Two groups | Three groups |
+|:-:|:-:|:-:|
+| <img src="man/figures/ternaryplot_1_basic.png" width="280" /> | <img src="man/figures/ternaryplot_2_grouped.png" width="280" /> | <img src="man/figures/ternaryplot_3_diamond.png" width="280" /> |
+
+#### `dumbbellPlot` – Dumbbell plots for range/comparison visualization
+
+| Two-point comparison | Single dot by category | Before/after scores |
+|:-:|:-:|:-:|
+| <img src="man/figures/dumbbellplot_1_basic.png" width="280" /> | <img src="man/figures/dumbbellplot_2_singledot.png" width="280" /> | <img src="man/figures/dumbbellplot_3_scores.png" width="280" /> |
+
+#### `parallelCoordinatesPlot` – Parallel coordinates for high-dimensional data
+
+| Viridis colorscale | Portland colorscale | RdBu colorscale |
+|:-:|:-:|:-:|
+| <img src="man/figures/parallelcoords_1_basic.png" width="280" /> | <img src="man/figures/parallelcoords_2_iris.png" width="280" /> | <img src="man/figures/parallelcoords_3_styled.png" width="280" /> |
 
 ## Modules Planned
 
