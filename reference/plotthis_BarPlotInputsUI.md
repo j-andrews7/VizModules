@@ -339,28 +339,28 @@ library(VizModules)
 data(mtcars)
 plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="9927">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="7857">
 #>     <li class="active">
-#>       <a href="#tab-9927-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7857-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9927-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7857-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9927-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7857-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9927-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-7857-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9927-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7857-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9927-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7857-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9927">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9927-1">
+#>   <div class="tab-content" data-tabsetid="7857">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7857-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4088539">
@@ -399,7 +399,8 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>           <div class="form-group shiny-input-container" id="tipify6525100">
 #>             <label class="control-label" id="BarPlot-group.by-label" for="BarPlot-group.by">Group by:</label>
 #>             <div>
-#>               <select id="BarPlot-group.by" class="shiny-input-select"><option value="mpg">mpg</option>
+#>               <select id="BarPlot-group.by" class="shiny-input-select"><option value=""></option>
+#> <option value="mpg">mpg</option>
 #> <option value="cyl">cyl</option>
 #> <option value="disp">disp</option>
 #> <option value="hp">hp</option>
@@ -410,7 +411,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="am">am</option>
 #> <option value="gear">gear</option>
 #> <option value="carb">carb</option></select>
-#>               <script type="application/json" data-for="BarPlot-group.by" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BarPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6525100', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using group_by_sep as the separator'})}, 500)});</script>
@@ -419,7 +420,8 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>           <div class="form-group shiny-input-container" id="tipify1435593">
 #>             <label class="control-label" id="BarPlot-fill.by-label" for="BarPlot-fill.by">Fill by:</label>
 #>             <div>
-#>               <select id="BarPlot-fill.by" class="shiny-input-select"><option value="mpg">mpg</option>
+#>               <select id="BarPlot-fill.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="mpg">mpg</option>
 #> <option value="cyl">cyl</option>
 #> <option value="disp">disp</option>
 #> <option value="hp">hp</option>
@@ -430,14 +432,14 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="am">am</option>
 #> <option value="gear">gear</option>
 #> <option value="carb">carb</option></select>
-#>               <script type="application/json" data-for="BarPlot-fill.by" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="BarPlot-fill.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1435593', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If TRUE (default), the bars will be filled by the x-axis values, If FALSE, the bars will be filled a single color (the first color in the palette). ONLY works when group_by is NULL. When group_by is not NULL, the bars will be filled by the group_by variable.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9927-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7857-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6807986">
@@ -504,7 +506,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9927-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7857-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="BarPlot-palette.selection" class="shiny-html-output"></div>
@@ -534,7 +536,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9927-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-7857-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7311036">
@@ -552,7 +554,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9927-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7857-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -787,7 +789,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9927-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7857-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9758180">
