@@ -49,11 +49,9 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data (iris & mtcars):
 app <- linePlotApp()
-#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
 if (interactive()) runApp(app)
 
 # Launch with custom data:
 app2 <- linePlotApp(list("cars" = mtcars))
-#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
 if (interactive()) runApp(app2)
 ```
