@@ -49,55 +49,64 @@ linePlotApp <- function(data_list = NULL) {
         title = "Modular linePlots",
         useShinyjs(),
 
-        
-            sidebarLayout(
-                sidebarPanel(
+        sidebarLayout(
+            sidebarPanel(
 
-                    # --- Data Import ---
-                    h4("Data Import"),
-                    fileInput("file_upload", "Upload Excel File",
-                        accept = c(".xlsx", ".xls")
-                    ),
-                    actionButton("load_data", "Load Data", class = "btn-primary"),
-                    hr(),
-
-                    # --- Dataset Selection ---
-                    h4("Plot Settings"),
-                    selectInput("plot_select", "Select Dataset:", choices = names(data_list)),
-                    helpText("Plot settings reset when switching datasets."),
-                    uiOutput("plot_inputs_ui")
-
+                # --- Data Import ---
+                h4("Data Import"),
+                fileInput("file_upload", "Upload Excel File",
+                    accept = c(".xlsx", ".xls")
                 ),
-                mainPanel(
+                actionButton("load_data", "Load Data", class = "btn-primary"),
+                hr(),
 
-                    # --- Plot ---
-                    h4(),
-                    linePlotOutputUI("active_plot"),
-                    hr(),
+                # --- Plot Settings ---
+                h4("Plot Settings"),
+                selectInput("plot_select", "Select Dataset:", choices = names(data_list)),
+                helpText("Plot settings reset when switching datasets."),
+                uiOutput("plot_inputs_ui")
 
-                    # --- Table ---
-                    h4("Data Table"),
-                        p("Filtering of the data table will result in changes to the plot",
-                        style = "color: grey; font-size: 12px;"),
+            ),
+            mainPanel(
 
-                    fluidRow(
-                        column(4,
-                            selectInput("table_select", "Select Dataset:", choices = names(data_list))
-                        )
-                    ),
-                    DT::dataTableOutput("data_table")
+                # --- Plot ---
+                linePlotOutputUI("active_plot"),
+                hr(),
 
-                )
+                # --- Table ---
+                h4("Data Table"),
+                p("Filtering or editing the data table will update the plot.",
+                    style = "color: grey; font-size: 12px;"),
+                DT::dataTableOutput("data_table")
+
             )
         )
-    
-
+    )
 
     server <- function(input, output, session) {
-        # Reactive store for all datasets
+
         rv <- reactiveValues(datasets = data_list)
 
-        # ---- Data Input tab ----
+        # Explicit reactive that updates on BOTH dataset switch and cell edits
+        active_data <- reactiveVal(NULL)
+
+        # Update active_data whenever the selected dataset changes
+        observeEvent(input$plot_select, {
+            req(input$plot_select)
+            active_data(rv$datasets[[input$plot_select]])
+        })
+
+        # Cell edits write back AND explicitly push updated data into active_data
+        observeEvent(input$data_table_cell_edit, {
+            info <- input$data_table_cell_edit
+            name <- input$plot_select
+            d <- rv$datasets[[name]]
+            d[info$row, info$col + 1L] <- DT::coerceValue(info$value, d[info$row, info$col + 1L])
+            rv$datasets[[name]] <- d
+            active_data(d)  # <-- explicitly push updated data to trigger plot re-render
+        })
+
+        # ---- Data Import ----
         observeEvent(input$load_data, {
             req(input$file_upload)
             tryCatch({
@@ -105,61 +114,29 @@ linePlotApp <- function(data_list = NULL) {
                     readxl::read_excel(input$file_upload$datapath)
                 )
                 name <- tools::file_path_sans_ext(input$file_upload$name)
-
-                if (name %in% names(rv$datasets)) {
-                    showNotification(
-                        paste0("Dataset '", name, "' already exists ",
-                            "and will be overwritten."),
-                        type = "warning"
-                    )
-                }
-
                 rv$datasets[[name]] <- new_data
                 showNotification(
-                    paste0("Loaded '", name, "' (", nrow(new_data),
-                        " rows, ", ncol(new_data), " cols)"),
+                    paste0("Loaded '", name, "' (", nrow(new_data), " rows, ", ncol(new_data), " cols)"),
                     type = "message"
                 )
             }, error = function(e) {
                 showNotification(
                     paste("Could not read the uploaded file.",
-                        "Please ensure it is a valid Excel (.xlsx/.xls)",
-                        "file."),
+                        "Please ensure it is a valid Excel (.xlsx/.xls) file."),
                     type = "error"
                 )
             })
         })
 
-        # Keep dataset selectors in sync
+        # Keep dataset selector in sync when new datasets are loaded
         observe({
-            dataset_names <- names(rv$datasets)
-            updateSelectInput(session, "table_select", choices = dataset_names)
-            updateSelectInput(session, "plot_select", choices = dataset_names)
+            updateSelectInput(session, "plot_select", choices = names(rv$datasets))
         })
 
-        # Show summary of available datasets
-        output$dataset_info <- renderUI({
-            dataset_names <- names(rv$datasets)
-            if (length(dataset_names) == 0) {
-                return(p("No datasets loaded."))
-            }
-            tags$ul(
-                lapply(dataset_names, function(name) {
-                    d <- rv$datasets[[name]]
-                    tags$li(
-                        strong(name),
-                        paste0(" — ", nrow(d), " rows, ", ncol(d), " columns")
-                    )
-                })
-            )
-        })
-
-        # ---- Table tab ----
+        # ---- Table ----
         output$data_table <- DT::renderDataTable({
-            req(input$table_select)
-            d <- rv$datasets[[input$table_select]]
-            req(d)
-            DT::datatable(d,
+            req(active_data())
+            DT::datatable(active_data(),
                 editable = TRUE,
                 filter = "top",
                 rownames = FALSE,
@@ -167,38 +144,16 @@ linePlotApp <- function(data_list = NULL) {
             )
         })
 
-        # Handle cell edits in the table
-        observeEvent(input$data_table_cell_edit, {
-            info <- input$data_table_cell_edit
-            name <- input$table_select
-            # DT uses 0-based column index; row is 1-based
-            row_idx <- info$row
-            col_idx <- info$col + 1L
-            d <- rv$datasets[[name]]
-            d[row_idx, col_idx] <- DT::coerceValue(info$value, d[row_idx, col_idx])
-            rv$datasets[[name]] <- d
-        })
-
-        # ---- Plots tab ----
-        # Dynamically render plot inputs when the selected dataset changes
+        # ---- Plot Settings UI ----
         output$plot_inputs_ui <- renderUI({
-            req(input$plot_select)
-            d <- rv$datasets[[input$plot_select]]
-            req(d)
-            linePlotInputsUI("active_plot", d,
+            req(active_data())
+            linePlotInputsUI("active_plot", active_data(),
                 title = h3(paste(input$plot_select, "Settings"))
             )
         })
 
-        # Reactive data for the plot module
-        active_data <- reactive({
-            req(input$plot_select)
-            rv$datasets[[input$plot_select]]
-        })
-
-        # Single plot module driven by the active dataset
+        # ---- Plot Module ----
         linePlotServer("active_plot", data = active_data)
     }
-
-    shinyApp(ui, server)
+shinyApp(ui, server)
 }
