@@ -289,28 +289,28 @@ library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="9949">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="1019">
 #>     <li class="active">
-#>       <a href="#tab-9949-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1019-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9949-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1019-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9949-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-1019-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9949-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-1019-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9949-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1019-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9949-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1019-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9949">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9949-1">
+#>   <div class="tab-content" data-tabsetid="1019">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1019-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9643438">
@@ -346,7 +346,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9949-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1019-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4581607">
@@ -402,7 +402,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9949-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1019-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7921029">
@@ -431,7 +431,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-9949-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-1019-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify687955">
@@ -468,7 +468,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9949-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1019-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -703,7 +703,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9949-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1019-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9736225">
