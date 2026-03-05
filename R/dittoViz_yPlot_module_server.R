@@ -67,7 +67,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
             if (!is.null(col_to_use)) {
-                unique(stats::na.omit(as.character(df[[col_to_use]])))
+                col_data <- stats::na.omit(df[[col_to_use]])
+                # Use factor level order to match ggplot2/dittoViz color assignment.
+                # For factors, use the defined levels (preserves order);
+                # for character/other, convert to factor (alphabetical order).
+                if (is.factor(col_data)) {
+                    levels(col_data)
+                } else {
+                    levels(as.factor(col_data))
+                }
             } else {
                 character(0)
             }
@@ -264,10 +272,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 default_palette_values
             )
 
-            # dittoViz yPlot expects color.panel to be a vector of colors
+            # Keep names so scale_fill_manual matches colors to groups by name,
+            # making the mapping independent of positional order.
             color.panel.arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
-                color.panel.arg <- as.vector(palette_values)
+                color.panel.arg <- palette_values
             }
 
             # Set default color.by to group.by if not specified
