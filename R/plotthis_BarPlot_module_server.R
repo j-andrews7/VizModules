@@ -71,12 +71,26 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             group_col <- input$group.by
             x_col <- input$x.data
 
-            if (!fill_numeric() && !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[fill_col]])))
+            col_to_use <- if (!fill_numeric() && !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
+                fill_col
             } else if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+                group_col
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+                x_col
+            } else {
+                NULL
+            }
+
+            if (!is.null(col_to_use)) {
+                col_data <- stats::na.omit(df[[col_to_use]])
+                # Use factor level order to match ggplot2/plotthis color assignment.
+                # For factors, use the defined levels (preserves order);
+                # for character/other, convert to factor (alphabetical order).
+                if (is.factor(col_data)) {
+                    levels(col_data)
+                } else {
+                    levels(as.factor(col_data))
+                }
             } else {
                 character(0)
             }
@@ -287,7 +301,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     isolate_fn(input$palette.colours),
                     default_palette_values
                 )
-                palcolor_arg <- unname(palette_values)
+                palcolor_arg <- as.list(palette_values)
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow

@@ -54,7 +54,13 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
             # Only return groups when group.by is set to a valid categorical column
             if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+                col_data <- stats::na.omit(df[[group_col]])
+                # Use factor level order to match ggplot2/plotthis color assignment.
+                if (is.factor(col_data)) {
+                    levels(col_data)
+                } else {
+                    levels(as.factor(col_data))
+                }
             } else {
                 # No grouping - will show single color picker instead
                 character(0)
@@ -210,7 +216,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
         palcolor_arg <- NULL
         if (!is.null(palette_values) && length(palette_values) > 0) {
-            palcolor_arg <- unname(palette_values)
+            palcolor_arg <- as.list(palette_values)
         } else {
             # No grouping - use single fill color
             single_color <- isolate_fn(input$single.fill.color)
