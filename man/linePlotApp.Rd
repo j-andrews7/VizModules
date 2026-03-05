@@ -21,8 +21,10 @@ for configuring and displaying an interactive line plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{iris} and \code{mtcars} as example datasets. Any uploaded Excel file is added
-to the available datasets and can be selected for plotting.
+\code{iris} and \code{mtcars} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)

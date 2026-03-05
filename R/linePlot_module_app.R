@@ -6,8 +6,10 @@
 #' for configuring and displaying an interactive line plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `iris` and `mtcars` as example datasets. Any uploaded Excel file is added
-#' to the available datasets and can be selected for plotting.
+#' `iris` and `mtcars` as example datasets. Uploaded Excel files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
 #'   `list("iris" = iris, "mtcars" = mtcars)` is used as example data.
@@ -78,6 +80,7 @@ linePlotApp <- function(data_list = NULL) {
             sidebarLayout(
                 sidebarPanel(
                     selectInput("plot_select", "Select Dataset:", choices = names(data_list)),
+                    helpText("Plot settings reset when switching datasets."),
                     uiOutput("plot_inputs_ui")
                 ),
                 mainPanel(
@@ -99,6 +102,15 @@ linePlotApp <- function(data_list = NULL) {
                     readxl::read_excel(input$file_upload$datapath)
                 )
                 name <- tools::file_path_sans_ext(input$file_upload$name)
+
+                if (name %in% names(rv$datasets)) {
+                    showNotification(
+                        paste0("Dataset '", name, "' already exists ",
+                            "and will be overwritten."),
+                        type = "warning"
+                    )
+                }
+
                 rv$datasets[[name]] <- new_data
                 showNotification(
                     paste0("Loaded '", name, "' (", nrow(new_data),
@@ -106,8 +118,12 @@ linePlotApp <- function(data_list = NULL) {
                     type = "message"
                 )
             }, error = function(e) {
-                showNotification(paste("Error reading file:", e$message),
-                    type = "error")
+                showNotification(
+                    paste("Could not read the uploaded file.",
+                        "Please ensure it is a valid Excel (.xlsx/.xls)",
+                        "file."),
+                    type = "error"
+                )
             })
         })
 
