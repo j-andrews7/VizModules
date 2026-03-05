@@ -2,26 +2,35 @@
 
 This function generates a Shiny application with modular
 [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
-components. A module is created for each data frame provided in the
-named list of data frames.
+components. The app features three tabs: a **Data Input** tab for
+uploading Excel spreadsheets, a **Table** tab for viewing and editing
+the active dataset, and a **Plots** tab for configuring and displaying
+an interactive line plot.
 
 ## Usage
 
 ``` r
-linePlotApp(data_list)
+linePlotApp(data_list = NULL)
 ```
 
 ## Arguments
 
 - data_list:
 
-  A named list of data frames for which linePlot modules will be
-  created. That is, UI inputs and a line plot will be generated for
-  each.
+  An optional named list of data frames. If `NULL` (the default),
+  `list("iris" = iris, "mtcars" = mtcars)` is used as example data.
 
 ## Value
 
 A Shiny app object.
+
+## Details
+
+When `data_list` is not provided (or `NULL`), the app launches with
+`iris` and `mtcars` as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 ## See also
 
@@ -38,8 +47,13 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- linePlotApp(data_list)
+# Launch with default example data (iris & mtcars):
+app <- linePlotApp()
 #> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- linePlotApp(list("cars" = mtcars))
+#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
+if (interactive()) runApp(app2)
 ```
