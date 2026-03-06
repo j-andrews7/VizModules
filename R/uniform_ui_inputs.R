@@ -15,6 +15,7 @@
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
 #'
+#' @author Jared Andrews
 #' @keywords internal
 .uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
     intercept_tip <- paste(
@@ -105,6 +106,8 @@
 #' @param defaults A named list of default values for the inputs.
 #' @param include.rotate Logical; whether to include the "Rotate" input for swapping
 #'   x and y axes (e.g., horizontal bar plots). Default is FALSE.
+#' @param include.flip Logical; whether to include the "Flip" input for flipping
+#'   the axis. Default is FALSE.
 #'
 #' @return A `tagList` containing the axis input UI elements.
 #'
@@ -113,6 +116,7 @@
 #'
 #' @importFrom shinyWidgets materialSwitch
 #'
+#' @author Jared Andrews
 #' @keywords internal
 .uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
     font_choices <- c(

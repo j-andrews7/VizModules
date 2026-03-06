@@ -27,6 +27,7 @@
 #' @importFrom jsonlite toJSON
 #'
 #' @export
+#' @author Jared Andrews
 #'
 #' @examples
 #' if (interactive()) {
@@ -213,6 +214,7 @@ multiColorPicker <- function(
 #'
 #' @import shiny
 #' @export
+#' @author Jared Andrews
 #'
 #' @examples
 #' if (interactive()) {
