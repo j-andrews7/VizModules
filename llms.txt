@@ -91,9 +91,6 @@ The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic while reusing
 the full functionality of the base modules.
 
-Here’s a link to how to add custom modules:
-[CUSTOM](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
-
 **Key points when building wrapper modules:**
 
 1.  **Namespace handling**: Use `NS(id)` for your wrapper’s custom
@@ -172,7 +169,7 @@ To contribute a new module to the package, see the vignette for
 guidelines:
 [`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html)
 
-### Examples of Plots:
+## Examples of Plots:
 
 [linePlot:](https://j-andrews7.github.io/VizModules/reference/linePlotApp.html)
 
