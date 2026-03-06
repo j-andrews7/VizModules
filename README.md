@@ -250,15 +250,18 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 
 ![](man/PlotImages/LinePlot.png)
 
-[AreaPlot:][2]
+[plotthis_AreaPlot:][2]
+[(Source_Package)][19]
 
 ![](man/PlotImages/AreaPlot.png)
 
-[BoxPlot:][3]
+[plotthis_BoxPlot:][3]
+[(Source_Package)][20]
 
 ![](man/PlotImages/BoxPlot.png)
 
-[DensityPlot:][4]
+[plotthis_DensityPlot:][4]
+[(Source_Package)][21]
 
 ![](man/PlotImages/DensityPlot.png)
 
@@ -266,7 +269,8 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 
 ![](man/PlotImages/DumbellPlot.png)
 
-[HistogramPlot:][6]
+[plotthis_HistogramPlot:][6]
+[(Source_Package)][21]
 
 ![](man/PlotImages/HistogramPlot.png)
 
@@ -282,11 +286,13 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 
 ![](man/PlotImages/RadarPlot.png)
 
-[ScatterPlot:][10]
+[dittoViz_ScatterPlot:][10]
+[(Source_Package)][22]
 
 ![](man/PlotImages/ScatterPlot.png)
 
-[SplitBarPlot:][11]
+[plotthis_SplitBarPlot:][11]
+[(Source_Package)][23]
 
 ![](man/PlotImages/SplitBarPlot.png)
 
@@ -294,11 +300,13 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 
 ![](man/PlotImages/ternaryPlot.png)
 
-[ViolinPlot:][13]
+[plotthis_ViolinPlot:][13]
+[(Source_Package)][20]
 
 ![](man/PlotImages/ViolinPlot.png)
 
-[yPlot:][14]
+[dittoViz_yPlot:][14]
+[(Source_Package)][22]
 
 ![](man/PlotImages/yPlot.png)
 
@@ -323,3 +331,8 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 [16]: https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html
 [17]: https://j-andrews7.github.io/VizModules/articles/custom-modules.html
 [18]: https://j-andrews7.github.io/VizModules/articles/quick-start.html
+[19]: https://pwwang.github.io/plotthis/reference/AreaPlot.html
+[20]: https://pwwang.github.io/plotthis/reference/boxviolinplot.html
+[21]: https://pwwang.github.io/plotthis/reference/densityhistoplot.html
+[22]: https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html
+[23]: https://pwwang.github.io/plotthis/reference/barplot.html
