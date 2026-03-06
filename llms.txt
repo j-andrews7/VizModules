@@ -35,7 +35,7 @@ devtools::install_github("j-andrews7/VizModules")
 - Run the same gallery locally:
   `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - See the vignette for a full walkthrough:
-  [`vignette("quick-start", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/quick-start.md)
+  [`vignette("quick-start", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/quick-start.html)
 
 ``` r
 library(VizModules)
@@ -233,7 +233,7 @@ shinyApp(ui, server)
     wrapper and the underlying module servers.
 
 For more details, see
-[`vignette("custom-modules", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-modules.md).
+[`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
 
 ## Modules Provided
 
@@ -290,7 +290,7 @@ created as more visualization functions are added.
 
 To contribute a new module to the package, see the vignette for
 guidelines:
-[`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.md).
+[`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html)
 
 ### Examples of Plots:
 
