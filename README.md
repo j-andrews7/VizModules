@@ -70,8 +70,6 @@ Modules built on plotting functions from other packages expose most of the under
 
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
 
-Here's a link to how to add custom modules: [CUSTOM][17]
-
 
 **Key points when building wrapper modules:**
 
@@ -127,7 +125,9 @@ dittoViz is under active development, so additional modules will be created as m
 To contribute a new module to the package, see the vignette for guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
 
 
-### Examples of Plots:
+
+
+## Examples of Plots:
 
 [linePlot:][1]
 
