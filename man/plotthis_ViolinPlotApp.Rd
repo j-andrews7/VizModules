@@ -14,7 +14,7 @@ plotthis_ViolinPlotApp(data_list = NULL)
 A Shiny app object.
 }
 \description{
-This function generates a Shiny application with modular \code{\link[plotthis:boxviolinplot]{plotthis::ViolinPlot()}} components.
+This function generates a Shiny application with modular \code{\link[plotthis:ViolinPlot]{plotthis::ViolinPlot()}} components.
 The app features a \strong{Data Import} section for uploading Excel spreadsheets,
 a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive violin plot.

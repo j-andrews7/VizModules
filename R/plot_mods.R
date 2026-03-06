@@ -351,7 +351,8 @@
 #'   gridline inputs are applied.
 #' @param isolate_fn Function. A function used to isolate Shiny inputs,
 #'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
-#'@param ggplot.axis.styling boolean value that determines wether ggplot styling is applied 
+#' @param ggplot.axis.styling Logical. Whether ggplot axis styling is applied.
+#'   Defaults to \code{TRUE}.
 #' @return A named list containing Plotly-compatible axis styling
 #'   components, including title font, line properties, tick label
 #'   formatting, and gridline visibility.

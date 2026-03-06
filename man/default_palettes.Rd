@@ -6,8 +6,19 @@
 \usage{
 default_palettes()
 }
+\value{
+A named list with two elements: \code{choices} (a nested list of palette
+name to color vector mappings, grouped by category) and \code{textColor} (a
+character vector of text colors for each palette).
+}
 \description{
-Color palette options for palettePicker
+Returns a list of predefined color palettes grouped by category (Defaults,
+Viridis, Diverging, Qualitative, Sequential) for use with color picker UI
+components.
+}
+\examples{
+pals <- default_palettes()
+names(pals$choices)
 }
 \author{
 Jared Andrews

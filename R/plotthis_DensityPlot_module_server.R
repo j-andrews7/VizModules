@@ -10,7 +10,7 @@
 #' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
 #' 
-#' @return A \code{reactive} Plotly object.
+#' @return The `moduleServer` function for the DensityPlot module.
 #' 
 #' @import shiny
 #' @import plotly

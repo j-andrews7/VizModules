@@ -21,4 +21,7 @@ A \code{tagList} containing the line input UI elements.
 Creates a standardized tagList of line-related inputs (horizontal, vertical,
 and diagonal lines) for use across plot modules.
 }
+\author{
+Jared Andrews
+}
 \keyword{internal}

@@ -52,3 +52,6 @@ if (interactive()) {
   shinyApp(ui, server)
 }
 }
+\author{
+Jared Andrews
+}

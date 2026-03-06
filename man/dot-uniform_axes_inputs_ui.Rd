@@ -18,11 +18,17 @@
 
 \item{include.rotate}{Logical; whether to include the "Rotate" input for swapping
 x and y axes (e.g., horizontal bar plots). Default is FALSE.}
+
+\item{include.flip}{Logical; whether to include the "Flip" input for flipping
+the axis. Default is FALSE.}
 }
 \value{
 A \code{tagList} containing the axis input UI elements.
 }
 \description{
 Creates a standardized tagList of axis-related inputs for use across plot modules.
+}
+\author{
+Jared Andrews
 }
 \keyword{internal}
