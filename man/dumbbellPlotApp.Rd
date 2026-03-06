@@ -4,29 +4,43 @@
 \alias{dumbbellPlotApp}
 \title{Create a Shiny App for Dumbbell Plots}
 \usage{
-dumbbellPlotApp(data_list)
+dumbbellPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames to plot. Each data frame will get its own
-set of inputs and output in the app.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("iris" = iris, "mtcars" = mtcars)} is used as example data.}
 }
 \value{
-A Shiny app object that can be run with \code{shiny::runApp()} or by calling the function directly.
+A Shiny app object.
 }
 \description{
-Creates a Shiny application for generating interactive dumbbell plots.
-This is a standalone app that demonstrates the dumbbellPlot module functionality.
+This function generates a Shiny application for interactive dumbbell plots.
+The app features a \strong{Data Import} section for uploading Excel spreadsheets,
+a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive dumbbell plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{iris} and \code{mtcars} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
-\dontrun{
+library(VizModules)
+# Launch with default example data:
+app <- dumbbellPlotApp()
+if (interactive()) runApp(app)
+
+# Launch with custom data:
 data <- data.frame(
   School = c("MIT", "Stanford", "Harvard"),
   Women = c(94, 96, 112),
   Men = c(152, 151, 165),
   Group = c("A", "B", "A")
 )
-dumbbellPlotApp(list("School Earnings" = data))
-}
+app2 <- dumbbellPlotApp(list("School Earnings" = data))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[=dumbbellPlot]{dumbbellPlot()}}, \code{\link[=dumbbellPlotInputsUI]{dumbbellPlotInputsUI()}},
