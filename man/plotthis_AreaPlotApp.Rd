@@ -4,24 +4,37 @@
 \alias{plotthis_AreaPlotApp}
 \title{Create an example Modular AreaPlot Shiny Application}
 \usage{
-plotthis_AreaPlotApp(data_list)
+plotthis_AreaPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which AreaPlot modules will be created.
-That is, UI inputs and an area plot will be generated for each.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("sales" = example_sales, "population" = example_population)} is used as example data.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading Excel spreadsheets,
+a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive area plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{example_sales} and \code{example_population} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- plotthis_AreaPlotApp(data_list)
+# Launch with default example data:
+app <- plotthis_AreaPlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- plotthis_AreaPlotApp(list("cars" = mtcars))
+if (interactive()) runApp(app2)
 }
 \author{
 Jacob Martin, Jared Andrews

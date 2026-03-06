@@ -4,11 +4,11 @@
 \alias{radarPlotApp}
 \title{Create an example Modular radarPlot Shiny Application}
 \usage{
-radarPlotApp(data_list)
+radarPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which radarPlot modules will be created.
-That is, UI inputs and a radar plot will be generated for each. Each data frame should
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+example datasets with categories and values are used. Each data frame should
 contain columns for categories (theta) and values (r). For multiple traces, include a
 grouping column.}
 }
@@ -17,27 +17,30 @@ A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular radarPlot components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading Excel spreadsheets,
+a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive radar plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+example \code{skills} and \code{team_stats} datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
+# Launch with default example data:
+app <- radarPlotApp()
+if (interactive()) runApp(app)
 
-# Single trace example
+# Launch with custom data:
 skills <- data.frame(
     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
     value = c(8, 6, 7, 9, 8)
 )
-
-# Multiple trace example
-team_stats <- data.frame(
-    category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
-    value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
-    player = rep(c("Player A", "Player B"), each = 5)
-)
-
-data_list <- list("skills" = skills, "team" = team_stats)
-app <- radarPlotApp(data_list)
-if (interactive()) runApp(app)
+app2 <- radarPlotApp(list("skills" = skills))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[=radarPlot]{radarPlot()}}, \code{\link[=radarPlotInputsUI]{radarPlotInputsUI()}},

@@ -1,73 +1,131 @@
 #' Create an example Modular ViolinPlot Shiny Application
 #'
 #' This function generates a Shiny application with modular [plotthis::ViolinPlot()] components.
-#' A module is created for each data frame provided in the named list of data frames.
+#' The app features a **Data Import** section for uploading Excel spreadsheets,
+#' a **Data Table** for viewing and editing the active dataset, and a **Plot** area
+#' for configuring and displaying an interactive violin plot.
 #'
-#' @param data_list A named list of data frames for which ViolinPlot modules will be created.
-#'   That is, UI inputs and a violin plot will be generated for each.
+#' When `data_list` is not provided (or `NULL`), the app launches with
+#' `example_sales` and `example_population` as example datasets. Uploaded Excel files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
+#'
+#' @param data_list An optional named list of data frames. If `NULL` (the default),
+#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
 #' @return A Shiny app object.
 #'
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
-#' @export
+#' @importFrom readxl read_excel
 #'
+#' @export
 #' @author Jacob Martin
 #' @examples
 #' library(VizModules)
-#' data_list <- list("sales" = example_sales, "population" = example_population)
-#' app <- plotthis_ViolinPlotApp(data_list)
+#' # Launch with default example data:
+#' app <- plotthis_ViolinPlotApp()
 #' if (interactive()) runApp(app)
-plotthis_ViolinPlotApp <- function(data_list) {
+#'
+#' # Launch with custom data:
+#' app2 <- plotthis_ViolinPlotApp(list("cars" = mtcars))
+#' if (interactive()) runApp(app2)
+plotthis_ViolinPlotApp <- function(data_list = NULL) {
+    # Use default example data when none is provided
+    if (is.null(data_list)) {
+        data_list <- list("sales" = example_sales, "population" = example_population)
+    }
+
     # Validate input
     stopifnot(is.list(data_list))
     lapply(data_list, function(data) {
         stopifnot(is.data.frame(data))
     })
 
-    ui <- navbarPage(
+    ui <- fluidPage(
         title = "Modular ViolinPlots",
         useShinyjs(),
 
-        tabPanel("Filter",
-            mainPanel(
-                lapply(names(data_list), function(name) {
-                    tagList(dataFilterUI(paste0("filter_", name)))
-                })
-            )
-        ),
+        sidebarLayout(
+            sidebarPanel(
 
-        tabPanel("Plots",
-            sidebarLayout(
-                sidebarPanel(
-                    # Add the module inputs UI for each data frame
-                    lapply(names(data_list), function(name) {
-                        tagList(
-                            plotthis_ViolinPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                            hr()
-                        )
-                    })
+                # --- Data Import ---
+                h4("Data Import"),
+                fileInput("file_upload", "Upload Excel File",
+                    accept = c(".xlsx", ".xls")
                 ),
-                mainPanel(
-                    # Add the module output UI for each data frame
-                    lapply(names(data_list), function(name) {
-                        tagList(plotthis_ViolinPlotOutputUI(name), br())
-                    })
-                )
+                actionButton("load_data", "Load Data", class = "btn-primary"),
+                hr(),
+
+                # --- Plot Settings ---
+                h4("Plot Settings"),
+                selectInput("plot_select", "Select Dataset:", choices = names(data_list)),
+                helpText("Plot settings reset when switching datasets."),
+                uiOutput("plot_inputs_ui")
+
+            ),
+            mainPanel(
+
+                # --- Plot ---
+                plotthis_ViolinPlotOutputUI("active_plot"),
+                hr(),
+
+                # --- Table ---
+                h4("Data Table"),
+                p("Filtering or editing the data table will update the plot.",
+                    style = "color: grey; font-size: 12px;"),
+                dataFilterUI(paste0("table"))
+
             )
         )
     )
 
     server <- function(input, output, session) {
-        filtered_list <- lapply(names(data_list), function(name) {
-            dataFilterServer(paste0("filter_", name), reactive(data_list[[name]]))
-        })
-        names(filtered_list) <- names(data_list)
 
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            plotthis_ViolinPlotServer(name, data = filtered_list[[name]])
+        rv <- reactiveValues(datasets = data_list)
+
+        # Update active_data whenever the selected dataset changes
+        observeEvent(input$plot_select, {
+            req(input$plot_select)
         })
+
+        # ---- Data Import ----
+        observeEvent(input$load_data, {
+            req(input$file_upload)
+            tryCatch({
+                new_data <- as.data.frame(
+                    readxl::read_excel(input$file_upload$datapath)
+                )
+                name <- tools::file_path_sans_ext(input$file_upload$name)
+                rv$datasets[[name]] <- new_data
+                showNotification(
+                    paste0("Loaded '", name, "' (", nrow(new_data), " rows, ", ncol(new_data), " cols)"),
+                    type = "message"
+                )
+            }, error = function(e) {
+                showNotification(
+                    paste("Could not read the uploaded file.",
+                        "Please ensure it is a valid Excel (.xlsx/.xls) file."),
+                    type = "error"
+                )
+            })
+        })
+        filtered_data <- dataFilterServer("table", reactive(rv$datasets[[input$plot_select]]))
+        # Keep dataset selector in sync when new datasets are loaded
+        observe({
+            updateSelectInput(session, "plot_select", choices = names(rv$datasets))
+        })
+
+        # ---- Plot Settings UI ----
+        output$plot_inputs_ui <- renderUI({
+            req(rv$datasets[[input$plot_select]])
+            plotthis_ViolinPlotInputsUI("active_plot", rv$datasets[[input$plot_select]],
+                title = h3(paste(input$plot_select, "Settings"))
+            )
+        })
+
+        # ---- Plot Module ----
+        plotthis_ViolinPlotServer("active_plot", data = filtered_data)
     }
-
     shinyApp(ui, server)
 }

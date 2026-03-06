@@ -4,24 +4,37 @@
 \alias{dittoViz_scatterPlotApp}
 \title{Create an example Modular scatterPlot Shiny Application}
 \usage{
-dittoViz_scatterPlotApp(data_list)
+dittoViz_scatterPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which scatterPlot modules will be created.
-That is, UI inputs and a scatter plot will be generated for each.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("sales" = example_sales, "population" = example_population)} is used as example data.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading Excel spreadsheets,
+a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive scatter plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{example_sales} and \code{example_population} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- dittoViz_scatterPlotApp(data_list)
+# Launch with default example data:
+app <- dittoViz_scatterPlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- dittoViz_scatterPlotApp(list("cars" = mtcars))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=dittoViz_scatterPlotInputsUI]{dittoViz_scatterPlotInputsUI()}},

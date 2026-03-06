@@ -4,12 +4,12 @@
 \alias{parallelCoordinatesPlotApp}
 \title{Create an example Modular parallelCoordinatesPlot Shiny Application}
 \usage{
-parallelCoordinatesPlotApp(data_list)
+parallelCoordinatesPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which parallelCoordinatesPlot modules
-will be created. That is, UI inputs and a parallel coordinates plot will be generated
-for each. Each data frame should contain at least two numeric or categorical columns.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("mtcars" = mtcars, "iris" = iris)} is used as example data. Each data frame
+should contain at least two numeric or categorical columns.}
 }
 \value{
 A Shiny app object.
@@ -17,13 +17,26 @@ A Shiny app object.
 \description{
 This function generates a Shiny application with modular
 \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading Excel spreadsheets,
+a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive parallel coordinates plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{iris} and \code{mtcars} as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
-app <- parallelCoordinatesPlotApp(data_list)
+# Launch with default example data:
+app <- parallelCoordinatesPlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- parallelCoordinatesPlotApp(list("cars" = mtcars))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}}, \code{\link[=parallelCoordinatesPlotInputsUI]{parallelCoordinatesPlotInputsUI()}},
