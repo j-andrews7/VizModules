@@ -8,8 +8,7 @@
 #' When `data_list` is not provided (or `NULL`), the app launches with
 #' `example_sales` and `example_population` as example datasets. Uploaded Excel files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
-#' file shares a name with an existing dataset, the existing one is overwritten
-#' with a warning.
+#' file shares a name with an existing dataset, the existing one is overwritten.
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
 #'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
@@ -86,11 +85,6 @@ dittoViz_yPlotApp <- function(data_list = NULL) {
     server <- function(input, output, session) {
 
         rv <- reactiveValues(datasets = data_list)
-
-        # Update active_data whenever the selected dataset changes
-        observeEvent(input$plot_select, {
-            req(input$plot_select)
-        })
 
         # ---- Data Import ----
         observeEvent(input$load_data, {
