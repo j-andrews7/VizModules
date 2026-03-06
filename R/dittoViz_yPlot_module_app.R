@@ -86,6 +86,11 @@ dittoViz_yPlotApp <- function(data_list = NULL) {
 
         rv <- reactiveValues(datasets = data_list)
 
+        # Update active_data whenever the selected dataset changes
+        observeEvent(input$plot_select, {
+            req(input$plot_select)
+        })
+
         # ---- Data Import ----
         observeEvent(input$load_data, {
             req(input$file_upload)
