@@ -31,7 +31,7 @@ plotthis_DensityPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
 ## Value
 
-A `reactive` Plotly object.
+The `moduleServer` function for the DensityPlot module.
 
 ## Author
 

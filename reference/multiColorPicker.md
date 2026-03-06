@@ -74,6 +74,10 @@ multiColorPicker(
 
 A UI element that produces a named character vector of colors.
 
+## Author
+
+Jared Andrews
+
 ## Examples
 
 ``` r

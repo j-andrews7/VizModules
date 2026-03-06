@@ -27,3 +27,7 @@ vertical, and diagonal lines) for use across plot modules.
 ## Value
 
 A `tagList` containing the line input UI elements.
+
+## Author
+
+Jared Andrews

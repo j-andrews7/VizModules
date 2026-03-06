@@ -28,6 +28,10 @@ updateMultiColorPicker(session, inputId, colors)
 
 Invisibly returns `NULL`. Called for its side effect.
 
+## Author
+
+Jared Andrews
+
 ## Examples
 
 ``` r

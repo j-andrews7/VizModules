@@ -29,6 +29,15 @@ plot modules.
   Logical; whether to include the "Rotate" input for swapping x and y
   axes (e.g., horizontal bar plots). Default is FALSE.
 
+- include.flip:
+
+  Logical; whether to include the "Flip" input for flipping the axis.
+  Default is FALSE.
+
 ## Value
 
 A `tagList` containing the axis input UI elements.
+
+## Author
+
+Jared Andrews
