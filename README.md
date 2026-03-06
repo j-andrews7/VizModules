@@ -27,7 +27,7 @@ devtools::install_github("j-andrews7/VizModules")
 
 - Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- See the vignette for a full walkthrough: `vignette("quick-start", package = "VizModules")`
+- See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ```r
 library(VizModules)
@@ -201,7 +201,7 @@ shinyApp(ui, server)
 
 3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
 
-For more details, see `vignette("custom-modules", package = "VizModules")`.
+For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
 ## Modules Provided
 
@@ -241,7 +241,7 @@ dittoViz is under active development, so additional modules will be created as m
 
 ## Contributing a New Module
 
-To contribute a new module to the package, see the vignette for guidelines: `vignette("adding-a-new-module", package = "VizModules")`.
+To contribute a new module to the package, see the vignette for guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
 
 
 ### Examples of Plots:
@@ -319,3 +319,7 @@ To contribute a new module to the package, see the vignette for guidelines: `vig
 [12]:https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
 [13]:https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
 [14]:https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
+[15]: https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.html
+[16]: https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html
+[17]: https://j-andrews7.github.io/VizModules/articles/custom-modules.html
+[18]: https://j-andrews7.github.io/VizModules/articles/quick-start.html
