@@ -1,27 +1,37 @@
 # Create an example Modular piePlot Shiny Application
 
 This function generates a Shiny application with modular piePlot
-components. A module is created for each data frame provided in the
-named list of data frames.
+components. The app features a **Data Import** section for uploading
+Excel spreadsheets, a **Data Table** for viewing and editing the active
+dataset, and a **Plot** area for configuring and displaying an
+interactive pie plot.
 
 ## Usage
 
 ``` r
-piePlotApp(data_list)
+piePlotApp(data_list = NULL)
 ```
 
 ## Arguments
 
 - data_list:
 
-  A named list of summary data frames (one row per slice) for which
-  piePlot modules will be created. That is, UI inputs and a pie plot
-  will be generated for each. Each data frame should already contain a
-  label column and an aggregated numeric value column.
+  An optional named list of summary data frames (one row per slice). If
+  `NULL` (the default), aggregated example data is used. Each data frame
+  should already contain a label column and an aggregated numeric value
+  column.
 
 ## Value
 
 A Shiny app object.
+
+## Details
+
+When `data_list` is not provided (or `NULL`), the app launches with
+aggregated `example_sales` and `example_population` datasets. Uploaded
+Excel files are added to the available datasets and can be selected for
+plotting. If an uploaded file shares a name with an existing dataset,
+the existing one is overwritten with a warning.
 
 ## See also
 
@@ -38,10 +48,12 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-sales_summary <- aggregate(revenue ~ region, example_sales, sum)
-population_summary <- aggregate(count ~ age_group, example_population, sum)
-data_list <- list("sales" = sales_summary, "population" = population_summary)
-app <- piePlotApp(data_list)
-#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
+# Launch with default example data:
+app <- piePlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+sales_summary <- aggregate(revenue ~ region, example_sales, sum)
+app2 <- piePlotApp(list("sales" = sales_summary))
+if (interactive()) runApp(app2)
 ```

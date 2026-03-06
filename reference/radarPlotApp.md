@@ -1,27 +1,37 @@
 # Create an example Modular radarPlot Shiny Application
 
 This function generates a Shiny application with modular radarPlot
-components. A module is created for each data frame provided in the
-named list of data frames.
+components. The app features a **Data Import** section for uploading
+Excel spreadsheets, a **Data Table** for viewing and editing the active
+dataset, and a **Plot** area for configuring and displaying an
+interactive radar plot.
 
 ## Usage
 
 ``` r
-radarPlotApp(data_list)
+radarPlotApp(data_list = NULL)
 ```
 
 ## Arguments
 
 - data_list:
 
-  A named list of data frames for which radarPlot modules will be
-  created. That is, UI inputs and a radar plot will be generated for
-  each. Each data frame should contain columns for categories (theta)
-  and values (r). For multiple traces, include a grouping column.
+  An optional named list of data frames. If `NULL` (the default),
+  example datasets with categories and values are used. Each data frame
+  should contain columns for categories (theta) and values (r). For
+  multiple traces, include a grouping column.
 
 ## Value
 
 A Shiny app object.
+
+## Details
+
+When `data_list` is not provided (or `NULL`), the app launches with
+example `skills` and `team_stats` datasets. Uploaded Excel files are
+added to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 ## See also
 
@@ -38,22 +48,15 @@ Jacob Martin
 
 ``` r
 library(VizModules)
+# Launch with default example data:
+app <- radarPlotApp()
+if (interactive()) runApp(app)
 
-# Single trace example
+# Launch with custom data:
 skills <- data.frame(
     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
     value = c(8, 6, 7, 9, 8)
 )
-
-# Multiple trace example
-team_stats <- data.frame(
-    category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
-    value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
-    player = rep(c("Player A", "Player B"), each = 5)
-)
-
-data_list <- list("skills" = skills, "team" = team_stats)
-app <- radarPlotApp(data_list)
-#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
-if (interactive()) runApp(app)
+app2 <- radarPlotApp(list("skills" = skills))
+if (interactive()) runApp(app2)
 ```

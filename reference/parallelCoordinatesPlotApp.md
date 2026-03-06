@@ -2,27 +2,36 @@
 
 This function generates a Shiny application with modular
 [`parallelCoordinatesPlot()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlot.md)
-components. A module is created for each data frame provided in the
-named list of data frames.
+components. The app features a **Data Import** section for uploading
+Excel spreadsheets, a **Data Table** for viewing and editing the active
+dataset, and a **Plot** area for configuring and displaying an
+interactive parallel coordinates plot.
 
 ## Usage
 
 ``` r
-parallelCoordinatesPlotApp(data_list)
+parallelCoordinatesPlotApp(data_list = NULL)
 ```
 
 ## Arguments
 
 - data_list:
 
-  A named list of data frames for which parallelCoordinatesPlot modules
-  will be created. That is, UI inputs and a parallel coordinates plot
-  will be generated for each. Each data frame should contain at least
-  two numeric or categorical columns.
+  An optional named list of data frames. If `NULL` (the default),
+  `list("mtcars" = mtcars, "iris" = iris)` is used as example data. Each
+  data frame should contain at least two numeric or categorical columns.
 
 ## Value
 
 A Shiny app object.
+
+## Details
+
+When `data_list` is not provided (or `NULL`), the app launches with
+`iris` and `mtcars` as example datasets. Uploaded Excel files are added
+to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 ## See also
 
@@ -39,8 +48,11 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-data_list <- list("mtcars" = mtcars, "iris" = iris)
-app <- parallelCoordinatesPlotApp(data_list)
-#> Warning: Navigation containers expect a collection of `bslib::nav_panel()`/`shiny::tabPanel()`s and/or `bslib::nav_menu()`/`shiny::navbarMenu()`s. Consider using `header` or `footer` if you wish to place content above (or below) every panel's contents.
+# Launch with default example data:
+app <- parallelCoordinatesPlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- parallelCoordinatesPlotApp(list("cars" = mtcars))
+if (interactive()) runApp(app2)
 ```

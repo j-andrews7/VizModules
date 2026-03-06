@@ -109,7 +109,7 @@
 - [`plotthis_BoxPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotServer.md)
   : Server logic for BoxPlot module
 - [`plotthis_DensityPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.md)
-  : Standalone Multi-Dataset Density Plot Application
+  : Create an example Modular DensityPlot Shiny Application
 - [`plotthis_DensityPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotInputsUI.md)
   : Input UI components for the DensityPlot module
 - [`plotthis_DensityPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotOutputUI.md)
@@ -117,7 +117,7 @@
 - [`plotthis_DensityPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotServer.md)
   : Density Plot Server Module
 - [`plotthis_HistogramApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.md)
-  : Standalone Multi-Dataset Histogram Application
+  : Create an example Modular Histogram Shiny Application
 - [`plotthis_HistogramInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramInputsUI.md)
   : Input UI components for the Histogram module
 - [`plotthis_HistogramOutputUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramOutputUI.md)
