@@ -86,7 +86,7 @@ linePlotApp <- function(data_list = NULL) {
     server <- function(input, output, session) {
 
         rv <- reactiveValues(datasets = data_list)
-        
+
         # Update active_data whenever the selected dataset changes
         observeEvent(input$plot_select, {
             req(input$plot_select)
@@ -94,7 +94,7 @@ linePlotApp <- function(data_list = NULL) {
 
         
 
-        # ---- Data Import ----
+        # ---- Data Import ----  / FOR NOW ONLY EXCEL
         observeEvent(input$load_data, {
             req(input$file_upload)
             tryCatch({
@@ -115,7 +115,7 @@ linePlotApp <- function(data_list = NULL) {
                 )
             })
         })
-        filtered_data <- dataFilterServer("table", reactive(rv$datasets[[input$plot_select]]))
+        filtered_data <- dataFilterServer("table", reactive(rv$datasets[[input$plot_select]])) # Setting active and filtered data based on plot_select input
         # Keep dataset selector in sync when new datasets are loaded
         observe({
             updateSelectInput(session, "plot_select", choices = names(rv$datasets))
