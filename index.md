@@ -250,3 +250,6 @@ Function)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
 
 ![](man/PlotImages/yPlot.png)
+
+Developed by [Jared Andrews](https://github.com/j-andrews7) and \[Jacob
+Martin\]\[<https://github.com/Jacob1106>\]
