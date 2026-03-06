@@ -125,8 +125,6 @@ dittoViz is under active development, so additional modules will be created as m
 To contribute a new module to the package, see the vignette for guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
 
 
-
-
 ## Examples of Plots:
 
 [linePlot:][1]
