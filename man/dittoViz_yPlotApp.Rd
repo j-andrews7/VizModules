@@ -23,7 +23,8 @@ for configuring and displaying an interactive y plot.
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
 \code{example_sales} and \code{example_population} as example datasets. Uploaded Excel files are added
 to the available datasets and can be selected for plotting. If an uploaded
-file shares a name with an existing dataset, the existing one is overwritten.
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 }
 \examples{
 library(VizModules)
