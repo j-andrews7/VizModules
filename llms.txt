@@ -298,15 +298,18 @@ guidelines:
 
 ![](man/PlotImages/LinePlot.png)
 
-[AreaPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html)
+[plotthis_AreaPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/AreaPlot.html)
 
 ![](man/PlotImages/AreaPlot.png)
 
-[BoxPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html)
+[plotthis_BoxPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 
 ![](man/PlotImages/BoxPlot.png)
 
-[DensityPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html)
+[plotthis_DensityPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
 ![](man/PlotImages/DensityPlot.png)
 
@@ -314,7 +317,8 @@ guidelines:
 
 ![](man/PlotImages/DumbellPlot.png)
 
-[HistogramPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
+[plotthis_HistogramPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
 ![](man/PlotImages/HistogramPlot.png)
 
@@ -330,11 +334,13 @@ guidelines:
 
 ![](man/PlotImages/RadarPlot.png)
 
-[ScatterPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
+[dittoViz_ScatterPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
+[(Source_Package)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
 
 ![](man/PlotImages/ScatterPlot.png)
 
-[SplitBarPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html)
+[plotthis_SplitBarPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/barplot.html)
 
 ![](man/PlotImages/SplitBarPlot.png)
 
@@ -342,11 +348,13 @@ guidelines:
 
 ![](man/PlotImages/ternaryPlot.png)
 
-[ViolinPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
+[plotthis_ViolinPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
+[(Source_Package)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 
 ![](man/PlotImages/ViolinPlot.png)
 
-[yPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
+[dittoViz_yPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
+[(Source_Package)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
 
 ![](man/PlotImages/yPlot.png)
 
