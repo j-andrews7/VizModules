@@ -422,14 +422,6 @@ Martin\]\[<https://github.com/Jacob1106>\]
   : Server logic for ternaryPlot module
 - [`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md)
   : Update a multiColorPicker input on the client
-- [`volcanoPlotApp()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotApp.md)
-  : Create a standalone Shiny app for the volcanoPlot module
-- [`volcanoPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotInputsUI.md)
-  : Input UI components for the volcanoPlot module
-- [`volcanoPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotOutputUI.md)
-  : Output UI components for the volcanoPlot module
-- [`volcanoPlotServer()`](https://j-andrews7.github.io/VizModules/reference/volcanoPlotServer.md)
-  : Server logic for volcanoPlot module
 
 # Articles
 
