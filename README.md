@@ -65,133 +65,13 @@ Every module uses the same trio of functions: `*InputsUI()` for controls, `*Outp
 
 Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
-## Using **VizModules** 
-
-Including a VizModules module in your Shiny application is simple. 
-The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.
-
-As an example, we can look at the `dittoViz_ScatterPlotApp()` function:
-
-```r
-library(VizModules)
-
-dittoViz_ScatterPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    # UI definition
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular scatterPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        scatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                # Add the module output UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(dittoViz_ScatterPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    # Server function
-    server <- function(input, output, session) {
-
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            dittoViz_ScatterPlotServer(name, data = reactive(data_list[[name]]))
-        })
-    }
-
-    # Return the Shiny app
-    shinyApp(ui, server)
-}
-
-data_list <- list("mtcars" = mtcars, "iris" = iris)
-dittoViz_ScatterPlotApp(data_list)
-```
 
 ## Building Custom Wrapper Modules
 
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
 
-Here's a minimal example of wrapping the `dittoViz_ScatterPlot` module to add custom filtering logic:
+Here's a link to how to add custom modules: [CUSTOM][17]
 
-```r
-library(VizModules)
-
-# Define the wrapper UI
-minimalWrapperUI <- function(id) {
-    ns <- NS(id)
-    tagList(
-        h4("Minimal Wrapper Controls"),
-        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
-        hr(),
-        dittoViz_ScatterPlotInputsUI(id, iris)
-    )
-}
-
-minimalWrapperOutput <- function(id) {
-    dittoViz_ScatterPlotOutputUI(id)
-}
-
-# Define the wrapper server
-minimalWrapperServer <- function(id, data_reactive) {
-    # 1. Process data in a moduleServer block to access inputs namespaced to 'id'
-    # We return the reactive expression produced by this block.
-    # Note: moduleServer returns the return value of the function it runs.
-    filtered_data <- moduleServer(id, function(input, output, session) {
-        reactive({
-            req(data_reactive())
-            df <- data_reactive()
-
-            # Custom wrapper logic: filter based on a checkbox
-            if (isTRUE(input$filter_setosa)) {
-                if ("Species" %in% names(df)) {
-                    df <- df[df$Species == "setosa", ]
-                }
-            }
-            df
-        })
-    })
-
-    # 2. Call the base module server with the processed data.
-    # We call this OUTSIDE the first moduleServer closure so that
-    # dittoViz_ScatterPlotServer attaches to 'id' relative to the parent,
-    # avoiding nested namespace issues (e.g. id-id-input).
-    dittoViz_ScatterPlotServer(id, filtered_data)
-}
-
-# Create the app using the wrapper
-ui <- fluidPage(
-    titlePanel("Minimal Wrapper Example"),
-    sidebarLayout(
-        sidebarPanel(
-            minimalWrapperUI("demo")
-        ),
-        mainPanel(
-            minimalWrapperOutput("demo")
-        )
-    )
-)
-
-server <- function(input, output, session) {
-    minimalWrapperServer("demo", reactive({ iris }))
-}
-
-shinyApp(ui, server)
-```
 
 **Key points when building wrapper modules:**
 
@@ -226,13 +106,16 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 * `linePlot` - Line plots with customizable trajectories.
 * `piePlot` - Pie and donut charts.
+* `radarPlot` - Radar Plot 
+* `parallelCoordinatePlot` 
+* `ternaryPlot`
+* `dumbbellPlot`
 * `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`).
 
 ## Modules Planned
 
 ### `dittoViz`
 
-* **yPlot** - box/violin/jitter plots.
 * **scatterHex** - hexbin plots encoding density/frequency information along x/y coordinates.
 * **barPlot** - compositional barplots.
 * **freqPlot** - box/jitter plots for discrete observation frequencies per sample/group.
@@ -251,17 +134,20 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 ![](man/PlotImages/LinePlot.png)
 
 [plotthis_AreaPlot:][2]
-[(Source_Package)][19]
+
+[(Source Plotting Function)][19]
 
 ![](man/PlotImages/AreaPlot.png)
 
 [plotthis_BoxPlot:][3]
-[(Source_Package)][20]
+
+[(Source Plotting Function)][20]
 
 ![](man/PlotImages/BoxPlot.png)
 
 [plotthis_DensityPlot:][4]
-[(Source_Package)][21]
+
+[(Source Plotting Function)][21]
 
 ![](man/PlotImages/DensityPlot.png)
 
@@ -270,7 +156,8 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 ![](man/PlotImages/DumbellPlot.png)
 
 [plotthis_HistogramPlot:][6]
-[(Source_Package)][21]
+
+[(Source Plotting Function)][21]
 
 ![](man/PlotImages/HistogramPlot.png)
 
@@ -287,12 +174,14 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 ![](man/PlotImages/RadarPlot.png)
 
 [dittoViz_ScatterPlot:][10]
-[(Source_Package)][22]
+
+[(Source Plotting Function)][22]
 
 ![](man/PlotImages/ScatterPlot.png)
 
 [plotthis_SplitBarPlot:][11]
-[(Source_Package)][23]
+
+[(Source Plotting Function)][23]
 
 ![](man/PlotImages/SplitBarPlot.png)
 
@@ -301,12 +190,14 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 ![](man/PlotImages/ternaryPlot.png)
 
 [plotthis_ViolinPlot:][13]
-[(Source_Package)][20]
+
+[(Source Plotting Function)][20]
 
 ![](man/PlotImages/ViolinPlot.png)
 
 [dittoViz_yPlot:][14]
-[(Source_Package)][22]
+
+[(Source Plotting Function)][22]
 
 ![](man/PlotImages/yPlot.png)
 
