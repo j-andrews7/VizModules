@@ -31,7 +31,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
             lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "densityPlotTabsetPanel", target = tab.name)
+                hideTab(inputId = "DensityPlotTabsetPanel", target = tab.name)
             })
         }
 
