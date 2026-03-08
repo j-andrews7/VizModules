@@ -45,6 +45,14 @@ with `shinytest2`.
 
 Note any `ggplotly` conversion quirks that change or drop functionality.
 
+**Never use `eval(str2expression())` on raw user input.** Use
+[`safe_eval_filter()`](https://j-andrews7.github.io/VizModules/reference/safe_eval_filter.md),
+[`validate_expression()`](https://j-andrews7.github.io/VizModules/reference/validate_expression.md),
+or
+[`safe_resolve_adj_fxn()`](https://j-andrews7.github.io/VizModules/reference/safe_resolve_adj_fxn.md)
+instead (see [Sanitizing User-Provided
+Expressions](#sanitizing-user-provided-expressions) below).
+
 ## Naming & Organization
 
 File names follow the module naming pattern:
@@ -218,3 +226,80 @@ Confirm UI text/tooltips mention any missing or altered plot features.
 
 Verify both module instances in the example app work independently
 (namespacing correct).
+
+## Sanitizing User-Provided Expressions
+
+**Never use `eval(str2expression())` or `eval(parse())` on raw user
+input.** If a Shiny app is deployed publicly, this allows arbitrary code
+execution on the server (e.g., `system("rm -rf /")`). VizModules
+provides three exported helper functions for safely handling user-typed
+expressions. Use them whenever your module accepts free-text input that
+will be evaluated or passed to a plotting function.
+
+### `safe_eval_filter(expr_text, data)`
+
+Use when a module **evaluates** a user-typed filter expression directly
+to produce a logical vector for row subsetting. The expression is
+parsed, its AST is walked to ensure only allowed operations are present
+(comparisons, logical operators, column references, and literals), and
+then it is evaluated in a restricted environment containing only the
+data frame’s columns.
+
+``` r
+# In a module server — filtering rows by a textInput:
+rows.use = safe_eval_filter(isolate_fn(input$rows.use), data())
+```
+
+Returns a logical vector (same length as `nrow(data)`), or `NULL` if the
+input is empty, unparseable, or contains disallowed operations.
+
+### `validate_expression(expr_text, col_names)`
+
+Use when a module **passes** a user-typed expression string through to a
+downstream plotting function that will evaluate it internally (e.g.,
+`plotthis::BoxPlot(highlight = ...)`). The string is validated but not
+executed.
+
+``` r
+# In a module server — passing a highlight expression to plotthis:
+highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
+```
+
+Returns the original string if safe, or `NULL`.
+
+### `safe_resolve_adj_fxn(fn_name)`
+
+Use when a module resolves a function name from a dropdown or text input
+into an actual function reference (e.g., for `x.adj.fxn`, `y.adj.fxn`).
+Only function names in the allowed list (`"log2"`, `"log"`, `"log10"`,
+`"neg_log10"`, `"log1p"`, `"as.factor"`, `"abs"`, `"sqrt"`) are
+accepted.
+
+``` r
+# In a module server — resolving an adjustment function:
+x.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$x.adj.fxn))
+```
+
+Returns the function, or `NULL` if the name is empty or not in the
+allowed list.
+
+### What counts as “allowed”?
+
+All three helpers share the same whitelist of safe AST nodes:
+
+- **Comparisons:** `<`, `>`, `<=`, `>=`, `==`, `!=`
+- **Logical operators:** `&`, `&&`, `|`, `||`, `!`
+- **Utilities:** `%in%`, [`c()`](https://rdrr.io/r/base/c.html),
+  [`is.na()`](https://rdrr.io/r/base/NA.html),
+  [`is.null()`](https://rdrr.io/r/base/NULL.html)
+- **Arithmetic:** `-`, `+`, `*`, `/`, `:`, `%%`
+- **Grouping:** `()`
+- **Column names** from the data
+- **Literals:** numbers, strings, `TRUE`, `FALSE`, `NA`, `NULL`, `Inf`,
+  `NaN`
+
+Anything outside this list (including function calls like
+[`system()`](https://rdrr.io/r/base/system.html),
+[`file.remove()`](https://rdrr.io/r/base/files.html),
+[`library()`](https://rdrr.io/r/base/library.html), etc.) is rejected
+and a warning is issued.

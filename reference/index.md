@@ -152,6 +152,11 @@
   : Server logic for radarPlot module
 - [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
   : Resolve a color palette for plot groups
+- [`safe_eval_filter()`](https://j-andrews7.github.io/VizModules/reference/safe_eval_filter.md)
+  : Safely evaluate a user-provided filter expression against a data
+  frame
+- [`safe_resolve_adj_fxn()`](https://j-andrews7.github.io/VizModules/reference/safe_resolve_adj_fxn.md)
+  : Safely resolve an adjustment function name to an actual function
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
 - [`ternaryPlot()`](https://j-andrews7.github.io/VizModules/reference/ternaryPlot.md)
@@ -166,3 +171,5 @@
   : Server logic for ternaryPlot module
 - [`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md)
   : Update a multiColorPicker input on the client
+- [`validate_expression()`](https://j-andrews7.github.io/VizModules/reference/validate_expression.md)
+  : Validate a user-provided expression string for safety

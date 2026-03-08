@@ -130,6 +130,11 @@ with <code>testthat</code>; cover the module/app with
 <code>shinytest2</code>.</label></li>
 <li><label><input type="checkbox">Note any <code>ggplotly</code>
 conversion quirks that change or drop functionality.</label></li>
+<li><label><input type="checkbox"><strong>Never use
+<code>eval(str2expression())</code> on raw user input.</strong> Use
+<code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code>, <code><a href="../reference/validate_expression.html">validate_expression()</a></code>, or
+<code><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn()</a></code> instead (see <a href="#sanitizing-user-provided-expressions">Sanitizing User-Provided
+Expressions</a> below).</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -342,6 +347,102 @@ missing or altered plot features.</label></li>
 <li><label><input type="checkbox">Verify both module instances in the
 example app work independently (namespacing correct).</label></li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="sanitizing-user-provided-expressions">Sanitizing User-Provided Expressions<a class="anchor" aria-label="anchor" href="#sanitizing-user-provided-expressions"></a>
+</h2>
+<p><strong>Never use <code>eval(str2expression())</code> or
+<code>eval(parse())</code> on raw user input.</strong> If a Shiny app is
+deployed publicly, this allows arbitrary code execution on the server
+(e.g., <code>system("rm -rf /")</code>). VizModules provides three
+exported helper functions for safely handling user-typed expressions.
+Use them whenever your module accepts free-text input that will be
+evaluated or passed to a plotting function.</p>
+<div class="section level3">
+<h3 id="safe_eval_filterexpr_text-data">
+<code>safe_eval_filter(expr_text, data)</code><a class="anchor" aria-label="anchor" href="#safe_eval_filterexpr_text-data"></a>
+</h3>
+<p>Use when a module <strong>evaluates</strong> a user-typed filter
+expression directly to produce a logical vector for row subsetting. The
+expression is parsed, its AST is walked to ensure only allowed
+operations are present (comparisons, logical operators, column
+references, and literals), and then it is evaluated in a restricted
+environment containing only the data frame’s columns.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># In a module server — filtering rows by a textInput:</span></span>
+<span><span class="va">rows.use</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rows.use</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Returns a logical vector (same length as <code>nrow(data)</code>), or
+<code>NULL</code> if the input is empty, unparseable, or contains
+disallowed operations.</p>
+</div>
+<div class="section level3">
+<h3 id="validate_expressionexpr_text-col_names">
+<code>validate_expression(expr_text, col_names)</code><a class="anchor" aria-label="anchor" href="#validate_expressionexpr_text-col_names"></a>
+</h3>
+<p>Use when a module <strong>passes</strong> a user-typed expression
+string through to a downstream plotting function that will evaluate it
+internally (e.g., <code>plotthis::BoxPlot(highlight = ...)</code>). The
+string is validated but not executed.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># In a module server — passing a highlight expression to plotthis:</span></span>
+<span><span class="va">highlight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_expression.html">validate_expression</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">highlight</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Returns the original string if safe, or <code>NULL</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="safe_resolve_adj_fxnfn_name">
+<code>safe_resolve_adj_fxn(fn_name)</code><a class="anchor" aria-label="anchor" href="#safe_resolve_adj_fxnfn_name"></a>
+</h3>
+<p>Use when a module resolves a function name from a dropdown or text
+input into an actual function reference (e.g., for
+<code>x.adj.fxn</code>, <code>y.adj.fxn</code>). Only function names in
+the allowed list (<code>"log2"</code>, <code>"log"</code>,
+<code>"log10"</code>, <code>"neg_log10"</code>, <code>"log1p"</code>,
+<code>"as.factor"</code>, <code>"abs"</code>, <code>"sqrt"</code>) are
+accepted.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># In a module server — resolving an adjustment function:</span></span>
+<span><span class="va">x.adj.fxn</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.adj.fxn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Returns the function, or <code>NULL</code> if the name is empty or
+not in the allowed list.</p>
+</div>
+<div class="section level3">
+<h3 id="what-counts-as-allowed">What counts as “allowed”?<a class="anchor" aria-label="anchor" href="#what-counts-as-allowed"></a>
+</h3>
+<p>All three helpers share the same whitelist of safe AST nodes:</p>
+<ul>
+<li>
+<strong>Comparisons:</strong> <code>&lt;</code>, <code>&gt;</code>,
+<code>&lt;=</code>, <code>&gt;=</code>, <code>==</code>,
+<code>!=</code>
+</li>
+<li>
+<strong>Logical operators:</strong> <code>&amp;</code>,
+<code>&amp;&amp;</code>, <code>|</code>, <code>||</code>,
+<code>!</code>
+</li>
+<li>
+<strong>Utilities:</strong> <code>%in%</code>, <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>,
+<code><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na()</a></code>, <code><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null()</a></code>
+</li>
+<li>
+<strong>Arithmetic:</strong> <code>-</code>, <code>+</code>,
+<code>*</code>, <code>/</code>, <code>:</code>, <code>%%</code>
+</li>
+<li>
+<strong>Grouping:</strong> <code>()</code>
+</li>
+<li>
+<strong>Column names</strong> from the data</li>
+<li>
+<strong>Literals:</strong> numbers, strings, <code>TRUE</code>,
+<code>FALSE</code>, <code>NA</code>, <code>NULL</code>,
+<code>Inf</code>, <code>NaN</code>
+</li>
+</ul>
+<p>Anything outside this list (including function calls like
+<code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code>, <code><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove()</a></code>,
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>, etc.) is rejected and a warning is issued.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
