@@ -5,7 +5,7 @@
 \title{Create an Interactive Parallel Coordinates Plot with plotly}
 \usage{
 parallelCoordinatesPlot(
-  reactive.data,
+  data,
   dimensions,
   color.by = NULL,
   color.scale = "Viridis",
@@ -26,7 +26,7 @@ parallelCoordinatesPlot(
 )
 }
 \arguments{
-\item{reactive.data}{A data.frame or tibble containing the data to plot.}
+\item{data}{A data.frame or tibble containing the data to plot.}
 
 \item{dimensions}{Character vector of column names to use as dimensions (axes).
 Must contain at least two columns. Non-numeric columns are mapped to integers.}
@@ -77,7 +77,7 @@ supporting dimension selection, color mapping, and font styling.
 }
 \examples{
 fig <- parallelCoordinatesPlot(
-  reactive.data = mtcars,
+  data = mtcars,
   dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
   color.by = "mpg",
   color.scale = "Viridis",

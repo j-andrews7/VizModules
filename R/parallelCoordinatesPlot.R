@@ -3,7 +3,7 @@
 #' Generates a customizable interactive parallel coordinates plot using plotly,
 #' supporting dimension selection, color mapping, and font styling.
 #'
-#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param data A data.frame or tibble containing the data to plot.
 #' @param dimensions Character vector of column names to use as dimensions (axes).
 #'   Must contain at least two columns. Non-numeric columns are mapped to integers.
 #' @param color.by Optional character, column name to color lines by.
@@ -37,14 +37,14 @@
 #'
 #' @examples
 #' fig <- parallelCoordinatesPlot(
-#'   reactive.data = mtcars,
+#'   data = mtcars,
 #'   dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
 #'   color.by = "mpg",
 #'   color.scale = "Viridis",
 #'   line.opacity = 0.6
 #' )
 parallelCoordinatesPlot <- function(
-    reactive.data,
+    data,
     dimensions,
     color.by = NULL,
     color.scale = "Viridis",
@@ -63,7 +63,7 @@ parallelCoordinatesPlot <- function(
     title.text.color = "black",
     bgcolor = "#FFFFFF"
 ) {
-    df <- reactive.data
+    df <- data
 
     # Build dimensions list for parcoords
     dim_list <- lapply(dimensions, function(col) {

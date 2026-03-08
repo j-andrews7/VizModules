@@ -2,7 +2,7 @@
 #'
 #' Generates a customizable interactive line plot using plotly, supporting grouping, faceting, axis adjustments, and color palettes.
 #'
-#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param data A data.frame or tibble containing the data to plot.
 #' @param x Character vector of column name(s) for the x-axis. Multiple columns create separate traces.
 #' @param y Character vector of column name(s) for the y-axis. Multiple columns create separate traces.
 #' @param plot.mode Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".
@@ -58,7 +58,7 @@
 #' @examples
 #' palette <- plotthis::palette_list[["Set2"]]
 #' fig <- linePlot(
-#'   reactive.data = mtcars,
+#'   data = mtcars,
 #'   x = "cyl",
 #'   y = "mpg",
 #'   plot.mode = "lines",
@@ -67,7 +67,7 @@
 #'   palette.selection = palette,
 #'   show.legend = TRUE
 #'   )
-linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
+linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
                      facet.scales = "fixed",
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
@@ -87,18 +87,18 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     multi_axis <- xor(length(x) > 1, length(y) > 1)
 
 
-    cat.choices <- c("", names(reactive.data)[vapply(reactive.data, function(x) !is.numeric(x), logical(1))])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     # if (x %in% cat.choices ){
     #     for (i in y){
-    #         reactive.data <- reactive.data %>%
+    #         data <- data %>%
     #         dplyr::group_by(.data[[x]]) %>%      
     #         dplyr::mutate(
     #             ymean = mean(.data[[i]], na.rm = TRUE)        
     #         ) %>%
     #             dplyr::ungroup()
 
-    #         reactive.data[[i]] <- reactive.data$ymean
-    #         reactive.data$ymean <- NULL
+    #         data[[i]] <- data$ymean
+    #         data$ymean <- NULL
     #     }
     # }
 
@@ -108,7 +108,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         if (!is.null(facet.by) && nzchar(facet.by)) {
             group_vars <- c(facet.by, x)
         }
-        ex <- reactive.data |>
+        ex <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
             dplyr::summarise(
                 sd_y = if (length(y) == 1) stats::sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
@@ -119,9 +119,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
                 ),
                 .groups = "drop"
             )
-        reactive.data <- ex
+        data <- ex
     } else {
-        reactive.data <- reactive.data |>
+        data <- data |>
             dplyr::mutate(sd_y = NA)
     }
 
@@ -147,11 +147,11 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
 
     # Making axis adjustments if the parameters are not NULL
     if (!is.null(x.adjustment) && x.adjustment != "") {
-        reactive.data <- .adjust_column_values(df = reactive.data, x.col = x, x.adj.fun = x.adjustment)
+        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
         for (i in seq_along(x)) {
             adj_name <- paste(x[i], "adj", sep = ".")
-            if (adj_name %in% names(reactive.data)) {
+            if (adj_name %in% names(data)) {
                 x.new[i] <- adj_name
             }
         }
@@ -159,11 +159,11 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     }
 
     if (!is.null(y.adjustment) && y.adjustment != "") {
-        reactive.data <- .adjust_column_values(df = reactive.data, y.col = y, y.adj.fun = y.adjustment)
+        data <- .adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
         y.new <- y
         for (i in seq_along(y)) {
             adj_name <- paste(y[i], "adj", sep = ".")
-            if (adj_name %in% names(reactive.data)) {
+            if (adj_name %in% names(data)) {
                 y.new[i] <- adj_name
             }
         }
@@ -171,11 +171,11 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     }
 
     if (!is.null(color.adjustment) && color.adjustment != "") {
-        reactive.data <- .adjust_column_values(df = reactive.data, color.col = colour.group.by, color.adj.fun = color.adjustment)
+        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
         colour.group.by.new <- colour.group.by
         for (i in seq_along(colour.group.by)) {
             adj_name <- paste(colour.group.by[i], "adj", sep = ".")
-            if (adj_name %in% names(reactive.data)) {
+            if (adj_name %in% names(data)) {
                 colour.group.by.new[i] <- adj_name
             }
         }
@@ -187,9 +187,9 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         order.cols <- x
     }
 
-    plot_data <- reactive.data
-    if (!is.null(order.cols) && length(order.cols) > 0 && order.cols[1] %in% names(reactive.data)) {
-        plot_data <- reactive.data[order(reactive.data[[order.cols[1]]]), ]
+    plot_data <- data
+    if (!is.null(order.cols) && length(order.cols) > 0 && order.cols[1] %in% names(data)) {
+        plot_data <- data[order(data[[order.cols[1]]]), ]
     }
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
@@ -454,7 +454,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     if (multi_axis && (is.null(facet.by) || facet.by == "")) {
         if (length(x) > 1) {
             for (i in seq_along(x)) {
-                trace_data <- reactive.data
+                trace_data <- data
                 sort_column <- order.cols[1]
                 if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
                     sort_column <- order.cols[i]
@@ -484,7 +484,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
         }
         if (length(y) > 1) {
             for (i in seq_along(y)) {
-                trace_data <- reactive.data
+                trace_data <- data
                 sort_column <- order.cols[1]
                 if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
                     sort_column <- order.cols[i]

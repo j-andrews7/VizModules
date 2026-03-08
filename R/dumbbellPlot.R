@@ -3,7 +3,7 @@
 #' Generates a customizable interactive dumbbell plot using plotly. Supports single dot mode (1 x variable)
 #' or dumbbell mode (2 x variables), with flexible coloring by either X or Y variables, faceting, and transformations.
 #'
-#' @param reactive.data A data.frame or tibble containing the data to plot.
+#' @param data A data.frame or tibble containing the data to plot.
 #' @param x Character vector of column name(s) for x-axis values. Maximum 2 values allowed.
 #'   If 1 value: creates single dot plot. If 2 values: creates dumbbell plot with connecting segments.
 #' @param y Character, column name for the y-axis (categorical variable recommended).
@@ -66,7 +66,7 @@
 #'   Men = c(152, 151, 165)
 #' )
 #' fig <- dumbbellPlot(
-#'   reactive.data = data,
+#'   data = data,
 #'   x = c("Women", "Men"),
 #'   y = "School",
 #'   colour.by = "X variables",
@@ -74,7 +74,7 @@
 #'   show.legend = TRUE,
 #'   line.colour = "gray80"
 #' )
-dumbbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
+dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
@@ -115,11 +115,11 @@ dumbbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette
 
     # Making axis adjustments if the parameters are not NULL
     if (!is.null(x.adjustment) && x.adjustment != "") {
-        reactive.data <- .adjust_column_values(df = reactive.data, x.col = x, x.adj.fun = x.adjustment)
+        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
         for (i in seq_along(x)) {
             adj_name <- paste(x[i], "adj", sep = ".")
-            if (adj_name %in% names(reactive.data)) {
+            if (adj_name %in% names(data)) {
                 x.new[i] <- adj_name
             }
         }
@@ -132,9 +132,9 @@ dumbbellPlot <- function(reactive.data, x, y, colour.by = "X variables", palette
         order.cols <- x[1]
     }
 
-    plot_data <- reactive.data
-    if (!is.null(order.cols) && length(order.cols) > 0 && order.cols[1] %in% names(reactive.data)) {
-        plot_data <- reactive.data[order(reactive.data[[order.cols[1]]]), ]
+    plot_data <- data
+    if (!is.null(order.cols) && length(order.cols) > 0 && order.cols[1] %in% names(data)) {
+        plot_data <- data[order(data[[order.cols[1]]]), ]
     }
 
     # Determine shareX and shareY based on facet.scales

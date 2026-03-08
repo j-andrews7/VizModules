@@ -5,7 +5,7 @@
 \title{Create an Interactive Dumbbell Plot with plotly}
 \usage{
 dumbbellPlot(
-  reactive.data,
+  data,
   x,
   y,
   colour.by = "X variables",
@@ -40,7 +40,7 @@ dumbbellPlot(
 )
 }
 \arguments{
-\item{reactive.data}{A data.frame or tibble containing the data to plot.}
+\item{data}{A data.frame or tibble containing the data to plot.}
 
 \item{x}{Character vector of column name(s) for x-axis values. Maximum 2 values allowed.
 If 1 value: creates single dot plot. If 2 values: creates dumbbell plot with connecting segments.}
@@ -138,7 +138,7 @@ data <- data.frame(
   Men = c(152, 151, 165)
 )
 fig <- dumbbellPlot(
-  reactive.data = data,
+  data = data,
   x = c("Women", "Men"),
   y = "School",
   colour.by = "X variables",

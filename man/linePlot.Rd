@@ -5,7 +5,7 @@
 \title{Create an Interactive Line Plot with plotly}
 \usage{
 linePlot(
-  reactive.data,
+  data,
   x,
   y,
   plot.mode,
@@ -48,7 +48,7 @@ linePlot(
 )
 }
 \arguments{
-\item{reactive.data}{A data.frame or tibble containing the data to plot.}
+\item{data}{A data.frame or tibble containing the data to plot.}
 
 \item{x}{Character vector of column name(s) for the x-axis. Multiple columns create separate traces.}
 
@@ -141,7 +141,7 @@ Generates a customizable interactive line plot using plotly, supporting grouping
 \examples{
 palette <- plotthis::palette_list[["Set2"]]
 fig <- linePlot(
-  reactive.data = mtcars,
+  data = mtcars,
   x = "cyl",
   y = "mpg",
   plot.mode = "lines",
