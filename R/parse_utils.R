@@ -248,3 +248,113 @@ setup_auto_update_logic <- function(input) {
     if (auto_update) identity else isolate
 }
 
+
+#' Safely evaluate a user-provided filter expression against a data frame
+#'
+#' Parses the expression text, validates that it only contains allowed
+#' operations (comparisons, logical operators, column references, and
+#' literals), then evaluates it in a restricted environment containing
+#' only the data frame columns. Returns a logical vector suitable for
+#' row subsetting, or `NULL` if the input is empty or invalid.
+#'
+#' @param expr_text Character string containing the filter expression.
+#' @param data A `data.frame` whose columns are made available for the expression.
+#' @return A logical vector the same length as `nrow(data)`, or `NULL`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_safe_eval_filter
+#' @keywords internal
+.safe_eval_filter <- function(expr_text, data) {
+    if (is.null(expr_text) || !nzchar(trimws(expr_text))) {
+        return(NULL)
+    }
+
+    parsed <- tryCatch(parse(text = expr_text), error = function(e) NULL)
+    if (is.null(parsed) || length(parsed) == 0) {
+        warning("Could not parse filter expression.")
+        return(NULL)
+    }
+
+    # Walk the AST and ensure only whitelisted operations are used
+    allowed_calls <- c(
+        "<", ">", "<=", ">=", "==", "!=",
+        "&", "&&", "|", "||", "!",
+        "%in%", "c", "is.na", "is.null",
+        "(", "-", "+", "*", "/", ":", "%%"
+    )
+    col_names <- names(data)
+
+    .check_node <- function(node) {
+        if (is.atomic(node) || is.null(node)) {
+            return(TRUE)
+        }
+        if (is.symbol(node)) {
+            nm <- as.character(node)
+            if (nm %in% col_names || nm %in% c("TRUE", "FALSE", "T", "F", "NA", "NULL", "Inf", "NaN")) {
+                return(TRUE)
+            }
+            # Unknown symbol — block it
+            return(FALSE)
+        }
+        if (is.call(node)) {
+            fn_name <- as.character(node[[1L]])
+            if (!fn_name %in% allowed_calls) {
+                return(FALSE)
+            }
+            # Recursively check all arguments
+            for (i in seq_along(node)[-1]) {
+                if (!.check_node(node[[i]])) return(FALSE)
+            }
+            return(TRUE)
+        }
+        if (is.pairlist(node)) {
+            return(all(vapply(node, .check_node, logical(1))))
+        }
+        FALSE
+    }
+
+    expr <- parsed[[1L]]
+    if (!.check_node(expr)) {
+        warning(
+            "Filter expression contains disallowed operations. ",
+            "Only column references, comparisons, and logical operators are permitted."
+        )
+        return(NULL)
+    }
+
+    # Evaluate in a restricted environment with only data columns
+    env <- list2env(as.list(data), parent = baseenv())
+    tryCatch(
+        eval(expr, envir = env),
+        error = function(e) {
+            warning("Filter expression error: ", e$message)
+            NULL
+        }
+    )
+}
+
+#' Safely resolve an adjustment function name to an actual function
+#'
+#' Validates that the provided function name is in the allowed list before
+#' converting it to a function reference. Returns `NULL` for empty strings
+#' or unrecognized names.
+#'
+#' @param fn_name Character string — name of the adjustment function.
+#' @return A function, or `NULL`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_safe_resolve_adj_fxn
+#' @keywords internal
+.safe_resolve_adj_fxn <- function(fn_name) {
+    if (is.null(fn_name) || !nzchar(trimws(fn_name))) {
+        return(NULL)
+    }
+
+    allowed <- c("log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    if (!fn_name %in% allowed) {
+        warning("Unrecognized adjustment function: ", fn_name)
+        return(NULL)
+    }
+
+    match.fun(fn_name)
+}
