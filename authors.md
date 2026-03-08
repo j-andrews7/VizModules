@@ -5,7 +5,7 @@
 - **Jared Andrews**. Author, maintainer.
   [](https://orcid.org/0000-0002-0780-6248)
 
-- **Jacob Martin**. Author.
+- **Jacob Martin**. Author. [](https://orcid.org/0009-0007-6896-4796)
 
 ## Citation
 

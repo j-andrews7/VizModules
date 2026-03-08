@@ -6,8 +6,8 @@
 interactivity-first Shiny modules for common plot types. Built on
 dittoViz and plotthis, all plots use plotly for interactive features.
 
-**Stack**: R 4.3.3+, Shiny, roxygen2 \| **Version**: 0.99.0.9000 (dev)
-\| **License**: MIT
+**Stack**: R 4.5+, Shiny, roxygen2 \| **Version**: 0.99.0.9000 (dev) \|
+**License**: MIT
 
 ## Repository Structure
 
@@ -27,7 +27,7 @@ dittoViz and plotthis, all plots use plotly for interactive features.
 
 ### Prerequisites
 
-R 4.3.3+, install with: `sudo apt-get install -y r-base r-base-dev`
+R 4.5+, available at: C:Files.0.exe
 
 ### Key R Commands
 
