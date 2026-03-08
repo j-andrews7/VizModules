@@ -141,8 +141,13 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
-    min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+    if (length(num.choices) >= 2) {
+        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
+        min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+    } else {
+        max.y <- 1
+        min.y <- 0
+    }
 
     selected <- c("var", "group.by", "color.by", "shape.by",
             "plots", "min", "max", "split.by", "split.nrow", "split.ncol",

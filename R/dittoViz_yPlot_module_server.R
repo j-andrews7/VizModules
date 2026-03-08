@@ -107,8 +107,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
 
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
-            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            } else {
+                max.y <- 1
+                min.y <- 0
+            }
 
             # Data
             updateSelectInput(session, "var", selected = num.choices[2])
@@ -118,13 +123,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             
 
             # Plot Type
-            updateCheckboxGroupInput(session, "plots", selected = c("vlnplot", "boxplot", "jitter"))
+            updateCheckboxGroupInput(session, "plots", selected = c("boxplot", "jitter"))
 
             # Adjustments
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
             updateMaterialSwitch(session, "do.raster", value = FALSE)
-            updateNumericInput(session, "raster.dpi", value = 300)
+            updateNumericInput(session, "raster.dpi", value = 600)
 
             # Jitter
             updateNumericInput(session, "jitter.size", value = 1)
@@ -138,18 +143,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateMaterialSwitch(session, "show.outliers", value = FALSE)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
             updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
-            updateNumericInput(session, "boxplot.lineweight", value = 1)
+            updateNumericInput(session, "boxplot.lineweight", value = 0.5)
             updateNumericInput(session, "boxgap", value = 0.3)
             updateNumericInput(session, "boxgroupgap", value = 0.2)
 
             # Violin
-            updateNumericInput(session, "vlnplot.lineweight", value = 1)
+            updateNumericInput(session, "vlnplot.lineweight", value = 0.5)
             updateNumericInput(session, "vlnplot.width", value = 1)
             updateSelectInput(session, "vlnplot.scaling", selected = "area")
             updateTextInput(session, "vlnplot.quantiles", value = "")
 
             # Ridge
-            updateNumericInput(session, "ridgeplot.lineweight", value = 1)
+            updateNumericInput(session, "ridgeplot.lineweight", value = 0.5)
             updateNumericInput(session, "ridgeplot.scale", value = 1.25)
             updateNumericInput(session, "ridgeplot.ymax.expansion", value = NA)
             updateSelectInput(session, "ridgeplot.shape", selected = "smooth")

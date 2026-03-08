@@ -158,6 +158,11 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateTextInput(session, "vline.linetypes", value = "dashed")
             updateTextInput(session, "vline.opacities", value = "1")
             updateTextInput(session, "abline.slopes", value = "")
+            updateTextInput(session, "abline.intercepts", value = "")
+            updateTextInput(session, "abline.colors", value = "#000000")
+            updateTextInput(session, "abline.widths", value = "1")
+            updateTextInput(session, "abline.linetypes", value = "dashed")
+            updateTextInput(session, "abline.opacities", value = "1")
         })
 
         generate_AreaPlot <- reactive({

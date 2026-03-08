@@ -182,8 +182,13 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
     cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor ( Allows the top of the graph to not reach the top of the axes)
-    min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+    if (length(num.choices) >= 2) {
+        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
+        min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+    } else {
+        max.y <- 1
+        min.y <- 0
+    }
 
     selected <- c("x", "y", "group_by", "sort_x",
             "y_max", "y_min", "add_point", "pt_size", "pt_alpha",
