@@ -85,7 +85,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             }
 
             fig <- parallelCoordinatesPlot(
-                reactive.data = d,
+                data = d,
                 dimensions = dims,
                 color.by = color.by,
                 color.scale = isolate_fn(input$color.scale),
@@ -105,7 +105,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             )
 
             config_list <- .add_plot_config(
-                download.format = isolate_fn(input$download.type),
+                download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(plotly::config, c(list(p = fig), config_list))

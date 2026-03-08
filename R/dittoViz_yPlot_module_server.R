@@ -190,7 +190,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             colourpicker::updateColourInput(session, "text.colour", value = "#000000")
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
@@ -379,7 +379,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = split.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

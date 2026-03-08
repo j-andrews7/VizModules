@@ -217,7 +217,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             )
 
             config_list <- .add_plot_config(
-                download.format = isolate_fn(input$download.type),
+                download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = TRUE
             )
             fig <- do.call(config, c(list(p = fig), config_list))

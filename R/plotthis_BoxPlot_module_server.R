@@ -57,7 +57,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             group_col <- input$group.by
             x_col <- input$x.data
 
-            if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[x_col]])))
@@ -139,7 +139,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
@@ -314,7 +314,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

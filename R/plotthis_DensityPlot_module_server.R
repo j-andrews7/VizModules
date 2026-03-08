@@ -52,7 +52,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             group_col <- input$group.by
 
             # Only return groups when group.by is set to a valid categorical column
-            if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
             } else {
                 # No grouping - will show single color picker instead
@@ -115,7 +115,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
@@ -259,7 +259,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)

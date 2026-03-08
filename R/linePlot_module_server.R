@@ -258,7 +258,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             fig <- linePlot(
-                reactive.data = d,
+                data = d,
                 x = x_input,
                 y = y_input,
                 plot.mode = isolate_fn(input$plot.type),
@@ -318,7 +318,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
 
             return(fig)

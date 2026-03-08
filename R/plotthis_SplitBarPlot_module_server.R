@@ -250,7 +250,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "axis.tickwidth", value = 1)
 
             # Action Button (unchanged)
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
             updateTextInput(session, "hline.intercepts", value = "")
@@ -463,7 +463,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
