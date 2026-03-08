@@ -7,7 +7,7 @@ grouping, faceting, axis adjustments, and color palettes.
 
 ``` r
 linePlot(
-  reactive.data,
+  data,
   x,
   y,
   plot.mode,
@@ -52,7 +52,7 @@ linePlot(
 
 ## Arguments
 
-- reactive.data:
+- data:
 
   A data.frame or tibble containing the data to plot.
 
@@ -248,7 +248,7 @@ Jacob Martin, Jared Andrews
 ``` r
 palette <- plotthis::palette_list[["Set2"]]
 fig <- linePlot(
-  reactive.data = mtcars,
+  data = mtcars,
   x = "cyl",
   y = "mpg",
   plot.mode = "lines",

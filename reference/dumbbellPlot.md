@@ -9,7 +9,7 @@ and transformations.
 
 ``` r
 dumbbellPlot(
-  reactive.data,
+  data,
   x,
   y,
   colour.by = "X variables",
@@ -46,7 +46,7 @@ dumbbellPlot(
 
 ## Arguments
 
-- reactive.data:
+- data:
 
   A data.frame or tibble containing the data to plot.
 
@@ -228,7 +228,7 @@ data <- data.frame(
   Men = c(152, 151, 165)
 )
 fig <- dumbbellPlot(
-  reactive.data = data,
+  data = data,
   x = c("Women", "Men"),
   y = "School",
   colour.by = "X variables",

@@ -7,7 +7,7 @@ plotly, supporting dimension selection, color mapping, and font styling.
 
 ``` r
 parallelCoordinatesPlot(
-  reactive.data,
+  data,
   dimensions,
   color.by = NULL,
   color.scale = "Viridis",
@@ -30,7 +30,7 @@ parallelCoordinatesPlot(
 
 ## Arguments
 
-- reactive.data:
+- data:
 
   A data.frame or tibble containing the data to plot.
 
@@ -121,7 +121,7 @@ Jacob Martin, Jared Andrews
 
 ``` r
 fig <- parallelCoordinatesPlot(
-  reactive.data = mtcars,
+  data = mtcars,
   dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
   color.by = "mpg",
   color.scale = "Viridis",
