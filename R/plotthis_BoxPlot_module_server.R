@@ -93,12 +93,17 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
-            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            } else {
+                max.y <- 1
+                min.y <- 0
+            }
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by", selected = "NULL")
+            updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             updateMaterialSwitch(session, "show.outliers", value = TRUE)
@@ -127,7 +132,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "highlight.alpha", value = 1)
 
             # Facet
-            updateSelectInput(session, "facet.by", selected = "NULL")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
@@ -204,7 +209,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$sort_x) == "") {
                 sort.x <- isolate_fn(input$sort_x)
             }
-            highlight <- .na_to_null(isolate_fn(input$highlight))
+            highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))

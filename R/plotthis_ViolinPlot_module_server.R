@@ -89,12 +89,17 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 
-            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            } else {
+                max.y <- 1
+                min.y <- 0
+            }
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by", selected = "NULL")
+            updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
@@ -126,7 +131,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateNumericInput(session, "highlight.alpha", value = 1)
 
             # Facet
-            updateSelectInput(session, "facet.by", selected = "NULL")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
@@ -197,7 +202,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-            highlight <- .na_to_null(isolate_fn(input$highlight))
+            highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))

@@ -257,14 +257,24 @@ setup_auto_update_logic <- function(input) {
 #' only the data frame columns. Returns a logical vector suitable for
 #' row subsetting, or `NULL` if the input is empty or invalid.
 #'
-#' @param expr_text Character string containing the filter expression.
-#' @param data A `data.frame` whose columns are made available for the expression.
-#' @return A logical vector the same length as `nrow(data)`, or `NULL`.
+#' **Use this function any time a module evaluates a user-typed expression
+#' directly** (e.g., a row-filter text input). Never call `eval(str2expression())`
+#' on raw user input — doing so allows arbitrary code execution on the server.
 #'
+#' @param expr_text Character string containing the filter expression
+#'   (e.g., `"Sepal.Length > 5 & Species == 'setosa'"`).
+#' @param data A `data.frame` whose columns are made available for the expression.
+#' @return A logical vector the same length as `nrow(data)`, or `NULL` if the
+#'   input is empty, unparseable, or contains disallowed operations.
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_safe_eval_filter
-#' @keywords internal
-.safe_eval_filter <- function(expr_text, data) {
+#' @examples
+#' safe_eval_filter("Sepal.Length > 5", iris)
+#' safe_eval_filter("Sepal.Length > 5 & Species == 'setosa'", iris)
+#' safe_eval_filter("", iris) # NULL
+#' safe_eval_filter("system('echo pwned')", iris) # NULL + warning
+safe_eval_filter <- function(expr_text, data) {
     if (is.null(expr_text) || !nzchar(trimws(expr_text))) {
         return(NULL)
     }
@@ -339,13 +349,23 @@ setup_auto_update_logic <- function(input) {
 #' converting it to a function reference. Returns `NULL` for empty strings
 #' or unrecognized names.
 #'
-#' @param fn_name Character string — name of the adjustment function.
-#' @return A function, or `NULL`.
+#' **Use this instead of `eval(str2expression())` when resolving function names
+#' from user input** (e.g., a dropdown that selects a transformation like
+#' `"log2"` or `"sqrt"`).
 #'
+#' @param fn_name Character string — name of the adjustment function.
+#'   Currently allowed values: `"log2"`, `"log"`, `"log10"`, `"neg_log10"`,
+#'   `"log1p"`, `"as.factor"`, `"abs"`, `"sqrt"`.
+#' @return The corresponding function, or `NULL` if `fn_name` is empty or
+#'   not in the allowed list.
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_safe_resolve_adj_fxn
-#' @keywords internal
-.safe_resolve_adj_fxn <- function(fn_name) {
+#' @examples
+#' safe_resolve_adj_fxn("log2")    # returns log2
+#' safe_resolve_adj_fxn("")        # NULL
+#' safe_resolve_adj_fxn("system")  # NULL + warning
+safe_resolve_adj_fxn <- function(fn_name) {
     if (is.null(fn_name) || !nzchar(trimws(fn_name))) {
         return(NULL)
     }
@@ -357,4 +377,86 @@ setup_auto_update_logic <- function(input) {
     }
 
     match.fun(fn_name)
+}
+
+#' Validate a user-provided expression string for safety
+#'
+#' Parses the expression text and walks the AST to ensure it only contains
+#' allowed operations (comparisons, logical operators, column references, and
+#' literals). Returns the original string if valid, or `NULL` if the input
+#' is empty, unparseable, or contains disallowed operations. This is useful
+#' when the expression string must be passed through to a downstream function
+#' (e.g., `plotthis::BoxPlot(highlight = ...)`) rather than evaluated directly.
+#'
+#' **Use this when a module passes a user-typed expression string to an
+#' external plotting function** that will evaluate it internally. The string
+#' is validated but not executed by this function.
+#'
+#' @param expr_text Character string containing the expression to validate
+#'   (e.g., `"group == 'A' & value > 10"`).
+#' @param col_names Character vector of allowed column/symbol names
+#'   (typically `names(data)`).
+#' @return The original `expr_text` string if safe, or `NULL`.
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' validate_expression("Sepal.Length > 5", names(iris))
+#' validate_expression("system('echo pwned')", names(iris)) # NULL + warning
+#' validate_expression("", names(iris)) # NULL
+validate_expression <- function(expr_text, col_names) {
+    if (is.null(expr_text) || !nzchar(trimws(expr_text))) {
+        return(NULL)
+    }
+
+    parsed <- tryCatch(parse(text = expr_text), error = function(e) NULL)
+    if (is.null(parsed) || length(parsed) == 0) {
+        warning("Could not parse expression.")
+        return(NULL)
+    }
+
+    allowed_calls <- c(
+        "<", ">", "<=", ">=", "==", "!=",
+        "&", "&&", "|", "||", "!",
+        "%in%", "c", "is.na", "is.null",
+        "(", "-", "+", "*", "/", ":", "%%"
+    )
+
+    .check_node <- function(node) {
+        if (is.atomic(node) || is.null(node)) {
+            return(TRUE)
+        }
+        if (is.symbol(node)) {
+            nm <- as.character(node)
+            if (nm %in% col_names || nm %in% c("TRUE", "FALSE", "T", "F", "NA", "NULL", "Inf", "NaN")) {
+                return(TRUE)
+            }
+            return(FALSE)
+        }
+        if (is.call(node)) {
+            fn_name <- as.character(node[[1L]])
+            if (!fn_name %in% allowed_calls) {
+                return(FALSE)
+            }
+            for (i in seq_along(node)[-1]) {
+                if (!.check_node(node[[i]])) return(FALSE)
+            }
+            return(TRUE)
+        }
+        if (is.pairlist(node)) {
+            return(all(vapply(node, .check_node, logical(1))))
+        }
+        FALSE
+    }
+
+    expr <- parsed[[1L]]
+    if (!.check_node(expr)) {
+        warning(
+            "Expression contains disallowed operations. ",
+            "Only column references, comparisons, and logical operators are permitted."
+        )
+        return(NULL)
+    }
+
+    expr_text
 }
