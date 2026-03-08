@@ -228,7 +228,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
         # SINGLE DOT MODE
         if (colour.by == "X variables") {
             # Color by X variable (single color for all points)
-            fig <- fig %>% add_markers(
+            fig <- fig |> add_markers(
                 x = data[[x[1]]],
                 y = data[[y]],
                 name = x[1],
@@ -252,7 +252,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
         if (colour.by == "X variables") {
             # Color by X variables (different colors for each x variable)
             # Add connecting segments
-            fig <- fig %>% add_segments(
+            fig <- fig |> add_segments(
                 x = data[[x[1]]],
                 xend = data[[x[2]]],
                 y = data[[y]],
@@ -262,7 +262,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
                 hoverinfo = "skip"
             )
             # Add start markers
-            fig <- fig %>% add_markers(
+            fig <- fig |> add_markers(
                 x = data[[x[1]]],
                 y = data[[y]],
                 name = x[1],
@@ -270,7 +270,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
                 showlegend = show.legend
             )
             # Add end markers
-            fig <- fig %>% add_markers(
+            fig <- fig |> add_markers(
                 x = data[[x[2]]],
                 y = data[[y]],
                 name = x[2],
@@ -292,7 +292,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
                 color_idx <- (i - 1) %% length(palette.selection) + 1
                 
                 # Add segment
-                fig <- fig %>% add_segments(
+                fig <- fig |> add_segments(
                     x = y_data[[x[1]]],
                     xend = y_data[[x[2]]],
                     y = y_data[[y]],
@@ -302,7 +302,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
                     hoverinfo = "skip"
                 )
                 # Add start markers
-                fig <- fig %>% add_markers(
+                fig <- fig |> add_markers(
                     x = y_data[[x[1]]],
                     y = y_data[[y]],
                     name = as.character(y_val),
@@ -311,7 +311,7 @@ create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.
                     legendgroup = as.character(y_val)
                 )
                 # Add end markers
-                fig <- fig %>% add_markers(
+                fig <- fig |> add_markers(
                     x = y_data[[x[2]]],
                     y = y_data[[y]],
                     name = as.character(y_val),

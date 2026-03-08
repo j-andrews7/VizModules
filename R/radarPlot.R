@@ -160,7 +160,7 @@ radarPlot <- function(df, theta, r,
             fallback_palette[1]
         }
 
-        fig <- fig %>%
+        fig <- fig |>
             add_trace(
                 data = df_closed,
                 r = reformulate(r),
@@ -212,7 +212,7 @@ radarPlot <- function(df, theta, r,
             first_row <- group_data[1, , drop = FALSE]
             group_data_closed <- rbind(group_data, first_row)
 
-            fig <- fig %>%
+            fig <- fig |>
                 add_trace(
                     data = group_data_closed,
                     r = reformulate(r),

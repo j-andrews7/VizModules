@@ -87,7 +87,7 @@ linePlot <- function(reactive.data, x, y, plot.mode, line.type, colour.group.by,
     multi_axis <- xor(length(x) > 1, length(y) > 1)
 
 
-    cat.choices <- c("", names(reactive.data)[unlist(lapply(reactive.data, function(x) !is.numeric(x)), use.names = FALSE)])
+    cat.choices <- c("", names(reactive.data)[vapply(reactive.data, function(x) !is.numeric(x), logical(1))])
     # if (x %in% cat.choices ){
     #     for (i in y){
     #         reactive.data <- reactive.data %>%

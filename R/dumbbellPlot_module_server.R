@@ -108,8 +108,8 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             choices <- c("", names(data()))
 
             # Get numeric variables of data.
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
-            cat.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
 
             # Reset Data columns to default. First and second index of data named list
 
@@ -299,7 +299,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_dumbbellPlot() %>%
+                fig <- generate_dumbbellPlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

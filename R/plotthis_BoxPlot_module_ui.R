@@ -179,8 +179,8 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     if (length(num.choices) >= 2) {
         max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor

@@ -89,8 +89,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
@@ -229,8 +229,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             #Fill By colour grading 
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             fill.by <- NULL
             if (!is.null(group.by) && group.by %in% num.choices) {
                 fill.by <- group.by
@@ -342,7 +342,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_BoxPlot() %>%
+                fig <- generate_BoxPlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

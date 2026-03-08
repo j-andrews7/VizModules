@@ -1236,7 +1236,7 @@
             trace_name <- fit_name_prefix
             show_legend <- !trace_name %in% added_names
 
-            fig <- fig %>%
+            fig <- fig |>
                 plotly::add_lines(
                     data = fit_data,
                     x = ~x,
@@ -1268,7 +1268,7 @@
                 trace_name <- paste(fit_name_prefix, group_name)
                 show_legend <- !trace_name %in% added_names
 
-                fig <- fig %>%
+                fig <- fig |>
                     plotly::add_lines(
                         data = group_fit,
                         x = ~x,
@@ -1303,7 +1303,7 @@
 #' @rdname INTERNAL_empty_plot
 #' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
 #' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
-#' @importFrom plotly ggplotly layout %>%
+#' @importFrom plotly ggplotly layout
 .empty_plot <- function(text = NULL, plotly = FALSE) {
     plot <- ggplot() +
         theme_void() +
@@ -1314,7 +1314,7 @@
 
     if (plotly) {
         plot <- ggplotly(plot)
-        plot <- plot %>% layout(
+        plot <- plot |> layout(
             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
             plot_bgcolor = "white",

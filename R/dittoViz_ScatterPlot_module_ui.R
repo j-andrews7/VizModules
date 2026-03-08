@@ -175,14 +175,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric),
-        use.names = FALSE
-    )])
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
 
     # Get categorical variables of data.
-    cat.choices <- c("", names(data)[unlist(lapply(data,
-        FUN = function(x) !is.numeric(x)
-    ), use.names = FALSE)])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Various other choice vectors
     adj.choices <- c("", "z-score", "relative.to.max")

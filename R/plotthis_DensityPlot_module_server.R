@@ -281,7 +281,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_DensityPlot() %>%
+                fig <- generate_DensityPlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

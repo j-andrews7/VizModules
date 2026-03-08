@@ -189,7 +189,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Render the plot output
         output$piePlot <- renderPlotly({
             
-            generate_piePlot() %>%
+            generate_piePlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )

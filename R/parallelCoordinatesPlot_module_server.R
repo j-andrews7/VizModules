@@ -117,7 +117,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         output$parallelCoordinatesPlot <- renderPlotly({
 
 
-            generate_parallelCoordinatesPlot() %>%
+            generate_parallelCoordinatesPlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )

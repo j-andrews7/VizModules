@@ -82,7 +82,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         })
         
         observeEvent(input$x.data, ignoreInit = TRUE, {
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             group_facet_choices <- setdiff(char.choices, input$x.data) 
             updateSelectInput(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
             updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if(input$facet.by %in% group_facet_choices) input$facet.by else "")
@@ -90,9 +90,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Reset functionality
         observeEvent(input$reset, {
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
@@ -280,7 +280,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_AreaPlot() %>%
+                fig <- generate_AreaPlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

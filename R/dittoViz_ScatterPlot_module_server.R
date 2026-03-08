@@ -195,8 +195,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         observeEvent(input$reset, {
             # Get data for defaults
             choices <- c("", names(data()))
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
-            cat.choices <- c("", names(data())[unlist(lapply(data(), FUN = function(x) !is.numeric(x)), use.names = FALSE)])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
 
             # Data
             updateSelectInput(session, "x.by", selected = choices[2])
@@ -749,7 +749,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         }
                     }
                 }
-                fig <- fig %>% toWebGL()
+                fig <- fig |> toWebGL()
             }
 
             # Add fit lines if requested
@@ -797,7 +797,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Render the plot output
         output$scatterPlot <- renderPlotly({
             
-            generate_scatterPlot() %>%
+            generate_scatterPlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )

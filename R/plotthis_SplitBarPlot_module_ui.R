@@ -141,9 +141,9 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    char.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
-    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
+    char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.x <- max(numeric.data, na.rm = TRUE)
     min.x <- min(numeric.data, na.rm = TRUE)
 

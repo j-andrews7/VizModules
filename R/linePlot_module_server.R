@@ -245,12 +245,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             # Checking that all columns are numeric for x and y adjustment to be available
-            # TODO: remove sapply usage here
-            if (!all(sapply(d[x_input], is.numeric))) {
+            if (!all(vapply(d[x_input], is.numeric, logical(1)))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
-            if (!all(sapply(d[y_input], is.numeric))) {
+            if (!all(vapply(d[y_input], is.numeric, logical(1)))) {
                 updateSelectInput(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
@@ -369,7 +368,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             if (return_empty){
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_linePlot() %>%
+                fig <- generate_linePlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

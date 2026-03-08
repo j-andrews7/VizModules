@@ -103,8 +103,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
@@ -401,7 +401,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_yPlot() %>%
+                fig <- generate_yPlot() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

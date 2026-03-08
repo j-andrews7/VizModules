@@ -317,7 +317,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_Histogram() %>%
+                fig <- generate_Histogram() |>
                     layout(
                         margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )

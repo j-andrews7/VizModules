@@ -228,7 +228,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         # Render the plot output
         output$radarPlot <- renderPlotly({
             
-            generate_radarPlot() %>%
+            generate_radarPlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
