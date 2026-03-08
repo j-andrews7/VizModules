@@ -7,7 +7,7 @@ Authors@R:
         person(given = "Jacob",
                 family = "Martin",
                 role = c("aut"),
-                comment = c(ORCID = "0009-0007-6896-4796")
+                comment = c(ORCID = "0009-0007-6896-4796"),
                 email = "jacob@martin-email.com"))
 Description: VizModules offers a core selection of interactivity-first Shiny modules for many 
     plot types meant to serve as flexible building blocks for applications and 
