@@ -19,10 +19,10 @@ Description: VizModules offers a core selection of interactivity-first Shiny mod
 License: MIT + file LICENSE
 Depends:
     shiny,
-    plotthis,
+    plotthis (>= 0.10.0),
     dittoViz,
     plotly,
-    R (>= 3.5),
+    R (>= 4.5),
     shinyBS
 Imports:
     colourpicker,
