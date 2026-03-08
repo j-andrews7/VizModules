@@ -92,9 +92,16 @@ parallelCoordinatesPlot <- function(
             lvls <- sort(unique(as.character(color_vals)))
             color_vals <- match(as.character(color_vals), lvls)
 
-            
+            line_spec <- list(
+                color = color_vals,
+                colorscale = color.scale,
+                showscale = show.colorbar,
+                opacity = line.opacity,
+                cmin = min(color_vals, na.rm = TRUE),
+                cmax = max(color_vals, na.rm = TRUE)
+            )
         } else {
-        
+
             line_spec <- list(
                 color = color_vals,
                 colorscale = color.scale,
