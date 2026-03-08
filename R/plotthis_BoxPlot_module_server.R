@@ -28,16 +28,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "BoxPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "BoxPlotTabsetPanel", target = tab.name)
         }
 
         ns <- session$ns

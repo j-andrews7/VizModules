@@ -29,16 +29,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         ns <- session$ns
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
         }
 
         # Available color groups for the current color.by selection
