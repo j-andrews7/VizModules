@@ -156,16 +156,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
 
         generate_DensityPlot <- reactive({
-            # Check if auto update on
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
