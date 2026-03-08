@@ -90,7 +90,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
                 min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             } else {
                 max.y <- 1
@@ -183,7 +183,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.11, grouping = FALSE)
+            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)

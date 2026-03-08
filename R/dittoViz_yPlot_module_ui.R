@@ -142,7 +142,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     if (length(num.choices) >= 2) {
-        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
+        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
         min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
     } else {
         max.y <- 1
@@ -172,9 +172,9 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$var, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by", selected = cat.choices[2], choices = cat.choices),
                 documentParameters$group.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.by"), "Color by", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("color.by"), "Color by", selected = "", choices = cat.choices),
                 documentParameters$color.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("shape.by"), "Shape by", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("shape.by"), "Shape by", selected = "", choices = cat.choices),
                 documentParameters$shape.by, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection"))
         ),
@@ -259,7 +259,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$ridgeplot.binwidth, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("split.by"), "Split by (facet)", selected = "", choices = cat.choices),
                 documentParameters$split.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("split.adjust"), "Facet Scaling", selected = "free", choices = c("fixed", "free", "free_y", "free_x")),
                 documentParameters$split.adjust, placement = "top", options = list(container = "body")),

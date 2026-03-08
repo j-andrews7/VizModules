@@ -186,7 +186,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     if (length(num.choices) >= 2) {
-        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 # Y axis scale factor
+        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
         min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
     } else {
         max.y <- 1

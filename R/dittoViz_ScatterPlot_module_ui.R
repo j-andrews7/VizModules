@@ -370,7 +370,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$contour.linetype, placement = "top", options = list(container = "body")),
             uiOutput(ns("color.panel.ui"))
         ),
-        "Facets" = tagList(
+        "Facet" = tagList(
             tipify(numericInput(ns("split.nrow"), "Split Rows",
                 step = 1, min = 0,
                 value = ifelse("split.nrow" %in% names(defaults) & is.numeric(defaults[["split.nrow"]]),

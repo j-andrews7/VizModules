@@ -108,7 +108,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
                 min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             } else {
                 max.y <- 1
@@ -208,7 +208,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Update y-axis range when var (y data) column is changed
         observeEvent(input$var, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = 1.11, grouping = FALSE)
+            y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -289,9 +289,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 color.by <- isolate_fn(input$group.by)
             }
             
-            #Formating split adjustment into correct structure for dittoViz paramater input 
+            # Formatting split adjustment into correct structure for dittoViz parameter input
             split.adjust <- list(scales = "free")
-            if (!isolate_fn(input$split.adjust) == "free"){
+            if (isolate_fn(input$split.adjust) != "free") {
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
 

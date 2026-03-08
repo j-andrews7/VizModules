@@ -1,3 +1,7 @@
+# Scale factor applied to the maximum Y value for initial axis range.
+# Using a named constant avoids magic numbers scattered across modules.
+.y_axis_scale_factor <- 1.11
+
 #' Apply axis styling to all subplot axes in a plotly figure
 #'
 #' When using plotly subplots (e.g., via split.by in dittoViz), axis styling

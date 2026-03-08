@@ -94,7 +94,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
                 min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
             } else {
                 max.y <- 1
@@ -184,7 +184,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.11, grouping = FALSE)
+            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -222,7 +222,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
-                # plotthis::BarPlot expects a named list for palcolor when manually setting colors
+                # plotthis::BoxPlot expects a named list for palcolor when manually setting colors
                 palcolor_arg <- as.list(palette_values)
             }
 
