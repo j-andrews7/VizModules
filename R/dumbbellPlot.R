@@ -165,7 +165,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         first <- TRUE  # Ensure figure legend only added to the first subplot
         for (level in facet_levels) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-            plots[[length(plots) + 1]] <- create_dumbbell_plot(
+            plots[[length(plots) + 1]] <- .create_dumbbell_plot(
                 facet_data, x, y, colour.by, palette.selection, 
                 line.colour, show.legend = first
             )
@@ -194,7 +194,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         fig <- fig |> layout(annotations = annotations)
     } else {
         # WITHOUT FACETING
-        fig <- create_dumbbell_plot(plot_data, x, y, colour.by, palette.selection, line.colour, show.legend)
+        fig <- .create_dumbbell_plot(plot_data, x, y, colour.by, palette.selection, line.colour, show.legend)
     }
 
     fig <- fig |> layout(
@@ -215,8 +215,27 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     return(fig)
 }
 
-# Helper function to create dumbbell plot for a single dataset
-create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.colour, show.legend) {
+#' Create a Dumbbell Plot for a Single Dataset
+#'
+#' Helper function that generates a plotly scatter plot in either single dot or dumbbell mode
+#' for one dataset (i.e., one facet). Called internally by \code{\link{dumbbellPlot}}.
+#'
+#' @param data A data.frame containing the data to plot.
+#' @param x Character vector of column name(s) for x-axis values. Length 1 produces a single dot plot;
+#'   length 2 produces a dumbbell plot with connecting segments.
+#' @param y Character, column name for the y-axis (categorical variable).
+#' @param colour.by Character, how to color the markers. Either \code{"X variables"} (one color per x variable)
+#'   or \code{"Y variables"} (one color per y category).
+#' @param palette.selection Character vector of hex colors used for marker coloring.
+#' @param line.colour Character, hex color for the connecting line between dumbbell points.
+#' @param show.legend Logical, whether to display the legend for this subplot.
+#'
+#' @return A plotly object representing the dumbbell (or single dot) plot for the supplied data.
+#'
+#' @author Jacob Martin
+#' @rdname INTERNAL_create_dumbbell_plot
+#' @keywords internal
+.create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.colour, show.legend) {
     if (is.null(x) || length(x) == 0) {
         return(plot_ly())
     }
