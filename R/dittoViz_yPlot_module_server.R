@@ -220,17 +220,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
             
-            # Parse add.line (comma-separated numeric values)
-            add.line <- isolate_fn(input$add.line)
-            if (!is.null(add.line) && nzchar(add.line)) {
-                add.line <- as.numeric(trimws(strsplit(add.line, ",")[[1]]))
-                if (any(is.na(add.line))) {
-                    add.line <- NULL
-                }
-            } else {
-                add.line <- NULL
-            }
-
             # Parse vlnplot.quantiles (comma-separated numeric values)
             vlnplot.quantiles <- isolate_fn(input$vlnplot.quantiles)
             if (!is.null(vlnplot.quantiles) && nzchar(vlnplot.quantiles)) {

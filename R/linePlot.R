@@ -83,24 +83,9 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         title = x.title, autorange = TRUE, showgrid = show.grid.x
     )
 
-    #Error Bars Mean Logic: 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
 
-
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    # if (x %in% cat.choices ){
-    #     for (i in y){
-    #         data <- data %>%
-    #         dplyr::group_by(.data[[x]]) %>%      
-    #         dplyr::mutate(
-    #             ymean = mean(.data[[i]], na.rm = TRUE)        
-    #         ) %>%
-    #             dplyr::ungroup()
-
-    #         data[[i]] <- data$ymean
-    #         data$ymean <- NULL
-    #     }
-    # }
 
     if (length(x) == 1 && x %in% cat.choices) {
         # Compute per-group mean and SD for error bars
@@ -300,8 +285,6 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
             shareX <- TRUE
             shareY <- FALSE
         }
-        # plots <- lapply(facet_levels, function(level) {
-            # facet_data <- plot_data[plot_data[[facet.by]] == level, ]        
         plots <- list()
         first_facet <- TRUE
         for (n in seq_along(facet_levels)){

@@ -156,11 +156,6 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         # WITH FACETING
         facet_levels <- unique(plot_data[[facet.by]])
 
-        # plots <- lapply(facet_levels, function(level) {
-        #     facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-        #     create_dumbbell_plot(facet_data, x, y, colour.by, palette.selection, line.colour, show.legend = first)
-        #     # first <- FALSE
-        # })
         plots <- list()
         first <- TRUE  # Ensure figure legend only added to the first subplot
         for (level in facet_levels) {
@@ -300,10 +295,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             # Color by Y variables (same color for start/end, different colors per y category)
             # Get unique y values for coloring
             y_unique <- unique(data[[y]])
-            
-            # Create color mapping
-            color_map <- setNames(palette.selection[seq_along(y_unique) %% length(palette.selection) + 1], y_unique)
-            
+
             # Add segments and markers for each y value
             for (i in seq_along(y_unique)) {
                 y_val <- y_unique[i]

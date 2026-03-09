@@ -349,8 +349,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 "color.adj.fxn" = .na_to_null(isolate_fn(input$color.adj.fxn)),
                 "split.nrow" = .na_to_null(isolate_fn(input$split.nrow)),
                 "split.ncol" = .na_to_null(isolate_fn(input$split.ncol)),
-                "hover.data" = .na_to_null(isolate_fn(input$hover.data)),
-                "annotate.by" = .na_to_null(isolate_fn(input$annotate.by))
+                "hover.data" = .na_to_null(isolate_fn(input$hover.data))
             )
 
             # Waiver inputs
