@@ -226,14 +226,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "single.point.color", 
                 value = "#000000")
             
-            # Simulate clicking the reset button in the multiColorPicker widget
-            shinyjs::runjs(sprintf("
-                var colorPanel = document.getElementById('%s');
-                if (colorPanel) {
-                    var resetBtn = colorPanel.querySelector('.mc-reset-palette');
-                    if (resetBtn) resetBtn.click();
-                }
-            ", ns("color.panel")))
+            # Reset multiColorPicker to its initial palette
+            updateMultiColorPicker(session, "color.panel", reset = TRUE)
 
             # Facets
             updateNumericInput(session, "split.nrow", value = NA)

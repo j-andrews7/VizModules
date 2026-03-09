@@ -94,6 +94,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Slice borders
             colourpicker::updateColourInput(session, "slice.line.color", value = "#FFFFFF")
             updateNumericInput(session, "slice.line.width", value = 0)
+
+            # Slice colors
+            updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
         })
 
         build_textinfo <- function(selected) {
