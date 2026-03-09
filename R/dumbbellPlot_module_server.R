@@ -129,42 +129,11 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
 
 
-            # Axes:
-            updateSelectInput(session, "font.type", selected = "Arial")
-            updateMaterialSwitch(session, "flip.x", value = FALSE)
-            updateMaterialSwitch(session, "flip.y", value = FALSE)
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            # Axes
+            .reset_axes_inputs(session)
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
       })
 
         # Reactive expression to generate the plot (used by both output and download)

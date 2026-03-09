@@ -147,9 +147,8 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Data", selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
-                    defaults[["x.data"]], num.choices[2]
-                ),
+            tipify(selectInput(ns("x.data"), "X Data", selected = .get_default(defaults, "x.data", num.choices[2],
+                    function(x) x %in% num.choices),
                 choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body"))
