@@ -1501,3 +1501,188 @@ get_documentation <- function(package_name, type = "param", selected = NULL, cap
 
     result
 }
+
+#' Resolve facet axis sharing from facet.scales
+#'
+#' Converts a \code{facet.scales} string (one of \code{"fixed"}, \code{"free"},
+#' \code{"free_x"}, \code{"free_y"}) into the \code{shareX} / \code{shareY}
+#' logical values expected by \code{plotly::subplot}.
+#'
+#' @param facet.scales Character, one of \code{"fixed"} (default),
+#'   \code{"free"}, \code{"free_x"}, or \code{"free_y"}.
+#'
+#' @return A named list with logical elements \code{shareX} and \code{shareY}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_resolve_facet_sharing
+#' @keywords internal
+.resolve_facet_sharing <- function(facet.scales = "fixed") {
+    shareX <- TRUE
+    shareY <- TRUE
+    if (facet.scales == "free") {
+        shareX <- FALSE
+        shareY <- FALSE
+    } else if (facet.scales == "free_x") {
+        shareX <- FALSE
+    } else if (facet.scales == "free_y") {
+        shareY <- FALSE
+    }
+    list(shareX = shareX, shareY = shareY)
+}
+
+#' Build facet subplot annotations
+#'
+#' Creates a list of plotly annotation objects suitable for labelling faceted
+#' subplots arranged in a single row.
+#' Optionally appends a shared X-axis title (bottom centre) and a shared,
+#' rotated Y-axis title (left centre).
+#'
+#' @param facet_levels Character vector of facet level labels, one per subplot.
+#' @param x.title Optional character, shared X-axis title. Default: \code{NULL}.
+#' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
+#' @param title.font.size Numeric, font size for all annotation text.
+#'   Default: 14.
+#'
+#' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_build_facet_annotations
+#' @keywords internal
+.build_facet_annotations <- function(facet_levels, x.title = NULL,
+                                     y.title = NULL,
+                                     title.font.size = 14) {
+    n_facets <- length(facet_levels)
+    subplot_width <- 1.0 / n_facets
+
+    # Per-subplot title annotations
+    annotations <- lapply(seq_along(facet_levels), function(i) {
+        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+        list(
+            x = x_pos,
+            y = 1.05,
+            xref = "paper",
+            yref = "paper",
+            text = as.character(facet_levels[i]),
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "bottom",
+            font = list(size = title.font.size)
+        )
+    })
+
+    # Shared X-axis title at bottom centre
+    if (!is.null(x.title)) {
+        annotations <- c(annotations, list(list(
+            x = 0.5,
+            y = -0.1,
+            xref = "paper",
+            yref = "paper",
+            text = x.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "top",
+            font = list(size = title.font.size)
+        )))
+    }
+
+    # Shared Y-axis title at left centre (rotated)
+    if (!is.null(y.title)) {
+        annotations <- c(annotations, list(list(
+            x = -0.05,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            text = y.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "middle",
+            textangle = -90,
+            font = list(size = title.font.size)
+        )))
+    }
+
+    annotations
+}
+
+#' Add multi-axis traces to a plotly figure
+#'
+#' Appends scatter traces for each element of a multi-valued \code{x} or
+#' multi-valued \code{y} vector to an existing plotly figure.
+#' Handles data ordering, line/marker styling, and palette colouring.
+#'
+#' @param fig A plotly figure object to add traces to.
+#' @param data A data.frame containing the plot data.
+#' @param x Character vector of x-column name(s).
+#' @param y Character vector of y-column name(s).
+#' @param order.cols Character vector of column name(s) used to sort trace
+#'   data before plotting.
+#' @param plot.mode Character, plotly scatter mode (e.g. \code{"lines"},
+#'   \code{"markers"}, \code{"lines+markers"}).
+#' @param line.type Character, plotly dash style for lines.
+#' @param palette.selection Character vector of hex colours.
+#' @param show.legend Logical, whether traces should appear in the legend.
+#'   Default: \code{TRUE}.
+#'
+#' @return The modified plotly figure with added traces.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @rdname INTERNAL_add_multi_axis_traces
+#' @keywords internal
+.add_multi_axis_traces <- function(fig, data, x, y, order.cols, plot.mode,
+                                   line.type, palette.selection,
+                                   show.legend = TRUE) {
+    .add_traces_for <- function(iter_var, fixed_var, is_x_multi) {
+        for (i in seq_along(iter_var)) {
+            trace_data <- data
+
+            sort_column <- order.cols[1]
+            if (!is.null(order.cols) && length(order.cols) >= i &&
+                order.cols[i] %in% names(trace_data)) {
+                sort_column <- order.cols[i]
+            }
+            if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
+                trace_data <- trace_data[order(trace_data[[sort_column]]), ]
+            }
+
+            if (is_x_multi) {
+                xvals <- trace_data[[iter_var[i]]]
+                yvals <- trace_data[[fixed_var[1]]]
+                trace_name <- iter_var[i]
+            } else {
+                xvals <- trace_data[[fixed_var[1]]]
+                yvals <- trace_data[[iter_var[i]]]
+                trace_name <- iter_var[i]
+            }
+
+            trace_params <- list(
+                x = xvals,
+                y = yvals,
+                type = "scatter",
+                mode = plot.mode,
+                name = trace_name,
+                showlegend = show.legend
+            )
+
+            if (plot.mode %in% c("lines", "lines+markers")) {
+                trace_params$line <- list(
+                    dash = line.type,
+                    color = palette.selection[i]
+                )
+            }
+            if (plot.mode %in% c("markers", "lines+markers")) {
+                trace_params$marker <- list(color = palette.selection[i])
+            }
+
+            fig <<- do.call(plotly::add_trace, c(list(fig), trace_params))
+        }
+    }
+
+    if (length(x) > 1) {
+        .add_traces_for(x, y, is_x_multi = TRUE)
+    }
+    if (length(y) > 1) {
+        .add_traces_for(y, x, is_x_multi = FALSE)
+    }
+
+    fig
+}

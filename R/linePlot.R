@@ -206,206 +206,38 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
             do.call(plot_ly, plot_params)
         })
 
-        # Determine shareX and shareY based on facet.scales
-        shareX <- TRUE
-        shareY <- TRUE
-        if (facet.scales == "free") {
-            shareX <- FALSE
-            shareY <- FALSE
-        } else if (facet.scales == "free_x") {
-            shareX <- FALSE
-            shareY <- TRUE
-        } else if (facet.scales == "free_y") {
-            shareX <- TRUE
-            shareY <- FALSE
-        }
+        sharing <- .resolve_facet_sharing(facet.scales)
+        fig <- subplot(
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
+            titleX = FALSE, titleY = FALSE, margin = 0.05
+        )
 
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.05)
-
-        # Add subplot titles as annotations plus single axis titles
-        n_facets <- length(facet_levels)
-        # Calculate subplot domain width (accounting for spacing between subplots)
-        # Plotly subplots have small gaps, so we adjust positioning
-        subplot_width <- 1.0 / n_facets
-        annotations <- lapply(seq_along(facet_levels), function(i) {
-            # Position at center of each subplot's domain
-            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
-            list(
-                x = x_pos,
-                y = 1.05,
-                xref = "paper",
-                yref = "paper",
-                text = as.character(facet_levels[i]),
-                showarrow = FALSE,
-                xanchor = "center",
-                yanchor = "bottom",
-                font = list(size = 14)
-            )
-        })
-        # Add single X-axis title annotation at bottom center
-        annotations <- c(annotations, list(list(
-            x = 0.5,
-            y = -0.1,
-            xref = "paper",
-            yref = "paper",
-            text = x.title,
-            showarrow = FALSE,
-            xanchor = "center",
-            yanchor = "top",
-            font = list(size = 14)
-        )))
-        # Add single Y-axis title annotation at left center (rotated)
-        annotations <- c(annotations, list(list(
-            x = -0.05,
-            y = 0.5,
-            xref = "paper",
-            yref = "paper",
-            text = y.title,
-            showarrow = FALSE,
-            xanchor = "center",
-            yanchor = "middle",
-            textangle = -90,
-            font = list(size = 14)
-        )))
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
+        sharing <- .resolve_facet_sharing(facet.scales)
 
-        # Determine shareX and shareY based on facet.scales
-        shareX <- TRUE
-        shareY <- TRUE
-        if (facet.scales == "free") {
-            shareX <- FALSE
-            shareY <- FALSE
-        } else if (facet.scales == "free_x") {
-            shareX <- FALSE
-            shareY <- TRUE
-        } else if (facet.scales == "free_y") {
-            shareX <- TRUE
-            shareY <- FALSE
-        }
         plots <- list()
         first_facet <- TRUE
-        for (n in seq_along(facet_levels)){
+        for (n in seq_along(facet_levels)) {
             facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[n], ]
-            # Initialize empty plot for this facet
             facet_fig <- plot_ly(data = facet_data, type = "scatter")
-
-            # Add traces for multi-axis
-            if (length(x) > 1) {
-                for (i in seq_along(x)) {
-                    trace_data <- facet_data
-                    sort_column <- order.cols[1]
-                    if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
-                        sort_column <- order.cols[i]
-                    }
-                    if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
-                        trace_data <- trace_data[order(trace_data[[sort_column]]), ]
-                    }
-                    # Build trace parameters conditionally
-                    trace_params <- list(
-                        x = trace_data[[x[i]]],
-                        y = trace_data[[y[1]]],
-                        type = "scatter",
-                        mode = plot.mode,
-                        name = x[i],
-                        showlegend = first_facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
-                    )
-                    # Only add line parameter if mode is "lines" or "lines+markers"
-                    if (plot.mode %in% c("lines", "lines+markers")) {
-                        trace_params$line <- list(dash = line.type, color = palette.selection[i])
-                    }
-                    # Add marker parameter with matching color for consistency
-                    if (plot.mode %in% c("markers", "lines+markers")) {
-                        trace_params$marker <- list(color = palette.selection[i])
-                    }
-                    facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
-                }
-            }
-            if (length(y) > 1) {
-                for (i in seq_along(y)) {
-                    trace_data <- facet_data
-                    sort_column <- order.cols[1]
-                    if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
-                        sort_column <- order.cols[i]
-                    }
-                    if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
-                        trace_data <- trace_data[order(trace_data[[sort_column]]), ]
-                    }
-                    # Build trace parameters conditionally
-                    trace_params <- list(
-                        x = trace_data[[x[1]]],
-                        y = trace_data[[y[i]]],
-                        type = "scatter",
-                        mode = plot.mode,
-                        name = y[i],
-                        showlegend = first_facet # Condtional on the first iteration therefore legend is not multiplied when there are multiple facets 
-                    )
-                    # Only add line parameter if mode is "lines" or "lines+markers"
-                    if (plot.mode %in% c("lines", "lines+markers")) {
-                        trace_params$line <- list(dash = line.type, color = palette.selection[i])
-                    }
-                    # Add marker parameter with matching color for consistency
-                    if (plot.mode %in% c("markers", "lines+markers")) {
-                        trace_params$marker <- list(color = palette.selection[i])
-                    }
-                    facet_fig <- do.call(add_trace, c(list(facet_fig), trace_params))
-                }
-            }
-            plots[[length(plots) + 1]] <- facet_fig # Adding multiple lines plot for each facet to list of plots 
-            first_facet <- FALSE # Set to false after first iteration 
-
-            
-        }
-        # Combining all elements of plots list into one plotly element
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = FALSE, titleY = FALSE, margin = 0.05)
-
-        # Add subplot titles as annotations plus single axis titles
-        n_facets <- length(facet_levels)
-        # Calculate subplot domain width (accounting for spacing between subplots)
-        # Plotly subplots have small gaps, so we adjust positioning
-        subplot_width <- 1.0 / n_facets
-        annotations <- lapply(seq_along(facet_levels), function(i) {
-            # Position at center of each subplot's domain
-            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
-            list(
-                x = x_pos,
-                y = 1.05,
-                xref = "paper",
-                yref = "paper",
-                text = as.character(facet_levels[i]),
-                showarrow = FALSE,
-                xanchor = "center",
-                yanchor = "bottom",
-                font = list(size = 14)
+            facet_fig <- .add_multi_axis_traces(
+                facet_fig, facet_data, x, y, order.cols, plot.mode,
+                line.type, palette.selection, show.legend = first_facet
             )
-        })
-        # Add single X-axis title annotation at bottom center
-        annotations <- c(annotations, list(list(
-            x = 0.5,
-            y = -0.1,
-            xref = "paper",
-            yref = "paper",
-            text = x.title,
-            showarrow = FALSE,
-            xanchor = "center",
-            yanchor = "top",
-            font = list(size = 14)
-        )))
-        # Add single Y-axis title annotation at left center (rotated)
-        annotations <- c(annotations, list(list(
-            x = -0.05,
-            y = 0.5,
-            xref = "paper",
-            yref = "paper",
-            text = y.title,
-            showarrow = FALSE,
-            xanchor = "center",
-            yanchor = "middle",
-            textangle = -90,
-            font = list(size = 14)
-        )))
+            plots[[length(plots) + 1]] <- facet_fig
+            first_facet <- FALSE
+        }
+
+        fig <- subplot(
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
+            titleX = FALSE, titleY = FALSE, margin = 0.05
+        )
+
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
@@ -435,66 +267,10 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
     }
 
     if (multi_axis && (is.null(facet.by) || facet.by == "")) {
-        if (length(x) > 1) {
-            for (i in seq_along(x)) {
-                trace_data <- data
-                sort_column <- order.cols[1]
-                if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
-                    sort_column <- order.cols[i]
-                }
-                if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
-                    trace_data <- trace_data[order(trace_data[[sort_column]]), ]
-                }
-                # Build trace parameters conditionally
-                trace_params <- list(
-                    x = trace_data[[x[i]]],
-                    y = trace_data[[y[1]]],
-                    type = "scatter",
-                    mode = plot.mode,
-                    name = x[i],
-                    showlegend = TRUE
-                )
-                # Only add line parameter if mode is "lines" or "lines+markers"
-                if (plot.mode %in% c("lines", "lines+markers")) {
-                    trace_params$line <- list(dash = line.type, color = palette.selection[i])
-                }
-                # Add marker parameter with matching color for consistency
-                if (plot.mode %in% c("markers", "lines+markers")) {
-                    trace_params$marker <- list(color = palette.selection[i])
-                }
-                fig <- do.call(add_trace, c(list(fig), trace_params))
-            }
-        }
-        if (length(y) > 1) {
-            for (i in seq_along(y)) {
-                trace_data <- data
-                sort_column <- order.cols[1]
-                if (!is.null(order.cols) && length(order.cols) >= i && order.cols[i] %in% names(trace_data)) {
-                    sort_column <- order.cols[i]
-                }
-                if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
-                    trace_data <- trace_data[order(trace_data[[sort_column]]), ]
-                }
-                # Build trace parameters conditionally
-                trace_params <- list(
-                    x = trace_data[[x[1]]],
-                    y = trace_data[[y[i]]],
-                    type = "scatter",
-                    mode = plot.mode,
-                    name = y[i],
-                    showlegend = TRUE
-                )
-                # Only add line parameter if mode is "lines" or "lines+markers"
-                if (plot.mode %in% c("lines", "lines+markers")) {
-                    trace_params$line <- list(dash = line.type, color = palette.selection[i])
-                }
-                # Add marker parameter with matching color for consistency
-                if (plot.mode %in% c("markers", "lines+markers")) {
-                    trace_params$marker <- list(color = palette.selection[i])
-                }
-                fig <- do.call(add_trace, c(list(fig), trace_params))
-            }
-        }
+        fig <- .add_multi_axis_traces(
+            fig, data, x, y, order.cols, plot.mode,
+            line.type, palette.selection, show.legend = TRUE
+        )
     }
 
     fig <- fig |> layout(

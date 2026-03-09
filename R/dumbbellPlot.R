@@ -137,19 +137,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         plot_data <- data[order(data[[order.cols[1]]]), ]
     }
 
-    # Determine shareX and shareY based on facet.scales
-    shareX <- TRUE
-    shareY <- TRUE
-    if (facet.scales == "free") {
-        shareX <- FALSE
-        shareY <- FALSE
-    } else if (facet.scales == "free_x") {
-        shareX <- FALSE
-        shareY <- TRUE
-    } else if (facet.scales == "free_y") {
-        shareX <- TRUE
-        shareY <- FALSE
-    }
+    sharing <- .resolve_facet_sharing(facet.scales)
 
     # Main plotting logic
     if (!is.null(facet.by) && facet.by != "") {
@@ -161,31 +149,18 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         for (level in facet_levels) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
             plots[[length(plots) + 1]] <- .create_dumbbell_plot(
-                facet_data, x, y, colour.by, palette.selection, 
+                facet_data, x, y, colour.by, palette.selection,
                 line.colour, show.legend = first
             )
-            first <- FALSE  
+            first <- FALSE
         }
-        
-        fig <- subplot(plots, nrows = 1, shareX = shareX, shareY = shareY, titleX = TRUE, titleY = TRUE, margin = 0.06)
-        
-        # Add subplot titles as annotations
-        n_facets <- length(facet_levels)
-        subplot_width <- 1.0 / n_facets
-        annotations <- lapply(seq_along(facet_levels), function(i) {
-            x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
-            list(
-                x = x_pos,
-                y = 1.05,
-                xref = "paper",
-                yref = "paper",
-                text = as.character(facet_levels[i]),
-                showarrow = FALSE,
-                xanchor = "center",
-                yanchor = "bottom",
-                font = list(size = 14)
-            )
-        })
+
+        fig <- subplot(
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
+            titleX = TRUE, titleY = TRUE, margin = 0.06
+        )
+
+        annotations <- .build_facet_annotations(facet_levels)
         fig <- fig |> layout(annotations = annotations)
     } else {
         # WITHOUT FACETING
