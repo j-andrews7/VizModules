@@ -160,7 +160,13 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     # Axis range values
-    if (length(num.choices) >= 2) {
+    # BarPlot aggregates (sums) y per x group, so compute range from per-group sums
+    if (length(num.choices) >= 2 && length(char.choices) >= 2 &&
+        char.choices[2] %in% names(data) && num.choices[2] %in% names(data)) {
+        x_sums <- tapply(data[[num.choices[2]]], data[[char.choices[2]]],
+            function(v) sum(v, na.rm = TRUE))
+        max.y <- max(x_sums, na.rm = TRUE)
+    } else if (length(num.choices) >= 2) {
         max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE)
     } else {
         max.y <- 1

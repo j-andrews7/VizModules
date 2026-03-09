@@ -133,7 +133,13 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             
             # Calculate y.max and y.min from the default selections
-            if (length(num.choices) >= 2) {
+            # BarPlot aggregates (sums) y per x group, so compute range from per-group sums
+            if (length(num.choices) >= 2 && length(char.choices) >= 2 &&
+                char.choices[2] %in% names(data()) && num.choices[2] %in% names(data())) {
+                x_sums <- tapply(data()[[num.choices[2]]], data()[[char.choices[2]]],
+                    function(v) sum(v, na.rm = TRUE))
+                max.y <- max(x_sums, na.rm = TRUE) * y_axis_scale_factor
+            } else if (length(num.choices) >= 2) {
                 max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor
             } else {
                 max.y <- 1
@@ -222,26 +228,15 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             req(input$y.data %in% names(data()))
             req(input$x.data %in% names(data()))
 
-            group_by_val <- if (nzchar(input$group.by)) input$group.by else NULL
-            fill_by_val  <- if (nzchar(input$fill.by))  input$fill.by  else NULL
-
-            # Determine if stacking is happening:
-            # Stacked when group.by is numeric OR fill.by is numeric
-            group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
-            fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
-
-            is_stacked <- group_is_numeric || fill_is_numeric
-
-            # Pick which column is doing the stacking (for tapply grouping by x)
-            stack_col <- if (group_is_numeric) group_by_val else if (fill_is_numeric) fill_by_val else NULL
-
+            # BarPlot always aggregates (sums) y per x group, so we must use
+            # grouping = TRUE to compute the y-axis range from per-group sums
+            # rather than raw individual values.
             y_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$x.data,
                 data_col_y        = input$y.data,
                 axis_scale_factor = 1.18,
-                grouping          = is_stacked,
-                stack_by          = stack_col
+                grouping          = TRUE
             )
 
             if (!is.null(y_range)) {
