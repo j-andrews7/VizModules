@@ -25,9 +25,9 @@
 #' app <- plotthis_SplitBarPlotApp()
 #' if (interactive()) runApp(app)
 #'
-#' # Launch with custom data:
-#' app2 <- plotthis_SplitBarPlotApp(list("cars" = mtcars))
-#' if (interactive()) runApp(app2)
+# ' # Launch with custom data:
+# ' app2 <- plotthis_SplitBarPlotApp(list("iris" = iris))
+# ' if (interactive()) runApp(app2)
 plotthis_SplitBarPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
         data_list <- list("sales" = example_sales, "population" = example_population)

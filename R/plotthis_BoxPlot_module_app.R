@@ -26,7 +26,7 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- plotthis_BoxPlotApp(list("cars" = mtcars))
+#' app2 <- plotthis_BoxPlotApp(list("iris" = iris))
 #' if (interactive()) runApp(app2)
 plotthis_BoxPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
