@@ -281,7 +281,6 @@
                              include.modebar.buttons = TRUE, facet.by = NULL) {
     if (is.null(facet.by)) {
         config <- list(
-            editable = TRUE, 
             edits = list(
                 axisTitleText = TRUE,
                 titleText = TRUE,
