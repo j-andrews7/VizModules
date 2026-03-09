@@ -73,7 +73,7 @@
 #'   \item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
 #'   \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 #'   \item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
-#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 #'   \item \code{text.colour} - Color for title text (UI: "Label colour", default: "#000000")
 #'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 #'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis title font color", default: "#000000")
@@ -315,16 +315,14 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     function(x) x %in% c("fixed", "free", "free_y", "free_x")),
                 choices = c("fixed", "free", "free_y", "free_x")),
                 documentParameters$split.adjust, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("split.ncol"), "Number of Columns",
-                selected = .get_default(defaults, "split.ncol", 4,
-                    function(x) x %in% c("", 1:10)),
-                choices = c("", 1:10)),
-                documentParameters$split.ncol, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("split.nrow"), "Number of Rows",
-                selected = .get_default(defaults, "split.nrow", 4,
-                    function(x) x %in% c("", 1:10)),
-                choices = c("", 1:10)),
-                documentParameters$split.nrow, placement = "top", options = list(container = "body"))
+            tipify(numericInput(ns("split.ncol"), "Split Columns",
+                step = 1, min = 0,
+                value = .get_default(defaults, "split.ncol", NA, is.numeric)
+            ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("split.nrow"), "Split Rows",
+                step = 1, min = 0,
+                value = .get_default(defaults, "split.nrow", NA, is.numeric)
+            ), documentParameters$split.nrow, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

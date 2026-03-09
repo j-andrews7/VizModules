@@ -50,7 +50,7 @@
     shinyWidgets::updateMaterialSwitch(session, "flip.x", value = FALSE)
     shinyWidgets::updateMaterialSwitch(session, "flip.y", value = FALSE)
     # Title font
-    updateSelectInput(session, "font.type", selected = "Arial")
+    updateSelectInput(session, "title.font.family", selected = "Arial")
     colourpicker::updateColourInput(session, "text.colour", value = "#000000")
     # Axis title
     updateNumericInput(session, "axis.title.font.size", value = 18)
@@ -285,9 +285,9 @@
         rotate_input,
         flip_x,
         flip_y,
-        selectInput(ns("font.type"), "Title Font",
+        selectInput(ns("title.font.family"), "Title Font",
             choices = font_choices,
-            selected = .get_default(defaults, "font.type", "Arial",
+            selected = .get_default(defaults, "title.font.family", "Arial",
                 function(x) x %in% font_choices)
         ),
         colourInput(ns("text.colour"), "Title Color",

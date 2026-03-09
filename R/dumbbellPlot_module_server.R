@@ -207,7 +207,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
                 title.font.size = isolate_fn(input$title.font.size),
-                title.font.family = isolate_fn(input$font.type),
+                title.font.family = isolate_fn(input$title.font.family),
                 title.text.color = isolate_fn(input$text.colour),
                 x.title = x_title,
                 y.title = y_title,

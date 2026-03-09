@@ -252,7 +252,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 show.grid.x = isolate_fn(input$show.grid.x),
                 show.grid.y = isolate_fn(input$show.grid.y),
                 title.font.size = isolate_fn(input$title.font.size),
-                title.font.family = isolate_fn(input$font.type),
+                title.font.family = isolate_fn(input$title.font.family),
                 title.text.color = isolate_fn(input$text.colour),
                 x.title = x_title,
                 y.title = y_title,

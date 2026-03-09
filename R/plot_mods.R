@@ -342,7 +342,7 @@
 #' appearance, and gridline settings.
 #'
 #' @param input Shiny input object. Expected to contain axis-related fields
-#'   such as \code{font.type}, \code{text.colour}, \code{axis.showline},
+#'   such as \code{title.font.family}, \code{text.colour}, \code{axis.showline},
 #'   \code{axis.mirror}, \code{axis.linecolor}, \code{axis.linewidth},
 #'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
 #'   \code{axis.tickfont.family}, \code{axis.tickangle.x},

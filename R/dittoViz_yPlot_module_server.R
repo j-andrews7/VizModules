@@ -160,8 +160,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             # Facet
             updateSelectInput(session, "split.by", selected = "")
             updateSelectInput(session, "split.adjust", selected = "free")
-            updateSelectInput(session, "split.ncol", selected = "")
-            updateSelectInput(session, "split.nrow", selected = "")
+            updateNumericInput(session, "split.ncol", value = NA)
+            updateNumericInput(session, "split.nrow", value = NA)
 
             # Axes
             .reset_axes_inputs(session)
@@ -203,19 +203,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
             # Parse split dimensions
-            split.ncol <- isolate_fn(input$split.ncol)
-            if (is.null(split.ncol) || split.ncol == "") {
-                split.ncol <- NULL
-            } else {
-                split.ncol <- as.integer(split.ncol)
-            }
-
-            split.nrow <- isolate_fn(input$split.nrow)
-            if (is.null(split.nrow) || split.nrow == "") {
-                split.nrow <- NULL
-            } else {
-                split.nrow <- as.integer(split.nrow)
-            }
+            split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
+            split.nrow <- .na_to_null(isolate_fn(input$split.nrow))
 
             # Handle ridgeplot.ymax.expansion
             ridgeplot.ymax.expansion <- isolate_fn(input$ridgeplot.ymax.expansion)
@@ -295,7 +284,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             fig <- p |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
