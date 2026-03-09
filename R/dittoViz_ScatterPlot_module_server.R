@@ -27,6 +27,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+        # Unique source ID for plotly event_data, scoped to this module instance
+        plot_source <- session$ns("scatter")
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -165,10 +167,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Observer to add selected data to selected.data
         observeEvent(
-            event_data("plotly_selected"),
+            event_data("plotly_selected", source = plot_source),
             # suspended = TRUE,
             {
-                selected <- event_data("plotly_selected")
+                selected <- event_data("plotly_selected", source = plot_source)
                 selected.full <- rbind(selected.data(), selected)
 
                 # Since this is running on every selection, remove duplicates
@@ -750,11 +752,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            
-            generate_scatterPlot() |>
+            fig <- generate_scatterPlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
+            fig$x$source <- plot_source
+            fig
         })
 
         # Download handler for interactive plot
