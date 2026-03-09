@@ -355,6 +355,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            } 
+            if (y_input == input$group.by){
+                return_empty <- TRUE
+                txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs")
             }
 
             if (return_empty) {
