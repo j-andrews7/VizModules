@@ -406,33 +406,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             plot_data <- p$Target_data
 
-            # COLOUR MAPPING FOR LINE
-            manual_vals <- manual_color_values()
-            if (!is.null(manual_vals) && length(manual_vals) > 0) {
-                palette_for_mapping <- manual_vals
-            } else if (!is.null(null.na.inputs$color.by) &&
-                length(current_color_levels) > 0 &&
-                length(palette_values) > 0) {
-                palette_for_mapping <- palette_values
+            # Colour mapping for fit lines — palette_values from color.panel() is already
+            # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
+            color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
+                palette_values
             } else {
-                palette_for_mapping <- NULL
-            }
-
-            if (!is.null(palette_for_mapping) && length(current_color_levels) > 0) {
-                if (!is.null(names(palette_for_mapping)) && any(nzchar(names(palette_for_mapping)))) {
-                    palette_for_mapping <- palette_for_mapping[match(current_color_levels, names(palette_for_mapping))]
-                }
-
-                if (any(is.na(palette_for_mapping))) {
-                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                    na_idx <- which(is.na(palette_for_mapping))
-                    palette_for_mapping[na_idx] <- rep_len(fallback_palette, length(na_idx))
-                }
-
-                palette_for_mapping <- rep_len(palette_for_mapping, length(current_color_levels))
-                color_mapping <- stats::setNames(palette_for_mapping[seq_len(length(current_color_levels))], current_color_levels)
-            } else {
-                color_mapping <- NULL
+                NULL
             }
 
             if (!is.null(null.na.inputs$split.by)){
