@@ -202,7 +202,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "color.by", selected = "")
             updateSelectInput(session, "shape.by", selected = "")
             updateSelectizeInput(session, "split.by", selected = "")
-            updateTextInput(session, "rows.use", value = "")
 
             # Adjustments
             updateSelectInput(session, "x.adjustment", selected = "")
@@ -359,7 +358,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,
                 size = isolate_fn(input$size),
-                rows.use = safe_eval_filter(isolate_fn(input$rows.use), data()),
                 show.others = isolate_fn(input$show.others),
                 x.adjustment = null.na.inputs$x.adjustment,
                 y.adjustment = null.na.inputs$y.adjustment,

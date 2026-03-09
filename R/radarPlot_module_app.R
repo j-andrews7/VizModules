@@ -32,8 +32,19 @@
 #'
 #' # Launch with custom data:
 #' skills <- data.frame(
-#'     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
-#'     value = c(8, 6, 7, 9, 8)
+#'     entity = c(
+#'        rep("Player A", 6),
+#'         rep("Player B", 6),
+#'         rep("Player C", 6),
+#'         rep("Player D", 6)
+#'     ),
+#'     category = rep(c("Pace", "Shooting", "Passing", "Dribbling", "Defending", "Physical"), 4),
+#'     value = c(
+#'         99, 89, 80, 92, 36, 78,
+#'         89, 97, 65, 72, 45, 95,
+#'         76, 86, 94, 86, 64, 78,
+#'         62, 60, 71, 63, 94, 91
+#'     )
 #' )
 #' app2 <- radarPlotApp(list("skills" = skills))
 #' if (interactive()) runApp(app2)

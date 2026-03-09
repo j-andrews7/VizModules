@@ -234,11 +234,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     function(x) all(x %in% cat.choices)),
                 multiple = TRUE,
                 options = list(maxItems = 2)
-            ), documentParameters$split.by, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("rows.use"), "Rows Filter",
-                placeholder = "Filter expression, e.g. Sepal.Length > 5",
-                value = .get_default(defaults, "rows.use", "")
-            ), documentParameters$rows.use, placement = "top", options = list(container = "body"))
+            ), documentParameters$split.by, placement = "top", options = list(container = "body"))
         ),
         "Adjustments" = tagList(
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
