@@ -281,7 +281,6 @@
                              include.modebar.buttons = TRUE, facet.by = NULL) {
     if (is.null(facet.by)) {
         config <- list(
-            editable = TRUE, 
             edits = list(
                 axisTitleText = TRUE,
                 titleText = TRUE,
@@ -290,9 +289,9 @@
                 legendPosition = TRUE,
                 colorbarPosition = TRUE,
                 colorbarTitleText = TRUE,
-                annotationTail = TRUE, 
+                annotationTail = TRUE,
                 editText = TRUE,
-                editTitle = TRUE, 
+                editTitle = TRUE,
                 annotationPosition = TRUE
             ),
             toImageButtonOptions = list(
