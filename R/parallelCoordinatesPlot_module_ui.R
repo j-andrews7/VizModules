@@ -70,11 +70,13 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
     )
 
     colorscale.choices <- c(
-        "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
-        "Blues", "Greens", "Reds", "Oranges", "Greys",
-        "RdBu", "RdYlBu", "Spectral", "Jet", "Hot", "Cool",
-        "Portland", "Picnic", "Rainbow", "Earth"
-    )
+    "Blackbody", "Bluered", "Blues", "Cividis", "Earth",
+    "Electric", "Greens", "Greys", "Hot", "Jet", "Picnic",
+    "Portland", "Rainbow", "RdBu", "Reds", "Viridis",
+    "YlGnBu", "YlOrRd"
+)
+
+
 
     # Default dimensions: all columns
     default_dims <- if ("dimensions" %in% names(defaults)) {
