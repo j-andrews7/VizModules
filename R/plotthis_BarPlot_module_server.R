@@ -338,7 +338,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 plotly::layout(
                     title = list(
                         font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                        x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
                     )
                 )
 
@@ -399,7 +399,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BarPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = 50, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
 

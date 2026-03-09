@@ -65,6 +65,25 @@ Every module uses the same trio of functions: `*InputsUI()` for controls, `*Outp
 
 Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
+## App Factory
+
+Need a quick standalone app for any module? `createModuleApp()` is a factory that wires up data import, a filterable data table, dataset switching, and the module's UI/server:
+
+```r
+library(VizModules)
+
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BarPlotInputsUI,
+    output_ui_fn = plotthis_BarPlotOutputUI,
+    server_fn    = plotthis_BarPlotServer,
+    data_list    = list("cars" = mtcars),
+    title        = "My Bar Plot"
+)
+if (interactive()) runApp(app)
+```
+
+Every built-in `*App()` convenience function (e.g. `plotthis_BarPlotApp()`, `linePlotApp()`) is a thin wrapper around `createModuleApp()` with sensible default data. You can also pass your own custom wrapper module functions to `createModuleApp()` for rapid prototyping.
+
 
 ## Building Custom Wrapper Modules
 

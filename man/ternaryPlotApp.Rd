@@ -17,16 +17,18 @@ A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular ternaryPlot components.
-The app features a \strong{Data Import} section for uploading Excel spreadsheets,
-a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive ternary plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-example \code{roles} and \code{teams} datasets. Uploaded Excel files are added
+example \code{roles} and \code{teams} datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
@@ -48,5 +50,5 @@ if (interactive()) runApp(app2)
 \code{\link[=ternaryPlotOutputUI]{ternaryPlotOutputUI()}}, \code{\link[=ternaryPlotServer]{ternaryPlotServer()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
