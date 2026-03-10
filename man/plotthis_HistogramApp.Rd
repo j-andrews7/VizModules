@@ -35,7 +35,7 @@ app <- plotthis_HistogramApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- plotthis_HistogramApp(list("cars" = mtcars))
+app2 <- plotthis_HistogramApp(list("iris" = iris))
 if (interactive()) runApp(app2)
 }
 \author{

@@ -34,9 +34,6 @@ library(VizModules)
 app <- plotthis_SplitBarPlotApp()
 if (interactive()) runApp(app)
 
-# Launch with custom data:
-app2 <- plotthis_SplitBarPlotApp(list("cars" = mtcars))
-if (interactive()) runApp(app2)
 }
 \author{
 Jacob Martin, Jared Andrews
