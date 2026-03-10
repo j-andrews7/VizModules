@@ -138,18 +138,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$x.data) && input$x.data != "") {
-                    fill_by_val <- if (!is.null(input$fill.by) && nzchar(input$fill.by)) input$fill.by else NULL
-                    fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) &&
-                        is.numeric(data()[[fill_by_val]])
-                    stack_col <- if (fill_is_numeric) fill_by_val else NULL
-
                     x_range <- .calculate_range(
                         df                = data(),
                         data_col_x        = input$y.data,
                         data_col_y        = input$x.data,
                         axis_scale_factor = axis_scale(),
-                        grouping          = fill_is_numeric,
-                        stack_by          = stack_col
+                        grouping          = TRUE,
+                        stack_by          = NULL
                     )
                     if (!is.null(x_range)) {
                         updateNumericInput(session, "x.max", value = x_range$max)
@@ -172,18 +167,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 return()
             }
 
-            fill_by_val <- if (!is.null(fill_col) && nzchar(fill_col)) fill_col else NULL
-            fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) &&
-                is.numeric(data()[[fill_by_val]])
-            stack_col <- if (fill_is_numeric) fill_by_val else NULL
-
             x_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = y_col,
                 data_col_y        = x_col,
                 axis_scale_factor = axis_scale(),
-                grouping          = fill_is_numeric,
-                stack_by          = stack_col
+                grouping          = TRUE,
+                stack_by          = NULL
             )
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
@@ -208,18 +198,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
 
-            fill_by_val <- if (!is.null(input$fill.by) && nzchar(input$fill.by)) input$fill.by else NULL
-            fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) &&
-                is.numeric(data()[[fill_by_val]])
-            stack_col <- if (fill_is_numeric) fill_by_val else NULL
 
             x_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$y.data,
                 data_col_y        = input$x.data,
                 axis_scale_factor = axis_scale(),
-                grouping          = fill_is_numeric,
-                stack_by          = stack_col
+                grouping          = TRUE,
+                stack_by          = NULL
             )
             if (!is.null(x_range)) {
                 min.x <- -x_range$max
@@ -276,21 +262,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             req(input$x.data %in% names(data()))
             req(input$y.data %in% names(data()))
 
-            fill_by_val <- if (!is.null(input$fill.by) && nzchar(input$fill.by)) input$fill.by else NULL
-
-            # Determine if stacking is happening:
-            # In split bar plot, stacking occurs when fill.by is numeric
-            fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) &&
-                is.numeric(data()[[fill_by_val]])
-            stack_col <- if (fill_is_numeric) fill_by_val else NULL
-
             x_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$y.data,
                 data_col_y        = input$x.data,
                 axis_scale_factor = axis_scale(),
-                grouping          = fill_is_numeric,
-                stack_by          = stack_col
+                grouping          = TRUE,
+                stack_by          = NULL
             )
             if (!is.null(x_range)) {
                 updateNumericInput(session, "x.max", value = x_range$max)
