@@ -68,7 +68,7 @@
 #' \itemize{
 #'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 #'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
-#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 #'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
@@ -147,9 +147,8 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Data", selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
-                    defaults[["x.data"]], num.choices[2]
-                ),
+            tipify(selectInput(ns("x.data"), "X Data", selected = .get_default(defaults, "x.data", num.choices[2],
+                    function(x) x %in% num.choices),
                 choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body"))

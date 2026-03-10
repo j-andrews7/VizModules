@@ -86,31 +86,26 @@ parallelCoordinatesPlot <- function(
     # Build line spec
     if (!is.null(color.by) && nzchar(color.by) && color.by %in% names(df)) {
         color_vals <- df[[color.by]]
-
+        
         # Map categorical color column to integers
         if (!is.numeric(color_vals)) {
             lvls <- sort(unique(as.character(color_vals)))
             color_vals <- match(as.character(color_vals), lvls)
-
-            line_spec <- list(
-                color = color_vals,
-                colorscale = color.scale,
-                showscale = show.colorbar,
-                opacity = line.opacity,
-                cmin = min(color_vals, na.rm = TRUE),
-                cmax = max(color_vals, na.rm = TRUE)
-            )
-        } else {
-
-            line_spec <- list(
-                color = color_vals,
-                colorscale = color.scale,
-                showscale = show.colorbar,
-                opacity = line.opacity,
-                cmin = min(color_vals, na.rm = TRUE),
-                cmax = max(color_vals, na.rm = TRUE)
-            )
         }
+        
+        line_spec <- list(
+                color = color_vals,
+                colorscale = color.scale,
+                showscale = show.colorbar,
+                opacity = line.opacity,
+                cmin = min(color_vals, na.rm = TRUE),
+                cmax = max(color_vals, na.rm = TRUE),
+                colorbar = list(
+                    title = list(text = "color.by")
+                )
+            )
+        
+        
         if (line.width != 1) {
             line_spec$width <- line.width
         }

@@ -222,7 +222,7 @@ module_tack_ui <- function(ns, defaults = NULL) {
                 materialSwitch(
                     ns("auto.update"),
                     "Auto Update",
-                    value = FALSE,
+                    value = TRUE,
                     status = "success"
                 ),
                 style = "margin-top: 25px;"

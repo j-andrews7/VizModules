@@ -24,9 +24,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
   
     moduleServer(id, function(input, output, session) {
       
-        # local({
-        #     addTooltip(session, "facet.by", "TEST", placement = "right")
-        # })
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
         
@@ -91,9 +88,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 character(0)
             }
         })
-
-        # Track initialization
-        initialized <- reactiveVal(FALSE)
 
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
@@ -173,46 +167,15 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.max", value = max.y)
             updateNumericInput(session, "y.min", value = min.y)
-
-            updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            .reset_axes_inputs(session)
 
             # Action Button (unchanged)
             updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
 
         })
 
@@ -230,18 +193,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
             fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
 
-            is_stacked <- group_is_numeric || fill_is_numeric
-
-            # Pick which column is doing the stacking (for tapply grouping by x)
-            stack_col <- if (group_is_numeric) group_by_val else if (fill_is_numeric) fill_by_val else NULL
-
             y_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$x.data,
                 data_col_y        = input$y.data,
                 axis_scale_factor = 1.18,
-                grouping          = is_stacked,
-                stack_by          = stack_col
+                grouping          = TRUE
             )
 
             if (!is.null(y_range)) {
@@ -337,8 +294,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
                     )
                 )
 
@@ -392,6 +349,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            } 
+            if (y_input == input$group.by){
+                return_empty <- TRUE
+                txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs")
             }
 
             if (return_empty) {
@@ -399,7 +360,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BarPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = 50, l = 90, r = 90, b = 100, autoexpand = TRUE)
                     )
             }
 

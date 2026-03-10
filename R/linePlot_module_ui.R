@@ -130,25 +130,18 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             tipify(materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE),
                 documentParameters$error.bar, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("order.by"), "Order by Y",
-                value = ifelse("order.by" %in% names(defaults),
-                    ifelse(is.logical(defaults[["order.by"]]), defaults[["order.by"]], FALSE),
-                    FALSE
-                ),
+                value = .get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"
             ), documentParameters$order.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
-                selected = ifelse("x.adjustment" %in% names(defaults),
-                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
-                    ""
-                )
+                selected = .get_default(defaults, "x.adjustment", "",
+                    function(x) x %in% adj.choices)
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
-                selected = ifelse("y.adjustment" %in% names(defaults),
-                    ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
-                    ""
-                )
+                selected = .get_default(defaults, "y.adjustment", "",
+                    function(x) x %in% adj.choices)
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body"))
         ),
 
@@ -158,12 +151,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
                 choices   = c("fixed", "free", "free_x", "free_y"),
-                selected  = ifelse("facet.scales" %in% names(defaults),
-                    ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
-                    defaults[["facet.scales"]], "fixed"
-                    ),
-                    "fixed"
-                )
+                selected  = .get_default(defaults, "facet.scales", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y"))
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
 

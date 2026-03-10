@@ -31,7 +31,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         axis_scale <- reactive({
             axis_scale_factor <- input$axis.scale.factor
         })
-
+        #Initial call of .calculate_range() made into a reactive to be used later on in server 
+        axis_range <- reactive({
+            return(.calculate_range(
+                        df                = data(),
+                        data_col_x        = input$y.data,
+                        data_col_y        = input$x.data,
+                        axis_scale_factor = axis_scale(),
+                        grouping          = TRUE
+                    ))
+        })
 
         
         # Hide individual inputs if specified
@@ -129,7 +138,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
         })
 
-        # Initialize y-axis range on startup
+        # Initialize x-axis range on startup
         observe({
             # Only run once when inputs are first available
             if (!initialized()) {
@@ -138,7 +147,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$x.data) && input$x.data != "") {
-                    x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
+                    x_range <- axis_range()
                     if (!is.null(x_range)) {
                         updateNumericInput(session, "x.max", value = x_range$max)
                         updateNumericInput(session, "x.min", value = -x_range$max)
@@ -148,27 +157,28 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
         })
 
-        # Auto-update y-axis range when relevant inputs change
+        # Auto-update x-axis range when relevant inputs change
         observe({
             # Trigger on changes to y.data, x.data, or fill.by
             y_col <- input$y.data
             x_col <- input$x.data
             fill_col <- input$fill.by
-            
+
             # Skip if we haven't initialized yet or y.data is not set
             if (!initialized() || is.null(y_col) || y_col == "") {
                 return()
             }
-            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
+            x_range <- axis_range()
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
                 if (!is.null(x_range)) {
                     updateNumericInput(session, "x.max", value = x_range$max)
                     updateNumericInput(session, "x.min", value = -x_range$max)
                 }
             }
-          updateSliderInput(session, "text.position", min = 0, max = x_range$max)
+            if (!is.null(x_range)) {
+                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
+            }
         })
 
         # Reset functionality
@@ -177,12 +187,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             
-            # Calculate y.max and y.min from the default selections
+            # Calculate x.max and x.min from the default selections
             default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
             default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
             default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
-            
-            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
+
+            x_range <- axis_range()
             if (!is.null(x_range)) {
                 min.x <- -x_range$max
                 max.x <- x_range$max
@@ -220,57 +230,25 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "x.max", value = max.x)
             updateNumericInput(session, "x.min", value = min.x)
-
-            updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            .reset_axes_inputs(session)
 
             # Action Button (unchanged)
             updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
+            .reset_lines_inputs(session)
 
         })
 
-        # Update y-axis range when y data column is changed (when auto-update is off)
-        observeEvent(list(input$x.data, input$y.data), {
-            x_range <- .calculate_range(df = data(), data_col_x = input$x.data, data_col_y = input$y.data, axis_scale_factor = axis_scale(), grouping = TRUE)
+        # Update x-axis range when data columns or fill.by change (when auto-update is off)
+        observeEvent(list(input$x.data, input$y.data, input$fill.by), {
+            req(input$x.data, input$y.data)
+            req(input$x.data %in% names(data()))
+            req(input$y.data %in% names(data()))
+
+            x_range <- axis_range()
             if (!is.null(x_range)) {
                 updateNumericInput(session, "x.max", value = x_range$max)
                 updateNumericInput(session, "x.min", value = -x_range$max)
@@ -428,7 +406,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )

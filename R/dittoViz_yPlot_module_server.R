@@ -160,46 +160,17 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             # Facet
             updateSelectInput(session, "split.by", selected = "")
             updateSelectInput(session, "split.adjust", selected = "free")
-            updateSelectInput(session, "split.ncol", selected = "")
-            updateSelectInput(session, "split.nrow", selected = "")
+            updateNumericInput(session, "split.ncol", value = NA)
+            updateNumericInput(session, "split.nrow", value = NA)
 
             # Axes
-            updateSelectInput(session, "font.type", selected = "Arial")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            .reset_axes_inputs(session)
 
             # Action Button
             updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
         })
 
         # Update y-axis range when var (y data) column is changed
@@ -220,17 +191,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
             
-            # Parse add.line (comma-separated numeric values)
-            add.line <- isolate_fn(input$add.line)
-            if (!is.null(add.line) && nzchar(add.line)) {
-                add.line <- as.numeric(trimws(strsplit(add.line, ",")[[1]]))
-                if (any(is.na(add.line))) {
-                    add.line <- NULL
-                }
-            } else {
-                add.line <- NULL
-            }
-
             # Parse vlnplot.quantiles (comma-separated numeric values)
             vlnplot.quantiles <- isolate_fn(input$vlnplot.quantiles)
             if (!is.null(vlnplot.quantiles) && nzchar(vlnplot.quantiles)) {
@@ -243,19 +203,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
             # Parse split dimensions
-            split.ncol <- isolate_fn(input$split.ncol)
-            if (is.null(split.ncol) || split.ncol == "") {
-                split.ncol <- NULL
-            } else {
-                split.ncol <- as.integer(split.ncol)
-            }
-
-            split.nrow <- isolate_fn(input$split.nrow)
-            if (is.null(split.nrow) || split.nrow == "") {
-                split.nrow <- NULL
-            } else {
-                split.nrow <- as.integer(split.nrow)
-            }
+            split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
+            split.nrow <- .na_to_null(isolate_fn(input$split.nrow))
 
             # Handle ridgeplot.ymax.expansion
             ridgeplot.ymax.expansion <- isolate_fn(input$ridgeplot.ymax.expansion)
@@ -335,7 +284,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             fig <- p |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),

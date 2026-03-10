@@ -15,16 +15,18 @@ A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} components.
-The app features a \strong{Data Import} section for uploading Excel spreadsheets,
-a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive split bar plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_sales} and \code{example_population} as example datasets. Uploaded Excel files are added
+\code{example_sales} and \code{example_population} as example datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
@@ -32,10 +34,15 @@ library(VizModules)
 app <- plotthis_SplitBarPlotApp()
 if (interactive()) runApp(app)
 
-# Launch with custom data:
-app2 <- plotthis_SplitBarPlotApp(list("cars" = mtcars))
+#Launch with custom data:
+df <- data.frame(
+    group = c("A", "B", "C", "D", "E"),
+    value = c(43, 78, 25, 61, 89),
+    count = c(12, -7, 34, 19, -15)
+)
+app2 <- plotthis_SplitBarPlotApp(list("data" = df))
 if (interactive()) runApp(app2)
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -100,7 +100,7 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
 \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 \item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
-\item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+\item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 \item \code{text.colour} - Color for title text (UI: "Label colour", default: "#000000")
 \item \code{axis.title.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 \item \code{axis.title.font.color} - Axis title font color (UI: "Axis title font color", default: "#000000")

@@ -17,16 +17,18 @@ A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular radarPlot components.
-The app features a \strong{Data Import} section for uploading Excel spreadsheets,
-a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive radar plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-example \code{skills} and \code{team_stats} datasets. Uploaded Excel files are added
+example \code{skills} and \code{team_stats} datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
@@ -36,8 +38,19 @@ if (interactive()) runApp(app)
 
 # Launch with custom data:
 skills <- data.frame(
-    category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
-    value = c(8, 6, 7, 9, 8)
+    entity = c(
+       rep("Player A", 6),
+        rep("Player B", 6),
+        rep("Player C", 6),
+        rep("Player D", 6)
+    ),
+    category = rep(c("Pace", "Shooting", "Passing", "Dribbling", "Defending", "Physical"), 4),
+    value = c(
+        99, 89, 80, 92, 36, 78,
+        89, 97, 65, 72, 45, 95,
+        76, 86, 94, 86, 64, 78,
+        62, 60, 71, 63, 94, 91
+    )
 )
 app2 <- radarPlotApp(list("skills" = skills))
 if (interactive()) runApp(app2)
@@ -47,5 +60,5 @@ if (interactive()) runApp(app2)
 \code{\link[=radarPlotOutputUI]{radarPlotOutputUI()}}, \code{\link[=radarPlotServer]{radarPlotServer()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -15,16 +15,18 @@ A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} components.
-The app features a \strong{Data Import} section for uploading Excel spreadsheets,
-a \strong{Data Table} for viewing and editing the active dataset, and a \strong{Plot} area
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive y plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_sales} and \code{example_population} as example datasets. Uploaded Excel files are added
+\code{example_sales} and \code{example_population} as example datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
@@ -33,7 +35,7 @@ app <- dittoViz_yPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_yPlotApp(list("cars" = mtcars))
+app2 <- dittoViz_yPlotApp(list("sales" = example_sales, "population" = example_population))
 if (interactive()) runApp(app2)
 }
 \seealso{

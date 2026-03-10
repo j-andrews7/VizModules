@@ -1,3 +1,133 @@
+#' Resolve a default value from a named list
+#'
+#' Looks up `key` in `defaults`. If present and passes `validator` (when
+#' supplied), returns the stored value; otherwise returns `fallback`.
+#' Uses standard `if`/`else` instead of vectorized `ifelse()` to avoid
+#' silent truncation of multi-valued defaults.
+#'
+#' @param defaults A named list of default values, or NULL.
+#' @param key Character string — the name to look up.
+#' @param fallback The value to return when `key` is absent or fails validation.
+#' @param validator An optional single-argument predicate function (e.g.,
+#'   `is.numeric`, `is.logical`). When supplied, the stored value is returned
+#'   only if `validator(value)` is `TRUE`.
+#'
+#' @return The resolved default value or `fallback`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_get_default
+#' @keywords internal
+.get_default <- function(defaults, key, fallback, validator = NULL) {
+    if (!is.null(defaults) && key %in% names(defaults)) {
+        value <- defaults[[key]]
+        if (is.null(validator) || isTRUE(validator(value))) {
+            return(value)
+        }
+    }
+    fallback
+}
+
+
+#' Reset uniform axes inputs to defaults
+#'
+#' Resets all inputs created by [.uniform_axes_inputs_ui()] to their default
+#' values. Call inside an `observeEvent(input$reset, ...)` block to avoid
+#' duplicating 20 `updateXxxInput` calls in every module server.
+#'
+#' @param session The Shiny session object (from `moduleServer`).
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateSelectInput updateNumericInput updateCheckboxInput
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_axes_inputs
+#' @keywords internal
+.reset_axes_inputs <- function(session) {
+    # Optional conditional inputs (harmless if absent)
+    shinyWidgets::updateMaterialSwitch(session, "rotate", value = FALSE)
+    shinyWidgets::updateMaterialSwitch(session, "flip.x", value = FALSE)
+    shinyWidgets::updateMaterialSwitch(session, "flip.y", value = FALSE)
+    # Title font
+    updateSelectInput(session, "title.font.family", selected = "Arial")
+    colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+    # Axis title
+    updateNumericInput(session, "axis.title.font.size", value = 18)
+    colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+    updateSelectInput(session, "axis.title.font.family", selected = "Arial")
+    # Borders & gridlines
+    updateCheckboxInput(session, "axis.showline", value = TRUE)
+    updateCheckboxInput(session, "axis.mirror", value = TRUE)
+    updateCheckboxInput(session, "show.grid.x", value = TRUE)
+    updateCheckboxInput(session, "show.grid.y", value = TRUE)
+    colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
+    updateNumericInput(session, "axis.linewidth", value = 0.5)
+    # Tick marks
+    updateNumericInput(session, "axis.tickfont.size", value = 12)
+    colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
+    updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
+    updateNumericInput(session, "axis.tickangle.x", value = 0)
+    updateNumericInput(session, "axis.tickangle.y", value = 0)
+    updateSelectInput(session, "axis.ticks", selected = "outside")
+    colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
+    updateNumericInput(session, "axis.ticklen", value = 5)
+    updateNumericInput(session, "axis.tickwidth", value = 1)
+    invisible(NULL)
+}
+
+
+#' Reset uniform lines inputs to defaults
+#'
+#' Resets all inputs created by [.uniform_lines_inputs_ui()] to their default
+#' values. Call inside an `observeEvent(input$reset, ...)` block to avoid
+#' duplicating line-reset boilerplate in every module server.
+#'
+#' @param session The Shiny session object (from `moduleServer`).
+#' @param include.fit.lines Logical; if TRUE, also resets the fit-line
+#'   inputs (best.fit, line.best.smoothness, line.best.colour, linear.model).
+#'   Default is FALSE.
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateTextInput updateNumericInput
+#' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_lines_inputs
+#' @keywords internal
+.reset_lines_inputs <- function(session, include.fit.lines = FALSE) {
+    # Horizontal lines
+    updateTextInput(session, "hline.intercepts", value = "")
+    updateTextInput(session, "hline.colors", value = "#000000")
+    updateTextInput(session, "hline.widths", value = "1")
+    updateTextInput(session, "hline.linetypes", value = "dashed")
+    updateTextInput(session, "hline.opacities", value = "1")
+    # Vertical lines
+    updateTextInput(session, "vline.intercepts", value = "")
+    updateTextInput(session, "vline.colors", value = "#000000")
+    updateTextInput(session, "vline.widths", value = "1")
+    updateTextInput(session, "vline.linetypes", value = "dashed")
+    updateTextInput(session, "vline.opacities", value = "1")
+    # Diagonal lines
+    updateTextInput(session, "abline.slopes", value = "")
+    updateTextInput(session, "abline.intercepts", value = "")
+    updateTextInput(session, "abline.colors", value = "#000000")
+    updateTextInput(session, "abline.widths", value = "1")
+    updateTextInput(session, "abline.linetypes", value = "dashed")
+    updateTextInput(session, "abline.opacities", value = "1")
+
+    if (include.fit.lines) {
+        shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
+        updateNumericInput(session, "line.best.smoothness", value = 1)
+        colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
+        shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
+    }
+    invisible(NULL)
+}
+
+
 #' Generate uniform Lines input UI
 #'
 #' Creates a standardized tagList of line-related inputs (horizontal, vertical,
@@ -16,6 +146,7 @@
 #' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_uniform_lines_inputs_ui
 #' @keywords internal
 .uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
     intercept_tip <- paste(
@@ -27,43 +158,43 @@
         tipify(
             textInput(ns("hline.intercepts"), "Y-intercepts",
                 placeholder = "e.g. 2, -2",
-                value = ifelse("hline.intercepts" %in% names(defaults), defaults[["hline.intercepts"]], "")
+                value = .get_default(defaults, "hline.intercepts", "")
             ),
             intercept_tip, placement = "top", options = list(container = "body")
         ),
         textInput(ns("hline.colors"), "Colors",
-            value = ifelse("hline.colors" %in% names(defaults), defaults[["hline.colors"]], "#000000")
+            value = .get_default(defaults, "hline.colors", "#000000")
         ),
         textInput(ns("hline.widths"), "Widths",
-            value = ifelse("hline.widths" %in% names(defaults), defaults[["hline.widths"]], "1")
+            value = .get_default(defaults, "hline.widths", "1")
         ),
         textInput(ns("hline.linetypes"), "Line types",
             placeholder = "solid, dashed, dotted, ...",
-            value = ifelse("hline.linetypes" %in% names(defaults), defaults[["hline.linetypes"]], "dashed")
+            value = .get_default(defaults, "hline.linetypes", "dashed")
         ),
         textInput(ns("hline.opacities"), "Opacities (0-1)",
-            value = ifelse("hline.opacities" %in% names(defaults), defaults[["hline.opacities"]], "1")
+            value = .get_default(defaults, "hline.opacities", "1")
         ),
         br(),
         tipify(
             textInput(ns("vline.intercepts"), "X-intercepts",
                 placeholder = "e.g. 2, -2",
-                value = ifelse("vline.intercepts" %in% names(defaults), defaults[["vline.intercepts"]], "")
+                value = .get_default(defaults, "vline.intercepts", "")
             ),
             intercept_tip, placement = "top", options = list(container = "body")
         ),
         textInput(ns("vline.colors"), "Colors",
-            value = ifelse("vline.colors" %in% names(defaults), defaults[["vline.colors"]], "#000000")
+            value = .get_default(defaults, "vline.colors", "#000000")
         ),
         textInput(ns("vline.widths"), "Widths",
-            value = ifelse("vline.widths" %in% names(defaults), defaults[["vline.widths"]], "1")
+            value = .get_default(defaults, "vline.widths", "1")
         ),
         textInput(ns("vline.linetypes"), "Line types",
             placeholder = "solid, dashed, dotted, ...",
-            value = ifelse("vline.linetypes" %in% names(defaults), defaults[["vline.linetypes"]], "dashed")
+            value = .get_default(defaults, "vline.linetypes", "dashed")
         ),
         textInput(ns("vline.opacities"), "Opacities (0-1)",
-            value = ifelse("vline.opacities" %in% names(defaults), defaults[["vline.opacities"]], "1")
+            value = .get_default(defaults, "vline.opacities", "1")
         ),
         br()
     )
@@ -71,7 +202,7 @@
     if (include.fit.lines) {
         fit_inputs <- tagList(
             textInput(ns("abline.slopes"), "Slopes",
-                value = ifelse("abline.slopes" %in% names(defaults), defaults[["abline.slopes"]], "")
+                value = .get_default(defaults, "abline.slopes", "")
             ),
             materialSwitch(ns("best.fit"), "Line of best fit:",
                 value = FALSE,
@@ -117,6 +248,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @author Jared Andrews
+#' @rdname INTERNAL_uniform_axes_inputs_ui
 #' @keywords internal
 .uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
     font_choices <- c(
@@ -128,29 +260,20 @@
 
     rotate_input <- if (include.rotate) {
         materialSwitch(ns("rotate"), "Rotate (swap X/Y)",
-            value = ifelse("rotate" %in% names(defaults),
-                ifelse(is.logical(defaults[["rotate"]]), defaults[["rotate"]], FALSE),
-                FALSE
-            ),
+            value = .get_default(defaults, "rotate", FALSE, is.logical),
             status = "success"
         )
     } else {
         NULL
     }
 
-    if (include.flip){
+    if (include.flip) {
         flip_x <- materialSwitch(ns("flip.x"), "Flip X Axis",
-            value = ifelse("flip.x" %in% names(defaults),
-                ifelse(is.logical(defaults[["flip.x"]]), defaults[["flip.x"]], FALSE),
-                FALSE
-            ),
+            value = .get_default(defaults, "flip.x", FALSE, is.logical),
             status = "success"
         )
         flip_y <- materialSwitch(ns("flip.y"), "Flip Y Axis",
-            value = ifelse("flip.y" %in% names(defaults),
-                ifelse(is.logical(defaults[["flip.y"]]), defaults[["flip.y"]], FALSE),
-                FALSE
-            ),
+            value = .get_default(defaults, "flip.y", FALSE, is.logical),
             status = "success"
         )
     } else {
@@ -162,146 +285,87 @@
         rotate_input,
         flip_x,
         flip_y,
-        selectInput(ns("font.type"), "Title Font",
+        selectInput(ns("title.font.family"), "Title Font",
             choices = font_choices,
-            selected = ifelse("font.type" %in% names(defaults),
-                ifelse(defaults[["font.type"]] %in% font_choices,
-                    defaults[["font.type"]], "Arial"
-                ),
-                "Arial"
-            )
+            selected = .get_default(defaults, "title.font.family", "Arial",
+                function(x) x %in% font_choices)
         ),
         colourInput(ns("text.colour"), "Title Color",
-            value = ifelse("text.colour" %in% names(defaults),
-                defaults[["text.colour"]], "#000000"
-            )
+            value = .get_default(defaults, "text.colour", "#000000")
         ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
-            value = ifelse("axis.title.font.size" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.title.font.size"]]), defaults[["axis.title.font.size"]], 18),
-                18
-            ),
+            value = .get_default(defaults, "axis.title.font.size", 18, is.numeric),
             min = 1,
             step = 1
         ),
         colourInput(ns("axis.title.font.color"), "Axis Title Color",
-            value = ifelse("axis.title.font.color" %in% names(defaults),
-                defaults[["axis.title.font.color"]], "#000000"
-            )
+            value = .get_default(defaults, "axis.title.font.color", "#000000")
         ),
         selectInput(ns("axis.title.font.family"), "Axis Title Font",
             choices = font_choices,
-            selected = ifelse("axis.title.font.family" %in% names(defaults),
-                ifelse(defaults[["axis.title.font.family"]] %in% font_choices,
-                    defaults[["axis.title.font.family"]], "Arial"
-                ),
-                "Arial"
-            )
+            selected = .get_default(defaults, "axis.title.font.family", "Arial",
+                function(x) x %in% font_choices)
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
-            value = ifelse("axis.showline" %in% names(defaults),
-                ifelse(is.logical(defaults[["axis.showline"]]), defaults[["axis.showline"]], TRUE),
-                TRUE
-            )
+            value = .get_default(defaults, "axis.showline", TRUE, is.logical)
         ),
         checkboxInput(ns("axis.mirror"), "Mirror Axis Borders",
-            value = ifelse("axis.mirror" %in% names(defaults),
-                ifelse(is.logical(defaults[["axis.mirror"]]), defaults[["axis.mirror"]], TRUE),
-                TRUE
-            )
+            value = .get_default(defaults, "axis.mirror", TRUE, is.logical)
         ),
         checkboxInput(ns("show.grid.x"), "Show X Gridlines",
-            value = ifelse("show.grid.x" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.grid.x"]]), defaults[["show.grid.x"]], TRUE),
-                TRUE
-            )
+            value = .get_default(defaults, "show.grid.x", TRUE, is.logical)
         ),
         checkboxInput(ns("show.grid.y"), "Show Y Gridlines",
-            value = ifelse("show.grid.y" %in% names(defaults),
-                ifelse(is.logical(defaults[["show.grid.y"]]), defaults[["show.grid.y"]], TRUE),
-                TRUE
-            )
+            value = .get_default(defaults, "show.grid.y", TRUE, is.logical)
         ),
         colourInput(ns("axis.linecolor"), "Axis Line Color",
-            value = ifelse("axis.linecolor" %in% names(defaults),
-                defaults[["axis.linecolor"]], "black"
-            )
+            value = .get_default(defaults, "axis.linecolor", "black")
         ),
         numericInput(ns("axis.linewidth"), "Axis Line Width",
-            value = ifelse("axis.linewidth" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.linewidth"]]), defaults[["axis.linewidth"]], 0.5),
-                0.5
-            ),
+            value = .get_default(defaults, "axis.linewidth", 0.5, is.numeric),
             min = 0,
             step = 0.1
         ),
         numericInput(ns("axis.tickfont.size"), "Tick Label Size",
-            value = ifelse("axis.tickfont.size" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickfont.size"]]), defaults[["axis.tickfont.size"]], 12),
-                12
-            ),
+            value = .get_default(defaults, "axis.tickfont.size", 12, is.numeric),
             min = 1,
             step = 1
         ),
         colourInput(ns("axis.tickfont.color"), "Tick Label Color",
-            value = ifelse("axis.tickfont.color" %in% names(defaults),
-                defaults[["axis.tickfont.color"]], "black"
-            )
+            value = .get_default(defaults, "axis.tickfont.color", "black")
         ),
         selectInput(ns("axis.tickfont.family"), "Tick Label Font",
             choices = font_choices,
-            selected = ifelse("axis.tickfont.family" %in% names(defaults),
-                ifelse(defaults[["axis.tickfont.family"]] %in% font_choices,
-                    defaults[["axis.tickfont.family"]], "Arial"
-                ),
-                "Arial"
-            )
+            selected = .get_default(defaults, "axis.tickfont.family", "Arial",
+                function(x) x %in% font_choices)
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
-            value = ifelse("axis.tickangle.x" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickangle.x"]]), defaults[["axis.tickangle.x"]], 0),
-                0
-            ),
+            value = .get_default(defaults, "axis.tickangle.x", 0, is.numeric),
             min = -180,
             max = 180,
             step = 15
         ),
         numericInput(ns("axis.tickangle.y"), "Y Tick Label Angle",
-            value = ifelse("axis.tickangle.y" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickangle.y"]]), defaults[["axis.tickangle.y"]], 0),
-                0
-            ),
+            value = .get_default(defaults, "axis.tickangle.y", 0, is.numeric),
             min = -180,
             max = 180,
             step = 15
         ),
         selectInput(ns("axis.ticks"), "Tick Position",
             choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-            selected = ifelse("axis.ticks" %in% names(defaults),
-                ifelse(defaults[["axis.ticks"]] %in% c("outside", "inside", ""),
-                    defaults[["axis.ticks"]], "outside"
-                ),
-                "outside"
-            )
+            selected = .get_default(defaults, "axis.ticks", "outside",
+                function(x) x %in% c("outside", "inside", ""))
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
-            value = ifelse("axis.tickcolor" %in% names(defaults),
-                defaults[["axis.tickcolor"]], "black"
-            )
+            value = .get_default(defaults, "axis.tickcolor", "black")
         ),
         numericInput(ns("axis.ticklen"), "Tick Mark Length",
-            value = ifelse("axis.ticklen" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.ticklen"]]), defaults[["axis.ticklen"]], 5),
-                5
-            ),
+            value = .get_default(defaults, "axis.ticklen", 5, is.numeric),
             min = 0,
             step = 1
         ),
         numericInput(ns("axis.tickwidth"), "Tick Mark Width",
-            value = ifelse("axis.tickwidth" %in% names(defaults),
-                ifelse(is.numeric(defaults[["axis.tickwidth"]]), defaults[["axis.tickwidth"]], 1),
-                1
-            ),
+            value = .get_default(defaults, "axis.tickwidth", 1, is.numeric),
             min = 0,
             step = 0.1
         )

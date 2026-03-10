@@ -238,6 +238,7 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #' }
 setup_auto_update_logic <- function(input) {
     auto_update <- input$auto.update
+    req(!is.null(auto_update))
 
     # If update button is required, add dependency on it
     if (!auto_update) {

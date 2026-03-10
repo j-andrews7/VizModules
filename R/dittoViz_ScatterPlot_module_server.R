@@ -27,6 +27,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+        # Unique source ID for plotly event_data, scoped to this module instance
+        plot_source <- session$ns("scatter")
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -165,10 +167,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Observer to add selected data to selected.data
         observeEvent(
-            event_data("plotly_selected"),
+            event_data("plotly_selected", source = plot_source),
             # suspended = TRUE,
             {
-                selected <- event_data("plotly_selected")
+                selected <- event_data("plotly_selected", source = plot_source)
                 selected.full <- rbind(selected.data(), selected)
 
                 # Since this is running on every selection, remove duplicates
@@ -200,7 +202,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "color.by", selected = "")
             updateSelectInput(session, "shape.by", selected = "")
             updateSelectizeInput(session, "split.by", selected = "")
-            updateTextInput(session, "rows.use", value = "")
 
             # Adjustments
             updateSelectInput(session, "x.adjustment", selected = "")
@@ -226,14 +227,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "single.point.color", 
                 value = "#000000")
             
-            # Simulate clicking the reset button in the multiColorPicker widget
-            shinyjs::runjs(sprintf("
-                var colorPanel = document.getElementById('%s');
-                if (colorPanel) {
-                    var resetBtn = colorPanel.querySelector('.mc-reset-palette');
-                    if (resetBtn) resetBtn.click();
-                }
-            ", ns("color.panel")))
+            # Reset multiColorPicker to its initial palette
+            updateMultiColorPicker(session, "color.panel", reset = TRUE)
 
             # Facets
             updateNumericInput(session, "split.nrow", value = NA)
@@ -287,44 +282,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectizeInput(session, "hover.data", selected = "")
             updateNumericInput(session, "hover.round.digits", value = 5)
 
-            # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
-            shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
-            updateNumericInput(session, "line.best.smoothness", value = 1)
-            colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
-            shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
-
-            # Axes
-            updateSelectInput(session, "font.type", selected = "Arial")
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            # Lines & Axes
+            .reset_lines_inputs(session, include.fit.lines = TRUE)
+            .reset_axes_inputs(session)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -349,8 +309,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 "color.adj.fxn" = .na_to_null(isolate_fn(input$color.adj.fxn)),
                 "split.nrow" = .na_to_null(isolate_fn(input$split.nrow)),
                 "split.ncol" = .na_to_null(isolate_fn(input$split.ncol)),
-                "hover.data" = .na_to_null(isolate_fn(input$hover.data)),
-                "annotate.by" = .na_to_null(isolate_fn(input$annotate.by))
+                "hover.data" = .na_to_null(isolate_fn(input$hover.data))
             )
 
             # Waiver inputs
@@ -399,7 +358,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,
                 size = isolate_fn(input$size),
-                rows.use = safe_eval_filter(isolate_fn(input$rows.use), data()),
                 show.others = isolate_fn(input$show.others),
                 x.adjustment = null.na.inputs$x.adjustment,
                 y.adjustment = null.na.inputs$y.adjustment,
@@ -446,33 +404,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             plot_data <- p$Target_data
 
-            # COLOUR MAPPING FOR LINE
-            manual_vals <- manual_color_values()
-            if (!is.null(manual_vals) && length(manual_vals) > 0) {
-                palette_for_mapping <- manual_vals
-            } else if (!is.null(null.na.inputs$color.by) &&
-                length(current_color_levels) > 0 &&
-                length(palette_values) > 0) {
-                palette_for_mapping <- palette_values
+            # Colour mapping for fit lines — palette_values from color.panel() is already
+            # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
+            color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
+                palette_values
             } else {
-                palette_for_mapping <- NULL
-            }
-
-            if (!is.null(palette_for_mapping) && length(current_color_levels) > 0) {
-                if (!is.null(names(palette_for_mapping)) && any(nzchar(names(palette_for_mapping)))) {
-                    palette_for_mapping <- palette_for_mapping[match(current_color_levels, names(palette_for_mapping))]
-                }
-
-                if (any(is.na(palette_for_mapping))) {
-                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                    na_idx <- which(is.na(palette_for_mapping))
-                    palette_for_mapping[na_idx] <- rep_len(fallback_palette, length(na_idx))
-                }
-
-                palette_for_mapping <- rep_len(palette_for_mapping, length(current_color_levels))
-                color_mapping <- stats::setNames(palette_for_mapping[seq_len(length(current_color_levels))], current_color_levels)
-            } else {
-                color_mapping <- NULL
+                NULL
             }
 
             if (!is.null(null.na.inputs$split.by)){
@@ -792,11 +729,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            
-            generate_scatterPlot() |>
+            fig <- generate_scatterPlot() |>
                 layout(
                     margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
                 )
+            fig$x$source <- plot_source
+            fig
         })
 
         # Download handler for interactive plot

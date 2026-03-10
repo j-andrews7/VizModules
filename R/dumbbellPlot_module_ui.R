@@ -85,10 +85,8 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment:",
                 choices = adj.choices,
-                selected = ifelse("x.adjustment" %in% names(defaults),
-                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
-                    ""
-                )
+                selected = .get_default(defaults, "x.adjustment", "",
+                    function(x) x %in% adj.choices)
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("colour.by"), "Colour by:",
                 choices = c("X variables", "Y variables"),
@@ -102,12 +100,8 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
                 choices   = c("fixed", "free", "free_x", "free_y"),
-                selected  = ifelse("facet.scales" %in% names(defaults),
-                    ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
-                    defaults[["facet.scales"]], "fixed"
-                    ),
-                    "fixed"
-                )
+                selected  = .get_default(defaults, "facet.scales", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y"))
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
 

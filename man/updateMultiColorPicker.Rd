@@ -4,22 +4,38 @@
 \alias{updateMultiColorPicker}
 \title{Update a multiColorPicker input on the client}
 \usage{
-updateMultiColorPicker(session, inputId, colors)
+updateMultiColorPicker(
+  session,
+  inputId,
+  colors = NULL,
+  palette = NULL,
+  reset = FALSE
+)
 }
 \arguments{
 \item{session}{The Shiny session object, typically \code{session}.}
 
 \item{inputId}{Character. The input id of the multiColorPicker to update.}
 
-\item{colors}{A named character vector of hex colors keyed by group name.
-Only groups present in the vector will be updated; others remain unchanged.}
+\item{colors}{Optional named character vector of hex colors keyed by group
+name. Only groups present in the vector will be updated; others remain
+unchanged. Ignored when \code{palette} or \code{reset} is provided.}
+
+\item{palette}{Optional character string giving the name of a palette
+(as supplied in the widget's \code{palette_options}). The palette's colors are
+applied in order to the widget's groups' color pickers and the palette
+selector is updated to match. Ignored when \code{reset} is \code{TRUE}.}
+
+\item{reset}{Logical. If \code{TRUE}, reset the widget to its initial state
+(colors and selected palette). Overrides \code{colors} and \code{palette}.}
 }
 \value{
 Invisibly returns \code{NULL}. Called for its side effect.
 }
 \description{
 Change the color values assigned to groups in an existing multiColorPicker
-input from the server side.
+input from the server side. You can supply explicit colors, apply a palette
+by name, or reset the widget back to its initial state.
 }
 \examples{
 if (interactive()) {
@@ -34,6 +50,8 @@ if (interactive()) {
       selected_palette = "dittoColors"
     ),
     actionButton("randomize", "Randomize colors"),
+    actionButton("apply_pal", "Apply ggplot2 palette"),
+    actionButton("reset_cols", "Reset to initial"),
     verbatimTextOutput("chosen")
   )
 
@@ -45,7 +63,15 @@ if (interactive()) {
         sprintf("#\%06X", sample(0xFFFFFF, length(groups))),
         groups
       )
-      updateMultiColorPicker(session, "species_cols", new_colors)
+      updateMultiColorPicker(session, "species_cols", colors = new_colors)
+    })
+
+    observeEvent(input$apply_pal, {
+      updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
+    })
+
+    observeEvent(input$reset_cols, {
+      updateMultiColorPicker(session, "species_cols", reset = TRUE)
     })
   }
 
