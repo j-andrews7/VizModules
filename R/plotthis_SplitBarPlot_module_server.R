@@ -38,8 +38,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         data_col_x        = input$y.data,
                         data_col_y        = input$x.data,
                         axis_scale_factor = axis_scale(),
-                        grouping          = TRUE,
-                        stack_by          = NULL
+                        grouping          = TRUE
                     ))
         })
 

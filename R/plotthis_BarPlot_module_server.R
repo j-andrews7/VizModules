@@ -193,18 +193,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
             fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
 
-            is_stacked <- group_is_numeric || fill_is_numeric
-
-            # Pick which column is doing the stacking (for tapply grouping by x)
-            stack_col <- if (group_is_numeric) group_by_val else if (fill_is_numeric) fill_by_val else NULL
-
             y_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$x.data,
                 data_col_y        = input$y.data,
                 axis_scale_factor = 1.18,
-                grouping          = is_stacked,
-                stack_by          = stack_col
+                grouping          = TRUE
             )
 
             if (!is.null(y_range)) {

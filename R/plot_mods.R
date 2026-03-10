@@ -1005,19 +1005,11 @@
   if (!is.numeric(df[[data_col]])) return(NULL)
 
   if (!grouping) {
-    # --- Non-stacked: bars are NOT stacked, just find the max single value ---
-    # If stack_by is provided and numeric, bars ARE stacked → sum per x group
-    if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
-      # Numeric stack_by: stacked bars, sum y per x category
-      if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
-      x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
-      max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
-      min_val <- 0
-    } else {
-      # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
-      max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-      min_val <- min(df[[data_col]], na.rm = TRUE)
-    }
+    
+    # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+    max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+    min_val <- min(df[[data_col]], na.rm = TRUE)
+    
 
     if (!is.finite(min_val)) min_val <- 0
     if (!is.finite(max_val)) max_val <- 1
@@ -1025,7 +1017,6 @@
     return(list(min = min_val, max = max_val))
 
   } else {
-    # --- Stacked grouping: sum y values per x group ---
     if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
     x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
     max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
