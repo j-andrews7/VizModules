@@ -35,7 +35,7 @@ app <- linePlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- linePlotApp(list("cars" = mtcars))
+app2 <- linePlotApp(list("iris" = iris))
 if (interactive()) runApp(app2)
 }
 \seealso{

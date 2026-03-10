@@ -35,7 +35,7 @@ app <- plotthis_BoxPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- plotthis_BoxPlotApp(list("iris" = iris))
+app2 <- plotthis_BoxPlotApp(list("sales" = example_sales, "population" = example_population))
 if (interactive()) runApp(app2)
 }
 \author{

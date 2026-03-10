@@ -37,7 +37,7 @@ app <- parallelCoordinatesPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- parallelCoordinatesPlotApp(list("cars" = mtcars))
+app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales, "population" = example_population))
 if (interactive()) runApp(app2)
 }
 \seealso{

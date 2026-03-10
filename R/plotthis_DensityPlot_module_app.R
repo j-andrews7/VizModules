@@ -26,7 +26,7 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- plotthis_DensityPlotApp(list("iris" = iris))
+#' app2 <- plotthis_DensityPlotApp(list("sales" = example_sales, "population" = example_population))
 #' if (interactive()) runApp(app2)
 plotthis_DensityPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {

@@ -35,7 +35,7 @@ app <- dittoViz_yPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_yPlotApp(list("cars" = mtcars))
+app2 <- dittoViz_yPlotApp(list("sales" = example_sales, "population" = example_population))
 if (interactive()) runApp(app2)
 }
 \seealso{

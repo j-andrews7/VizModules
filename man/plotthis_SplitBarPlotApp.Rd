@@ -34,6 +34,14 @@ library(VizModules)
 app <- plotthis_SplitBarPlotApp()
 if (interactive()) runApp(app)
 
+#Launch with custom data:
+df <- data.frame(
+    group = c("A", "B", "C", "D", "E"),
+    value = c(43, 78, 25, 61, 89),
+    count = c(12, -7, 34, 19, -15)
+)
+app2 <- plotthis_SplitBarPlotApp(list("data" = df))
+if (interactive()) runApp(app2)
 }
 \author{
 Jacob Martin, Jared Andrews
