@@ -2,9 +2,8 @@
 
 This function generates a Shiny application with modular ternaryPlot
 components. The app features a **Data Import** section for uploading
-Excel spreadsheets, a **Data Table** for viewing and editing the active
-dataset, and a **Plot** area for configuring and displaying an
-interactive ternary plot.
+data, a **Data Table** for filtering the active dataset, and a **Plot**
+area for configuring and displaying an interactive ternary plot.
 
 ## Usage
 
@@ -28,10 +27,13 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-example `roles` and `teams` datasets. Uploaded Excel files are added to
+example `roles` and `teams` datasets. Uploaded data files are added to
 the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is
 overwritten with a warning.
+
+This is a convenience wrapper around
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
 
 ## See also
 
@@ -42,7 +44,7 @@ overwritten with a warning.
 
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 

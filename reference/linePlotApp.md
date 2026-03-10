@@ -2,10 +2,9 @@
 
 This function generates a Shiny application with modular
 [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
-components. The app features three tabs: a **Data Input** tab for
-uploading Excel spreadsheets, a **Table** tab for viewing and editing
-the active dataset, and a **Plots** tab for configuring and displaying
-an interactive line plot.
+components. The app features a **Data Import** section for uploading
+data, a **Data Table** for filtering the active dataset, and a **Plot**
+area for configuring and displaying an interactive line plot.
 
 ## Usage
 
@@ -27,10 +26,13 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`iris` and `mtcars` as example datasets. Uploaded Excel files are added
+`iris` and `mtcars` as example datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an
 uploaded file shares a name with an existing dataset, the existing one
 is overwritten with a warning.
+
+This is a convenience wrapper around
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
 
 ## See also
 
@@ -52,6 +54,6 @@ app <- linePlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- linePlotApp(list("cars" = mtcars))
+app2 <- linePlotApp(list("iris" = iris))
 if (interactive()) runApp(app2)
 ```

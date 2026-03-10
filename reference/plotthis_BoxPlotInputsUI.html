@@ -200,7 +200,7 @@ for that function for an exhaustive list.</p>
 <li><p><code>show.outliers</code> - Show outlier points (UI: "Show Outliers", default: TRUE)</p></li>
 <li><p><code>axis.font.size</code> - Axis title font size (UI: "Axis font size", default: 18)</p></li>
 <li><p><code>title.font.size</code> - Plot title font size (UI: "Title font size", default: 28)</p></li>
-<li><p><code>font.type</code> - Font family for plot text (UI: "Font", default: "Arial")</p></li>
+<li><p><code>title.font.family</code> - Font family for title text (UI: "Title Font", default: "Arial")</p></li>
 <li><p><code>text.colour</code> - Color for axis labels (UI: "Label colour", default: "#000000")</p></li>
 <li><p><code>axis.showline</code> - Show axis border lines (UI: "Show axis lines", default: TRUE)</p></li>
 <li><p><code>axis.mirror</code> - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)</p></li>
@@ -250,41 +250,41 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_BoxPlotInputsUI</span><span class="op">(</span><span class="st">"BoxPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="9619"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="1579"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight"&gt;Highlight&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight"&gt;Highlight&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-9619-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1579-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="9619"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-9619-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="1579"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-1579-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9528248"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1636232"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-x.data-label" for="BoxPlot-x.data"&gt;X data&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-x.data" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-x.data"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9528248', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1636232', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3218546"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9528248"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-y.data-label" for="BoxPlot-y.data"&gt;Y data&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-y.data" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
@@ -302,12 +302,12 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-y.data"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3218546', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9528248', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3615341"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3218546"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-group.by-label" for="BoxPlot-group.by"&gt;Group by&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-group.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
@@ -315,17 +315,17 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-group.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3615341', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using group_by_sep as the separator'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3218546', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using group_by_sep as the separator'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8877234"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3615341"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BoxPlot-show.outliers" style="padding-right: 10px;"&gt;Show Outliers&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BoxPlot-show.outliers" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BoxPlot-show.outliers"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8877234', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Toggle whether outlier points beyond the whiskers are displayed on the boxplot'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3615341', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Toggle whether outlier points beyond the whiskers are displayed on the boxplot'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
@@ -334,122 +334,122 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-9619-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-1579-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8280144"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8877234"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-boxplot.width-label" for="BoxPlot-boxplot.width"&gt;Boxplot Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-boxplot.width" type="number" class="shiny-input-number form-control" value="0.8" data-update-on="change" min="0" max="1" step="0.05"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8280144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the relative width of each boxplot, where 1 fills the entire available space'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8877234', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the relative width of each boxplot, where 1 fills the entire available space'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1006565"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8280144"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-sort_x-label" for="BoxPlot-sort_x"&gt;Sort X By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-sort_x" type="text" class="shiny-input-text form-control" value="" placeholder="mean(y data col name)" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1006565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the sorting of x-axis, chosen from "none", "mean_asc", "mean_desc", "mean", "median_asc", "median_desc", "median". none means no sorting (as-is). mean_asc sorts the x-axis by ascending mean of y-values. mean_desc sorts the x-axis by descending mean of y-values. mean is an alias for mean_asc. median_asc sorts the x-axis by ascending median of y-values. median_desc sorts the x-axis by descending median of y-values. median is an alias for median_asc.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8280144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the sorting of x-axis, chosen from "none", "mean_asc", "mean_desc", "mean", "median_asc", "median_desc", "median". none means no sorting (as-is). mean_asc sorts the x-axis by ascending mean of y-values. mean_desc sorts the x-axis by descending mean of y-values. mean is an alias for mean_asc. median_asc sorts the x-axis by ascending median of y-values. median_desc sorts the x-axis by descending median of y-values. median is an alias for median_asc.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9060515"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1006565"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-y.max-label" for="BoxPlot-y.max"&gt;Max Value of Y Axis&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-Inf" max="Inf"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9060515', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the maximum value of the y-axis. You can also use quantile notation like "q95" to specify the 95th percentile. When comparisons are set and a numeric y_max is provided, it will be used to set the y-axis limit, including the significance labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1006565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the maximum value of the y-axis. You can also use quantile notation like "q95" to specify the 95th percentile. When comparisons are set and a numeric y_max is provided, it will be used to set the y-axis limit, including the significance labels.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7727303"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9060515"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-y.min-label" for="BoxPlot-y.min"&gt;Min Value of Y Axis&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-Inf" max="Inf"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7727303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the minimum value of the y-axis. You can also use quantile notation like "q5" to specify the 5th percentile.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9060515', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the minimum value of the y-axis. You can also use quantile notation like "q5" to specify the 5th percentile.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3833707"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7727303"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BoxPlot-add.points" style="padding-right: 10px;"&gt;Add Jitter Points&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BoxPlot-add.points" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BoxPlot-add.points"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3833707', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value to add (jitter) points to the plot.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7727303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value to add (jitter) points to the plot.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9996524"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3833707"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-pt.size-label" for="BoxPlot-pt.size"&gt;Point Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-pt.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="100"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9996524', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3833707', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3492991"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9996524"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-pt.alpha-label" for="BoxPlot-pt.alpha"&gt;Point Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-pt.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3492991', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9996524', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9473182"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3492991"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-jitter.width-label" for="BoxPlot-jitter.width"&gt;Jitter Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.3" data-update-on="change" min="0" max="1" step="0.05"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9473182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the width of the jitter. Defaults to 0.5, but when paired_by is provided, it will be set to 0.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3492991', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the width of the jitter. Defaults to 0.5, but when paired_by is provided, it will be set to 0.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2161000"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9473182"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BoxPlot-pt.color"&gt;Point Outline Colour&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-pt.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2161000', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9473182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Highlight" id="tab-9619-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Highlight" id="tab-1579-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify320928"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2161000"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-highlight-label" for="BoxPlot-highlight"&gt;Highlight&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-highlight" type="text" class="shiny-input-text form-control" value="" placeholder="E.g. col name &amp;gt; 0" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify320928', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A vector of character strings to highlight the points. It should be a subset of the row names of the data. If TRUE, it will highlight all points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2161000', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A vector of character strings to highlight the points. It should be a subset of the row names of the data. If TRUE, it will highlight all points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1453159"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify320928"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BoxPlot-highlight.colour"&gt;Highlight Colour&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-highlight.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1453159', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify320928', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8543839"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1453159"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-highlight.size-label" for="BoxPlot-highlight.size"&gt;Highlight Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-highlight.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8543839', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1453159', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2131493"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8543839"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-highlight.alpha-label" for="BoxPlot-highlight.alpha"&gt;Highlight Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-highlight.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2131493', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8543839', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the highlighted points.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-9619-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-1579-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2103108"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2131493"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-facet.by-label" for="BoxPlot-facet.by"&gt;Facet by&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-facet.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
@@ -457,10 +457,10 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-facet.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2103108', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2131493', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by split_by and generate multiple plots and combine them into one using patchwork::wrap_plots'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify395207"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2103108"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-facet.scale-label" for="BoxPlot-facet.scale"&gt;Facet Scale&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-facet.scale" class="shiny-input-select"&gt;&lt;option value="fixed" selected&gt;fixed&lt;/option&gt;</span>
@@ -470,39 +470,39 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-facet.scale" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify395207', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2103108', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See ggplot2::facet_wrap'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9447748"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify395207"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-facet.ncol-label" for="BoxPlot-facet.ncol"&gt;Columns&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9447748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify395207', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2449280"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9447748"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-facet.nrow-label" for="BoxPlot-facet.nrow"&gt;Rows&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2449280', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9447748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7811225"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2449280"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BoxPlot-facet.by.row" style="padding-right: 10px;"&gt;Facet by Row&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BoxPlot-facet.by.row" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BoxPlot-facet.by.row"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7811225', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2449280', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-9619-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-1579-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -519,9 +519,9 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;&lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-font.type-label" for="BoxPlot-font.type"&gt;Title Font&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-title.font.family-label" for="BoxPlot-title.font.family"&gt;Title Font&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-font.type" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="BoxPlot-title.font.family" class="shiny-input-select"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
@@ -538,7 +538,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-font.type" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BoxPlot-title.font.family" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
@@ -737,14 +737,14 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-9619-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-1579-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2882372"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7811225"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-hline.intercepts-label" for="BoxPlot-hline.intercepts"&gt;Y-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2882372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7811225', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -780,11 +780,11 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8753579"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2882372"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BoxPlot-vline.intercepts-label" for="BoxPlot-vline.intercepts"&gt;X-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BoxPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8753579', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2882372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -826,7 +826,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label for="BoxPlot-auto.update" style="padding-right: 10px;"&gt;Auto Update&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;input id="BoxPlot-auto.update" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;input id="BoxPlot-auto.update" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label class="switch label-success bg-success" for="BoxPlot-auto.update"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>

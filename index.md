@@ -85,6 +85,36 @@ underlying plot docs
 [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),
 etc.) to see the full parameter set.
 
+## App Factory
+
+Need a quick standalone app for any module?
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+is a factory that wires up data import, a filterable data table, dataset
+switching, and the module’s UI/server:
+
+``` r
+library(VizModules)
+
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BarPlotInputsUI,
+    output_ui_fn = plotthis_BarPlotOutputUI,
+    server_fn    = plotthis_BarPlotServer,
+    data_list    = list("cars" = mtcars),
+    title        = "My Bar Plot"
+)
+if (interactive()) runApp(app)
+```
+
+Every built-in `*App()` convenience function
+(e.g. [`plotthis_BarPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.md),
+[`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md))
+is a thin wrapper around
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+with sensible default data. You can also pass your own custom wrapper
+module functions to
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+for rapid prototyping.
+
 ## Building Custom Wrapper Modules
 
 The modules in **VizModules** are designed to be composed and extended.

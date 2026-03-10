@@ -157,12 +157,27 @@ expect.
 
 ## Example App Requirement
 
-Provide an app in `<plot>_module_app.R` that instantiates the module
-**twice** with different datasets/IDs.
+Provide an app in `<plot>_module_app.R` as a thin wrapper around
+\[createModuleApp()\]:
 
-Keep the app minimal: load sample data, render both modules’
-inputs/outputs, and no extra custom logic beyond demonstrating the
-module.
+``` r
+myPlotApp <- function(data_list = NULL) {
+    if (is.null(data_list)) {
+        data_list <- list("example" = my_default_data)
+    }
+    createModuleApp(
+        inputs_ui_fn = myPlotInputsUI,
+        output_ui_fn = myPlotOutputUI,
+        server_fn    = myPlotServer,
+        data_list    = data_list,
+        title        = "Modular myPlots"
+    )
+}
+```
+
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+already handles validation, data import, data filtering, and dataset
+switching — no need to duplicate that logic.
 
 Add the module to the gallery app (`inst/apps/module-gallery/app.R`),
 placing it in its own tab alongside the other modules.
@@ -213,8 +228,7 @@ and outputs together.
 Verify namespacing: each module instance should have a unique `id` and
 independent state.
 
-Keep dependencies minimal (prefer built-in datasets) so the gallery runs
-out-of-the-box.
+Keep dependencies minimal (prefer built-in or generated datasets).
 
 ## Review Before Submitting
 

@@ -73,10 +73,41 @@ dittoViz_ScatterPlotServer(
 Hidden inputs and tabs still feed their values into the plot, so the
 module stays fully configured while exposing only what your users need.
 
+## App factory with `createModuleApp()`
+
+To enable simple, consistent testing of any module, we provide an app
+factory function that returns a full standalone app with data import, a
+filterable data table, and dataset switching for any module -
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md):
+
+``` r
+library(VizModules)
+
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BarPlotInputsUI,
+    output_ui_fn = plotthis_BarPlotOutputUI,
+    server_fn    = plotthis_BarPlotServer,
+    data_list    = list("cars" = mtcars),
+    title        = "My Bar Plot"
+)
+if (interactive()) runApp(app)
+```
+
+All built-in `*App()` convenience functions
+(e.g. [`plotthis_BarPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.md),
+[`linePlotApp()`](https://j-andrews7.github.io/VizModules/reference/linePlotApp.md))
+are thin wrappers around
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+with sensible default data. You can also pass custom wrapper module
+functions to
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+for rapid prototyping.
+
 ## Which plot parameters are exposed?
 
-Modules wrap plotting functions from **dittoViz** and **plotthis**. To
-see which arguments are available in a module:
+Modules wrap plotting functions from **dittoViz**, **plotthis**, and
+native plotting functions. To see which arguments are available in a
+module:
 
 1.  Open the module input help page, e.g.,
     `?dittoViz_ScatterPlotInputsUI` or `?AreaPlotInputsUI`. The

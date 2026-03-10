@@ -151,11 +151,35 @@ module stays fully configured while exposing only what your users
 need.</p>
 </div>
 <div class="section level2">
+<h2 id="app-factory-with-createmoduleapp">App factory with <code>createModuleApp()</code><a class="anchor" aria-label="anchor" href="#app-factory-with-createmoduleapp"></a>
+</h2>
+<p>To enable simple, consistent testing of any module, we provide an app
+factory function that returns a full standalone app with data import, a
+filterable data table, and dataset switching for any module -
+<code><a href="../reference/createModuleApp.html">createModuleApp()</a></code>:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createModuleApp.html">createModuleApp</a></span><span class="op">(</span></span>
+<span>    inputs_ui_fn <span class="op">=</span> <span class="va">plotthis_BarPlotInputsUI</span>,</span>
+<span>    output_ui_fn <span class="op">=</span> <span class="va">plotthis_BarPlotOutputUI</span>,</span>
+<span>    server_fn    <span class="op">=</span> <span class="va">plotthis_BarPlotServer</span>,</span>
+<span>    data_list    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"cars"</span> <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>,</span>
+<span>    title        <span class="op">=</span> <span class="st">"My Bar Plot"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></code></pre></div>
+<p>All built-in <code>*App()</code> convenience functions
+(e.g. <code><a href="../reference/plotthis_BarPlotApp.html">plotthis_BarPlotApp()</a></code>, <code><a href="../reference/linePlotApp.html">linePlotApp()</a></code>)
+are thin wrappers around <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> with sensible
+default data. You can also pass custom wrapper module functions to
+<code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> for rapid prototyping.</p>
+</div>
+<div class="section level2">
 <h2 id="which-plot-parameters-are-exposed">Which plot parameters are exposed?<a class="anchor" aria-label="anchor" href="#which-plot-parameters-are-exposed"></a>
 </h2>
-<p>Modules wrap plotting functions from <strong>dittoViz</strong> and
-<strong>plotthis</strong>. To see which arguments are available in a
-module:</p>
+<p>Modules wrap plotting functions from <strong>dittoViz</strong>,
+<strong>plotthis</strong>, and native plotting functions. To see which
+arguments are available in a module:</p>
 <ol style="list-style-type: decimal">
 <li>Open the module input help page, e.g.,
 <code>?dittoViz_ScatterPlotInputsUI</code> or

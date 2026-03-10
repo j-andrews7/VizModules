@@ -266,11 +266,26 @@ in the UI docs so users know what to expect.</label></li>
 </h2>
 <ul class="task-list">
 <li><label><input type="checkbox">Provide an app in
-<code>&lt;plot&gt;_module_app.R</code> that instantiates the module
-<strong>twice</strong> with different datasets/IDs.</label></li>
-<li><label><input type="checkbox">Keep the app minimal: load sample
-data, render both modules’ inputs/outputs, and no extra custom logic
-beyond demonstrating the module.</label></li>
+<code>&lt;plot&gt;_module_app.R</code> as a thin wrapper around
+[createModuleApp()]:</label></li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">myPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"example"</span> <span class="op">=</span> <span class="va">my_default_data</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="fu"><a href="../reference/createModuleApp.html">createModuleApp</a></span><span class="op">(</span></span>
+<span>        inputs_ui_fn <span class="op">=</span> <span class="va">myPlotInputsUI</span>,</span>
+<span>        output_ui_fn <span class="op">=</span> <span class="va">myPlotOutputUI</span>,</span>
+<span>        server_fn    <span class="op">=</span> <span class="va">myPlotServer</span>,</span>
+<span>        data_list    <span class="op">=</span> <span class="va">data_list</span>,</span>
+<span>        title        <span class="op">=</span> <span class="st">"Modular myPlots"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<ul class="task-list">
+<li><label><input type="checkbox"><code><a href="../reference/createModuleApp.html">createModuleApp()</a></code>
+already handles validation, data import, data filtering, and dataset
+switching — no need to duplicate that logic.</label></li>
 <li><label><input type="checkbox">Add the module to the gallery app
 (<code>inst/apps/module-gallery/app.R</code>), placing it in its own tab
 alongside the other modules.</label></li>
@@ -330,7 +345,7 @@ dataset and show the module’s inputs and outputs together.</label></li>
 instance should have a unique <code>id</code> and independent
 state.</label></li>
 <li><label><input type="checkbox">Keep dependencies minimal (prefer
-built-in datasets) so the gallery runs out-of-the-box.</label></li>
+built-in or generated datasets).</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -368,7 +383,7 @@ expression is parsed, its AST is walked to ensure only allowed
 operations are present (comparisons, logical operators, column
 references, and literals), and then it is evaluated in a restricted
 environment containing only the data frame’s columns.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — filtering rows by a textInput:</span></span>
 <span><span class="va">rows.use</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rows.use</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns a logical vector (same length as <code>nrow(data)</code>), or
@@ -383,7 +398,7 @@ disallowed operations.</p>
 string through to a downstream plotting function that will evaluate it
 internally (e.g., <code>plotthis::BoxPlot(highlight = ...)</code>). The
 string is validated but not executed.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — passing a highlight expression to plotthis:</span></span>
 <span><span class="va">highlight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_expression.html">validate_expression</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">highlight</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the original string if safe, or <code>NULL</code>.</p>
@@ -399,7 +414,7 @@ the allowed list (<code>"log2"</code>, <code>"log"</code>,
 <code>"log10"</code>, <code>"neg_log10"</code>, <code>"log1p"</code>,
 <code>"as.factor"</code>, <code>"abs"</code>, <code>"sqrt"</code>) are
 accepted.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — resolving an adjustment function:</span></span>
 <span><span class="va">x.adj.fxn</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.adj.fxn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the function, or <code>NULL</code> if the name is empty or

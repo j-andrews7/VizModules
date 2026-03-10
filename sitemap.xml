@@ -10,9 +10,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/copilot-instructions.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/news/index.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/airway_deseq2.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/airway_edger.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/airway_voom.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/createModuleApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/default_palettes.html</loc></url>
@@ -25,8 +23,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dot-adjust_column_values.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/dot-uniform_axes_inputs_ui.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/dot-uniform_lines_inputs_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotInputsUI.html</loc></url>

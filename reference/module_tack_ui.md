@@ -44,7 +44,7 @@ module_tack_ui(ns)
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="myModule-auto.update" style="padding-right: 10px;">Auto Update</label>
-#>         <input id="myModule-auto.update" type="checkbox"/>
+#>         <input id="myModule-auto.update" type="checkbox" checked="checked"/>
 #>         <label class="switch label-success bg-success" for="myModule-auto.update"></label>
 #>       </div>
 #>     </div>
@@ -81,7 +81,7 @@ module_tack_ui(ns, defaults = list(download.format = "png"))
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="myModule-auto.update" style="padding-right: 10px;">Auto Update</label>
-#>         <input id="myModule-auto.update" type="checkbox"/>
+#>         <input id="myModule-auto.update" type="checkbox" checked="checked"/>
 #>         <label class="switch label-success bg-success" for="myModule-auto.update"></label>
 #>       </div>
 #>     </div>

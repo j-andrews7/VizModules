@@ -3,9 +3,8 @@
 This function generates a Shiny application with modular
 [`dittoViz::scatterPlot()`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)
 components. The app features a **Data Import** section for uploading
-Excel spreadsheets, a **Data Table** for viewing and editing the active
-dataset, and a **Plot** area for configuring and displaying an
-interactive scatter plot.
+data, a **Data Table** for filtering the active dataset, and a **Plot**
+area for configuring and displaying an interactive scatter plot.
 
 ## Usage
 
@@ -29,9 +28,12 @@ A Shiny app object.
 
 When `data_list` is not provided (or `NULL`), the app launches with
 `example_sales` and `example_population` as example datasets. Uploaded
-Excel files are added to the available datasets and can be selected for
+data files are added to the available datasets and can be selected for
 plotting. If an uploaded file shares a name with an existing dataset,
 the existing one is overwritten with a warning.
+
+This is a convenience wrapper around
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
 
 ## See also
 
@@ -53,6 +55,6 @@ app <- dittoViz_scatterPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_scatterPlotApp(list("cars" = mtcars))
+app2 <- dittoViz_scatterPlotApp(list("sales" = example_sales, "population" = example_population))
 if (interactive()) runApp(app2)
 ```
