@@ -25,6 +25,7 @@ Depends:
     R (>= 4.5),
     shinyBS
 Imports:
+    roclang,
     colourpicker,
     dplyr,
     DT,

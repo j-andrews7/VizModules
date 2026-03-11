@@ -137,7 +137,6 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
         package_name = "plotthis::AreaPlot", type = "param",
         selected = selected, cap = TRUE
     )
-
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.data"), "X values:",

@@ -1005,11 +1005,19 @@
   if (!is.numeric(df[[data_col]])) return(NULL)
 
   if (!grouping) {
-    
-    # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
-    max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-    min_val <- min(df[[data_col]], na.rm = TRUE)
-    
+    # --- Non-stacked: bars are NOT stacked, just find the max single value ---
+    # If stack_by is provided and numeric, bars ARE stacked → sum per x group
+    if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
+      # Numeric stack_by: stacked bars, sum y per x category
+      if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
+      x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+      max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+      min_val <- 0 
+    } else {
+      # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+      max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+      min_val <- min(df[[data_col]], na.rm = TRUE)
+    }
 
     if (!is.finite(min_val)) min_val <- 0
     if (!is.finite(max_val)) max_val <- 1
@@ -1017,6 +1025,7 @@
     return(list(min = min_val, max = max_val))
 
   } else {
+    # --- Stacked grouping: sum y values per x group ---
     if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
     x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
     max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
@@ -1380,7 +1389,7 @@ is_pure_type <- function(inputs, d) {
 #'   "param" is supported.
 #' @param selected A character vector of parameter names to extract.
 #' @param cap Logical; if TRUE, capitalize the first letter of each description.
-#'
+#' @importFrom roclang extract_roc_text
 #' @return A named list where names are parameter names and values are
 #'   their documentation strings. Returns empty strings for parameters
 #'   not found in the documentation.
@@ -1388,109 +1397,18 @@ is_pure_type <- function(inputs, d) {
 #' @author Jacob Martin, Jared Andrews
 #' @export
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
-    # Parse package::function format
-    parts <- strsplit(package_name, "::")[[1]]
-    if (length(parts) != 2) {
-        stop("package_name must be in 'package::function' format")
-    }
-
-    if (type != "param") {
-        stop("Only 'param' type is currently supported")
-    }
-
-    pkg <- parts[1]
-    fn <- parts[2]
-
-    result <- stats::setNames(
-        as.list(rep("", length(selected))),
-        selected
-    )
-
-    # Helper to extract params from a parsed Rd object
-    .extract_params <- function(rd, selected, cap) {
-        extracted <- list()
-        for (item in rd) {
-            tag <- attr(item, "Rd_tag")
-            if (!is.null(tag) && tag == "\\arguments") {
-                for (arg_item in item) {
-                    arg_tag <- attr(arg_item, "Rd_tag")
-                    if (!is.null(arg_tag) && arg_tag == "\\item") {
-                        if (length(arg_item) >= 2) {
-                            param_name <- paste(unlist(arg_item[[1]]), collapse = "")
-                            param_desc <- paste(unlist(arg_item[[2]]), collapse = "")
-                            param_desc <- trimws(gsub("\\s+", " ", param_desc))
-
-                            if (param_name %in% selected) {
-                                if (cap && nzchar(param_desc)) {
-                                    param_desc <- paste0(
-                                        toupper(substring(param_desc, 1, 1)),
-                                        substring(param_desc, 2)
-                                    )
-                                }
-                                extracted[[param_name]] <- param_desc
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        extracted
-    }
-
-    # Try installed package Rd database first
-    rd_found <- FALSE
-    tryCatch({
-        rd_db <- tools::Rd_db(pkg)
-        for (rd_name in names(rd_db)) {
-            rd_obj <- rd_db[[rd_name]]
-            for (item in rd_obj) {
-                tag <- attr(item, "Rd_tag")
-                if (!is.null(tag) && tag == "\\alias") {
-                    alias <- paste(unlist(item), collapse = "")
-                    if (trimws(alias) == fn) {
-                        extracted <- .extract_params(rd_obj, selected, cap)
-                        for (n in names(extracted)) {
-                            result[[n]] <- extracted[[n]]
-                        }
-                        rd_found <- TRUE
-                        break
-                    }
-                }
-            }
-            if (rd_found) break
-        }
-    }, error = function(e) {
-        # Package not installed; will try local man/ fallback below
+    docs <- lapply(selected, function(s) {
+        doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
+        doc %>%
+        gsub("\\\\n", " ", .) %>%                    
+        gsub("\\\\", "", .) %>%                          
+        gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%        
+        gsub("\n", " ", .) %>% trimws()                   
     })
-
-    # Fallback: read from local man/ directory (for dev mode / devtools::load_all).
-    # When using devtools::load_all(), the working directory is the package source root,
-    # so the relative "man/" path will resolve correctly.
-    if (!rd_found) {
-        rd_file <- file.path(system.file(package = pkg), "man", paste0(fn, ".Rd"))
-        if (!file.exists(rd_file)) {
-            rd_file <- file.path("man", paste0(fn, ".Rd"))
-        }
-        if (file.exists(rd_file)) {
-            tryCatch({
-                rd_obj <- tools::parse_Rd(rd_file)
-                extracted <- .extract_params(rd_obj, selected, cap)
-                for (n in names(extracted)) {
-                    result[[n]] <- extracted[[n]]
-                }
-                rd_found <- TRUE
-            }, error = function(e) {
-                warning(paste("Could not parse local Rd file for", fn, ":", e$message))
-            })
-        }
-    }
-
-    if (!rd_found) {
-        warning(paste("Could not find documentation for", package_name))
-    }
-
-    result
+    setNames(docs, selected)
 }
+
+
 
 #' Resolve facet axis sharing from facet.scales
 #'
