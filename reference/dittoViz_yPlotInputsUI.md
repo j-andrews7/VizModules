@@ -317,5 +317,5 @@ Jared Andrews, Jacob Martin
 library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
-#> Error in extract_roc_text(package_name, type = type, select = s, capitalize = cap): No Rd string extracted (NA_character_); please check your inputs; when using roxygen > 7.1.2, please check whether some parameters are co-documented: if they are, you need to select them as a whole set by select = 'param_a,param_b' or select = c('param_a', 'param_b')
+#> Error in FUN(X[[i]], ...): object '.' not found
 ```
