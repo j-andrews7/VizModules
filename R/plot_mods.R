@@ -1399,16 +1399,14 @@ is_pure_type <- function(inputs, d) {
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
     docs <- lapply(selected, function(s) {
         doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
-        doc %>%
-        gsub("\\\\n", " ", .) %>%                    
-        gsub("\\\\", "", .) %>%                          
-        gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%        
-        gsub("\n", " ", .) %>% trimws()                   
+        doc |>
+        gsub("\\\\n", " ", .) |>                  
+        gsub("\\\\", "", .) |>                   
+        gsub("code\\{([^}]+)\\}", "`\\1`", .) |>      
+        gsub("\n", " ", .) |> trimws()                   
     })
     setNames(docs, selected)
 }
-
-
 
 #' Resolve facet axis sharing from facet.scales
 #'
