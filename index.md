@@ -285,5 +285,5 @@ Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html
 
 ![](man/PlotImages/UI_Overview.png)
 
-Developed by [Jared Andrews](https://github.com/j-andrews7) and \[Jacob
-Martin\]\[<https://github.com/Jacob1106>\]
+Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob
+Martin](https://github.com/Jacob1106)
