@@ -222,7 +222,7 @@ To contribute a new module to the package, see the vignette for guidelines: [`vi
 
 ![](man/PlotImages/UI_Overview.png)
 
-Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin][https://github.com/Jacob1106]
+Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin](https://github.com/Jacob1106)
 
 
 
