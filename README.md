@@ -6,9 +6,9 @@
 [![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
-This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis)) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
+This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis) along with native plotting functions) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
 
-These modules will contain all possible functionality for each plot with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
+These modules contain all possible functionality for each plot with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
 
 The modules provide comprehensive plot control for app users, allowing for convenient aesthetic customizations and publication-quality images.
 They also provide developers a way to dramatically save time and reduce complexity of their plotting code or a flexible base to build more specialized Shiny modules upon.
@@ -28,6 +28,10 @@ devtools::install_github("j-andrews7/VizModules")
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
+
+### Using Modules in Your Own App
+
+To use a module in your own app, simply call the `*InputsUI()`, `*OutputUI()`, and `*Server()` functions for the module you want to use. For example, to use the ScatterPlot module from dittoViz, you would do something like this:
 
 ```r
 library(VizModules)
@@ -52,22 +56,41 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     dittoViz_ScatterPlotServer(
         "cars",
-        data = reactive(mtcars),
-        hide.inputs = c("rows.use"),
-        hide.tabs = c("Plotly")
+        data = reactive(mtcars)
     )
 }
 
 shinyApp(ui, server)
 ```
 
-Every module uses the same trio of functions: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic. Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide controls while keeping their values so you can enforce app-level defaults without exposing them.
+Every module uses the same trio of functions: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic. The separation of InputsUI and OutputUI allows you to place input controls and the actual plot wherever you'd like.
+
+Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide controls while keeping their values so you can enforce app-level defaults without exposing them.
 
 Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
+### Example Apps for Each Module
+
+Every module has a corresponding `*App()` function that creates a complete Shiny app showcasing the module's functionality with example data. For instance, `plotthis_BarPlotApp()` creates an app BarPlot module. You can run these apps directly to explore the module's features and see how it works in a full Shiny context.
+
+```r
+library(VizModules)
+# Using built-in example data (or upload your own file in the app)
+plotthis_BarPlotApp()
+
+# Providing your own data
+df <- data.frame(
+    category = c("A", "B", "C"),
+    value = c(10, 20, 15),
+    group = c("X", "Y", "X")
+)
+
+plotthis_BarPlotApp(data = df)
+```
+
 ## App Factory
 
-Need a quick standalone app for any module? `createModuleApp()` is a factory that wires up data import, a filterable data table, dataset switching, and the module's UI/server:
+Every built-in `*App()` convenience function (e.g. `plotthis_BarPlotApp()`, `linePlotApp()`) is a thin wrapper around `createModuleApp()` with sensible default data. You can also pass your own custom wrapper module functions to `createModuleApp()` for rapid prototyping after defining the UI and server functions.
 
 ```r
 library(VizModules)
@@ -79,16 +102,14 @@ app <- createModuleApp(
     data_list    = list("cars" = mtcars),
     title        = "My Bar Plot"
 )
-if (interactive()) runApp(app)
-```
 
-Every built-in `*App()` convenience function (e.g. `plotthis_BarPlotApp()`, `linePlotApp()`) is a thin wrapper around `createModuleApp()` with sensible default data. You can also pass your own custom wrapper module functions to `createModuleApp()` for rapid prototyping.
+runApp(app)
+```
 
 
 ## Building Custom Wrapper Modules
 
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
-
 
 For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
@@ -113,6 +134,8 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### Plotting Functions Defined in VizModules
 
+Via direct use of plotly.
+
 * `linePlot` - Line plots
 * `piePlot` - Pie and donut plots
 * `radarPlot` - Radar plots
@@ -128,14 +151,14 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 * **barPlot** - compositional barplots.
 * **freqPlot** - box/jitter plots for discrete observation frequencies per sample/group.
 
-dittoViz is under active development, so additional modules will be created as more visualization functions are added.
+[dittoViz](https://github.com/dtm2451/dittoViz) is under active development, so additional modules may be addedas more visualization functions are added.
 
 ## Contributing a New Module
 
 To contribute a new module to the package, see the vignette for clear guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
 
 
-## Examples of Plots:
+## Available Modules
 
 [linePlot:][1]
 
@@ -209,12 +232,9 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/yPlot.png)
 
-### UI Overview:
+### UI Example
 
 ![](man/figures/UI_Overview.png)
-
-Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin](https://github.com/Jacob1106)
-
 
 
 
@@ -222,16 +242,16 @@ Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin](h
 [2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
 [3]: https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html
 [4]: https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html
-[5]:https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html
-[6]:https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html
-[7]:https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html
-[8]:https://j-andrews7.github.io/VizModules/reference/piePlotApp.html
-[9]:https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
-[10]:https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
-[11]:https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
-[12]:https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
-[13]:https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
-[14]:https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
+[5]: https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html
+[6]: https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html
+[7]: https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html
+[8]: https://j-andrews7.github.io/VizModules/reference/piePlotApp.html
+[9]: https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
+[10]: https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
+[11]: https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
+[12]: https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
+[13]: https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
+[14]: https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
 [15]: https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.html
 [16]: https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html
 [17]: https://j-andrews7.github.io/VizModules/articles/custom-modules.html
