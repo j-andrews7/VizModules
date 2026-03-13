@@ -23,7 +23,8 @@ Depends:
     dittoViz,
     plotly,
     R (>= 4.5),
-    shinyBS
+    shinyBS,
+    plotthis
 Imports:
     roclang,
     colourpicker,
