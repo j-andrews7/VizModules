@@ -20,7 +20,6 @@ Description: VizModules offers a core selection of interactivity-first Shiny mod
 License: MIT + file LICENSE
 Depends:
     shiny,
-    plotthis (>= 0.11.0),
     dittoViz,
     plotly,
     R (>= 4.5),
@@ -40,6 +39,8 @@ Imports:
     methods,
     shinyWidgets,
     htmlwidgets
+Remotes:
+    pwwang/plotthis
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
