@@ -1,3 +1,7 @@
+# Scale factor applied to the maximum Y value for initial axis range.
+# Using a named constant avoids magic numbers scattered across modules.
+.y_axis_scale_factor <- 1.11
+
 #' Apply axis styling to all subplot axes in a plotly figure
 #'
 #' When using plotly subplots (e.g., via split.by in dittoViz), axis styling
@@ -10,8 +14,6 @@
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
-#'
-#' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_apply_subplot_axis_styling
@@ -87,6 +89,7 @@
 
     fig
 }
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.
@@ -101,8 +104,6 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#'
-#' @importFrom stats lm coef
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_linear_fit
@@ -156,8 +157,6 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#'
-#' @importFrom stats loess predict
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_loess_fit
@@ -290,7 +289,10 @@
                 legendPosition = TRUE,
                 colorbarPosition = TRUE,
                 colorbarTitleText = TRUE,
-                annotationTail = TRUE
+                annotationTail = TRUE,
+                editText = TRUE,
+                editTitle = TRUE,
+                annotationPosition = TRUE
             ),
             toImageButtonOptions = list(
                 format = download.format,
@@ -302,7 +304,7 @@
         config <- list(
             edits = list(
                 axisTitleText = FALSE,
-                titleText = FALSE,
+                titleText = TRUE,
                 annotationText = TRUE,
                 legendText = TRUE,
                 legendPosition = TRUE,
@@ -339,20 +341,21 @@
 #' appearance, and gridline settings.
 #'
 #' @param input Shiny input object. Expected to contain axis-related fields
-#'   such as \code{font.type}, \code{text.colour}, \code{axis.showline},
+#'   such as \code{title.font.family}, \code{text.colour}, \code{axis.showline},
 #'   \code{axis.mirror}, \code{axis.linecolor}, \code{axis.linewidth},
 #'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
 #'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
 #'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
-#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.major.grid.x},
-#'   and \code{show.major.grid.y}.
+#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.grid.x},
+#'   and \code{show.grid.y}.
 #' @param axis_side Character. Which axis to style, either \code{"x"} or
 #'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
 #'   \code{axis.tickangle.y} is used for the tick angle, and which
 #'   gridline inputs are applied.
 #' @param isolate_fn Function. A function used to isolate Shiny inputs,
 #'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
-#'@param ggplot.axis.styling boolean value that determines wether ggplot styling is applied 
+#' @param ggplot.axis.styling Logical. Whether ggplot axis styling is applied.
+#'   Defaults to \code{TRUE}.
 #' @return A named list containing Plotly-compatible axis styling
 #'   components, including title font, line properties, tick label
 #'   formatting, and gridline visibility.
@@ -373,8 +376,8 @@
     # Determine gridline visibility based on axis side
     # Use defaults if inputs are not present (for backwards compatibility)
     show_grid <- ifelse(axis_side == "x",
-        isolate_fn(input$show.major.grid.x),
-        isolate_fn(input$show.major.grid.y)
+        isolate_fn(input$show.grid.x),
+        isolate_fn(input$show.grid.y)
     )
     style <- list(
         title = list(
@@ -398,6 +401,7 @@
         ticklen = isolate_fn(input$axis.ticklen),
         tickwidth = isolate_fn(input$axis.tickwidth),
         showgrid = show_grid
+        
     )
     if (!ggplot.axis.styling){
         style$showline <- isolate_fn(input$axis.showline)
@@ -423,7 +427,6 @@
 #'
 #' @param input Shiny input object containing axis styling parameters.
 #' @param isolate_fn Function to use for isolating reactive values (default: isolate).
-#' @param facet.by Character or NULL. The faceting variable name. If NULL, no faceting.
 #'
 #' @return A named list of ggplot2 theme arguments to be passed to theme_args parameter.
 #'
@@ -433,33 +436,38 @@
 #' @rdname INTERNAL_create_ggplot_axis_style
 #' @keywords internal
 .create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
-        if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
-            # Return full axis border when both show line and mirror are on
-            theme_args <- list(
-                panel.border = ggplot2::element_rect(
-                    colour = isolate_fn(input$axis.linecolor),
-                    fill = NA,
-                    linewidth = isolate_fn(input$axis.linewidth)
-                )
-            )
-            return(theme_args)
-        } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
-            # Set it so the axis line is only shown on x and y axis
-            theme_args <- list(
-                axis.line = ggplot2::element_line(
-                    colour = isolate_fn(input$axis.linecolor),
-                    linewidth = isolate_fn(input$axis.linewidth)   
-                ),
-                panel.border = element_blank()
-            )
-            return(theme_args)
-        } else {
-            # No borders when axis.showline is FALSE
-            theme_args <- list(
-                panel.border = ggplot2::element_blank()
-            )
-            return(theme_args)
-        }
+    if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
+        # Return full axis border when both show line and mirror are on
+        theme_args <- list(
+            panel.border = ggplot2::element_rect(
+                colour = isolate_fn(input$axis.linecolor),
+                fill = NA,
+                linewidth = isolate_fn(input$axis.linewidth)
+            ),
+            axis.line = element_blank(),
+            axis.ticks = element_blank()
+        )
+        
+    } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
+        # Set it so the axis line is only shown on x and y axis
+        theme_args <- list(
+            axis.line = ggplot2::element_line(
+                colour = isolate_fn(input$axis.linecolor),
+                linewidth = isolate_fn(input$axis.linewidth)   
+            ),
+            panel.border = element_blank(),
+            axis.ticks = element_blank()
+        )
+        
+    } else {
+        # No borders when axis.showline is FALSE
+        theme_args <- list(
+            panel.border = element_blank(),
+            axis.line = element_blank(),
+            axis.ticks = element_blank()
+        )
+    }
+    return(theme_args)
 }
 
 #' Parse comma-separated numeric string to vector
@@ -936,73 +944,99 @@
     )
 }
 
-#' Calculate Y-axis range from data
+#' Calculate axis range from data
 #'
-#' Computes a numeric range for the Y-axis based on a specified column in a
-#' data frame, applying a scaling factor to the maximum value. This is useful
-#' for deriving dynamic axis limits directly from the underlying data.
+#' Computes a numeric range for the Y-axis based on specified columns in a
+#' data frame, applying a scaling factor to the maximum value. Handles both
+#' simple (non-stacked) and stacked bar scenarios, where stacking occurs when
+#' \code{group.by} or \code{fill.by} is numeric.
 #'
-#' @param df Data frame. The data containing the Y variable.
-#' @param data_col Character. Name of the column in \code{df} to use for
-#'   calculating the Y-axis range.
+#' @param df Data frame. The data containing the variables to range over.
+#' @param data_col_y Character string. Name of the numeric Y-axis data column.
+#'   Takes priority over \code{data_col_x} if both are provided.
+#' @param data_col_x Character string. Name of the X-axis data column. Required
+#'   when \code{grouping = TRUE} or \code{stack_by} is specified, as it defines
+#'   the groups over which Y values are summed.
 #' @param axis_scale_factor Numeric. Multiplicative factor applied to the
 #'   maximum Y value to provide additional headroom on the axis.
+#' @param grouping Logical. If \code{TRUE}, bars are treated as stacked and the
+#'   maximum is derived from the sum of Y values within each X group rather than
+#'   the raw maximum. Defaults to \code{FALSE}.
+#' @param stack_by Character string or \code{NULL}. Name of the column used for
+#'   stacking (i.e. \code{group.by} or \code{fill.by}). When this column is
+#'   numeric, bars are stacked and Y values are summed per X category before
+#'   computing the maximum. Ignored if \code{NULL} or if the column is
+#'   categorical. Defaults to \code{NULL}.
 #'
 #' @return A named list with components \code{min} and \code{max} giving the
-#'   lower and upper limits for the Y-axis, or \code{NULL} if the input column
-#'   is missing, non-numeric, or otherwise invalid.
+#'   lower and upper limits for the Y-axis, or \code{NULL} if any required
+#'   column is missing, non-numeric, or otherwise invalid.
 #'
-#' @details The function first validates that \code{data_col} is specified
-#'   and corresponds to a numeric column in \code{df}. It then computes the
-#'   minimum and maximum of that column, ignoring \code{NA} values, and scales
-#'   the maximum by \code{axis_scale_factor}. Non-finite results are replaced
-#'   by default values of 0 for the minimum and 1 for the maximum.
+#' @details
+#' The function resolves the primary data column from \code{data_col_y} or
+#' \code{data_col_x} and validates that it exists and is numeric in \code{df}.
+#'
+#' Behaviour depends on whether bars are stacked:
+#' \itemize{
+#'   \item \strong{Non-stacked} (\code{grouping = FALSE}, categorical or absent
+#'     \code{stack_by}): the Y range is computed directly from the raw column
+#'     values using \code{min()} and \code{max()}.
+#'   \item \strong{Stacked} (\code{grouping = TRUE} or \code{stack_by} is
+#'     numeric): Y values are summed within each unique X category using
+#'     \code{tapply()}, and the maximum of those sums is used. The minimum is
+#'     fixed at 0 since stacked bars always originate from zero.
+#' }
+#'
+#' Non-finite results (e.g. from empty or all-\code{NA} columns) are replaced
+#' with default values of 0 for the minimum and 1 for the maximum.
 #'
 #' @author Jacob Martin
 #' @keywords internal
-#' @rdname INTERNAL_calculate_y_range
-.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL, axis_scale_factor, grouping = FALSE) {
-    if (!is.null(data_col_x)) {
-        data_col <- data_col_x
-    }
-    if (!is.null(data_col_y)) {
-        data_col <- data_col_y
-    }
-    if (!grouping){
-        if (is.null(data_col) || data_col == "") {
-            return(NULL)
-        }
+#' @rdname INTERNAL_calculate_range
+.calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL,
+                              axis_scale_factor, grouping = FALSE,
+                              stack_by = NULL) {
+  # Resolve primary data column
+  data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
 
-        if (!data_col %in% names(df) || !is.numeric(df[[data_col]])) {
-            return(NULL)
-        }
+  # Basic guards
+  if (is.null(data_col) || !nzchar(data_col)) return(NULL)
+  if (!data_col %in% names(df)) return(NULL)
+  if (!is.numeric(df[[data_col]])) return(NULL)
 
-        # Calculate min and max from raw data
-        min <- min(df[[data_col]], na.rm = TRUE)
-        max <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-
-        # Handle edge cases
-        if (!is.finite(min)) min <- 0
-        if (!is.finite(max)) max <- 1
-
-        return(list(min = min, max = max))
-
+  if (!grouping) {
+    # --- Non-stacked: bars are NOT stacked, just find the max single value ---
+    # If stack_by is provided and numeric, bars ARE stacked → sum per x group
+    if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
+      # Numeric stack_by: stacked bars, sum y per x category
+      if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
+      x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+      max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+      min_val <- 0 
     } else {
-        if (is.numeric(df[[data_col_x]]))
-            numeric_list <- split(df[[data_col_x]], df[[data_col_y]])
-            values_list <- list()
-            for (i in seq_along(numeric_list)){
-                sum <- sum(abs(numeric_list[[i]]))
-                values_list <- append(values_list, sum)
-            }
-        
-            all_counts <- unlist(values_list)
-            max <- max(all_counts, na.rm = TRUE)
-            min <- min(all_counts, na.rm = TRUE)
-        
-            return(list(min = min, max = max)) # Returns the min and max sum of each data_col_y. E.g. group A has 10, 20, 30  and group B has 5, 2 ,1 so the output would be list( min = 8, max = 60)
+      # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+      max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+      min_val <- min(df[[data_col]], na.rm = TRUE)
     }
+
+    if (!is.finite(min_val)) min_val <- 0
+    if (!is.finite(max_val)) max_val <- 1
+
+    return(list(min = min_val, max = max_val))
+
+  } else {
+    # --- Stacked grouping: sum y values per x group ---
+    if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
+    x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+    max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+    min_val <- 0
+
+    if (!is.finite(max_val)) max_val <- 1
+
+    return(list(min = min_val, max = max_val))
+  }
 }
+
 
 #' Remove boxplot outliers from plotly figure
 #'
@@ -1205,7 +1239,7 @@
             trace_name <- fit_name_prefix
             show_legend <- !trace_name %in% added_names
 
-            fig <- fig %>%
+            fig <- fig |>
                 plotly::add_lines(
                     data = fit_data,
                     x = ~x,
@@ -1237,7 +1271,7 @@
                 trace_name <- paste(fit_name_prefix, group_name)
                 show_legend <- !trace_name %in% added_names
 
-                fig <- fig %>%
+                fig <- fig |>
                     plotly::add_lines(
                         data = group_fit,
                         x = ~x,
@@ -2046,4 +2080,305 @@
     }
 
     return(combined_fig)
+}
+
+#' Create an empty ggplot2 plot or plotly plot with input text
+#'
+#' This function creates an empty ggplot2 or plotly plot and places a user-provided text
+#' string in the middle of the plot.
+#'
+#' @param text Character scalar to show in plot area.
+#' @param plotly Boolean indicating whether to return a plotly object.
+#' @return Either a ggplot object or a plotly object if \code{plotly = TRUE}.
+#'
+#' @author Jared Andrews
+#'
+#' @rdname INTERNAL_empty_plot
+#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
+#' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
+#' @importFrom plotly ggplotly layout
+.empty_plot <- function(text = NULL, plotly = FALSE) {
+    plot <- ggplot() +
+        theme_void() +
+        theme(plot.margin = margin(1, 1, 1, 1, "cm")) +
+        geom_text(aes(x = 0.5, y = 0.5, label = text),
+            inherit.aes = FALSE, check_overlap = TRUE
+        )
+
+    if (plotly) {
+        plot <- ggplotly(plot)
+        plot <- plot |> layout(
+            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
+            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE, showline = FALSE),
+            plot_bgcolor = "white",
+            showlegend = FALSE,
+            autosize = TRUE,
+            margin = list(l = 0, r = 0, b = 0, t = 0)
+        )
+    }
+
+    return(plot)
+}
+
+#' Check if column inputs contain mixed data types
+#'
+#' This function validates that a vector of column names from a data frame contains
+#' columns of only one data type category: either all numeric OR all categorical 
+#' (factor/character). Returns \code{FALSE} for mixed numeric + categorical columns.
+#' Single columns always return \code{TRUE}. Used for Shiny plotting module input validation.
+#'
+#' @param inputs Character vector of column names to validate.
+#' @param d Data frame containing the columns specified in \code{inputs}.
+#'
+#' @return Logical scalar: \code{TRUE} if all numeric OR all categorical (factor/character);
+#'   \code{FALSE} if mixed numeric + categorical/factor detected.
+#'
+#' @author Jacob Martin
+#'
+#' @examples
+#' df <- data.frame(num1 = 1:3, num2 = 4:6, cat1 = letters[1:3], fac1 = factor(1:3))
+#' is_pure_type(c("num1", "num2"), df)    # TRUE (all numeric)
+#' is_pure_type(c("cat1", "fac1"), df)    # TRUE (all categorical)
+#' is_pure_type(c("num1"), df)            # TRUE (single)
+#' is_pure_type(c("num1", "cat1"), df)    # FALSE (mixed numeric + cat)
+#'
+#' @rdname is_pure_type
+#' @seealso \code{\link[base]{for}}
+#' @export
+is_pure_type <- function(inputs, d) {
+    cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
+    
+    # Single column or empty always pure
+    if (length(cols) <= 1) return(TRUE)
+    
+    # Classify first column to establish reference type
+    first_col <- d[[cols[1]]]
+    ref_type <- if (is.numeric(first_col)) "numeric" 
+                else if (is.factor(first_col) || is.character(first_col)) "categorical"
+    
+    # Check all remaining columns match reference
+    for (i in 2:length(cols)) {
+        col <- d[[cols[i]]]
+        col_type <- if (is.numeric(col)) "numeric" 
+                   else if (is.factor(col) || is.character(col)) "categorical"
+        
+        if (col_type != ref_type) return(FALSE)
+    }
+    
+    TRUE
+}
+
+#' Extract parameter documentation from an R function help page
+#'
+#' Parses the Rd documentation for a given function and extracts
+#' parameter descriptions for specified parameter names.
+#'
+#' @param package_name A string in the format "package::function" indicating
+#'   which function's documentation to parse.
+#' @param type The type of documentation section to extract. Currently only
+#'   "param" is supported.
+#' @param selected A character vector of parameter names to extract.
+#' @param cap Logical; if TRUE, capitalize the first letter of each description.
+#' @importFrom roclang extract_roc_text
+#' @return A named list where names are parameter names and values are
+#'   their documentation strings. Returns empty strings for parameters
+#'   not found in the documentation.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @export
+get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
+    docs <- lapply(selected, function(s) {
+        doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
+        doc |>
+        gsub("\\\\n", " ", .) |>                  
+        gsub("\\\\", "", .) |>                   
+        gsub("code\\{([^}]+)\\}", "`\\1`", .) |>      
+        gsub("\n", " ", .) |> trimws()                   
+    })
+    setNames(docs, selected)
+}
+
+#' Resolve facet axis sharing from facet.scales
+#'
+#' Converts a \code{facet.scales} string (one of \code{"fixed"}, \code{"free"},
+#' \code{"free_x"}, \code{"free_y"}) into the \code{shareX} / \code{shareY}
+#' logical values expected by \code{plotly::subplot}.
+#'
+#' @param facet.scales Character, one of \code{"fixed"} (default),
+#'   \code{"free"}, \code{"free_x"}, or \code{"free_y"}.
+#'
+#' @return A named list with logical elements \code{shareX} and \code{shareY}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_resolve_facet_sharing
+#' @keywords internal
+.resolve_facet_sharing <- function(facet.scales = "fixed") {
+    shareX <- TRUE
+    shareY <- TRUE
+    if (facet.scales == "free") {
+        shareX <- FALSE
+        shareY <- FALSE
+    } else if (facet.scales == "free_x") {
+        shareX <- FALSE
+    } else if (facet.scales == "free_y") {
+        shareY <- FALSE
+    }
+    list(shareX = shareX, shareY = shareY)
+}
+
+#' Build facet subplot annotations
+#'
+#' Creates a list of plotly annotation objects suitable for labelling faceted
+#' subplots arranged in a single row.
+#' Optionally appends a shared X-axis title (bottom centre) and a shared,
+#' rotated Y-axis title (left centre).
+#'
+#' @param facet_levels Character vector of facet level labels, one per subplot.
+#' @param x.title Optional character, shared X-axis title. Default: \code{NULL}.
+#' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
+#' @param title.font.size Numeric, font size for all annotation text.
+#'   Default: 14.
+#'
+#' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_build_facet_annotations
+#' @keywords internal
+.build_facet_annotations <- function(facet_levels, x.title = NULL,
+                                     y.title = NULL,
+                                     title.font.size = 14) {
+    n_facets <- length(facet_levels)
+    subplot_width <- 1.0 / n_facets
+
+    # Per-subplot title annotations
+    annotations <- lapply(seq_along(facet_levels), function(i) {
+        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+        list(
+            x = x_pos,
+            y = 1.05,
+            xref = "paper",
+            yref = "paper",
+            text = as.character(facet_levels[i]),
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "bottom",
+            font = list(size = title.font.size)
+        )
+    })
+
+    # Shared X-axis title at bottom centre
+    if (!is.null(x.title)) {
+        annotations <- c(annotations, list(list(
+            x = 0.5,
+            y = -0.1,
+            xref = "paper",
+            yref = "paper",
+            text = x.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "top",
+            font = list(size = title.font.size)
+        )))
+    }
+
+    # Shared Y-axis title at left centre (rotated)
+    if (!is.null(y.title)) {
+        annotations <- c(annotations, list(list(
+            x = -0.05,
+            y = 0.5,
+            xref = "paper",
+            yref = "paper",
+            text = y.title,
+            showarrow = FALSE,
+            xanchor = "center",
+            yanchor = "middle",
+            textangle = -90,
+            font = list(size = title.font.size)
+        )))
+    }
+
+    annotations
+}
+
+#' Add multi-axis traces to a plotly figure
+#'
+#' Appends scatter traces for each element of a multi-valued \code{x} or
+#' multi-valued \code{y} vector to an existing plotly figure.
+#' Handles data ordering, line/marker styling, and palette colouring.
+#'
+#' @param fig A plotly figure object to add traces to.
+#' @param data A data.frame containing the plot data.
+#' @param x Character vector of x-column name(s).
+#' @param y Character vector of y-column name(s).
+#' @param order.cols Character vector of column name(s) used to sort trace
+#'   data before plotting.
+#' @param plot.mode Character, plotly scatter mode (e.g. \code{"lines"},
+#'   \code{"markers"}, \code{"lines+markers"}).
+#' @param line.type Character, plotly dash style for lines.
+#' @param palette.selection Character vector of hex colours.
+#' @param show.legend Logical, whether traces should appear in the legend.
+#'   Default: \code{TRUE}.
+#'
+#' @return The modified plotly figure with added traces.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @rdname INTERNAL_add_multi_axis_traces
+#' @keywords internal
+.add_multi_axis_traces <- function(fig, data, x, y, order.cols, plot.mode,
+                                   line.type, palette.selection,
+                                   show.legend = TRUE) {
+    .add_traces_for <- function(iter_var, fixed_var, is_x_multi) {
+        for (i in seq_along(iter_var)) {
+            trace_data <- data
+
+            sort_column <- order.cols[1]
+            if (!is.null(order.cols) && length(order.cols) >= i &&
+                order.cols[i] %in% names(trace_data)) {
+                sort_column <- order.cols[i]
+            }
+            if (!is.null(sort_column) && sort_column %in% names(trace_data)) {
+                trace_data <- trace_data[order(trace_data[[sort_column]]), ]
+            }
+
+            if (is_x_multi) {
+                xvals <- trace_data[[iter_var[i]]]
+                yvals <- trace_data[[fixed_var[1]]]
+                trace_name <- iter_var[i]
+            } else {
+                xvals <- trace_data[[fixed_var[1]]]
+                yvals <- trace_data[[iter_var[i]]]
+                trace_name <- iter_var[i]
+            }
+
+            trace_params <- list(
+                x = xvals,
+                y = yvals,
+                type = "scatter",
+                mode = plot.mode,
+                name = trace_name,
+                showlegend = show.legend
+            )
+
+            if (plot.mode %in% c("lines", "lines+markers")) {
+                trace_params$line <- list(
+                    dash = line.type,
+                    color = palette.selection[i]
+                )
+            }
+            if (plot.mode %in% c("markers", "lines+markers")) {
+                trace_params$marker <- list(color = palette.selection[i])
+            }
+
+            fig <<- do.call(plotly::add_trace, c(list(fig), trace_params))
+        }
+    }
+
+    if (length(x) > 1) {
+        .add_traces_for(x, y, is_x_multi = TRUE)
+    }
+    if (length(y) > 1) {
+        .add_traces_for(y, x, is_x_multi = FALSE)
+    }
+
+    fig
 }

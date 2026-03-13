@@ -22,23 +22,35 @@
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
+    
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
+        
+        observeEvent(input$x.value, {
+            if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
+                hide("errorBarWidth")
+                hide("errorBarColour")
+                hide("errorBar")
+            } else {
+                show("errorBar")
+                show("errorBarWidth")
+                show("errorBarColour")
+            }
+        }) 
+
+
+
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
         }
 
-        ns <- session$ns
+        
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -82,6 +94,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         output$palette.selection <- renderUI({
+            ns <- session$ns
             groups <- palette_groups()
             if (length(groups) == 0) {
                 return(NULL)
@@ -115,40 +128,17 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateSelectInput(session, "facet.scales", selected = "fixed")
             updateSelectInput(session, "x.adjustment", selected = "")
             updateSelectInput(session, "y.adjustment", selected = "")
+            updateMaterialSwitch(session, "errorBar", value = TRUE)
+            updateNumericInput(session, "errorBarWidth", value = 1)
+            colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
 
             # Axes
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            .reset_axes_inputs(session)
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
+            .reset_lines_inputs(session)
         })
+
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_linePlot <- reactive({
@@ -171,8 +161,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             group.by <- palette_selection[1]
-            if (!isolate_fn(input$group.by) == "" && length(x_input) == 1 && length(y_input) == 1) {
+            show_legend <- FALSE
+            if (isolate_fn(input$group.by) != "" && length(x_input) == 1 && length(y_input) == 1) {
                 group.by <- reformulate(isolate_fn(input$group.by))
+                show_legend <- TRUE
+            } else if (length(x_input) > 1 || length(y_input) > 1) {
+                show_legend <- TRUE
             }
 
             # Making multiple lines on the axis. e.g 3x and 1y
@@ -218,12 +212,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             }
 
             # Checking that all columns are numeric for x and y adjustment to be available
-            # TODO: remove sapply usage here
-            if (!all(sapply(d[x_input], is.numeric))) {
+            if (!all(vapply(d[x_input], is.numeric, logical(1)))) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
-            if (!all(sapply(d[y_input], is.numeric))) {
+            if (!all(vapply(d[y_input], is.numeric, logical(1)))) {
                 updateSelectInput(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
@@ -232,14 +225,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             fig <- linePlot(
-                reactive.data = d,
+                data = d,
                 x = x_input,
                 y = y_input,
                 plot.mode = isolate_fn(input$plot.type),
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
-                show.legend = FALSE,
+                show.legend = show_legend,
                 facet.by = isolate_fn(input$facet.by),
                 facet.scales = isolate_fn(input$facet.scales),
                 order.by = order_by,
@@ -256,15 +249,20 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 axis.tickcolor = isolate_fn(input$axis.tickcolor),
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                show.grid.x = isolate_fn(input$show.grid.x),
+                show.grid.y = isolate_fn(input$show.grid.y),
                 title.font.size = isolate_fn(input$title.font.size),
-                title.font.family = isolate_fn(input$font.type),
+                title.font.family = isolate_fn(input$title.font.family),
                 title.text.color = isolate_fn(input$text.colour),
                 x.title = x_title,
                 y.title = y_title,
                 flip.x = isolate_fn(input$flip.x),
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
-                y.adjustment = y.adjustment
+                y.adjustment = y.adjustment, 
+                error.colour = isolate_fn(input$errorBarColour),
+                error.width = isolate_fn(input$errorBarWidth),
+                error.bar = isolate_fn(input$errorBar)
             )
 
             # Add reference lines
@@ -287,7 +285,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
 
             return(fig)
@@ -295,7 +293,55 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$linePlot <- renderPlotly({
-            generate_linePlot()
+            
+            d <- data_reactive()
+            x_input <- input$x.value
+            y_input <- input$y.value
+
+
+            # Section is for catching errors and displaying an empty plot with a warning message if any error conditions are met.
+            #Ensures a clean method for dealing with errors and instructing the user on next steps to resolve the issue 
+            #Error Prone conditions
+            x_is_cat <- length(x_input) == 1 && nzchar(x_input) && !is.numeric(d[[x_input]])
+            y_is_cat <- length(y_input) == 1 && nzchar(y_input) && !is.numeric(d[[y_input]])
+            x_not_0 <- length(x_input) == 0
+            y_not_0 <- length(y_input) == 0
+            multi_axis <- xor(length(x_input) > 1, length(y_input) > 1)
+            dual_multiAxis <- length(x_input) > 1 && length(y_input) > 1
+            x_pure <- is_pure_type(c(x_input), d)
+            y_pure <- is_pure_type(c(y_input), d)
+
+            return_empty <- FALSE
+            txt <- c()
+
+            
+
+            if (x_is_cat && y_is_cat) {
+                return_empty <- TRUE
+                txt <- c(txt, "X and Y categories cannot both be discrete data types")
+            } else if (x_not_0 || y_not_0){
+                return_empty <- TRUE
+                txt <- c(txt, "Both X and Y variable inputs must not be empty. Please select a variable input.")
+            } else if (!x_pure || !y_pure){
+                return_empty <- TRUE
+                txt <- c(txt, "Cant have a discrete and non discrete data input on the same axis.")
+            } else if (dual_multiAxis) {
+                return_empty <- TRUE
+                txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
+            } else if (multi_axis && !(input$group.by == "")){
+                return_empty <- TRUE
+                txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
+            }
+            if (return_empty){
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_linePlot() |>
+                    layout(
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

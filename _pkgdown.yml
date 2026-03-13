@@ -3,3 +3,167 @@ template:
   bootstrap: 5
   light-switch: true
 
+reference:
+  - title: "ScatterPlot Module"
+    desc: "dittoViz-based interactive scatter plot module."
+    contents:
+      - dittoViz_scatterPlotServer
+      - dittoViz_scatterPlotInputsUI
+      - dittoViz_scatterPlotOutputUI
+      - dittoViz_scatterPlotApp
+
+  - title: "yPlot Module"
+    desc: "dittoViz-based Y-axis plot module (box, violin, ridgeplot, etc.)."
+    contents:
+      - dittoViz_yPlotServer
+      - dittoViz_yPlotInputsUI
+      - dittoViz_yPlotOutputUI
+      - dittoViz_yPlotApp
+
+  - title: "linePlot Module"
+    desc: "Interactive line plot module."
+    contents:
+      - linePlot
+      - linePlotServer
+      - linePlotInputsUI
+      - linePlotOutputUI
+      - linePlotApp
+
+  - title: "dumbbellPlot Module"
+    desc: "Interactive dumbbell plot module."
+    contents:
+      - dumbbellPlot
+      - dumbbellPlotServer
+      - dumbbellPlotInputsUI
+      - dumbbellPlotOutputUI
+      - dumbbellPlotApp
+
+  - title: "piePlot Module"
+    desc: "Interactive pie/donut chart module."
+    contents:
+      - piePlot
+      - piePlotServer
+      - piePlotInputsUI
+      - piePlotOutputUI
+      - piePlotApp
+
+  - title: "radarPlot Module"
+    desc: "Interactive radar/spider chart module."
+    contents:
+      - radarPlot
+      - radarPlotServer
+      - radarPlotInputsUI
+      - radarPlotOutputUI
+      - radarPlotApp
+
+  - title: "ternaryPlot Module"
+    desc: "Interactive ternary plot module."
+    contents:
+      - ternaryPlot
+      - ternaryPlotServer
+      - ternaryPlotInputsUI
+      - ternaryPlotOutputUI
+      - ternaryPlotApp
+
+  - title: "parallelCoordinatesPlot Module"
+    desc: "Interactive parallel coordinates plot module."
+    contents:
+      - parallelCoordinatesPlot
+      - parallelCoordinatesPlotServer
+      - parallelCoordinatesPlotInputsUI
+      - parallelCoordinatesPlotOutputUI
+      - parallelCoordinatesPlotApp
+
+  - title: "AreaPlot Module"
+    desc: "plotthis-based interactive area plot module."
+    contents:
+      - plotthis_AreaPlotServer
+      - plotthis_AreaPlotInputsUI
+      - plotthis_AreaPlotOutputUI
+      - plotthis_AreaPlotApp
+
+  - title: "BarPlot Module"
+    desc: "plotthis-based interactive bar plot module."
+    contents:
+      - plotthis_BarPlotServer
+      - plotthis_BarPlotInputsUI
+      - plotthis_BarPlotOutputUI
+      - plotthis_BarPlotApp
+
+  - title: "SplitBarPlot Module"
+    desc: "plotthis-based interactive split/stacked bar plot module."
+    contents:
+      - plotthis_SplitBarPlotServer
+      - plotthis_SplitBarPlotInputsUI
+      - plotthis_SplitBarPlotOutputUI
+      - plotthis_SplitBarPlotApp
+
+  - title: "BoxPlot Module"
+    desc: "plotthis-based interactive box plot module."
+    contents:
+      - plotthis_BoxPlotServer
+      - plotthis_BoxPlotInputsUI
+      - plotthis_BoxPlotOutputUI
+      - plotthis_BoxPlotApp
+
+  - title: "ViolinPlot Module"
+    desc: "plotthis-based interactive violin plot module."
+    contents:
+      - plotthis_ViolinPlotServer
+      - plotthis_ViolinPlotInputsUI
+      - plotthis_ViolinPlotOutputUI
+      - plotthis_ViolinPlotApp
+
+  - title: "DensityPlot Module"
+    desc: "plotthis-based interactive density plot module."
+    contents:
+      - plotthis_DensityPlotServer
+      - plotthis_DensityPlotInputsUI
+      - plotthis_DensityPlotOutputUI
+      - plotthis_DensityPlotApp
+
+  - title: "Histogram Module"
+    desc: "plotthis-based interactive histogram module."
+    contents:
+      - plotthis_HistogramServer
+      - plotthis_HistogramInputsUI
+      - plotthis_HistogramOutputUI
+      - plotthis_HistogramApp
+
+  - title: "dataFilter Module"
+    desc: "Reusable data filtering module for use with plot modules."
+    contents:
+      - dataFilterServer
+      - dataFilterUI
+
+  - title: "UI Helpers & Widgets"
+    desc: "Utility functions for building module UIs."
+    contents:
+      - createModuleApp
+      - organize_inputs
+      - module_tack_ui
+      - setup_auto_update_logic
+
+  - title: "Palette & Color Utilities"
+    desc: "Functions/inputs for managing color palettes."
+    contents:
+      - default_palettes
+      - resolve_palette
+      - multiColorPicker
+      - updateMultiColorPicker
+
+  - title: "Utility Functions"
+    desc: "General-purpose helper functions for data handling and validation."
+    contents:
+      - get_documentation
+      - .adjust_column_values
+      - is_pure_type
+      - safe_eval_filter
+      - safe_resolve_adj_fxn
+      - validate_expression
+
+  - title: "Example Data"
+    desc: "Built-in datasets for demos and testing."
+    contents:
+      - example_population
+      - example_sales

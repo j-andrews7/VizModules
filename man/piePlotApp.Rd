@@ -4,27 +4,41 @@
 \alias{piePlotApp}
 \title{Create an example Modular piePlot Shiny Application}
 \usage{
-piePlotApp(data_list)
+piePlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of summary data frames (one row per slice) for which piePlot modules will be created.
-That is, UI inputs and a pie plot will be generated for each. Each data frame should already contain
-a label column and an aggregated numeric value column.}
+\item{data_list}{An optional named list of summary data frames (one row per slice).
+If \code{NULL} (the default), aggregated example data is used. Each data frame should already
+contain a label column and an aggregated numeric value column.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular piePlot components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive pie plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+aggregated \code{example_sales} and \code{example_population} datasets. Uploaded data files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
-sales_summary <- aggregate(revenue ~ region, example_sales, sum)
-population_summary <- aggregate(count ~ age_group, example_population, sum)
-data_list <- list("sales" = sales_summary, "population" = population_summary)
-app <- piePlotApp(data_list)
+# Launch with default example data:
+app <- piePlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+sales_summary <- aggregate(revenue ~ region, example_sales, sum)
+app2 <- piePlotApp(list("sales" = sales_summary))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=piePlotInputsUI]{piePlotInputsUI()}},

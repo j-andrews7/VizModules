@@ -77,9 +77,32 @@ dittoViz_ScatterPlotServer(
 
 Hidden inputs and tabs still feed their values into the plot, so the module stays fully configured while exposing only what your users need.
 
+## App factory with `createModuleApp()`
+
+To enable simple, consistent testing of any module, we provide an app factory function that returns a full 
+standalone app with data import, a filterable data table, and dataset switching for any module - 
+`createModuleApp()`:
+
+```{r create-module-app}
+library(VizModules)
+
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BarPlotInputsUI,
+    output_ui_fn = plotthis_BarPlotOutputUI,
+    server_fn    = plotthis_BarPlotServer,
+    data_list    = list("cars" = mtcars),
+    title        = "My Bar Plot"
+)
+if (interactive()) runApp(app)
+```
+
+All built-in `*App()` convenience functions (e.g. `plotthis_BarPlotApp()`, `linePlotApp()`)
+are thin wrappers around `createModuleApp()` with sensible default data. You can also pass
+custom wrapper module functions to `createModuleApp()` for rapid prototyping.
+
 ## Which plot parameters are exposed?
 
-Modules wrap plotting functions from **dittoViz** and **plotthis**. To see which arguments are available in a module:
+Modules wrap plotting functions from **dittoViz**, **plotthis**, and native plotting functions. To see which arguments are available in a module:
 
 1. Open the module input help page, e.g., `?dittoViz_ScatterPlotInputsUI` or `?AreaPlotInputsUI`. The **Details** section notes which arguments from the underlying plot function are wired through and any that are intentionally omitted.
 2. Cross-reference the base plot documentation (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.). Input names in `defaults` line up with those function arguments when they are supported.

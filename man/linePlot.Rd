@@ -5,7 +5,7 @@
 \title{Create an Interactive Line Plot with plotly}
 \usage{
 linePlot(
-  reactive.data,
+  data,
   x,
   y,
   plot.mode,
@@ -28,6 +28,8 @@ linePlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
@@ -39,11 +41,14 @@ linePlot(
   x.adjustment = NULL,
   y.adjustment = NULL,
   color.adjustment = NULL,
-  order.by = NULL
+  order.by = NULL,
+  error.colour = NULL,
+  error.width = NULL,
+  error.bar = FALSE
 )
 }
 \arguments{
-\item{reactive.data}{A data.frame or tibble containing the data to plot.}
+\item{data}{A data.frame or tibble containing the data to plot.}
 
 \item{x}{Character vector of column name(s) for the x-axis. Multiple columns create separate traces.}
 
@@ -90,6 +95,10 @@ linePlot(
 
 \item{axis.tickwidth}{Numeric, width of tick marks in pixels. Default: 1.}
 
+\item{show.grid.x}{Logical, whether to show gridlines on the x-axis. Default: TRUE.}
+
+\item{show.grid.y}{Logical, whether to show gridlines on the y-axis. Default: TRUE.}
+
 \item{title.text}{Character, main title text for the plot. Default: "".}
 
 \item{title.font.size}{Numeric, font size for plot title. Default: 14.}
@@ -116,6 +125,12 @@ Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt
 Same options as x.adjustment and y.adjustment. Default: NULL.}
 
 \item{order.by}{Optional character vector, column name(s) to order data by before plotting. Default: NULL.}
+
+\item{error.colour}{hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+
+\item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+
+\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable}
 }
 \value{
 A plotly object representing the interactive line plot.
@@ -126,7 +141,7 @@ Generates a customizable interactive line plot using plotly, supporting grouping
 \examples{
 palette <- plotthis::palette_list[["Set2"]]
 fig <- linePlot(
-  reactive.data = mtcars,
+  data = mtcars,
   x = "cyl",
   y = "mpg",
   plot.mode = "lines",

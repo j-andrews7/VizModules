@@ -1,56 +1,47 @@
 #' Create an example Modular SplitBarPlot Shiny Application
 #'
 #' This function generates a Shiny application with modular [plotthis::SplitBarPlot()] components.
-#' A module is created for each data frame provided in the named list of data frames.
+#' The app features a **Data Import** section for uploading data,
+#' a **Data Table** for filtering the active dataset, and a **Plot** area
+#' for configuring and displaying an interactive split bar plot.
 #'
-#' @param data_list A named list of data frames for which SplitBarPlot modules will be created.
-#'   That is, UI inputs and a split bar plot will be generated for each.
+#' When `data_list` is not provided (or `NULL`), the app launches with
+#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
+#'
+#' This is a convenience wrapper around [createModuleApp()].
+#'
+#' @param data_list An optional named list of data frames. If `NULL` (the default),
+#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
 #' @return A Shiny app object.
 #'
-#' @import shiny
-#' @importFrom plotthis SplitBarPlot
-#' @importFrom shinyjs useShinyjs
 #' @export
-#'
-#' @author Jacob Martin
-#'
+#' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' data_list <- list("sales" = example_sales, "population" = example_population)
-#' app <- plotthis_SplitBarPlotApp(data_list)
+#' # Launch with default example data:
+#' app <- plotthis_SplitBarPlotApp()
 #' if (interactive()) runApp(app)
-plotthis_SplitBarPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular SplitBarPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_SplitBarPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                lapply(names(data_list), function(name) {
-                    tagList(plotthis_SplitBarPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    server <- function(input, output, session) {
-        lapply(names(data_list), function(name) {
-            plotthis_SplitBarPlotServer(name, data = reactive(data_list[[name]]))
-        })
+#'
+#' #Launch with custom data:
+#' df <- data.frame(
+#'     group = c("A", "B", "C", "D", "E"),
+#'     value = c(43, 78, 25, 61, 89),
+#'     count = c(12, -7, 34, 19, -15)
+#' )
+#' app2 <- plotthis_SplitBarPlotApp(list("data" = df))
+#' if (interactive()) runApp(app2)
+plotthis_SplitBarPlotApp <- function(data_list = NULL) {
+    if (is.null(data_list)) {
+        data_list <- list("sales" = example_sales, "population" = example_population)
     }
-
-    shinyApp(ui, server)
+    createModuleApp(
+        inputs_ui_fn = plotthis_SplitBarPlotInputsUI,
+        output_ui_fn = plotthis_SplitBarPlotOutputUI,
+        server_fn    = plotthis_SplitBarPlotServer,
+        data_list    = data_list,
+        title        = "Modular SplitBarPlots"
+    )
 }

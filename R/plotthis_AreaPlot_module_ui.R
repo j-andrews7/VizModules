@@ -32,7 +32,7 @@
 #'   \item \code{nrow} - Only applies if `split_by` is used
 #'   \item \code{ncol} - Only applies if `split_by` is used
 #'   \item \code{palette} - Managed internally via the palette selection UI
-#'.  \item \code{legend_direction} - Managed postion of legend however this can be handled via plotly
+#'   \item \code{legend_direction} - Managed position of legend however this can be handled via plotly
 #' }
 #'
 #' @section Plot parameters and defaults:
@@ -58,12 +58,12 @@
 #' \itemize{
 #'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 #'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
-#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 #'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
-#'   \item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
-#'   \item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+#'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+#'   \item \code{show.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
 #'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
 #'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
 #'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
@@ -103,6 +103,7 @@
 #' @importFrom colourpicker colourInput
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -121,83 +122,73 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
-    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
 
+    selected <- c("x", "y", "group_by", "scale_y",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+            "alpha")
+
+    documentParameters <- get_documentation(
+        package_name = "plotthis::AreaPlot", type = "param",
+        selected = selected, cap = TRUE
+    )
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X values:",
-                selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% cat.choices,
-                    defaults[["x.data"]], cat.choices[2]
-                ),
+            tipify(selectInput(ns("x.data"), "X values:",
+                selected = .get_default(defaults, "x.data", cat.choices[2],
+                    function(x) x %in% cat.choices),
                 choices = cat.choices
-            ),
-            selectInput(ns("y.data"), "Y values:",
-                selected = ifelse("y.data" %in% names(defaults) && defaults[["y.data"]] %in% num.choices,
-                    defaults[["y.data"]], num.choices[2]
-                ),
+            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("y.data"), "Y values:",
+                selected = .get_default(defaults, "y.data", num.choices[2],
+                    function(x) x %in% num.choices),
                 choices = num.choices
-            ),
-            selectInput(ns("group.by"), "Group by:",
-                selected = ifelse("group.by" %in% names(defaults) && defaults[["group.by"]] %in% c("", group_facet_choices),
-                    defaults[["group.by"]], cat.choices[3]
-                ),
+            ), documentParameters$y, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("group.by"), "Group by:",
+                selected = .get_default(defaults, "group.by", cat.choices[3],
+                    function(x) x %in% c("", group_facet_choices)),
                 choices = c("", group_facet_choices)
-            ),
-            materialSwitch(ns("scale.y"), "Scale y-axis by total:",
-                value = ifelse("scale.y" %in% names(defaults),
-                    ifelse(is.logical(defaults[["scale.y"]]), defaults[["scale.y"]], FALSE),
-                    FALSE
-                ),
+            ), documentParameters$group_by, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("scale.y"), "Scale y-axis by total:",
+                value = .get_default(defaults, "scale.y", FALSE, is.logical),
                 status = "success"
-            )
+            ), documentParameters$scale_y, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:",
-                selected = ifelse("facet.by" %in% names(defaults) && defaults[["facet.by"]] %in% c(group_facet_choices, ""),
-                    defaults[["facet.by"]], ""
-                ),
+            tipify(selectInput(ns("facet.by"), "Facet by:",
+                selected = .get_default(defaults, "facet.by", "",
+                    function(x) x %in% c(group_facet_choices, "")),
                 choices = c(group_facet_choices, "")
-            ),
-            selectInput(ns("facet.scale"), "Facet scale:",
-                selected = ifelse("facet.scale" %in% names(defaults) && defaults[["facet.scale"]] %in% c("fixed", "free", "free_x", "free_y"),
-                    defaults[["facet.scale"]], "fixed"
-                ),
+            ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scale"), "Facet scale:",
+                selected = .get_default(defaults, "facet.scale", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")),
                 choices = c("fixed", "free", "free_x", "free_y")
-            ),
-            numericInput(ns("facet.ncol"), "Facet number of columns:",
-                value = ifelse("facet.ncol" %in% names(defaults) && is.numeric(defaults[["facet.ncol"]]),
-                    defaults[["facet.ncol"]], NA
-                ),
+            ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",
+                value = .get_default(defaults, "facet.ncol", NA, is.numeric),
                 min = 0, max = 20
-            ),
-            numericInput(ns("facet.nrow"), "Facet number of rows:",
-                value = ifelse("facet.nrow" %in% names(defaults) && is.numeric(defaults[["facet.nrow"]]),
-                    defaults[["facet.nrow"]], NA
-                ),
+            ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.nrow"), "Facet number of rows:",
+                value = .get_default(defaults, "facet.nrow", NA, is.numeric),
                 min = 0, max = 20
-            ),
-            materialSwitch(ns("facet.by.row"), "Facet by row",
-                value = ifelse("facet.by.row" %in% names(defaults),
-                    ifelse(is.logical(defaults[["facet.by.row"]]), defaults[["facet.by.row"]], TRUE),
-                    TRUE
-                ),
+            ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("facet.by.row"), "Facet by row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical),
                 status = "success"
-            )
+            ), documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            numericInput(ns("alpha"), "Alpha:",
-                value = ifelse("alpha" %in% names(defaults),
-                    ifelse(is.numeric(defaults[["alpha"]]), defaults[["alpha"]], 1),
-                    1
-                ),
+            tipify(numericInput(ns("alpha"), "Alpha:",
+                value = .get_default(defaults, "alpha", 1, is.numeric),
                 min = 0, max = 1
-            )
+            ), documentParameters$alpha, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

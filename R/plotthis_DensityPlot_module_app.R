@@ -1,61 +1,42 @@
-#' Standalone Multi-Dataset Density Plot Application
+#' Create an example Modular DensityPlot Shiny Application
 #'
-#' @description
-#' Launches a complete Shiny application that displays interactive density plot modules 
-#' for every data frame provided in a list. This is ideal for side-by-side 
-#' comparison of different genomic datasets or clinical cohorts.
+#' This function generates a Shiny application with modular density plot components.
+#' The app features a **Data Import** section for uploading data,
+#' a **Data Table** for filtering the active dataset, and a **Plot** area
+#' for configuring and displaying an interactive density plot.
 #'
-#' @param data_list \code{list} A named list of data frames. Each list element will 
-#' trigger the creation of a separate density plot module instance.
+#' When `data_list` is not provided (or `NULL`), the app launches with
+#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
 #'
-#' @return A Shiny app object that can be run locally or deployed to a server.
+#' This is a convenience wrapper around [createModuleApp()].
 #'
-#' @author Jacob Martin, Jared Andrews
-#' 
-#' @import shiny
-#' @importFrom shinyjs useShinyjs
+#' @param data_list An optional named list of data frames. If `NULL` (the default),
+#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
+#' @return A Shiny app object.
+#'
 #' @export
-#' 
+#' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' data_list <- list("sales" = example_sales, "population" = example_population)
-#' app <- plotthis_DensityPlotApp(data_list)
+#' # Launch with default example data:
+#' app <- plotthis_DensityPlotApp()
 #' if (interactive()) runApp(app)
-plotthis_DensityPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular DensityPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_DensityPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                # Add the module output UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(plotthis_DensityPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    server <- function(input, output, session) {
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            plotthis_DensityPlotServer(name, data = reactive(data_list[[name]]))
-        })
+#'
+#' # Launch with custom data:
+#' app2 <- plotthis_DensityPlotApp(list("sales" = example_sales, "population" = example_population))
+#' if (interactive()) runApp(app2)
+plotthis_DensityPlotApp <- function(data_list = NULL) {
+    if (is.null(data_list)) {
+        data_list <- list("sales" = example_sales, "population" = example_population)
     }
-
-    shinyApp(ui, server)
+    createModuleApp(
+        inputs_ui_fn = plotthis_DensityPlotInputsUI,
+        output_ui_fn = plotthis_DensityPlotOutputUI,
+        server_fn    = plotthis_DensityPlotServer,
+        data_list    = data_list,
+        title        = "Modular DensityPlots"
+    )
 }

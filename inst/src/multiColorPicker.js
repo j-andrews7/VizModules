@@ -1,7 +1,4 @@
 (function () {
-  if (typeof window.Shiny === "undefined") {
-    return;
-  }
 
   const parseJSON = (value, fallback) => {
     try {
@@ -263,9 +260,28 @@
     select._mcSelectize = instance;
   };
 
-  const binding = new Shiny.InputBinding();
+  /**
+   * Helper: read the current value from a multiColorPicker element.
+   */
+  const readValue = (el) => {
+    const rows = el.querySelectorAll(".mc-color-row");
+    return Array.prototype.map.call(rows, (row) => ({
+      name: row.dataset.group || "",
+      value: row.dataset.value || (row.querySelector(".mc-color-input") || {}).value || ""
+    }));
+  };
 
-  $.extend(binding, {
+  // Defer binding registration until Shiny is available.
+  // The helpers and VizModules global above are defined regardless
+  // so that shinyjs::runjs calls always find them.
+  var _registerBinding = function () {
+    if (typeof Shiny === "undefined" || !Shiny.InputBinding) {
+      setTimeout(_registerBinding, 50);
+      return;
+    }
+    var binding = new Shiny.InputBinding();
+
+    $.extend(binding, {
     find: function (scope) {
       return $(scope).find(".multi-color-picker");
     },
@@ -291,9 +307,27 @@
       });
     },
     receiveMessage: function (el, data) {
-      if (data && data.value) {
+      if (data && data.reset) {
+        resetColors(el);
+      } else if (data && data.palette) {
+        applyPalette(el, data.palette);
+        const select = el.querySelector(".mc-palette-select");
+        if (select) {
+          if (select._mcSelectize) {
+            select._mcSelectize.setValue(data.palette, true);
+          } else {
+            select.value = data.palette;
+          }
+        }
+        renderSwatches(el, data.palette);
+      } else if (data && data.value) {
         this.setValue(el, data.value);
       }
+      // Notify Shiny of the updated value
+      Shiny.setInputValue(
+        el.id + ":VizModules.multiColorPicker",
+        readValue(el)
+      );
     },
     subscribe: function (el, callback) {
       const $el = $(el);
@@ -355,5 +389,7 @@
     }
   });
 
-  Shiny.inputBindings.register(binding, "VizModules.multiColorPicker");
+    Shiny.inputBindings.register(binding, "VizModules.multiColorPicker");
+  };
+  _registerBinding();
 })();

@@ -24,16 +24,12 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
         }
       
         ns <- session$ns
@@ -82,7 +78,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         })
         
         observeEvent(input$x.data, ignoreInit = TRUE, {
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             group_facet_choices <- setdiff(char.choices, input$x.data) 
             updateSelectInput(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
             updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if(input$facet.by %in% group_facet_choices) input$facet.by else "")
@@ -90,9 +86,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Reset functionality
         observeEvent(input$reset, {
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            numeric.data <- data()[, unlist(lapply(data(), is.numeric), use.names = FALSE), drop = FALSE]
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
             max.y <- max(numeric.data, na.rm = TRUE)
             min.y <- min(numeric.data, na.rm = TRUE)
@@ -118,46 +114,14 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Axes
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
-            updateSelectInput(session, "font.type", selected = "Arial")
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
             updateMaterialSwitch(session, "scale.y", value = FALSE)
-
-            # Ticks
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            .reset_axes_inputs(session)
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
         })
 
         generate_AreaPlot <- reactive({
@@ -182,7 +146,11 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-            
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            }
+
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::AreaPlot(
@@ -192,7 +160,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 group_by = group.by,
                 theme = "theme_this",
                 theme_args = theme_args,
-                palcolor = unname(palette_values),
+                palcolor = palcolor_arg,
                 alpha = isolate_fn(input$alpha),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
@@ -210,7 +178,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                     title = list(
                         font = list(
                             size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$font.type),
+                            family = isolate_fn(input$title.font.family),
                             color = isolate_fn(input$text.colour)
                         ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
@@ -243,7 +211,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -251,7 +219,33 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Render the plot output
         output$AreaPlot <- renderPlotly({
-            generate_AreaPlot()
+
+            x_input <- input$x.data
+            y_input <- input$y.data
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(x_input) == 0 || !nzchar(x_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable input must not be empty. Please select a variable.")
+            }
+
+            if (length(y_input) == 0 || !nzchar(y_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_AreaPlot() |>
+                    layout(
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

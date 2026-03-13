@@ -76,12 +76,12 @@
 #' \itemize{
 #'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
 #'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
-#'   \item \code{font.type} - Font family for plot text (UI: "Font", default: "Arial")
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 #'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
-#'   \item \code{show.major.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
-#'   \item \code{show.major.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+#'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+#'   \item \code{show.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
 #'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
 #'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
 #'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
@@ -121,6 +121,7 @@
 #' @import shiny
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -137,50 +138,78 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+    selected <- c("x", "group_by", "bins", "binwidth",
+            "use_trend", "add_trend", "trend_skip_zero", "trend_alpha",
+            "trend_linewidth", "trend_pt_size", "position", "alpha",
+            "add_bars", "bar_height", "bar_alpha", "bar_width",
+            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
+
+    documentParameters <- get_documentation(
+        package_name = "plotthis::Histogram", type = "param",
+        selected = selected, cap = TRUE
+    )
 
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.data"), "X Data",
-                    selected = ifelse("x.data" %in% names(defaults) && defaults[["x.data"]] %in% num.choices,
-                    defaults[["x.data"]], num.choices[2]
-                ),
-                choices = num.choices),
-            selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices))
+            tipify(selectInput(ns("x.data"), "X Data",
+                    selected = .get_default(defaults, "x.data", num.choices[2],
+                    function(x) x %in% num.choices),
+                choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
+                documentParameters$group_by, placement = "top", options = list(container = "body"))
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-            selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-            numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-            numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-            materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success")
+            tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
+                documentParameters$facet_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+                documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+                documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+                documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
+                documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            numericInput(ns("bins"), "Number of Bins", value = NA, min = 0),
-            numericInput(ns("bin.width"), "Bin Width", value = NA, min = 0),
-            materialSwitch(ns("use.trend"), "Trend Line Only", value = FALSE, status = "success"),
-            materialSwitch(ns("trend.skip.zero"), "Skip Zero Values", value = FALSE, status = "success"),
-            materialSwitch(ns("add.trend"), "Add Trend to Histogram", value = FALSE, status = "success"),
-            sliderInput(ns("trend.alpha"), "Trend Line Alpha", min = 0, max = 1, value = 1),
-            numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
-            numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
-            sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
+            tipify(numericInput(ns("bins"), "Number of Bins", value = NA, min = 0),
+                documentParameters$bins, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("bin.width"), "Bin Width", value = NA, min = 0),
+                documentParameters$binwidth, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("use.trend"), "Trend Line Only", value = FALSE, status = "success"),
+                documentParameters$use_trend, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("trend.skip.zero"), "Skip Zero Values", value = FALSE, status = "success"),
+                documentParameters$trend_skip_zero, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("add.trend"), "Add Trend to Histogram", value = FALSE, status = "success"),
+                documentParameters$add_trend, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("trend.alpha"), "Trend Line Alpha", min = 0, max = 1, value = 1),
+                documentParameters$trend_alpha, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("trend.linewidth"), "Trend Line Width", value = 0.8, min = 0),
+                documentParameters$trend_linewidth, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("trend.pt.size"), "Trend Point Size", value = 1.5),
+                documentParameters$trend_pt_size, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 1),
+                documentParameters$alpha, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
-            selectInput(ns("position"), "Position", selected = "identity",
-            choices = c("identity", "stack", "dodge", "fill")
-            )
+            tipify(selectInput(ns("position"), "Position", selected = "identity",
+                choices = c("identity", "stack", "dodge", "fill")
+            ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
-            materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-            numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-            sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-            numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05)
+            tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
+                documentParameters$add_bars, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
+                documentParameters$bar_height, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
+                documentParameters$bar_alpha, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
+                documentParameters$bar_width, placement = "top", options = list(container = "body"))
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

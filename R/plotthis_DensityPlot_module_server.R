@@ -10,11 +10,10 @@
 #' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
 #' 
-#' @return A \code{reactive} Plotly object.
+#' @return The `moduleServer` function for the DensityPlot module.
 #' 
 #' @import shiny
 #' @import plotly
-#' @importFrom stats na.omit setNames
 #' 
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -24,16 +23,12 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "densityPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "DensityPlotTabsetPanel", target = tab.name)
         }
 
         ns <- session$ns
@@ -53,7 +48,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             group_col <- input$group.by
 
             # Only return groups when group.by is set to a valid categorical column
-            if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
             } else {
                 # No grouping - will show single color picker instead
@@ -105,7 +100,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateMaterialSwitch(session, "add.bars", value = FALSE)
             updateNumericInput(session, "bar.height", value = 0.04)
             updateSliderInput(session, "bar.alpha", value = 1)
@@ -116,61 +111,18 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
+            .reset_lines_inputs(session)
 
             # Axes
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
-            updateSelectInput(session, "font.type", selected = "Arial")
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            .reset_axes_inputs(session)
         })
 
 
         generate_DensityPlot <- reactive({
-            # Check if auto update on
-            auto_update <- input$auto.update
-
-            # If update button is required, add dependency on it
-            if (!auto_update) {
-                input$update
-            }
-
-            # Set up wrapper function based on switch state
-            isolate_fn <- if (auto_update) identity else isolate
+            isolate_fn <- setup_auto_update_logic(input)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
@@ -229,7 +181,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )
@@ -260,7 +212,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -268,7 +220,27 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$DensityPlot <- renderPlotly({
-            generate_DensityPlot()
+
+            x_input <- input$x.data
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(x_input) == 0 || !nzchar(x_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_DensityPlot() |>
+                    layout(
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

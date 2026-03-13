@@ -14,7 +14,6 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
-#' @importFrom stats na.omit setNames
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
@@ -28,16 +27,12 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
         }
         ns <- session$ns
 
@@ -99,6 +94,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Slice borders
             colourpicker::updateColourInput(session, "slice.line.color", value = "#FFFFFF")
             updateNumericInput(session, "slice.line.width", value = 0)
+
+            # Slice colors
+            updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
         })
 
         build_textinfo <- function(selected) {
@@ -181,7 +179,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 slice.line.width = isolate_fn(input$slice.line.width)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -189,7 +187,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$piePlot <- renderPlotly({
-            generate_piePlot()
+            
+            generate_piePlot() |>
+                layout(
+                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                )
         })
 
         # Download handler for interactive plot

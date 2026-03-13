@@ -14,30 +14,28 @@
 #' @import plotly
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
-#' @importFrom stats aggregate
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
-
+  
+    
+  
     moduleServer(id, function(input, output, session) {
+      
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
         
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "BarPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "BarPlotTabsetPanel", target = tab.name)
         }
 
         ns <- session$ns
@@ -48,44 +46,76 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
         }
 
+
+        fill_numeric <- reactive({
+            df <- data()
+            fill_col <- input$fill.by
+            !is.null(fill_col) && nzchar(fill_col) &&
+                fill_col %in% names(df) && is.numeric(df[[fill_col]])
+        })
+
         palette_groups <- reactive({
             df <- data()
             if (is.null(df)) {
                 return(character(0))
             }
+            fill_col <- input$fill.by
 
             group_col <- input$group.by
             x_col <- input$x.data
 
-            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+            col_to_use <- if (!fill_numeric() && !is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
+                fill_col
+            } else if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
+                group_col
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+                x_col
+            } else {
+                NULL
+            }
+
+            if (!is.null(col_to_use)) {
+                col_data <- stats::na.omit(df[[col_to_use]])
+                # Use factor level order to match ggplot2/plotthis color assignment.
+                # For factors, use the defined levels (preserves order);
+                # for character/other, convert to factor (alphabetical order).
+                if (is.factor(col_data)) {
+                    levels(col_data)
+                } else {
+                    levels(as.factor(col_data))
+                }
             } else {
                 character(0)
             }
         })
 
-        # Track initialization
-        initialized <- reactiveVal(FALSE)
-
         output$palette.selection <- renderUI({
-            groups <- palette_groups()
-            if (length(groups) == 0) {
-                return(NULL)
+            if (fill_numeric()) {
+                palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+                selectInput(
+                    ns("palette.name"),
+                    "Color Palette",
+                    choices = palette_names,
+                    selected = "viridis"
+                )
+            } else {
+                groups <- palette_groups()
+                if (length(groups) == 0) {
+                    return(NULL)
+                }
+
+                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+                multiColorPicker(
+                    ns("palette.colours"),
+                    label = "Plot colors",
+                    groups = groups,
+                    palette_options = default_palettes()[["choices"]],
+                    selected_palette = default_palette_name,
+                    colors = initial_colors,
+                    compact = TRUE
+                )
             }
-
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
-
-            multiColorPicker(
-                ns("palette.colours"),
-                label = "Plot colors",
-                groups = groups,
-                palette_options = default_palettes()[["choices"]],
-                selected_palette = default_palette_name,
-                colors = initial_colors,
-                compact = TRUE
-            )
         })
 
   
@@ -93,11 +123,15 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor 
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor
+            } else {
+                max.y <- 1
+            }
             min.y <- 0
             # Reset numeric inputs to defaults derived from data
 
@@ -105,6 +139,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             updateSelectInput(session, "group.by", selected = char.choices[2])
+            updateSelectInput(session, "fill.by", selected = "")
 
 
             # Facet
@@ -129,60 +164,49 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateTextInput(session, "line.name", value = "")
 
             # Axes
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.max", value = max.y)
             updateNumericInput(session, "y.min", value = min.y)
-
-            updateSelectInput(session, "font.type", selected = "Arial")
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            .reset_axes_inputs(session)
 
             # Action Button (unchanged)
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
 
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
-        observeEvent(input$y.data, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = 1.18, grouping = FALSE)
+        observeEvent(list(input$y.data, input$group.by, input$fill.by), {
+            req(input$y.data, input$x.data)
+            req(input$y.data %in% names(data()))
+            req(input$x.data %in% names(data()))
+
+            group_by_val <- if (nzchar(input$group.by)) input$group.by else NULL
+            fill_by_val  <- if (nzchar(input$fill.by))  input$fill.by  else NULL
+
+            # Determine if stacking is happening:
+            # Stacked when group.by is numeric OR fill.by is numeric
+            group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
+            fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
+
+            y_range <- .calculate_range(
+                df                = data(),
+                data_col_x        = input$x.data,
+                data_col_y        = input$y.data,
+                axis_scale_factor = 1.18,
+                grouping          = TRUE
+            )
+
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
         })
+
 
 
         generate_BarPlot <- reactive({
@@ -213,18 +237,35 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 group.by <- isolate_fn(input$group.by)
             }
 
+
+
+            fill_by_input <- isolate_fn(input$fill.by)
+            if (nzchar(fill_by_input)) {
+                fill.by <- fill_by_input
+                group.by <- NULL
+            } else {
+                fill.by <- FALSE
+            }
+
+            if (isolate_fn(fill_numeric())) {
+                palette_arg <- isolate_fn(input$palette.name)
+                if (is.null(palette_arg) || !nzchar(palette_arg)) palette_arg <- "viridis"
+                palcolor_arg <- NULL
+            } else {
+                palette_arg <- NULL
+                palette_values <- resolve_palette(
+                    isolate_fn(palette_groups()),
+                    isolate_fn(input$palette.colours),
+                    default_palette_values
+                )
+                palcolor_arg <- as.list(palette_values)
+            }
+
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
-            palette_values <- resolve_palette(
-                isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
-            )
-            
-            # Create ggplot theme arguments based on faceting and axis border settings
+
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -237,23 +278,24 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_ncol = facet.ncol,
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
-                palcolor = unname(palette_values),
+                palette = palette_arg,
+                palcolor = palcolor_arg,
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
-                fill_by_x_if_no_group = TRUE,
                 expand = expand,
                 width = width,
-                split_by = split.by
+                split_by = split.by,
+                fill_by = fill.by
             )
 
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
                     )
                 )
 
@@ -284,7 +326,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -292,7 +334,37 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
-            generate_BarPlot()
+
+            x_input <- input$x.data
+            y_input <- input$y.data
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(x_input) == 0 || !nzchar(x_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable input must not be empty. Please select a variable.")
+            }
+
+            if (length(y_input) == 0 || !nzchar(y_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            } 
+            if (y_input == input$group.by){
+                return_empty <- TRUE
+                txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_BarPlot() |>
+                    layout(
+                        margin = list(t = 50, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

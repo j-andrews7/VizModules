@@ -16,7 +16,7 @@ plotthis_HistogramServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 \item{hide.tabs}{\code{character} vector of tab names to hide within the module. Default is NULL.}
 }
 \value{
-A \code{reactive} Plotly object.
+The \code{moduleServer} function for the Histogram module.
 }
 \description{
 Server-side logic for the histogram plot module. This function manages

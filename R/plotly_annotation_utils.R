@@ -304,7 +304,7 @@
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_create_selected_annotations
+#' @rdname INTERNAL_create_highlight_annotations
 #' @keywords internal
 .create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
                                            x_col, y_col, annotation_params, show.others = TRUE) {

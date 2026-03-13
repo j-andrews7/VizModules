@@ -4,24 +4,39 @@
 \alias{dittoViz_yPlotApp}
 \title{Create an example Modular yPlot Shiny Application}
 \usage{
-dittoViz_yPlotApp(data_list)
+dittoViz_yPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which yPlot modules will be created.
-That is, UI inputs and a y plot will be generated for each.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("sales" = example_sales, "population" = example_population)} is used as example data.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive y plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{example_sales} and \code{example_population} as example datasets. Uploaded data files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- dittoViz_yPlotApp(data_list)
+# Launch with default example data:
+app <- dittoViz_yPlotApp()
 if (interactive()) runApp(app)
+
+# Launch with custom data:
+app2 <- dittoViz_yPlotApp(list("sales" = example_sales, "population" = example_population))
+if (interactive()) runApp(app2)
 }
 \seealso{
 \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=dittoViz_yPlotInputsUI]{dittoViz_yPlotInputsUI()}},

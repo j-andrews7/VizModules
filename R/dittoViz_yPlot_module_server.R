@@ -27,16 +27,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
         }
 
         ns <- session$ns
@@ -67,7 +63,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
             if (!is.null(col_to_use)) {
-                unique(stats::na.omit(as.character(df[[col_to_use]])))
+                col_data <- stats::na.omit(df[[col_to_use]])
+                # Use factor level order to match ggplot2/dittoViz color assignment.
+                # For factors, use the defined levels (preserves order);
+                # for character/other, convert to factor (alphabetical order).
+                if (is.factor(col_data)) {
+                    levels(col_data)
+                } else {
+                    levels(as.factor(col_data))
+                }
             } else {
                 character(0)
             }
@@ -95,12 +99,17 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11
-            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
+                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            } else {
+                max.y <- 1
+                min.y <- 0
+            }
 
             # Data
             updateSelectInput(session, "var", selected = num.choices[2])
@@ -110,13 +119,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             
 
             # Plot Type
-            updateCheckboxGroupInput(session, "plots", selected = c("vlnplot", "boxplot", "jitter"))
+            updateCheckboxGroupInput(session, "plots", selected = c("boxplot", "jitter"))
 
             # Adjustments
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
             updateMaterialSwitch(session, "do.raster", value = FALSE)
-            updateNumericInput(session, "raster.dpi", value = 300)
+            updateNumericInput(session, "raster.dpi", value = 600)
 
             # Jitter
             updateNumericInput(session, "jitter.size", value = 1)
@@ -130,16 +139,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateMaterialSwitch(session, "show.outliers", value = FALSE)
             colourpicker::updateColourInput(session, "boxplot.color", value = "#000000")
             updateMaterialSwitch(session, "boxplot.fill", value = TRUE)
-            updateNumericInput(session, "boxplot.lineweight", value = 1)
+            updateNumericInput(session, "boxplot.lineweight", value = 0.5)
+            updateNumericInput(session, "boxgap", value = 0.3)
+            updateNumericInput(session, "boxgroupgap", value = 0.2)
 
             # Violin
-            updateNumericInput(session, "vlnplot.lineweight", value = 1)
+            updateNumericInput(session, "vlnplot.lineweight", value = 0.5)
             updateNumericInput(session, "vlnplot.width", value = 1)
             updateSelectInput(session, "vlnplot.scaling", selected = "area")
             updateTextInput(session, "vlnplot.quantiles", value = "")
 
             # Ridge
-            updateNumericInput(session, "ridgeplot.lineweight", value = 1)
+            updateNumericInput(session, "ridgeplot.lineweight", value = 0.5)
             updateNumericInput(session, "ridgeplot.scale", value = 1.25)
             updateNumericInput(session, "ridgeplot.ymax.expansion", value = NA)
             updateSelectInput(session, "ridgeplot.shape", selected = "smooth")
@@ -149,51 +160,22 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             # Facet
             updateSelectInput(session, "split.by", selected = "")
             updateSelectInput(session, "split.adjust", selected = "free")
-            updateSelectInput(session, "split.ncol", selected = "")
-            updateSelectInput(session, "split.nrow", selected = "")
+            updateNumericInput(session, "split.ncol", value = NA)
+            updateNumericInput(session, "split.nrow", value = NA)
 
             # Axes
-            updateSelectInput(session, "font.type", selected = "Arial")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
+            .reset_axes_inputs(session)
 
             # Action Button
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
+            .reset_lines_inputs(session)
         })
 
         # Update y-axis range when var (y data) column is changed
         observeEvent(input$var, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$var, y_axis_scale_factor = 1.11)
+            y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -209,17 +191,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
             
-            # Parse add.line (comma-separated numeric values)
-            add.line <- isolate_fn(input$add.line)
-            if (!is.null(add.line) && nzchar(add.line)) {
-                add.line <- as.numeric(trimws(strsplit(add.line, ",")[[1]]))
-                if (any(is.na(add.line))) {
-                    add.line <- NULL
-                }
-            } else {
-                add.line <- NULL
-            }
-
             # Parse vlnplot.quantiles (comma-separated numeric values)
             vlnplot.quantiles <- isolate_fn(input$vlnplot.quantiles)
             if (!is.null(vlnplot.quantiles) && nzchar(vlnplot.quantiles)) {
@@ -232,19 +203,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
             # Parse split dimensions
-            split.ncol <- isolate_fn(input$split.ncol)
-            if (is.null(split.ncol) || split.ncol == "") {
-                split.ncol <- NULL
-            } else {
-                split.ncol <- as.integer(split.ncol)
-            }
-
-            split.nrow <- isolate_fn(input$split.nrow)
-            if (is.null(split.nrow) || split.nrow == "") {
-                split.nrow <- NULL
-            } else {
-                split.nrow <- as.integer(split.nrow)
-            }
+            split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
+            split.nrow <- .na_to_null(isolate_fn(input$split.nrow))
 
             # Handle ridgeplot.ymax.expansion
             ridgeplot.ymax.expansion <- isolate_fn(input$ridgeplot.ymax.expansion)
@@ -262,10 +222,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 default_palette_values
             )
 
-            # dittoViz yPlot expects color.panel to be a vector of colors
+            # Keep names so scale_fill_manual matches colors to groups by name,
+            # making the mapping independent of positional order.
             color.panel.arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
-                color.panel.arg <- as.vector(palette_values)
+                color.panel.arg <- palette_values
             }
 
             # Set default color.by to group.by if not specified
@@ -273,9 +234,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 color.by <- isolate_fn(input$group.by)
             }
             
-            #Formating split adjustment into correct structure for dittoViz paramater input 
+            # Formatting split adjustment into correct structure for dittoViz parameter input
             split.adjust <- list(scales = "free")
-            if (!isolate_fn(input$split.adjust) == "free"){
+            if (isolate_fn(input$split.adjust) != "free") {
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
 
@@ -316,13 +277,14 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE
+                legend.show = TRUE, 
+                theme = theme_bw()
             )
 
             fig <- p |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
@@ -331,8 +293,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 )
 
             # Apply axis styling
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
@@ -362,7 +324,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = split.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -370,7 +332,27 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            generate_yPlot()
+
+            var_input <- input$var
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(var_input) == 0 || !nzchar(var_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_yPlot() |>
+                    layout(
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

@@ -25,16 +25,12 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "ViolinPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "ViolinPlotTabsetPanel", target = tab.name)
         }
 
         ns <- session$ns
@@ -54,7 +50,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             group_col <- input$group.by
             x_col <- input$x.data
 
-            if (!is.null(group_col) && nzchar(group_col) && group_col != "NULL" && group_col %in% names(df)) {
+            if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
                 unique(stats::na.omit(as.character(df[[x_col]])))
@@ -85,21 +81,26 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            char.choices <- c("", names(data())[unlist(lapply(data(), function(x) !is.numeric(x)), use.names = FALSE)])
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             
             # Calculate y.max and y.min from the default selections
-            max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * 1.11 
-            min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            if (length(num.choices) >= 2) {
+                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
+                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
+            } else {
+                max.y <- 1
+                min.y <- 0
+            }
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by", selected = "NULL")
+            updateSelectInput(session, "group.by", selected = "")
             updateSelectInput(session, "x.data", selected = char.choices[2])
             updateSelectInput(session, "y.data", selected = num.choices[2])
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = "none")
-            updateMaterialSwitch(session, "flip", value = FALSE)
+            updateSelectInput(session, "sort_x", selected = "")
+            updateMaterialSwitch(session, "rotate", value = FALSE)
             updateNumericInput(session, "y.min", value = min.y)
             updateNumericInput(session, "y.max", value = max.y)
 
@@ -126,59 +127,25 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateNumericInput(session, "highlight.alpha", value = 1)
 
             # Facet
-            updateSelectInput(session, "facet.by", selected = "NULL")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
             # Action Button:
-            updateSelectInput(session, "download.type", selected = "png")
+            updateSelectInput(session, "download.format", selected = "png")
 
             # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
-            updateTextInput(session, "abline.intercepts", value = "")
-            updateTextInput(session, "abline.colors", value = "#000000")
-            updateTextInput(session, "abline.widths", value = "1")
-            updateTextInput(session, "abline.linetypes", value = "dashed")
-            updateTextInput(session, "abline.opacities", value = "1")
+            .reset_lines_inputs(session)
 
             # Axes
-            colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-            updateSelectInput(session, "font.type", selected = "Arial")
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror",  value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            .reset_axes_inputs(session)
         })
 
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
-            y_range <- .calculate_y_range(df = data(), y_data_col = input$y.data, y_axis_scale_factor = 1.11)
+            y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
@@ -197,7 +164,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-            highlight <- .na_to_null(isolate_fn(input$highlight))
+            highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
@@ -213,7 +180,10 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 # plotthis::ViolinPlot expects a named list for palcolor when manually setting colors
                 palcolor_arg <- as.list(palette_values)
             }
-
+            sort.x <- NULL 
+            if (!isolate_fn(input$sort_x) == ""){
+                sort.x <- isolate_fn(input$sort_x)
+            }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- plotthis::ViolinPlot(
@@ -222,7 +192,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 y = isolate_fn(input$y.data),
                 group_by = group.by,
                 flip = isolate_fn(input$rotate),
-                sort_x = isolate_fn(input$sort_x),
+                sort_x = sort.x,
                 y_max = isolate_fn(input$y.max),
                 y_min = isolate_fn(input$y.min),
                 add_point = isolate_fn(input$add.points),
@@ -257,7 +227,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$font.type), color = isolate_fn(input$text.colour)),
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )
@@ -295,7 +265,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.type), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
             return(fig)
@@ -303,7 +273,35 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Render the plot output
         output$ViolinPlot <- renderPlotly({
-            generate_ViolinPlot()
+
+            x_input <- input$x.data
+            y_input <- input$y.data
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(x_input) == 0 || !nzchar(x_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "X variable input must not be empty. Please select a variable.")
+            }
+
+            if (length(y_input) == 0 || !nzchar(y_input)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
+            }
+
+           
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_ViolinPlot() |>
+                    layout(
+                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

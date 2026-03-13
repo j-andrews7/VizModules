@@ -1,57 +1,42 @@
 #' Create an example Modular ViolinPlot Shiny Application
 #'
 #' This function generates a Shiny application with modular [plotthis::ViolinPlot()] components.
-#' A module is created for each data frame provided in the named list of data frames.
+#' The app features a **Data Import** section for uploading data,
+#' a **Data Table** for filtering the active dataset, and a **Plot** area
+#' for configuring and displaying an interactive violin plot.
 #'
-#' @param data_list A named list of data frames for which ViolinPlot modules will be created.
-#'   That is, UI inputs and a violin plot will be generated for each.
+#' When `data_list` is not provided (or `NULL`), the app launches with
+#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
+#'
+#' This is a convenience wrapper around [createModuleApp()].
+#'
+#' @param data_list An optional named list of data frames. If `NULL` (the default),
+#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
 #' @return A Shiny app object.
 #'
-#' @import shiny
-#' @importFrom shinyjs useShinyjs
 #' @export
-#'
-#' @author Jacob Martin
+#' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' data_list <- list("sales" = example_sales, "population" = example_population)
-#' app <- plotthis_ViolinPlotApp(data_list)
+#' # Launch with default example data:
+#' app <- plotthis_ViolinPlotApp()
 #' if (interactive()) runApp(app)
-plotthis_ViolinPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular ViolinPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_ViolinPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                # Add the module output UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(plotthis_ViolinPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    server <- function(input, output, session) {
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            plotthis_ViolinPlotServer(name, data = reactive(data_list[[name]]))
-        })
+#'
+#' # Launch with custom data:
+#' app2 <- plotthis_ViolinPlotApp(list("sales" = example_sales, "population" = example_population))
+#' if (interactive()) runApp(app2)
+plotthis_ViolinPlotApp <- function(data_list = NULL) {
+    if (is.null(data_list)) {
+        data_list <- list("sales" = example_sales, "population" = example_population)
     }
-
-    shinyApp(ui, server)
+    createModuleApp(
+        inputs_ui_fn = plotthis_ViolinPlotInputsUI,
+        output_ui_fn = plotthis_ViolinPlotOutputUI,
+        server_fn    = plotthis_ViolinPlotServer,
+        data_list    = data_list,
+        title        = "Modular ViolinPlots"
+    )
 }

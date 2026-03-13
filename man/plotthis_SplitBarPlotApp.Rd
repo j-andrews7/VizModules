@@ -4,25 +4,45 @@
 \alias{plotthis_SplitBarPlotApp}
 \title{Create an example Modular SplitBarPlot Shiny Application}
 \usage{
-plotthis_SplitBarPlotApp(data_list)
+plotthis_SplitBarPlotApp(data_list = NULL)
 }
 \arguments{
-\item{data_list}{A named list of data frames for which SplitBarPlot modules will be created.
-That is, UI inputs and a split bar plot will be generated for each.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+\code{list("sales" = example_sales, "population" = example_population)} is used as example data.}
 }
 \value{
 A Shiny app object.
 }
 \description{
 This function generates a Shiny application with modular \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} components.
-A module is created for each data frame provided in the named list of data frames.
+The app features a \strong{Data Import} section for uploading data,
+a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
+for configuring and displaying an interactive split bar plot.
+}
+\details{
+When \code{data_list} is not provided (or \code{NULL}), the app launches with
+\code{example_sales} and \code{example_population} as example datasets. Uploaded data files are added
+to the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is overwritten
+with a warning.
+
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
 \examples{
 library(VizModules)
-data_list <- list("sales" = example_sales, "population" = example_population)
-app <- plotthis_SplitBarPlotApp(data_list)
+# Launch with default example data:
+app <- plotthis_SplitBarPlotApp()
 if (interactive()) runApp(app)
+
+#Launch with custom data:
+df <- data.frame(
+    group = c("A", "B", "C", "D", "E"),
+    value = c(43, 78, 25, 61, 89),
+    count = c(12, -7, 34, 19, -15)
+)
+app2 <- plotthis_SplitBarPlotApp(list("data" = df))
+if (interactive()) runApp(app2)
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

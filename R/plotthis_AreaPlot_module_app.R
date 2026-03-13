@@ -1,58 +1,42 @@
 #' Create an example Modular AreaPlot Shiny Application
 #'
 #' This function generates a Shiny application with modular [plotthis::AreaPlot()] components.
-#' A module is created for each data frame provided in the named list of data frames.
+#' The app features a **Data Import** section for uploading data,
+#' a **Data Table** for filtering the active dataset, and a **Plot** area
+#' for configuring and displaying an interactive area plot.
 #'
-#' @param data_list A named list of data frames for which AreaPlot modules will be created.
-#'   That is, UI inputs and an area plot will be generated for each.
+#' When `data_list` is not provided (or `NULL`), the app launches with
+#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' to the available datasets and can be selected for plotting. If an uploaded
+#' file shares a name with an existing dataset, the existing one is overwritten
+#' with a warning.
+#'
+#' This is a convenience wrapper around [createModuleApp()].
+#'
+#' @param data_list An optional named list of data frames. If `NULL` (the default),
+#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
 #' @return A Shiny app object.
-#' 
-#' @import shiny
-#' @importFrom shinyjs useShinyjs
+#'
 #' @export
-#'
 #' @author Jacob Martin, Jared Andrews
-#'
 #' @examples
 #' library(VizModules)
-#' data_list <- list("sales" = example_sales, "population" = example_population)
-#' app <- plotthis_AreaPlotApp(data_list)
+#' # Launch with default example data:
+#' app <- plotthis_AreaPlotApp()
 #' if (interactive()) runApp(app)
-plotthis_AreaPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular AreaPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        plotthis_AreaPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                # Add the module output UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(plotthis_AreaPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    server <- function(input, output, session) {
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            plotthis_AreaPlotServer(name, data = reactive(data_list[[name]]))
-        })
+#'
+#' # Launch with custom data:
+#' app2 <- plotthis_AreaPlotApp(list("sales" = example_sales, "population" = example_population))
+#' if (interactive()) runApp(app2)
+plotthis_AreaPlotApp <- function(data_list = NULL) {
+    if (is.null(data_list)) {
+        data_list <- list("sales" = example_sales, "population" = example_population)
     }
-
-    shinyApp(ui, server)
+    createModuleApp(
+        inputs_ui_fn = plotthis_AreaPlotInputsUI,
+        output_ui_fn = plotthis_AreaPlotOutputUI,
+        server_fn    = plotthis_AreaPlotServer,
+        data_list    = data_list,
+        title        = "Modular AreaPlots"
+    )
 }

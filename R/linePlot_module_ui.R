@@ -40,6 +40,8 @@
 #'   \item \code{axis.tickcolor} - Tick color (UI: via .uniform_axes_inputs_ui, default: "black")
 #'   \item \code{axis.ticklen} - Tick length (UI: via .uniform_axes_inputs_ui, default: 5)
 #'   \item \code{axis.tickwidth} - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)
+#'   \item \code{show.grid.x} - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
+#'   \item \code{show.grid.y} - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
 #'   \item \code{title.font.size} - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)
 #'   \item \code{title.font.family} - Title font family (UI: "Font", default: "Arial")
 #'   \item \code{title.text.color} - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")
@@ -80,6 +82,7 @@
 #' @import shiny
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyWidgets materialSwitch
+#' @importFrom shinyBS tipify
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -96,73 +99,77 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     choices <- c("", names(data))
 
     # Get numeric variables of data.
-    num.choices <- c("", names(data)[unlist(lapply(data, is.numeric), use.names = FALSE)])
-    cat.choices <- c("", names(data)[unlist(lapply(data, function(x) !is.numeric(x)), use.names = FALSE)])
-    numeric.data <- data[, unlist(lapply(data, is.numeric), use.names = FALSE), drop = FALSE]
+    num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
+    selected <- c("x", "y", "colour.group.by", "error.bar", "order.by",
+        "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
+        "plot.mode", "line.type", "error.colour", "error.width")
+
+    documentParameters <- get_documentation(
+        package_name = "VizModules::linePlot", type = "param",
+        selected = selected, cap = TRUE
+    )
+
     inputs <- list(
         "Data" = tagList(
-            selectInput(ns("x.value"), "Select X values:",
-            selected = names(data)[1], choices = names(data), multiple = TRUE
-            ),
-            selectInput(ns("y.value"), "Select Y values:",
-            selected = names(data)[2], choices = names(data), multiple = TRUE
-            ),
-            selectInput(ns("group.by"), "Group by:",
-            selected = cat.choices[1], choices = cat.choices
-            ),
-            materialSwitch(ns("order.by"), "Order by Y",
-                value = ifelse("order.by" %in% names(defaults),
-                    ifelse(is.logical(defaults[["order.by"]]), defaults[["order.by"]], FALSE),
-                    FALSE
-                ),
+            tipify(selectInput(ns("x.value"), "Select X values:",
+                selected = names(data)[1], choices = names(data), multiple = TRUE
+            ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("y.value"), "Select Y values:",
+                selected = names(data)[2], choices = names(data), multiple = TRUE
+            ), documentParameters$y, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("group.by"), "Group by:",
+                selected = cat.choices[1], choices = cat.choices
+            ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE),
+                documentParameters$error.bar, placement = "top", options = list(container = "body")),
+            tipify(materialSwitch(ns("order.by"), "Order by Y",
+                value = .get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"
-            ),
-            selectInput(ns("x.adjustment"), "X Adjustment",
+            ), documentParameters$order.by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
-                selected = ifelse("x.adjustment" %in% names(defaults),
-                    ifelse(defaults[["x.adjustment"]] %in% adj.choices, defaults[["x.adjustment"]], ""),
-                    ""
-                )
-            ),
-            selectInput(ns("y.adjustment"), "Y Adjustment",
+                selected = .get_default(defaults, "x.adjustment", "",
+                    function(x) x %in% adj.choices)
+            ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
-                selected = ifelse("y.adjustment" %in% names(defaults),
-                    ifelse(defaults[["y.adjustment"]] %in% adj.choices, defaults[["y.adjustment"]], ""),
-                    ""
-                )
-            )
+                selected = .get_default(defaults, "y.adjustment", "",
+                    function(x) x %in% adj.choices)
+            ), documentParameters$y.adjustment, placement = "top", options = list(container = "body"))
         ),
 
         "Facet" = tagList(
-            selectInput(ns("facet.by"), "Facet by:",
-            selected = "", choices = cat.choices
-            ),
-            selectInput(ns("facet.scales"), "Facet scales",
-            choices   = c("fixed", "free", "free_x", "free_y"),
-            selected  = ifelse("facet.scales" %in% names(defaults),
-                ifelse(defaults[["facet.scales"]] %in% c("fixed", "free", "free_x", "free_y"),
-                defaults[["facet.scales"]], "fixed"
-                ),
-                "fixed"
-            )
-            )
+            tipify(selectInput(ns("facet.by"), "Facet by:",
+                selected = "", choices = cat.choices
+            ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scales"), "Facet scales",
+                choices   = c("fixed", "free", "free_x", "free_y"),
+                selected  = .get_default(defaults, "facet.scales", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y"))
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
 
         "Aesthetics" = tagList(
-            selectInput(ns("plot.type"), "Plot type:",
-            selected = "lines",
-            choices  = c("lines", "markers", "lines+markers")
-            ),
-            selectInput(ns("line.type"), "Line type:",
-            selected = "solid",
-            choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
-            ),
-            uiOutput(ns("palette.selection"))
+            tipify(selectInput(ns("plot.type"), "Plot type:",
+                selected = "lines",
+                choices  = c("lines", "markers", "lines+markers")
+            ), documentParameters$plot.mode, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("line.type"), "Line type:",
+                selected = "solid",
+                choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
+            ), documentParameters$line.type, placement = "top", options = list(container = "body")),
+            uiOutput(ns("palette.selection")),
+            tipify(colourpicker::colourInput(ns("errorBarColour"), "Error Bar Colour", value = "#000000"),
+                documentParameters$error.colour, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("errorBarWidth"), "Error Bar Width", value = 1, min = 0.1),
+                documentParameters$error.width, placement = "top", options = list(container = "body"))
         ),
 
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),

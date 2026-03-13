@@ -27,7 +27,7 @@ devtools::install_github("j-andrews7/VizModules")
 
 - Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- See the vignette for a full walkthrough: `vignette("quick-start", package = "VizModules")`
+- See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ```r
 library(VizModules)
@@ -65,133 +65,30 @@ Every module uses the same trio of functions: `*InputsUI()` for controls, `*Outp
 
 Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
-## Using **VizModules** 
+## App Factory
 
-Including a VizModules module in your Shiny application is simple. 
-The package provides a function returning an example Shiny application for each module that showcases their functionality and how they can be used.
-
-As an example, we can look at the `dittoViz_ScatterPlotApp()` function:
+Need a quick standalone app for any module? `createModuleApp()` is a factory that wires up data import, a filterable data table, dataset switching, and the module's UI/server:
 
 ```r
 library(VizModules)
 
-dittoViz_ScatterPlotApp <- function(data_list) {
-    # Validate input
-    stopifnot(is.list(data_list))
-    lapply(data_list, function(data) {
-        stopifnot(is.data.frame(data))
-    })
-
-    # UI definition
-    ui <- fluidPage(
-        useShinyjs(),
-        titlePanel("Modular scatterPlots"),
-        sidebarLayout(
-            sidebarPanel(
-                # Add the module inputs UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(
-                        scatterPlotInputsUI(name, data_list[[name]], title = h3(paste(name, "Settings"))),
-                        hr()
-                    )
-                })
-            ),
-            mainPanel(
-                # Add the module output UI for each data frame
-                lapply(names(data_list), function(name) {
-                    tagList(dittoViz_ScatterPlotOutputUI(name), br())
-                })
-            )
-        )
-    )
-
-    # Server function
-    server <- function(input, output, session) {
-
-        # Add the module server for each data frame
-        lapply(names(data_list), function(name) {
-            dittoViz_ScatterPlotServer(name, data = reactive(data_list[[name]]))
-        })
-    }
-
-    # Return the Shiny app
-    shinyApp(ui, server)
-}
-
-data_list <- list("mtcars" = mtcars, "iris" = iris)
-dittoViz_ScatterPlotApp(data_list)
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BarPlotInputsUI,
+    output_ui_fn = plotthis_BarPlotOutputUI,
+    server_fn    = plotthis_BarPlotServer,
+    data_list    = list("cars" = mtcars),
+    title        = "My Bar Plot"
+)
+if (interactive()) runApp(app)
 ```
+
+Every built-in `*App()` convenience function (e.g. `plotthis_BarPlotApp()`, `linePlotApp()`) is a thin wrapper around `createModuleApp()` with sensible default data. You can also pass your own custom wrapper module functions to `createModuleApp()` for rapid prototyping.
+
 
 ## Building Custom Wrapper Modules
 
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
 
-Here's a minimal example of wrapping the `dittoViz_ScatterPlot` module to add custom filtering logic:
-
-```r
-library(VizModules)
-
-# Define the wrapper UI
-minimalWrapperUI <- function(id) {
-    ns <- NS(id)
-    tagList(
-        h4("Minimal Wrapper Controls"),
-        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
-        hr(),
-        dittoViz_ScatterPlotInputsUI(id, iris)
-    )
-}
-
-minimalWrapperOutput <- function(id) {
-    dittoViz_ScatterPlotOutputUI(id)
-}
-
-# Define the wrapper server
-minimalWrapperServer <- function(id, data_reactive) {
-    # 1. Process data in a moduleServer block to access inputs namespaced to 'id'
-    # We return the reactive expression produced by this block.
-    # Note: moduleServer returns the return value of the function it runs.
-    filtered_data <- moduleServer(id, function(input, output, session) {
-        reactive({
-            req(data_reactive())
-            df <- data_reactive()
-
-            # Custom wrapper logic: filter based on a checkbox
-            if (isTRUE(input$filter_setosa)) {
-                if ("Species" %in% names(df)) {
-                    df <- df[df$Species == "setosa", ]
-                }
-            }
-            df
-        })
-    })
-
-    # 2. Call the base module server with the processed data.
-    # We call this OUTSIDE the first moduleServer closure so that
-    # dittoViz_ScatterPlotServer attaches to 'id' relative to the parent,
-    # avoiding nested namespace issues (e.g. id-id-input).
-    dittoViz_ScatterPlotServer(id, filtered_data)
-}
-
-# Create the app using the wrapper
-ui <- fluidPage(
-    titlePanel("Minimal Wrapper Example"),
-    sidebarLayout(
-        sidebarPanel(
-            minimalWrapperUI("demo")
-        ),
-        mainPanel(
-            minimalWrapperOutput("demo")
-        )
-    )
-)
-
-server <- function(input, output, session) {
-    minimalWrapperServer("demo", reactive({ iris }))
-}
-
-shinyApp(ui, server)
-```
 
 **Key points when building wrapper modules:**
 
@@ -201,7 +98,7 @@ shinyApp(ui, server)
 
 3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
 
-For more details, see `vignette("custom-modules", package = "VizModules")`.
+For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
 ## Modules Provided
 
@@ -226,13 +123,16 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 * `linePlot` - Line plots with customizable trajectories.
 * `piePlot` - Pie and donut charts.
+* `radarPlot` - Radar Plot 
+* `parallelCoordinatePlot` 
+* `ternaryPlot`
+* `dumbbellPlot`
 * `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`).
 
 ## Modules Planned
 
 ### `dittoViz`
 
-* **yPlot** - box/violin/jitter plots.
 * **scatterHex** - hexbin plots encoding density/frequency information along x/y coordinates.
 * **barPlot** - compositional barplots.
 * **freqPlot** - box/jitter plots for discrete observation frequencies per sample/group.
@@ -241,4 +141,112 @@ dittoViz is under active development, so additional modules will be created as m
 
 ## Contributing a New Module
 
-To contribute a new module to the package, see the vignette for guidelines: `vignette("adding-a-new-module", package = "VizModules")`.
+To contribute a new module to the package, see the vignette for guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
+
+
+## Examples of Plots:
+
+[linePlot:][1]
+
+![](man/PlotImages/LinePlot.png)
+
+[plotthis_AreaPlot:][2]
+
+[(Source Plotting Function)][19]
+
+![](man/PlotImages/AreaPlot.png)
+
+[plotthis_BoxPlot:][3]
+
+[(Source Plotting Function)][20]
+
+![](man/PlotImages/BoxPlot.png)
+
+[plotthis_DensityPlot:][4]
+
+[(Source Plotting Function)][21]
+
+![](man/PlotImages/DensityPlot.png)
+
+[dumbellPlot:][5]
+
+![](man/PlotImages/DumbellPlot.png)
+
+[plotthis_HistogramPlot:][6]
+
+[(Source Plotting Function)][21]
+
+![](man/PlotImages/HistogramPlot.png)
+
+[parallelCoordinatePlot:][7]
+
+![](man/PlotImages/ParallelPlot.png)
+
+[piePlot:][8]
+
+![](man/PlotImages/PiePlot.png)
+
+[radarPlot:][9]
+
+![](man/PlotImages/RadarPlot.png)
+
+[dittoViz_ScatterPlot:][10]
+
+[(Source Plotting Function)][22]
+
+![](man/PlotImages/ScatterPlot.png)
+
+[plotthis_SplitBarPlot:][11]
+
+[(Source Plotting Function)][23]
+
+![](man/PlotImages/SplitBarPlot.png)
+
+[ternaryPlot:][12]
+
+![](man/PlotImages/ternaryPlot.png)
+
+[plotthis_ViolinPlot:][13]
+
+[(Source Plotting Function)][20]
+
+![](man/PlotImages/ViolinPlot.png)
+
+[dittoViz_yPlot:][14]
+
+[(Source Plotting Function)][22]
+
+![](man/PlotImages/yPlot.png)
+
+### UI Overview:
+
+![](man/PlotImages/UI_Overview.png)
+
+Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin](https://github.com/Jacob1106)
+
+
+
+
+[1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
+[2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
+[3]: https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html
+[4]: https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html
+[5]:https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html
+[6]:https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html
+[7]:https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html
+[8]:https://j-andrews7.github.io/VizModules/reference/piePlotApp.html
+[9]:https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
+[10]:https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
+[11]:https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
+[12]:https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
+[13]:https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
+[14]:https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
+[15]: https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.html
+[16]: https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html
+[17]: https://j-andrews7.github.io/VizModules/articles/custom-modules.html
+[18]: https://j-andrews7.github.io/VizModules/articles/quick-start.html
+[19]: https://pwwang.github.io/plotthis/reference/AreaPlot.html
+[20]: https://pwwang.github.io/plotthis/reference/boxviolinplot.html
+[21]: https://pwwang.github.io/plotthis/reference/densityhistoplot.html
+[22]: https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html
+[23]: https://pwwang.github.io/plotthis/reference/barplot.html

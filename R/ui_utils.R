@@ -12,7 +12,6 @@
 #'   nested inside a tabsetPanel.
 #'
 #' @import shiny
-#' @importFrom methods is
 #' @export
 #'
 #' @author Jared Andrews
@@ -106,10 +105,23 @@ organize_inputs <- function(
 }
 
 #' Color palette options for palettePicker
+#'
+#' Returns a list of predefined color palettes grouped by category (Defaults,
+#' Viridis, Diverging, Qualitative, Sequential) for use with color picker UI
+#' components.
+#'
+#' @return A named list with two elements: `choices` (a nested list of palette
+#'   name to color vector mappings, grouped by category) and `textColor` (a
+#'   character vector of text colors for each palette).
+#'
 #' @importFrom scales hue_pal viridis_pal brewer_pal
 #' @importFrom dittoViz dittoColors
 #' @export
 #' @author Jared Andrews
+#'
+#' @examples
+#' pals <- default_palettes()
+#' names(pals$choices)
 default_palettes <- function() {
   pals <- list(
     choices = list(
@@ -210,7 +222,7 @@ module_tack_ui <- function(ns, defaults = NULL) {
                 materialSwitch(
                     ns("auto.update"),
                     "Auto Update",
-                    value = FALSE,
+                    value = TRUE,
                     status = "success"
                 ),
                 style = "margin-top: 25px;"

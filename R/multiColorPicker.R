@@ -27,6 +27,7 @@
 #' @importFrom jsonlite toJSON
 #'
 #' @export
+#' @author Jared Andrews
 #'
 #' @examples
 #' if (interactive()) {
@@ -202,17 +203,26 @@ multiColorPicker <- function(
 #' Update a multiColorPicker input on the client
 #'
 #' Change the color values assigned to groups in an existing multiColorPicker
-#' input from the server side.
+#' input from the server side. You can supply explicit colors, apply a palette
+#' by name, or reset the widget back to its initial state.
 #'
 #' @param session The Shiny session object, typically `session`.
 #' @param inputId Character. The input id of the multiColorPicker to update.
-#' @param colors A named character vector of hex colors keyed by group name.
-#'   Only groups present in the vector will be updated; others remain unchanged.
+#' @param colors Optional named character vector of hex colors keyed by group
+#'   name. Only groups present in the vector will be updated; others remain
+#'   unchanged. Ignored when `palette` or `reset` is provided.
+#' @param palette Optional character string giving the name of a palette
+#'   (as supplied in the widget's `palette_options`). The palette's colors are
+#'   applied in order to the widget's groups' color pickers and the palette
+#'   selector is updated to match. Ignored when `reset` is `TRUE`.
+#' @param reset Logical. If `TRUE`, reset the widget to its initial state
+#'   (colors and selected palette). Overrides `colors` and `palette`.
 #'
 #' @return Invisibly returns `NULL`. Called for its side effect.
 #'
 #' @import shiny
 #' @export
+#' @author Jared Andrews
 #'
 #' @examples
 #' if (interactive()) {
@@ -227,6 +237,8 @@ multiColorPicker <- function(
 #'       selected_palette = "dittoColors"
 #'     ),
 #'     actionButton("randomize", "Randomize colors"),
+#'     actionButton("apply_pal", "Apply ggplot2 palette"),
+#'     actionButton("reset_cols", "Reset to initial"),
 #'     verbatimTextOutput("chosen")
 #'   )
 #'
@@ -238,34 +250,51 @@ multiColorPicker <- function(
 #'         sprintf("#%06X", sample(0xFFFFFF, length(groups))),
 #'         groups
 #'       )
-#'       updateMultiColorPicker(session, "species_cols", new_colors)
+#'       updateMultiColorPicker(session, "species_cols", colors = new_colors)
+#'     })
+#'
+#'     observeEvent(input$apply_pal, {
+#'       updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
+#'     })
+#'
+#'     observeEvent(input$reset_cols, {
+#'       updateMultiColorPicker(session, "species_cols", reset = TRUE)
 #'     })
 #'   }
 #'
 #'   shinyApp(ui, server)
 #' }
-updateMultiColorPicker <- function(session, inputId, colors) {
+updateMultiColorPicker <- function(session, inputId, colors = NULL,
+                                   palette = NULL, reset = FALSE) {
     if (missing(session) || is.null(session)) {
         stop("`session` must be a valid Shiny session object.")
     }
     if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
         stop("`inputId` must be a non-empty string.")
     }
-    if (missing(colors) || is.null(colors) || length(colors) == 0) {
-        stop("`colors` must be a non-empty named character vector.")
+
+    # Build the message for the binding's receiveMessage handler.
+    if (isTRUE(reset)) {
+        msg <- list(reset = TRUE)
+    } else if (!is.null(palette)) {
+        if (!is.character(palette) || length(palette) != 1 || !nzchar(palette)) {
+            stop("`palette` must be a single non-empty string.")
+        }
+        msg <- list(palette = palette)
+    } else if (!is.null(colors) && length(colors) > 0) {
+        colors <- .normalize_hex(colors)
+        if (is.null(names(colors)) || any(names(colors) == "")) {
+            stop("`colors` must be a named character vector with group names.")
+        }
+        msg <- list(value = lapply(names(colors), function(nm) {
+            list(name = nm, value = colors[[nm]])
+        }))
+    } else {
+        stop("One of `colors`, `palette`, or `reset` must be provided.")
     }
 
-    colors <- .normalize_hex(colors)
-    if (is.null(names(colors)) || any(names(colors) == "")) {
-        stop("`colors` must be a named character vector with group names.")
-    }
+    session$sendInputMessage(inputId, msg)
 
-    # Convert to list format expected by JS receiveMessage
-    value <- lapply(names(colors), function(nm) {
-        list(name = nm, value = colors[[nm]])
-    })
-
-    session$sendInputMessage(inputId, list(value = value))
     invisible(NULL)
 }
 

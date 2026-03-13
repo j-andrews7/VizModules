@@ -14,7 +14,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom dittoViz scatterPlot colLevels
-#' @importFrom ggplot2 theme_bw waiver
+#' @importFrom ggplot2 theme_bw waiver theme
 #' @importFrom shinyjs hide runjs
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
@@ -27,18 +27,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+        # Unique source ID for plotly event_data, scoped to this module instance
+        plot_source <- session$ns("scatter")
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
-            lapply(hide.inputs, function(input.name) {
-                hide(input.name)
-            })
+            for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
         if (!is.null(hide.tabs)) {
-            lapply(hide.tabs, function(tab.name) {
-                hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
-            })
+            for (tab.name in hide.tabs) hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
         }
 
         # Available color groups for the current color.by selection
@@ -169,10 +167,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Observer to add selected data to selected.data
         observeEvent(
-            event_data("plotly_selected"),
+            event_data("plotly_selected", source = plot_source),
             # suspended = TRUE,
             {
-                selected <- event_data("plotly_selected")
+                selected <- event_data("plotly_selected", source = plot_source)
                 selected.full <- rbind(selected.data(), selected)
 
                 # Since this is running on every selection, remove duplicates
@@ -195,8 +193,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         observeEvent(input$reset, {
             # Get data for defaults
             choices <- c("", names(data()))
-            num.choices <- c("", names(data())[unlist(lapply(data(), is.numeric), use.names = FALSE)])
-            cat.choices <- c("", names(data())[unlist(lapply(data(), FUN = function(x) !is.numeric(x)), use.names = FALSE)])
+            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
 
             # Data
             updateSelectInput(session, "x.by", selected = choices[2])
@@ -204,7 +202,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "color.by", selected = "")
             updateSelectInput(session, "shape.by", selected = "")
             updateSelectizeInput(session, "split.by", selected = "")
-            updateTextInput(session, "rows.use", value = "")
 
             # Adjustments
             updateSelectInput(session, "x.adjustment", selected = "")
@@ -230,14 +227,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             colourpicker::updateColourInput(session, "single.point.color", 
                 value = "#000000")
             
-            # Simulate clicking the reset button in the multiColorPicker widget
-            shinyjs::runjs(sprintf("
-                var colorPanel = document.getElementById('%s');
-                if (colorPanel) {
-                    var resetBtn = colorPanel.querySelector('.mc-reset-palette');
-                    if (resetBtn) resetBtn.click();
-                }
-            ", ns("color.panel")))
+            # Reset multiColorPicker to its initial palette
+            updateMultiColorPicker(session, "color.panel", reset = TRUE)
 
             # Facets
             updateNumericInput(session, "split.nrow", value = NA)
@@ -304,42 +295,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "marginal.show.ticks", value = FALSE)
             updateCheckboxInput(session, "marginal.show.labels", value = FALSE)
 
-            # Lines
-            updateTextInput(session, "hline.intercepts", value = "")
-            updateTextInput(session, "hline.colors", value = "#000000")
-            updateTextInput(session, "hline.widths", value = "1")
-            updateTextInput(session, "hline.linetypes", value = "dashed")
-            updateTextInput(session, "hline.opacities", value = "1")
-            updateTextInput(session, "vline.intercepts", value = "")
-            updateTextInput(session, "vline.colors", value = "#000000")
-            updateTextInput(session, "vline.widths", value = "1")
-            updateTextInput(session, "vline.linetypes", value = "dashed")
-            updateTextInput(session, "vline.opacities", value = "1")
-            updateTextInput(session, "abline.slopes", value = "")
-            shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
-            updateNumericInput(session, "line.best.smoothness", value = 1)
-            colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
-            shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
-
-            # Axes
-            updateNumericInput(session, "axis.title.font.size", value = 18)
-            colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
-            updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-            updateCheckboxInput(session, "axis.showline", value = TRUE)
-            updateCheckboxInput(session, "axis.mirror", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.x", value = TRUE)
-            updateCheckboxInput(session, "show.major.grid.y", value = TRUE)
-            colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
-            updateNumericInput(session, "axis.linewidth", value = 0.5)
-            updateNumericInput(session, "axis.tickfont.size", value = 12)
-            colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
-            updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
-            updateNumericInput(session, "axis.tickangle.x", value = 0)
-            updateNumericInput(session, "axis.tickangle.y", value = 0)
-            updateSelectInput(session, "axis.ticks", selected = "outside")
-            colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
-            updateNumericInput(session, "axis.ticklen", value = 5)
-            updateNumericInput(session, "axis.tickwidth", value = 1)
+            # Lines & Axes
+            .reset_lines_inputs(session, include.fit.lines = TRUE)
+            .reset_axes_inputs(session)
         })
 
         # Observer to disable marginal plots when faceting is enabled
@@ -379,8 +337,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 "color.adj.fxn" = .na_to_null(isolate_fn(input$color.adj.fxn)),
                 "split.nrow" = .na_to_null(isolate_fn(input$split.nrow)),
                 "split.ncol" = .na_to_null(isolate_fn(input$split.ncol)),
-                "hover.data" = .na_to_null(isolate_fn(input$hover.data)),
-                "annotate.by" = .na_to_null(isolate_fn(input$annotate.by))
+                "hover.data" = .na_to_null(isolate_fn(input$hover.data))
             )
 
             # Waiver inputs
@@ -418,8 +375,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
             
-            theme_style <- theme_bw() + theme(unlist(.create_ggplot_axis_style(input, isolate_fn = isolate_fn))) 
-
+            additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_style <- theme_bw() + theme(panel.border = additional_theme$panel.border, axis.line = additional_theme$axis.line, axis.ticks = additional_theme$axis.ticks)
+                
             p <- dittoViz::scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -428,14 +386,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,
                 size = isolate_fn(input$size),
-                rows.use = with(data(), eval(str2expression(isolate_fn(input$rows.use)))),
                 show.others = isolate_fn(input$show.others),
                 x.adjustment = null.na.inputs$x.adjustment,
                 y.adjustment = null.na.inputs$y.adjustment,
                 color.adjustment = null.na.inputs$color.adjustment,
-                x.adj.fxn = eval(str2expression(isolate_fn(input$x.adj.fxn))),
-                y.adj.fxn = eval(str2expression(isolate_fn(input$y.adj.fxn))),
-                color.adj.fxn = eval(str2expression(isolate_fn(input$color.adj.fxn))),
+                x.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$x.adj.fxn)),
+                y.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$y.adj.fxn)),
+                color.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$color.adj.fxn)),
                 split.show.all.others = isolate_fn(input$split.show.all.others),
                 opacity = isolate_fn(input$opacity),
                 color.panel = unname(palette_values),
@@ -475,33 +432,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             plot_data <- p$Target_data
 
-            # COLOUR MAPPING FOR LINE
-            manual_vals <- manual_color_values()
-            if (!is.null(manual_vals) && length(manual_vals) > 0) {
-                palette_for_mapping <- manual_vals
-            } else if (!is.null(null.na.inputs$color.by) &&
-                length(current_color_levels) > 0 &&
-                length(palette_values) > 0) {
-                palette_for_mapping <- palette_values
+            # Colour mapping for fit lines — palette_values from color.panel() is already
+            # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
+            color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
+                palette_values
             } else {
-                palette_for_mapping <- NULL
-            }
-
-            if (!is.null(palette_for_mapping) && length(current_color_levels) > 0) {
-                if (!is.null(names(palette_for_mapping)) && any(nzchar(names(palette_for_mapping)))) {
-                    palette_for_mapping <- palette_for_mapping[match(current_color_levels, names(palette_for_mapping))]
-                }
-
-                if (any(is.na(palette_for_mapping))) {
-                    fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                    na_idx <- which(is.na(palette_for_mapping))
-                    palette_for_mapping[na_idx] <- rep_len(fallback_palette, length(na_idx))
-                }
-
-                palette_for_mapping <- rep_len(palette_for_mapping, length(current_color_levels))
-                color_mapping <- stats::setNames(palette_for_mapping[seq_len(length(current_color_levels))], current_color_levels)
-            } else {
-                color_mapping <- NULL
+                NULL
             }
 
             if (!is.null(null.na.inputs$split.by)){
@@ -799,6 +735,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
+
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
                 # Layers with a single text element (length == 1) are typically background/other layers
@@ -811,7 +748,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         }
                     }
                 }
-                fig <- fig %>% toWebGL()
+                fig <- fig |> toWebGL()
             }
 
             # Add fit lines if requested
@@ -858,7 +795,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$scatterPlot <- renderPlotly({
-            generate_scatterPlot()
+            fig <- generate_scatterPlot() |>
+                layout(
+                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                )
+            fig$x$source <- plot_source
+            fig
         })
 
         # Download handler for interactive plot
