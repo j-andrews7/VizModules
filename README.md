@@ -15,7 +15,7 @@ They also provide developers a way to dramatically save time and reduce complexi
 
 ## Install
 
-Note that this package is in development and may break at any time.
+Note that this package is in development and may contain bugs and general wonkiness.
 
 Currently, the package can be installed from Github:
 
@@ -25,8 +25,8 @@ devtools::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
-- Run the same gallery locally: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
+- Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ```r
@@ -90,14 +90,6 @@ Every built-in `*App()` convenience function (e.g. `plotthis_BarPlotApp()`, `lin
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
 
 
-**Key points when building wrapper modules:**
-
-1. **Namespace handling**: Use `NS(id)` for your wrapper's custom inputs, and pass the bare `id` (not namespaced) to the base module's UI and server functions.
-
-2. **Data processing pattern**: Process your data inside a `moduleServer()` block to access your wrapper's namespaced inputs, then call the base module's server function *outside* that block to avoid double-namespacing.
-
-3. **Reactive data**: Always pass reactive expressions to both your wrapper and the underlying module servers.
-
 For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
 ## Modules Provided
@@ -107,7 +99,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 ### `dittoViz`
 
 * `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`).
-* `dittoViz_yPlot` - Multi-variate Y-axis plots (wraps `dittoViz::yPlot`).
+* `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps `dittoViz::yPlot`).
 
 ### `plotthis`
 
@@ -119,15 +111,14 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 * `plotthis_DensityPlot` - Density plots (wraps `plotthis::DensityPlot`).
 * `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
 
-### Defined in VizModules
+### Plotting Functions Defined in VizModules
 
-* `linePlot` - Line plots with customizable trajectories.
-* `piePlot` - Pie and donut charts.
-* `radarPlot` - Radar Plot 
-* `parallelCoordinatePlot` 
-* `ternaryPlot`
-* `dumbbellPlot`
-* `volcanoPlot` - Volcano plots for differential expression analysis (extends `dittoViz_scatterPlot`).
+* `linePlot` - Line plots
+* `piePlot` - Pie and donut plots
+* `radarPlot` - Radar plots
+* `parallelCoordinatePlot` - Parallel coordinate plots
+* `ternaryPlot` - Ternary plots
+* `dumbbellPlot` - Dumbbell plots
 
 ## Modules Planned
 
@@ -141,86 +132,86 @@ dittoViz is under active development, so additional modules will be created as m
 
 ## Contributing a New Module
 
-To contribute a new module to the package, see the vignette for guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
+To contribute a new module to the package, see the vignette for clear guidelines: [`vignette("adding-a-new-module", package = "VizModules")`][16]
 
 
 ## Examples of Plots:
 
 [linePlot:][1]
 
-![](man/PlotImages/LinePlot.png)
+![](man/figures/LinePlot.png)
 
 [plotthis_AreaPlot:][2]
 
 [(Source Plotting Function)][19]
 
-![](man/PlotImages/AreaPlot.png)
+![](man/figures/AreaPlot.png)
 
 [plotthis_BoxPlot:][3]
 
 [(Source Plotting Function)][20]
 
-![](man/PlotImages/BoxPlot.png)
+![](man/figures/BoxPlot.png)
 
 [plotthis_DensityPlot:][4]
 
 [(Source Plotting Function)][21]
 
-![](man/PlotImages/DensityPlot.png)
+![](man/figures/DensityPlot.png)
 
 [dumbellPlot:][5]
 
-![](man/PlotImages/DumbellPlot.png)
+![](man/figures/DumbellPlot.png)
 
 [plotthis_HistogramPlot:][6]
 
 [(Source Plotting Function)][21]
 
-![](man/PlotImages/HistogramPlot.png)
+![](man/figures/HistogramPlot.png)
 
 [parallelCoordinatePlot:][7]
 
-![](man/PlotImages/ParallelPlot.png)
+![](man/figures/ParallelPlot.png)
 
 [piePlot:][8]
 
-![](man/PlotImages/PiePlot.png)
+![](man/figures/PiePlot.png)
 
 [radarPlot:][9]
 
-![](man/PlotImages/RadarPlot.png)
+![](man/figures/RadarPlot.png)
 
 [dittoViz_ScatterPlot:][10]
 
 [(Source Plotting Function)][22]
 
-![](man/PlotImages/ScatterPlot.png)
+![](man/figures/ScatterPlot.png)
 
 [plotthis_SplitBarPlot:][11]
 
 [(Source Plotting Function)][23]
 
-![](man/PlotImages/SplitBarPlot.png)
+![](man/figures/SplitBarPlot.png)
 
 [ternaryPlot:][12]
 
-![](man/PlotImages/ternaryPlot.png)
+![](man/figures/ternaryPlot.png)
 
 [plotthis_ViolinPlot:][13]
 
 [(Source Plotting Function)][20]
 
-![](man/PlotImages/ViolinPlot.png)
+![](man/figures/ViolinPlot.png)
 
 [dittoViz_yPlot:][14]
 
 [(Source Plotting Function)][22]
 
-![](man/PlotImages/yPlot.png)
+![](man/figures/yPlot.png)
 
 ### UI Overview:
 
-![](man/PlotImages/UI_Overview.png)
+![](man/figures/UI_Overview.png)
 
 Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob Martin](https://github.com/Jacob1106)
 

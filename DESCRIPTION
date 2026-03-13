@@ -13,13 +13,14 @@ Description: VizModules offers a core selection of interactivity-first Shiny mod
     plot types meant to serve as flexible building blocks for applications and 
     as the base for more complex modules. These modules
     allow for the rapid and convenient construction of Shiny apps with very few lines
-    of code and decouple plotting from the underlying data. As is, these modules allow 
+    of code and decouple plotting from the underlying data. These modules allow 
     for full plot aesthetic customization by the end user through UI inputs. Utility
-    functions for simple UI organization and parsing are also provided.
+    functions for simple UI organization, automated UI tooltips, and additional
+    plot enhancements are also provided.
 License: MIT + file LICENSE
 Depends:
     shiny,
-    plotthis (>= 0.10.0),
+    plotthis (>= 0.11.0),
     dittoViz,
     plotly,
     R (>= 4.5),

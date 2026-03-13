@@ -55,3 +55,4 @@ docs
 INTERNAL_*
 
 .vscode
+.DS_Store
