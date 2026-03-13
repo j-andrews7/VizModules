@@ -20,7 +20,8 @@ specialized Shiny modules upon.
 
 ## Install
 
-Note that this package is in development and may break at any time.
+Note that this package is in development and may contain bugs and
+general wonkiness.
 
 Currently, the package can be installed from Github:
 
@@ -30,9 +31,9 @@ devtools::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted gallery:
+- Explore the hosted example gallery:
   <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
-- Run the same gallery locally:
+- Run the same gallery locally after installation:
   `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - See the vignette for a full walkthrough:
   [`vignette("quick-start", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/quick-start.html)
@@ -121,21 +122,6 @@ The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic while reusing
 the full functionality of the base modules.
 
-**Key points when building wrapper modules:**
-
-1.  **Namespace handling**: Use `NS(id)` for your wrapper’s custom
-    inputs, and pass the bare `id` (not namespaced) to the base module’s
-    UI and server functions.
-
-2.  **Data processing pattern**: Process your data inside a
-    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
-    block to access your wrapper’s namespaced inputs, then call the base
-    module’s server function *outside* that block to avoid
-    double-namespacing.
-
-3.  **Reactive data**: Always pass reactive expressions to both your
-    wrapper and the underlying module servers.
-
 For more details, see
 [`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
 
@@ -149,7 +135,8 @@ following visualization functions:
 - `dittoViz_scatterPlot` - x/y coordinate plots with additional color
   and shape encodings (wraps
   [`dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)).
-- `dittoViz_yPlot` - Multi-variate Y-axis plots (wraps
+- `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter,
+  violinplots - wraps
   [`dittoViz::yPlot`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)).
 
 ### `plotthis`
@@ -169,16 +156,14 @@ following visualization functions:
 - `plotthis_Histogram` - Histograms (wraps
   [`plotthis::Histogram`](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)).
 
-### Defined in VizModules
+### Plotting Functions Defined in VizModules
 
-- `linePlot` - Line plots with customizable trajectories.
-- `piePlot` - Pie and donut charts.
-- `radarPlot` - Radar Plot
-- `parallelCoordinatePlot`
-- `ternaryPlot`
-- `dumbbellPlot`
-- `volcanoPlot` - Volcano plots for differential expression analysis
-  (extends `dittoViz_scatterPlot`).
+- `linePlot` - Line plots
+- `piePlot` - Pie and donut plots
+- `radarPlot` - Radar plots
+- `parallelCoordinatePlot` - Parallel coordinate plots
+- `ternaryPlot` - Ternary plots
+- `dumbbellPlot` - Dumbbell plots
 
 ## Modules Planned
 
@@ -195,7 +180,7 @@ created as more visualization functions are added.
 
 ## Contributing a New Module
 
-To contribute a new module to the package, see the vignette for
+To contribute a new module to the package, see the vignette for clear
 guidelines:
 [`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html)
 
@@ -203,87 +188,87 @@ guidelines:
 
 [linePlot:](https://j-andrews7.github.io/VizModules/reference/linePlotApp.html)
 
-![](man/PlotImages/LinePlot.png)
+![](reference/figures/LinePlot.png)
 
 [plotthis_AreaPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/AreaPlot.html)
 
-![](man/PlotImages/AreaPlot.png)
+![](reference/figures/AreaPlot.png)
 
 [plotthis_BoxPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 
-![](man/PlotImages/BoxPlot.png)
+![](reference/figures/BoxPlot.png)
 
 [plotthis_DensityPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
-![](man/PlotImages/DensityPlot.png)
+![](reference/figures/DensityPlot.png)
 
 [dumbellPlot:](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html)
 
-![](man/PlotImages/DumbellPlot.png)
+![](reference/figures/DumbellPlot.png)
 
 [plotthis_HistogramPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
-![](man/PlotImages/HistogramPlot.png)
+![](reference/figures/HistogramPlot.png)
 
 [parallelCoordinatePlot:](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html)
 
-![](man/PlotImages/ParallelPlot.png)
+![](reference/figures/ParallelPlot.png)
 
 [piePlot:](https://j-andrews7.github.io/VizModules/reference/piePlotApp.html)
 
-![](man/PlotImages/PiePlot.png)
+![](reference/figures/PiePlot.png)
 
 [radarPlot:](https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html)
 
-![](man/PlotImages/RadarPlot.png)
+![](reference/figures/RadarPlot.png)
 
 [dittoViz_ScatterPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
 
 [(Source Plotting
 Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
 
-![](man/PlotImages/ScatterPlot.png)
+![](reference/figures/ScatterPlot.png)
 
 [plotthis_SplitBarPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/barplot.html)
 
-![](man/PlotImages/SplitBarPlot.png)
+![](reference/figures/SplitBarPlot.png)
 
 [ternaryPlot:](https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html)
 
-![](man/PlotImages/ternaryPlot.png)
+![](reference/figures/ternaryPlot.png)
 
 [plotthis_ViolinPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 
-![](man/PlotImages/ViolinPlot.png)
+![](reference/figures/ViolinPlot.png)
 
 [dittoViz_yPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
 
 [(Source Plotting
 Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
 
-![](man/PlotImages/yPlot.png)
+![](reference/figures/yPlot.png)
 
 ### UI Overview:
 
-![](man/PlotImages/UI_Overview.png)
+![](reference/figures/UI_Overview.png)
 
 Developed by [Jared Andrews](https://github.com/j-andrews7) and [Jacob
 Martin](https://github.com/Jacob1106)

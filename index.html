@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Flexible, Interactive Shiny Modules for Almost Any Plot">
-<meta name="description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
-<meta property="og:description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. As is, these modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization and parsing are also provided.">
+<meta name="description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. These modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization, automated UI tooltips, and additional plot enhancements are also provided.">
+<meta property="og:description" content="VizModules offers a core selection of interactivity-first Shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of Shiny apps with very few lines of code and decouple plotting from the underlying data. These modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization, automated UI tooltips, and additional plot enhancements are also provided.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -73,7 +73,7 @@
 <div class="section level2">
 <h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
-<p>Note that this package is in development and may break at any time.</p>
+<p>Note that this package is in development and may contain bugs and general wonkiness.</p>
 <p>Currently, the package can be installed from Github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"j-andrews7/VizModules"</span><span class="op">)</span></span></code></pre></div>
@@ -82,9 +82,9 @@
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <ul>
-<li>Explore the hosted gallery: <a href="https://j-andrews7-vizmodules.share.connect.posit.cloud/" class="external-link uri">https://j-andrews7-vizmodules.share.connect.posit.cloud/</a>
+<li>Explore the hosted example gallery: <a href="https://j-andrews7-vizmodules.share.connect.posit.cloud/" class="external-link uri">https://j-andrews7-vizmodules.share.connect.posit.cloud/</a>
 </li>
-<li>Run the same gallery locally: <code>shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))</code>
+<li>Run the same gallery locally after installation: <code>shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))</code>
 </li>
 <li>See the vignette for a full walkthrough: <a href="https://j-andrews7.github.io/VizModules/articles/quick-start.html"><code>vignette("quick-start", package = "VizModules")</code></a>
 </li>
@@ -143,12 +143,6 @@
 <h2 id="building-custom-wrapper-modules">Building Custom Wrapper Modules<a class="anchor" aria-label="anchor" href="#building-custom-wrapper-modules"></a>
 </h2>
 <p>The modules in <strong>VizModules</strong> are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.</p>
-<p><strong>Key points when building wrapper modules:</strong></p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Namespace handling</strong>: Use <code>NS(id)</code> for your wrapper’s custom inputs, and pass the bare <code>id</code> (not namespaced) to the base module’s UI and server functions.</p></li>
-<li><p><strong>Data processing pattern</strong>: Process your data inside a <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> block to access your wrapper’s namespaced inputs, then call the base module’s server function <em>outside</em> that block to avoid double-namespacing.</p></li>
-<li><p><strong>Reactive data</strong>: Always pass reactive expressions to both your wrapper and the underlying module servers.</p></li>
-</ol>
 <p>For more details, see <a href="https://j-andrews7.github.io/VizModules/articles/custom-modules.html"><code>vignette("custom-modules", package = "VizModules")</code>.</a></p>
 </div>
 <div class="section level2">
@@ -163,7 +157,7 @@
 <li>
 <code>dittoViz_scatterPlot</code> - x/y coordinate plots with additional color and shape encodings (wraps <code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">dittoViz::scatterPlot</a></code>).</li>
 <li>
-<code>dittoViz_yPlot</code> - Multi-variate Y-axis plots (wraps <code><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">dittoViz::yPlot</a></code>).</li>
+<code>dittoViz_yPlot</code> - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps <code><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">dittoViz::yPlot</a></code>).</li>
 </ul>
 </div>
 <div class="section level3">
@@ -188,20 +182,21 @@
 </ul>
 </div>
 <div class="section level3">
-<h3 id="defined-in-vizmodules">Defined in VizModules<a class="anchor" aria-label="anchor" href="#defined-in-vizmodules"></a>
+<h3 id="plotting-functions-defined-in-vizmodules">Plotting Functions Defined in VizModules<a class="anchor" aria-label="anchor" href="#plotting-functions-defined-in-vizmodules"></a>
 </h3>
 <ul>
 <li>
-<code>linePlot</code> - Line plots with customizable trajectories.</li>
+<code>linePlot</code> - Line plots</li>
 <li>
-<code>piePlot</code> - Pie and donut charts.</li>
+<code>piePlot</code> - Pie and donut plots</li>
 <li>
-<code>radarPlot</code> - Radar Plot</li>
-<li><code>parallelCoordinatePlot</code></li>
-<li><code>ternaryPlot</code></li>
-<li><code>dumbbellPlot</code></li>
+<code>radarPlot</code> - Radar plots</li>
 <li>
-<code>volcanoPlot</code> - Volcano plots for differential expression analysis (extends <code>dittoViz_scatterPlot</code>).</li>
+<code>parallelCoordinatePlot</code> - Parallel coordinate plots</li>
+<li>
+<code>ternaryPlot</code> - Ternary plots</li>
+<li>
+<code>dumbbellPlot</code> - Dumbbell plots</li>
 </ul>
 </div>
 </div>
@@ -226,51 +221,51 @@
 <div class="section level2">
 <h2 id="contributing-a-new-module">Contributing a New Module<a class="anchor" aria-label="anchor" href="#contributing-a-new-module"></a>
 </h2>
-<p>To contribute a new module to the package, see the vignette for guidelines: <a href="https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html"><code>vignette("adding-a-new-module", package = "VizModules")</code></a></p>
+<p>To contribute a new module to the package, see the vignette for clear guidelines: <a href="https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html"><code>vignette("adding-a-new-module", package = "VizModules")</code></a></p>
 </div>
 <div class="section level2">
 <h2 id="examples-of-plots">Examples of Plots:<a class="anchor" aria-label="anchor" href="#examples-of-plots"></a>
 </h2>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/linePlotApp.html">linePlot:</a></p>
-<p><img src="man/PlotImages/LinePlot.png"></p>
+<p><img src="reference/figures/LinePlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html">plotthis_AreaPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/AreaPlot.png"></p>
+<p><img src="reference/figures/AreaPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotApp.html">plotthis_BoxPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/BoxPlot.png"></p>
+<p><img src="reference/figures/BoxPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html">plotthis_DensityPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/DensityPlot.png"></p>
+<p><img src="reference/figures/DensityPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html">dumbellPlot:</a></p>
-<p><img src="man/PlotImages/DumbellPlot.png"></p>
+<p><img src="reference/figures/DumbellPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html">plotthis_HistogramPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/HistogramPlot.png"></p>
+<p><img src="reference/figures/HistogramPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html">parallelCoordinatePlot:</a></p>
-<p><img src="man/PlotImages/ParallelPlot.png"></p>
+<p><img src="reference/figures/ParallelPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/piePlotApp.html">piePlot:</a></p>
-<p><img src="man/PlotImages/PiePlot.png"></p>
+<p><img src="reference/figures/PiePlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html">radarPlot:</a></p>
-<p><img src="man/PlotImages/RadarPlot.png"></p>
+<p><img src="reference/figures/RadarPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html">dittoViz_ScatterPlot:</a></p>
 <p><a href="https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/ScatterPlot.png"></p>
+<p><img src="reference/figures/ScatterPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html">plotthis_SplitBarPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/barplot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/SplitBarPlot.png"></p>
+<p><img src="reference/figures/SplitBarPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html">ternaryPlot:</a></p>
-<p><img src="man/PlotImages/ternaryPlot.png"></p>
+<p><img src="reference/figures/ternaryPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html">plotthis_ViolinPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/ViolinPlot.png"></p>
+<p><img src="reference/figures/ViolinPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html">dittoViz_yPlot:</a></p>
 <p><a href="https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html" class="external-link">(Source Plotting Function)</a></p>
-<p><img src="man/PlotImages/yPlot.png"></p>
+<p><img src="reference/figures/yPlot.png"></p>
 <div class="section level3">
 <h3 id="ui-overview">UI Overview:<a class="anchor" aria-label="anchor" href="#ui-overview"></a>
 </h3>
-<p><img src="man/PlotImages/UI_Overview.png"></p>
+<p><img src="reference/figures/UI_Overview.png"></p>
 <p>Developed by <a href="https://github.com/j-andrews7" class="external-link">Jared Andrews</a> and <a href="https://github.com/Jacob1106" class="external-link">Jacob Martin</a></p>
 </div>
 </div>
