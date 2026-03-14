@@ -43,7 +43,7 @@ parameter descriptions for specified parameter names."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Extract parameter documentation from an R function help page</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_mods.R" class="external-link"><code>R/plot_mods.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/parse_utils.R" class="external-link"><code>R/parse_utils.R</code></a></small>
       <div class="d-none name"><code>get_documentation.Rd</code></div>
     </div>
 
@@ -72,7 +72,9 @@ which function's documentation to parse.</p></dd>
 
 
 <dt id="arg-selected">selected<a class="anchor" aria-label="anchor" href="#arg-selected"></a></dt>
-<dd><p>A character vector of parameter names to extract.</p></dd>
+<dd><p>A list of parameter names to extract. Note that co-documented
+parameters (e.g., <code>x.by</code> and <code>y.by</code>) should be grouped together in a vector
+within the list or an error will be thrown by <code>extract_roc_text</code>.</p></dd>
 
 
 <dt id="arg-cap">cap<a class="anchor" aria-label="anchor" href="#arg-cap"></a></dt>

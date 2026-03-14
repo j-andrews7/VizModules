@@ -23,7 +23,10 @@ get_documentation(package_name, type = "param", selected = NULL, cap = FALSE)
 
 - selected:
 
-  A character vector of parameter names to extract.
+  A list of parameter names to extract. Note that co-documented
+  parameters (e.g., `x.by` and `y.by`) should be grouped together in a
+  vector within the list or an error will be thrown by
+  `extract_roc_text`.
 
 - cap:
 

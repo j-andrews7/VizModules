@@ -268,5 +268,498 @@ library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 plotthis_AreaPlotInputsUI("areaPlot", mtcars)
-#> Error in FUN(X[[i]], ...): object '.' not found
+#> <div class="tabbable">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="3529">
+#>     <li class="active">
+#>       <a href="#tab-3529-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-3529-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-3529-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-3529-4" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-3529-5" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>     </li>
+#>   </ul>
+#>   <div class="tab-content" data-tabsetid="3529">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3529-1">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9728442">
+#>             <label class="control-label" id="areaPlot-x.data-label" for="areaPlot-x.data">X values:</label>
+#>             <div>
+#>               <select id="areaPlot-x.data" class="shiny-input-select"><option value=""></option>
+#> <option value="cyl" selected>cyl</option>
+#> <option value="gear">gear</option></select>
+#>               <script type="application/json" data-for="areaPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9728442', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8190824">
+#>             <label class="control-label" id="areaPlot-y.data-label" for="areaPlot-y.data">Y values:</label>
+#>             <div>
+#>               <select id="areaPlot-y.data" class="shiny-input-select"><option value=""></option>
+#> <option value="mpg" selected>mpg</option>
+#> <option value="disp">disp</option>
+#> <option value="hp">hp</option>
+#> <option value="drat">drat</option>
+#> <option value="wt">wt</option>
+#> <option value="qsec">qsec</option>
+#> <option value="vs">vs</option>
+#> <option value="am">am</option>
+#> <option value="carb">carb</option></select>
+#>               <script type="application/json" data-for="areaPlot-y.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8190824', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9029238">
+#>             <label class="control-label" id="areaPlot-group.by-label" for="areaPlot-group.by">Group by:</label>
+#>             <div>
+#>               <select id="areaPlot-group.by" class="shiny-input-select"><option value=""></option>
+#> <option value=""></option>
+#> <option value="gear" selected>gear</option></select>
+#>               <script type="application/json" data-for="areaPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9029238', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify5813660">
+#>             <div class="material-switch">
+#>               <label for="areaPlot-scale.y" style="padding-right: 10px;">Scale y-axis by total:</label>
+#>               <input id="areaPlot-scale.y" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="areaPlot-scale.y"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5813660', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value to scale the y-axis by the total number in each x-axis group.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Facet" id="tab-3529-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7730085">
+#>             <label class="control-label" id="areaPlot-facet.by-label" for="areaPlot-facet.by">Facet by:</label>
+#>             <div>
+#>               <select id="areaPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="gear">gear</option>
+#> <option value="" selected></option></select>
+#>               <script type="application/json" data-for="areaPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7730085', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9951230">
+#>             <label class="control-label" id="areaPlot-facet.scale-label" for="areaPlot-facet.scale">Facet scale:</label>
+#>             <div>
+#>               <select id="areaPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#> <option value="free">free</option>
+#> <option value="free_x">free_x</option>
+#> <option value="free_y">free_y</option></select>
+#>               <script type="application/json" data-for="areaPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9951230', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7109712">
+#>             <label class="control-label" id="areaPlot-facet.ncol-label" for="areaPlot-facet.ncol">Facet number of columns:</label>
+#>             <input id="areaPlot-facet.ncol" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="20"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7109712', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2149426">
+#>             <label class="control-label" id="areaPlot-facet.nrow-label" for="areaPlot-facet.nrow">Facet number of rows:</label>
+#>             <input id="areaPlot-facet.nrow" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="20"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2149426', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2917577">
+#>             <div class="material-switch">
+#>               <label for="areaPlot-facet.by.row" style="padding-right: 10px;">Facet by row</label>
+#>               <input id="areaPlot-facet.by.row" type="checkbox" checked="checked"/>
+#>               <label class="switch label-success bg-success" for="areaPlot-facet.by.row"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2917577', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3529-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div id="areaPlot-palette.selection" class="shiny-html-output"></div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7217597">
+#>             <label class="control-label" id="areaPlot-alpha-label" for="areaPlot-alpha">Alpha:</label>
+#>             <input id="areaPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7217597', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Axes" id="tab-3529-4">
+#>       <div class="row">
+#>         <div class="col-sm-6"></div>
+#>         <div class="col-sm-6"></div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6"></div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-title.font.family-label" for="areaPlot-title.font.family">Title Font</label>
+#>             <div>
+#>               <select id="areaPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="areaPlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="areaPlot-text.colour">Title Color</label>
+#>             <input id="areaPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.title.font.size-label" for="areaPlot-axis.title.font.size">Axis Title Size</label>
+#>             <input id="areaPlot-axis.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="areaPlot-axis.title.font.color">Axis Title Color</label>
+#>             <input id="areaPlot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.title.font.family-label" for="areaPlot-axis.title.font.family">Axis Title Font</label>
+#>             <div>
+#>               <select id="areaPlot-axis.title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="areaPlot-axis.title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="areaPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="areaPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Mirror Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="areaPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show X Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="areaPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Y Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="areaPlot-axis.linecolor">Axis Line Color</label>
+#>             <input id="areaPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.linewidth-label" for="areaPlot-axis.linewidth">Axis Line Width</label>
+#>             <input id="areaPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.tickfont.size-label" for="areaPlot-axis.tickfont.size">Tick Label Size</label>
+#>             <input id="areaPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="areaPlot-axis.tickfont.color">Tick Label Color</label>
+#>             <input id="areaPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.tickfont.family-label" for="areaPlot-axis.tickfont.family">Tick Label Font</label>
+#>             <div>
+#>               <select id="areaPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="areaPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.tickangle.x-label" for="areaPlot-axis.tickangle.x">X Tick Label Angle</label>
+#>             <input id="areaPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.tickangle.y-label" for="areaPlot-axis.tickangle.y">Y Tick Label Angle</label>
+#>             <input id="areaPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.ticks-label" for="areaPlot-axis.ticks">Tick Position</label>
+#>             <div>
+#>               <select id="areaPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#> <option value="inside">Inside</option>
+#> <option value="">None</option></select>
+#>               <script type="application/json" data-for="areaPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="areaPlot-axis.tickcolor">Tick Mark Color</label>
+#>             <input id="areaPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.ticklen-label" for="areaPlot-axis.ticklen">Tick Mark Length</label>
+#>             <input id="areaPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-axis.tickwidth-label" for="areaPlot-axis.tickwidth">Tick Mark Width</label>
+#>             <input id="areaPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Lines" id="tab-3529-5">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8666157">
+#>             <label class="control-label" id="areaPlot-hline.intercepts-label" for="areaPlot-hline.intercepts">Y-intercepts</label>
+#>             <input id="areaPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8666157', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-hline.colors-label" for="areaPlot-hline.colors">Colors</label>
+#>             <input id="areaPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-hline.widths-label" for="areaPlot-hline.widths">Widths</label>
+#>             <input id="areaPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-hline.linetypes-label" for="areaPlot-hline.linetypes">Line types</label>
+#>             <input id="areaPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-hline.opacities-label" for="areaPlot-hline.opacities">Opacities (0-1)</label>
+#>             <input id="areaPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2384531">
+#>             <label class="control-label" id="areaPlot-vline.intercepts-label" for="areaPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="areaPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2384531', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-vline.colors-label" for="areaPlot-vline.colors">Colors</label>
+#>             <input id="areaPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-vline.widths-label" for="areaPlot-vline.widths">Widths</label>
+#>             <input id="areaPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-vline.linetypes-label" for="areaPlot-vline.linetypes">Line types</label>
+#>             <input id="areaPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="areaPlot-vline.opacities-label" for="areaPlot-vline.opacities">Opacities (0-1)</label>
+#>             <input id="areaPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <div class="material-switch">
+#>         <label for="areaPlot-auto.update" style="padding-right: 10px;">Auto Update</label>
+#>         <input id="areaPlot-auto.update" type="checkbox" checked="checked"/>
+#>         <label class="switch label-success bg-success" for="areaPlot-auto.update"></label>
+#>       </div>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button id="areaPlot-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="areaPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="areaPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="areaPlot-download.format-label" for="areaPlot-download.format">Download Format</label>
+#>       <div>
+#>         <select id="areaPlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="areaPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <br/>
 ```

@@ -391,5 +391,610 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
-#> Error in FUN(X[[i]], ...): object '.' not found
+#> <div class="tabbable">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="9076">
+#>     <li class="active">
+#>       <a href="#tab-9076-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-9076-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-9076-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-9076-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-9076-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-9076-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>     </li>
+#>   </ul>
+#>   <div class="tab-content" data-tabsetid="9076">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9076-1">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify1636232">
+#>             <label class="control-label" id="BoxPlot-x.data-label" for="BoxPlot-x.data">X data</label>
+#>             <div>
+#>               <select id="BoxPlot-x.data" class="shiny-input-select"><option value=""></option></select>
+#>               <script type="application/json" data-for="BoxPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1636232', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9528248">
+#>             <label class="control-label" id="BoxPlot-y.data-label" for="BoxPlot-y.data">Y data</label>
+#>             <div>
+#>               <select id="BoxPlot-y.data" class="shiny-input-select"><option value=""></option>
+#> <option value="mpg" selected>mpg</option>
+#> <option value="cyl">cyl</option>
+#> <option value="disp">disp</option>
+#> <option value="hp">hp</option>
+#> <option value="drat">drat</option>
+#> <option value="wt">wt</option>
+#> <option value="qsec">qsec</option>
+#> <option value="vs">vs</option>
+#> <option value="am">am</option>
+#> <option value="gear">gear</option>
+#> <option value="carb">carb</option></select>
+#>               <script type="application/json" data-for="BoxPlot-y.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9528248', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3218546">
+#>             <label class="control-label" id="BoxPlot-group.by-label" for="BoxPlot-group.by">Group by</label>
+#>             <div>
+#>               <select id="BoxPlot-group.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="" selected></option></select>
+#>               <script type="application/json" data-for="BoxPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3218546', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3615341">
+#>             <div class="material-switch">
+#>               <label for="BoxPlot-show.outliers" style="padding-right: 10px;">Show Outliers</label>
+#>               <input id="BoxPlot-show.outliers" type="checkbox" checked="checked"/>
+#>               <label class="switch label-success bg-success" for="BoxPlot-show.outliers"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3615341', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Toggle whether outlier points beyond the whiskers are displayed on the boxplot'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div id="BoxPlot-palette.selection" class="shiny-html-output"></div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9076-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8877234">
+#>             <label class="control-label" id="BoxPlot-boxplot.width-label" for="BoxPlot-boxplot.width">Boxplot Width</label>
+#>             <input id="BoxPlot-boxplot.width" type="number" class="shiny-input-number form-control" value="0.8" data-update-on="change" min="0" max="1" step="0.05"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8877234', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the relative width of each boxplot, where 1 fills the entire available space'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8280144">
+#>             <label class="control-label" id="BoxPlot-sort_x-label" for="BoxPlot-sort_x">Sort X By</label>
+#>             <input id="BoxPlot-sort_x" type="text" class="shiny-input-text form-control" value="" placeholder="mean(y data col name)" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8280144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'An expression (in character string) to order x-axis. For example, "mean(y)" will order the x-axis by the mean of y. Default is NULL, which means keeping the original order of x. Note that when keep_empty is TRUE for x, the empty x levels will always be placed at the end of the x-axis.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify1006565">
+#>             <label class="control-label" id="BoxPlot-y.max-label" for="BoxPlot-y.max">Max Value of Y Axis</label>
+#>             <input id="BoxPlot-y.max" type="number" class="shiny-input-number form-control" value="37.629" data-update-on="change" min="-Inf" max="Inf"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1006565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the maximum value of the y-axis. You can also use quantile notation like "q95" to specify the 95th percentile. When comparisons are set and a numeric y_max is provided, it will be used to set the y-axis limit, including the significance labels.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9060515">
+#>             <label class="control-label" id="BoxPlot-y.min-label" for="BoxPlot-y.min">Min Value of Y Axis</label>
+#>             <input id="BoxPlot-y.min" type="number" class="shiny-input-number form-control" value="10.4" data-update-on="change" min="-Inf" max="Inf"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9060515', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value or a character string to specify the minimum value of the y-axis. You can also use quantile notation like "q5" to specify the 5th percentile.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7727303">
+#>             <div class="material-switch">
+#>               <label for="BoxPlot-add.points" style="padding-right: 10px;">Add Jitter Points</label>
+#>               <input id="BoxPlot-add.points" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="BoxPlot-add.points"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7727303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value to add (jitter) points to the plot.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3833707">
+#>             <label class="control-label" id="BoxPlot-pt.size-label" for="BoxPlot-pt.size">Point Size</label>
+#>             <input id="BoxPlot-pt.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1" max="100"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3833707', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the points.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9996524">
+#>             <label class="control-label" id="BoxPlot-pt.alpha-label" for="BoxPlot-pt.alpha">Point Alpha</label>
+#>             <input id="BoxPlot-pt.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9996524', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the points.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3492991">
+#>             <label class="control-label" id="BoxPlot-jitter.width-label" for="BoxPlot-jitter.width">Jitter Width</label>
+#>             <input id="BoxPlot-jitter.width" type="number" class="shiny-input-number form-control" value="0.3" data-update-on="change" min="0" max="1" step="0.05"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3492991', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the width of the jitter. Defaults to 0.5, but when paired_by is provided, it will be set to 0.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9473182">
+#>             <label class="control-label" for="BoxPlot-pt.color">Point Outline Colour</label>
+#>             <input id="BoxPlot-pt.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9473182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the points.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Highlight" id="tab-9076-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2161000">
+#>             <label class="control-label" id="BoxPlot-highlight-label" for="BoxPlot-highlight">Highlight</label>
+#>             <input id="BoxPlot-highlight" type="text" class="shiny-input-text form-control" value="" placeholder="E.g. col name &gt; 0" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2161000', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A vector of character strings to highlight the points. It should be a subset of the row names of the data. If TRUE, it will highlight all points.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify320928">
+#>             <label class="control-label" for="BoxPlot-highlight.colour">Highlight Colour</label>
+#>             <input id="BoxPlot-highlight.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify320928', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string to specify the color of the highlighted points.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify1453159">
+#>             <label class="control-label" id="BoxPlot-highlight.size-label" for="BoxPlot-highlight.size">Highlight Size</label>
+#>             <input id="BoxPlot-highlight.size" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1453159', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the size of the highlighted points.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8543839">
+#>             <label class="control-label" id="BoxPlot-highlight.alpha-label" for="BoxPlot-highlight.alpha">Highlight Alpha</label>
+#>             <input id="BoxPlot-highlight.alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8543839', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value to specify the transparency of the highlighted points.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Facet" id="tab-9076-4">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2131493">
+#>             <label class="control-label" id="BoxPlot-facet.by-label" for="BoxPlot-facet.by">Facet by</label>
+#>             <div>
+#>               <select id="BoxPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="" selected></option></select>
+#>               <script type="application/json" data-for="BoxPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2131493', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2103108">
+#>             <label class="control-label" id="BoxPlot-facet.scale-label" for="BoxPlot-facet.scale">Facet Scale</label>
+#>             <div>
+#>               <select id="BoxPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#> <option value="free">free</option>
+#> <option value="free_x">free_x</option>
+#> <option value="free_y">free_y</option></select>
+#>               <script type="application/json" data-for="BoxPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2103108', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify395207">
+#>             <label class="control-label" id="BoxPlot-facet.ncol-label" for="BoxPlot-facet.ncol">Columns</label>
+#>             <input id="BoxPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify395207', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9447748">
+#>             <label class="control-label" id="BoxPlot-facet.nrow-label" for="BoxPlot-facet.nrow">Rows</label>
+#>             <input id="BoxPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9447748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2449280">
+#>             <div class="material-switch">
+#>               <label for="BoxPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
+#>               <input id="BoxPlot-facet.by.row" type="checkbox" checked="checked"/>
+#>               <label class="switch label-success bg-success" for="BoxPlot-facet.by.row"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2449280', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Axes" id="tab-9076-5">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="material-switch">
+#>               <label for="BoxPlot-rotate" style="padding-right: 10px;">Rotate (swap X/Y)</label>
+#>               <input id="BoxPlot-rotate" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="BoxPlot-rotate"></label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6"></div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6"></div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-title.font.family-label" for="BoxPlot-title.font.family">Title Font</label>
+#>             <div>
+#>               <select id="BoxPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="BoxPlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-text.colour">Title Color</label>
+#>             <input id="BoxPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.title.font.size-label" for="BoxPlot-axis.title.font.size">Axis Title Size</label>
+#>             <input id="BoxPlot-axis.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-axis.title.font.color">Axis Title Color</label>
+#>             <input id="BoxPlot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.title.font.family-label" for="BoxPlot-axis.title.font.family">Axis Title Font</label>
+#>             <div>
+#>               <select id="BoxPlot-axis.title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="BoxPlot-axis.title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="BoxPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="BoxPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Mirror Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="BoxPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show X Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="BoxPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Y Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-axis.linecolor">Axis Line Color</label>
+#>             <input id="BoxPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.linewidth-label" for="BoxPlot-axis.linewidth">Axis Line Width</label>
+#>             <input id="BoxPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.tickfont.size-label" for="BoxPlot-axis.tickfont.size">Tick Label Size</label>
+#>             <input id="BoxPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-axis.tickfont.color">Tick Label Color</label>
+#>             <input id="BoxPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.tickfont.family-label" for="BoxPlot-axis.tickfont.family">Tick Label Font</label>
+#>             <div>
+#>               <select id="BoxPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="BoxPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.tickangle.x-label" for="BoxPlot-axis.tickangle.x">X Tick Label Angle</label>
+#>             <input id="BoxPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.tickangle.y-label" for="BoxPlot-axis.tickangle.y">Y Tick Label Angle</label>
+#>             <input id="BoxPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.ticks-label" for="BoxPlot-axis.ticks">Tick Position</label>
+#>             <div>
+#>               <select id="BoxPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#> <option value="inside">Inside</option>
+#> <option value="">None</option></select>
+#>               <script type="application/json" data-for="BoxPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="BoxPlot-axis.tickcolor">Tick Mark Color</label>
+#>             <input id="BoxPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.ticklen-label" for="BoxPlot-axis.ticklen">Tick Mark Length</label>
+#>             <input id="BoxPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-axis.tickwidth-label" for="BoxPlot-axis.tickwidth">Tick Mark Width</label>
+#>             <input id="BoxPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Lines" id="tab-9076-6">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7811225">
+#>             <label class="control-label" id="BoxPlot-hline.intercepts-label" for="BoxPlot-hline.intercepts">Y-intercepts</label>
+#>             <input id="BoxPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7811225', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-hline.colors-label" for="BoxPlot-hline.colors">Colors</label>
+#>             <input id="BoxPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-hline.widths-label" for="BoxPlot-hline.widths">Widths</label>
+#>             <input id="BoxPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-hline.linetypes-label" for="BoxPlot-hline.linetypes">Line types</label>
+#>             <input id="BoxPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-hline.opacities-label" for="BoxPlot-hline.opacities">Opacities (0-1)</label>
+#>             <input id="BoxPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2882372">
+#>             <label class="control-label" id="BoxPlot-vline.intercepts-label" for="BoxPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="BoxPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2882372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-vline.colors-label" for="BoxPlot-vline.colors">Colors</label>
+#>             <input id="BoxPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-vline.widths-label" for="BoxPlot-vline.widths">Widths</label>
+#>             <input id="BoxPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-vline.linetypes-label" for="BoxPlot-vline.linetypes">Line types</label>
+#>             <input id="BoxPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="BoxPlot-vline.opacities-label" for="BoxPlot-vline.opacities">Opacities (0-1)</label>
+#>             <input id="BoxPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <div class="material-switch">
+#>         <label for="BoxPlot-auto.update" style="padding-right: 10px;">Auto Update</label>
+#>         <input id="BoxPlot-auto.update" type="checkbox" checked="checked"/>
+#>         <label class="switch label-success bg-success" for="BoxPlot-auto.update"></label>
+#>       </div>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button id="BoxPlot-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="BoxPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="BoxPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="BoxPlot-download.format-label" for="BoxPlot-download.format">Download Format</label>
+#>       <div>
+#>         <select id="BoxPlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="BoxPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <br/>
 ```

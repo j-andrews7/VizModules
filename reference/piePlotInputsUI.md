@@ -149,5 +149,353 @@ library(VizModules)
 pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)
-#> Error in FUN(X[[i]], ...): object '.' not found
+#> <div class="tabbable">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="7132">
+#>     <li class="active">
+#>       <a href="#tab-7132-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7132-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7132-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7132-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>     </li>
+#>   </ul>
+#>   <div class="tab-content" data-tabsetid="7132">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7132-1">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2447183">
+#>             <label class="control-label" id="piePlot-labels-label" for="piePlot-labels">Label column (summary data):</label>
+#>             <div>
+#>               <select id="piePlot-labels" class="shiny-input-select"><option value=""></option>
+#> <option value="Species" selected>Species</option></select>
+#>               <script type="application/json" data-for="piePlot-labels">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2447183', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the slice labels.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify446172">
+#>             <label class="control-label" id="piePlot-values-label" for="piePlot-values">Aggregated value column:</label>
+#>             <div>
+#>               <select id="piePlot-values" class="shiny-input-select"><option value=""></option>
+#> <option value="Count" selected>Count</option></select>
+#>               <script type="application/json" data-for="piePlot-values">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify446172', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the aggregated values (slice sizes).'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9098545">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="piePlot-sort.slices" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Sort slices by value</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9098545', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to sort slices by their values in descending order. Default: TRUE.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify706813">
+#>             <label class="control-label" id="piePlot-direction-label" for="piePlot-direction">Slice direction:</label>
+#>             <div>
+#>               <select id="piePlot-direction" class="shiny-input-select"><option value="counterclockwise" selected>Counterclockwise</option>
+#> <option value="clockwise">Clockwise</option></select>
+#>               <script type="application/json" data-for="piePlot-direction" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify706813', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, direction of slice progression. Options: "counterclockwise" or "clockwise". Default: "counterclockwise".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9968914">
+#>             <label class="control-label" id="piePlot-rotation-label" for="piePlot-rotation">Start angle (degrees):</label>
+#>             <input class="js-range-slider" id="piePlot-rotation" data-skin="shiny" data-min="0" data-max="360" data-from="0" data-step="5" data-grid="true" data-grid-num="9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9968914', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, starting angle of the first slice in degrees (0-360). Default: 0.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6118524">
+#>             <label class="control-label" id="piePlot-hole-label" for="piePlot-hole">Center hole size:</label>
+#>             <input class="js-range-slider" id="piePlot-hole" data-skin="shiny" data-min="0" data-max="0.9" data-from="0" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6118524', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric value between 0 and 1 for the hole size (0 for pie chart, >0 for donut chart). Default: 0.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Colors" id="tab-7132-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div id="piePlot-color.picker" class="shiny-html-output"></div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1725589">
+#>             <label class="control-label" for="piePlot-slice.line.color">Slice border color:</label>
+#>             <input id="piePlot-slice.line.color" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1725589', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for slice borders. Default: "#FFFFFF" (white).'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9094409">
+#>             <label class="control-label" id="piePlot-slice.line.width-label" for="piePlot-slice.line.width">Slice border width:</label>
+#>             <input id="piePlot-slice.line.width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9094409', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of slice borders in pixels. Set to 0 for no borders. Default: 0.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-7132-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify374512">
+#>             <label class="control-label" id="piePlot-textinfo-label" for="piePlot-textinfo">Text to show on slices:</label>
+#>             <div>
+#>               <select id="piePlot-textinfo" class="shiny-input-select" multiple="multiple"><option value="label" selected>label</option>
+#> <option value="value" selected>value</option>
+#> <option value="percent" selected>percent</option>
+#> <option value="none">none</option></select>
+#>               <script type="application/json" data-for="piePlot-textinfo">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify374512', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character string specifying the text info to show on slices. Any combination of "label", "text", "value", "percent" joined with a "+" (e.g., "label+percent") or "none" to hide text. Default: "label+percent".'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify5935538">
+#>             <label class="control-label" id="piePlot-textposition-label" for="piePlot-textposition">Text position:</label>
+#>             <div>
+#>               <select id="piePlot-textposition" class="shiny-input-select"><option value="auto" selected>Auto</option>
+#> <option value="inside">Inside</option>
+#> <option value="outside">Outside</option>
+#> <option value="none">Hide text</option></select>
+#>               <script type="application/json" data-for="piePlot-textposition" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5935538', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, position of the text relative to the slice. Options: "auto", "inside", "outside", or "none". Default: "auto".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2369776">
+#>             <label class="control-label" id="piePlot-insidetextorientation-label" for="piePlot-insidetextorientation">Inside text orientation:</label>
+#>             <div>
+#>               <select id="piePlot-insidetextorientation" class="shiny-input-select"><option value="auto" selected>auto</option>
+#> <option value="horizontal">horizontal</option>
+#> <option value="radial">radial</option>
+#> <option value="tangential">tangential</option></select>
+#>               <script type="application/json" data-for="piePlot-insidetextorientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2369776', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, orientation for inside text. Options: "auto", "horizontal", "radial", or "tangential". Default: "auto".'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9062972">
+#>             <label class="control-label" id="piePlot-text.font.size-label" for="piePlot-text.font.size">Slice text size:</label>
+#>             <input id="piePlot-text.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="6" step="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9062972', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the slice labels. Default: 12.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8188730">
+#>             <label class="control-label" id="piePlot-text.font.family-label" for="piePlot-text.font.family">Slice text font:</label>
+#>             <div>
+#>               <select id="piePlot-text.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="piePlot-text.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8188730', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the slice labels. Default: "Arial".'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6998293">
+#>             <label class="control-label" for="piePlot-text.font.color">Slice text color:</label>
+#>             <input id="piePlot-text.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6998293', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the slice labels. Default: "#000000".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-7132-4">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2200004">
+#>             <label class="control-label" id="piePlot-title.x-label" for="piePlot-title.x">Title horizontal position:</label>
+#>             <input class="js-range-slider" id="piePlot-title.x" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2200004', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, horizontal position for the plot title (0-1, where 0=left, 0.5=center, 1=right). Default: 0.5.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7279909">
+#>             <label class="control-label" id="piePlot-title.font.size-label" for="piePlot-title.font.size">Title font size:</label>
+#>             <input id="piePlot-title.font.size" type="number" class="shiny-input-number form-control" value="28" data-update-on="change" min="0"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7279909', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the title text. Default: 18.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2170845">
+#>             <label class="control-label" id="piePlot-title.font.family-label" for="piePlot-title.font.family">Title font:</label>
+#>             <div>
+#>               <select id="piePlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="piePlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2170845', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the title text. Default: "Arial".'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4562302">
+#>             <label class="control-label" for="piePlot-title.font.color">Title font color:</label>
+#>             <input id="piePlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4562302', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the title text. Default: "#000000".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3327998">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="piePlot-show.legend" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show legend</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3327998', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to display the legend. Default: TRUE.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify5683527">
+#>             <label class="control-label" id="piePlot-legend.orientation-label" for="piePlot-legend.orientation">Legend orientation:</label>
+#>             <div>
+#>               <select id="piePlot-legend.orientation" class="shiny-input-select"><option value="h" selected>Horizontal</option>
+#> <option value="v">Vertical</option></select>
+#>               <script type="application/json" data-for="piePlot-legend.orientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5683527', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, legend orientation. Options: "h" (horizontal) or "v" (vertical). Default: "h".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2522057">
+#>             <label class="control-label" id="piePlot-legend.font.family-label" for="piePlot-legend.font.family">Legend font:</label>
+#>             <div>
+#>               <select id="piePlot-legend.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="piePlot-legend.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2522057', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the legend text. Default: "Arial".'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify4640136">
+#>             <label class="control-label" id="piePlot-legend.font.size-label" for="piePlot-legend.font.size">Legend font size:</label>
+#>             <input id="piePlot-legend.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4640136', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the legend text. Default: 12.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9176605">
+#>             <label class="control-label" for="piePlot-legend.font.color">Legend font color:</label>
+#>             <input id="piePlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9176605', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the legend text. Default: "#000000".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <div class="material-switch">
+#>         <label for="piePlot-auto.update" style="padding-right: 10px;">Auto Update</label>
+#>         <input id="piePlot-auto.update" type="checkbox" checked="checked"/>
+#>         <label class="switch label-success bg-success" for="piePlot-auto.update"></label>
+#>       </div>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button id="piePlot-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="piePlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="piePlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="piePlot-download.format-label" for="piePlot-download.format">Download Format</label>
+#>       <div>
+#>         <select id="piePlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="piePlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <br/>
 ```

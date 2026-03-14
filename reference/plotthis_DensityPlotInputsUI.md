@@ -289,5 +289,537 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
-#> Error in FUN(X[[i]], ...): object '.' not found
+#> <div class="tabbable">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="7630">
+#>     <li class="active">
+#>       <a href="#tab-7630-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7630-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7630-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7630-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7630-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>     </li>
+#>     <li>
+#>       <a href="#tab-7630-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>     </li>
+#>   </ul>
+#>   <div class="tab-content" data-tabsetid="7630">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7630-1">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8753579">
+#>             <label class="control-label" id="densityPlot-x.data-label" for="densityPlot-x.data">X Data</label>
+#>             <div>
+#>               <select id="densityPlot-x.data" class="shiny-input-select"><option value=""></option>
+#> <option value="mpg" selected>mpg</option>
+#> <option value="cyl">cyl</option>
+#> <option value="disp">disp</option>
+#> <option value="hp">hp</option>
+#> <option value="drat">drat</option>
+#> <option value="wt">wt</option>
+#> <option value="qsec">qsec</option>
+#> <option value="vs">vs</option>
+#> <option value="am">am</option>
+#> <option value="gear">gear</option>
+#> <option value="carb">carb</option></select>
+#>               <script type="application/json" data-for="densityPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8753579', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2957501">
+#>             <label class="control-label" id="densityPlot-group.by-label" for="densityPlot-group.by">Group By</label>
+#>             <div>
+#>               <select id="densityPlot-group.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="" selected></option></select>
+#>               <script type="application/json" data-for="densityPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2957501', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Facet" id="tab-7630-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9835254">
+#>             <label class="control-label" id="densityPlot-facet.by-label" for="densityPlot-facet.by">Facet By</label>
+#>             <div>
+#>               <select id="densityPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="" selected></option></select>
+#>               <script type="application/json" data-for="densityPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9835254', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify5898375">
+#>             <label class="control-label" id="densityPlot-facet.scale-label" for="densityPlot-facet.scale">Facet Scale</label>
+#>             <div>
+#>               <select id="densityPlot-facet.scale" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#> <option value="free">free</option>
+#> <option value="free_x">free_x</option>
+#> <option value="free_y">free_y</option></select>
+#>               <script type="application/json" data-for="densityPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5898375', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7591584">
+#>             <label class="control-label" id="densityPlot-facet.ncol-label" for="densityPlot-facet.ncol">Number of Columns</label>
+#>             <input id="densityPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7591584', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify8360753">
+#>             <label class="control-label" id="densityPlot-facet.nrow-label" for="densityPlot-facet.nrow">Number of Rows</label>
+#>             <input id="densityPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8360753', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7628194">
+#>             <div class="material-switch">
+#>               <label for="densityPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
+#>               <input id="densityPlot-facet.by.row" type="checkbox" checked="checked"/>
+#>               <label class="switch label-success bg-success" for="densityPlot-facet.by.row"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7628194', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7630-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify4172699">
+#>             <label class="control-label" id="densityPlot-plot.alpha-label" for="densityPlot-plot.alpha">Plot Alpha</label>
+#>             <input id="densityPlot-plot.alpha" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4172699', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div id="densityPlot-palette.selection" class="shiny-html-output"></div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify1380749">
+#>             <label class="control-label" id="densityPlot-position-label" for="densityPlot-position">Position</label>
+#>             <div>
+#>               <select id="densityPlot-position" class="shiny-input-select"><option value="identity" selected>identity</option>
+#> <option value="stack">stack</option>
+#> <option value="dodge">dodge</option>
+#> <option value="fill">fill</option></select>
+#>               <script type="application/json" data-for="densityPlot-position" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1380749', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How should we position the values in each bin? Default is "identity". Unlike the default position = "stack" in link[ggplot2:geom_histogram]{ggplot2::geom_histogram} or link[ggplot2:geom_density]{ggplot2::geom_density}, the default position is "identity" to show the actual count or density for each group.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Rug" id="tab-7630-4">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify808450">
+#>             <div class="material-switch">
+#>               <label for="densityPlot-add.bars" style="padding-right: 10px;">Add Rug Plot</label>
+#>               <input id="densityPlot-add.bars" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="densityPlot-add.bars"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify808450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add lines to the plot to show the data distribution on the bottom.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6559826">
+#>             <label class="control-label" id="densityPlot-bar.height-label" for="densityPlot-bar.height">Rug Bar Height</label>
+#>             <input id="densityPlot-bar.height" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6559826', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height of the bars. The actual height will be calculated based on the maximum density or count.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6020038">
+#>             <label class="control-label" id="densityPlot-bar.alpha-label" for="densityPlot-bar.alpha">Rug Bar Alpha</label>
+#>             <input class="js-range-slider" id="densityPlot-bar.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6020038', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the bars.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6569958">
+#>             <label class="control-label" id="densityPlot-bar.width-label" for="densityPlot-bar.width">Rug Bar Width</label>
+#>             <input id="densityPlot-bar.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.05"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6569958', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Axes" id="tab-7630-5">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="material-switch">
+#>               <label for="densityPlot-rotate" style="padding-right: 10px;">Rotate (swap X/Y)</label>
+#>               <input id="densityPlot-rotate" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="densityPlot-rotate"></label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6"></div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6"></div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-title.font.family-label" for="densityPlot-title.font.family">Title Font</label>
+#>             <div>
+#>               <select id="densityPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="densityPlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="densityPlot-text.colour">Title Color</label>
+#>             <input id="densityPlot-text.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.title.font.size-label" for="densityPlot-axis.title.font.size">Axis Title Size</label>
+#>             <input id="densityPlot-axis.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="densityPlot-axis.title.font.color">Axis Title Color</label>
+#>             <input id="densityPlot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.title.font.family-label" for="densityPlot-axis.title.font.family">Axis Title Font</label>
+#>             <div>
+#>               <select id="densityPlot-axis.title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="densityPlot-axis.title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="densityPlot-axis.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="densityPlot-axis.mirror" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Mirror Axis Borders</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="densityPlot-show.grid.x" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show X Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="densityPlot-show.grid.y" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Y Gridlines</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="densityPlot-axis.linecolor">Axis Line Color</label>
+#>             <input id="densityPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.linewidth-label" for="densityPlot-axis.linewidth">Axis Line Width</label>
+#>             <input id="densityPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.tickfont.size-label" for="densityPlot-axis.tickfont.size">Tick Label Size</label>
+#>             <input id="densityPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="densityPlot-axis.tickfont.color">Tick Label Color</label>
+#>             <input id="densityPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.tickfont.family-label" for="densityPlot-axis.tickfont.family">Tick Label Font</label>
+#>             <div>
+#>               <select id="densityPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#> <option value="Balto">Balto</option>
+#> <option value="Courier New">Courier New</option>
+#> <option value="Droid Sans">Droid Sans</option>
+#> <option value="Droid Serif">Droid Serif</option>
+#> <option value="Droid Sans Mono">Droid Sans Mono</option>
+#> <option value="Gravitas One">Gravitas One</option>
+#> <option value="Old Standard TT">Old Standard TT</option>
+#> <option value="Open Sans">Open Sans</option>
+#> <option value="Overpass">Overpass</option>
+#> <option value="PT Sans Narrow">PT Sans Narrow</option>
+#> <option value="Raleway">Raleway</option>
+#> <option value="Times New Roman">Times New Roman</option>
+#> <option value="Verdana">Verdana</option>
+#> <option value="sans-serif">sans-serif</option>
+#> <option value="serif">serif</option>
+#> <option value="monospace">monospace</option></select>
+#>               <script type="application/json" data-for="densityPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.tickangle.x-label" for="densityPlot-axis.tickangle.x">X Tick Label Angle</label>
+#>             <input id="densityPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.tickangle.y-label" for="densityPlot-axis.tickangle.y">Y Tick Label Angle</label>
+#>             <input id="densityPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.ticks-label" for="densityPlot-axis.ticks">Tick Position</label>
+#>             <div>
+#>               <select id="densityPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#> <option value="inside">Inside</option>
+#> <option value="">None</option></select>
+#>               <script type="application/json" data-for="densityPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
+#>             <label class="control-label" for="densityPlot-axis.tickcolor">Tick Mark Color</label>
+#>             <input id="densityPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.ticklen-label" for="densityPlot-axis.ticklen">Tick Mark Length</label>
+#>             <input id="densityPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-axis.tickwidth-label" for="densityPlot-axis.tickwidth">Tick Mark Width</label>
+#>             <input id="densityPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Lines" id="tab-7630-6">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3293172">
+#>             <label class="control-label" id="densityPlot-hline.intercepts-label" for="densityPlot-hline.intercepts">Y-intercepts</label>
+#>             <input id="densityPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3293172', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-hline.colors-label" for="densityPlot-hline.colors">Colors</label>
+#>             <input id="densityPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-hline.widths-label" for="densityPlot-hline.widths">Widths</label>
+#>             <input id="densityPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-hline.linetypes-label" for="densityPlot-hline.linetypes">Line types</label>
+#>             <input id="densityPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-hline.opacities-label" for="densityPlot-hline.opacities">Opacities (0-1)</label>
+#>             <input id="densityPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify9794742">
+#>             <label class="control-label" id="densityPlot-vline.intercepts-label" for="densityPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="densityPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9794742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-vline.colors-label" for="densityPlot-vline.colors">Colors</label>
+#>             <input id="densityPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-vline.widths-label" for="densityPlot-vline.widths">Widths</label>
+#>             <input id="densityPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-vline.linetypes-label" for="densityPlot-vline.linetypes">Line types</label>
+#>             <input id="densityPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="densityPlot-vline.opacities-label" for="densityPlot-vline.opacities">Opacities (0-1)</label>
+#>             <input id="densityPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <br/>
+#>         </div>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <div class="form-group shiny-input-container">
+#>       <div class="material-switch">
+#>         <label for="densityPlot-auto.update" style="padding-right: 10px;">Auto Update</label>
+#>         <input id="densityPlot-auto.update" type="checkbox" checked="checked"/>
+#>         <label class="switch label-success bg-success" for="densityPlot-auto.update"></label>
+#>       </div>
+#>     </div>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button id="densityPlot-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
+#>   </div>
+#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>     <button class="btn btn-default action-button btn-secondary" id="densityPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#>   <div class="col-sm-3" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="densityPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>       Save Interactive
+#>     </a>
+#>   </div>
+#>   <div class="col-sm-3">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
+#>       <label class="control-label" id="densityPlot-download.format-label" for="densityPlot-download.format">Download Format</label>
+#>       <div>
+#>         <select id="densityPlot-download.format" class="shiny-input-select"><option value="png">png</option>
+#> <option value="svg" selected>svg</option></select>
+#>         <script type="application/json" data-for="densityPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       </div>
+#>     </div>
+#>   </div>
+#> </div>
+#> <br/>
 ```
