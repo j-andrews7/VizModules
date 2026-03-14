@@ -91,7 +91,7 @@ module_registry <- list(
         server_fn  = radarPlotServer
     ),
     list(
-        label      = "Scatter Plot (dittoViz)",
+        label      = "Scatter Plot",
         id         = "scatter",
         inputs_ui  = dittoViz_scatterPlotInputsUI,
         output_ui  = dittoViz_scatterPlotOutputUI,
@@ -119,7 +119,7 @@ module_registry <- list(
         server_fn  = plotthis_ViolinPlotServer
     ),
     list(
-        label      = "y-Plot (dittoViz)",
+        label      = "yPlot",
         id         = "yplot",
         inputs_ui  = dittoViz_yPlotInputsUI,
         output_ui  = dittoViz_yPlotOutputUI,
@@ -127,9 +127,6 @@ module_registry <- list(
     )
 )
 
-# ---------------------------------------------------------------------------
-# Default datasets – bundled with the package
-# ---------------------------------------------------------------------------
 default_datasets <- list(
     "sales"      = example_sales,
     "population" = example_population,
@@ -237,16 +234,13 @@ ui <- do.call(navbarPage, c(
 # ---------------------------------------------------------------------------
 server <- function(input, output, session) {
 
-    # -- Reactive store for all available datasets --------------------------
     rv <- reactiveValues(datasets = default_datasets)
 
-    # -- File upload toggle ---------------------------------------------------
     observeEvent(input$toggle_upload, {
         shinyjs::toggle("upload_panel", anim = TRUE, animType = "slide",
             time = 0.2)
     })
 
-    # -- File upload handler ------------------------------------------------
     observeEvent(input$load_data, {
         req(input$file_upload)
         tryCatch({
@@ -285,14 +279,12 @@ server <- function(input, output, session) {
         )
     })
 
-    # -- Quick data info -----------------------------------------------------
     output$data_info <- renderText({
         req(input$dataset_select, rv$datasets[[input$dataset_select]])
         d <- rv$datasets[[input$dataset_select]]
         paste0(nrow(d), " rows \u00d7 ", ncol(d), " cols")
     })
 
-    # -- Active raw data (for InputsUI) and filtered data (for Server) ------
     active_data <- reactive({
         req(input$dataset_select)
         rv$datasets[[input$dataset_select]]

@@ -177,7 +177,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             if (!is.null(x_range)) {
-                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
+                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
         })
 
