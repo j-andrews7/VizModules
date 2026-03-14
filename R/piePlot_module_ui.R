@@ -77,7 +77,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- c("labels", "values", "sort", "direction", "rotation", "hole",
+    selected <- list("labels", "values", "sort", "direction", "rotation", "hole",
         "slice.line.color", "slice.line.width", "textinfo", "textposition",
         "insidetextorientation", "text.font.size", "text.font.family", "text.font.color",
         "title.x", "title.font.size", "title.font.family", "title.font.color",

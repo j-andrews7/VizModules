@@ -97,7 +97,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- c("a", "b", "c", "group", "sum", "mode",
+    selected <- list("a", "b", "c", "group", "sum", "mode",
         "marker.size", "marker.symbol", "marker.line.width", "marker.line.color",
         "line.width", "line.dash", "opacity",
         "a.title", "b.title", "c.title",

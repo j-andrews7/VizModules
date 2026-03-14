@@ -136,15 +136,13 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-    selected <- c("x", "group_by", "bins", "binwidth",
+    selected <- list("x", "group_by", "bins", "binwidth",
             "use_trend", "add_trend", "trend_skip_zero", "trend_alpha",
             "trend_linewidth", "trend_pt_size", "position", "alpha",
             "add_bars", "bar_height", "bar_alpha", "bar_width",

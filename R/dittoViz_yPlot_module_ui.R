@@ -149,8 +149,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         min.y <- 0
     }
 
-    selected <- c("var", "group.by", "color.by", "shape.by",
-            "plots", "min", "max", "split.by", "split.nrow", "split.ncol",
+    selected <- list("var", "group.by", "color.by", "shape.by",
+            "plots", c("min", "max"), "split.by", c("split.nrow", "split.ncol"),
             "split.adjust", "do.raster", "raster.dpi",
             "jitter.size", "jitter.width", "jitter.color",
             "jitter.shape.legend.size", "jitter.shape.legend.show",

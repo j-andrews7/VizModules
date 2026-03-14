@@ -55,8 +55,6 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
@@ -65,7 +63,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    selected <- c("x", "y", "x.adjustment", "colour.by",
+    selected <- list("x", "y", "x.adjustment", "colour.by",
         "facet.by", "facet.scales", "line.colour")
 
     documentParameters <- get_documentation(

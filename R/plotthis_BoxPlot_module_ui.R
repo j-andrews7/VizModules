@@ -177,11 +177,10 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+
     if (length(num.choices) >= 2) {
         max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
         min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
@@ -190,7 +189,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         min.y <- 0
     }
 
-    selected <- c("x", "y", "group_by", "sort_x",
+    selected <- list("x", "y", "group_by", "sort_x",
             "y_max", "y_min", "add_point", "pt_size", "pt_alpha",
             "jitter_width", "pt_color",
             "highlight", "highlight_color", "highlight_size", "highlight_alpha",

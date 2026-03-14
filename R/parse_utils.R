@@ -461,3 +461,45 @@ validate_expression <- function(expr_text, col_names) {
 
     expr_text
 }
+
+#' Extract parameter documentation from an R function help page
+#'
+#' Parses the Rd documentation for a given function and extracts
+#' parameter descriptions for specified parameter names.
+#'
+#' @param package_name A string in the format "package::function" indicating
+#'   which function's documentation to parse.
+#' @param type The type of documentation section to extract. Currently only
+#'   "param" is supported.
+#' @param selected A list of parameter names to extract. Note that co-documented
+#'   parameters (e.g., `x.by` and `y.by`) should be grouped together in a vector 
+#'   within the list or an error will be thrown by `extract_roc_text`.
+#' @param cap Logical; if TRUE, capitalize the first letter of each description.
+#' @importFrom roclang extract_roc_text
+#' @return A named list where names are parameter names and values are
+#'   their documentation strings. Returns empty strings for parameters
+#'   not found in the documentation.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @export
+get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
+    docs <- lapply(selected, function(s) {
+        doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
+        doc %>%
+        gsub("\\\\n", " ", .) %>%                  
+        gsub("\\\\", "", .) %>%                   
+        gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%      
+        gsub("\n", " ", .) %>% trimws()                   
+    })
+
+    # Expand co-documented parameters (e.g., c("x.by", "y.by")) into
+    # separate named elements sharing the same documentation string.
+    result <- list()
+    for (i in seq_along(selected)) {
+        param_names <- selected[[i]]
+        for (nm in param_names) {
+            result[[nm]] <- docs[[i]]
+        }
+    }
+    result
+}

@@ -59,18 +59,18 @@
 #' @export
 #'
 #' @examples
-#' # Dumbbell plot comparing Women vs Men earnings by School
 #' data <- data.frame(
 #'   School = c("MIT", "Stanford", "Harvard"),
-#'   Women = c(94, 96, 112),
-#'   Men = c(152, 151, 165)
+#'   Women = c(152, 96, 112),
+#'   Men = c(95, 151, 165)
 #' )
+#' 
 #' fig <- dumbbellPlot(
 #'   data = data,
 #'   x = c("Women", "Men"),
 #'   y = "School",
 #'   colour.by = "X variables",
-#'   palette.selection = c("pink", "blue"),
+#'   palette.selection = c("green", "blue"),
 #'   show.legend = TRUE,
 #'   line.colour = "gray80"
 #' )

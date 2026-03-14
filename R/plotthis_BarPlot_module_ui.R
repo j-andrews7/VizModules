@@ -154,11 +154,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+
     # Axis range values
     if (length(num.choices) >= 2) {
         max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE)
@@ -167,7 +166,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     }
     min.y <- 0
 
-    selected <- c("x", "y", "group_by", "fill_by",
+    selected <- list("x", "y", "group_by", "fill_by",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
             "split_by", "alpha", "width", "expand", "y_min", "y_max")
 

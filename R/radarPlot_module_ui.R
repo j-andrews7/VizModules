@@ -88,7 +88,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- c("theta", "r", "group", "fill", "line.width", "line.dash",
+    selected <- list("theta", "r", "group", "fill", "line.width", "line.dash",
         "marker.size", "marker.symbol", "opacity", "radial.visible",
         "radial.range", "radial.showline", "radial.linecolor", "radial.gridcolor",
         "angular.direction", "angular.rotation", "angular.gridcolor",

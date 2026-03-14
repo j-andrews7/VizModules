@@ -139,15 +139,13 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.x <- max(numeric.data, na.rm = TRUE)
     min.x <- min(numeric.data, na.rm = TRUE)
 
-    selected <- c("x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
+    selected <- list("x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
             "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
             "facet_byrow", "split_by", "x_min", "x_max")
 

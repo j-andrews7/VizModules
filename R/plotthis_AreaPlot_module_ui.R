@@ -129,7 +129,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     min.y <- min(numeric.data, na.rm = TRUE)
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
 
-    selected <- c("x", "y", "group_by", "scale_y",
+    selected <- list("x", "y", "group_by", "scale_y",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
             "alpha")
 

@@ -128,15 +128,13 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-    selected <- c("x", "group_by", "position", "alpha",
+    selected <- list("x", "group_by", "position", "alpha",
             "add_bars", "bar_height", "bar_alpha", "bar_width",
             "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
 

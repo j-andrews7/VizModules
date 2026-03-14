@@ -97,8 +97,6 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     # Get variables of data.
     choices <- c("", names(data))
-
-    # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
@@ -107,7 +105,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    selected <- c("x", "y", "colour.group.by", "error.bar", "order.by",
+    selected <- list("x", "y", "colour.group.by", "error.bar", "order.by",
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
         "plot.mode", "line.type", "error.colour", "error.width")
 

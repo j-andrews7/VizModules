@@ -184,18 +184,19 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    selected <- c("x.by", "y.by", "color.by", "shape.by", "split.by",
-            "rows.use", "x.adjustment", "y.adjustment", "color.adjustment",
-            "x.adj.fxn", "y.adj.fxn", "color.adj.fxn",
+    selected <- list(c("x.by", "y.by"), "color.by", "shape.by", "split.by",
+            "rows.use", c("x.adjustment", "y.adjustment", "color.adjustment"),
+            c("x.adj.fxn", "y.adj.fxn", "color.adj.fxn"),
             "size", "opacity", "show.others", "split.show.all.others",
             "plot.order", "shape.panel",
             "min.color", "max.color", "contour.color", "contour.linetype",
-            "split.nrow", "split.ncol", "multivar.split.dir",
+            c("split.nrow", "split.ncol"), "multivar.split.dir",
             "do.ellipse", "do.contour",
             "hover.data", "hover.round.digits",
-            "legend.show", "legend.color.title", "legend.color.size",
-            "legend.shape.size", "legend.color.breaks",
-            "min.value", "max.value",
+            "legend.show", c("legend.color.title", "legend.shape.title"), 
+            c("legend.color.size", "legend.shape.size"),
+            "legend.color.breaks",
+            c("min.value", "max.value"),
             "trajectory.group.by", "add.trajectory.by.groups",
             "trajectory.arrow.size")
 
