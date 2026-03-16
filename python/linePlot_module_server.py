@@ -63,6 +63,33 @@ def line_plot_server(
         Tab names to hide on startup (e.g. ``["Facet", "Lines"]``).
     """
 
+@module.server
+def line_plot_server(
+    input,
+    output,
+    session,
+    data: Callable[[], pd.DataFrame],
+    hide_inputs: Optional[List[str]] = None,
+    hide_tabs: Optional[List[str]] = None,
+) -> None:
+    """Server logic for the linePlot module.
+
+    Mirrors ``linePlotServer()`` in R. Call this inside your app's server
+    function with an ``id`` that matches the ``id`` used in
+    ``line_plot_inputs_ui()`` and ``line_plot_output_ui()``.
+
+    Parameters
+    ----------
+    data : callable
+        A ``reactive.calc`` (or any zero-argument callable) that returns the
+        ``pd.DataFrame`` to plot.
+    hide_inputs : list of str, optional
+        Input IDs to hide on startup. The inputs are still initialised and
+        their values passed to ``linePlotPX``; they are simply not visible.
+    hide_tabs : list of str, optional
+        Tab names to hide on startup (e.g. ``["Facet", "Lines"]``).
+    """
+
     # ------------------------------------------------------------------
     # Reactive: determine colour-palette groups
     # ------------------------------------------------------------------
@@ -180,7 +207,10 @@ def line_plot_server(
         ui.update_switch("flip_x", value=False)
         ui.update_switch("flip_y", value=False)
         ui.update_select("group_by", selected="")
-        ui.update_select("facet_by", selected="")
+        ui.update_select("facet_col_by", selected="")
+        ui.update_select("facet_row_by", selected="")
+        ui.update_numeric("facet_ncols", value=0)
+        ui.update_numeric("facet_nrows", value=0)
         ui.update_select("facet_scales", selected="fixed")
         ui.update_select("x_adjustment", selected="")
         ui.update_select("y_adjustment", selected="")
@@ -226,42 +256,108 @@ def line_plot_server(
         ui.update_text("abline_opacities", value="1")
 
     # ------------------------------------------------------------------
-    # Reactive: generate the linePlot figure
+    # Master reactive: handles auto-update, validation, and plot generation
     # ------------------------------------------------------------------
+    # By consolidating everything inside this single @reactive.calc we
+    # ensure the auto-update/isolate logic is respected: when auto_update
+    # is OFF every input read is wrapped in reactive.isolate(), so the
+    # reactive is only re-triggered by the Update button click.
 
     @reactive.calc
-    def generate_line_plot() -> go.Figure:
-        """Build and return the plotly linePlot figure.
+    def _compute_plot() -> go.Figure:
+        """Build and return the validated, fully-configured linePlot figure.
 
-        Mirrors the ``generate_linePlot`` reactive in R. Respects the
-        auto-update / manual-update toggle via ``_get_isolated_value``.
+        This reactive encapsulates both validation (showing empty plot on bad
+        inputs) and figure generation so that the ``linePlot`` render function
+        can simply call it. This guarantees the auto-update toggle is honoured
+        end-to-end: no re-render occurs until the Update button is pressed when
+        auto_update is OFF.
         """
         auto_update: bool = input.auto_update()
 
-        # If auto-update is off, depend on the Update button instead of
-        # individual inputs changing (mirrors setup_auto_update_logic in R).
+        # When auto-update is OFF, create a dependency on the Update button
+        # so the reactive only re-computes on button click.
         if not auto_update:
             input.update()
 
         def get(fn: Callable) -> Any:
-            """Return fn() directly (reactive) or isolated (manual update)."""
+            """Return fn() directly (auto) or isolated (manual update)."""
             if auto_update:
                 return fn()
             with reactive.isolate():
                 return fn()
 
+        def safe_get(name: str, default: Any) -> Any:
+            """Like get() but handles inputs that may not exist in the DOM."""
+            try:
+                attr = getattr(input, name)
+                if auto_update:
+                    return attr()
+                with reactive.isolate():
+                    return attr()
+            except Exception:
+                return default
+
+        # ---- data & core inputs -----------------------------------------
         df = data()
         x_input: List[str] = list(get(input.x_value))
         y_input: List[str] = list(get(input.y_value))
 
-        # Resolve colour palette
-        palette_name: str = _safe_input(input, "palette_colours", "Set2")
-        palette_selection: List[str] = _get_plotly_palette(palette_name)
+        # ---- input validation -------------------------------------------
+        x_is_cat = (
+            len(x_input) == 1
+            and x_input[0] in df.columns
+            and not pd.api.types.is_numeric_dtype(df[x_input[0]])
+        )
+        y_is_cat = (
+            len(y_input) == 1
+            and y_input[0] in df.columns
+            and not pd.api.types.is_numeric_dtype(df[y_input[0]])
+        )
+        x_empty = len(x_input) == 0
+        y_empty = len(y_input) == 0
+        multi_axis = (len(x_input) > 1) != (len(y_input) > 1)
+        dual_multi_axis = len(x_input) > 1 and len(y_input) > 1
+        x_pure = _is_pure_type(x_input, df)
+        y_pure = _is_pure_type(y_input, df)
 
-        # Determine grouping / legend visibility
+        messages: List[str] = []
+        return_empty = False
+
+        if x_is_cat and y_is_cat:
+            return_empty = True
+            messages.append("X and Y categories cannot both be discrete data types")
+        elif x_empty or y_empty:
+            return_empty = True
+            messages.append(
+                "Both X and Y variable inputs must not be empty. "
+                "Please select a variable input."
+            )
+        elif not x_pure or not y_pure:
+            return_empty = True
+            messages.append("Can't have a discrete and non-discrete data input on the same axis.")
+        elif dual_multi_axis:
+            return_empty = True
+            messages.append(
+                "You cannot have multiple inputs for both X and Y inputs simultaneously"
+            )
+        elif multi_axis and get(input.group_by):
+            return_empty = True
+            messages.append(
+                "You cannot have multiple inputs on x and y axis and group by at the same time"
+            )
+
+        if return_empty:
+            return _empty_plot(text="\n".join(messages))
+
+        # ---- palette ----------------------------------------------------
+        palette_name: str = safe_get("palette_colours", "Set2")
+        palette_colours: List[str] = _get_plotly_palette(palette_name)
+
+        # ---- grouping / legend ------------------------------------------
         group_by_col: str = get(input.group_by)
         show_legend = False
-        colour_group_by: Any = palette_selection[0] if palette_selection else "#000000"
+        colour_group_by: Any = palette_colours[0] if palette_colours else "#000000"
 
         if group_by_col and len(x_input) == 1 and len(y_input) == 1:
             colour_group_by = group_by_col
@@ -269,23 +365,15 @@ def line_plot_server(
         elif len(x_input) > 1 or len(y_input) > 1:
             show_legend = True
 
-        # Axis ordering
+        # ---- axis ordering & axis titles --------------------------------
         order_by = x_input if not get(input.order_by) else y_input
-
-        # Sort data
-        sort_col = order_by[0] if order_by and order_by[0] in df.columns else None
-        if sort_col and pd.api.types.is_numeric_dtype(df[sort_col]):
-            df = df.sort_values(by=sort_col)
-
-        # Axis titles
         x_title = x_input[0] if len(x_input) == 1 else "Value"
         y_title = y_input[0] if len(y_input) == 1 else "Value"
 
-        # Axis adjustments
+        # ---- axis adjustments -------------------------------------------
         y_adjustment: Optional[str] = get(input.y_adjustment) or None
         x_adjustment: Optional[str] = get(input.x_adjustment) or None
 
-        # Only apply numeric transformations when all columns are numeric
         if x_adjustment and not all(
             pd.api.types.is_numeric_dtype(df[c]) for c in x_input if c in df.columns
         ):
@@ -295,14 +383,19 @@ def line_plot_server(
         ):
             y_adjustment = None
 
-        facet_by_val: str = get(input.facet_by)
-        facet_by: Optional[str] = facet_by_val if facet_by_val else None
+        facet_col_by_val: str = safe_get("facet_col_by", "")
+        facet_col_by: Optional[str] = facet_col_by_val if facet_col_by_val else None
+        facet_row_by_val: str = safe_get("facet_row_by", "")
+        facet_row_by: Optional[str] = facet_row_by_val if facet_row_by_val else None
+        facet_ncols: int = max(0, int(safe_get("facet_ncols", 0) or 0))
+        facet_nrows: int = max(0, int(safe_get("facet_nrows", 0) or 0))
 
-        # Error-bar inputs (may not exist if hidden)
-        error_bar: bool = _safe_input(input, "errorBar", False)
-        error_colour: str = _safe_input(input, "errorBarColour", "#000000")
-        error_width: float = _safe_input(input, "errorBarWidth", 1.0)
+        # ---- error bars -------------------------------------------------
+        error_bar: bool = safe_get("errorBar", False)
+        error_colour: str = safe_get("errorBarColour", "#000000")
+        error_width: float = float(safe_get("errorBarWidth", 1.0) or 1.0)
 
+        # ---- build figure -----------------------------------------------
         fig = linePlotPX(
             data=df,
             x=x_input,
@@ -310,9 +403,12 @@ def line_plot_server(
             plot_mode=get(input.plot_type),
             line_type=get(input.line_type),
             colour_group_by=colour_group_by,
-            palette_selection=palette_selection,
+            palette_selection=palette_colours,
             show_legend=show_legend,
-            facet_by=facet_by,
+            facet_col_by=facet_col_by,
+            facet_row_by=facet_row_by,
+            facet_ncols=facet_ncols,
+            facet_nrows=facet_nrows,
             facet_scales=get(input.facet_scales),
             order_by=order_by,
             axis_showline=get(input.axis_showline),
@@ -344,7 +440,7 @@ def line_plot_server(
             error_bar=error_bar,
         )
 
-        # Add reference lines
+        # ---- reference lines --------------------------------------------
         fig = _add_reference_lines(
             fig,
             hline_intercepts=get(input.hline_intercepts),
@@ -365,77 +461,26 @@ def line_plot_server(
             abline_opacities=get(input.abline_opacities),
         )
 
+        fig.update_layout(
+            margin=dict(t=100, l=90, r=90, b=100, autoexpand=True)
+        )
         return fig
 
     # ------------------------------------------------------------------
-    # Render: plotly output
+    # Render: plotly widget output
     # ------------------------------------------------------------------
 
     @render_widget
     def linePlot() -> go.Figure:
         """Render the linePlot widget.
 
-        Mirrors ``output$linePlot <- renderPlotly({...})`` in R. Validates
-        inputs and shows an informative empty plot on error conditions.
+        Simply delegates to ``_compute_plot()`` which encapsulates all
+        validation and figure-generation logic.  Because ``_compute_plot``
+        is a ``@reactive.calc``, Shiny returns the cached figure whenever
+        none of its reactive dependencies have changed – this is what makes
+        the auto-update/manual-update toggle work correctly.
         """
-        df = data()
-        x_input: List[str] = list(input.x_value())
-        y_input: List[str] = list(input.y_value())
-
-        # Validation flags (mirrors error-check section in R server)
-        x_is_cat = (
-            len(x_input) == 1
-            and x_input[0] in df.columns
-            and not pd.api.types.is_numeric_dtype(df[x_input[0]])
-        )
-        y_is_cat = (
-            len(y_input) == 1
-            and y_input[0] in df.columns
-            and not pd.api.types.is_numeric_dtype(df[y_input[0]])
-        )
-        x_empty = len(x_input) == 0
-        y_empty = len(y_input) == 0
-        multi_axis = (len(x_input) > 1) != (len(y_input) > 1)
-        dual_multi_axis = len(x_input) > 1 and len(y_input) > 1
-        x_pure = _is_pure_type(x_input, df)
-        y_pure = _is_pure_type(y_input, df)
-
-        return_empty = False
-        messages: List[str] = []
-
-        if x_is_cat and y_is_cat:
-            return_empty = True
-            messages.append("X and Y categories cannot both be discrete data types")
-        elif x_empty or y_empty:
-            return_empty = True
-            messages.append(
-                "Both X and Y variable inputs must not be empty. "
-                "Please select a variable input."
-            )
-        elif not x_pure or not y_pure:
-            return_empty = True
-            messages.append(
-                "Can't have a discrete and non-discrete data input on the same axis."
-            )
-        elif dual_multi_axis:
-            return_empty = True
-            messages.append(
-                "You cannot have multiple inputs for both X and Y inputs simultaneously"
-            )
-        elif multi_axis and input.group_by():
-            return_empty = True
-            messages.append(
-                "You cannot have multiple inputs on x and y axis and group by at the same time"
-            )
-
-        if return_empty:
-            return _empty_plot(text="\n".join(messages))
-
-        fig = generate_line_plot()
-        fig = fig.update_layout(
-            margin=dict(t=100, l=90, r=90, b=100, autoexpand=True)
-        )
-        return fig
+        return _compute_plot()
 
     # ------------------------------------------------------------------
     # Download: interactive HTML plot
@@ -447,7 +492,7 @@ def line_plot_server(
 
         Mirrors ``.create_plot_download_handler()`` in R.
         """
-        fig = generate_line_plot()
+        fig = _compute_plot()
         return fig.to_html(full_html=True, include_plotlyjs="cdn")
 
 
@@ -465,7 +510,10 @@ def linePlotPX(
     colour_group_by: Any,
     palette_selection: List[str],
     show_legend: bool,
-    facet_by: Optional[str] = None,
+    facet_col_by: Optional[str] = None,
+    facet_row_by: Optional[str] = None,
+    facet_ncols: int = 0,
+    facet_nrows: int = 0,
     facet_scales: str = "fixed",
     order_by: Optional[List[str]] = None,
     axis_showline: bool = True,
@@ -498,11 +546,14 @@ def linePlotPX(
     error_width: Optional[float] = None,
     error_bar: bool = False,
 ) -> go.Figure:
-    """Create an interactive line plot using Plotly.
+    """Create an interactive line plot using Plotly (WebGL-accelerated).
 
     Python equivalent of ``linePlot()`` in R. All parameter names match the R
     version (dots replaced by underscores). Vectors ``c()`` in R are passed as
     ``[]`` lists in Python.
+
+    Traces are rendered with ``go.Scattergl`` (WebGL) for high-performance
+    rendering of large datasets.
 
     Parameters
     ----------
@@ -525,8 +576,20 @@ def linePlotPX(
         Hex colour strings used to assign colours to groups / traces.
     show_legend : bool
         Whether to display the legend.
-    facet_by : str, optional
-        Column name to facet plots by. Creates subplots for each unique value.
+    facet_col_by : str, optional
+        Column whose unique values produce separate subplot **columns**
+        (left → right). Can be used alone or combined with ``facet_row_by``
+        for a 2-D grid.
+    facet_row_by : str, optional
+        Column whose unique values produce separate subplot **rows**
+        (top → bottom). Can be used alone or combined with ``facet_col_by``
+        for a 2-D grid.
+    facet_ncols : int
+        Maximum columns per row when using ``facet_col_by`` alone. ``0``
+        (default) places all column-facets in a single row.
+    facet_nrows : int
+        Maximum rows per column when using ``facet_row_by`` alone. ``0``
+        (default) places all row-facets in a single column.
     facet_scales : str
         Controls axis scaling across facets: ``"fixed"``, ``"free"``,
         ``"free_x"``, or ``"free_y"``. Default ``"fixed"``.
@@ -623,10 +686,12 @@ def linePlotPX(
         ]
 
     # Compute SD/mean when X is a single categorical column (for error bars)
+    # Include any active facet columns in the grouping so means are per-facet-panel
     if len(x) == 1 and x[0] in cat_cols:
         group_vars = [x[0]]
-        if facet_by and facet_by in data.columns:
-            group_vars = [facet_by, x[0]]
+        for facet_col in [facet_row_by, facet_col_by]:
+            if facet_col and facet_col in data.columns and facet_col not in group_vars:
+                group_vars = [facet_col] + group_vars
         agg_dict: Dict[str, Any] = {}
         for col in y:
             agg_dict[col] = pd.NamedAgg(column=col, aggfunc="mean")
@@ -649,6 +714,11 @@ def linePlotPX(
         data = data.sort_values(by=sort_col)
 
     multi_axis = (len(x) > 1) != (len(y) > 1)  # xor
+
+    # Determine whether any faceting is active
+    has_col_facet = bool(facet_col_by and facet_col_by in data.columns)
+    has_row_facet = bool(facet_row_by and facet_row_by in data.columns)
+    has_facet = has_col_facet or has_row_facet
 
     # Build base axis style dicts (mirrors xaxis_style in R)
     xaxis_style = dict(
@@ -682,7 +752,7 @@ def linePlotPX(
         yaxis_style["autorange"] = "reversed"
 
     # Clear per-axis titles when faceting (added as annotations instead)
-    if facet_by and facet_by != "":
+    if has_facet:
         xaxis_style["title"] = None
         yaxis_style["title"] = None
 
@@ -690,44 +760,96 @@ def linePlotPX(
     # Build figure
     # ------------------------------------------------------------------
 
-    if facet_by and facet_by != "" and not multi_axis:
-        facet_levels = data[facet_by].unique().tolist()
+    if has_facet and not multi_axis:
+        # Determine the 2-D grid of (row_level, col_level) combinations.
+        # If only one direction is set, it fills across that single direction.
+        row_levels = data[facet_row_by].unique().tolist() if has_row_facet else [None]
+        col_levels = data[facet_col_by].unique().tolist() if has_col_facet else [None]
+
+        # Override grid dimensions if the user supplied explicit counts
+        if facet_nrows > 0 and not has_row_facet:
+            # facet_nrows overrides the "wrap" behaviour for column facets
+            n_col_levels = len(col_levels)
+            actual_ncols = math.ceil(n_col_levels / facet_nrows)
+            actual_nrows = facet_nrows
+        elif facet_ncols > 0 and not has_col_facet:
+            n_row_levels = len(row_levels)
+            actual_nrows = math.ceil(n_row_levels / facet_ncols)
+            actual_ncols = facet_ncols
+        else:
+            actual_nrows = len(row_levels)
+            actual_ncols = len(col_levels)
+
         share_x, share_y = _resolve_facet_sharing(facet_scales)
         plots = []
-        for level in facet_levels:
-            facet_data = data[data[facet_by] == level].copy()
-            sub_fig = _build_single_trace(
-                facet_data, x, y, plot_mode, line_type,
-                colour_group_by, palette_selection, show_legend,
-                error_bar, error_colour, error_width,
-            )
-            plots.append(sub_fig)
+        labels: List[str] = []
+        for r_lvl in row_levels:
+            for c_lvl in col_levels:
+                mask = pd.Series([True] * len(data), index=data.index)
+                label_parts = []
+                if r_lvl is not None:
+                    mask = mask & (data[facet_row_by] == r_lvl)
+                    label_parts.append(str(r_lvl))
+                if c_lvl is not None:
+                    mask = mask & (data[facet_col_by] == c_lvl)
+                    label_parts.append(str(c_lvl))
+                panel_data = data[mask].copy()
+                label = " / ".join(label_parts)
+                labels.append(label)
+                sub_fig = _build_single_trace(
+                    panel_data, x, y, plot_mode, line_type,
+                    colour_group_by, palette_selection, show_legend,
+                    error_bar, error_colour, error_width,
+                )
+                plots.append(sub_fig)
 
-        fig = _combine_subplots(plots, share_x=share_x, share_y=share_y)
+        fig = _combine_subplots(
+            plots, nrows=actual_nrows, ncols=actual_ncols,
+            share_x=share_x, share_y=share_y,
+        )
         annotations = _build_facet_annotations(
-            facet_levels, x_title=x_title, y_title=y_title
+            labels, nrows=actual_nrows, ncols=actual_ncols,
+            x_title=x_title, y_title=y_title,
         )
         fig.update_layout(annotations=annotations)
 
-    elif facet_by and facet_by != "" and multi_axis:
-        facet_levels = data[facet_by].unique().tolist()
+    elif has_facet and multi_axis:
+        row_levels = data[facet_row_by].unique().tolist() if has_row_facet else [None]
+        col_levels = data[facet_col_by].unique().tolist() if has_col_facet else [None]
+        actual_nrows = len(row_levels)
+        actual_ncols = len(col_levels)
         share_x, share_y = _resolve_facet_sharing(facet_scales)
         plots = []
-        first_facet = True
-        for level in facet_levels:
-            facet_data = data[data[facet_by] == level].copy()
-            sub_fig = go.Figure()
-            _add_multi_axis_traces(
-                sub_fig, facet_data, x, y, order_cols,
-                plot_mode, line_type, palette_selection,
-                show_legend=first_facet,
-            )
-            plots.append(sub_fig)
-            first_facet = False
+        labels = []
+        first_panel = True
+        for r_lvl in row_levels:
+            for c_lvl in col_levels:
+                mask = pd.Series([True] * len(data), index=data.index)
+                label_parts = []
+                if r_lvl is not None:
+                    mask = mask & (data[facet_row_by] == r_lvl)
+                    label_parts.append(str(r_lvl))
+                if c_lvl is not None:
+                    mask = mask & (data[facet_col_by] == c_lvl)
+                    label_parts.append(str(c_lvl))
+                panel_data = data[mask].copy()
+                labels.append(" / ".join(label_parts))
+                sub_fig = go.Figure()
+                _add_multi_axis_traces(
+                    sub_fig, panel_data, x, y, order_cols,
+                    plot_mode, line_type, palette_selection,
+                    show_legend=first_panel,
+                )
+                plots.append(sub_fig)
+                first_panel = False
 
-        fig = _combine_subplots(plots, share_x=share_x, share_y=share_y)
+        fig = _combine_subplots(
+            plots, nrows=actual_nrows, ncols=actual_ncols,
+            share_x=share_x, share_y=share_y,
+        )
         annotations = _build_facet_annotations(
-            facet_levels, x_title=x_title, y_title=y_title
+            labels, nrows=actual_nrows, ncols=actual_ncols,
+            x_title=x_title, y_title=y_title,
         )
         fig.update_layout(annotations=annotations)
 
@@ -793,6 +915,7 @@ def _build_single_trace(
 ) -> go.Figure:
     """Build a single-panel plotly figure with one set of x/y traces.
 
+    Uses ``go.Scattergl`` (WebGL) for high-performance rendering.
     Mirrors the single-axis branch of ``linePlot()`` in R.
     """
     fig = go.Figure()
@@ -825,7 +948,7 @@ def _build_single_trace(
                     thickness=error_width if error_width else 1,
                     visible=True,
                 )
-            fig.add_trace(go.Scatter(**trace_kw))
+            fig.add_trace(go.Scattergl(**trace_kw))
     else:
         # No grouping – single trace with flat colour
         color = (
@@ -854,7 +977,7 @@ def _build_single_trace(
                 thickness=error_width if error_width else 1,
                 visible=True,
             )
-        fig.add_trace(go.Scatter(**trace_kw))
+        fig.add_trace(go.Scattergl(**trace_kw))
 
     return fig
 
@@ -870,9 +993,10 @@ def _add_multi_axis_traces(
     palette_selection: List[str],
     show_legend: bool = True,
 ) -> None:
-    """Add multiple traces to ``fig`` for multi-axis mode (many X or many Y).
+    """Add multiple WebGL traces to ``fig`` for multi-axis mode (many X or many Y).
 
-    Mirrors ``.add_multi_axis_traces()`` in R. Mutates ``fig`` in-place.
+    Uses ``go.Scattergl`` (WebGL). Mirrors ``.add_multi_axis_traces()`` in R.
+    Mutates ``fig`` in-place.
     """
     sort_col = order_cols[0] if order_cols and order_cols[0] in data.columns else None
     if sort_col and pd.api.types.is_numeric_dtype(data[sort_col]):
@@ -892,7 +1016,7 @@ def _add_multi_axis_traces(
             )
             if plot_mode in ("lines", "lines+markers"):
                 trace_kw["line"] = dict(dash=line_type, color=color)
-            fig.add_trace(go.Scatter(**trace_kw))
+            fig.add_trace(go.Scattergl(**trace_kw))
     else:
         # Single X, multiple Y columns
         for i, y_col in enumerate(y):
@@ -907,22 +1031,29 @@ def _add_multi_axis_traces(
             )
             if plot_mode in ("lines", "lines+markers"):
                 trace_kw["line"] = dict(dash=line_type, color=color)
-            fig.add_trace(go.Scatter(**trace_kw))
+            fig.add_trace(go.Scattergl(**trace_kw))
 
 
 def _combine_subplots(
     figures: List[go.Figure],
+    nrows: int = 1,
+    ncols: Optional[int] = None,
     share_x: bool = True,
     share_y: bool = True,
 ) -> go.Figure:
     """Combine a list of single-panel figures into a subplot grid.
 
-    Mirrors the ``subplot()`` calls in R.
+    Mirrors the ``subplot()`` calls in R, now supporting ``nrows`` and
+    ``ncols`` to mirror R's ``plotly::subplot(nrows = ...)`` argument.
 
     Parameters
     ----------
     figures : list of go.Figure
         Sub-figures to combine.
+    nrows : int
+        Number of rows in the subplot grid. Default 1 (all in one row).
+    ncols : int, optional
+        Number of columns. Calculated automatically from ``nrows`` if omitted.
     share_x : bool
         Whether to share the x-axis across subplots.
     share_y : bool
@@ -937,34 +1068,50 @@ def _combine_subplots(
     if n == 0:
         return go.Figure()
 
+    nrows = max(1, nrows)
+    if ncols is None:
+        ncols = math.ceil(n / nrows)
+    else:
+        ncols = max(1, ncols)
+
     combined = make_subplots(
-        rows=1,
-        cols=n,
+        rows=nrows,
+        cols=ncols,
         shared_xaxes=share_x,
         shared_yaxes=share_y,
         horizontal_spacing=0.05,
+        vertical_spacing=0.1,
     )
 
-    for col_idx, sub_fig in enumerate(figures, start=1):
+    for idx, sub_fig in enumerate(figures):
+        row = (idx // ncols) + 1
+        col = (idx % ncols) + 1
         for trace in sub_fig.data:
-            combined.add_trace(trace, row=1, col=col_idx)
+            combined.add_trace(trace, row=row, col=col)
 
     return combined
 
 
 def _build_facet_annotations(
     facet_levels: List[Any],
+    nrows: int = 1,
+    ncols: int = 1,
     x_title: Optional[str] = None,
     y_title: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """Build plotly annotations for subplot titles and shared axis labels.
 
-    Mirrors ``.build_facet_annotations()`` in R.
+    Mirrors ``.build_facet_annotations()`` in R, now supporting a 2-D
+    subplot grid (``nrows`` × ``ncols``).
 
     Parameters
     ----------
     facet_levels : list
         Unique values of the faceting variable.
+    nrows : int
+        Number of rows in the subplot grid.
+    ncols : int
+        Number of columns in the subplot grid.
     x_title : str, optional
         Shared x-axis label.
     y_title : str, optional
@@ -978,14 +1125,23 @@ def _build_facet_annotations(
     n = len(facet_levels)
     annotations = []
 
-    # Subplot title annotations
+    nrows = max(1, nrows)
+    ncols = max(1, ncols)
+
     for i, level in enumerate(facet_levels):
-        x_pos = (i + 0.5) / n
+        col_idx = i % ncols
+        row_idx = i // ncols
+        # x position: centre of the subplot column (paper coordinates)
+        x_pos = (col_idx + 0.5) / ncols
+        # y position: slightly above the subplot row
+        row_height = 1.0 / nrows
+        y_pos = 1.0 - row_idx * row_height + 0.02
+
         annotations.append(
             dict(
                 text=str(level),
                 x=x_pos,
-                y=1.05,
+                y=min(y_pos, 1.08),
                 xref="paper",
                 yref="paper",
                 showarrow=False,
@@ -993,7 +1149,7 @@ def _build_facet_annotations(
             )
         )
 
-    # Shared x-axis label
+    # Shared x-axis label (bottom centre)
     if x_title:
         annotations.append(
             dict(
@@ -1007,7 +1163,7 @@ def _build_facet_annotations(
             )
         )
 
-    # Shared y-axis label
+    # Shared y-axis label (left centre, rotated)
     if y_title:
         annotations.append(
             dict(

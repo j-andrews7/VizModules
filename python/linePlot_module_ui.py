@@ -68,7 +68,10 @@ def line_plot_inputs_ui(
     - ``order_by`` – Order by Y values; default: False
     - ``x_adjustment`` – X-axis transformation; default: ""
     - ``y_adjustment`` – Y-axis transformation; default: ""
-    - ``facet_by`` – Faceting column; default: ""
+    - ``facet_col_by`` – Column whose unique values become subplot columns; default: ""
+    - ``facet_row_by`` – Column whose unique values become subplot rows; default: ""
+    - ``facet_ncols`` – Max subplot columns per row (0 = auto); default: 0
+    - ``facet_nrows`` – Max subplot rows per column (0 = auto); default: 0
     - ``facet_scales`` – Facet scale behaviour; default: "fixed"
     - ``plot_mode`` – Plot type; default: "lines"
     - ``line_type`` – Line style; default: "solid"
@@ -187,15 +190,69 @@ def line_plot_inputs_ui(
     )
 
     facet_inputs = ui.TagList(
+        # ── Facet by columns ──────────────────────────────────────────────────
+        ui.h6(
+            ui.span("── Facet by Columns ──", style="color: #6c757d; font-size: 0.8rem;")
+        ),
         ui.tooltip(
             ui.input_select(
-                "facet_by",
-                "Facet by:",
+                "facet_col_by",
+                "Facet by columns:",
                 choices=cat_choices,
-                selected=_get_default(defaults, "facet_by", ""),
+                selected=_get_default(defaults, "facet_col_by", ""),
             ),
-            "Column name to facet plots by. Creates subplots for each unique value.",
+            (
+                "Select a categorical column whose unique values become separate "
+                "subplot COLUMNS (left → right). Each unique value gets its own "
+                "column of subplots."
+            ),
         ),
+        ui.tooltip(
+            ui.input_numeric(
+                "facet_ncols",
+                "Max columns per row:",
+                value=_get_default(defaults, "facet_ncols", 0),
+                min=0,
+                step=1,
+            ),
+            (
+                "Maximum subplot columns per row when faceting by columns. "
+                "Set to 0 (default) to place all column-facets in a single row."
+            ),
+        ),
+        ui.br(),
+        # ── Facet by rows ─────────────────────────────────────────────────────
+        ui.h6(
+            ui.span("── Facet by Rows ──", style="color: #6c757d; font-size: 0.8rem;")
+        ),
+        ui.tooltip(
+            ui.input_select(
+                "facet_row_by",
+                "Facet by rows:",
+                choices=cat_choices,
+                selected=_get_default(defaults, "facet_row_by", ""),
+            ),
+            (
+                "Select a categorical column whose unique values become separate "
+                "subplot ROWS (top → bottom). Each unique value gets its own row "
+                "of subplots. Can be combined with 'Facet by columns' for a 2-D grid."
+            ),
+        ),
+        ui.tooltip(
+            ui.input_numeric(
+                "facet_nrows",
+                "Max rows per column:",
+                value=_get_default(defaults, "facet_nrows", 0),
+                min=0,
+                step=1,
+            ),
+            (
+                "Maximum subplot rows per column when faceting by rows. "
+                "Set to 0 (default) to place all row-facets in a single column."
+            ),
+        ),
+        ui.br(),
+        # ── Facet axis scales ─────────────────────────────────────────────────
         ui.tooltip(
             ui.input_select(
                 "facet_scales",
@@ -204,8 +261,11 @@ def line_plot_inputs_ui(
                 selected=_get_default(defaults, "facet_scales", "fixed"),
             ),
             (
-                "Controls axis scaling across facets: 'fixed' (same for all), "
-                "'free' (independent), 'free_x', or 'free_y'."
+                "Controls axis scaling across all facets: "
+                "'fixed' – same scale for all subplots; "
+                "'free' – each subplot has its own scale; "
+                "'free_x' – only x-axis varies; "
+                "'free_y' – only y-axis varies."
             ),
         ),
     )
@@ -260,6 +320,9 @@ def line_plot_output_ui(id: str) -> ui.Tag:
     plot should appear. The ``id`` must match the ``id`` used in
     ``line_plot_inputs_ui()`` and ``line_plot_server()``.
 
+    A CSS ``resize: both`` wrapper gives the user a drag handle (bottom-right
+    corner) to resize the plot container, similar to ``jqui_resizable()`` in R.
+
     Parameters
     ----------
     id : str
@@ -268,10 +331,22 @@ def line_plot_output_ui(id: str) -> ui.Tag:
     Returns
     -------
     ui.Tag
-        A shinywidgets ``output_widget`` for the plotly linePlot.
+        A shinywidgets ``output_widget`` for the plotly linePlot, wrapped in
+        a resizable container.
     """
     # Python Shiny namespaces module outputs as "{module_id}-{output_id}"
-    return output_widget(f"{id}-linePlot")
+    return ui.div(
+        output_widget(f"{id}-linePlot"),
+        style=(
+            "resize: both;"
+            " overflow: auto;"
+            " min-height: 450px;"
+            " min-width: 300px;"
+            " border: 1px solid #dee2e6;"
+            " border-radius: 4px;"
+            " padding: 4px;"
+        ),
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -557,7 +632,10 @@ def _uniform_lines_inputs_ui(
     )
 
     elements: List[Any] = [
-        # Horizontal lines
+        # ── Horizontal lines ──────────────────────────────────────────────
+        ui.h6(
+            ui.span("─── Horizontal Lines (H-Lines) ───", style="color: #6c757d; font-size: 0.8rem;")
+        ),
         ui.tooltip(
             ui.input_text(
                 "hline_intercepts",
@@ -569,27 +647,30 @@ def _uniform_lines_inputs_ui(
         ),
         ui.input_text(
             "hline_colors",
-            "Colors",
+            "H-Line Colors",
             value=_get_default(defaults, "hline_colors", "#000000"),
         ),
         ui.input_text(
             "hline_widths",
-            "Widths",
+            "H-Line Widths",
             value=_get_default(defaults, "hline_widths", "1"),
         ),
         ui.input_text(
             "hline_linetypes",
-            "Line types",
+            "H-Line Types",
             value=_get_default(defaults, "hline_linetypes", "dashed"),
             placeholder="solid, dashed, dotted, ...",
         ),
         ui.input_text(
             "hline_opacities",
-            "Opacities (0-1)",
+            "H-Line Opacities (0-1)",
             value=_get_default(defaults, "hline_opacities", "1"),
         ),
         ui.br(),
-        # Vertical lines
+        # ── Vertical lines ────────────────────────────────────────────────
+        ui.h6(
+            ui.span("─── Vertical Lines (V-Lines) ───", style="color: #6c757d; font-size: 0.8rem;")
+        ),
         ui.tooltip(
             ui.input_text(
                 "vline_intercepts",
@@ -601,27 +682,30 @@ def _uniform_lines_inputs_ui(
         ),
         ui.input_text(
             "vline_colors",
-            "Colors",
+            "V-Line Colors",
             value=_get_default(defaults, "vline_colors", "#000000"),
         ),
         ui.input_text(
             "vline_widths",
-            "Widths",
+            "V-Line Widths",
             value=_get_default(defaults, "vline_widths", "1"),
         ),
         ui.input_text(
             "vline_linetypes",
-            "Line types",
+            "V-Line Types",
             value=_get_default(defaults, "vline_linetypes", "dashed"),
             placeholder="solid, dashed, dotted, ...",
         ),
         ui.input_text(
             "vline_opacities",
-            "Opacities (0-1)",
+            "V-Line Opacities (0-1)",
             value=_get_default(defaults, "vline_opacities", "1"),
         ),
         ui.br(),
-        # Diagonal (ab)lines
+        # ── Diagonal (abline) lines ───────────────────────────────────────
+        ui.h6(
+            ui.span("─── Diagonal Lines (Ablines) ───", style="color: #6c757d; font-size: 0.8rem;")
+        ),
         ui.tooltip(
             ui.input_text(
                 "abline_slopes",
@@ -629,32 +713,32 @@ def _uniform_lines_inputs_ui(
                 value=_get_default(defaults, "abline_slopes", ""),
                 placeholder="e.g. 1, 0.5",
             ),
-            intercept_tip,
+            "Slope(s) for diagonal reference lines (rise over run).",
         ),
         ui.input_text(
             "abline_intercepts",
-            "Y-intercepts (diagonal)",
+            "Ab-Line Y-intercepts",
             value=_get_default(defaults, "abline_intercepts", ""),
         ),
         ui.input_text(
             "abline_colors",
-            "Colors",
+            "Ab-Line Colors",
             value=_get_default(defaults, "abline_colors", "#000000"),
         ),
         ui.input_text(
             "abline_widths",
-            "Widths",
+            "Ab-Line Widths",
             value=_get_default(defaults, "abline_widths", "1"),
         ),
         ui.input_text(
             "abline_linetypes",
-            "Line types",
+            "Ab-Line Types",
             value=_get_default(defaults, "abline_linetypes", "dashed"),
             placeholder="solid, dashed, dotted, ...",
         ),
         ui.input_text(
             "abline_opacities",
-            "Opacities (0-1)",
+            "Ab-Line Opacities (0-1)",
             value=_get_default(defaults, "abline_opacities", "1"),
         ),
     ]
@@ -765,7 +849,7 @@ def _organize_inputs(
     if tab_id is not None:
         kwargs["id"] = tab_id
 
-    tabset = ui.navset_tab(*nav_panels, **kwargs)
+    tabset = ui.navset_card_pill(*nav_panels, **kwargs)
 
     parts: List[Any] = [tabset]
     if tack is not None:
