@@ -105,7 +105,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            tipify(colourpicker::colourInput(ns("line.colour"), "Colour of connectors", value = "red"),
+            tipify(colourpicker::colourInput(ns("line.colour"), "Colour of connectors", value = "gray30"),
                 documentParameters$line.colour, placement = "top", options = list(container = "body"))
         ),
 

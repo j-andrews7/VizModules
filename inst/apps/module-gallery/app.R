@@ -58,11 +58,11 @@ module_data <- list(
     pie       = list("sales_by_region" = sales_summary,
                      "pop_by_age" = pop_summary),
     radar     = list("skills" = skills),
-    scatter   = list("sales" = example_sales, "mtcars" = mtcars_f),
+    scatter   = list("sales" = example_sales, "iris" = iris_g),
     splitbar  = standard_data,
     ternary   = list("roles" = roles),
-    violin    = standard_data,
-    yplot     = standard_data
+    violin    = iris_mtcars_data,
+    yplot     = iris_mtcars_data
 )
 
 # ---------------------------------------------------------------------------
