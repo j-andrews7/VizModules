@@ -1,20 +1,69 @@
 library(shiny)
-library(shinyjs)
 library(VizModules)
 
-mtcars <- transform(mtcars,
+# ---------------------------------------------------------------------------
+# Prepare example datasets
+# ---------------------------------------------------------------------------
+mtcars_f <- transform(mtcars,
     cyl = factor(cyl),
     gear = factor(gear),
     vs = factor(vs)
 )
 
-iris$Group <- c(rep(c("A", "B"), 50), rep(c("C", "D"), 25))
+iris_g <- iris
+iris_g$Group <- c(rep(c("A", "B"), 50), rep(c("C", "D"), 25))
 
-iris_summary <- {
-    iris_summary <- as.data.frame(table(iris$Species))
-    names(iris_summary) <- c("Species", "Count")
-    iris_summary
-}
+# Specialised datasets for modules that need specific structures
+school_earnings <- data.frame(
+    School = c("MIT", "Stanford", "Harvard", "Yale", "Princeton", "Columbia"),
+    Women = c(94, 96, 112, 188, 91, 129),
+    Men = c(52, 101, 165, 145, 148, 155),
+    Group = c("STEM-heavy", "STEM-heavy", "Liberal Arts", "Liberal Arts",
+              "Liberal Arts", "STEM-heavy")
+)
+
+skills <- data.frame(
+    category = rep(c("Speed", "Strength", "Defense", "Stamina", "Agility"), 3),
+    value = c(8, 6, 7, 9, 7, 5, 9, 8, 6, 4, 7, 7, 5, 8, 9),
+    player = rep(c("Player A", "Player B", "Player C"), each = 5)
+)
+
+roles <- data.frame(
+    journalist = c(75, 70, 75, 5, 10, 10, 20, 10, 15, 10, 20),
+    developer = c(25, 10, 20, 60, 80, 90, 70, 20, 5, 10, 10),
+    designer = c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70),
+    label = paste("point", seq_len(11)),
+    team = c(rep("Team A", 6), rep("Team B", 5))
+)
+
+sales_summary <- aggregate(revenue ~ region, example_sales, sum)
+pop_summary <- aggregate(count ~ age_group, example_population, sum)
+
+# ---------------------------------------------------------------------------
+# Per-module data lists
+# ---------------------------------------------------------------------------
+standard_data <- list("sales" = example_sales, "population" = example_population)
+iris_mtcars_data <- list("iris" = iris_g, "mtcars" = mtcars_f)
+
+module_data <- list(
+    area      = standard_data,
+    bar       = standard_data,
+    box       = standard_data,
+    density   = standard_data,
+    dumbbell  = list("school_earnings" = school_earnings, "iris" = iris_g,
+                     "mtcars" = mtcars_f),
+    histogram = standard_data,
+    line      = list("sales" = example_sales, "iris" = iris_g),
+    parallel  = list("mtcars" = mtcars_f, "iris" = iris_g),
+    pie       = list("sales_by_region" = sales_summary,
+                     "pop_by_age" = pop_summary),
+    radar     = list("skills" = skills),
+    scatter   = list("sales" = example_sales, "mtcars" = mtcars_f),
+    splitbar  = standard_data,
+    ternary   = list("roles" = roles),
+    violin    = standard_data,
+    yplot     = standard_data
+)
 
 # ---------------------------------------------------------------------------
 # Module registry – each entry defines one plot module for the gallery
@@ -127,13 +176,6 @@ module_registry <- list(
     )
 )
 
-default_datasets <- list(
-    "sales"      = example_sales,
-    "population" = example_population,
-    "iris"               = iris,
-    "mtcars"             = mtcars
-)
-
 # ---------------------------------------------------------------------------
 # Helper: build a tab panel for one module
 # ---------------------------------------------------------------------------
@@ -144,6 +186,10 @@ build_tab <- function(mod) {
         sidebarLayout(
             sidebarPanel(
                 width = 4,
+                selectInput(
+                    paste0(mod$id, "_dataset"), "Dataset",
+                    choices = names(module_data[[mod$id]])
+                ),
                 uiOutput(paste0(mod$id, "_inputs_ui"))
             ),
             mainPanel(
@@ -162,69 +208,14 @@ build_tab <- function(mod) {
 # ---------------------------------------------------------------------------
 # UI
 # ---------------------------------------------------------------------------
-gallery_header <- tagList(
-    useShinyjs(),
-    tags$head(
-        tags$style(HTML("
-            .data-toolbar {
-                background: #f8f9fa;
-                border-bottom: 1px solid #dee2e6;
-                padding: 8px 15px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                flex-wrap: wrap;
-            }
-            .data-toolbar .form-group { margin-bottom: 0; }
-            .data-toolbar .selectize-control { min-width: 180px; }
-            .data-toolbar .btn-sm { padding: 4px 10px; font-size: 13px; }
-            .data-toolbar .data-info {
-                color: #6c757d; font-size: 13px; white-space: nowrap;
-            }
-            #upload_panel {
-                background: #f8f9fa;
-                border-bottom: 1px solid #dee2e6;
-                padding: 8px 15px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-            #upload_panel .form-group { margin-bottom: 0; }
-            .navbar { margin-bottom: 0; }
-        "))
-    ),
-    div(class = "data-toolbar",
-        tags$strong("Dataset:"),
-        selectInput("dataset_select", NULL,
-            choices = names(default_datasets),
-            width = "200px"
-        ),
-        span(class = "data-info", textOutput("data_info", inline = TRUE)),
-        actionButton("toggle_upload", "Upload...",
-            class = "btn-default btn-sm",
-            icon = icon("upload")
-        )
-    ),
-    shinyjs::hidden(
-        div(id = "upload_panel",
-            fileInput("file_upload", NULL,
-                accept = c(".xlsx", ".xls", ".csv", ".tsv", ".txt"),
-                placeholder = "Choose file...",
-                width = "300px"
-            ),
-            actionButton("load_data", "Load Data",
-                class = "btn-primary btn-sm"
-            )
-        )
-    )
-)
-
 ui <- do.call(navbarPage, c(
     list(
         title    = "VizModules Gallery",
         id       = "active_tab",
         position = "static-top",
-        header   = gallery_header
+        header   = tags$head(tags$style(HTML(
+            ".navbar { margin-bottom: 0; }"
+        )))
     ),
     lapply(module_registry, build_tab)
 ))
@@ -234,66 +225,14 @@ ui <- do.call(navbarPage, c(
 # ---------------------------------------------------------------------------
 server <- function(input, output, session) {
 
-    rv <- reactiveValues(datasets = default_datasets)
-
-    observeEvent(input$toggle_upload, {
-        shinyjs::toggle("upload_panel", anim = TRUE, animType = "slide",
-            time = 0.2)
-    })
-
-    observeEvent(input$load_data, {
-        req(input$file_upload)
-        tryCatch({
-            filepath <- input$file_upload$datapath
-            ext <- tolower(tools::file_ext(input$file_upload$name))
-            new_data <- switch(ext,
-                xlsx = as.data.frame(readxl::read_excel(filepath)),
-                xls  = as.data.frame(readxl::read_excel(filepath)),
-                csv  = read.csv(filepath, stringsAsFactors = TRUE),
-                tsv  = read.delim(filepath, stringsAsFactors = TRUE),
-                txt  = read.delim(filepath, stringsAsFactors = TRUE),
-                stop("Unsupported file type: .", ext)
-            )
-            new_data <- as.data.frame(new_data)
-            name <- tools::file_path_sans_ext(input$file_upload$name)
-            rv$datasets[[name]] <- new_data
-            showNotification(
-                paste0("Loaded '", name, "' (", nrow(new_data),
-                    " rows, ", ncol(new_data), " cols)"),
-                type = "message"
-            )
-        }, error = function(e) {
-            showNotification(
-                paste("Could not read the uploaded file.",
-                    "Supported formats: .xlsx, .xls, .csv, .tsv,",
-                    ".txt (tab-delimited)."),
-                type = "error"
-            )
-        })
-    })
-
-    # -- Keep dataset selector in sync --------------------------------------
-    observe({
-        updateSelectInput(session, "dataset_select",
-            choices = names(rv$datasets)
-        )
-    })
-
-    output$data_info <- renderText({
-        req(input$dataset_select, rv$datasets[[input$dataset_select]])
-        d <- rv$datasets[[input$dataset_select]]
-        paste0(nrow(d), " rows \u00d7 ", ncol(d), " cols")
-    })
-
-    active_data <- reactive({
-        req(input$dataset_select)
-        rv$datasets[[input$dataset_select]]
-    })
-
     # -- Wire up each module ------------------------------------------------
-    # lapply gives each module its own function scope, avoiding the
-    # closure-over-loop-variable pitfall that a `for` loop would cause.
     lapply(module_registry, function(m) {
+        # Reactive data based on per-module dataset selector
+        active_data <- reactive({
+            req(input[[paste0(m$id, "_dataset")]])
+            module_data[[m$id]][[input[[paste0(m$id, "_dataset")]]]]
+        })
+
         # Data filter for this module
         filtered_data <- dataFilterServer(
             paste0(m$id, "_filter"),
