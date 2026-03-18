@@ -255,7 +255,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     pairs <- lapply(strsplit(pair_string, " vs "), unname)
 
                 }
-                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox", pairs = pairs)
+                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox", pairs = pairs, order = unique(data()[[isolate_fn(input$x.data)]]))
                 fig <- stats$fig 
                 updateNumericInput(session, "y.max", value = stats$ymax)
             }
