@@ -239,7 +239,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1, 
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-
+            fig <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox")
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
