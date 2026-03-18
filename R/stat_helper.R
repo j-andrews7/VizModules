@@ -106,19 +106,23 @@ plot_stats <- function(fig, df, x, y,
     #Creating annotation lists
     y_val <- v_max
     annots <- list()
+    shapes <- list()
     for (item in pValues){
         x_val <- (item[2] + item[3]) * 0.5
         y_val <- y_val + v_unit
 
         subAnno <- list(text = item[1], x = x_val, y = y_val, showarrow = FALSE, font = list(size = 16, color = "red"))
         annots[[length(annots) + 1]] <- subAnno 
-        
+      
+        subShape <- list(type = "line", line = list(color = "black", width = 10),
+                            xref = "x", yref = "y", x0 = item[2] - 0.2 , x1 = item[3] + 0.2, y0 = y_val * 0.98, y1= y_val *0.98)
+        shapes[[length(shapes) + 1]] <- subShape
     }
     y_max <- y_val + v_unit
     
   
-    fig <- fig %>% layout(annotations = annots, yaxis = list(range = c(v_min, y_max)))
-    object <- list("fig" = fig, "ymax" = y_max) # Decided to export y_max to apply to the layout within the server code - Layout wasnt being updated properly. 
-    return(fig)
+    fig <- fig %>% layout(annotations = annots, shapes = shapes, yaxis = list(range = c(v_min, y_max)))
+    object <- list("fig" = fig, "ymax" = y_max, "shapes" = shapes) # Decided to export y_max to apply to the layout within the server code - Layout wasnt being updated properly. 
+    return(object)
 
-}
+    }

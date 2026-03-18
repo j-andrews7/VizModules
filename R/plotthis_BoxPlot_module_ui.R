@@ -255,6 +255,10 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
                 documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
+        "stats" = tagList(
+            materialSwitch(ns("stats"), "Stats", value = FALSE),
+            selectInput(ns("pairs"), "Pairs:", selected = "", choices = c(), multiple = TRUE)
+        ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
