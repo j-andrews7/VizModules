@@ -1,11 +1,42 @@
 library(shiny)
 library(shinyjs)
+
 library(VizModules)
+skills <- data.frame(
+     entity = c(
+        rep("Player A", 6),
+         rep("Player B", 6),
+         rep("Player C", 6),
+         rep("Player D", 6)
+     ),
+     category = rep(c("Pace", "Shooting", "Passing", "Dribbling", "Defending", "Physical"), 4),
+     value = c(
+         99, 89, 80, 92, 36, 78,
+         89, 97, 65, 72, 45, 95,
+         76, 86, 94, 86, 64, 78,
+         62, 60, 71, 63, 94, 91
+    )
+)
+
+Bar <- data.frame(
+  Group = c("A", "B", "C", "D", "E"),
+  Type = c("Alpha", "Beta", "Alpha", "Gamma", "Beta"),
+  Values = c(22, 35, 18, 41, 29),
+  Numbers = c(15, -8, 22, -5, 12),
+  Score = c(7, -3, 15, 8, -2)
+)
+
 
 mtcars <- transform(mtcars,
     cyl = factor(cyl),
     gear = factor(gear),
     vs = factor(vs)
+)
+dumbbell <- data.frame(
+  School = c("MIT", "Stanford", "Harvard"),
+  Women = c(94, 96, 112),
+  Men = c(152, 151, 165),
+  Group = c("A", "B", "A")
 )
 
 iris$Group <- c(rep(c("A", "B"), 50), rep(c("C", "D"), 25))
@@ -15,7 +46,23 @@ iris_summary <- {
     names(iris_summary) <- c("Species", "Count")
     iris_summary
 }
-
+module_dataset_map <- list(
+  area      = "sales",
+  bar       = "bar", 
+  box       = "population",
+  density   = "iris",
+  dumbbell  = "dumbbell",
+  histogram = "iris",
+  line      = "iris",
+  parallel  = "sales",
+  pie       = "sales",
+  radar     = "skills",
+  scatter   = "sales",
+  splitbar  = "bar",
+  ternary   = "population",
+  violin    = "population",
+  yplot     = "population"
+)
 # ---------------------------------------------------------------------------
 # Module registry – each entry defines one plot module for the gallery
 # ---------------------------------------------------------------------------
@@ -131,7 +178,12 @@ default_datasets <- list(
     "sales"      = example_sales,
     "population" = example_population,
     "iris"               = iris,
-    "mtcars"             = mtcars
+    "mtcars"             = mtcars,
+    "dumbbell" = dumbbell,
+    "bar" = Bar,
+    "skills" = skills
+
+
 )
 
 # ---------------------------------------------------------------------------
@@ -193,18 +245,6 @@ gallery_header <- tagList(
             .navbar { margin-bottom: 0; }
         "))
     ),
-    div(class = "data-toolbar",
-        tags$strong("Dataset:"),
-        selectInput("dataset_select", NULL,
-            choices = names(default_datasets),
-            width = "200px"
-        ),
-        span(class = "data-info", textOutput("data_info", inline = TRUE)),
-        actionButton("toggle_upload", "Upload...",
-            class = "btn-default btn-sm",
-            icon = icon("upload")
-        )
-    ),
     shinyjs::hidden(
         div(id = "upload_panel",
             fileInput("file_upload", NULL,
@@ -236,74 +276,27 @@ server <- function(input, output, session) {
 
     rv <- reactiveValues(datasets = default_datasets)
 
-    observeEvent(input$toggle_upload, {
-        shinyjs::toggle("upload_panel", anim = TRUE, animType = "slide",
-            time = 0.2)
-    })
-
-    observeEvent(input$load_data, {
-        req(input$file_upload)
-        tryCatch({
-            filepath <- input$file_upload$datapath
-            ext <- tolower(tools::file_ext(input$file_upload$name))
-            new_data <- switch(ext,
-                xlsx = as.data.frame(readxl::read_excel(filepath)),
-                xls  = as.data.frame(readxl::read_excel(filepath)),
-                csv  = read.csv(filepath, stringsAsFactors = TRUE),
-                tsv  = read.delim(filepath, stringsAsFactors = TRUE),
-                txt  = read.delim(filepath, stringsAsFactors = TRUE),
-                stop("Unsupported file type: .", ext)
-            )
-            new_data <- as.data.frame(new_data)
-            name <- tools::file_path_sans_ext(input$file_upload$name)
-            rv$datasets[[name]] <- new_data
-            showNotification(
-                paste0("Loaded '", name, "' (", nrow(new_data),
-                    " rows, ", ncol(new_data), " cols)"),
-                type = "message"
-            )
-        }, error = function(e) {
-            showNotification(
-                paste("Could not read the uploaded file.",
-                    "Supported formats: .xlsx, .xls, .csv, .tsv,",
-                    ".txt (tab-delimited)."),
-                type = "error"
-            )
-        })
-    })
-
-    # -- Keep dataset selector in sync --------------------------------------
-    observe({
-        updateSelectInput(session, "dataset_select",
-            choices = names(rv$datasets)
-        )
-    })
-
-    output$data_info <- renderText({
-        req(input$dataset_select, rv$datasets[[input$dataset_select]])
-        d <- rv$datasets[[input$dataset_select]]
-        paste0(nrow(d), " rows \u00d7 ", ncol(d), " cols")
-    })
-
-    active_data <- reactive({
-        req(input$dataset_select)
-        rv$datasets[[input$dataset_select]]
-    })
-
-    # -- Wire up each module ------------------------------------------------
-    # lapply gives each module its own function scope, avoiding the
-    # closure-over-loop-variable pitfall that a `for` loop would cause.
     lapply(module_registry, function(m) {
+
+    module_data <- reactive({
+        ds_name <- module_dataset_map[[m$id]]
+        if (!is.null(ds_name) && !is.null(rv$datasets[[ds_name]])) {
+            rv$datasets[[ds_name]]
+        } else {
+            active_data()  # fallback to global choice
+        }
+        })
+
         # Data filter for this module
         filtered_data <- dataFilterServer(
             paste0(m$id, "_filter"),
-            active_data
+            module_data
         )
 
         # Dynamic inputs UI – re-renders when dataset changes
         output[[paste0(m$id, "_inputs_ui")]] <- renderUI({
-            req(active_data())
-            m$inputs_ui(m$id, active_data(),
+            req(module_data())
+            m$inputs_ui(m$id, module_data(),
                 title = h3(paste(m$label, "Settings"))
             )
         })
