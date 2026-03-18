@@ -66,9 +66,6 @@ plot_stats <- function(fig, df, x, y,
             return(fig)
             message("Expected all items in X ")
         }
-
-
-        
     }
 
     #Calculating the MIN and MAX values of Y 
@@ -121,7 +118,7 @@ plot_stats <- function(fig, df, x, y,
     
   
     fig <- fig %>% layout(annotations = annots, yaxis = list(range = c(v_min, y_max)))
-    
+    object <- list("fig" = fig, "ymax" = y_max)
     return(fig)
 
 }
