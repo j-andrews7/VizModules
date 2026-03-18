@@ -118,7 +118,7 @@ plot_stats <- function(fig, df, x, y,
     
   
     fig <- fig %>% layout(annotations = annots, yaxis = list(range = c(v_min, y_max)))
-    object <- list("fig" = fig, "ymax" = y_max)
+    object <- list("fig" = fig, "ymax" = y_max) # Decided to export y_max to apply to the layout within the server code - Layout wasnt being updated properly. 
     return(fig)
 
 }
