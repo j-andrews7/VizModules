@@ -133,7 +133,7 @@ plot_stats <- function(fig, df, x, y,
         gaps <- c(gaps, gap)
     }
     
-    ord_idx <- order(gaps, decreasing = FALSE)
+    ord_idx <- order(gaps, decreasing = TRUE)
     pValues <- pValues[ord_idx]
     index <- index[ord_idx]
     #Creating annotation lists
@@ -169,9 +169,9 @@ plot_stats <- function(fig, df, x, y,
                         showarrow = FALSE, font = list(size = 16, color = "black"))
         annots[[length(annots) + 1]] <- subAnno 
         
-        subShapes <- list(type = "line", line = list(color = "black", width = 10),
+        subShapes <- list(type = "line", line = list(color = "black", width = 1),
                         xref = "x", yref = "y", 
-                        x0 = x0 - 0.2, x1 = x1 + 0.2, 
+                        x0 = x0 + 0.05, x1 = x1 - 0.05, 
                         y0 = y_val * 0.98, y1 = y_val * 0.98)
         shapes[[length(shapes) + 1]] <- subShapes
     }
