@@ -149,8 +149,8 @@ plot_stats <- function(fig, df, x, y,
     shapes <- list()
 
     for (i in seq_along(pValues)) {
-        x0 <- as.numeric(index[[i]][1])
-        x1 <- as.numeric(index[[i]][2])
+        x0 <- min(index[[i]][1])
+        x1 <- max(index[[i]])
         x_val <- (x0 + x1) * 0.5
         gap <- abs(x1 - x0)
         
