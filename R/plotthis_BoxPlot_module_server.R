@@ -90,8 +90,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             pair_strings <- sapply(pairs_list, paste, collapse = " vs ")
             updateSelectInput(session, "pairs", choices = c("", pair_strings), selected = "")
         })
-          
-      
+        observeEvent(input$symbol, {
+            if (input$symbol){
+              hide(id = "p.value")
+            } else {
+              show(id = "p.value")
+            }
+        })
       
       
         # Reset functionality
@@ -267,9 +272,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 if (!is.na(isolate_fn(input$p.value))){
                     p_value <- isolate_fn(input$p.value)
                 }
-                  
-                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox", pairs = pairs, order = levels(unique(data()[[isolate_fn(input$x.data)]])),
-                                    cutoff_pvalue = p_value)
+                
+                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), pairs = pairs, order = levels(unique(data()[[isolate_fn(input$x.data)]])),
+                                    cutoff_pvalue = p_value, type_test = isolate_fn(input$stat.test), p_adjustment = isolate_fn(input$p.adjustment), symbol = isolate_fn(input$symbol))
                 fig <- stats$fig 
                 updateNumericInput(session, "y.max", value = stats$ymax)
             }

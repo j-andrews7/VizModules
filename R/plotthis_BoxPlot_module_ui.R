@@ -258,7 +258,11 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "stats" = tagList(
             materialSwitch(ns("stats"), "Stats", value = FALSE),
             selectInput(ns("pairs"), "Pairs:", selected = "", choices = c(), multiple = TRUE),
-            numericInput(ns("p.value"), "Signifficance level (pvalue)", value = NA, min = 0, max = 1)
+            selectInput(ns("stat.test"), "Type of test:", selected = "wilcox.test", choices = c("wilcox.test", "t.test")),
+            selectInput(ns("p.adjustment"), "Type of P adjustment", selected = "holm", choices = c("holm", "hochberg", "hommel", "bonferroni", 
+                                                                                                    "BH", "BY", "fdr", "none")),
+            materialSwitch(ns("symbol"), "Symbol stats: ", value = FALSE),
+            numericInput(ns("p.value"), "Signifficance level (pvalue)", value = NA, min = 0, max = 1)                                                    
         ),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

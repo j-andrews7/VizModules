@@ -11,8 +11,9 @@ plot_stats(
   y,
   pairs = NULL,
   order = NULL,
-  type_test = "wilcox",
+  type_test = "wilcox.test",
   type_correction = NULL,
+  p_adjustment = "holm",
   cutoff_pvalue = 0.05
 )
 }

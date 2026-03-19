@@ -39,7 +39,8 @@ Imports:
     jsonlite,
     methods,
     shinyWidgets,
-    htmlwidgets
+    htmlwidgets,
+    ggpubr
 Remotes:
     pwwang/plotthis
 Encoding: UTF-8

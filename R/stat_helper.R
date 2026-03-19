@@ -17,7 +17,7 @@
 #' @param cutoff_pvalue Numeric (0.05); currently unused but reserved for filtering
 #' 
 #' @return Annotated plotly figure with p-value labels positioned above bars/groups
-#' 
+#' @importFrom ggpubr compare_means
 #' @details 
 #' Performs Wilcoxon rank-sum tests between all specified pairs (or all pairs if 
 #' `pairs = NULL`). P-value annotations appear above the plot in red text, 
@@ -39,10 +39,13 @@
 plot_stats <- function(fig, df, x, y, 
         pairs = NULL,
         order = NULL, 
-        type_test = "wilcox", 
+        type_test = "wilcox.test", 
         type_correction = NULL,
+        p_adjustment = "holm",
         # subcategory = NULL,  #Potential Future input 
-        cutoff_pvalue = 0.05
+        cutoff_pvalue = 0.05,
+        symbol = TRUE,
+        group_by = NULL
         ){
     
     
@@ -81,68 +84,99 @@ plot_stats <- function(fig, df, x, y,
 
     #Creating Pairs combinations if pairs is NULL
     if (is.null(pairs)){
-        all_group <- levels(all_group)
         pairs <- combn(all_group, 2, simplify = FALSE)
     } 
 
     
     pValues <- list()
+    index <- list()
     #Generating X indexing and P values
-    if (type_test == "wilcox"){
-        for (pair in pairs){
-            subset_data <- df[df[[x]] %in% pair, ]
-            test <- wilcox.test(reformulate(x, y), data = subset_data)
+    for (pair in pairs){
+        subset_data <- df[df[[x]] %in% pair, ]
 
+        test <- compare_means(formula = reformulate(x, response = y), data = subset_data, method = type_test, paired = TRUE, p.adjust.methods = p_adjustment, group.by = group_by)
+        pValue <- round(test$p.adj[1], 3)
 
-            pValue <- round(test$p.value, 3)
-            if (pValue <= cutoff_pvalue){
-                subList <- c(pValue)
+        
+        if (symbol){
+            if (pValue <= cutoff_pvalue) {
+                subList <- c(test$p.signif)
+                subIndex <- c()
                 for (p in pair){
-                    index <- match(p, order)
-                    subList <- c(subList, index)
+                    index_num <- match(p, order)
+                    subIndex <- c(subIndex, index_num)
                 }
                 pValues[[length(pValues) + 1]] <- subList
+                index[[length(index) + 1]] <- subIndex
             }
-        }
+            } else {
+                subList <- c(round(test$p.adj[1], 3))
+                subIndex <- c()
+                for (p in pair){
+                    index_num <- match(p, order)
+                    subIndex <- c(subIndex, index_num)
+                }
+                pValues[[length(pValues) + 1]] <- subList
+                index[[length(index) + 1]] <- subIndex
+          
+            }
     }
+
     #Ordering Pvalues vector list based on gap between x0 and x1 positions
     # Extract 1st and 3rd as numeric vectors
-    second_vals <- vapply(pValues, `[`, numeric(1), 2)
-    third_vals <- vapply(pValues, `[`, numeric(1), 3)
-
-    diff_vals <- third_vals - second_vals
-
-    ord_idx <- order(diff_vals, na.last = TRUE, decreasing = FALSE)
-
+    
+    gaps <- c()
+  
+    for (i in seq_along(index)){
+        v <- index[[i]]
+        gap <- as.numeric(v[2]) - as.numeric(v[1])
+        gaps <- c(gaps, gap)
+    }
+    
+    ord_idx <- order(gaps, decreasing = FALSE)
     pValues <- pValues[ord_idx]
-
-
+    index <- index[ord_idx]
     #Creating annotation lists
-    y_val <- v_max + v_unit
+
     annots <- list()
     shapes <- list()
-    for (item in pValues){
-      
-        x_val <- (item[2] + item[3]) * 0.5
-      
-        if (item[3] - item[2] == 1){
-          
-          y_val <- y_val
+
+    y_val_incre <- v_max + v_unit 
+    base <- v_max + v_unit
+
+
+    annots <- list()
+    shapes <- list()
+
+    for (i in seq_along(pValues)) {
+        x0 <- as.numeric(index[[i]][1])
+        x1 <- as.numeric(index[[i]][2])
+        x_val <- (x0 + x1) * 0.5
+        gap <- abs(x1 - x0)
+        
+        if (gap == 1) {
+
+            y_val <- base
 
         } else {
-          
-            y_val <- y_val + v_unit
-          
+            y_val_incre <- y_val_incre + v_unit 
+            y_val <- y_val_incre
         }
-      
-        subAnno <- list(text = item[1], x = x_val, y = y_val, showarrow = FALSE, font = list(size = 16, color = "black"))
+
+        
+        # Add annot/shape
+        subAnno <- list(text = pValues[[i]][1], x = x_val, y = y_val, 
+                        showarrow = FALSE, font = list(size = 16, color = "black"))
         annots[[length(annots) + 1]] <- subAnno 
         
         subShape <- list(type = "line", line = list(color = "black", width = 10),
-                            xref = "x", yref = "y", x0 = item[2] - 0.2 , x1 = item[3] + 0.2, y0 = y_val * 0.98, y1= y_val *0.98)
+                        xref = "x", yref = "y", 
+                        x0 = x0 - 0.2, x1 = x1 + 0.2, 
+                        y0 = y_val * 0.98, y1 = y_val * 0.98)
         shapes[[length(shapes) + 1]] <- subShape
     }
     y_max <- y_val + v_unit
+
     
   
     fig <- fig %>% layout(annotations = annots, shapes = shapes, yaxis = list(range = c(v_min, y_max)))
