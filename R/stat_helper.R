@@ -138,9 +138,6 @@ plot_stats <- function(fig, df, x, y,
     index <- index[ord_idx]
     #Creating annotation lists
 
-    annots <- list()
-    shapes <- list()
-
     y_val_incre <- v_max + v_unit 
     base <- v_max + v_unit
 
