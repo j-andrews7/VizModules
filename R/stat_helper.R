@@ -81,6 +81,7 @@ plot_stats <- function(fig, df, x, y,
 
     #Creating Pairs combinations if pairs is NULL
     if (is.null(pairs)){
+        all_group <- levels(all_group)
         pairs <- combn(all_group, 2, simplify = FALSE)
     } 
 
@@ -94,26 +95,49 @@ plot_stats <- function(fig, df, x, y,
 
 
             pValue <- round(test$p.value, 3)
-            subList <- c(pValue)
-            for (p in pair){
-                index <- match(p, order)
-                subList <- c(subList, index)
+            if (pValue <= cutoff_pvalue){
+                subList <- c(pValue)
+                for (p in pair){
+                    index <- match(p, order)
+                    subList <- c(subList, index)
+                }
+                pValues[[length(pValues) + 1]] <- subList
             }
-            pValues[[length(pValues) + 1]] <- subList
         }
     }
-  
+    #Ordering Pvalues vector list based on gap between x0 and x1 positions
+    # Extract 1st and 3rd as numeric vectors
+    second_vals <- vapply(pValues, `[`, numeric(1), 2)
+    third_vals <- vapply(pValues, `[`, numeric(1), 3)
+
+    diff_vals <- third_vals - second_vals
+
+    ord_idx <- order(diff_vals, na.last = TRUE, decreasing = FALSE)
+
+    pValues <- pValues[ord_idx]
+
+
     #Creating annotation lists
-    y_val <- v_max
+    y_val <- v_max + v_unit
     annots <- list()
     shapes <- list()
     for (item in pValues){
-        x_val <- (item[2] + item[3]) * 0.5
-        y_val <- y_val + v_unit
-
-        subAnno <- list(text = item[1], x = x_val, y = y_val, showarrow = FALSE, font = list(size = 16, color = "red"))
-        annots[[length(annots) + 1]] <- subAnno 
       
+        x_val <- (item[2] + item[3]) * 0.5
+      
+        if (item[3] - item[2] == 1){
+          
+          y_val <- y_val
+
+        } else {
+          
+            y_val <- y_val + v_unit
+          
+        }
+      
+        subAnno <- list(text = item[1], x = x_val, y = y_val, showarrow = FALSE, font = list(size = 16, color = "black"))
+        annots[[length(annots) + 1]] <- subAnno 
+        
         subShape <- list(type = "line", line = list(color = "black", width = 10),
                             xref = "x", yref = "y", x0 = item[2] - 0.2 , x1 = item[3] + 0.2, y0 = y_val * 0.98, y1= y_val *0.98)
         shapes[[length(shapes) + 1]] <- subShape
@@ -125,4 +149,4 @@ plot_stats <- function(fig, df, x, y,
     object <- list("fig" = fig, "ymax" = y_max, "shapes" = shapes) # Decided to export y_max to apply to the layout within the server code - Layout wasnt being updated properly. 
     return(object)
 
-    }
+}

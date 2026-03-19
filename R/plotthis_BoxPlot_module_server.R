@@ -84,11 +84,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         #On start Up update the pairs select input in the stats module: 
         #Formatting pairs options so the ui input can use it. 
         observeEvent(input$x.data, {
+          
+          
             pairs_list <- combn(unique(data()[[input$x.data]]), 2, simplify = FALSE)
             pair_strings <- sapply(pairs_list, paste, collapse = " vs ")
             updateSelectInput(session, "pairs", choices = c("", pair_strings), selected = "")
         })
-            
+          
+      
+      
+      
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
@@ -247,6 +252,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
             
+
+          
             # Determining if stats is on and parsing pairs if the ui input is not ""
             if (isolate_fn(input$stats)){
                 pairs <- NULL
@@ -255,11 +262,21 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     pairs <- lapply(strsplit(pair_string, " vs "), unname)
 
                 }
-                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox", pairs = pairs, order = unique(data()[[isolate_fn(input$x.data)]]))
+              
+                p_value <- 1
+                if (!is.na(isolate_fn(input$p.value))){
+                    p_value <- isolate_fn(input$p.value)
+                }
+                  
+                stats <- plot_stats(fig = fig, df = data(), x = isolate_fn(input$x.data), y = isolate_fn(input$y.data), type_test = "wilcox", pairs = pairs, order = levels(unique(data()[[isolate_fn(input$x.data)]])),
+                                    cutoff_pvalue = p_value)
                 fig <- stats$fig 
                 updateNumericInput(session, "y.max", value = stats$ymax)
             }
         
+          
+        #   order = levels(unique(data()[[isolate_fn(input$x.data)]]))
+
             
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
