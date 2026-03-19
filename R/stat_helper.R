@@ -133,7 +133,7 @@ plot_stats <- function(fig, df, x, y,
         gaps <- c(gaps, gap)
     }
     
-    ord_idx <- order(gaps, decreasing = FALSE)
+    ord_idx <- order(gaps, decreasing = TRUE)
     pValues <- pValues[ord_idx]
     index <- index[ord_idx]
     #Creating annotation lists
@@ -169,17 +169,20 @@ plot_stats <- function(fig, df, x, y,
                         showarrow = FALSE, font = list(size = 16, color = "black"))
         annots[[length(annots) + 1]] <- subAnno 
         
-        subShape <- list(type = "line", line = list(color = "black", width = 10),
+        subShapes <- list(type = "line", line = list(color = "black", width = 1),
                         xref = "x", yref = "y", 
-                        x0 = x0 - 0.2, x1 = x1 + 0.2, 
+                        x0 = x0 + 0.05, x1 = x1 - 0.05, 
                         y0 = y_val * 0.98, y1 = y_val * 0.98)
-        shapes[[length(shapes) + 1]] <- subShape
+        shapes[[length(shapes) + 1]] <- subShapes
     }
     y_max <- y_val + v_unit
 
     
   
-    fig <- fig %>% layout(annotations = annots, shapes = shapes, yaxis = list(range = c(v_min, y_max)))
+    fig <- fig %>% layout(annotations = annots, yaxis = list(range = c(v_min, y_max)))
+    if (length(shapes) > 0) {
+        fig$x$layout$shapes <- shapes
+    }
     object <- list("fig" = fig, "ymax" = y_max, "shapes" = shapes) # Decided to export y_max to apply to the layout within the server code - Layout wasnt being updated properly. 
     return(object)
 
