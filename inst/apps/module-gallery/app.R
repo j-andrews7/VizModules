@@ -92,7 +92,7 @@ module_registry <- list(
         inputs_ui = plotthis_HistogramInputsUI,
         output_ui = plotthis_HistogramOutputUI,
         server_fn = plotthis_HistogramServer,
-        defaults  = list("x.data" = "salary", "group.by" = "department")
+        defaults  = list("x.data" = "salary")
     ),
     list(
         label     = "Line Plot",
@@ -100,8 +100,7 @@ module_registry <- list(
         inputs_ui = linePlotInputsUI,
         output_ui = linePlotOutputUI,
         server_fn = linePlotServer,
-        defaults  = list("x.value" = "year", "y.value" = "revenue",
-                         "group.by" = "product_line")
+        defaults  = list("x.value" = "product_line", "y.value" = "units")
     ),
     list(
         label     = "Parallel Coordinates",
@@ -143,8 +142,7 @@ module_registry <- list(
         inputs_ui = plotthis_SplitBarPlotInputsUI,
         output_ui = plotthis_SplitBarPlotOutputUI,
         server_fn = plotthis_SplitBarPlotServer,
-        defaults  = list("x.data" = "Score", "y.data" = "Group",
-                         "fill.by" = "Type")
+        defaults  = list("x.data" = "Score", "y.data" = "Group")
     ),
     list(
         label     = "Ternary Plot",
@@ -161,8 +159,7 @@ module_registry <- list(
         inputs_ui = plotthis_ViolinPlotInputsUI,
         output_ui = plotthis_ViolinPlotOutputUI,
         server_fn = plotthis_ViolinPlotServer,
-        defaults  = list("x.data" = "department", "y.data" = "salary",
-                         "group.by" = "job_level")
+        defaults  = list("x.data" = "department", "y.data" = "salary")
     ),
     list(
         label     = "yPlot",
