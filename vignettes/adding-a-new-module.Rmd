@@ -150,6 +150,38 @@ myPlotApp <- function(data_list = NULL) {
 - [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
 - [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
 
+## Integrating Statistical Testing (Stats Tab)
+
+Modules for categorical-vs-numeric plots (box, violin, etc.) can include an optional **Stats** tab that provides pairwise statistical testing with plotly bracket annotations. If your new module supports grouped comparisons along a categorical x-axis, follow this pattern:
+
+### UI
+
+- [ ] Add a `"Stats"` tab to the module's `tabsetPanel` containing `.uniform_stats_inputs_ui(ns, defaults)`.
+- [ ] Pass `has.stats = TRUE` to `module_tack_ui()` so the conditionally visible "Save Stats" button is included.
+
+### Server
+
+- [ ] Create a `reactiveVal` to store the last computed stats table: `last_stats_df <- reactiveVal(NULL)`.
+- [ ] When `input$stats.enabled` is TRUE in the plot rendering block, call `.compute_pairwise_stats()` to run tests, then `.create_stat_annotations()` to build bracket shapes/annotations, then `.apply_stat_annotations()` to append them to the plotly figure.
+- [ ] Store the result: `last_stats_df(stats_df)`.
+- [ ] Add an `observeEvent` to update `stat.pairs` choices when the x or grouping column changes, using `.generate_pair_strings()`.
+- [ ] Add an `observeEvent(input$stats.enabled)` to show/hide the "Save Stats" button via `shinyjs::show("download.stats.col")` / `shinyjs::hide("download.stats.col")`.
+- [ ] Add a `downloadHandler` for `output$download.stats` that calls `.write_stats_csv()`.
+- [ ] Call `.reset_stats_inputs(session)` in the reset observer.
+
+### Key helpers (all in `R/stat_helper.R`)
+
+| Function | Purpose |
+|---|---|
+| `.compute_pairwise_stats()` | Run pairwise or omnibus tests with p-value adjustment |
+| `.create_stat_annotations()` | Convert stats to plotly shapes/annotations with bracket packing |
+| `.apply_stat_annotations()` | Append shapes/annotations to the plotly figure and adjust y-axes |
+| `.generate_pair_strings()` | Build `"A vs B"` strings for the comparison selector |
+| `.parse_pair_strings()` | Convert selected pair strings back to list of length-2 vectors |
+| `.write_stats_csv()` | Write stats CSV with metadata comment header |
+
+See the `plotthis_BoxPlotServer`, `plotthis_ViolinPlotServer`, or `dittoViz_yPlotServer` implementations for complete integration examples.
+
 ## Gallery App
 
 - [ ] Add or update the gallery app at `inst/apps/module-gallery/app.R` to include the new module in its own tab.

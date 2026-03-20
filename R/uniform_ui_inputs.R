@@ -386,79 +386,149 @@
 #' @importFrom shiny selectInput numericInput tagList
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_uniform_stats_inputs_ui
 #' @keywords internal
 .uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
     tagList(
-        materialSwitch(ns("stats.enabled"), "Enable Stats",
-            value = .get_default(defaults, "stats.enabled", FALSE, is.logical),
-            status = "success"
-        ),
-        selectInput(ns("stat.test"), "Test",
-            choices = c(
-                "Wilcoxon" = "wilcox.test",
-                "t-test" = "t.test",
-                "Kruskal-Wallis" = "kruskal.test",
-                "ANOVA" = "anova"
+        tipify(
+            materialSwitch(ns("stats.enabled"), "Enable Stats",
+                value = .get_default(defaults, "stats.enabled", FALSE, is.logical),
+                status = "success"
             ),
-            selected = .get_default(defaults, "stat.test", "wilcox.test")
+            "Toggle pairwise statistical testing with bracket annotations on the plot",
+            placement = "top", options = tip_opts
         ),
-        selectInput(ns("stat.p.adjust"), "P-value Adjustment",
-            choices = c("holm", "hochberg", "hommel", "bonferroni",
-                "BH", "BY", "fdr", "none"),
-            selected = .get_default(defaults, "stat.p.adjust", "holm")
-        ),
-        selectInput(ns("stat.display"), "Display",
-            choices = c(
-                "Adjusted P-value" = "p.adj",
-                "P-value" = "p.value",
-                "Symbols" = "symbol"
+        tipify(
+            selectInput(ns("stat.test"), "Test",
+                choices = c(
+                    "Wilcoxon" = "wilcox.test",
+                    "t-test" = "t.test",
+                    "Kruskal-Wallis" = "kruskal.test",
+                    "ANOVA" = "anova"
+                ),
+                selected = .get_default(defaults, "stat.test", "wilcox.test")
             ),
-            selected = .get_default(defaults, "stat.display", "p.adj")
+            paste(
+                "Statistical test for comparisons.",
+                "Wilcoxon and t-test perform pairwise comparisons.",
+                "Kruskal-Wallis and ANOVA perform omnibus tests."
+            ),
+            placement = "top", options = tip_opts
         ),
-        numericInput(ns("stat.sig.threshold"), "Significance Threshold",
-            value = .get_default(defaults, "stat.sig.threshold", 0.05, is.numeric),
-            min = 0, max = 1, step = 0.01
+        tipify(
+            selectInput(ns("stat.p.adjust"), "P-value Adjustment",
+                choices = c("holm", "hochberg", "hommel", "bonferroni",
+                    "BH", "BY", "fdr", "none"),
+                selected = .get_default(defaults, "stat.p.adjust", "holm")
+            ),
+            "Method for multiple testing correction applied to all p-values",
+            placement = "top", options = tip_opts
         ),
-        materialSwitch(ns("stat.hide.ns"), "Hide Non-Significant",
-            value = .get_default(defaults, "stat.hide.ns", FALSE, is.logical),
-            status = "success"
+        tipify(
+            selectInput(ns("stat.display"), "Display",
+                choices = c(
+                    "Adjusted P-value" = "p.adj",
+                    "P-value" = "p.value",
+                    "Symbols" = "symbol"
+                ),
+                selected = .get_default(defaults, "stat.display", "p.adj")
+            ),
+            "What to display on brackets: adjusted p-values, raw p-values, or significance symbols (*, **, ***, ****)",
+            placement = "top", options = tip_opts
         ),
-        materialSwitch(ns("stat.paired"), "Paired Test",
-            value = .get_default(defaults, "stat.paired", FALSE, is.logical),
-            status = "success"
+        tipify(
+            numericInput(ns("stat.sig.threshold"), "Significance Threshold",
+                value = .get_default(defaults, "stat.sig.threshold", 0.05, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            "(Adjusted, if applied) P-values above this threshold are labeled 'ns'. Also used as the boundary for the '*' significance symbol.",
+            placement = "top", options = tip_opts
         ),
-        selectInput(ns("stat.pairs"), "Comparisons",
-            choices = c(), multiple = TRUE
+        tipify(
+            materialSwitch(ns("stat.hide.ns"), "Hide Non-Significant",
+                value = .get_default(defaults, "stat.hide.ns", FALSE, is.logical),
+                status = "success"
+            ),
+            "Hide comparison brackets where the adjusted p-value exceeds the significance threshold",
+            placement = "top", options = tip_opts
         ),
-        colourpicker::colourInput(ns("stat.line.color"), "Line Color",
-            value = .get_default(defaults, "stat.line.color", "#000000")
+        tipify(
+            materialSwitch(ns("stat.paired"), "Paired Test",
+                value = .get_default(defaults, "stat.paired", FALSE, is.logical),
+                status = "success"
+            ),
+            paste(
+                "Perform paired tests (Wilcoxon signed-rank or paired t-test).",
+                "Each group must have the same number of observations in corresponding order.",
+                "Data should be sorted so that paired samples align row-by-row within each group."
+            ),
+            placement = "top", options = tip_opts
         ),
-        numericInput(ns("stat.line.width"), "Line Width",
-            value = .get_default(defaults, "stat.line.width", 1, is.numeric),
-            min = 0.1, max = 5, step = 0.1
+        tipify(
+            selectInput(ns("stat.pairs"), "Comparisons",
+                choices = c(), multiple = TRUE
+            ),
+            "Select specific pairwise comparisons to display. If empty, all possible pairs are tested.",
+            placement = "top", options = tip_opts
         ),
-        selectInput(ns("stat.bracket.style"), "Bracket Style",
-            choices = c("Capped" = "capped", "Flat" = "flat"),
-            selected = .get_default(defaults, "stat.bracket.style", "capped")
+        tipify(
+            colourpicker::colourInput(ns("stat.line.color"), "Line Color",
+                value = .get_default(defaults, "stat.line.color", "#000000")
+            ),
+            "Color for bracket lines and annotation text",
+            placement = "top", options = tip_opts
         ),
-        numericInput(ns("stat.step.increase"), "Bracket Spacing",
-            value = .get_default(defaults, "stat.step.increase", 0.06, is.numeric),
-            min = 0.01, max = 0.3, step = 0.01
+        tipify(
+            numericInput(ns("stat.line.width"), "Line Width",
+                value = .get_default(defaults, "stat.line.width", 1, is.numeric),
+                min = 1, max = 50, step = 1
+            ),
+            "Width of bracket lines in pixels",
+            placement = "top", options = tip_opts
         ),
-        numericInput(ns("stat.text.bump"), "Text Offset",
-            value = .get_default(defaults, "stat.text.bump", 0.04, is.numeric),
-            min = 0.005, max = 0.2, step = 0.005
+        tipify(
+            selectInput(ns("stat.bracket.style"), "Bracket Style",
+                choices = c("Capped" = "capped", "Flat" = "flat"),
+                selected = .get_default(defaults, "stat.bracket.style", "capped")
+            ),
+            "Capped brackets have vertical ticks at each end; flat brackets are a single horizontal line",
+            placement = "top", options = tip_opts
         ),
-        numericInput(ns("stat.bracket.inset"), "Bracket Inset",
-            value = .get_default(defaults, "stat.bracket.inset", 0.025, is.numeric),
-            min = 0, max = 0.2, step = 0.005
+        tipify(
+            numericInput(ns("stat.step.increase"), "Bracket Spacing",
+                value = .get_default(defaults, "stat.step.increase", 0.06, is.numeric),
+                min = 0.01, max = 0.3, step = 0.01
+            ),
+            "Fraction of the y-axis range used as vertical spacing between successive bracket levels",
+            placement = "top", options = tip_opts
         ),
-        materialSwitch(ns("stat.per.facet"), "Per Facet Panel",
-            value = .get_default(defaults, "stat.per.facet", TRUE, is.logical),
-            status = "success"
+        tipify(
+            numericInput(ns("stat.text.bump"), "Text Offset",
+                value = .get_default(defaults, "stat.text.bump", 0.04, is.numeric),
+                min = 0.005, max = 0.2, step = 0.005
+            ),
+            "Fraction of the y-axis range for vertical distance between the bracket line and annotation text",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("stat.bracket.inset"), "Bracket Inset",
+                value = .get_default(defaults, "stat.bracket.inset", 0.025, is.numeric),
+                min = 0, max = 0.2, step = 0.005
+            ),
+            "Fixed amount to inset bracket endpoints from group centers, preventing overlap of adjacent brackets",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            materialSwitch(ns("stat.per.facet"), "Per Facet Panel",
+                value = .get_default(defaults, "stat.per.facet", TRUE, is.logical),
+                status = "success"
+            ),
+            "When enabled, statistical tests run independently within each facet panel. When disabled, tests run on the full dataset.",
+            placement = "top", options = tip_opts
         )
     )
 }

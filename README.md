@@ -143,6 +143,30 @@ Via direct use of plotly.
 * `ternaryPlot` - Ternary plots
 * `dumbbellPlot` - Dumbbell plots
 
+## Statistical Testing
+
+The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure.
+
+### Supported Tests
+
+- **Pairwise**: Wilcoxon rank-sum test, t-test (paired or unpaired)
+- **Omnibus**: Kruskal-Wallis, ANOVA
+
+### Features
+
+- Bracket annotations with capped or flat style, placed via an interval packing algorithm to minimize vertical space
+- Multiple display modes: adjusted p-values, raw p-values, or significance symbols (`*`, `**`, `***`, `****`)
+- P-value correction via any `p.adjust` method (Holm, Bonferroni, BH, etc.)
+- Configurable significance threshold, bracket spacing, inset, and line styling
+- Per-facet testing: run tests independently within each facet panel, or across the full dataset
+- Nested grouping: compare `group.by` levels within each x-axis category
+- Omnibus test results shown as a draggable text annotation
+- Download computed statistics as a CSV with metadata header (correction method, threshold, symbol legend)
+
+### Data Format for Paired Tests
+
+When using paired tests (Wilcoxon signed-rank or paired t-test), each group must have the **same number of observations** in corresponding order. Data should be sorted so that paired samples align row-by-row within each group.
+
 ## Modules Planned
 
 ### `dittoViz`
