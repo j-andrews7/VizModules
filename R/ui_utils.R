@@ -259,7 +259,7 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 ),
                 style = "margin-top: 25px;"
             ),
-            if (has.stats) column(
+            if (has.stats) shinyjs::hidden(column(
                 2,
                 downloadButton(
                     ns("download.stats"),
@@ -268,8 +268,9 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                     icon = icon("table"),
                     width = "100%"
                 ),
+                id = ns("download.stats.col"),
                 style = "margin-top: 25px;"
-            ),
+            )),
             column(
                 2,
                 selectInput(

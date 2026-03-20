@@ -90,6 +90,15 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             pair_strings <- .generate_pair_strings(data(), input$x.data, input$group.by)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
+
+        # Show/hide Save Stats button based on stats.enabled
+        observeEvent(input$stats.enabled, {
+            if (isTRUE(input$stats.enabled)) {
+                shinyjs::show("download.stats.col")
+            } else {
+                shinyjs::hide("download.stats.col")
+            }
+        })
       
       
         # Reset functionality

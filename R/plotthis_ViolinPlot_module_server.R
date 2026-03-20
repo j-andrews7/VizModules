@@ -156,6 +156,15 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
+        # Show/hide Save Stats button based on stats.enabled
+        observeEvent(input$stats.enabled, {
+            if (isTRUE(input$stats.enabled)) {
+                shinyjs::show("download.stats.col")
+            } else {
+                shinyjs::hide("download.stats.col")
+            }
+        })
+
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)

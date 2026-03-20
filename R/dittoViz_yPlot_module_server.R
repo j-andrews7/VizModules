@@ -52,6 +52,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
+        # Show/hide Save Stats button based on stats.enabled
+        observeEvent(input$stats.enabled, {
+            if (isTRUE(input$stats.enabled)) {
+                shinyjs::show("download.stats.col")
+            } else {
+                shinyjs::hide("download.stats.col")
+            }
+        })
+
         ns <- session$ns
 
         # Store last computed stats table for download
