@@ -143,7 +143,7 @@ module_registry <- list(
         inputs_ui = plotthis_SplitBarPlotInputsUI,
         output_ui = plotthis_SplitBarPlotOutputUI,
         server_fn = plotthis_SplitBarPlotServer,
-        defaults  = list("x.data" = "Values", "y.data" = "Group",
+        defaults  = list("x.data" = "Score", "y.data" = "Group",
                          "fill.by" = "Type")
     ),
     list(
