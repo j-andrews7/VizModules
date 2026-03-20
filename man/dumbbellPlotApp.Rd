@@ -8,7 +8,7 @@ dumbbellPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("school_earnings" = example_school_earnings, "iris" = example_iris, "mtcars" = example_mtcars)}
+\code{list("school_earnings" = example_school_earnings)}
 is used as example data.}
 }
 \value{
@@ -22,7 +22,7 @@ for configuring and displaying an interactive dumbbell plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_school_earnings}, \code{example_iris}, and \code{example_mtcars} as example datasets.
+\code{example_school_earnings} as an example dataset.
 Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten

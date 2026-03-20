@@ -1,105 +1,27 @@
-#' Example sales dataset for module apps
+#' Bar dataset for bar and split bar plot examples
 #'
-#' A dataset containing simulated sales records across years, months, and regions.
+#' A small dataset with five groups, two categorical variables, and three
+#' numeric variables. Used as the default data for [plotthis_BarPlotApp()]
+#' and [plotthis_SplitBarPlotApp()].
 #'
-#' @format A data frame with 720 rows and 6 columns:
+#' @format A data frame with 5 rows and 5 columns:
 #' \describe{
-#'   \item{sale_id}{Unique sale record identifier}
-#'   \item{year}{Year of the sale}
-#'   \item{month}{Month of the sale}
-#'   \item{region}{Sales region}
-#'   \item{revenue}{Revenue amount}
-#'   \item{units}{Units sold}
+#'   \item{Group}{Group label (A through E)}
+#'   \item{Type}{Category type (Alpha, Beta, or Gamma)}
+#'   \item{Values}{Primary numeric values (positive)}
+#'   \item{Numbers}{Secondary numeric values (can be negative)}
+#'   \item{Score}{Tertiary numeric values (can be negative)}
 #' }
 #'
-#' @source Simulated in data-raw/generate_example_data.R.
+#' @source Defined in data-raw/generate_example_data.R.
 #'
 #' @examples
 #' library(VizModules)
-#' head(example_sales)
+#' Bar
 #'
 #' @author Jared Andrews
 #' @keywords datasets
-"example_sales"
-
-#' Example population dataset for module apps
-#'
-#' A dataset containing simulated population counts across years and age groups.
-#'
-#' @format A data frame with 400 rows and 4 columns:
-#' \describe{
-#'   \item{record_id}{Unique population record identifier}
-#'   \item{year}{Year of the record}
-#'   \item{age_group}{Age group}
-#'   \item{count}{Population count}
-#' }
-#'
-#' @source Simulated in data-raw/generate_example_data.R.
-#'
-#' @examples
-#' library(VizModules)
-#' head(example_population)
-#'
-#' @author Jared Andrews
-#' @keywords datasets
-"example_population"
-
-#' Example iris dataset with an additional Group column
-#'
-#' The built-in \code{iris} dataset extended with a \code{Group} column
-#' assigning groups \code{"A"} and \code{"B"} to the first 100 rows and
-#' \code{"C"} and \code{"D"} alternating across the remaining 50 rows,
-#' for multi-group plotting examples.
-#'
-#' @format A data frame with 150 rows and 6 columns:
-#' \describe{
-#'   \item{Sepal.Length}{Sepal length in cm}
-#'   \item{Sepal.Width}{Sepal width in cm}
-#'   \item{Petal.Length}{Petal length in cm}
-#'   \item{Petal.Width}{Petal width in cm}
-#'   \item{Species}{Species of iris}
-#'   \item{Group}{Arbitrary group label (A or B for rows 1-100; C or D for rows 101-150)}
-#' }
-#'
-#' @source Derived from the built-in \code{iris} dataset.
-#'
-#' @examples
-#' library(VizModules)
-#' head(example_iris)
-#'
-#' @author Jared Andrews
-#' @keywords datasets
-"example_iris"
-
-#' Example mtcars dataset with key columns as factors
-#'
-#' The built-in \code{mtcars} dataset with \code{cyl}, \code{gear}, and
-#' \code{vs} converted to factors for categorical-aware plotting.
-#'
-#' @format A data frame with 32 rows and 11 columns:
-#' \describe{
-#'   \item{mpg}{Miles per gallon}
-#'   \item{cyl}{Number of cylinders (factor)}
-#'   \item{disp}{Displacement (cu. in.)}
-#'   \item{hp}{Gross horsepower}
-#'   \item{drat}{Rear axle ratio}
-#'   \item{wt}{Weight (1000 lbs)}
-#'   \item{qsec}{1/4 mile time}
-#'   \item{vs}{Engine shape (factor: 0 = V-shaped, 1 = straight)}
-#'   \item{am}{Transmission (0 = automatic, 1 = manual)}
-#'   \item{gear}{Number of forward gears (factor)}
-#'   \item{carb}{Number of carburetors}
-#' }
-#'
-#' @source Derived from the built-in \code{mtcars} dataset.
-#'
-#' @examples
-#' library(VizModules)
-#' head(example_mtcars)
-#'
-#' @author Jared Andrews
-#' @keywords datasets
-"example_mtcars"
+"Bar"
 
 #' Example school earnings dataset for dumbbell plots
 #'

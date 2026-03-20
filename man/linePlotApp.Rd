@@ -8,7 +8,7 @@ linePlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("sales" = example_sales, "iris" = example_iris)} is used as example data.}
+\code{list("sales" = gallery_sales)} is used as example data.}
 }
 \value{
 A Shiny app object.
@@ -21,7 +21,7 @@ for configuring and displaying an interactive line plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_sales} and \code{example_iris} as example datasets. Uploaded data files are added
+\code{gallery_sales} as an example dataset. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
@@ -30,12 +30,12 @@ This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleA
 }
 \examples{
 library(VizModules)
-# Launch with default example data (example_sales & example_iris):
+# Launch with default example data (gallery_sales):
 app <- linePlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- linePlotApp(list("iris" = iris))
+app2 <- linePlotApp(list("sales" = gallery_sales))
 if (interactive()) runApp(app2)
 }
 \seealso{

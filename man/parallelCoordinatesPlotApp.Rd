@@ -8,7 +8,7 @@ parallelCoordinatesPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("mtcars" = example_mtcars, "iris" = example_iris)} is used as example data. Each data frame
+\code{list("sales" = gallery_sales)} is used as example data. Each data frame
 should contain at least two numeric or categorical columns.}
 }
 \value{
@@ -23,7 +23,7 @@ for configuring and displaying an interactive parallel coordinates plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_mtcars} and \code{example_iris} as example datasets. Uploaded data files are added
+\code{gallery_sales} as an example dataset. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
@@ -37,7 +37,7 @@ app <- parallelCoordinatesPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales, "population" = example_population))
+app2 <- parallelCoordinatesPlotApp(list("sales" = gallery_sales))
 if (interactive()) runApp(app2)
 }
 \seealso{
