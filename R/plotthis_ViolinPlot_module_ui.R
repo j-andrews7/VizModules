@@ -263,6 +263,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             tipify(materialSwitch(ns("facet.by.row"), "Facet By Row", value = TRUE, status = "success"),
                 documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
+        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
@@ -271,7 +272,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         inputs,
         id = ns("ViolinPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults),
+        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
         columns = columns
     )
 }

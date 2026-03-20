@@ -371,3 +371,130 @@
         )
     )
 }
+
+
+#' Generate uniform Stats input UI
+#'
+#' Creates a standardized tagList of statistical testing inputs for use across
+#' plot modules that support pairwise comparisons (BoxPlot, ViolinPlot, yPlot).
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the stats input UI elements.
+#'
+#' @importFrom shiny selectInput numericInput tagList
+#' @importFrom shinyWidgets materialSwitch
+#' @importFrom colourpicker colourInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_uniform_stats_inputs_ui
+#' @keywords internal
+.uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
+    tagList(
+        materialSwitch(ns("stats.enabled"), "Enable Stats",
+            value = .get_default(defaults, "stats.enabled", FALSE, is.logical),
+            status = "success"
+        ),
+        selectInput(ns("stat.test"), "Test",
+            choices = c(
+                "Wilcoxon" = "wilcox.test",
+                "t-test" = "t.test",
+                "Kruskal-Wallis" = "kruskal.test",
+                "ANOVA" = "anova"
+            ),
+            selected = .get_default(defaults, "stat.test", "wilcox.test")
+        ),
+        selectInput(ns("stat.p.adjust"), "P-value Adjustment",
+            choices = c("holm", "hochberg", "hommel", "bonferroni",
+                "BH", "BY", "fdr", "none"),
+            selected = .get_default(defaults, "stat.p.adjust", "holm")
+        ),
+        selectInput(ns("stat.display"), "Display",
+            choices = c(
+                "Adjusted P-value" = "p.adj",
+                "P-value" = "p.value",
+                "Symbols" = "symbol"
+            ),
+            selected = .get_default(defaults, "stat.display", "p.adj")
+        ),
+        numericInput(ns("stat.sig.threshold"), "Significance Threshold",
+            value = .get_default(defaults, "stat.sig.threshold", 0.05, is.numeric),
+            min = 0, max = 1, step = 0.01
+        ),
+        materialSwitch(ns("stat.hide.ns"), "Hide Non-Significant",
+            value = .get_default(defaults, "stat.hide.ns", FALSE, is.logical),
+            status = "success"
+        ),
+        materialSwitch(ns("stat.paired"), "Paired Test",
+            value = .get_default(defaults, "stat.paired", FALSE, is.logical),
+            status = "success"
+        ),
+        selectInput(ns("stat.pairs"), "Comparisons",
+            choices = c(), multiple = TRUE
+        ),
+        colourpicker::colourInput(ns("stat.line.color"), "Line Color",
+            value = .get_default(defaults, "stat.line.color", "#000000")
+        ),
+        numericInput(ns("stat.line.width"), "Line Width",
+            value = .get_default(defaults, "stat.line.width", 1, is.numeric),
+            min = 0.1, max = 5, step = 0.1
+        ),
+        selectInput(ns("stat.bracket.style"), "Bracket Style",
+            choices = c("Capped" = "capped", "Flat" = "flat"),
+            selected = .get_default(defaults, "stat.bracket.style", "capped")
+        ),
+        numericInput(ns("stat.step.increase"), "Bracket Spacing",
+            value = .get_default(defaults, "stat.step.increase", 0.06, is.numeric),
+            min = 0.01, max = 0.3, step = 0.01
+        ),
+        numericInput(ns("stat.text.bump"), "Text Offset",
+            value = .get_default(defaults, "stat.text.bump", 0.04, is.numeric),
+            min = 0.005, max = 0.2, step = 0.005
+        ),
+        numericInput(ns("stat.bracket.inset"), "Bracket Inset",
+            value = .get_default(defaults, "stat.bracket.inset", 0.025, is.numeric),
+            min = 0, max = 0.2, step = 0.005
+        ),
+        materialSwitch(ns("stat.per.facet"), "Per Facet Panel",
+            value = .get_default(defaults, "stat.per.facet", TRUE, is.logical),
+            status = "success"
+        )
+    )
+}
+
+
+#' Reset uniform stats inputs to defaults
+#'
+#' Resets all inputs created by [.uniform_stats_inputs_ui()] to their default
+#' values. Call inside an `observeEvent(input$reset, ...)` block.
+#'
+#' @param session The Shiny session object (from `moduleServer`).
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateSelectInput updateNumericInput
+#' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_stats_inputs
+#' @keywords internal
+.reset_stats_inputs <- function(session) {
+    shinyWidgets::updateMaterialSwitch(session, "stats.enabled", value = FALSE)
+    updateSelectInput(session, "stat.test", selected = "wilcox.test")
+    updateSelectInput(session, "stat.p.adjust", selected = "holm")
+    updateSelectInput(session, "stat.display", selected = "p.adj")
+    updateNumericInput(session, "stat.sig.threshold", value = 0.05)
+    shinyWidgets::updateMaterialSwitch(session, "stat.hide.ns", value = FALSE)
+    shinyWidgets::updateMaterialSwitch(session, "stat.paired", value = FALSE)
+    updateSelectInput(session, "stat.pairs", selected = character(0))
+    colourpicker::updateColourInput(session, "stat.line.color", value = "#000000")
+    updateNumericInput(session, "stat.line.width", value = 1)
+    updateSelectInput(session, "stat.bracket.style", selected = "capped")
+    updateNumericInput(session, "stat.step.increase", value = 0.06)
+    updateNumericInput(session, "stat.text.bump", value = 0.04)
+    updateNumericInput(session, "stat.bracket.inset", value = 0.025)
+    shinyWidgets::updateMaterialSwitch(session, "stat.per.facet", value = TRUE)
+    invisible(NULL)
+}

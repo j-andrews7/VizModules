@@ -305,6 +305,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 min = 0),
                 documentParameters$ridgeplot.binwidth, placement = "top", options = list(container = "body"))
         ),
+        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
             tipify(selectInput(ns("split.by"), "Split by (facet)", choices = cat.choices,
                 selected = .get_default(defaults, "split.by", "",
@@ -332,7 +333,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         inputs,
         id = ns("yPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults),
+        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
         columns = columns
     )
 }

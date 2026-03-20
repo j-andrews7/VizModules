@@ -310,7 +310,8 @@
                 legendPosition = TRUE,
                 colorbarPosition = TRUE,
                 colorbarTitleText = TRUE,
-                annotationTail = TRUE
+                annotationTail = TRUE,
+                annotationPosition = TRUE
             ),
             toImageButtonOptions = list(
                 format = download.format,

@@ -255,15 +255,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
                 documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
         ),
-        "stats" = tagList(
-            materialSwitch(ns("stats"), "Stats", value = FALSE),
-            selectInput(ns("pairs"), "Pairs:", selected = "", choices = c(), multiple = TRUE),
-            selectInput(ns("stat.test"), "Type of test:", selected = "wilcox.test", choices = c("wilcox.test", "t.test")),
-            selectInput(ns("p.adjustment"), "Type of P adjustment", selected = "holm", choices = c("holm", "hochberg", "hommel", "bonferroni", 
-                                                                                                    "BH", "BY", "fdr", "none")),
-            materialSwitch(ns("symbol"), "Symbol stats: ", value = FALSE),
-            numericInput(ns("p.value"), "Signifficance level (pvalue)", value = NA, min = 0, max = 1)                                                    
-        ),
+        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
@@ -272,7 +264,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         inputs,
         id = ns("BoxPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults),
+        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
         columns = columns
     )
 }

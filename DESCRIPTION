@@ -40,9 +40,7 @@ Imports:
     methods,
     shinyWidgets,
     htmlwidgets,
-    ggpubr
-Remotes:
-    pwwang/plotthis
+    plotthis
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
