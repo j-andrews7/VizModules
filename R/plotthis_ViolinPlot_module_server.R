@@ -35,6 +35,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         ns <- session$ns
         default_palette_name <- "dittoColors"
+
+        # Store last computed stats table for download
+        last_stats_df <- reactiveVal(NULL)
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
@@ -141,6 +144,16 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             # Axes
             .reset_axes_inputs(session)
+
+            # Stats
+            .reset_stats_inputs(session)
+        })
+
+        # Update stat comparison pairs when x or group.by changes
+        observeEvent(c(input$x.data, input$group.by), {
+            req(input$x.data)
+            pair_strings <- .generate_pair_strings(data(), input$x.data, input$group.by)
+            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
         # Update y-axis range when y data column is changed
@@ -265,6 +278,38 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 fig <- .hide_jitter_from_legend(fig)
             }
 
+            # Statistical annotations
+            if (isolate_fn(input$stats.enabled)) {
+                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- .compute_pairwise_stats(
+                    df = data(), x = isolate_fn(input$x.data),
+                    y = isolate_fn(input$y.data), pairs = stat_pairs,
+                    test = isolate_fn(input$stat.test),
+                    p.adjust.method = isolate_fn(input$stat.p.adjust),
+                    paired = isolate_fn(input$stat.paired),
+                    group.by = group.by, facet.by = facet.by,
+                    per.facet = isolate_fn(input$stat.per.facet),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold)
+                )
+                last_stats_df(stats_df)
+                stat_result <- .create_stat_annotations(
+                    stats_df = stats_df, fig = fig, df = data(),
+                    x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
+                    display = isolate_fn(input$stat.display),
+                    hide.ns = isolate_fn(input$stat.hide.ns),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold),
+                    line.color = isolate_fn(input$stat.line.color),
+                    line.width = isolate_fn(input$stat.line.width),
+                    bracket.style = isolate_fn(input$stat.bracket.style),
+                    group.by = group.by, facet.by = facet.by,
+                    step.increase = isolate_fn(input$stat.step.increase),
+                    text.bump = isolate_fn(input$stat.text.bump),
+                    bracket.inset = isolate_fn(input$stat.bracket.inset)
+                )
+                fig <- .apply_stat_annotations(fig, stat_result,
+                    y.min = isolate_fn(input$y.min))
+            }
+
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
 
@@ -308,6 +353,20 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         output$download.interactive <- .create_plot_download_handler(
             plot_reactive = generate_ViolinPlot,
             filename_base = "ViolinPlot"
+        )
+
+        # Download handler for stats table
+        output$download.stats <- downloadHandler(
+            filename = function() {
+                paste0("stats_table_", Sys.Date(), ".csv")
+            },
+            content = function(file) {
+                .write_stats_csv(
+                    stats_df = last_stats_df(), file = file,
+                    p.adjust.method = input$stat.p.adjust,
+                    sig.threshold = input$stat.sig.threshold
+                )
+            }
         )
     })
 }

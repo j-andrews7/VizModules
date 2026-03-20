@@ -4,7 +4,7 @@
 \alias{module_tack_ui}
 \title{Create standard tack UI for module inputs}
 \usage{
-module_tack_ui(ns, defaults = NULL)
+module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
 }
 \arguments{
 \item{ns}{Namespace function from the module (e.g., \code{ns <- NS(id)}).}
@@ -13,6 +13,9 @@ module_tack_ui(ns, defaults = NULL)
 \itemize{
 \item \code{download.format} - Default download format ("svg" or "png"), defaults to "svg"
 }}
+
+\item{has.stats}{Logical; if TRUE, include a "Save Stats" download button.
+Default FALSE.}
 }
 \value{
 A Shiny tagList containing the standard control buttons and inputs.

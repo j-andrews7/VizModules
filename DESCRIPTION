@@ -39,9 +39,8 @@ Imports:
     jsonlite,
     methods,
     shinyWidgets,
-    htmlwidgets
-Remotes:
-    pwwang/plotthis
+    htmlwidgets,
+    plotthis
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

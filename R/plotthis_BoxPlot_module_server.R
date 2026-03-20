@@ -38,6 +38,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         ns <- session$ns
         default_palette_name <- "dittoColors"
+
+        # Store last computed stats table for download
+        last_stats_df <- reactiveVal(NULL)
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
@@ -81,7 +84,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
         })
 
-
+        # Update stat comparison pairs when x or group.by changes
+        observeEvent(c(input$x.data, input$group.by), {
+            req(input$x.data)
+            pair_strings <- .generate_pair_strings(data(), input$x.data, input$group.by)
+            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+        })
+      
+      
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
@@ -142,6 +152,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Axes
             .reset_axes_inputs(session)
+
+            # Stats
+            .reset_stats_inputs(session)
         })
 
         # Update y-axis range when y data column is changed
@@ -239,7 +252,41 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1, 
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
+            
 
+            # Statistical annotations
+            if (isolate_fn(input$stats.enabled)) {
+                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- .compute_pairwise_stats(
+                    df = data(), x = isolate_fn(input$x.data),
+                    y = isolate_fn(input$y.data), pairs = stat_pairs,
+                    test = isolate_fn(input$stat.test),
+                    p.adjust.method = isolate_fn(input$stat.p.adjust),
+                    paired = isolate_fn(input$stat.paired),
+                    group.by = group.by, facet.by = facet.by,
+                    per.facet = isolate_fn(input$stat.per.facet),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold)
+                )
+                last_stats_df(stats_df)
+                stat_result <- .create_stat_annotations(
+                    stats_df = stats_df, fig = fig, df = data(),
+                    x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
+                    display = isolate_fn(input$stat.display),
+                    hide.ns = isolate_fn(input$stat.hide.ns),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold),
+                    line.color = isolate_fn(input$stat.line.color),
+                    line.width = isolate_fn(input$stat.line.width),
+                    bracket.style = isolate_fn(input$stat.bracket.style),
+                    group.by = group.by, facet.by = facet.by,
+                    step.increase = isolate_fn(input$stat.step.increase),
+                    text.bump = isolate_fn(input$stat.text.bump),
+                    bracket.inset = isolate_fn(input$stat.bracket.inset)
+                )
+                fig <- .apply_stat_annotations(fig, stat_result,
+                    y.min = isolate_fn(input$y.min))
+            }
+
+            
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
@@ -317,6 +364,20 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$download.interactive <- .create_plot_download_handler(
             plot_reactive = generate_BoxPlot,
             filename_base = "BoxPlot"
+        )
+
+        # Download handler for stats table
+        output$download.stats <- downloadHandler(
+            filename = function() {
+                paste0("stats_table_", Sys.Date(), ".csv")
+            },
+            content = function(file) {
+                .write_stats_csv(
+                    stats_df = last_stats_df(), file = file,
+                    p.adjust.method = input$stat.p.adjust,
+                    sig.threshold = input$stat.sig.threshold
+                )
+            }
         )
     })
 }

@@ -198,6 +198,8 @@ default_palettes <- function() {
 #'   \itemize{
 #'     \item \code{download.format} - Default download format ("svg" or "png"), defaults to "svg"
 #'   }
+#' @param has.stats Logical; if TRUE, include a "Save Stats" download button.
+#'   Default FALSE.
 #'
 #' @return A Shiny tagList containing the standard control buttons and inputs.
 #'
@@ -214,7 +216,7 @@ default_palettes <- function() {
 #'
 #' # With custom defaults
 #' module_tack_ui(ns, defaults = list(download.format = "png"))
-module_tack_ui <- function(ns, defaults = NULL) {
+module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
     tagList(
         fluidRow(
             column(
@@ -257,8 +259,19 @@ module_tack_ui <- function(ns, defaults = NULL) {
                 ),
                 style = "margin-top: 25px;"
             ),
+            if (has.stats) column(
+                2,
+                downloadButton(
+                    ns("download.stats"),
+                    "Save Stats",
+                    class = "btn-secondary",
+                    icon = icon("table"),
+                    width = "100%"
+                ),
+                style = "margin-top: 25px;"
+            ),
             column(
-                3,
+                2,
                 selectInput(
                     ns("download.format"),
                     "Download Format",

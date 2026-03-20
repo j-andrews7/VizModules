@@ -35,7 +35,27 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
         }
 
+        # Conditionally show/hide Stats tab based on plot type selection
+        observeEvent(input$plots, {
+            if (length(input$plots) == 1 && input$plots == "ridgeplot") {
+                hideTab(inputId = "yPlotTabsetPanel", target = "Stats")
+            } else {
+                showTab(inputId = "yPlotTabsetPanel", target = "Stats")
+            }
+        })
+
+        # Update stat comparison pairs when group.by or color.by changes
+        observeEvent(c(input$group.by, input$color.by), {
+            req(input$group.by)
+            color_by <- if (!is.null(input$color.by) && nzchar(input$color.by)) input$color.by else NULL
+            pair_strings <- .generate_pair_strings(data(), input$group.by, color_by)
+            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+        })
+
         ns <- session$ns
+
+        # Store last computed stats table for download
+        last_stats_df <- reactiveVal(NULL)
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -171,6 +191,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
             # Lines
             .reset_lines_inputs(session)
+
+            # Stats
+            .reset_stats_inputs(session)
         })
 
         # Update y-axis range when var (y data) column is changed
@@ -323,6 +346,41 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 fig <- .remove_boxplot_outliers(fig)
             }
 
+            # Statistical annotations
+            if (isolate_fn(input$stats.enabled)) {
+                # yPlot uses group.by as the x-axis, color.by for nested grouping
+                xvar <- isolate_fn(input$group.by)
+                grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
+                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- .compute_pairwise_stats(
+                    df = data(), x = xvar,
+                    y = isolate_fn(input$var), pairs = stat_pairs,
+                    test = isolate_fn(input$stat.test),
+                    p.adjust.method = isolate_fn(input$stat.p.adjust),
+                    paired = isolate_fn(input$stat.paired),
+                    group.by = grp_var, facet.by = split.by,
+                    per.facet = isolate_fn(input$stat.per.facet),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold)
+                )
+                last_stats_df(stats_df)
+                stat_result <- .create_stat_annotations(
+                    stats_df = stats_df, fig = fig, df = data(),
+                    x = xvar, y = isolate_fn(input$var),
+                    display = isolate_fn(input$stat.display),
+                    hide.ns = isolate_fn(input$stat.hide.ns),
+                    sig.threshold = isolate_fn(input$stat.sig.threshold),
+                    line.color = isolate_fn(input$stat.line.color),
+                    line.width = isolate_fn(input$stat.line.width),
+                    bracket.style = isolate_fn(input$stat.bracket.style),
+                    group.by = grp_var, facet.by = split.by,
+                    step.increase = isolate_fn(input$stat.step.increase),
+                    text.bump = isolate_fn(input$stat.text.bump),
+                    bracket.inset = isolate_fn(input$stat.bracket.inset)
+                )
+                fig <- .apply_stat_annotations(fig, stat_result,
+                    y.min = isolate_fn(input$y.min))
+            }
+
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
@@ -359,6 +417,20 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         output$download.interactive <- .create_plot_download_handler(
             plot_reactive = generate_yPlot,
             filename_base = "yPlot"
+        )
+
+        # Download handler for stats table
+        output$download.stats <- downloadHandler(
+            filename = function() {
+                paste0("stats_table_", Sys.Date(), ".csv")
+            },
+            content = function(file) {
+                .write_stats_csv(
+                    stats_df = last_stats_df(), file = file,
+                    p.adjust.method = input$stat.p.adjust,
+                    sig.threshold = input$stat.sig.threshold
+                )
+            }
         )
     })
 }
