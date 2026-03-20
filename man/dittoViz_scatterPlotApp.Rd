@@ -8,7 +8,7 @@ dittoViz_scatterPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("sales" = example_sales, "population" = example_population)} is used as example data.}
+\code{list("sales" = example_sales, "iris" = example_iris)} is used as example data.}
 }
 \value{
 A Shiny app object.
@@ -21,7 +21,7 @@ for configuring and displaying an interactive scatter plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_sales} and \code{example_population} as example datasets. Uploaded data files are added
+\code{example_sales} and \code{example_iris} as example datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.

@@ -8,7 +8,7 @@ parallelCoordinatesPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("mtcars" = mtcars, "iris" = iris)} is used as example data. Each data frame
+\code{list("mtcars" = example_mtcars, "iris" = example_iris)} is used as example data. Each data frame
 should contain at least two numeric or categorical columns.}
 }
 \value{
@@ -23,7 +23,7 @@ for configuring and displaying an interactive parallel coordinates plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{iris} and \code{mtcars} as example datasets. Uploaded data files are added
+\code{example_mtcars} and \code{example_iris} as example datasets. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.

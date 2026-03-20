@@ -7,7 +7,7 @@
 #' for configuring and displaying an interactive parallel coordinates plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `iris` and `mtcars` as example datasets. Uploaded data files are added
+#' `example_mtcars` and `example_iris` as example datasets. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -15,7 +15,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("mtcars" = mtcars, "iris" = iris)` is used as example data. Each data frame
+#'   `list("mtcars" = example_mtcars, "iris" = example_iris)` is used as example data. Each data frame
 #'   should contain at least two numeric or categorical columns.
 #' @return A Shiny app object.
 #'
@@ -35,7 +35,7 @@
 #' if (interactive()) runApp(app2)
 parallelCoordinatesPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("mtcars" = mtcars, "iris" = iris)
+        data_list <- list("mtcars" = example_mtcars, "iris" = example_iris)
     }
     createModuleApp(
         inputs_ui_fn = parallelCoordinatesPlotInputsUI,

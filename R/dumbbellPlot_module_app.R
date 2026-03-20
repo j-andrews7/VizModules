@@ -6,7 +6,8 @@
 #' for configuring and displaying an interactive dumbbell plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `iris` and `mtcars` as example datasets. Uploaded data files are added
+#' `example_school_earnings`, `example_iris`, and `example_mtcars` as example datasets.
+#' Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +15,8 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("iris" = iris, "mtcars" = mtcars)` is used as example data.
+#'   `list("school_earnings" = example_school_earnings, "iris" = example_iris, "mtcars" = example_mtcars)`
+#'   is used as example data.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -39,7 +41,11 @@
 #' if (interactive()) runApp(app2)
 dumbbellPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("iris" = iris, "mtcars" = mtcars)
+        data_list <- list(
+            "school_earnings" = example_school_earnings,
+            "iris"            = example_iris,
+            "mtcars"          = example_mtcars
+        )
     }
     createModuleApp(
         inputs_ui_fn = dumbbellPlotInputsUI,

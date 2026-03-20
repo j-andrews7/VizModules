@@ -36,8 +36,8 @@
 piePlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
         data_list <- list(
-            "sales" = aggregate(revenue ~ region, example_sales, sum),
-            "population" = aggregate(count ~ age_group, example_population, sum)
+            "sales_by_region" = aggregate(revenue ~ region, example_sales, sum),
+            "pop_by_age"      = aggregate(count ~ age_group, example_population, sum)
         )
     }
     createModuleApp(

@@ -8,7 +8,7 @@ ternaryPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-example datasets with three numeric columns are used. Each data frame should
+\code{list("roles" = example_roles)} is used. Each data frame should
 contain numeric columns for the three ternary axes (a, b, c). For multiple traces,
 include a grouping column.}
 }
@@ -23,7 +23,7 @@ for configuring and displaying an interactive ternary plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-example \code{roles} and \code{teams} datasets. Uploaded data files are added
+\code{example_roles} as an example dataset. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.

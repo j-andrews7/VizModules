@@ -8,7 +8,7 @@ radarPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-example datasets with categories and values are used. Each data frame should
+\code{list("skills" = example_skills)} is used. Each data frame should
 contain columns for categories (theta) and values (r). For multiple traces, include a
 grouping column.}
 }
@@ -23,7 +23,7 @@ for configuring and displaying an interactive radar plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-example \code{skills} and \code{team_stats} datasets. Uploaded data files are added
+\code{example_skills} as an example dataset. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.

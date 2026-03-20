@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive scatter plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' `example_sales` and `example_iris` as example datasets. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +14,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
+#'   `list("sales" = example_sales, "iris" = example_iris)` is used as example data.
 #' @return A Shiny app object.
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
@@ -33,7 +33,7 @@
 #' if (interactive()) runApp(app2)
 dittoViz_scatterPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("sales" = example_sales, "population" = example_population)
+        data_list <- list("sales" = example_sales, "iris" = example_iris)
     }
     createModuleApp(
         inputs_ui_fn = dittoViz_scatterPlotInputsUI,
