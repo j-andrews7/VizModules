@@ -636,6 +636,13 @@
             if (is.null(y_lo) && !is.null(existing_yaxis$range)) {
                 y_lo <- existing_yaxis$range[1]
             }
+            # Add a small buffer below the minimum so whiskers/points don't
+            # sit flush against the bottom edge (plotly's auto-padding is
+            # lost when we set an explicit range).
+            if (!is.null(y_lo)) {
+                y_span <- stat_result$y.max - y_lo
+                y_lo <- y_lo - y_span * 0.02
+            }
             existing_yaxis$range <- c(y_lo, stat_result$y.max)
             fig$x$layout[[yax_name]] <- existing_yaxis
         }
