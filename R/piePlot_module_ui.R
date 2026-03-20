@@ -92,10 +92,14 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("labels"), "Label column (summary data):",
-                selected = cat.choices[2], choices = cat.choices),
+                selected = .get_default(defaults, "labels", cat.choices[2],
+                    function(x) x %in% cat.choices),
+                choices = cat.choices),
                 documentParameters$labels, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("values"), "Aggregated value column:",
-                selected = num.choices[2], choices = num.choices),
+                selected = .get_default(defaults, "values", num.choices[2],
+                    function(x) x %in% num.choices),
+                choices = num.choices),
                 documentParameters$values, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("sort.slices"), "Sort slices by value",
                 value = .get_default(defaults, "sort.slices", TRUE, is.logical)

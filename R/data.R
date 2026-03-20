@@ -169,3 +169,61 @@
 #' @author Jared Andrews
 #' @keywords datasets
 "example_roles"
+
+#' Gallery sales dataset for the module gallery app
+#'
+#' A simulated product-sales dataset covering five product lines over four years
+#' and four quarters (80 rows total). Designed to showcase bar, box, violin,
+#' area, line, scatter, split-bar, density, and histogram plot modules.
+#'
+#' @format A data frame with 80 rows and 9 columns:
+#' \describe{
+#'   \item{product_line}{Product category (factor: Electronics, Clothing, Food, Sports, Home)}
+#'   \item{year}{Year of the record (factor: 2020-2023)}
+#'   \item{quarter}{Quarter of the year (factor: Q1-Q4)}
+#'   \item{revenue}{Total quarterly revenue}
+#'   \item{profit}{Quarterly profit (can be negative)}
+#'   \item{units}{Units sold}
+#'   \item{growth_pct}{Year-over-year growth percentage (can be negative)}
+#'   \item{rating}{Average customer rating (3.0–5.0)}
+#'   \item{online_pct}{Percentage of sales made online (20–80)}
+#' }
+#'
+#' @source Simulated in data-raw/generate_example_data.R.
+#'
+#' @examples
+#' library(VizModules)
+#' head(gallery_sales)
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"gallery_sales"
+
+#' Gallery demographics dataset for the module gallery app
+#'
+#' A simulated employee survey dataset with 500 rows spanning six departments
+#' and four job levels. Designed to showcase violin, box, yPlot, density, and
+#' histogram plot modules with realistic numeric distributions.
+#'
+#' @format A data frame with 500 rows and 9 columns:
+#' \describe{
+#'   \item{department}{Employee department (factor: Engineering, Marketing, Sales, HR, Finance, Operations)}
+#'   \item{job_level}{Job seniority level (factor: Junior, Mid, Senior, Lead)}
+#'   \item{gender}{Employee gender (factor: Male, Female)}
+#'   \item{age}{Employee age in years}
+#'   \item{salary}{Annual salary in USD}
+#'   \item{satisfaction}{Job satisfaction score (1–10)}
+#'   \item{performance}{Performance rating (1–10)}
+#'   \item{tenure_years}{Years with the company}
+#'   \item{weekly_hours}{Average weekly hours worked (35–65)}
+#' }
+#'
+#' @source Simulated in data-raw/generate_example_data.R.
+#'
+#' @examples
+#' library(VizModules)
+#' head(gallery_demographics)
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"gallery_demographics"

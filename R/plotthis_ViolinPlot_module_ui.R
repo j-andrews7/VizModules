@@ -206,11 +206,18 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Data", choices = char.choices, selected = char.choices[2]),
+            tipify(selectInput(ns("x.data"), "X Data", choices = char.choices,
+                selected = .get_default(defaults, "x.data", char.choices[2],
+                    function(x) x %in% char.choices)),
                 documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.data"), "Y Data", choices = num.choices, selected = num.choices[2]),
+            tipify(selectInput(ns("y.data"), "Y Data", choices = num.choices,
+                selected = .get_default(defaults, "y.data", num.choices[2],
+                    function(x) x %in% num.choices)),
                 documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", char.choices)),
+            tipify(selectInput(ns("group.by"), "Group By",
+                selected = .get_default(defaults, "group.by", "",
+                    function(x) x %in% c("", char.choices)),
+                choices = c("", char.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection"))
         ),

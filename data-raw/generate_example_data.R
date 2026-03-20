@@ -71,5 +71,6 @@ usethis::use_data(
     example_sales, example_population,
     example_iris, example_mtcars,
     example_school_earnings, example_skills, example_roles,
+    gallery_sales, gallery_demographics,
     overwrite = TRUE
 )
