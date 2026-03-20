@@ -77,7 +77,7 @@ iris_mtcars_data <- list("iris" = iris_g, "mtcars" = mtcars_f)
 
 module_data <- list(
     area      = standard_data,
-    bar       = standard_data,
+    bar       = list("Bar" = Bar),
     box       = standard_data,
     density   = standard_data,
     dumbbell  = list("school_earnings" = school_earnings, "iris" = iris_g,
@@ -89,7 +89,7 @@ module_data <- list(
                      "pop_by_age" = pop_summary),
     radar     = list("skills" = skills),
     scatter   = list("sales" = example_sales, "iris" = iris_g),
-    splitbar  = standard_data,
+    splitbar  = list("Bar" = Bar),
     ternary   = list("roles" = roles),
     violin    = iris_mtcars_data,
     yplot     = iris_mtcars_data
