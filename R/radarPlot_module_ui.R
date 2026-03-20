@@ -104,11 +104,13 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("theta"), "Category column (theta):",
-                selected = cat.choices[2],
+                selected = .get_default(defaults, "theta", cat.choices[2],
+                    function(x) x %in% all.choices),
                 choices = all.choices
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("r"), "Values column (r):",
-                selected = num.choices[2],
+                selected = .get_default(defaults, "r", num.choices[2],
+                    function(x) x %in% num.choices),
                 choices = num.choices
             ), documentParameters$r, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group"), "Group column (optional):",

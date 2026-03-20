@@ -157,15 +157,21 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     inputs <- list(
       "Data" = tagList(
       tipify(selectInput(ns("x.data"), "X values",
-        selected = num.choices[2], choices = num.choices
+        selected = .get_default(defaults, "x.data", num.choices[2],
+            function(x) x %in% num.choices),
+        choices = num.choices
       ), documentParameters$x, placement = "top", options = list(container = "body")),
       tipify(selectInput(ns("y.data"), "Y values",
-        selected = char.choices[2], choices = char.choices
+        selected = .get_default(defaults, "y.data", char.choices[2],
+            function(x) x %in% char.choices),
+        choices = char.choices
       ), "Select the categorical column to use for the Y axis groupings",
         placement = "top", options = list(container = "body")),
       # Changed from group.by to fill.by
       tipify(selectInput(ns("fill.by"), "Fill by",
-        selected = choices[2], choices = choices
+        selected = .get_default(defaults, "fill.by", choices[2],
+            function(x) x %in% choices),
+        choices = choices
       ), documentParameters$fill_by, placement = "top", options = list(container = "body"))),
 
 

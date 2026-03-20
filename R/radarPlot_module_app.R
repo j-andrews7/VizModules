@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive radar plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' example `skills` and `team_stats` datasets. Uploaded data files are added
+#' `example_skills` as an example dataset. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +14,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   example datasets with categories and values are used. Each data frame should
+#'   `list("skills" = example_skills)` is used. Each data frame should
 #'   contain columns for categories (theta) and values (r). For multiple traces, include a
 #'   grouping column.
 #' @return A Shiny app object.
@@ -50,16 +50,7 @@
 #' if (interactive()) runApp(app2)
 radarPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        skills <- data.frame(
-            category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
-            value = c(8, 6, 7, 9, 8)
-        )
-        team_stats <- data.frame(
-            category = rep(c("Speed", "Strength", "Defense", "Stamina", "Speed"), 2),
-            value = c(8, 6, 7, 9, 8, 5, 9, 8, 6, 5),
-            player = rep(c("Player A", "Player B"), each = 5)
-        )
-        data_list <- list("skills" = skills, "team" = team_stats)
+        data_list <- list("skills" = example_skills)
     }
     createModuleApp(
         inputs_ui_fn = radarPlotInputsUI,

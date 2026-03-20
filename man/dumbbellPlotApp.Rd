@@ -8,7 +8,8 @@ dumbbellPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("iris" = iris, "mtcars" = mtcars)} is used as example data.}
+\code{list("school_earnings" = example_school_earnings)}
+is used as example data.}
 }
 \value{
 A Shiny app object.
@@ -21,7 +22,8 @@ for configuring and displaying an interactive dumbbell plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{iris} and \code{mtcars} as example datasets. Uploaded data files are added
+\code{example_school_earnings} as an example dataset.
+Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.

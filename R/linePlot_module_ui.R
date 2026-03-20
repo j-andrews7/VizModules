@@ -117,13 +117,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.value"), "Select X values:",
-                selected = names(data)[1], choices = names(data), multiple = TRUE
+                selected = .get_default(defaults, "x.value", names(data)[1],
+                    function(x) all(x %in% names(data))),
+                choices = names(data), multiple = TRUE
             ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Select Y values:",
-                selected = names(data)[2], choices = names(data), multiple = TRUE
+                selected = .get_default(defaults, "y.value", names(data)[2],
+                    function(x) all(x %in% names(data))),
+                choices = names(data), multiple = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by:",
-                selected = cat.choices[1], choices = cat.choices
+                selected = .get_default(defaults, "group.by", cat.choices[1],
+                    function(x) x %in% cat.choices),
+                choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE),
                 documentParameters$error.bar, placement = "top", options = list(container = "body")),

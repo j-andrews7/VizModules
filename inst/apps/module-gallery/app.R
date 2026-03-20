@@ -1,208 +1,176 @@
 library(shiny)
 library(VizModules)
-skills <- data.frame(
-     entity = c(
-        rep("Player A", 6),
-         rep("Player B", 6),
-         rep("Player C", 6),
-         rep("Player D", 6)
-     ),
-     category = rep(c("Pace", "Shooting", "Passing", "Dribbling", "Defending", "Physical"), 4),
-     value = c(
-         99, 89, 80, 92, 36, 78,
-         89, 97, 65, 72, 45, 95,
-         76, 86, 94, 86, 64, 78,
-         62, 60, 71, 63, 94, 91
-    )
-)
 
+# ---------------------------------------------------------------------------
+# Inline datasets used only in this gallery
+# ---------------------------------------------------------------------------
 Bar <- data.frame(
-  Group = c("A", "B", "C", "D", "E"),
-  Type = c("Alpha", "Beta", "Alpha", "Gamma", "Beta"),
-  Values = c(22, 35, 18, 41, 29),
-  Numbers = c(15, -8, 22, -5, 12),
-  Score = c(7, -3, 15, 8, -2)
+    Group  = c("A", "B", "C", "D", "E"),
+    Type   = c("Alpha", "Beta", "Alpha", "Gamma", "Beta"),
+    Values = c(22, 35, 18, 41, 29),
+    Numbers = c(15, -8, 22, -5, 12),
+    Score  = c(7, -3, 15, 8, -2)
 )
-
 
 # ---------------------------------------------------------------------------
-# Prepare example datasets
+# Derived summary dataset (pie plot)
 # ---------------------------------------------------------------------------
-mtcars_f <- transform(mtcars,
-    cyl = factor(cyl),
-    gear = factor(gear),
-    vs = factor(vs)
-)
-dumbbell <- data.frame(
-  School = c("MIT", "Stanford", "Harvard"),
-  Women = c(94, 96, 112),
-  Men = c(152, 151, 165),
-  Group = c("A", "B", "A")
-)
-
-iris_g <- iris
-iris_g$Group <- c(rep(c("A", "B"), 50), rep(c("C", "D"), 25))
-
-# Specialised datasets for modules that need specific structures
-school_earnings <- data.frame(
-    School = c("MIT", "Stanford", "Harvard", "Yale", "Princeton", "Columbia"),
-    Women = c(94, 96, 112, 188, 91, 129),
-    Men = c(52, 101, 165, 145, 148, 155),
-    Group = c("STEM-heavy", "STEM-heavy", "Liberal Arts", "Liberal Arts",
-              "Liberal Arts", "STEM-heavy")
-)
-
-skills <- data.frame(
-    category = rep(c("Speed", "Strength", "Defense", "Stamina", "Agility"), 3),
-    value = c(8, 6, 7, 9, 7, 5, 9, 8, 6, 4, 7, 7, 5, 8, 9),
-    player = rep(c("Player A", "Player B", "Player C"), each = 5)
-)
-
-roles <- data.frame(
-    journalist = c(75, 70, 75, 5, 10, 10, 20, 10, 15, 10, 20),
-    developer = c(25, 10, 20, 60, 80, 90, 70, 20, 5, 10, 10),
-    designer = c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70),
-    label = paste("point", seq_len(11)),
-    team = c(rep("Team A", 6), rep("Team B", 5))
-)
-
-sales_summary <- aggregate(revenue ~ region, example_sales, sum)
-pop_summary <- aggregate(count ~ age_group, example_population, sum)
+sales_by_product <- aggregate(revenue ~ product_line, gallery_sales, sum)
 
 # ---------------------------------------------------------------------------
-# Per-module data lists
+# One dataset per module
 # ---------------------------------------------------------------------------
-standard_data <- list("sales" = example_sales, "population" = example_population)
-iris_mtcars_data <- list("iris" = iris_g, "mtcars" = mtcars_f)
-
 module_data <- list(
-    area      = standard_data,
-    bar       = list("Bar" = Bar),
-    box       = standard_data,
-    density   = standard_data,
-    dumbbell  = list("school_earnings" = school_earnings, "iris" = iris_g,
-                     "mtcars" = mtcars_f),
-    histogram = standard_data,
-    line      = list("sales" = example_sales, "iris" = iris_g),
-    parallel  = list("mtcars" = mtcars_f, "iris" = iris_g),
-    pie       = list("sales_by_region" = sales_summary,
-                     "pop_by_age" = pop_summary),
-    radar     = list("skills" = skills),
-    scatter   = list("sales" = example_sales, "iris" = iris_g),
-    splitbar  = list("Bar" = Bar),
-    ternary   = list("roles" = roles),
-    violin    = iris_mtcars_data,
-    yplot     = iris_mtcars_data
+    area     = gallery_sales,
+    bar      = Bar,
+    box      = gallery_demographics,
+    density  = gallery_demographics,
+    dumbbell = example_school_earnings,
+    histogram = gallery_demographics,
+    line     = gallery_sales,
+    parallel = gallery_sales,
+    pie      = sales_by_product,
+    radar    = example_skills,
+    scatter  = gallery_sales,
+    splitbar = Bar,
+    ternary  = example_roles,
+    violin   = gallery_demographics,
+    yplot    = gallery_demographics
 )
 
 # ---------------------------------------------------------------------------
-# Module registry – each entry defines one plot module for the gallery
+# Module registry – each entry defines one plot module for the gallery.
+# 'defaults' sets ONLY the data-column inputs; all other UI settings
+# remain at their built-in defaults.
 # ---------------------------------------------------------------------------
 module_registry <- list(
     list(
-        label      = "Area Plot",
-        id         = "area",
-        inputs_ui  = plotthis_AreaPlotInputsUI,
-        output_ui  = plotthis_AreaPlotOutputUI,
-        server_fn  = plotthis_AreaPlotServer
+        label     = "Area Plot",
+        id        = "area",
+        inputs_ui = plotthis_AreaPlotInputsUI,
+        output_ui = plotthis_AreaPlotOutputUI,
+        server_fn = plotthis_AreaPlotServer,
+        defaults  = list("x.data" = "year", "y.data" = "revenue",
+                         "group.by" = "product_line")
     ),
     list(
-        label      = "Bar Plot",
-        id         = "bar",
-        inputs_ui  = plotthis_BarPlotInputsUI,
-        output_ui  = plotthis_BarPlotOutputUI,
-        server_fn  = plotthis_BarPlotServer
+        label     = "Bar Plot",
+        id        = "bar",
+        inputs_ui = plotthis_BarPlotInputsUI,
+        output_ui = plotthis_BarPlotOutputUI,
+        server_fn = plotthis_BarPlotServer,
+        defaults  = list("x.data" = "Group", "y.data" = "Values",
+                         "group.by" = "Type")
     ),
     list(
-        label      = "Box Plot",
-        id         = "box",
-        inputs_ui  = plotthis_BoxPlotInputsUI,
-        output_ui  = plotthis_BoxPlotOutputUI,
-        server_fn  = plotthis_BoxPlotServer
+        label     = "Box Plot",
+        id        = "box",
+        inputs_ui = plotthis_BoxPlotInputsUI,
+        output_ui = plotthis_BoxPlotOutputUI,
+        server_fn = plotthis_BoxPlotServer,
+        defaults  = list("x.data" = "department", "y.data" = "salary")
     ),
     list(
-        label      = "Density Plot",
-        id         = "density",
-        inputs_ui  = plotthis_DensityPlotInputsUI,
-        output_ui  = plotthis_DensityPlotOutputUI,
-        server_fn  = plotthis_DensityPlotServer
+        label     = "Density Plot",
+        id        = "density",
+        inputs_ui = plotthis_DensityPlotInputsUI,
+        output_ui = plotthis_DensityPlotOutputUI,
+        server_fn = plotthis_DensityPlotServer,
+        defaults  = list("x.data" = "salary", "group.by" = "department")
     ),
     list(
-        label      = "Dumbbell Plot",
-        id         = "dumbbell",
-        inputs_ui  = dumbbellPlotInputsUI,
-        output_ui  = dumbbellPlotOutputUI,
-        server_fn  = dumbbellPlotServer
+        label     = "Dumbbell Plot",
+        id        = "dumbbell",
+        inputs_ui = dumbbellPlotInputsUI,
+        output_ui = dumbbellPlotOutputUI,
+        server_fn = dumbbellPlotServer,
+        defaults  = list()
     ),
     list(
-        label      = "Histogram",
-        id         = "histogram",
-        inputs_ui  = plotthis_HistogramInputsUI,
-        output_ui  = plotthis_HistogramOutputUI,
-        server_fn  = plotthis_HistogramServer
+        label     = "Histogram",
+        id        = "histogram",
+        inputs_ui = plotthis_HistogramInputsUI,
+        output_ui = plotthis_HistogramOutputUI,
+        server_fn = plotthis_HistogramServer,
+        defaults  = list("x.data" = "salary", "group.by" = "department")
     ),
     list(
-        label      = "Line Plot",
-        id         = "line",
-        inputs_ui  = linePlotInputsUI,
-        output_ui  = linePlotOutputUI,
-        server_fn  = linePlotServer
+        label     = "Line Plot",
+        id        = "line",
+        inputs_ui = linePlotInputsUI,
+        output_ui = linePlotOutputUI,
+        server_fn = linePlotServer,
+        defaults  = list("x.value" = "year", "y.value" = "revenue",
+                         "group.by" = "product_line")
     ),
     list(
-        label      = "Parallel Coordinates",
-        id         = "parallel",
-        inputs_ui  = parallelCoordinatesPlotInputsUI,
-        output_ui  = parallelCoordinatesPlotOutputUI,
-        server_fn  = parallelCoordinatesPlotServer
+        label     = "Parallel Coordinates",
+        id        = "parallel",
+        inputs_ui = parallelCoordinatesPlotInputsUI,
+        output_ui = parallelCoordinatesPlotOutputUI,
+        server_fn = parallelCoordinatesPlotServer,
+        defaults  = list("color.by" = "product_line")
     ),
     list(
-        label      = "Pie Plot",
-        id         = "pie",
-        inputs_ui  = piePlotInputsUI,
-        output_ui  = piePlotOutputUI,
-        server_fn  = piePlotServer
+        label     = "Pie Plot",
+        id        = "pie",
+        inputs_ui = piePlotInputsUI,
+        output_ui = piePlotOutputUI,
+        server_fn = piePlotServer,
+        defaults  = list("labels" = "product_line", "values" = "revenue")
     ),
     list(
-        label      = "Radar Plot",
-        id         = "radar",
-        inputs_ui  = radarPlotInputsUI,
-        output_ui  = radarPlotOutputUI,
-        server_fn  = radarPlotServer
+        label     = "Radar Plot",
+        id        = "radar",
+        inputs_ui = radarPlotInputsUI,
+        output_ui = radarPlotOutputUI,
+        server_fn = radarPlotServer,
+        defaults  = list("theta" = "category", "r" = "value",
+                         "group" = "player")
     ),
     list(
-        label      = "Scatter Plot",
-        id         = "scatter",
-        inputs_ui  = dittoViz_scatterPlotInputsUI,
-        output_ui  = dittoViz_scatterPlotOutputUI,
-        server_fn  = dittoViz_scatterPlotServer
+        label     = "Scatter Plot",
+        id        = "scatter",
+        inputs_ui = dittoViz_scatterPlotInputsUI,
+        output_ui = dittoViz_scatterPlotOutputUI,
+        server_fn = dittoViz_scatterPlotServer,
+        defaults  = list("x.by" = "revenue", "y.by" = "units",
+                         "color.by" = "product_line")
     ),
     list(
-        label      = "Split Bar Plot",
-        id         = "splitbar",
-        inputs_ui  = plotthis_SplitBarPlotInputsUI,
-        output_ui  = plotthis_SplitBarPlotOutputUI,
-        server_fn  = plotthis_SplitBarPlotServer
+        label     = "Split Bar Plot",
+        id        = "splitbar",
+        inputs_ui = plotthis_SplitBarPlotInputsUI,
+        output_ui = plotthis_SplitBarPlotOutputUI,
+        server_fn = plotthis_SplitBarPlotServer,
+        defaults  = list("x.data" = "Score", "y.data" = "Group",
+                         "fill.by" = "Type")
     ),
     list(
-        label      = "Ternary Plot",
-        id         = "ternary",
-        inputs_ui  = ternaryPlotInputsUI,
-        output_ui  = ternaryPlotOutputUI,
-        server_fn  = ternaryPlotServer
+        label     = "Ternary Plot",
+        id        = "ternary",
+        inputs_ui = ternaryPlotInputsUI,
+        output_ui = ternaryPlotOutputUI,
+        server_fn = ternaryPlotServer,
+        defaults  = list("a" = "journalist", "b" = "developer",
+                         "c" = "designer", "group" = "team")
     ),
     list(
-        label      = "Violin Plot",
-        id         = "violin",
-        inputs_ui  = plotthis_ViolinPlotInputsUI,
-        output_ui  = plotthis_ViolinPlotOutputUI,
-        server_fn  = plotthis_ViolinPlotServer
+        label     = "Violin Plot",
+        id        = "violin",
+        inputs_ui = plotthis_ViolinPlotInputsUI,
+        output_ui = plotthis_ViolinPlotOutputUI,
+        server_fn = plotthis_ViolinPlotServer,
+        defaults  = list("x.data" = "department", "y.data" = "salary",
+                         "group.by" = "job_level")
     ),
     list(
-        label      = "yPlot",
-        id         = "yplot",
-        inputs_ui  = dittoViz_yPlotInputsUI,
-        output_ui  = dittoViz_yPlotOutputUI,
-        server_fn  = dittoViz_yPlotServer
+        label     = "yPlot",
+        id        = "yplot",
+        inputs_ui = dittoViz_yPlotInputsUI,
+        output_ui = dittoViz_yPlotOutputUI,
+        server_fn = dittoViz_yPlotServer,
+        defaults  = list("var" = "salary", "group.by" = "department")
     )
 )
 
@@ -216,10 +184,6 @@ build_tab <- function(mod) {
         sidebarLayout(
             sidebarPanel(
                 width = 4,
-                selectInput(
-                    paste0(mod$id, "_dataset"), "Dataset",
-                    choices = names(module_data[[mod$id]])
-                ),
                 uiOutput(paste0(mod$id, "_inputs_ui"))
             ),
             mainPanel(
@@ -255,31 +219,32 @@ ui <- do.call(navbarPage, c(
 # ---------------------------------------------------------------------------
 server <- function(input, output, session) {
 
-    # -- Wire up each module ------------------------------------------------
     lapply(module_registry, function(m) {
-        # Reactive data based on per-module dataset selector
-        active_data <- reactive({
-            req(input[[paste0(m$id, "_dataset")]])
-            module_data[[m$id]][[input[[paste0(m$id, "_dataset")]]]]
-        })
+        # Fixed dataset for this module (wrapped in reactive for dataFilterServer)
+        active_data <- reactive(module_data[[m$id]])
 
-        # Data filter for this module
+        # Data filter feeds the plot module
         filtered_data <- dataFilterServer(
             paste0(m$id, "_filter"),
-            module_data
+            active_data
         )
 
-        # Dynamic inputs UI – re-renders when dataset changes
+        # Inputs UI rendered once on load with pre-selected data columns.
+        # Only data-column defaults are passed; all other inputs use their
+        # built-in defaults.
         output[[paste0(m$id, "_inputs_ui")]] <- renderUI({
-            req(module_data())
-            m$inputs_ui(m$id, module_data(),
-                title = h3(paste(m$label, "Settings"))
+            m$inputs_ui(
+                m$id,
+                active_data(),
+                defaults = m$defaults,
+                title    = h3(paste(m$label, "Settings"))
             )
         })
 
-        # Module server – receives filtered reactive data
+        # Wire up the plot server
         m$server_fn(m$id, data = filtered_data)
     })
 }
 
 shinyApp(ui, server)
+

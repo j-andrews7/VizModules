@@ -159,7 +159,10 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                     selected = .get_default(defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices),
                 choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group By", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("group.by"), "Group By",
+                selected = .get_default(defaults, "group.by", "",
+                    function(x) x %in% c("", cat.choices)),
+                choices = c("", cat.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body"))
         ),
 

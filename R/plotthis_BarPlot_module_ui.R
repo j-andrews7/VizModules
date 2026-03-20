@@ -178,13 +178,19 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     inputs <- list(
     "Data" = tagList(
         tipify(selectInput(ns("x.data"), "X values:",
-        selected = char.choices[2], choices = char.choices
+        selected = .get_default(defaults, "x.data", char.choices[2],
+            function(x) x %in% char.choices),
+        choices = char.choices
         ), documentParameters$x, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("y.data"), "Y values:",
-        selected = num.choices[2], choices = num.choices
+        selected = .get_default(defaults, "y.data", num.choices[2],
+            function(x) x %in% num.choices),
+        choices = num.choices
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("group.by"), "Group by:",
-        selected = char.choices[2], choices = c("", names(data))
+        selected = .get_default(defaults, "group.by", char.choices[2],
+            function(x) x %in% c("", names(data))),
+        choices = c("", names(data))
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill by:",
         selected = "", choices = c("", names(data))),

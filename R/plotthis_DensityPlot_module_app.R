@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive density plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `example_sales` and `example_population` as example datasets. Uploaded data files are added
+#' `gallery_demographics` as an example dataset. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +14,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("sales" = example_sales, "population" = example_population)` is used as example data.
+#'   `list("demographics" = gallery_demographics)` is used as example data.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -26,11 +26,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- plotthis_DensityPlotApp(list("sales" = example_sales, "population" = example_population))
+#' app2 <- plotthis_DensityPlotApp(list("demographics" = gallery_demographics))
 #' if (interactive()) runApp(app2)
 plotthis_DensityPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("sales" = example_sales, "population" = example_population)
+        data_list <- list("demographics" = gallery_demographics)
     }
     createModuleApp(
         inputs_ui_fn = plotthis_DensityPlotInputsUI,

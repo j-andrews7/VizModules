@@ -202,11 +202,18 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X data", choices = cat.choices, selected = cat.choices[2]),
+            tipify(selectInput(ns("x.data"), "X data", choices = cat.choices,
+                selected = .get_default(defaults, "x.data", cat.choices[2],
+                    function(x) x %in% cat.choices)),
                 documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.data"), "Y data", choices = num.choices, selected = num.choices[2]),
+            tipify(selectInput(ns("y.data"), "Y data", choices = num.choices,
+                selected = .get_default(defaults, "y.data", num.choices[2],
+                    function(x) x %in% num.choices)),
                 documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group by", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("group.by"), "Group by",
+                selected = .get_default(defaults, "group.by", "",
+                    function(x) x %in% c("", cat.choices)),
+                choices = c("", cat.choices)),
                 documentParameters$group_by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("show.outliers"), "Show Outliers", value = TRUE, status = "success"),
                 "Toggle whether outlier points beyond the whiskers are displayed on the boxplot",
