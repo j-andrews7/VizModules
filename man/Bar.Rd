@@ -22,8 +22,8 @@ Bar
 }
 \description{
 A small dataset with five groups, two categorical variables, and three
-numeric variables. Used as the default data for \code{\link{plotthis_BarPlotApp}}
-and \code{\link{plotthis_SplitBarPlotApp}}.
+numeric variables. Used as the default data for \code{\link[=plotthis_BarPlotApp]{plotthis_BarPlotApp()}}
+and \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}.
 }
 \examples{
 library(VizModules)

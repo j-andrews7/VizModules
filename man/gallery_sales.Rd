@@ -14,8 +14,8 @@ A data frame with 80 rows and 9 columns:
 \item{profit}{Quarterly profit (can be negative)}
 \item{units}{Units sold}
 \item{growth_pct}{Year-over-year growth percentage (can be negative)}
-\item{rating}{Average customer rating (3.0-5.0)}
-\item{online_pct}{Percentage of sales made online (20-80)}
+\item{rating}{Average customer rating (3.0–5.0)}
+\item{online_pct}{Percentage of sales made online (20–80)}
 }
 }
 \source{
