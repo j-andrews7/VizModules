@@ -39,43 +39,43 @@ by name, or reset the widget back to its initial state.
 }
 \examples{
 if (interactive()) {
-  library(shiny)
-  groups <- c("setosa", "virginica", "versicolor")
+    library(shiny)
+    groups <- c("setosa", "virginica", "versicolor")
 
-  ui <- fluidPage(
-    multiColorPicker(
-      "species_cols",
-      "Species colors",
-      groups = groups,
-      selected_palette = "dittoColors"
-    ),
-    actionButton("randomize", "Randomize colors"),
-    actionButton("apply_pal", "Apply ggplot2 palette"),
-    actionButton("reset_cols", "Reset to initial"),
-    verbatimTextOutput("chosen")
-  )
+    ui <- fluidPage(
+        multiColorPicker(
+            "species_cols",
+            "Species colors",
+            groups = groups,
+            selected_palette = "dittoColors"
+        ),
+        actionButton("randomize", "Randomize colors"),
+        actionButton("apply_pal", "Apply ggplot2 palette"),
+        actionButton("reset_cols", "Reset to initial"),
+        verbatimTextOutput("chosen")
+    )
 
-  server <- function(input, output, session) {
-    output$chosen <- renderPrint(input$species_cols)
+    server <- function(input, output, session) {
+        output$chosen <- renderPrint(input$species_cols)
 
-    observeEvent(input$randomize, {
-      new_colors <- setNames(
-        sprintf("#\%06X", sample(0xFFFFFF, length(groups))),
-        groups
-      )
-      updateMultiColorPicker(session, "species_cols", colors = new_colors)
-    })
+        observeEvent(input$randomize, {
+            new_colors <- setNames(
+                sprintf("#\%06X", sample(0xFFFFFF, length(groups))),
+                groups
+            )
+            updateMultiColorPicker(session, "species_cols", colors = new_colors)
+        })
 
-    observeEvent(input$apply_pal, {
-      updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
-    })
+        observeEvent(input$apply_pal, {
+            updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
+        })
 
-    observeEvent(input$reset_cols, {
-      updateMultiColorPicker(session, "species_cols", reset = TRUE)
-    })
-  }
+        observeEvent(input$reset_cols, {
+            updateMultiColorPicker(session, "species_cols", reset = TRUE)
+        })
+    }
 
-  shinyApp(ui, server)
+    shinyApp(ui, server)
 }
 }
 \author{

@@ -77,11 +77,11 @@ supporting dimension selection, color mapping, and font styling.
 }
 \examples{
 fig <- parallelCoordinatesPlot(
-  data = mtcars,
-  dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
-  color.by = "mpg",
-  color.scale = "Viridis",
-  line.opacity = 0.6
+    data = mtcars,
+    dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
+    color.by = "mpg",
+    color.scale = "Viridis",
+    line.opacity = 0.6
 )
 }
 \author{

@@ -141,15 +141,15 @@ Generates a customizable interactive line plot using plotly, supporting grouping
 \examples{
 palette <- plotthis::palette_list[["Set2"]]
 fig <- linePlot(
-  data = mtcars,
-  x = "cyl",
-  y = "mpg",
-  plot.mode = "lines",
-  line.type = "solid",
-  colour.group.by = "mpg",
-  palette.selection = palette,
-  show.legend = TRUE
-  )
+    data = mtcars,
+    x = "cyl",
+    y = "mpg",
+    plot.mode = "lines",
+    line.type = "solid",
+    colour.group.by = "mpg",
+    palette.selection = palette,
+    show.legend = TRUE
+)
 }
 \author{
 Jacob Martin, Jared Andrews

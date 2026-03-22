@@ -23,10 +23,10 @@ Single columns always return \code{TRUE}. Used for Shiny plotting module input v
 }
 \examples{
 df <- data.frame(num1 = 1:3, num2 = 4:6, cat1 = letters[1:3], fac1 = factor(1:3))
-is_pure_type(c("num1", "num2"), df)    # TRUE (all numeric)
-is_pure_type(c("cat1", "fac1"), df)    # TRUE (all categorical)
-is_pure_type(c("num1"), df)            # TRUE (single)
-is_pure_type(c("num1", "cat1"), df)    # FALSE (mixed numeric + cat)
+is_pure_type(c("num1", "num2"), df) # TRUE (all numeric)
+is_pure_type(c("cat1", "fac1"), df) # TRUE (all categorical)
+is_pure_type(c("num1"), df) # TRUE (single)
+is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 
 }
 \seealso{

@@ -324,6 +324,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
 
+            # Fix boxplot positioning across faceted subplots
+            if (!is.null(split.by) && nzchar(split.by)) {
+                fig <- .fix_boxplot_facet_positions(fig)
+            }
+
             # Apply axis styling
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
