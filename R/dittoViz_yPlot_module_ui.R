@@ -149,17 +149,19 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         min.y <- 0
     }
 
-    selected <- list("var", "group.by", "color.by", "shape.by",
-            "plots", c("min", "max"), "split.by", c("split.nrow", "split.ncol"),
-            "split.adjust", "do.raster", "raster.dpi",
-            "jitter.size", "jitter.width", "jitter.color",
-            "jitter.shape.legend.size", "jitter.shape.legend.show",
-            "boxplot.show.outliers", "boxplot.color", "boxplot.fill",
-            "boxplot.lineweight",
-            "vlnplot.lineweight", "vlnplot.scaling", "vlnplot.quantiles",
-            "ridgeplot.lineweight", "ridgeplot.scale",
-            "ridgeplot.ymax.expansion", "ridgeplot.shape",
-            "ridgeplot.bins", "ridgeplot.binwidth")
+    selected <- list(
+        "var", "group.by", "color.by", "shape.by",
+        "plots", c("min", "max"), "split.by", c("split.nrow", "split.ncol"),
+        "split.adjust", "do.raster", "raster.dpi",
+        "jitter.size", "jitter.width", "jitter.color",
+        "jitter.shape.legend.size", "jitter.shape.legend.show",
+        "boxplot.show.outliers", "boxplot.color", "boxplot.fill",
+        "boxplot.lineweight",
+        "vlnplot.lineweight", "vlnplot.scaling", "vlnplot.quantiles",
+        "ridgeplot.lineweight", "ridgeplot.scale",
+        "ridgeplot.ymax.expansion", "ridgeplot.shape",
+        "ridgeplot.bins", "ridgeplot.binwidth"
+    )
 
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
@@ -168,22 +170,50 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("var"), "Y data (var)", choices = num.choices,
-                selected = .get_default(defaults, "var", num.choices[2],
-                    function(x) x %in% num.choices)),
-                documentParameters$var, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group by", choices = cat.choices,
-                selected = .get_default(defaults, "group.by", cat.choices[2],
-                    function(x) x %in% cat.choices)),
-                documentParameters$group.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.by"), "Color by", choices = cat.choices,
-                selected = .get_default(defaults, "color.by", "",
-                    function(x) x %in% cat.choices)),
-                documentParameters$color.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("shape.by"), "Shape by", choices = cat.choices,
-                selected = .get_default(defaults, "shape.by", "",
-                    function(x) x %in% cat.choices)),
-                documentParameters$shape.by, placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("var"), "Y data (var)",
+                    choices = num.choices,
+                    selected = .get_default(
+                        defaults, "var", num.choices[2],
+                        function(x) x %in% num.choices
+                    )
+                ),
+                documentParameters$var,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("group.by"), "Group by",
+                    choices = cat.choices,
+                    selected = .get_default(
+                        defaults, "group.by", cat.choices[2],
+                        function(x) x %in% cat.choices
+                    )
+                ),
+                documentParameters$group.by,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("color.by"), "Color by",
+                    choices = cat.choices,
+                    selected = .get_default(
+                        defaults, "color.by", "",
+                        function(x) x %in% cat.choices
+                    )
+                ),
+                documentParameters$color.by,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("shape.by"), "Shape by",
+                    choices = cat.choices,
+                    selected = .get_default(
+                        defaults, "shape.by", "",
+                        function(x) x %in% cat.choices
+                    )
+                ),
+                documentParameters$shape.by,
+                placement = "top", options = list(container = "body")
+            ),
             uiOutput(ns("palette.selection"))
         ),
         "Plot Type" = tagList(
@@ -191,131 +221,250 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 ns("plots"),
                 "Plots to show:",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
-                selected = .get_default(defaults, "plots", c("boxplot", "jitter"),
-                    function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))),
+                selected = .get_default(
+                    defaults, "plots", c("boxplot", "jitter"),
+                    function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))
+                ),
                 multiple = TRUE
             ), documentParameters$plots, placement = "top", options = list(container = "body")),
             helpText("Order not currently respected")
         ),
         "Adjustments" = tagList(
-            tipify(numericInput(ns("y.max"), "Y Axis Max",
-                value = .get_default(defaults, "max", max.y, is.numeric),
-                min = -1000, max = 1000),
-                documentParameters$max, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("y.min"), "Y Axis Min",
-                value = .get_default(defaults, "min", min.y, is.numeric),
-                min = -1000, max = 1000),
-                documentParameters$min, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("do.raster"), "Rasterize Jitter",
-                value = .get_default(defaults, "do.raster", FALSE, is.logical),
-                status = "success"),
-                documentParameters$do.raster, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("raster.dpi"), "Raster DPI",
-                value = .get_default(defaults, "raster.dpi", 600, is.numeric),
-                min = 100, max = 1200),
-                documentParameters$raster.dpi, placement = "top", options = list(container = "body"))
+            tipify(
+                numericInput(ns("y.max"), "Y Axis Max",
+                    value = .get_default(defaults, "max", max.y, is.numeric),
+                    min = -1000, max = 1000
+                ),
+                documentParameters$max,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("y.min"), "Y Axis Min",
+                    value = .get_default(defaults, "min", min.y, is.numeric),
+                    min = -1000, max = 1000
+                ),
+                documentParameters$min,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("do.raster"), "Rasterize Jitter",
+                    value = .get_default(defaults, "do.raster", FALSE, is.logical),
+                    status = "success"
+                ),
+                documentParameters$do.raster,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("raster.dpi"), "Raster DPI",
+                    value = .get_default(defaults, "raster.dpi", 600, is.numeric),
+                    min = 100, max = 1200
+                ),
+                documentParameters$raster.dpi,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Jitter" = tagList(
-            tipify(numericInput(ns("jitter.size"), "Jitter Point Size", max = 10, min = 0.1,
-                value = .get_default(defaults, "jitter.size", 1, is.numeric)),
-                documentParameters$jitter.size, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, step = 0.05,
-                value = .get_default(defaults, "jitter.width", 0.2, is.numeric)),
-                documentParameters$jitter.width, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color",
-                value = .get_default(defaults, "jitter.color", "#000000")),
-                documentParameters$jitter.color, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
-                value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric),
-                min = 0, max = 20),
-                documentParameters$jitter.shape.legend.size, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
-                value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical),
-                status = "success"),
-                documentParameters$jitter.shape.legend.show, placement = "top", options = list(container = "body"))
+            tipify(
+                numericInput(ns("jitter.size"), "Jitter Point Size",
+                    max = 10, min = 0.1,
+                    value = .get_default(defaults, "jitter.size", 1, is.numeric)
+                ),
+                documentParameters$jitter.size,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("jitter.width"), "Jitter Width",
+                    min = 0, max = 1, step = 0.05,
+                    value = .get_default(defaults, "jitter.width", 0.2, is.numeric)
+                ),
+                documentParameters$jitter.width,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourpicker::colourInput(ns("jitter.color"), "Jitter Point Color",
+                    value = .get_default(defaults, "jitter.color", "#000000")
+                ),
+                documentParameters$jitter.color,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
+                    value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric),
+                    min = 0, max = 20
+                ),
+                documentParameters$jitter.shape.legend.size,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
+                    value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical),
+                    status = "success"
+                ),
+                documentParameters$jitter.shape.legend.show,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Box" = tagList(
-            tipify(materialSwitch(ns("show.outliers"), "Show Outliers",
-                value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical),
-                status = "success"),
-                documentParameters$boxplot.show.outliers, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color",
-                value = .get_default(defaults, "boxplot.color", "#000000")),
-                documentParameters$boxplot.color, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("boxplot.fill"), "Fill Boxplot",
-                value = .get_default(defaults, "boxplot.fill", TRUE, is.logical),
-                status = "success"),
-                documentParameters$boxplot.fill, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight",
-                value = .get_default(defaults, "boxplot.lineweight", 0.5, is.numeric),
-                min = 0, max = 5, step = 0.1),
-                documentParameters$boxplot.lineweight, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("boxgap"), "Boxplot Position Dodge",
-                value = .get_default(defaults, "boxgap", 0.3, is.numeric),
-                min = 0, max = 1, step = 0.05),
+            tipify(
+                materialSwitch(ns("show.outliers"), "Show Outliers",
+                    value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical),
+                    status = "success"
+                ),
+                documentParameters$boxplot.show.outliers,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourpicker::colourInput(ns("boxplot.color"), "Boxplot Color",
+                    value = .get_default(defaults, "boxplot.color", "#000000")
+                ),
+                documentParameters$boxplot.color,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("boxplot.fill"), "Fill Boxplot",
+                    value = .get_default(defaults, "boxplot.fill", TRUE, is.logical),
+                    status = "success"
+                ),
+                documentParameters$boxplot.fill,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight",
+                    value = .get_default(defaults, "boxplot.lineweight", 0.5, is.numeric),
+                    min = 0, max = 5, step = 0.1
+                ),
+                documentParameters$boxplot.lineweight,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("boxgap"), "Boxplot Position Dodge",
+                    value = .get_default(defaults, "boxgap", 0.3, is.numeric),
+                    min = 0, max = 1, step = 0.05
+                ),
                 "Set the gap between boxplots within the same group, controlling how closely boxes are spaced",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("boxgroupgap"), "Boxplot Group Dodge",
-                value = .get_default(defaults, "boxgroupgap", 0.2, is.numeric),
-                min = 0, max = 1, step = 0.05),
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("boxgroupgap"), "Boxplot Group Dodge",
+                    value = .get_default(defaults, "boxgroupgap", 0.2, is.numeric),
+                    min = 0, max = 1, step = 0.05
+                ),
                 "Set the gap between groups of boxplots when a color.by variable is used",
-                placement = "top", options = list(container = "body"))
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Violin" = tagList(
-            tipify(numericInput(ns("vlnplot.lineweight"), "Violin Line Weight",
-                value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric),
-                min = 0, max = 5, step = 0.1),
-                documentParameters$vlnplot.lineweight, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("vlnplot.scaling"), "Violin Scaling",
-                selected = .get_default(defaults, "vlnplot.scaling", "area",
-                    function(x) x %in% c("area", "count", "width")),
-                choices = c("area", "count", "width")),
-                documentParameters$vlnplot.scaling, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
-                value = .get_default(defaults, "vlnplot.quantiles", ""),
-                placeholder = "e.g., 0.25, 0.5, 0.75"),
-                documentParameters$vlnplot.quantiles, placement = "top", options = list(container = "body"))
+            tipify(
+                numericInput(ns("vlnplot.lineweight"), "Violin Line Weight",
+                    value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric),
+                    min = 0, max = 5, step = 0.1
+                ),
+                documentParameters$vlnplot.lineweight,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("vlnplot.scaling"), "Violin Scaling",
+                    selected = .get_default(
+                        defaults, "vlnplot.scaling", "area",
+                        function(x) x %in% c("area", "count", "width")
+                    ),
+                    choices = c("area", "count", "width")
+                ),
+                documentParameters$vlnplot.scaling,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
+                    value = .get_default(defaults, "vlnplot.quantiles", ""),
+                    placeholder = "e.g., 0.25, 0.5, 0.75"
+                ),
+                documentParameters$vlnplot.quantiles,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Ridge" = tagList(
-            tipify(numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight",
-                value = .get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric),
-                min = 0, max = 5, step = 0.1),
-                documentParameters$ridgeplot.lineweight, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)",
-                value = .get_default(defaults, "ridgeplot.scale", 1.25, is.numeric),
-                min = 0.5, max = 3),
-                documentParameters$ridgeplot.scale, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
-                value = .get_default(defaults, "ridgeplot.ymax.expansion", NA,
-                    function(x) is.numeric(x) || is.na(x)),
-                min = 0, max = 1),
-                documentParameters$ridgeplot.ymax.expansion, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("ridgeplot.shape"), "Ridge Shape",
-                selected = .get_default(defaults, "ridgeplot.shape", "smooth",
-                    function(x) x %in% c("smooth", "hist")),
-                choices = c("smooth", "hist")),
-                documentParameters$ridgeplot.shape, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("ridgeplot.bins"), "Ridge Bins",
-                value = .get_default(defaults, "ridgeplot.bins", 30, is.numeric),
-                min = 5, max = 100),
-                documentParameters$ridgeplot.bins, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
-                value = .get_default(defaults, "ridgeplot.binwidth", NULL,
-                    function(x) is.numeric(x) || is.null(x)),
-                min = 0),
-                documentParameters$ridgeplot.binwidth, placement = "top", options = list(container = "body"))
+            tipify(
+                numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight",
+                    value = .get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric),
+                    min = 0, max = 5, step = 0.1
+                ),
+                documentParameters$ridgeplot.lineweight,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)",
+                    value = .get_default(defaults, "ridgeplot.scale", 1.25, is.numeric),
+                    min = 0.5, max = 3
+                ),
+                documentParameters$ridgeplot.scale,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
+                    value = .get_default(
+                        defaults, "ridgeplot.ymax.expansion", NA,
+                        function(x) is.numeric(x) || is.na(x)
+                    ),
+                    min = 0, max = 1
+                ),
+                documentParameters$ridgeplot.ymax.expansion,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("ridgeplot.shape"), "Ridge Shape",
+                    selected = .get_default(
+                        defaults, "ridgeplot.shape", "smooth",
+                        function(x) x %in% c("smooth", "hist")
+                    ),
+                    choices = c("smooth", "hist")
+                ),
+                documentParameters$ridgeplot.shape,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("ridgeplot.bins"), "Ridge Bins",
+                    value = .get_default(defaults, "ridgeplot.bins", 30, is.numeric),
+                    min = 5, max = 100
+                ),
+                documentParameters$ridgeplot.bins,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
+                    value = .get_default(
+                        defaults, "ridgeplot.binwidth", NULL,
+                        function(x) is.numeric(x) || is.null(x)
+                    ),
+                    min = 0
+                ),
+                documentParameters$ridgeplot.binwidth,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
-            tipify(selectInput(ns("split.by"), "Split by (facet)", choices = cat.choices,
-                selected = .get_default(defaults, "split.by", "",
-                    function(x) x %in% cat.choices)),
-                documentParameters$split.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("split.adjust"), "Facet Scaling",
-                selected = .get_default(defaults, "split.adjust", "free",
-                    function(x) x %in% c("fixed", "free", "free_y", "free_x")),
-                choices = c("fixed", "free", "free_y", "free_x")),
-                documentParameters$split.adjust, placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("split.by"), "Split by (facet)",
+                    choices = cat.choices,
+                    selected = .get_default(
+                        defaults, "split.by", "",
+                        function(x) x %in% cat.choices
+                    )
+                ),
+                documentParameters$split.by,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("split.adjust"), "Facet Scaling",
+                    selected = .get_default(
+                        defaults, "split.adjust", "free",
+                        function(x) x %in% c("fixed", "free", "free_y", "free_x")
+                    ),
+                    choices = c("fixed", "free", "free_y", "free_x")
+                ),
+                documentParameters$split.adjust,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("split.ncol"), "Split Columns",
                 step = 1, min = 0,
                 value = .get_default(defaults, "split.ncol", NA, is.numeric)

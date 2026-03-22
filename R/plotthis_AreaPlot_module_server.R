@@ -31,7 +31,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
         }
-      
+
         ns <- session$ns
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
@@ -76,12 +76,12 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 compact = TRUE
             )
         })
-        
+
         observeEvent(input$x.data, ignoreInit = TRUE, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
-            group_facet_choices <- setdiff(char.choices, input$x.data) 
+            group_facet_choices <- setdiff(char.choices, input$x.data)
             updateSelectInput(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
-            updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if(input$facet.by %in% group_facet_choices) input$facet.by else "")
+            updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
         })
 
         # Reset functionality
@@ -94,12 +94,12 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             min.y <- min(numeric.data, na.rm = TRUE)
 
             # Data
-            updateSelectInput(session, "x.data",    selected = char.choices[2])
-            updateSelectInput(session, "y.data",    selected = num.choices[2])
-            updateSelectInput(session, "group.by",  selected = char.choices[3])
+            updateSelectInput(session, "x.data", selected = char.choices[2])
+            updateSelectInput(session, "y.data", selected = num.choices[2])
+            updateSelectInput(session, "group.by", selected = char.choices[3])
 
             # Facet
-            updateSelectInput(session, "facet.by",    selected = "")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
@@ -110,7 +110,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateSelectInput(session, "theme", selected = "theme_this")
             updateNumericInput(session, "alpha", value = 1)
             updateSelectInput(session, "legend.direction", selected = "vertical")
-            
+
             # Axes
             updateNumericInput(session, "axis.font.size", value = 18)
             updateNumericInput(session, "title.font.size", value = 28)
@@ -128,7 +128,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             isolate_fn <- setup_auto_update_logic(input)
 
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == ""){
+            if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
 
@@ -219,7 +219,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # Render the plot output
         output$AreaPlot <- renderPlotly({
-
             x_input <- input$x.data
             y_input <- input$y.data
 

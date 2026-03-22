@@ -145,7 +145,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             updateSelectInput(session, "group.by", selected = char.choices[2])
             updateSelectInput(session, "color.by", selected = "")
             updateSelectInput(session, "shape.by", selected = "")
-            
+
 
             # Plot Type
             updateCheckboxGroupInput(session, "plots", selected = c("boxplot", "jitter"))
@@ -222,7 +222,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             split.by <- .na_to_null(isolate_fn(input$split.by))
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
-            
+
             # Parse vlnplot.quantiles (comma-separated numeric values)
             vlnplot.quantiles <- isolate_fn(input$vlnplot.quantiles)
             if (!is.null(vlnplot.quantiles) && nzchar(vlnplot.quantiles)) {
@@ -265,7 +265,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             if (is.null(color.by) || color.by == "") {
                 color.by <- isolate_fn(input$group.by)
             }
-            
+
             # Formatting split adjustment into correct structure for dittoViz parameter input
             split.adjust <- list(scales = "free")
             if (isolate_fn(input$split.adjust) != "free") {
@@ -309,7 +309,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE, 
+                legend.show = TRUE,
                 theme = theme_bw()
             )
 
@@ -387,7 +387,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
                 fig <- .apply_stat_annotations(fig, stat_result,
-                    y.min = isolate_fn(input$y.min))
+                    y.min = isolate_fn(input$y.min)
+                )
             }
 
 
@@ -399,7 +400,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-
             var_input <- input$var
 
             return_empty <- FALSE

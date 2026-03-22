@@ -88,13 +88,15 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- list("theta", "r", "group", "fill", "line.width", "line.dash",
+    selected <- list(
+        "theta", "r", "group", "fill", "line.width", "line.dash",
         "marker.size", "marker.symbol", "opacity", "radial.visible",
         "radial.range", "radial.showline", "radial.linecolor", "radial.gridcolor",
         "angular.direction", "angular.rotation", "angular.gridcolor",
         "title.x", "title.font.size", "title.font.family", "title.font.color",
         "show.legend", "legend.orientation", "legend.font.family",
-        "legend.font.size", "legend.font.color", "bgcolor", "polar.bgcolor")
+        "legend.font.size", "legend.font.color", "bgcolor", "polar.bgcolor"
+    )
 
     documentParameters <- get_documentation(
         package_name = "VizModules::radarPlot", type = "param",
@@ -104,13 +106,17 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("theta"), "Category column (theta):",
-                selected = .get_default(defaults, "theta", cat.choices[2],
-                    function(x) x %in% all.choices),
+                selected = .get_default(
+                    defaults, "theta", cat.choices[2],
+                    function(x) x %in% all.choices
+                ),
                 choices = all.choices
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("r"), "Values column (r):",
-                selected = .get_default(defaults, "r", num.choices[2],
-                    function(x) x %in% num.choices),
+                selected = .get_default(
+                    defaults, "r", num.choices[2],
+                    function(x) x %in% num.choices
+                ),
                 choices = num.choices
             ), documentParameters$r, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group"), "Group column (optional):",
@@ -216,8 +222,10 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "title.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "title.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
                 value = .get_default(defaults, "title.font.color", "#000000")
@@ -231,8 +239,10 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "legend.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "legend.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend font size:",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),

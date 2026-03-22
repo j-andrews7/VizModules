@@ -51,7 +51,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             x_vals <- input$x.value
             y_val <- input$y.value
             colour_by <- input$colour.by
-            
+
             # Ensure max 2 x values
             if (!is.null(x_vals) && length(x_vals) > 2) {
                 x_vals <- x_vals[1:2]
@@ -73,11 +73,14 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
         # Enforce max 2 x values
-        observeEvent(input$x.value, {
-            if (!is.null(input$x.value) && length(input$x.value) > 2) {
-                updateSelectInput(session, "x.value", selected = input$x.value[1:2])
-            }
-        }, ignoreNULL = FALSE)
+        observeEvent(input$x.value,
+            {
+                if (!is.null(input$x.value) && length(input$x.value) > 2) {
+                    updateSelectInput(session, "x.value", selected = input$x.value[1:2])
+                }
+            },
+            ignoreNULL = FALSE
+        )
 
         output$palette.selection <- renderUI({
             groups <- palette_groups()
@@ -100,7 +103,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Reset functionality
         observeEvent(input$reset, {
-
             choices <- c("", names(data()))
 
             # Get numeric variables of data.
@@ -110,23 +112,21 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Reset Data columns to default. First and second index of data named list
 
             # Data tab
-            updateSelectInput(session, "x.value", selected = num.choices[2])  
-            updateSelectInput(session, "y.value", selected = cat.choices[2])  
-            
+            updateSelectInput(session, "x.value", selected = num.choices[2])
+            updateSelectInput(session, "y.value", selected = cat.choices[2])
+
             updateSelectInput(session, "x.adjustment", selected = "")
             updateSelectInput(session, "colour.by", selected = "X variables")
-            
-            # Facet tab  
+
+            # Facet tab
             updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scales", selected = "fixed")
-            
+
             # Aesthetics tab
             colourpicker::updateColourInput(session, "line.colour", value = "red")
-            
+
 
             shinyjs::click("reset_palette")
-
-
 
 
             # Axes
@@ -134,7 +134,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Lines
             .reset_lines_inputs(session)
-      })
+        })
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_dumbbellPlot <- reactive({
@@ -144,7 +144,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             x_input <- isolate_fn(input$x.value)
             y_input <- isolate_fn(input$y.value)
-            
+
             # Ensure max 2 x values
             if (!is.null(x_input) && length(x_input) > 2) {
                 x_input <- x_input[1:2]
@@ -177,12 +177,12 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 updateSelectInput(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
-            
-            facet.by <- NULL 
-            if (!isolate_fn(input$facet.by) == ""){
+
+            facet.by <- NULL
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            
+
             fig <- dumbbellPlot(
                 data = d,
                 x = x_input,
@@ -244,7 +244,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$dumbbellPlot <- renderPlotly({
-
             x_input <- input$x.value
             y_input <- input$y.value
 

@@ -1,6 +1,6 @@
 #' Density Plot Server Module
 #'
-#' @description 
+#' @description
 #' Server-side logic for the density plot module. This function manages
 #' reactive data processing, dynamic UI generation for color palettes,
 #' and the rendering of interactive Plotly density plots.
@@ -9,12 +9,12 @@
 #' @param data \code{reactive} A reactive expression returning a data frame to be plotted.
 #' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
-#' 
+#'
 #' @return The `moduleServer` function for the DensityPlot module.
-#' 
+#'
 #' @import shiny
 #' @import plotly
-#' 
+#'
 #' @export
 #' @author Jacob Martin, Jared Andrews
 plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
@@ -220,7 +220,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Render the plot output
         output$DensityPlot <- renderPlotly({
-
             x_input <- input$x.data
 
             return_empty <- FALSE

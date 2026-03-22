@@ -67,8 +67,10 @@
 #' journalist <- c(75, 70, 75, 5, 10, 10, 20, 10, 15, 10, 20)
 #' developer <- c(25, 10, 20, 60, 80, 90, 70, 20, 5, 10, 10)
 #' designer <- c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70)
-#' label <- c("point 1", "point 2", "point 3", "point 4", "point 5", "point 6",
-#'            "point 7", "point 8", "point 9", "point 10", "point 11")
+#' label <- c(
+#'     "point 1", "point 2", "point 3", "point 4", "point 5", "point 6",
+#'     "point 7", "point 8", "point 9", "point 10", "point 11"
+#' )
 #'
 #' df <- data.frame(journalist, developer, designer, label)
 #'
@@ -159,7 +161,6 @@ ternaryPlot <- function(df, a, b, c,
                         title.font.color = "#000000",
                         title.x = 0.5,
                         bgcolor = "#FFFFFF") {
-
     # Validate inputs
     if (!a %in% names(df)) {
         stop(paste("Column", a, "not found in data frame"))
@@ -184,7 +185,7 @@ ternaryPlot <- function(df, a, b, c,
 
     # Helper function for creating axis configuration
     axis_config <- function(title, titlefont.size, titlefont.family, titlefont.color,
-                           tickfont.size, tickcolor, ticklen, gridcolor) {
+                            tickfont.size, tickcolor, ticklen, gridcolor) {
         list(
             title = title,
             titlefont = list(
@@ -202,12 +203,18 @@ ternaryPlot <- function(df, a, b, c,
     }
 
     # Configure axes
-    aaxis <- axis_config(a.title, a.titlefont.size, a.titlefont.family, a.titlefont.color,
-                        a.tickfont.size, a.tickcolor, a.ticklen, a.gridcolor)
-    baxis <- axis_config(b.title, b.titlefont.size, b.titlefont.family, b.titlefont.color,
-                        b.tickfont.size, b.tickcolor, b.ticklen, b.gridcolor)
-    caxis <- axis_config(c.title, c.titlefont.size, c.titlefont.family, c.titlefont.color,
-                        c.tickfont.size, c.tickcolor, c.ticklen, c.gridcolor)
+    aaxis <- axis_config(
+        a.title, a.titlefont.size, a.titlefont.family, a.titlefont.color,
+        a.tickfont.size, a.tickcolor, a.ticklen, a.gridcolor
+    )
+    baxis <- axis_config(
+        b.title, b.titlefont.size, b.titlefont.family, b.titlefont.color,
+        b.tickfont.size, b.tickcolor, b.ticklen, b.gridcolor
+    )
+    caxis <- axis_config(
+        c.title, c.titlefont.size, c.titlefont.family, c.titlefont.color,
+        c.tickfont.size, c.tickcolor, c.ticklen, c.gridcolor
+    )
 
     # Initialize plot
     fig <- plot_ly()
@@ -222,8 +229,10 @@ ternaryPlot <- function(df, a, b, c,
             if (!is.null(palette) && length(palette) > 0) {
                 colors <- rep_len(palette, length(group_values))
             } else {
-                default_cols <- c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
-                                "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")
+                default_cols <- c(
+                    "#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+                    "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"
+                )
                 colors <- rep_len(default_cols, length(group_values))
             }
         }
@@ -350,7 +359,7 @@ ternaryPlot <- function(df, a, b, c,
                 size = title.font.size,
                 color = title.font.color
             ),
-            x = title.x, 
+            x = title.x,
             automargin = TRUE
         ),
         ternary = list(

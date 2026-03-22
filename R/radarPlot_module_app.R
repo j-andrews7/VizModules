@@ -33,7 +33,7 @@
 #' # Launch with custom data:
 #' skills <- data.frame(
 #'     entity = c(
-#'        rep("Player A", 6),
+#'         rep("Player A", 6),
 #'         rep("Player B", 6),
 #'         rep("Player C", 6),
 #'         rep("Player D", 6)

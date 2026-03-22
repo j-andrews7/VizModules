@@ -160,7 +160,8 @@
                 placeholder = "e.g. 2, -2",
                 value = .get_default(defaults, "hline.intercepts", "")
             ),
-            intercept_tip, placement = "top", options = list(container = "body")
+            intercept_tip,
+            placement = "top", options = list(container = "body")
         ),
         textInput(ns("hline.colors"), "Colors",
             value = .get_default(defaults, "hline.colors", "#000000")
@@ -181,7 +182,8 @@
                 placeholder = "e.g. 2, -2",
                 value = .get_default(defaults, "vline.intercepts", "")
             ),
-            intercept_tip, placement = "top", options = list(container = "body")
+            intercept_tip,
+            placement = "top", options = list(container = "body")
         ),
         textInput(ns("vline.colors"), "Colors",
             value = .get_default(defaults, "vline.colors", "#000000")
@@ -287,8 +289,10 @@
         flip_y,
         selectInput(ns("title.font.family"), "Title Font",
             choices = font_choices,
-            selected = .get_default(defaults, "title.font.family", "Arial",
-                function(x) x %in% font_choices)
+            selected = .get_default(
+                defaults, "title.font.family", "Arial",
+                function(x) x %in% font_choices
+            )
         ),
         colourInput(ns("text.colour"), "Title Color",
             value = .get_default(defaults, "text.colour", "#000000")
@@ -303,8 +307,10 @@
         ),
         selectInput(ns("axis.title.font.family"), "Axis Title Font",
             choices = font_choices,
-            selected = .get_default(defaults, "axis.title.font.family", "Arial",
-                function(x) x %in% font_choices)
+            selected = .get_default(
+                defaults, "axis.title.font.family", "Arial",
+                function(x) x %in% font_choices
+            )
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
             value = .get_default(defaults, "axis.showline", TRUE, is.logical)
@@ -336,8 +342,10 @@
         ),
         selectInput(ns("axis.tickfont.family"), "Tick Label Font",
             choices = font_choices,
-            selected = .get_default(defaults, "axis.tickfont.family", "Arial",
-                function(x) x %in% font_choices)
+            selected = .get_default(
+                defaults, "axis.tickfont.family", "Arial",
+                function(x) x %in% font_choices
+            )
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
             value = .get_default(defaults, "axis.tickangle.x", 0, is.numeric),
@@ -353,8 +361,10 @@
         ),
         selectInput(ns("axis.ticks"), "Tick Position",
             choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-            selected = .get_default(defaults, "axis.ticks", "outside",
-                function(x) x %in% c("outside", "inside", ""))
+            selected = .get_default(
+                defaults, "axis.ticks", "outside",
+                function(x) x %in% c("outside", "inside", "")
+            )
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = .get_default(defaults, "axis.tickcolor", "black")
@@ -421,8 +431,10 @@
         ),
         tipify(
             selectInput(ns("stat.p.adjust"), "P-value Adjustment",
-                choices = c("holm", "hochberg", "hommel", "bonferroni",
-                    "BH", "BY", "fdr", "none"),
+                choices = c(
+                    "holm", "hochberg", "hommel", "bonferroni",
+                    "BH", "BY", "fdr", "none"
+                ),
                 selected = .get_default(defaults, "stat.p.adjust", "holm")
             ),
             "Method for multiple testing correction applied to all p-values",

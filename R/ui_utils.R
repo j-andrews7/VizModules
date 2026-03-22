@@ -217,76 +217,78 @@ default_palettes <- function() {
 #' # With custom defaults
 #' module_tack_ui(ns, defaults = list(download.format = "png"))
 module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
-    tagList(
-        fluidRow(
-            column(
-                2,
-                materialSwitch(
-                    ns("auto.update"),
-                    "Auto Update",
-                    value = TRUE,
-                    status = "success"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                2,
-                actionButton(
-                    ns("update"),
-                    "Update",
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                2,
-                actionButton(
-                    ns("reset"),
-                    "Reset",
-                    class = "btn-secondary",
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                3,
-                downloadButton(
-                    ns("download.interactive"),
-                    "Save Interactive",
-                    class = "btn-secondary",
-                    icon = icon("download"),
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            if (has.stats) shinyjs::hidden(column(
-                2,
-                downloadButton(
-                    ns("download.stats"),
-                    "Save Stats",
-                    class = "btn-secondary",
-                    icon = icon("table"),
-                    width = "100%"
-                ),
-                id = ns("download.stats.col"),
-                style = "margin-top: 25px;"
-            )),
-            column(
-                2,
-                selectInput(
-                    ns("download.format"),
-                    "Download Format",
-                    selected = ifelse(
-                        "download.format" %in% names(defaults) &&
-                        defaults[["download.format"]] %in% c("svg", "png"),
-                        defaults[["download.format"]],
-                        "svg"
-                    ),
-                    choices = c("png", "svg"),
-                    width = "100%"
-                )
-            )
+  tagList(
+    fluidRow(
+      column(
+        2,
+        materialSwitch(
+          ns("auto.update"),
+          "Auto Update",
+          value = TRUE,
+          status = "success"
         ),
-        br()
-    )
+        style = "margin-top: 25px;"
+      ),
+      column(
+        2,
+        actionButton(
+          ns("update"),
+          "Update",
+          width = "100%"
+        ),
+        style = "margin-top: 25px;"
+      ),
+      column(
+        2,
+        actionButton(
+          ns("reset"),
+          "Reset",
+          class = "btn-secondary",
+          width = "100%"
+        ),
+        style = "margin-top: 25px;"
+      ),
+      column(
+        3,
+        downloadButton(
+          ns("download.interactive"),
+          "Save Interactive",
+          class = "btn-secondary",
+          icon = icon("download"),
+          width = "100%"
+        ),
+        style = "margin-top: 25px;"
+      ),
+      if (has.stats) {
+        shinyjs::hidden(column(
+          2,
+          downloadButton(
+            ns("download.stats"),
+            "Save Stats",
+            class = "btn-secondary",
+            icon = icon("table"),
+            width = "100%"
+          ),
+          id = ns("download.stats.col"),
+          style = "margin-top: 25px;"
+        ))
+      },
+      column(
+        2,
+        selectInput(
+          ns("download.format"),
+          "Download Format",
+          selected = ifelse(
+            "download.format" %in% names(defaults) &&
+              defaults[["download.format"]] %in% c("svg", "png"),
+            defaults[["download.format"]],
+            "svg"
+          ),
+          choices = c("png", "svg"),
+          width = "100%"
+        )
+      )
+    ),
+    br()
+  )
 }

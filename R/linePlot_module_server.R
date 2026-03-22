@@ -22,11 +22,10 @@
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
-    
 
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
-        
+
         observeEvent(input$x.value, {
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
                 hide("errorBarWidth")
@@ -37,9 +36,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 show("errorBarWidth")
                 show("errorBarColour")
             }
-        }) 
-
-
+        })
 
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -50,7 +47,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
         }
 
-        
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -132,10 +128,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             updateNumericInput(session, "errorBarWidth", value = 1)
             colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
 
-            # Axes
             .reset_axes_inputs(session)
-
-            # Lines
             .reset_lines_inputs(session)
         })
 
@@ -220,8 +213,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 updateSelectInput(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
-            facet.by <- NULL 
-            if (!isolate_fn(input$facet.by) == ""){
+            facet.by <- NULL
+            if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
             fig <- linePlot(
@@ -259,7 +252,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 flip.x = isolate_fn(input$flip.x),
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
-                y.adjustment = y.adjustment, 
+                y.adjustment = y.adjustment,
                 error.colour = isolate_fn(input$errorBarColour),
                 error.width = isolate_fn(input$errorBarWidth),
                 error.bar = isolate_fn(input$errorBar)
@@ -293,15 +286,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$linePlot <- renderPlotly({
-            
             d <- data_reactive()
             x_input <- input$x.value
             y_input <- input$y.value
 
 
             # Section is for catching errors and displaying an empty plot with a warning message if any error conditions are met.
-            #Ensures a clean method for dealing with errors and instructing the user on next steps to resolve the issue 
-            #Error Prone conditions
+            # Ensures a clean method for dealing with errors and instructing the user on next steps to resolve the issue
+            # Error Prone conditions
             x_is_cat <- length(x_input) == 1 && nzchar(x_input) && !is.numeric(d[[x_input]])
             y_is_cat <- length(y_input) == 1 && nzchar(y_input) && !is.numeric(d[[y_input]])
             x_not_0 <- length(x_input) == 0
@@ -314,25 +306,24 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             return_empty <- FALSE
             txt <- c()
 
-            
 
             if (x_is_cat && y_is_cat) {
                 return_empty <- TRUE
                 txt <- c(txt, "X and Y categories cannot both be discrete data types")
-            } else if (x_not_0 || y_not_0){
+            } else if (x_not_0 || y_not_0) {
                 return_empty <- TRUE
                 txt <- c(txt, "Both X and Y variable inputs must not be empty. Please select a variable input.")
-            } else if (!x_pure || !y_pure){
+            } else if (!x_pure || !y_pure) {
                 return_empty <- TRUE
                 txt <- c(txt, "Cant have a discrete and non discrete data input on the same axis.")
             } else if (dual_multiAxis) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
-            } else if (multi_axis && !(input$group.by == "")){
+            } else if (multi_axis && !(input$group.by == "")) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }
-            if (return_empty){
+            if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
                 fig <- generate_linePlot() |>

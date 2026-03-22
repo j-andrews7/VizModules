@@ -402,9 +402,8 @@
         ticklen = isolate_fn(input$axis.ticklen),
         tickwidth = isolate_fn(input$axis.tickwidth),
         showgrid = show_grid
-        
     )
-    if (!ggplot.axis.styling){
+    if (!ggplot.axis.styling) {
         style$showline <- isolate_fn(input$axis.showline)
         style$mirror <- isolate_fn(input$axis.mirror)
         style$linecolor <- isolate_fn(input$axis.linecolor)
@@ -448,18 +447,16 @@
             axis.line = element_blank(),
             axis.ticks = element_blank()
         )
-        
     } else if (isolate_fn(input$axis.showline) && !isolate_fn(input$axis.mirror)) {
         # Set it so the axis line is only shown on x and y axis
         theme_args <- list(
             axis.line = ggplot2::element_line(
                 colour = isolate_fn(input$axis.linecolor),
-                linewidth = isolate_fn(input$axis.linewidth)   
+                linewidth = isolate_fn(input$axis.linewidth)
             ),
             panel.border = element_blank(),
             axis.ticks = element_blank()
         )
-        
     } else {
         # No borders when axis.showline is FALSE
         theme_args <- list(
@@ -544,7 +541,7 @@
         "dotdash" = "dashdot",
         "longdash" = "longdash",
         "twodash" = "longdashdot",
-        "solid"  # default
+        "solid" # default
     )
 }
 
@@ -745,7 +742,7 @@
         # Get axis range for this subplot
         # Convert trace axis ref (x, x2) to layout axis name (xaxis, xaxis2)
         xaxis_name <- paste0("xaxis", sub("^x", "", pair$x))
-        if (xaxis_name == "xaxis") xaxis_name <- "xaxis"  # Handle main axis
+        if (xaxis_name == "xaxis") xaxis_name <- "xaxis" # Handle main axis
         xaxis <- fig$x$layout[[xaxis_name]]
         x_range <- if (!is.null(xaxis)) xaxis$range else NULL
 
@@ -820,12 +817,12 @@
 #' @keywords internal
 #' @rdname INTERNAL_add_reference_lines
 .add_reference_lines <- function(fig,
-                                  hline.intercepts = NULL, hline.colors = NULL, hline.widths = NULL,
-                                  hline.linetypes = NULL, hline.opacities = NULL,
-                                  vline.intercepts = NULL, vline.colors = NULL, vline.widths = NULL,
-                                  vline.linetypes = NULL, vline.opacities = NULL,
-                                  abline.slopes = NULL, abline.intercepts = NULL, abline.colors = NULL,
-                                  abline.widths = NULL, abline.linetypes = NULL, abline.opacities = NULL) {
+                                 hline.intercepts = NULL, hline.colors = NULL, hline.widths = NULL,
+                                 hline.linetypes = NULL, hline.opacities = NULL,
+                                 vline.intercepts = NULL, vline.colors = NULL, vline.widths = NULL,
+                                 vline.linetypes = NULL, vline.opacities = NULL,
+                                 abline.slopes = NULL, abline.intercepts = NULL, abline.colors = NULL,
+                                 abline.widths = NULL, abline.linetypes = NULL, abline.opacities = NULL) {
     # Collect all shapes in one list
     all_shapes <- list()
 
@@ -919,8 +916,10 @@
 #' \dontrun{
 #' # In a Shiny module server:
 #' output$download.interactive <- .create_plot_download_handler(
-#'   plot_reactive = reactive({my_plotly_plot}),
-#'   filename_base = "my_plot"
+#'     plot_reactive = reactive({
+#'         my_plotly_plot
+#'     }),
+#'     filename_base = "my_plot"
 #' )
 #' }
 .create_plot_download_handler <- function(plot_reactive, filename_base = "interactive_plot") {
@@ -934,7 +933,7 @@
             if (!inherits(plot, "plotly")) {
                 stop("Plot must be a plotly object")
             }
-            
+
             # Save as HTML widget
             saveWidget(
                 widget = jqui_resizable(plot),
@@ -995,47 +994,56 @@
 #' @keywords internal
 #' @rdname INTERNAL_calculate_range
 .calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL,
-                              axis_scale_factor, grouping = FALSE,
-                              stack_by = NULL) {
-  # Resolve primary data column
-  data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
+                             axis_scale_factor, grouping = FALSE,
+                             stack_by = NULL) {
+    # Resolve primary data column
+    data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
 
-  # Basic guards
-  if (is.null(data_col) || !nzchar(data_col)) return(NULL)
-  if (!data_col %in% names(df)) return(NULL)
-  if (!is.numeric(df[[data_col]])) return(NULL)
-
-  if (!grouping) {
-    # --- Non-stacked: bars are NOT stacked, just find the max single value ---
-    # If stack_by is provided and numeric, bars ARE stacked → sum per x group
-    if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
-      # Numeric stack_by: stacked bars, sum y per x category
-      if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
-      x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
-      max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
-      min_val <- 0 
-    } else {
-      # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
-      max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-      min_val <- min(df[[data_col]], na.rm = TRUE)
+    # Basic guards
+    if (is.null(data_col) || !nzchar(data_col)) {
+        return(NULL)
+    }
+    if (!data_col %in% names(df)) {
+        return(NULL)
+    }
+    if (!is.numeric(df[[data_col]])) {
+        return(NULL)
     }
 
-    if (!is.finite(min_val)) min_val <- 0
-    if (!is.finite(max_val)) max_val <- 1
+    if (!grouping) {
+        # --- Non-stacked: bars are NOT stacked, just find the max single value ---
+        # If stack_by is provided and numeric, bars ARE stacked → sum per x group
+        if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
+            # Numeric stack_by: stacked bars, sum y per x category
+            if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+                return(NULL)
+            }
+            x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+            max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+            min_val <- 0
+        } else {
+            # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+            max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
+            min_val <- min(df[[data_col]], na.rm = TRUE)
+        }
 
-    return(list(min = min_val, max = max_val))
+        if (!is.finite(min_val)) min_val <- 0
+        if (!is.finite(max_val)) max_val <- 1
 
-  } else {
-    # --- Stacked grouping: sum y values per x group ---
-    if (is.null(data_col_x) || !data_col_x %in% names(df)) return(NULL)
-    x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
-    max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
-    min_val <- 0
+        return(list(min = min_val, max = max_val))
+    } else {
+        # --- Stacked grouping: sum y values per x group ---
+        if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+            return(NULL)
+        }
+        x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+        max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+        min_val <- 0
 
-    if (!is.finite(max_val)) max_val <- 1
+        if (!is.finite(max_val)) max_val <- 1
 
-    return(list(min = min_val, max = max_val))
-  }
+        return(list(min = min_val, max = max_val))
+    }
 }
 
 
@@ -1090,20 +1098,19 @@
 #'   appearing in the legend while keeping them visible in the plot. Box traces
 #'   and other trace types are returned unchanged.
 #'
-#' @author Jacob Martin 
+#' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_hide_jitter_from_legend
-.hide_jitter_from_legend <- function(fig){
-
+.hide_jitter_from_legend <- function(fig) {
     stopifnot("plotly" %in% class(fig))
     for (i in seq_along(fig$x$data)) {
         fig_data <- fig$x$data[[i]]
-        if (!is.null(fig_data$type) && fig_data$type == "scatter" && !is.null(fig_data$mode) && fig_data$mode =="markers"){
+        if (!is.null(fig_data$type) && fig_data$type == "scatter" && !is.null(fig_data$mode) && fig_data$mode == "markers") {
             fig_data$showlegend <- FALSE
         }
         fig$x$data[[i]] <- fig_data
     }
-    fig 
+    fig
 }
 
 #' Add fit line traces to all subplot panels
@@ -1130,9 +1137,9 @@
 #' @keywords internal
 #' @rdname INTERNAL_add_fit_lines_to_subplots
 .add_fit_lines_to_subplots <- function(fig, df, x.col, y.col, split.by = NULL, group.col = NULL,
-                                        color_mapping = NULL, line_color = "#000000",
-                                        fit_type = c("linear", "loess"), span = 0.75,
-                                        line_width = 3) {
+                                       color_mapping = NULL, line_color = "#000000",
+                                       fit_type = c("linear", "loess"), span = 0.75,
+                                       line_width = 3) {
     fit_type <- match.arg(fit_type)
 
     # Determine facet levels if split.by is provided
@@ -1334,7 +1341,7 @@
 #' Check if column inputs contain mixed data types
 #'
 #' This function validates that a vector of column names from a data frame contains
-#' columns of only one data type category: either all numeric OR all categorical 
+#' columns of only one data type category: either all numeric OR all categorical
 #' (factor/character). Returns \code{FALSE} for mixed numeric + categorical columns.
 #' Single columns always return \code{TRUE}. Used for Shiny plotting module input validation.
 #'
@@ -1348,34 +1355,40 @@
 #'
 #' @examples
 #' df <- data.frame(num1 = 1:3, num2 = 4:6, cat1 = letters[1:3], fac1 = factor(1:3))
-#' is_pure_type(c("num1", "num2"), df)    # TRUE (all numeric)
-#' is_pure_type(c("cat1", "fac1"), df)    # TRUE (all categorical)
-#' is_pure_type(c("num1"), df)            # TRUE (single)
-#' is_pure_type(c("num1", "cat1"), df)    # FALSE (mixed numeric + cat)
+#' is_pure_type(c("num1", "num2"), df) # TRUE (all numeric)
+#' is_pure_type(c("cat1", "fac1"), df) # TRUE (all categorical)
+#' is_pure_type(c("num1"), df) # TRUE (single)
+#' is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 #'
 #' @rdname is_pure_type
 #' @seealso \code{\link[base]{for}}
 #' @export
 is_pure_type <- function(inputs, d) {
     cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
-    
+
     # Single column or empty always pure
-    if (length(cols) <= 1) return(TRUE)
-    
+    if (length(cols) <= 1) {
+        return(TRUE)
+    }
+
     # Classify first column to establish reference type
     first_col <- d[[cols[1]]]
-    ref_type <- if (is.numeric(first_col)) "numeric" 
-                else if (is.factor(first_col) || is.character(first_col)) "categorical"
-    
+    ref_type <- if (is.numeric(first_col)) {
+        "numeric"
+    } else if (is.factor(first_col) || is.character(first_col)) "categorical"
+
     # Check all remaining columns match reference
     for (i in 2:length(cols)) {
         col <- d[[cols[i]]]
-        col_type <- if (is.numeric(col)) "numeric" 
-                   else if (is.factor(col) || is.character(col)) "categorical"
-        
-        if (col_type != ref_type) return(FALSE)
+        col_type <- if (is.numeric(col)) {
+            "numeric"
+        } else if (is.factor(col) || is.character(col)) "categorical"
+
+        if (col_type != ref_type) {
+            return(FALSE)
+        }
     }
-    
+
     TRUE
 }
 

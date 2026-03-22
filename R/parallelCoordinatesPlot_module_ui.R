@@ -82,11 +82,13 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         all.choices
     }
 
-    selected <- list("dimensions", "color.by", "color.scale",
+    selected <- list(
+        "dimensions", "color.by", "color.scale",
         "line.opacity", "line.width", "show.colorbar",
         "label.font.size", "label.font.color", "label.font.family",
         "tick.font.size", "tick.font.color", "tick.font.family",
-        "title.font.size", "title.font.family", "title.text.color", "bgcolor")
+        "title.font.size", "title.font.family", "title.text.color", "bgcolor"
+    )
 
     documentParameters <- get_documentation(
         package_name = "VizModules::parallelCoordinatesPlot", type = "param",
@@ -108,8 +110,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         "Aesthetics" = tagList(
             tipify(selectInput(ns("color.scale"), "Color scale:",
                 choices = colorscale.choices,
-                selected = .get_default(defaults, "color.scale", "Viridis",
-                    function(x) x %in% colorscale.choices)
+                selected = .get_default(
+                    defaults, "color.scale", "Viridis",
+                    function(x) x %in% colorscale.choices
+                )
             ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("line.opacity"), "Line opacity:",
                 min = 0, max = 1,
@@ -135,8 +139,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("label.font.family"), "Label font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "label.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "label.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("tick.font.size"), "Tick font size:",
                 value = .get_default(defaults, "tick.font.size", 10, is.numeric),
@@ -147,8 +153,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("tick.font.family"), "Tick font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "tick.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "tick.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$tick.font.family, placement = "top", options = list(container = "body"))
         ),
         "Title & Background" = tagList(
@@ -158,8 +166,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "title.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "title.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("title.text.color"), "Title color:",
                 value = .get_default(defaults, "title.text.color", "black")

@@ -66,7 +66,6 @@ createModuleApp <- function(inputs_ui_fn,
                             server_fn,
                             data_list,
                             title = "VizModules App") {
-
     # Validate inputs
     stopifnot(is.function(inputs_ui_fn))
     stopifnot(is.function(output_ui_fn))
@@ -79,7 +78,6 @@ createModuleApp <- function(inputs_ui_fn,
     ui <- fluidPage(
         title = title,
         useShinyjs(),
-
         sidebarLayout(
             sidebarPanel(
                 h4("Data Import"),
@@ -96,77 +94,78 @@ createModuleApp <- function(inputs_ui_fn,
                 ),
                 helpText("Plot settings reset when switching datasets."),
                 uiOutput("plot_inputs_ui")
-
             ),
             mainPanel(
                 output_ui_fn("active_plot"),
                 hr(),
                 h4("Data Table"),
                 p("Filtering the data table will update the plot.",
-                    style = "color: grey; font-size: 12px;"),
+                    style = "color: grey; font-size: 12px;"
+                ),
                 dataFilterUI("table")
-
             )
         )
     )
 
     server <- function(input, output, session) {
-
         rv <- reactiveValues(datasets = data_list)
 
         observeEvent(input$load_data, {
             req(input$file_upload)
-            tryCatch({
-                filepath <- input$file_upload$datapath
-                ext <- tolower(
-                    tools::file_ext(input$file_upload$name)
-                )
-                new_data <- switch(ext,
-                    xlsx = as.data.frame(
-                        readxl::read_excel(filepath)
-                    ),
-                    xls = as.data.frame(
-                        readxl::read_excel(filepath)
-                    ),
-                    csv = read.csv(
-                        filepath,
-                        stringsAsFactors = TRUE
-                    ),
-                    tsv = read.delim(
-                        filepath,
-                        stringsAsFactors = TRUE
-                    ),
-                    txt = read.delim(
-                        filepath,
-                        stringsAsFactors = TRUE
-                    ),
-                    stop("Unsupported file type: .", ext)
-                )
+            tryCatch(
+                {
+                    filepath <- input$file_upload$datapath
+                    ext <- tolower(
+                        tools::file_ext(input$file_upload$name)
+                    )
+                    new_data <- switch(ext,
+                        xlsx = as.data.frame(
+                            readxl::read_excel(filepath)
+                        ),
+                        xls = as.data.frame(
+                            readxl::read_excel(filepath)
+                        ),
+                        csv = read.csv(
+                            filepath,
+                            stringsAsFactors = TRUE
+                        ),
+                        tsv = read.delim(
+                            filepath,
+                            stringsAsFactors = TRUE
+                        ),
+                        txt = read.delim(
+                            filepath,
+                            stringsAsFactors = TRUE
+                        ),
+                        stop("Unsupported file type: .", ext)
+                    )
 
-                new_data <- as.data.frame(new_data)
-                name <- tools::file_path_sans_ext(
-                    input$file_upload$name
-                )
+                    new_data <- as.data.frame(new_data)
+                    name <- tools::file_path_sans_ext(
+                        input$file_upload$name
+                    )
 
-                rv$datasets[[name]] <- new_data
-                showNotification(
-                    paste0(
-                        "Loaded '", name, "' (",
-                        nrow(new_data), " rows, ",
-                        ncol(new_data), " cols)"
-                    ),
-                    type = "message"
-                )
-            }, error = function(e) {
-                showNotification(
-                    paste(
-                        "Could not read the uploaded file.",
-                        "Supported formats: .xlsx, .xls,",
-                        ".csv, .tsv, .txt (tab-delimited)."
-                    ),
-                    type = "error"
-                )
-            })
+                    rv$datasets[[name]] <- new_data
+                    showNotification(
+                        paste0(
+                            "Loaded '", name, "' (",
+                            nrow(new_data), " rows, ",
+                            ncol(new_data), " cols)"
+                        ),
+                        type = "message"
+                    )
+                },
+                error = function(e) {
+                    showNotification(
+                        paste(
+                            "Could not read the uploaded file.",
+                            "Supported formats: .xlsx, .xls,",
+                            ".csv, .tsv, .txt (tab-delimited)."
+                        ),
+                        type = "error"
+                    )
+                }
+            )
         })
 
         filtered_data <- dataFilterServer(

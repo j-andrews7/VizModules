@@ -19,15 +19,13 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
-  
-    
-  
+
+
     moduleServer(id, function(input, output, session) {
-      
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
-        
-        
+
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -118,14 +116,13 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
-  
 
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            
+
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
                 max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor
@@ -143,7 +140,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
 
             # Facet
-            updateSelectInput(session, "facet.by",   selected = "")
+            updateSelectInput(session, "facet.by", selected = "")
             updateSelectInput(session, "facet.scale", selected = "fixed")
             updateNumericInput(session, "facet.ncol", value = NULL)
             updateNumericInput(session, "facet.nrow", value = NULL)
@@ -176,7 +173,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Lines
             .reset_lines_inputs(session)
-
         })
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
@@ -186,12 +182,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             req(input$x.data %in% names(data()))
 
             group_by_val <- if (nzchar(input$group.by)) input$group.by else NULL
-            fill_by_val  <- if (nzchar(input$fill.by))  input$fill.by  else NULL
+            fill_by_val <- if (nzchar(input$fill.by)) input$fill.by else NULL
 
             # Determine if stacking is happening:
             # Stacked when group.by is numeric OR fill.by is numeric
             group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
-            fill_is_numeric  <- !is.null(fill_by_val)  && fill_by_val  %in% names(data()) && is.numeric(data()[[fill_by_val]])
+            fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) && is.numeric(data()[[fill_by_val]])
 
             y_range <- .calculate_range(
                 df                = data(),
@@ -206,7 +202,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
         })
-
 
 
         generate_BarPlot <- reactive({
@@ -233,10 +228,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 split.by <- isolate_fn(input$split.by)
             }
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == ""){
+            if (!isolate_fn(input$group.by) == "") {
                 group.by <- isolate_fn(input$group.by)
             }
-
 
 
             fill_by_input <- isolate_fn(input$fill.by)
@@ -334,7 +328,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
-
             x_input <- input$x.data
             y_input <- input$y.data
 
@@ -349,8 +342,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            } 
-            if (y_input == input$group.by){
+            }
+            if (y_input == input$group.by) {
                 return_empty <- TRUE
                 txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs")
             }

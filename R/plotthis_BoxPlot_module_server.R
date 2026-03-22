@@ -23,9 +23,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
     moduleServer(id, function(input, output, session) {
         # Constant for y-axis scaling to ensure highest box reaches ~90% of chart height
-        
 
-        
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -99,14 +98,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 shinyjs::hide("download.stats.col")
             }
         })
-      
-      
+
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            
+
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
                 max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
@@ -212,7 +211,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
-            #Fill By colour grading 
+            # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             fill.by <- NULL
@@ -250,7 +249,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
 
-
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
@@ -258,10 +256,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     boxmode = ifelse(!is.null(group.by), "group", "overlay"),
-                    boxgap = 0.1, 
+                    boxgap = 0.1,
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-            
+
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
@@ -292,10 +290,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
                 fig <- .apply_stat_annotations(fig, stat_result,
-                    y.min = isolate_fn(input$y.min))
+                    y.min = isolate_fn(input$y.min)
+                )
             }
 
-            
+
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
@@ -340,7 +339,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BoxPlot <- renderPlotly({
-
             x_input <- input$x.data
             y_input <- input$y.data
 

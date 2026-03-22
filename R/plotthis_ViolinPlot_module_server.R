@@ -22,7 +22,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
-        
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
@@ -86,7 +85,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            
+
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
                 max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
@@ -202,8 +201,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 # plotthis::ViolinPlot expects a named list for palcolor when manually setting colors
                 palcolor_arg <- as.list(palette_values)
             }
-            sort.x <- NULL 
-            if (!isolate_fn(input$sort_x) == ""){
+            sort.x <- NULL
+            if (!isolate_fn(input$sort_x) == "") {
                 sort.x <- isolate_fn(input$sort_x)
             }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
@@ -255,7 +254,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            #Axis Styling: 
+            # Axis Styling:
 
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
@@ -316,7 +315,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
                 fig <- .apply_stat_annotations(fig, stat_result,
-                    y.min = isolate_fn(input$y.min))
+                    y.min = isolate_fn(input$y.min)
+                )
             }
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
@@ -327,7 +327,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         # Render the plot output
         output$ViolinPlot <- renderPlotly({
-
             x_input <- input$x.data
             y_input <- input$y.data
 
@@ -344,7 +343,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
             }
 
-           
 
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)

@@ -139,13 +139,15 @@ radarPlot <- function(df, theta, r,
         )
     }
     if (is.null(fallback_palette) || length(fallback_palette) == 0) {
-        fallback_palette <- c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
-                              "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF")
+        fallback_palette <- c(
+            "#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+            "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"
+        )
     }
     fallback_palette <- unname(fallback_palette)
 
     # Initialize plotly figure
-    fig <- plot_ly(type = 'scatterpolar')
+    fig <- plot_ly(type = "scatterpolar")
 
     # Handle single vs multiple traces
     if (is.null(group)) {
@@ -153,7 +155,7 @@ radarPlot <- function(df, theta, r,
         # Automatically close the polygon by adding first point to the end
         first_row <- df[1, , drop = FALSE]
         df_closed <- rbind(df, first_row)
-        
+
         colour_value <- if (!is.null(colors) && length(colors) > 0) {
             colors[1]
         } else {
@@ -207,7 +209,7 @@ radarPlot <- function(df, theta, r,
         for (i in seq_along(group_values)) {
             group_val <- group_values[i]
             group_data <- df[df[[group]] == group_val, ]
-            
+
             # Automatically close the polygon by adding first point to the end
             first_row <- group_data[1, , drop = FALSE]
             group_data_closed <- rbind(group_data, first_row)
