@@ -191,9 +191,8 @@ default_palettes <- function() {
 #' Create standard tack UI for module inputs
 #'
 #' Generates a consistent set of control buttons for VizModules that includes
-#' Auto Update toggle, Update button, and Reset button. Download controls and
-#' plot styling are provided via the "Plotly" tab from
-#' [.uniform_plotly_inputs_ui()].
+#' Auto Update toggle, Update and Reset buttons, an optional Stats download button,
+#' and the "Plotly" tab containing plot margin and shape annotation controls.
 #'
 #' @param ns Namespace function from the module (e.g., `ns <- NS(id)`).
 #' @param defaults Optional named list of default values. Reserved for future use.

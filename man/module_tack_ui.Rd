@@ -19,9 +19,8 @@ A Shiny tagList containing the standard control buttons and inputs.
 }
 \description{
 Generates a consistent set of control buttons for VizModules that includes
-Auto Update toggle, Update button, and Reset button. Download controls and
-plot styling are provided via the "Plotly" tab from
-\code{\link[=.uniform_plotly_inputs_ui]{.uniform_plotly_inputs_ui()}}.
+Auto Update toggle, Update and Reset buttons, an optional Stats download button,
+and the "Plotly" tab containing plot margin and shape annotation controls.
 }
 \examples{
 library(VizModules)
