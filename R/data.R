@@ -17,11 +17,11 @@
 #'
 #' @examples
 #' library(VizModules)
-#' Bar
+#' example_bar
 #'
 #' @author Jared Andrews
 #' @keywords datasets
-"Bar"
+"example_bar"
 
 #' Example school earnings dataset for dumbbell plots
 #'
@@ -92,7 +92,7 @@
 #' @keywords datasets
 "example_roles"
 
-#' Gallery sales dataset for the module gallery app
+#' Example sales dataset
 #'
 #' A simulated product-sales dataset covering five product lines over four years
 #' and four quarters (80 rows total). Designed to showcase bar, box, violin,
@@ -115,13 +115,13 @@
 #'
 #' @examples
 #' library(VizModules)
-#' head(gallery_sales)
+#' head(example_sales)
 #'
 #' @author Jared Andrews
 #' @keywords datasets
-"gallery_sales"
+"example_sales"
 
-#' Gallery demographics dataset for the module gallery app
+#' Example demographics dataset
 #'
 #' A simulated employee survey dataset with 500 rows spanning six departments
 #' and four job levels. Designed to showcase violin, box, yPlot, density, and
@@ -144,8 +144,60 @@
 #'
 #' @examples
 #' library(VizModules)
-#' head(gallery_demographics)
+#' head(example_demographics)
 #'
 #' @author Jared Andrews
 #' @keywords datasets
-"gallery_demographics"
+"example_demographics"
+
+#' Example grouped iris dataset
+#'
+#' The classic iris dataset with an added 'Group' column to facilitate multi-group plot examples.
+#'
+#' @format A data frame with 150 rows and 6 columns:
+#' \describe{
+#'   \item{Sepal.Length}{Sepal length in cm}
+#'   \item{Sepal.Width}{Sepal width in cm}
+#'   \item{Petal.Length}{Petal length in cm}
+#'   \item{Petal.Width}{Petal width in cm}
+#'   \item{Species}{Species of the iris (factor: setosa, versicolor, virginica)}
+#'   \item{Group}{Group assignment (factor: A, B, C, D)}
+#' }
+#'
+#' @source Generated from the classic iris dataset.
+#'
+#' @examples
+#' library(VizModules)
+#' head(example_iris)
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"example_iris"
+
+#' Example mtcars dataset with factors
+#'
+#' The classic mtcars dataset with key numeric columns converted to factors for categorical plotting examples.
+#'
+#' @format A data frame with 32 rows and 11 columns:
+#' \describe{
+#'   \item{mpg}{Miles per gallon}
+#'   \item{cyl}{Number of cylinders (factor)}
+#'   \item{disp}{Displacement (cubic inches)}
+#'   \item{hp}{Gross horsepower}
+#'   \item{drat}{Rear axle ratio}
+#'   \item{wt}{Weight (1000 lbs)}
+#'   \item{qsec}{1/4 mile time}
+#'   \item{vs}{Engine (0 = V-shaped, 1 = straight) (factor)}
+#'   \item{am}{Transmission (0 = automatic, 1 = manual) (factor)}
+#'   \item{gear}{Number of forward gears (factor)}
+#'   \item{carb}{Number of carburetors (factor)}
+#' }
+#' @source Generated from the classic mtcars dataset.
+#'
+#' @examples
+#' library(VizModules)
+#' head(example_mtcars)
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"example_mtcars"

@@ -165,5 +165,9 @@ reference:
   - title: "Example Data"
     desc: "Built-in datasets for demos and testing."
     contents:
-      - example_population
+      - example_roles
+      - example_school_earnings
+      - example_skills
+      - example_bar
+      - example_demographics
       - example_sales
