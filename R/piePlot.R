@@ -57,6 +57,7 @@
 #' @return A plotly object.
 #'
 #' @import plotly
+#' @importFrom stats reformulate
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews

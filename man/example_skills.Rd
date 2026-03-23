@@ -22,12 +22,7 @@ example_skills
 A dataset of skill ratings across five categories for three players,
 suitable for radar/spider chart examples.
 }
-\examples{
-library(VizModules)
-example_skills
-
-}
 \author{
-Jared Andrews
+Jacob Martin
 }
 \keyword{datasets}

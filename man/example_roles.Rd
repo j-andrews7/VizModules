@@ -15,7 +15,7 @@ A data frame with 11 rows and 5 columns:
 }
 }
 \source{
-Simulated in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 }
 \usage{
 example_roles
@@ -24,12 +24,7 @@ example_roles
 A dataset of role proportions (journalist, developer, designer) for eleven
 individuals across two teams, suitable for ternary plot examples.
 }
-\examples{
-library(VizModules)
-example_roles
-
-}
 \author{
-Jared Andrews
+Jacob Martin
 }
 \keyword{datasets}

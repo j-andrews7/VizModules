@@ -153,7 +153,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
 
             # Action Button
-            updateSelectInput(session, "download.format", selected = "png")
+            .reset_plotly_inputs(session)
 
             # Lines
             .reset_lines_inputs(session)
@@ -210,6 +210,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
 
             # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -337,6 +338,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -364,7 +366,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BoxPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive bar plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `Bar` as an example dataset. Uploaded data files are added
+#' `example_bar` as an example dataset. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +14,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("Bar" = Bar)` is used as example data.
+#'   `list("Bar" = example_bar)` is used as example data.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -26,11 +26,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- plotthis_BarPlotApp(list("Bar" = Bar))
+#' app2 <- plotthis_BarPlotApp(list("Bar" = example_bar))
 #' if (interactive()) runApp(app2)
 plotthis_BarPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("Bar" = Bar)
+        data_list <- list("Bar" = example_bar)
     }
     createModuleApp(
         inputs_ui_fn = plotthis_BarPlotInputsUI,

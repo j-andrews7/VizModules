@@ -195,8 +195,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             # Axes
             .reset_axes_inputs(session)
 
-            # Action Button
-            updateSelectInput(session, "download.format", selected = "png")
+            # Plotly
+            .reset_plotly_inputs(session)
 
             # Lines
             .reset_lines_inputs(session)
@@ -309,8 +309,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE,
-                theme = theme_bw()
+                legend.show = TRUE, 
+                theme = theme_bw() + ggplot2::theme(
+                    panel.spacing = ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+                )
             )
 
             fig <- p |>
@@ -399,6 +401,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -420,7 +423,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             } else {
                 fig <- generate_yPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

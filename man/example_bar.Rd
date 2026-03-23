@@ -15,7 +15,7 @@ A data frame with 5 rows and 5 columns:
 }
 }
 \source{
-Defined in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 }
 \usage{
 example_bar
@@ -25,12 +25,7 @@ A small dataset with five groups, two categorical variables, and three
 numeric variables. Used as the default data for \code{\link[=plotthis_BarPlotApp]{plotthis_BarPlotApp()}}
 and \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}.
 }
-\examples{
-library(VizModules)
-example_bar
-
-}
 \author{
-Jared Andrews
+Jacob Martin
 }
 \keyword{datasets}

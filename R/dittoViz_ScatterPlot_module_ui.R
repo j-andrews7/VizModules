@@ -166,8 +166,7 @@
 #' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
 #' @examples
 #' library(VizModules)
-#' data(mtcars)
-#' dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
+#' dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
@@ -530,64 +529,12 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 step = 0.05
             ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = tagList(
-            tipify(
-                checkboxInput(ns("webgl"), "Plot with webGL",
-                    value = .get_default(defaults, "webgl", TRUE, is.logical)
-                ), "Enable WebGL rendering for improved performance with large datasets at the cost of some visual features",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                colourInput(ns("shape.fill"), "Shape Fill",
-                    allowTransparent = TRUE,
-                    value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
-                ), "Set the interior fill color for plotly marker shapes. Use transparent for unfilled markers",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                colourInput(ns("shape.line.color"), "Shape Line Color",
-                    allowTransparent = TRUE,
-                    value = .get_default(defaults, "shape.line.color", "black")
-                ), "Set the outline color for plotly marker shapes",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                numericInput(ns("shape.line.width"), "Shape Line Width",
-                    value = .get_default(defaults, "shape.line.width", 4, is.numeric),
-                    min = 0,
-                    step = 0.25
-                ), "Set the outline width for plotly marker shapes",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                selectInput(ns("shape.linetype"), "Shape Linetype",
-                    choices = c(
-                        "solid", "dot", "dash", "longdash",
-                        "dashdot", "longdashdot"
-                    ),
-                    selected = .get_default(
-                        defaults, "shape.linetype", "solid",
-                        function(x) {
-                            x %in% c(
-                                "solid", "dot", "dash", "longdash",
-                                "dashdot", "longdashdot"
-                            )
-                        }
-                    )
-                ), "Choose the line dash style for plotly marker shape outlines",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                numericInput(ns("shape.opacity"), "Shape Opacity",
-                    value = .get_default(defaults, "shape.opacity", 1, is.numeric),
-                    min = 0,
-                    max = 1,
-                    step = 0.01
-                ), "Set the opacity of plotly marker shapes, where 0 is fully transparent and 1 is fully opaque",
-                placement = "top", options = list(container = "body")
-            )
-        ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Extras" = tagList(
+            tipify(checkboxInput(ns("webgl"), "Plot with webGL",
+                value = .get_default(defaults, "webgl", TRUE, is.logical)
+            ), "Enable WebGL rendering for improved performance with large datasets at the cost of some visual features",
+                placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("do.ellipse"), "Enable Ellipses",
                 value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
             ), documentParameters$do.ellipse, placement = "top", options = list(container = "body")),

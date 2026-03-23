@@ -15,7 +15,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("sales" = gallery_sales)` is used as example data. Each data frame
+#'   `list("sales" = example_sales)` is used as example data. Each data frame
 #'   should contain at least two numeric or categorical columns.
 #' @return A Shiny app object.
 #'
@@ -31,11 +31,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- parallelCoordinatesPlotApp(list("sales" = gallery_sales))
+#' app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales))
 #' if (interactive()) runApp(app2)
 parallelCoordinatesPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("sales" = gallery_sales)
+        data_list <- list("sales" = example_sales)
     }
     createModuleApp(
         inputs_ui_fn = parallelCoordinatesPlotInputsUI,

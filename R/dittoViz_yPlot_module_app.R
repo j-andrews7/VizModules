@@ -29,11 +29,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- dittoViz_yPlotApp(list("demographics" = gallery_demographics))
+#' app2 <- dittoViz_yPlotApp(list("demographics" = example_demographics))
 #' if (interactive()) runApp(app2)
 dittoViz_yPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("demographics" = gallery_demographics)
+        data_list <- list("demographics" = example_demographics)
     }
     createModuleApp(
         inputs_ui_fn = dittoViz_yPlotInputsUI,

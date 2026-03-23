@@ -15,6 +15,7 @@
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
 #' @param axis.linecolor Character, hex color for axis lines. Default: "black".
@@ -74,17 +75,19 @@
 #'     show.legend = TRUE,
 #'     line.colour = "gray80"
 #' )
-dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE,
-                         facet.by = NULL, line.colour = "gray80",
-                         facet.scales = "fixed",
-                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5,
-                         axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial",
-                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
-                         axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1,
-                         title.text = "", title.font.size = 14, title.font.family = "Arial",
-                         title.text.color = "black", y.title = NULL, x.title = NULL,
-                         flip.x = FALSE, flip.y = FALSE,
-                         x.adjustment = NULL, order.by = NULL) {
+dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
+                        facet.by = NULL, line.colour = "gray80",
+                        facet.scales = "fixed",
+                        subplot.margin = 0.06,
+                        axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
+                        axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial", 
+                        axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
+                        axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, 
+                        title.text = "", title.font.size = 14, title.font.family = "Arial",
+                        title.text.color = "black", y.title = NULL, x.title = NULL, 
+                        flip.x = FALSE, flip.y = FALSE,
+                        x.adjustment = NULL, order.by = NULL) {
+    
     # Ensure max 2 x values
     if (!is.null(x) && length(x) > 2) {
         x <- x[1:2]
@@ -156,9 +159,8 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         }
 
         fig <- subplot(
-            plots,
-            nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = TRUE, titleY = TRUE, margin = 0.06
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
+            titleX = TRUE, titleY = TRUE, margin = subplot.margin
         )
 
         annotations <- .build_facet_annotations(facet_levels)
@@ -202,6 +204,8 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 #' @param show.legend Logical, whether to display the legend for this subplot.
 #'
 #' @return A plotly object representing the dumbbell (or single dot) plot for the supplied data.
+#' 
+#' @importFrom stats reformulate
 #'
 #' @author Jacob Martin
 #' @rdname INTERNAL_create_dumbbell_plot

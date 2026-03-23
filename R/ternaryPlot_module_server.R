@@ -116,6 +116,8 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             # Background
             colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
+
+            .reset_plotly_inputs(session)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -231,6 +233,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 include.modebar.buttons = TRUE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -239,7 +242,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$ternaryPlot <- renderPlotly({
             generate_ternaryPlot() |>
                 layout(
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                 )
         })
 

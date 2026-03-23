@@ -24,16 +24,16 @@
 #' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' # Launch with default example data (gallery_sales):
+#' # Launch with default example data (example_sales):
 #' app <- linePlotApp()
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- linePlotApp(list("sales" = gallery_sales))
+#' app2 <- linePlotApp(list("sales" = example_sales))
 #' if (interactive()) runApp(app2)
 linePlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("sales" = gallery_sales)
+        data_list <- list("sales" = example_sales)
     }
     createModuleApp(
         inputs_ui_fn = linePlotInputsUI,

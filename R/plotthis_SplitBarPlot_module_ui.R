@@ -157,98 +157,82 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     )
 
     inputs <- list(
-        "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X values",
-                selected = .get_default(
-                    defaults, "x.data", num.choices[2],
-                    function(x) x %in% num.choices
-                ),
-                choices = num.choices
-            ), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(
-                selectInput(ns("y.data"), "Y values",
-                    selected = .get_default(
-                        defaults, "y.data", char.choices[2],
-                        function(x) x %in% char.choices
-                    ),
-                    choices = char.choices
-                ), "Select the categorical column to use for the Y axis groupings",
-                placement = "top", options = list(container = "body")
-            ),
-            # Changed from group.by to fill.by
-            tipify(selectInput(ns("fill.by"), "Fill by",
-                selected = .get_default(
-                    defaults, "fill.by", choices[2],
-                    function(x) x %in% choices
-                ),
-                choices = choices
-            ), documentParameters$fill_by, placement = "top", options = list(container = "body"))
-        ),
-        "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet by",
-                selected = "", choices = c(char.choices, "")
-            ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scale"), "Facet scale",
-                selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
-            ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.ncol"), "Facet number of columns",
-                value = NULL, min = 0, max = 20
-            ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.nrow"), "Facet number of rows",
-                value = NULL, min = 0, max = 20
-            ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
-            tipify(
-                materialSwitch(ns("facet.by.row"), "Facet by row",
-                    value = TRUE, status = "success"
-                ),
-                documentParameters$facet_byrow,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(selectInput(ns("split.by"), "Split by",
-                selected = "", choices = c(char.choices, "")
-            ), documentParameters$split_by, placement = "top", options = list(container = "body"))
-        ),
-        "Aesthetics" = tagList(
-            uiOutput(ns("palette.selection")),
-            tipify(selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
-                documentParameters$alpha_by,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
-                documentParameters$alpha_reverse,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(textInput(ns("alpha.name"), "Alpha name", value = ""),
-                documentParameters$alpha_name,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
-                documentParameters$bar_height,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
-                "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
-                "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100),
-                "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
-                placement = "top", options = list(container = "body")
-            )
-        ),
-        "Adjustments" = tagList(
-            tipify(numericInput(ns("x.min"), "X-axis min:",
-                value = min.x
-            ), documentParameters$x_min, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("x.max"), "X-axis max:",
-                value = max.x
-            ), documentParameters$x_max, placement = "top", options = list(container = "body"))
-        ),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+      "Data" = tagList(
+      tipify(selectInput(ns("x.data"), "X values",
+        selected = .get_default(defaults, "x.data", num.choices[2],
+            function(x) x %in% num.choices),
+        choices = num.choices
+      ), documentParameters$x, placement = "top", options = list(container = "body")),
+      tipify(selectInput(ns("y.data"), "Y values",
+        selected = .get_default(defaults, "y.data", char.choices[2],
+            function(x) x %in% char.choices),
+        choices = char.choices
+      ), "Select the categorical column to use for the Y axis groupings",
+        placement = "top", options = list(container = "body")),
+      # Changed from group.by to fill.by
+      tipify(selectInput(ns("fill.by"), "Fill by",
+        selected = .get_default(defaults, "fill.by", choices[2],
+            function(x) x %in% choices),
+        choices = choices
+      ), documentParameters$fill_by, placement = "top", options = list(container = "body"))),
+
+
+    "Facet" = tagList(
+        tipify(selectInput(ns("facet.by"), "Facet by",
+        selected = "", choices = c(char.choices, "")
+        ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
+        tipify(selectInput(ns("facet.scale"), "Facet scale",
+        selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
+        ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("facet.ncol"), "Facet number of columns",
+        value = NULL, min = 0, max = 20
+        ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("facet.nrow"), "Facet number of rows",
+        value = NULL, min = 0, max = 20
+        ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+        tipify(materialSwitch(ns("facet.by.row"), "Facet by row",
+        value = TRUE, status = "success"),
+            documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
+        tipify(selectInput(ns("split.by"), "Split by",
+        selected = "", choices = c(char.choices, "")
+        ), documentParameters$split_by, placement = "top", options = list(container = "body"))
+    ),
+
+    "Aesthetics" = tagList(
+        uiOutput(ns("palette.selection")),
+        tipify(selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
+            documentParameters$alpha_by, placement = "top", options = list(container = "body")),
+        tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
+            documentParameters$alpha_reverse, placement = "top", options = list(container = "body")),
+        tipify(textInput(ns("alpha.name"), "Alpha name", value = ""),
+            documentParameters$alpha_name, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+            documentParameters$bar_height, placement = "top", options = list(container = "body")),
+        tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
+            "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
+            placement = "top", options = list(container = "body")),
+        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
+            "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
+            placement = "top", options = list(container = "body")),
+        tipify(sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100),
+            "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
+            placement = "top", options = list(container = "body"))
+
+    ),
+
+    "Adjustments" = tagList(
+        tipify(numericInput(ns("x.min"), "X-axis min:",
+            value = min.x
+        ), documentParameters$x_min, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("x.max"), "X-axis max:",
+            value = max.x
+        ), documentParameters$x_max, placement = "top", options = list(container = "body"))
+    ),
+
+
+    "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
+    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+    "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
 
 

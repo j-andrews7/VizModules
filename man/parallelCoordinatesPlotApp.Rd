@@ -8,7 +8,7 @@ parallelCoordinatesPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("sales" = gallery_sales)} is used as example data. Each data frame
+\code{list("sales" = example_sales)} is used as example data. Each data frame
 should contain at least two numeric or categorical columns.}
 }
 \value{
@@ -37,7 +37,7 @@ app <- parallelCoordinatesPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- parallelCoordinatesPlotApp(list("sales" = gallery_sales))
+app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 }
 \seealso{

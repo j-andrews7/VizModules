@@ -176,7 +176,6 @@
         textInput(ns("hline.opacities"), "Opacities (0-1)",
             value = .get_default(defaults, "hline.opacities", "1")
         ),
-        br(),
         tipify(
             textInput(ns("vline.intercepts"), "X-intercepts",
                 placeholder = "e.g. 2, -2",
@@ -197,8 +196,7 @@
         ),
         textInput(ns("vline.opacities"), "Opacities (0-1)",
             value = .get_default(defaults, "vline.opacities", "1")
-        ),
-        br()
+        )
     )
 
     if (include.fit.lines) {
@@ -578,5 +576,161 @@
     updateNumericInput(session, "stat.text.bump", value = 0.04)
     updateNumericInput(session, "stat.bracket.inset", value = 0.025)
     shinyWidgets::updateMaterialSwitch(session, "stat.per.facet", value = TRUE)
+    invisible(NULL)
+}
+
+
+#' Generate uniform Plotly input UI
+#'
+#' Creates a standardized tagList of Plotly-specific inputs used across all plot
+#' modules. Includes interactive download controls, plot margin adjustments,
+#' subplot spacing, and user-drawn shape styling for Plotly's drawing tools.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the Plotly input UI elements.
+#'
+#' @importFrom shiny downloadButton selectInput numericInput tagList br icon
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_uniform_plotly_inputs_ui
+#' @keywords internal
+.uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
+    tagList(
+        downloadButton(
+            ns("download.interactive"),
+            "Save Interactive",
+            class = "btn-secondary",
+            icon = icon("download"),
+            width = "100%"
+        ),
+        selectInput(
+            ns("download.format"),
+            "Download Format",
+            selected = .get_default(defaults, "download.format", "svg",
+                function(x) x %in% c("svg", "png", "jpeg", "webp")),
+            choices = c("svg", "png", "jpeg", "webp"),
+            width = "100%"
+        ),
+        tipify(
+            numericInput(ns("margin.t"), "Margin Top",
+                value = .get_default(defaults, "margin.t", 70, is.numeric),
+                min = 0, step = 5
+            ),
+            "Top margin of the plot in pixels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("margin.b"), "Margin Bottom",
+                value = .get_default(defaults, "margin.b", 70, is.numeric),
+                min = 0, step = 5
+            ),
+            "Bottom margin of the plot in pixels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("margin.l"), "Margin Left",
+                value = .get_default(defaults, "margin.l", 70, is.numeric),
+                min = 0, step = 5
+            ),
+            "Left margin of the plot in pixels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("margin.r"), "Margin Right",
+                value = .get_default(defaults, "margin.r", 70, is.numeric),
+                min = 0, step = 5
+            ),
+            "Right margin of the plot in pixels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("subplot.margin"), "Subplot Spacing",
+                value = .get_default(defaults, "subplot.margin", 0.4, is.numeric),
+                min = 0, max = 0.5, step = 0.01
+            ),
+            paste(
+                "Spacing between facet panels as a fraction of the plot area.",
+                "Only applies when faceting is active."
+            ),
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("shape.fill"), "Shape Fill",
+                allowTransparent = TRUE,
+                value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
+            ),
+            "Interior fill color for shapes drawn on the plot using Plotly's drawing tools",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("shape.line.color"), "Shape Line Color",
+                allowTransparent = TRUE,
+                value = .get_default(defaults, "shape.line.color", "black")
+            ),
+            "Outline color for shapes drawn on the plot using Plotly's drawing tools",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("shape.line.width"), "Shape Line Width",
+                value = .get_default(defaults, "shape.line.width", 4, is.numeric),
+                min = 0, step = 0.25
+            ),
+            "Outline width for shapes drawn on the plot using Plotly's drawing tools",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            selectInput(ns("shape.linetype"), "Shape Linetype",
+                choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"),
+                selected = .get_default(defaults, "shape.linetype", "solid",
+                    function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"))
+            ),
+            "Line dash style for shapes drawn on the plot using Plotly's drawing tools",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("shape.opacity"), "Shape Opacity",
+                value = .get_default(defaults, "shape.opacity", 1, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            "Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque",
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
+#' Reset uniform Plotly inputs to defaults
+#'
+#' Resets all inputs created by [.uniform_plotly_inputs_ui()] to their default
+#' values. Call inside an `observeEvent(input$reset, ...)` block to avoid
+#' duplicating Plotly-reset boilerplate in every module server.
+#'
+#' @param session The Shiny session object (from `moduleServer`).
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateNumericInput updateSelectInput
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_plotly_inputs
+#' @keywords internal
+.reset_plotly_inputs <- function(session) {
+    updateSelectInput(session, "download.format", selected = "svg")
+    updateNumericInput(session, "margin.t", value = 100)
+    updateNumericInput(session, "margin.b", value = 100)
+    updateNumericInput(session, "margin.l", value = 90)
+    updateNumericInput(session, "margin.r", value = 90)
+    updateNumericInput(session, "subplot.margin", value = 0.05)
+    colourpicker::updateColourInput(session, "shape.fill", value = "rgba(0, 0, 0, 0)")
+    colourpicker::updateColourInput(session, "shape.line.color", value = "black")
+    updateNumericInput(session, "shape.line.width", value = 4)
+    updateSelectInput(session, "shape.linetype", selected = "solid")
+    updateNumericInput(session, "shape.opacity", value = 1)
     invisible(NULL)
 }

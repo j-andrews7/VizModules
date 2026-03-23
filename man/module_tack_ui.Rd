@@ -9,10 +9,7 @@ module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
 \arguments{
 \item{ns}{Namespace function from the module (e.g., \code{ns <- NS(id)}).}
 
-\item{defaults}{Optional named list of default values. Currently supports:
-\itemize{
-\item \code{download.format} - Default download format ("svg" or "png"), defaults to "svg"
-}}
+\item{defaults}{Optional named list of default values. Reserved for future use.}
 
 \item{has.stats}{Logical; if TRUE, include a "Save Stats" download button.
 Default FALSE.}
@@ -22,17 +19,14 @@ A Shiny tagList containing the standard control buttons and inputs.
 }
 \description{
 Generates a consistent set of control buttons for VizModules that includes
-Auto Update toggle, Update button, Reset button, Download Interactive Plot button,
-and Download Format selector. This ensures all modules have a uniform interface.
+Auto Update toggle, Update and Reset buttons, an optional Stats download button,
+and the "Plotly" tab containing plot margin and shape annotation controls.
 }
 \examples{
 library(VizModules)
 library(shiny)
 ns <- NS("myModule")
 module_tack_ui(ns)
-
-# With custom defaults
-module_tack_ui(ns, defaults = list(download.format = "png"))
 }
 \author{
 Jared Andrews

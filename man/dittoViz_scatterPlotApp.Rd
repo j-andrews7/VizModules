@@ -35,7 +35,7 @@ app <- dittoViz_scatterPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_scatterPlotApp(list("sales" = gallery_sales))
+app2 <- dittoViz_scatterPlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 }
 \seealso{

@@ -129,6 +129,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
 
             .reset_axes_inputs(session)
+
+            # Plotly
+            .reset_plotly_inputs(session)
+
+            # Lines
             .reset_lines_inputs(session)
         })
 
@@ -228,6 +233,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 show.legend = show_legend,
                 facet.by = isolate_fn(input$facet.by),
                 facet.scales = isolate_fn(input$facet.scales),
+                subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
                 axis.showline = isolate_fn(input$axis.showline),
                 axis.mirror = isolate_fn(input$axis.mirror),
@@ -280,6 +286,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -328,7 +335,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             } else {
                 fig <- generate_linePlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

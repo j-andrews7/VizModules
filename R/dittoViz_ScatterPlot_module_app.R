@@ -29,11 +29,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- dittoViz_scatterPlotApp(list("sales" = gallery_sales))
+#' app2 <- dittoViz_scatterPlotApp(list("sales" = example_sales))
 #' if (interactive()) runApp(app2)
 dittoViz_scatterPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("sales" = gallery_sales)
+        data_list <- list("sales" = example_sales)
     }
     createModuleApp(
         inputs_ui_fn = dittoViz_scatterPlotInputsUI,

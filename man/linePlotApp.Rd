@@ -30,12 +30,12 @@ This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleA
 }
 \examples{
 library(VizModules)
-# Launch with default example data (gallery_sales):
+# Launch with default example data (example_sales):
 app <- linePlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- linePlotApp(list("sales" = gallery_sales))
+app2 <- linePlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 }
 \seealso{

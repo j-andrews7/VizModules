@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive pie plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' an aggregated `gallery_sales` dataset (revenue by product line). Uploaded data files are added
+#' an aggregated `example_sales` dataset (revenue by product line). Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -21,6 +21,7 @@
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()]
 #'
+#' @importFrom stats aggregate
 #' @export
 #' @author Jacob Martin, Jared Andrews
 #' @examples
@@ -30,13 +31,13 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' sales_summary <- aggregate(revenue ~ product_line, gallery_sales, sum)
+#' sales_summary <- aggregate(revenue ~ product_line, example_sales, sum)
 #' app2 <- piePlotApp(list("sales" = sales_summary))
 #' if (interactive()) runApp(app2)
 piePlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
         data_list <- list(
-            "sales_by_product" = aggregate(revenue ~ product_line, gallery_sales, sum)
+            "sales_by_product" = aggregate(revenue ~ product_line, example_sales, sum)
         )
     }
     createModuleApp(

@@ -53,6 +53,8 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             updateSelectInput(session, "title.font.family", selected = "Arial")
             colourpicker::updateColourInput(session, "title.text.color", value = "#000000")
             colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
+
+            .reset_plotly_inputs(session)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -109,6 +111,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -117,7 +120,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         output$parallelCoordinatesPlot <- renderPlotly({
             generate_parallelCoordinatesPlot() |>
                 layout(
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                 )
         })
 

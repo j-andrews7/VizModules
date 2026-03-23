@@ -184,8 +184,7 @@ The following parameters implementing new functionality or controlling plotly-sp
 
 \examples{
 library(VizModules)
-data(mtcars)
-dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
+dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

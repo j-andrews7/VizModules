@@ -13,13 +13,9 @@
 #'   \item{Score}{Tertiary numeric values (can be negative)}
 #' }
 #'
-#' @source Defined in data-raw/generate_example_data.R.
+#' @source Generated in data-raw/generate_example_data.R.
 #'
-#' @examples
-#' library(VizModules)
-#' example_bar
-#'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @keywords datasets
 "example_bar"
 
@@ -36,13 +32,9 @@
 #'   \item{Group}{University type (STEM-heavy or Liberal Arts)}
 #' }
 #'
-#' @source Simulated in data-raw/generate_example_data.R.
+#' @source Generated in data-raw/generate_example_data.R.
 #'
-#' @examples
-#' library(VizModules)
-#' example_school_earnings
-#'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @keywords datasets
 "example_school_earnings"
 
@@ -60,11 +52,7 @@
 #'
 #' @source Simulated in data-raw/generate_example_data.R.
 #'
-#' @examples
-#' library(VizModules)
-#' example_skills
-#'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @keywords datasets
 "example_skills"
 
@@ -82,40 +70,30 @@
 #'   \item{team}{Team assignment (Team A or Team B)}
 #' }
 #'
-#' @source Simulated in data-raw/generate_example_data.R.
+#' @source Generated in data-raw/generate_example_data.R.
 #'
-#' @examples
-#' library(VizModules)
-#' example_roles
-#'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @keywords datasets
 "example_roles"
 
 #' Example sales dataset
 #'
-#' A simulated product-sales dataset covering five product lines over four years
-#' and four quarters (80 rows total). Designed to showcase bar, box, violin,
+#' A simulated product-sales dataset (720 rows total).
+#' Designed to showcase bar, box, violin,
 #' area, line, scatter, split-bar, density, and histogram plot modules.
 #'
-#' @format A data frame with 80 rows and 9 columns:
+#' @format A data frame with 720 rows and 7 columns:
 #' \describe{
-#'   \item{product_line}{Product category (factor: Electronics, Clothing, Food, Sports, Home)}
-#'   \item{year}{Year of the record (factor: 2020-2023)}
-#'   \item{quarter}{Quarter of the year (factor: Q1-Q4)}
-#'   \item{revenue}{Total quarterly revenue}
-#'   \item{profit}{Quarterly profit (can be negative)}
+#'   \item{region}{Region of the sale (factor: North, South, East, West, Central, International)}
+#'   \item{revenue}{Revenue for month}
+#'   \item{year}{The year}
+#'   \item{month}{The month}
 #'   \item{units}{Units sold}
-#'   \item{growth_pct}{Year-over-year growth percentage (can be negative)}
-#'   \item{rating}{Average customer rating (3.0–5.0)}
-#'   \item{online_pct}{Percentage of sales made online (20–80)}
+#'   \item{sale_id}{Unique sale identifier}
+#'   \item{product_line}{Product line (factor: Gadgets, Widgets, Doohickeys)}
 #' }
 #'
-#' @source Simulated in data-raw/generate_example_data.R.
-#'
-#' @examples
-#' library(VizModules)
-#' head(example_sales)
+#' @source Generated in data-raw/generate_example_data.R.
 #'
 #' @author Jared Andrews
 #' @keywords datasets
@@ -142,10 +120,6 @@
 #'
 #' @source Simulated in data-raw/generate_example_data.R.
 #'
-#' @examples
-#' library(VizModules)
-#' head(example_demographics)
-#'
 #' @author Jared Andrews
 #' @keywords datasets
 "example_demographics"
@@ -165,10 +139,6 @@
 #' }
 #'
 #' @source Generated from the classic iris dataset.
-#'
-#' @examples
-#' library(VizModules)
-#' head(example_iris)
 #'
 #' @author Jared Andrews
 #' @keywords datasets
@@ -194,10 +164,24 @@
 #' }
 #' @source Generated from the classic mtcars dataset.
 #'
-#' @examples
-#' library(VizModules)
-#' head(example_mtcars)
-#'
 #' @author Jared Andrews
 #' @keywords datasets
 "example_mtcars"
+
+#' Example population dataset
+#' A simulated population dataset with 400 rows covering 50 years and 8 age groups.
+#' Designed for line, area, and stacked bar plot examples.
+#' 
+#' @format A data frame with 400 rows and 4 columns:
+#' \describe{
+#'   \item{year}{Year of the population record (factor: 1975–2024)}
+#'   \item{age_group}{Age group category (factor: 0-9, 10-17, 18-34, 35-44, 45-54, 55-64, 65-74, 75+)}
+#'   \item{count}{Population count for the given year and age group}
+#'   \item{record_id}{Unique identifier for each population record}
+#' }
+#' 
+#' @source Generated in data-raw/generate_example_data.R.
+#' 
+#' @author Jared Andrews
+#' @keywords datasets
+"example_population"

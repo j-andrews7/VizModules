@@ -28,7 +28,7 @@
 #' @return A data.frame with columns: `group1`, `group2`, `p.value`, `p.adj`,
 #'   `p.signif`, `test`, `facet_level`, `x_level` (when `group.by` is set).
 #'
-#' @importFrom stats wilcox.test t.test kruskal.test aov p.adjust
+#' @importFrom stats wilcox.test t.test kruskal.test aov p.adjust as.formula
 #'
 #' @author Jared Andrews, Jacob Martin
 #' @rdname INTERNAL_compute_pairwise_stats
@@ -50,8 +50,8 @@
         tryCatch(
             {
                 result <- switch(test_type,
-                    "wilcox.test" = stats::wilcox.test(vals1, vals2, paired = paired_test),
-                    "t.test" = stats::t.test(vals1, vals2, paired = paired_test),
+                    "wilcox.test" = wilcox.test(vals1, vals2, paired = paired_test),
+                    "t.test" = t.test(vals1, vals2, paired = paired_test),
                     stop("Unsupported pairwise test: ", test_type)
                 )
                 result$p.value
@@ -95,9 +95,9 @@
                 p_val <- tryCatch(
                     {
                         if (test == "kruskal.test") {
-                            stats::kruskal.test(x_sub[[y]] ~ factor(x_sub[[group.by]]))$p.value
+                            kruskal.test(x_sub[[y]] ~ factor(x_sub[[group.by]]))$p.value
                         } else {
-                            summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", group.by, "`)")),
+                            summary(aov(as.formula(paste0("`", y, "` ~ factor(`", group.by, "`)")),
                                 data = x_sub
                             ))[[1]][["Pr(>F)"]][1]
                         }
@@ -119,9 +119,9 @@
             p_val <- tryCatch(
                 {
                     if (test == "kruskal.test") {
-                        stats::kruskal.test(sub_df[[y]] ~ factor(sub_df[[x]]))$p.value
+                        kruskal.test(sub_df[[y]] ~ factor(sub_df[[x]]))$p.value
                     } else {
-                        summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", x, "`)")),
+                        summary(aov(as.formula(paste0("`", y, "` ~ factor(`", x, "`)")),
                             data = sub_df
                         ))[[1]][["Pr(>F)"]][1]
                     }
@@ -149,7 +149,7 @@
             grp_pairs <- if (!is.null(pairs)) {
                 pairs
             } else {
-                utils::combn(grp_levels, 2, simplify = FALSE)
+                combn(grp_levels, 2, simplify = FALSE)
             }
 
             results <- lapply(x_levels, function(xlev) {
@@ -177,7 +177,7 @@
             test_pairs <- if (!is.null(pairs)) {
                 pairs
             } else {
-                utils::combn(x_levels, 2, simplify = FALSE)
+                combn(x_levels, 2, simplify = FALSE)
             }
 
             results <- lapply(test_pairs, function(pr) {
@@ -216,7 +216,7 @@
     }
 
     # Adjust p-values across all tests
-    stats_df$p.adj <- stats::p.adjust(stats_df$p.value, method = p.adjust.method)
+    stats_df$p.adj <- p.adjust(stats_df$p.value, method = p.adjust.method)
     stats_df$p.signif <- .p_to_signif(stats_df$p.adj)
     stats_df
 }
@@ -262,6 +262,8 @@
 #'     \item{shapes}{List of plotly shape objects.}
 #'     \item{y.max}{Numeric; maximum y value needed to accommodate all annotations.}
 #'   }
+#' 
+#' @importFrom utils combn
 #'
 #' @author Jared Andrews, Jacob Martin
 #' @rdname INTERNAL_create_stat_annotations
@@ -693,6 +695,8 @@
 #' @param group.by Character or NULL; nested grouping column.
 #'
 #' @return A character vector of pair strings in "group1 vs group2" format.
+#' 
+#' @importFrom utils combn
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_generate_pair_strings
@@ -703,13 +707,13 @@
         if (length(grp_levels) < 2) {
             return(character(0))
         }
-        pairs_list <- utils::combn(grp_levels, 2, simplify = FALSE)
+        pairs_list <- combn(grp_levels, 2, simplify = FALSE)
     } else {
         x_levels <- unique(as.character(df[[x]]))
         if (length(x_levels) < 2) {
             return(character(0))
         }
-        pairs_list <- utils::combn(x_levels, 2, simplify = FALSE)
+        pairs_list <- combn(x_levels, 2, simplify = FALSE)
     }
     vapply(pairs_list, paste, character(1), collapse = " vs ")
 }

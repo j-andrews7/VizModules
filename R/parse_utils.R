@@ -481,22 +481,25 @@ validate_expression <- function(expr_text, col_names) {
 #'   parameters (e.g., `x.by` and `y.by`) should be grouped together in a vector
 #'   within the list or an error will be thrown by `extract_roc_text`.
 #' @param cap Logical; if TRUE, capitalize the first letter of each description.
-#' @importFrom roclang extract_roc_text
+#'
 #' @return A named list where names are parameter names and values are
 #'   their documentation strings. Returns empty strings for parameters
 #'   not found in the documentation.
 #'
+#' @importFrom roclang extract_roc_text
+#' 
 #' @author Jacob Martin, Jared Andrews
 #' @export
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
     docs <- lapply(selected, function(s) {
         doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
-        doc %>%
-            gsub("\\\\n", " ", .) %>%
-            gsub("\\\\", "", .) %>%
-            gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%
-            gsub("\n", " ", .) %>%
-            trimws()
+
+        doc |>
+            gsub("\\\\n", " ", x = _) |>
+            gsub("\\\\", "", x = _) |>
+            gsub("code\\{([^}]+)\\}", "`\\1`", x = _) |>
+            gsub("\n", " ", x = _) |>
+            trimws(x = _)
     })
 
     # Expand co-documented parameters (e.g., c("x.by", "y.by")) into

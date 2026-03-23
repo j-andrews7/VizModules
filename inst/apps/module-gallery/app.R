@@ -1,14 +1,9 @@
-library(shiny)
 library(VizModules)
 
-# ---------------------------------------------------------------------------
 # Derived summary dataset (pie plot)
-# ---------------------------------------------------------------------------
 sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
 
-# ---------------------------------------------------------------------------
-# One dataset per module
-# ---------------------------------------------------------------------------
+
 module_data <- list(
     area     = example_sales,
     bar      = example_bar,
@@ -27,11 +22,7 @@ module_data <- list(
     yplot    = example_demographics
 )
 
-# ---------------------------------------------------------------------------
 # Module registry – each entry defines one plot module for the gallery.
-# 'defaults' sets ONLY the data-column inputs; all other UI settings
-# remain at their built-in defaults.
-# ---------------------------------------------------------------------------
 module_registry <- list(
     list(
         label     = "Area Plot",
@@ -160,9 +151,8 @@ module_registry <- list(
     )
 )
 
-# ---------------------------------------------------------------------------
+
 # Helper: build a tab panel for one module
-# ---------------------------------------------------------------------------
 build_tab <- function(mod) {
     tabPanel(
         mod$label,
@@ -185,9 +175,7 @@ build_tab <- function(mod) {
     )
 }
 
-# ---------------------------------------------------------------------------
-# UI
-# ---------------------------------------------------------------------------
+
 ui <- do.call(navbarPage, c(
     list(
         title    = "VizModules Gallery",
@@ -200,9 +188,7 @@ ui <- do.call(navbarPage, c(
     lapply(module_registry, build_tab)
 ))
 
-# ---------------------------------------------------------------------------
-# Server
-# ---------------------------------------------------------------------------
+
 server <- function(input, output, session) {
 
     lapply(module_registry, function(m) {
@@ -227,10 +213,8 @@ server <- function(input, output, session) {
             )
         })
 
-        # Wire up the plot server
         m$server_fn(m$id, data = filtered_data)
     })
 }
 
 shinyApp(ui, server)
-

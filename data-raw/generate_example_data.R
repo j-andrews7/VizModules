@@ -13,7 +13,8 @@ example_sales <- data.frame(
     year = factor(years_sales),
     month = factor(months, levels = month.abb),
     units = sample(100:500, 720, replace = TRUE),
-    sale_id = paste0("Sale_", seq_len(720))
+    sale_id = paste0("Sale_", seq_len(720)),
+    product_line = sample(c("Gadgets", "Widgets", "Doohickeys"), 720, replace = TRUE)
 )
 
 # Population data: 50 years × 8 age groups = 400 rows
@@ -100,4 +101,12 @@ usethis::use_data(
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
     overwrite = TRUE
+)
+
+usethis::use_data(
+    example_iris, example_mtcars,
+    example_bar, example_school_earnings,
+    example_skills, example_roles,
+    example_sales, example_population, example_demographics,
+    internal = TRUE, overwrite = TRUE
 )

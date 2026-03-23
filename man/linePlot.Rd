@@ -15,6 +15,7 @@ linePlot(
   show.legend,
   facet.by = NULL,
   facet.scales = "fixed",
+  subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",
@@ -68,6 +69,8 @@ linePlot(
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
+
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 

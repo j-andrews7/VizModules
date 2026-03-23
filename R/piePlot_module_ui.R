@@ -216,7 +216,8 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             tipify(colourpicker::colourInput(ns("legend.font.color"), "Legend font color:",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
-        )
+        ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

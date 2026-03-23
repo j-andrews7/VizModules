@@ -29,11 +29,6 @@ A simulated employee survey dataset with 500 rows spanning six departments
 and four job levels. Designed to showcase violin, box, yPlot, density, and
 histogram plot modules with realistic numeric distributions.
 }
-\examples{
-library(VizModules)
-head(example_demographics)
-
-}
 \author{
 Jared Andrews
 }

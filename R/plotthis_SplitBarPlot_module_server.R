@@ -14,6 +14,8 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide show
+#' @importFrom stats na.omit setNames
+#' @importFrom ggplot2 sym .data
 #'
 #' @export
 #'
@@ -57,9 +59,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Toggle text.position slider visibility based on label.on.y.axis switch
         observeEvent(input$label.on.y.axis, {
             if (isTRUE(input$label.on.y.axis)) {
-                shinyjs::hide("text.position")
+                hide("text.position")
             } else {
-                shinyjs::show("text.position")
+                show("text.position")
             }
         })
 
@@ -92,9 +94,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             y_col <- input$y.data
 
             if (!is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[fill_col]])))
+                unique(na.omit(as.character(df[[fill_col]])))
             } else if (!is.null(y_col) && nzchar(y_col) && y_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[y_col]])))
+                unique(na.omit(as.character(df[[y_col]])))
             } else {
                 character(0)
             }
@@ -109,7 +111,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 # Build choices with palette names as values (selectInput needs atomic values)
                 raw_choices <- default_palettes()[["choices"]]
                 palette_choices <- lapply(raw_choices, function(group) {
-                    stats::setNames(names(group), names(group))
+                    setNames(names(group), names(group))
                 })
                 selectInput(
                     ns("gradient.palette"),
@@ -234,8 +236,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "title.font.size", value = 28)
             .reset_axes_inputs(session)
 
-            # Action Button (unchanged)
-            updateSelectInput(session, "download.format", selected = "png")
+            # Plotly
+            .reset_plotly_inputs(session)
 
             # Lines
             .reset_lines_inputs(session)
@@ -309,6 +311,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
 
             # bar Plot
             p <- plotthis::SplitBarPlot(
@@ -438,6 +441,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -465,7 +469,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             } else {
                 fig <- generate_SplitBarPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

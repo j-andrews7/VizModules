@@ -14,6 +14,8 @@
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
+#' 
+#' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_apply_subplot_axis_styling
@@ -104,6 +106,8 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
+#' 
+#' @importFrom stats lm loess coef predict
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_compute_linear_fit
@@ -892,6 +896,43 @@
     fig
 }
 
+
+#' Apply Plotly newshape styling from uniform Plotly inputs
+#'
+#' Applies user-drawn shape styling to a Plotly figure using inputs from
+#' [.uniform_plotly_inputs_ui()]. Updates the `newshape` layout property to
+#' style shapes drawn with Plotly's drawing tools (rectangles, circles, lines,
+#' etc.) in the modebar.
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object containing shape styling fields:
+#'   `shape.fill`, `shape.line.color`, `shape.line.width`, `shape.linetype`,
+#'   `shape.opacity`.
+#' @param isolate_fn Function to isolate reactive values. Defaults to
+#'   `shiny::isolate`.
+#'
+#' @return The modified plotly figure with updated `newshape` layout settings.
+#'
+#' @importFrom plotly layout
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_apply_plotly_newshape
+#' @keywords internal
+.apply_plotly_newshape <- function(fig, input, isolate_fn = isolate) {
+    fig |> plotly::layout(
+        newshape = list(
+            fillcolor = isolate_fn(input$shape.fill),
+            line = list(
+                color = isolate_fn(input$shape.line.color),
+                width = isolate_fn(input$shape.line.width),
+                dash = isolate_fn(input$shape.linetype)
+            ),
+            opacity = isolate_fn(input$shape.opacity)
+        )
+    )
+}
+
+
 #' Create download handler for interactive plotly plots
 #'
 #' Generates a Shiny downloadHandler that saves a plotly widget as an
@@ -1551,7 +1592,7 @@ is_pure_type <- function(inputs, d) {
 #'
 #' @return The modified plotly figure with added traces.
 #'
-#' @author Jacob Martin, Jared Andrews
+#' @author Jared Andrews
 #' @rdname INTERNAL_add_multi_axis_traces
 #' @keywords internal
 .add_multi_axis_traces <- function(fig, data, x, y, order.cols, plot.mode,
