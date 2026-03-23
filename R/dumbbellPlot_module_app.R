@@ -32,10 +32,10 @@
 #'
 #' # Launch with custom data:
 #' data <- data.frame(
-#'   School = c("MIT", "Stanford", "Harvard"),
-#'   Women = c(94, 96, 112),
-#'   Men = c(152, 151, 165),
-#'   Group = c("A", "B", "A")
+#'     School = c("MIT", "Stanford", "Harvard"),
+#'     Women = c(94, 96, 112),
+#'     Men = c(152, 151, 165),
+#'     Group = c("A", "B", "A")
 #' )
 #' app2 <- dumbbellPlotApp(list("School Earnings" = data))
 #' if (interactive()) runApp(app2)

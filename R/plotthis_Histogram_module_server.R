@@ -1,22 +1,22 @@
 #' Histogram Plot Server Module
 #'
-#' @description 
-#' Server-side logic for the histogram plot module. This function manages 
-#' reactive data processing, dynamic UI generation for color palettes, 
+#' @description
+#' Server-side logic for the histogram plot module. This function manages
+#' reactive data processing, dynamic UI generation for color palettes,
 #' and the rendering of interactive Plotly histograms.
 #'
 #' @param id \code{character} unique ID for the shiny namespace.
 #' @param data \code{reactive} A reactive expression returning a data frame to be plotted.
 #' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
-#' 
+#'
 #' @return The `moduleServer` function for the Histogram module.
-#' 
+#'
 #' @import shiny
 #' @import plotly
-#' 
+#'
 #' @export
-#' 
+#'
 #' @author Jacob Martin, Jared Andrews
 plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
     stopifnot(is.reactive(data))
@@ -140,41 +140,42 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         generate_Histogram <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
-          facet.by <- NULL 
-          if (!isolate_fn(input$facet.by) == ""){
-            facet.by <- isolate_fn(input$facet.by)
-          }
-        
-          group.by <- NULL
-          if (!isolate_fn(input$group.by) == "") {
-              group.by <- isolate_fn(input$group.by)
-          }
+            facet.by <- NULL
+            if (!isolate_fn(input$facet.by) == "") {
+                facet.by <- isolate_fn(input$facet.by)
+            }
 
-          #Bins NA value conversion
-          bins <- NULL
-          if (!is.na(isolate_fn(input$bins))){
-            bins <- isolate_fn(input$bins)
-          }
+            group.by <- NULL
+            if (!isolate_fn(input$group.by) == "") {
+                group.by <- isolate_fn(input$group.by)
+            }
 
-          bin.width <- NULL
-          if (!is.na(isolate_fn(input$bin.width))) {
-            bin.width <- isolate_fn(input$bin.width)
-          }
+            # Bins NA value conversion
+            bins <- NULL
+            if (!is.na(isolate_fn(input$bins))) {
+                bins <- isolate_fn(input$bins)
+            }
 
-        palette_values <- resolve_palette(
+            bin.width <- NULL
+            if (!is.na(isolate_fn(input$bin.width))) {
+                bin.width <- isolate_fn(input$bin.width)
+            }
+
+            palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
 
-        palcolor_arg <- NULL
-        if (!is.null(palette_values) && length(palette_values) > 0) {
-            palcolor_arg <- as.list(palette_values)
-        } else {
-            # No grouping - use single fill color
-            single_color <- isolate_fn(input$single.fill.color)
-            if (!is.null(single_color) && nzchar(single_color)) {
-                palcolor_arg <- single_color
+            palcolor_arg <- NULL
+            if (!is.null(palette_values) && length(palette_values) > 0) {
+                palcolor_arg <- as.list(palette_values)
+            } else {
+                # No grouping - use single fill color
+                single_color <- isolate_fn(input$single.fill.color)
+                if (!is.null(single_color) && nzchar(single_color)) {
+                    palcolor_arg <- single_color
+                }
             }
         }
           
@@ -258,7 +259,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
         # Render the plot output
         output$histogramPlot <- renderPlotly({
-
             x_input <- input$x.data
 
             return_empty <- FALSE

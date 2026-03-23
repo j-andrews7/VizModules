@@ -93,8 +93,10 @@
         if (lt_lower %in% valid_linetypes) {
             lt_lower
         } else {
-            warning(paste0("Invalid linetype '", lt, "'. Using 'solid' instead. ",
-                "Valid options: ", paste(valid_linetypes, collapse = ", ")))
+            warning(paste0(
+                "Invalid linetype '", lt, "'. Using 'solid' instead. ",
+                "Valid options: ", paste(valid_linetypes, collapse = ", ")
+            ))
             "solid"
         }
     }, character(1), USE.NAMES = FALSE)
@@ -314,7 +316,9 @@ safe_eval_filter <- function(expr_text, data) {
             }
             # Recursively check all arguments
             for (i in seq_along(node)[-1]) {
-                if (!.check_node(node[[i]])) return(FALSE)
+                if (!.check_node(node[[i]])) {
+                    return(FALSE)
+                }
             }
             return(TRUE)
         }
@@ -363,9 +367,9 @@ safe_eval_filter <- function(expr_text, data) {
 #' @export
 #' @author Jared Andrews
 #' @examples
-#' safe_resolve_adj_fxn("log2")    # returns log2
-#' safe_resolve_adj_fxn("")        # NULL
-#' safe_resolve_adj_fxn("system")  # NULL + warning
+#' safe_resolve_adj_fxn("log2") # returns log2
+#' safe_resolve_adj_fxn("") # NULL
+#' safe_resolve_adj_fxn("system") # NULL + warning
 safe_resolve_adj_fxn <- function(fn_name) {
     if (is.null(fn_name) || !nzchar(trimws(fn_name))) {
         return(NULL)
@@ -440,7 +444,9 @@ validate_expression <- function(expr_text, col_names) {
                 return(FALSE)
             }
             for (i in seq_along(node)[-1]) {
-                if (!.check_node(node[[i]])) return(FALSE)
+                if (!.check_node(node[[i]])) {
+                    return(FALSE)
+                }
             }
             return(TRUE)
         }
@@ -472,7 +478,7 @@ validate_expression <- function(expr_text, col_names) {
 #' @param type The type of documentation section to extract. Currently only
 #'   "param" is supported.
 #' @param selected A list of parameter names to extract. Note that co-documented
-#'   parameters (e.g., `x.by` and `y.by`) should be grouped together in a vector 
+#'   parameters (e.g., `x.by` and `y.by`) should be grouped together in a vector
 #'   within the list or an error will be thrown by `extract_roc_text`.
 #' @param cap Logical; if TRUE, capitalize the first letter of each description.
 #' @importFrom roclang extract_roc_text
@@ -486,10 +492,11 @@ get_documentation <- function(package_name, type = "param", selected = NULL, cap
     docs <- lapply(selected, function(s) {
         doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
         doc %>%
-        gsub("\\\\n", " ", .) %>%                  
-        gsub("\\\\", "", .) %>%                   
-        gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%      
-        gsub("\n", " ", .) %>% trimws()                   
+            gsub("\\\\n", " ", .) %>%
+            gsub("\\\\", "", .) %>%
+            gsub("code\\{([^}]+)\\}", "`\\1`", .) %>%
+            gsub("\n", " ", .) %>%
+            trimws()
     })
 
     # Expand co-documented parameters (e.g., c("x.by", "y.by")) into

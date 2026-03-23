@@ -66,15 +66,19 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
 
             dims <- isolate_fn(input$dimensions)
             validate(
-                need(!is.null(dims) && length(dims) >= 2,
-                    "Please select at least two dimension columns.")
+                need(
+                    !is.null(dims) && length(dims) >= 2,
+                    "Please select at least two dimension columns."
+                )
             )
 
             # Filter to valid columns
             dims <- dims[dims %in% names(d)]
             validate(
-                need(length(dims) >= 2,
-                    "Please select at least two valid dimension columns.")
+                need(
+                    length(dims) >= 2,
+                    "Please select at least two valid dimension columns."
+                )
             )
 
             color.by <- isolate_fn(input$color.by)
@@ -114,8 +118,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
 
         # Render the plot output
         output$parallelCoordinatesPlot <- renderPlotly({
-
-
             generate_parallelCoordinatesPlot() |>
                 layout(
                     margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)

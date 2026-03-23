@@ -52,22 +52,22 @@
 #'
 #' @import plotly
 #' @importFrom dplyr group_by summarise across all_of mutate
-#' 
+#'
 #' @author Jacob Martin, Jared Andrews
 #' @export
 #'
 #' @examples
 #' palette <- plotthis::palette_list[["Set2"]]
 #' fig <- linePlot(
-#'   data = mtcars,
-#'   x = "cyl",
-#'   y = "mpg",
-#'   plot.mode = "lines",
-#'   line.type = "solid",
-#'   colour.group.by = "mpg",
-#'   palette.selection = palette,
-#'   show.legend = TRUE
-#'   )
+#'     data = mtcars,
+#'     x = "cyl",
+#'     y = "mpg",
+#'     plot.mode = "lines",
+#'     line.type = "solid",
+#'     colour.group.by = "mpg",
+#'     palette.selection = palette,
+#'     show.legend = TRUE
+#' )
 linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
                      facet.scales = "fixed",
                      subplot.margin = 0.05,
@@ -101,7 +101,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
                 sd_y = if (length(y) == 1) stats::sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
                 dplyr::across(
                     dplyr::all_of(y),
-                    list(mean = ~mean(.x, na.rm = TRUE)),
+                    list(mean = ~ mean(.x, na.rm = TRUE)),
                     .names = "{.col}"
                 ),
                 .groups = "drop"
@@ -228,7 +228,8 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
             facet_fig <- plot_ly(data = facet_data, type = "scatter")
             facet_fig <- .add_multi_axis_traces(
                 facet_fig, facet_data, x, y, order.cols, plot.mode,
-                line.type, palette.selection, show.legend = first_facet
+                line.type, palette.selection,
+                show.legend = first_facet
             )
             plots[[length(plots) + 1]] <- facet_fig
             first_facet <- FALSE
@@ -271,7 +272,8 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
     if (multi_axis && (is.null(facet.by) || facet.by == "")) {
         fig <- .add_multi_axis_traces(
             fig, data, x, y, order.cols, plot.mode,
-            line.type, palette.selection, show.legend = TRUE
+            line.type, palette.selection,
+            show.legend = TRUE
         )
     }
 
@@ -291,4 +293,4 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
     fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
-    }
+}

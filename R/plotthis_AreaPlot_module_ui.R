@@ -12,7 +12,7 @@
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Nearly all parameters for [plotthis::AreaPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
-#' 
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::AreaPlot()] parameters are not available via UI inputs:
 #' \itemize{
@@ -52,7 +52,7 @@
 #'   \item \code{scale_y} - Scale y-axis by total (UI: "Scale y-axis by total", default: FALSE)
 #'   \item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
 #' }
-#' 
+#'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
@@ -129,9 +129,11 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     min.y <- min(numeric.data, na.rm = TRUE)
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
 
-    selected <- list("x", "y", "group_by", "scale_y",
-            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-            "alpha")
+    selected <- list(
+        "x", "y", "group_by", "scale_y",
+        "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+        "alpha"
+    )
 
     documentParameters <- get_documentation(
         package_name = "plotthis::AreaPlot", type = "param",
@@ -140,18 +142,24 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.data"), "X values:",
-                selected = .get_default(defaults, "x.data", cat.choices[2],
-                    function(x) x %in% cat.choices),
+                selected = .get_default(
+                    defaults, "x.data", cat.choices[2],
+                    function(x) x %in% cat.choices
+                ),
                 choices = cat.choices
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.data"), "Y values:",
-                selected = .get_default(defaults, "y.data", num.choices[2],
-                    function(x) x %in% num.choices),
+                selected = .get_default(
+                    defaults, "y.data", num.choices[2],
+                    function(x) x %in% num.choices
+                ),
                 choices = num.choices
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by:",
-                selected = .get_default(defaults, "group.by", cat.choices[3],
-                    function(x) x %in% c("", group_facet_choices)),
+                selected = .get_default(
+                    defaults, "group.by", cat.choices[3],
+                    function(x) x %in% c("", group_facet_choices)
+                ),
                 choices = c("", group_facet_choices)
             ), documentParameters$group_by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("scale.y"), "Scale y-axis by total:",
@@ -161,13 +169,17 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by:",
-                selected = .get_default(defaults, "facet.by", "",
-                    function(x) x %in% c(group_facet_choices, "")),
+                selected = .get_default(
+                    defaults, "facet.by", "",
+                    function(x) x %in% c(group_facet_choices, "")
+                ),
                 choices = c(group_facet_choices, "")
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet scale:",
-                selected = .get_default(defaults, "facet.scale", "fixed",
-                    function(x) x %in% c("fixed", "free", "free_x", "free_y")),
+                selected = .get_default(
+                    defaults, "facet.scale", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                ),
                 choices = c("fixed", "free", "free_x", "free_y")
             ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",

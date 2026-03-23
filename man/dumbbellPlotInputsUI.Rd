@@ -54,9 +54,9 @@ The following \code{\link[=dumbbellPlot]{dumbbellPlot()}} parameters can be acce
 \examples{
 library(VizModules)
 data <- data.frame(
-  School = c("MIT", "Stanford", "Harvard"),
-  Women = c(94, 96, 112),
-  Men = c(152, 151, 165)
+    School = c("MIT", "Stanford", "Harvard"),
+    Women = c(94, 96, 112),
+    Men = c(152, 151, 165)
 )
 dumbbellPlotInputsUI("dumbbellPlot", data)
 }

@@ -97,7 +97,8 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- list("a", "b", "c", "group", "sum", "mode",
+    selected <- list(
+        "a", "b", "c", "group", "sum", "mode",
         "marker.size", "marker.symbol", "marker.line.width", "marker.line.color",
         "line.width", "line.dash", "opacity",
         "a.title", "b.title", "c.title",
@@ -105,7 +106,8 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "a.gridcolor", "b.gridcolor", "c.gridcolor",
         "title.font.size", "title.font.family", "title.font.color",
         "show.legend", "legend.orientation", "legend.font.family",
-        "legend.font.size", "legend.font.color", "bgcolor")
+        "legend.font.size", "legend.font.color", "bgcolor"
+    )
 
     documentParameters <- get_documentation(
         package_name = "VizModules::ternaryPlot", type = "param",
@@ -230,8 +232,10 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "title.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "title.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
                 value = .get_default(defaults, "title.font.color", "#000000")
@@ -245,8 +249,10 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "legend.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "legend.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend font size:",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),

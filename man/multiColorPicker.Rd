@@ -53,24 +53,24 @@ named character vector of hex colors keyed by group.
 }
 \examples{
 if (interactive()) {
-  library(shiny)
-  groups <- c("setosa", "virginica", "versicolor")
+    library(shiny)
+    groups <- c("setosa", "virginica", "versicolor")
 
-  ui <- fluidPage(
-    multiColorPicker(
-      "species_cols",
-      "Species colors",
-      groups = groups,
-      selected_palette = "dittoColors"
-    ),
-    verbatimTextOutput("chosen")
-  )
+    ui <- fluidPage(
+        multiColorPicker(
+            "species_cols",
+            "Species colors",
+            groups = groups,
+            selected_palette = "dittoColors"
+        ),
+        verbatimTextOutput("chosen")
+    )
 
-  server <- function(input, output, session) {
-    output$chosen <- renderPrint(input$species_cols)
-  }
+    server <- function(input, output, session) {
+        output$chosen <- renderPrint(input$species_cols)
+    }
 
-  shinyApp(ui, server)
+    shinyApp(ui, server)
 }
 }
 \author{

@@ -105,9 +105,11 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    selected <- list("x", "y", "colour.group.by", "error.bar", "order.by",
+    selected <- list(
+        "x", "y", "colour.group.by", "error.bar", "order.by",
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
-        "plot.mode", "line.type", "error.colour", "error.width")
+        "plot.mode", "line.type", "error.colour", "error.width"
+    )
 
     documentParameters <- get_documentation(
         package_name = "VizModules::linePlot", type = "param",
@@ -117,49 +119,61 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.value"), "Select X values:",
-                selected = .get_default(defaults, "x.value", names(data)[1],
-                    function(x) all(x %in% names(data))),
+                selected = .get_default(
+                    defaults, "x.value", names(data)[1],
+                    function(x) all(x %in% names(data))
+                ),
                 choices = names(data), multiple = TRUE
             ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Select Y values:",
-                selected = .get_default(defaults, "y.value", names(data)[2],
-                    function(x) all(x %in% names(data))),
+                selected = .get_default(
+                    defaults, "y.value", names(data)[2],
+                    function(x) all(x %in% names(data))
+                ),
                 choices = names(data), multiple = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group by:",
-                selected = .get_default(defaults, "group.by", cat.choices[1],
-                    function(x) x %in% cat.choices),
+                selected = .get_default(
+                    defaults, "group.by", cat.choices[1],
+                    function(x) x %in% cat.choices
+                ),
                 choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE),
-                documentParameters$error.bar, placement = "top", options = list(container = "body")),
+                documentParameters$error.bar,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(materialSwitch(ns("order.by"), "Order by Y",
                 value = .get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"
             ), documentParameters$order.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
-                selected = .get_default(defaults, "x.adjustment", "",
-                    function(x) x %in% adj.choices)
+                selected = .get_default(
+                    defaults, "x.adjustment", "",
+                    function(x) x %in% adj.choices
+                )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
-                selected = .get_default(defaults, "y.adjustment", "",
-                    function(x) x %in% adj.choices)
+                selected = .get_default(
+                    defaults, "y.adjustment", "",
+                    function(x) x %in% adj.choices
+                )
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body"))
         ),
-
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by:",
                 selected = "", choices = cat.choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
-                choices   = c("fixed", "free", "free_x", "free_y"),
-                selected  = .get_default(defaults, "facet.scales", "fixed",
-                    function(x) x %in% c("fixed", "free", "free_x", "free_y"))
+                choices = c("fixed", "free", "free_x", "free_y"),
+                selected = .get_default(
+                    defaults, "facet.scales", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                )
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
-
         "Aesthetics" = tagList(
             tipify(selectInput(ns("plot.type"), "Plot type:",
                 selected = "lines",
@@ -171,15 +185,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ), documentParameters$line.type, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
             tipify(colourpicker::colourInput(ns("errorBarColour"), "Error Bar Colour", value = "#000000"),
-                documentParameters$error.colour, placement = "top", options = list(container = "body")),
+                documentParameters$error.colour,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("errorBarWidth"), "Error Bar Width", value = 1, min = 0.1),
-                documentParameters$error.width, placement = "top", options = list(container = "body"))
+                documentParameters$error.width,
+                placement = "top", options = list(container = "body")
+            )
         ),
 
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
-        )
+    )
 
 
     organize_inputs(

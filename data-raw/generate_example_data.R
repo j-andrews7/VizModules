@@ -45,10 +45,12 @@ example_mtcars <- transform(
 # School-earnings data for dumbbell plots
 example_school_earnings <- data.frame(
     School = c("MIT", "Stanford", "Harvard", "Yale", "Princeton", "Columbia"),
-    Women  = c(94, 96, 112, 188, 91, 129),
-    Men    = c(52, 101, 165, 145, 148, 155),
-    Group  = c("STEM-heavy", "STEM-heavy", "Liberal Arts", "Liberal Arts",
-               "Liberal Arts", "STEM-heavy")
+    Women = c(94, 96, 112, 188, 91, 129),
+    Men = c(52, 101, 165, 145, 148, 155),
+    Group = c(
+        "STEM-heavy", "STEM-heavy", "Liberal Arts", "Liberal Arts",
+        "Liberal Arts", "STEM-heavy"
+    )
 )
 
 # Multi-player skills data for radar plots
@@ -61,16 +63,41 @@ example_skills <- data.frame(
 # Roles data for ternary plots
 example_roles <- data.frame(
     journalist = c(75, 70, 75, 5, 10, 10, 20, 10, 15, 10, 20),
-    developer  = c(25, 10, 20, 60, 80, 90, 70, 20,  5, 10, 10),
-    designer   = c( 0, 20,  5, 35, 10,  0, 10, 70, 80, 80, 70),
+    developer  = c(25, 10, 20, 60, 80, 90, 70, 20, 5, 10, 10),
+    designer   = c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70),
     label      = paste("point", seq_len(11)),
     team       = c(rep("Team A", 6), rep("Team B", 5))
 )
 
+# For barplots and splitbar plots where a single value is what makes sense
+example_bar <- data.frame(
+    Group = c("A", "B", "C", "D", "E"),
+    Type = c("Alpha", "Beta", "Alpha", "Gamma", "Beta"),
+    Values = c(22, 35, 18, 41, 29),
+    Numbers = c(15, -8, 22, -5, 12),
+    Score = c(7, -3, 15, 8, -2)
+)
+
+# Grouping and fill data for demographics examples
+example_demographics <- data.frame(
+    department = factor(sample(c("HR", "Sales", "Engineering", "Marketing", "Finance", "Operations"),
+        500,
+        replace = TRUE
+    )),
+    job_level = factor(sample(c("Entry", "Mid", "Senior", "Lead"), 500, replace = TRUE)),
+    gender = factor(sample(c("Male", "Female"), 500, replace = TRUE)),
+    age = round(rnorm(500, mean = 35, sd = 12)),
+    salary = round(rnorm(500, mean = 70000, sd = 15000)),
+    satisfaction = round(runif(500, min = 1, max = 10), 1),
+    performance = round(rnorm(500, mean = 6, sd = 1.5), 1),
+    tenure_years = round(rnorm(500, mean = 5, sd = 3), 1),
+    weekly_hours = round(rnorm(500, mean = 40, sd = 5), 1)
+)
+
 usethis::use_data(
-    example_sales, example_population,
     example_iris, example_mtcars,
-    example_school_earnings, example_skills, example_roles,
-    gallery_sales, gallery_demographics,
+    example_bar, example_school_earnings,
+    example_skills, example_roles,
+    example_sales, example_population, example_demographics,
     overwrite = TRUE
 )

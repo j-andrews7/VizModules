@@ -40,7 +40,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         output$color.picker <- renderUI({
             d <- data_reactive()
             grp <- input$group
-            
+
             # Only show color picker if group is selected
             if (is.null(grp) || grp == "" || !grp %in% names(d)) {
                 return(tagList(
@@ -226,7 +226,6 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Render the plot output
         output$radarPlot <- renderPlotly({
-            
             generate_radarPlot() |>
                 layout(
                     margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)

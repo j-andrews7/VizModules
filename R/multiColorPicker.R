@@ -31,173 +31,171 @@
 #'
 #' @examples
 #' if (interactive()) {
-#'   library(shiny)
-#'   groups <- c("setosa", "virginica", "versicolor")
+#'     library(shiny)
+#'     groups <- c("setosa", "virginica", "versicolor")
 #'
-#'   ui <- fluidPage(
-#'     multiColorPicker(
-#'       "species_cols",
-#'       "Species colors",
-#'       groups = groups,
-#'       selected_palette = "dittoColors"
-#'     ),
-#'     verbatimTextOutput("chosen")
-#'   )
+#'     ui <- fluidPage(
+#'         multiColorPicker(
+#'             "species_cols",
+#'             "Species colors",
+#'             groups = groups,
+#'             selected_palette = "dittoColors"
+#'         ),
+#'         verbatimTextOutput("chosen")
+#'     )
 #'
-#'   server <- function(input, output, session) {
-#'     output$chosen <- renderPrint(input$species_cols)
-#'   }
+#'     server <- function(input, output, session) {
+#'         output$chosen <- renderPrint(input$species_cols)
+#'     }
 #'
-#'   shinyApp(ui, server)
+#'     shinyApp(ui, server)
 #' }
-multiColorPicker <- function(
-	inputId,
-	label = NULL,
-	groups,
-	palette_options = NULL,
-	selected_palette = NULL,
-	colors = NULL,
-	width = NULL,
-	show_text = TRUE,
-	compact = FALSE,
-	panel = TRUE
-) {
-	.register_multi_color_picker_handler()
+multiColorPicker <- function(inputId,
+                             label = NULL,
+                             groups,
+                             palette_options = NULL,
+                             selected_palette = NULL,
+                             colors = NULL,
+                             width = NULL,
+                             show_text = TRUE,
+                             compact = FALSE,
+                             panel = TRUE) {
+    .register_multi_color_picker_handler()
 
-	if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
-		stop("`inputId` must be a non-empty string.")
-	}
-	if (missing(groups) || length(groups) == 0) {
-		stop("`groups` must contain at least one value.")
-	}
+    if (missing(inputId) || is.null(inputId) || !nzchar(inputId)) {
+        stop("`inputId` must be a non-empty string.")
+    }
+    if (missing(groups) || length(groups) == 0) {
+        stop("`groups` must contain at least one value.")
+    }
 
-	groups <- as.character(unique(groups))
+    groups <- as.character(unique(groups))
 
-	palette_source <- palette_options
-	if (is.null(palette_source)) {
-		palette_source <- default_palettes()$choices
-	}
+    palette_source <- palette_options
+    if (is.null(palette_source)) {
+        palette_source <- default_palettes()$choices
+    }
 
-	palette_lookup <- .flatten_palette_options(palette_source)
-	if (length(palette_lookup) == 0) {
-		stop("`palette_options` must contain at least one palette.")
-	}
+    palette_lookup <- .flatten_palette_options(palette_source)
+    if (length(palette_lookup) == 0) {
+        stop("`palette_options` must contain at least one palette.")
+    }
 
-	palette_lookup <- lapply(palette_lookup, .normalize_hex)
-	if (
-		is.null(selected_palette) ||
-			is.na(selected_palette) ||
-			!selected_palette %in% names(palette_lookup)
-	) {
-		selected_palette <- names(palette_lookup)[1]
-	}
+    palette_lookup <- lapply(palette_lookup, .normalize_hex)
+    if (
+        is.null(selected_palette) ||
+            is.na(selected_palette) ||
+            !selected_palette %in% names(palette_lookup)
+    ) {
+        selected_palette <- names(palette_lookup)[1]
+    }
 
-	if (length(palette_lookup[[selected_palette]]) == 0) {
-		stop("The selected palette does not contain any colors.")
-	}
+    if (length(palette_lookup[[selected_palette]]) == 0) {
+        stop("The selected palette does not contain any colors.")
+    }
 
-	base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
+    base_colors <- .seed_colors(groups, palette_lookup[[selected_palette]])
 
-	if (!is.null(colors)) {
-		override <- .normalize_hex(colors)
-		if (is.null(names(override))) {
-			idx <- seq_len(min(length(override), length(base_colors)))
-			base_colors[idx] <- override[idx]
-		} else {
-			matched <- intersect(names(override), groups)
-			base_colors[matched] <- override[matched]
-		}
-	}
+    if (!is.null(colors)) {
+        override <- .normalize_hex(colors)
+        if (is.null(names(override))) {
+            idx <- seq_len(min(length(override), length(base_colors)))
+            base_colors[idx] <- override[idx]
+        } else {
+            matched <- intersect(names(override), groups)
+            base_colors[matched] <- override[matched]
+        }
+    }
 
-	initial_colors <- .normalize_hex(base_colors)
-	names(initial_colors) <- groups
+    initial_colors <- .normalize_hex(base_colors)
+    names(initial_colors) <- groups
 
-	palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
-	initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
-	groups_json <- toJSON(groups, auto_unbox = TRUE)
+    palette_json <- toJSON(palette_lookup, auto_unbox = TRUE)
+    initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
+    groups_json <- toJSON(groups, auto_unbox = TRUE)
 
-	palette_select <- tags$select(
-		id = paste0(inputId, "-palette"),
-		class = "mc-palette-select form-control input-sm",
-		`aria-label` = "Palette",
-		.build_palette_options(palette_source, selected_palette)
-	)
+    palette_select <- tags$select(
+        id = paste0(inputId, "-palette"),
+        class = "mc-palette-select form-control input-sm",
+        `aria-label` = "Palette",
+        .build_palette_options(palette_source, selected_palette)
+    )
 
-	rows <- lapply(seq_along(groups), function(i) {
-		grp <- groups[[i]]
-		tags$div(
-			class = paste("mc-color-row", if (i == 1) "is-active"),
-			`data-group` = grp,
-			tags$span(class = "mc-group-label", grp),
-			tags$input(
-				type = "color",
-				class = "mc-color-input",
-				value = initial_colors[[grp]],
-				`aria-label` = paste0(grp, " color")
-			),
-			if (isTRUE(show_text)) {
-				tags$input(
-					type = "text",
-					class = "mc-text-input form-control input-sm",
-					value = initial_colors[[grp]],
-					`aria-label` = paste0(grp, " hex code")
-				)
-			}
-		)
-	})
+    rows <- lapply(seq_along(groups), function(i) {
+        grp <- groups[[i]]
+        tags$div(
+            class = paste("mc-color-row", if (i == 1) "is-active"),
+            `data-group` = grp,
+            tags$span(class = "mc-group-label", grp),
+            tags$input(
+                type = "color",
+                class = "mc-color-input",
+                value = initial_colors[[grp]],
+                `aria-label` = paste0(grp, " color")
+            ),
+            if (isTRUE(show_text)) {
+                tags$input(
+                    type = "text",
+                    class = "mc-text-input form-control input-sm",
+                    value = initial_colors[[grp]],
+                    `aria-label` = paste0(grp, " hex code")
+                )
+            }
+        )
+    })
 
-	width_style <- if (!is.null(width)) {
-		paste0("max-width:", validateCssUnit(width), ";")
-	}
+    width_style <- if (!is.null(width)) {
+        paste0("max-width:", validateCssUnit(width), ";")
+    }
 
-	widget <- tags$div(
-		class = paste(
-			"multi-color-picker shiny-input-container form-group",
-			if (isTRUE(compact)) "is-compact" else NULL,
-			if (!isTRUE(panel)) "is-plain" else NULL
-		),
-		id = inputId,
-		style = width_style,
-		`data-palettes` = palette_json,
-		`data-initial` = initial_json,
-		`data-groups` = groups_json,
-		`data-default-palette` = selected_palette,
-		`data-compact` = if (isTRUE(compact)) "true" else "false",
-		tags$div(
-			class = "mc-top",
-			if (!is.null(label)) {
-				tags$label(
-					class = "control-label",
-					`for` = inputId,
-					label
-				)
-			},
-			tags$div(
-				class = "mc-actions",
-				palette_select,
-				tags$div(
-					class = "mc-button-group",
-					tags$button(
-						type = "button",
-						class = "mc-button mc-apply-palette",
-						"Apply"
-					),
-					tags$button(
-						type = "button",
-						class = "mc-button mc-reset-palette",
-						"Reset"
-					)
-				)
-			)
-		),
-		tags$div(class = "mc-swatch-row", role = "list"),
-		tags$div(class = "mc-color-rows", rows)
-	)
+    widget <- tags$div(
+        class = paste(
+            "multi-color-picker shiny-input-container form-group",
+            if (isTRUE(compact)) "is-compact" else NULL,
+            if (!isTRUE(panel)) "is-plain" else NULL
+        ),
+        id = inputId,
+        style = width_style,
+        `data-palettes` = palette_json,
+        `data-initial` = initial_json,
+        `data-groups` = groups_json,
+        `data-default-palette` = selected_palette,
+        `data-compact` = if (isTRUE(compact)) "true" else "false",
+        tags$div(
+            class = "mc-top",
+            if (!is.null(label)) {
+                tags$label(
+                    class = "control-label",
+                    `for` = inputId,
+                    label
+                )
+            },
+            tags$div(
+                class = "mc-actions",
+                palette_select,
+                tags$div(
+                    class = "mc-button-group",
+                    tags$button(
+                        type = "button",
+                        class = "mc-button mc-apply-palette",
+                        "Apply"
+                    ),
+                    tags$button(
+                        type = "button",
+                        class = "mc-button mc-reset-palette",
+                        "Reset"
+                    )
+                )
+            )
+        ),
+        tags$div(class = "mc-swatch-row", role = "list"),
+        tags$div(class = "mc-color-rows", rows)
+    )
 
-	htmltools::attachDependencies(
-		widget,
-		.multi_color_picker_dependency()
-	)
+    htmltools::attachDependencies(
+        widget,
+        .multi_color_picker_dependency()
+    )
 }
 
 #' Update a multiColorPicker input on the client
@@ -226,43 +224,43 @@ multiColorPicker <- function(
 #'
 #' @examples
 #' if (interactive()) {
-#'   library(shiny)
-#'   groups <- c("setosa", "virginica", "versicolor")
+#'     library(shiny)
+#'     groups <- c("setosa", "virginica", "versicolor")
 #'
-#'   ui <- fluidPage(
-#'     multiColorPicker(
-#'       "species_cols",
-#'       "Species colors",
-#'       groups = groups,
-#'       selected_palette = "dittoColors"
-#'     ),
-#'     actionButton("randomize", "Randomize colors"),
-#'     actionButton("apply_pal", "Apply ggplot2 palette"),
-#'     actionButton("reset_cols", "Reset to initial"),
-#'     verbatimTextOutput("chosen")
-#'   )
+#'     ui <- fluidPage(
+#'         multiColorPicker(
+#'             "species_cols",
+#'             "Species colors",
+#'             groups = groups,
+#'             selected_palette = "dittoColors"
+#'         ),
+#'         actionButton("randomize", "Randomize colors"),
+#'         actionButton("apply_pal", "Apply ggplot2 palette"),
+#'         actionButton("reset_cols", "Reset to initial"),
+#'         verbatimTextOutput("chosen")
+#'     )
 #'
-#'   server <- function(input, output, session) {
-#'     output$chosen <- renderPrint(input$species_cols)
+#'     server <- function(input, output, session) {
+#'         output$chosen <- renderPrint(input$species_cols)
 #'
-#'     observeEvent(input$randomize, {
-#'       new_colors <- setNames(
-#'         sprintf("#%06X", sample(0xFFFFFF, length(groups))),
-#'         groups
-#'       )
-#'       updateMultiColorPicker(session, "species_cols", colors = new_colors)
-#'     })
+#'         observeEvent(input$randomize, {
+#'             new_colors <- setNames(
+#'                 sprintf("#%06X", sample(0xFFFFFF, length(groups))),
+#'                 groups
+#'             )
+#'             updateMultiColorPicker(session, "species_cols", colors = new_colors)
+#'         })
 #'
-#'     observeEvent(input$apply_pal, {
-#'       updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
-#'     })
+#'         observeEvent(input$apply_pal, {
+#'             updateMultiColorPicker(session, "species_cols", palette = "ggplot2")
+#'         })
 #'
-#'     observeEvent(input$reset_cols, {
-#'       updateMultiColorPicker(session, "species_cols", reset = TRUE)
-#'     })
-#'   }
+#'         observeEvent(input$reset_cols, {
+#'             updateMultiColorPicker(session, "species_cols", reset = TRUE)
+#'         })
+#'     }
 #'
-#'   shinyApp(ui, server)
+#'     shinyApp(ui, server)
 #' }
 updateMultiColorPicker <- function(session, inputId, colors = NULL,
                                    palette = NULL, reset = FALSE) {
@@ -309,27 +307,27 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_multi_color_picker_dependency
 #' @keywords internal
 .multi_color_picker_dependency <- function() {
-	list(
-		htmltools::htmlDependency(
-			name = "multi-color-picker",
-			version = as.character(utils::packageVersion("VizModules")),
-			src = "src",
-			package = "VizModules",
-			script = "multiColorPicker.js",
-			stylesheet = "multiColorPicker.css"
-		),
-		htmltools::htmlDependency(
-			name = "selectize",
-			version = as.character(utils::packageVersion("shiny")),
-			src = "www/shared/selectize",
-			package = "shiny",
-			script = c(
-				"js/selectize.min.js",
-				"accessibility/js/selectize-plugin-a11y.min.js"
-			),
-			stylesheet = "css/selectize.bootstrap3.css"
-		)
-	)
+    list(
+        htmltools::htmlDependency(
+            name = "multi-color-picker",
+            version = as.character(utils::packageVersion("VizModules")),
+            src = "src",
+            package = "VizModules",
+            script = "multiColorPicker.js",
+            stylesheet = "multiColorPicker.css"
+        ),
+        htmltools::htmlDependency(
+            name = "selectize",
+            version = as.character(utils::packageVersion("shiny")),
+            src = "www/shared/selectize",
+            package = "shiny",
+            script = c(
+                "js/selectize.min.js",
+                "accessibility/js/selectize-plugin-a11y.min.js"
+            ),
+            stylesheet = "css/selectize.bootstrap3.css"
+        )
+    )
 }
 
 #' Register input handler for the multi-color picker
@@ -343,19 +341,19 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_register_multi_color_picker_handler
 #' @keywords internal
 .register_multi_color_picker_handler <- function() {
-	registerInputHandler(
-		"VizModules.multiColorPicker",
-		function(data, ...) {
-			if (is.null(data) || length(data) == 0) {
-				return(setNames(character(0), character(0)))
-			}
+    registerInputHandler(
+        "VizModules.multiColorPicker",
+        function(data, ...) {
+            if (is.null(data) || length(data) == 0) {
+                return(setNames(character(0), character(0)))
+            }
 
-			vals <- vapply(data, function(x) x$value %__% "", character(1))
-			nms <- vapply(data, function(x) x$name %__% "", character(1))
-			setNames(vals, nms)
-		},
-		force = TRUE
-	)
+            vals <- vapply(data, function(x) x$value %__% "", character(1))
+            nms <- vapply(data, function(x) x$name %__% "", character(1))
+            setNames(vals, nms)
+        },
+        force = TRUE
+    )
 }
 
 #' Flatten nested palette options
@@ -371,27 +369,27 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_flatten_palette_options
 #' @keywords internal
 .flatten_palette_options <- function(palettes) {
-	out <- list()
-	if (is.null(palettes) || length(palettes) == 0) {
-		return(out)
-	}
+    out <- list()
+    if (is.null(palettes) || length(palettes) == 0) {
+        return(out)
+    }
 
-	if (!is.list(palettes)) {
-		stop("`palette_options` must be a list.")
-	}
+    if (!is.list(palettes)) {
+        stop("`palette_options` must be a list.")
+    }
 
-	for (nm in names(palettes)) {
-		current <- palettes[[nm]]
-		if (is.list(current) && !is.null(names(current))) {
-			for (sub_nm in names(current)) {
-				out[[sub_nm]] <- current[[sub_nm]]
-			}
-		} else {
-			out[[nm]] <- current
-		}
-	}
+    for (nm in names(palettes)) {
+        current <- palettes[[nm]]
+        if (is.list(current) && !is.null(names(current))) {
+            for (sub_nm in names(current)) {
+                out[[sub_nm]] <- current[[sub_nm]]
+            }
+        } else {
+            out[[nm]] <- current
+        }
+    }
 
-	out
+    out
 }
 
 #' Build palette select options
@@ -407,34 +405,34 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_build_palette_options
 #' @keywords internal
 .build_palette_options <- function(palette_source, selected_palette) {
-	opts <- lapply(names(palette_source), function(cat) {
-		entry <- palette_source[[cat]]
-		if (is.list(entry)) {
-			tags$optgroup(
-				label = cat,
-				lapply(names(entry), function(nm) {
-					tags$option(
-						value = nm,
-						selected = if (nm == selected_palette) {
-							"selected"
-						} else {
-							NULL
-						},
-						nm
-					)
-				})
-			)
-		} else {
-			tags$option(
-				value = cat,
-				selected = if (cat == selected_palette) "selected" else NULL,
-				cat
-			)
-		}
-	})
+    opts <- lapply(names(palette_source), function(cat) {
+        entry <- palette_source[[cat]]
+        if (is.list(entry)) {
+            tags$optgroup(
+                label = cat,
+                lapply(names(entry), function(nm) {
+                    tags$option(
+                        value = nm,
+                        selected = if (nm == selected_palette) {
+                            "selected"
+                        } else {
+                            NULL
+                        },
+                        nm
+                    )
+                })
+            )
+        } else {
+            tags$option(
+                value = cat,
+                selected = if (cat == selected_palette) "selected" else NULL,
+                cat
+            )
+        }
+    })
 
-	# Flatten the list so selectInput renders correctly
-	do.call(tagList, opts)
+    # Flatten the list so selectInput renders correctly
+    do.call(tagList, opts)
 }
 
 #' Seed group colors from a palette
@@ -450,9 +448,9 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_seed_colors
 #' @keywords internal
 .seed_colors <- function(groups, palette) {
-	palette <- .normalize_hex(palette)
-	recycled <- rep_len(palette, length(groups))
-	stats::setNames(recycled, groups)
+    palette <- .normalize_hex(palette)
+    recycled <- rep_len(palette, length(groups))
+    stats::setNames(recycled, groups)
 }
 
 #' Normalize colors to hex strings
@@ -468,18 +466,18 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_normalize_hex
 #' @keywords internal
 .normalize_hex <- function(x) {
-	if (length(x) == 0) {
-		return(character(0))
-	}
+    if (length(x) == 0) {
+        return(character(0))
+    }
 
-	vapply(
-		x,
-		function(val) {
-			if (is.null(val) || is.na(val) || val == "") {
-				return("")
-			}
+    vapply(
+        x,
+        function(val) {
+            if (is.null(val) || is.na(val) || val == "") {
+                return("")
+            }
 
-			val <- trimws(as.character(val))
+            val <- trimws(as.character(val))
             if (!startsWith(val, "#")) {
                 col <- tryCatch(grDevices::col2rgb(val), error = function(...) {
                     NULL
@@ -523,7 +521,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_multi_color_picker_css
 #' @keywords internal
 .multi_color_picker_css <- function() {
-	"
+    "
 .multi-color-picker {
   border: 1px solid #dee2e6;
   border-radius: 6px;
@@ -847,5 +845,5 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' @rdname INTERNAL_null_coalesce
 #' @keywords internal
 `%__%` <- function(x, y) {
-	if (is.null(x) || length(x) == 0) y else x
+    if (is.null(x) || length(x) == 0) y else x
 }

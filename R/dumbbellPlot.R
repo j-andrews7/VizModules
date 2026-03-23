@@ -44,36 +44,36 @@
 #' @return A plotly object representing the interactive dumbbell plot.
 #'
 #' @details
-#' The dumbbell plot is designed for comparing two values across categories. 
-#' 
+#' The dumbbell plot is designed for comparing two values across categories.
+#'
 #' **Modes:**
 #' - **Single dot mode** (1 x variable): Shows one marker per y category
 #' - **Dumbbell mode** (2 x variables): Shows two markers connected by a line per y category
-#' 
+#'
 #' **Coloring options:**
 #' - **By X variables**: Each x variable gets a different color (e.g., Male=blue, Female=pink)
 #' - **By Y variables**: Each y category gets a different color (e.g., School A=red, School B=blue)
 #'
 #' @import plotly
-#' 
+#'
 #' @author Jacob Martin
 #' @export
 #'
 #' @examples
 #' data <- data.frame(
-#'   School = c("MIT", "Stanford", "Harvard"),
-#'   Women = c(152, 96, 112),
-#'   Men = c(95, 151, 165)
+#'     School = c("MIT", "Stanford", "Harvard"),
+#'     Women = c(152, 96, 112),
+#'     Men = c(95, 151, 165)
 #' )
-#' 
+#'
 #' fig <- dumbbellPlot(
-#'   data = data,
-#'   x = c("Women", "Men"),
-#'   y = "School",
-#'   colour.by = "X variables",
-#'   palette.selection = c("green", "blue"),
-#'   show.legend = TRUE,
-#'   line.colour = "gray80"
+#'     data = data,
+#'     x = c("Women", "Men"),
+#'     y = "School",
+#'     colour.by = "X variables",
+#'     palette.selection = c("green", "blue"),
+#'     show.legend = TRUE,
+#'     line.colour = "gray80"
 #' )
 dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
@@ -92,12 +92,12 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     if (!is.null(x) && length(x) > 2) {
         x <- x[1:2]
     }
-    
+
     # Unique x axis styling for dumbbellPlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
-        tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, 
+        tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen,
         tickwidth = axis.tickwidth,
         title = x.title, autorange = TRUE
     )
@@ -147,12 +147,13 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         facet_levels <- unique(plot_data[[facet.by]])
 
         plots <- list()
-        first <- TRUE  # Ensure figure legend only added to the first subplot
+        first <- TRUE # Ensure figure legend only added to the first subplot
         for (level in facet_levels) {
             facet_data <- plot_data[plot_data[[facet.by]] == level, ]
             plots[[length(plots) + 1]] <- .create_dumbbell_plot(
                 facet_data, x, y, colour.by, palette.selection,
-                line.colour, show.legend = first
+                line.colour,
+                show.legend = first
             )
             first <- FALSE
         }
@@ -211,10 +212,10 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     if (is.null(x) || length(x) == 0) {
         return(plot_ly())
     }
-    
+
     # Initialize empty plot
     fig <- plot_ly(data, type = "scatter")
-    
+
     if (length(x) == 1) {
         # SINGLE DOT MODE
         if (colour.by == "X variables") {
@@ -228,7 +229,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             )
         } else {
             # Color by Y variables (different color for each y value)
-            fig <- plot_ly(data, 
+            fig <- plot_ly(data,
                 x = reformulate(x[1]),
                 y = reformulate(y),
                 type = "scatter",
@@ -278,7 +279,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                 y_val <- y_unique[i]
                 y_data <- data[data[[y]] == y_val, ]
                 color_idx <- (i - 1) %% length(palette.selection) + 1
-                
+
                 # Add segment
                 fig <- fig |> add_segments(
                     x = y_data[[x[1]]],
@@ -310,6 +311,6 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             }
         }
     }
-    
+
     return(fig)
 }

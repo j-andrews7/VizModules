@@ -184,21 +184,23 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    selected <- list(c("x.by", "y.by"), "color.by", "shape.by", "split.by",
-            "rows.use", c("x.adjustment", "y.adjustment", "color.adjustment"),
-            c("x.adj.fxn", "y.adj.fxn", "color.adj.fxn"),
-            "size", "opacity", "show.others", "split.show.all.others",
-            "plot.order", "shape.panel",
-            "min.color", "max.color", "contour.color", "contour.linetype",
-            c("split.nrow", "split.ncol"), "multivar.split.dir",
-            "do.ellipse", "do.contour",
-            "hover.data", "hover.round.digits",
-            "legend.show", c("legend.color.title", "legend.shape.title"), 
-            c("legend.color.size", "legend.shape.size"),
-            "legend.color.breaks",
-            c("min.value", "max.value"),
-            "trajectory.group.by", "add.trajectory.by.groups",
-            "trajectory.arrow.size")
+    selected <- list(
+        c("x.by", "y.by"), "color.by", "shape.by", "split.by",
+        "rows.use", c("x.adjustment", "y.adjustment", "color.adjustment"),
+        c("x.adj.fxn", "y.adj.fxn", "color.adj.fxn"),
+        "size", "opacity", "show.others", "split.show.all.others",
+        "plot.order", "shape.panel",
+        "min.color", "max.color", "contour.color", "contour.linetype",
+        c("split.nrow", "split.ncol"), "multivar.split.dir",
+        "do.ellipse", "do.contour",
+        "hover.data", "hover.round.digits",
+        "legend.show", c("legend.color.title", "legend.shape.title"),
+        c("legend.color.size", "legend.shape.size"),
+        "legend.color.breaks",
+        c("min.value", "max.value"),
+        "trajectory.group.by", "add.trajectory.by.groups",
+        "trajectory.arrow.size"
+    )
 
     documentParameters <- get_documentation(
         package_name = "dittoViz::scatterPlot", type = "param",
@@ -211,28 +213,38 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         "Data" = tagList(
             tipify(selectInput(ns("x.by"), "X Data",
                 choices = choices,
-                selected = .get_default(defaults, "x.by", choices[2],
-                    function(x) x %in% choices)
+                selected = .get_default(
+                    defaults, "x.by", choices[2],
+                    function(x) x %in% choices
+                )
             ), documentParameters$x.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.by"), "Y Data",
                 choices = choices,
-                selected = .get_default(defaults, "y.by", choices[3],
-                    function(x) x %in% choices)
+                selected = .get_default(
+                    defaults, "y.by", choices[3],
+                    function(x) x %in% choices
+                )
             ), documentParameters$y.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.by"), "Color By",
                 choices = choices,
-                selected = .get_default(defaults, "color.by", "",
-                    function(x) x %in% choices)
+                selected = .get_default(
+                    defaults, "color.by", "",
+                    function(x) x %in% choices
+                )
             ), documentParameters$color.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("shape.by"), "Shape By",
                 choices = cat.choices,
-                selected = .get_default(defaults, "shape.by", "",
-                    function(x) x %in% cat.choices)
+                selected = .get_default(
+                    defaults, "shape.by", "",
+                    function(x) x %in% cat.choices
+                )
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
             tipify(selectizeInput(ns("split.by"), "Split By",
                 choices = cat.choices,
-                selected = .get_default(defaults, "split.by", "",
-                    function(x) all(x %in% cat.choices)),
+                selected = .get_default(
+                    defaults, "split.by", "",
+                    function(x) all(x %in% cat.choices)
+                ),
                 multiple = TRUE,
                 options = list(maxItems = 2)
             ), documentParameters$split.by, placement = "top", options = list(container = "body"))
@@ -240,33 +252,45 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         "Adjustments" = tagList(
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
-                selected = .get_default(defaults, "x.adjustment", "",
-                    function(x) x %in% adj.choices)
+                selected = .get_default(
+                    defaults, "x.adjustment", "",
+                    function(x) x %in% adj.choices
+                )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
-                selected = .get_default(defaults, "y.adjustment", "",
-                    function(x) x %in% adj.choices)
+                selected = .get_default(
+                    defaults, "y.adjustment", "",
+                    function(x) x %in% adj.choices
+                )
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.adjustment"), "Color Adjustment",
                 choices = adj.choices,
-                selected = .get_default(defaults, "color.adjustment", "",
-                    function(x) x %in% adj.choices)
+                selected = .get_default(
+                    defaults, "color.adjustment", "",
+                    function(x) x %in% adj.choices
+                )
             ), documentParameters$color.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adj.fxn"), "X Adjustment Function",
                 choices = adj.fxn.choices,
-                selected = .get_default(defaults, "x.adj.fxn", "",
-                    function(x) x %in% adj.fxn.choices)
+                selected = .get_default(
+                    defaults, "x.adj.fxn", "",
+                    function(x) x %in% adj.fxn.choices
+                )
             ), documentParameters$x.adj.fxn, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
                 choices = adj.fxn.choices,
-                selected = .get_default(defaults, "y.adj.fxn", "",
-                    function(x) x %in% adj.fxn.choices)
+                selected = .get_default(
+                    defaults, "y.adj.fxn", "",
+                    function(x) x %in% adj.fxn.choices
+                )
             ), documentParameters$y.adj.fxn, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
                 choices = adj.fxn.choices,
-                selected = .get_default(defaults, "color.adj.fxn", "",
-                    function(x) x %in% adj.fxn.choices)
+                selected = .get_default(
+                    defaults, "color.adj.fxn", "",
+                    function(x) x %in% adj.fxn.choices
+                )
             ), documentParameters$color.adj.fxn, placement = "top", options = list(container = "body"))
         ),
         "Points" = tagList(
@@ -289,8 +313,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$split.show.all.others, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("plot.order"), "Plot Order",
                 choices = c("unordered", "increasing", "decreasing", "randomize"),
-                selected = .get_default(defaults, "plot.order", "unordered",
-                    function(x) x %in% c("unordered", "increasing", "decreasing", "randomize"))
+                selected = .get_default(
+                    defaults, "plot.order", "unordered",
+                    function(x) x %in% c("unordered", "increasing", "decreasing", "randomize")
+                )
             ), documentParameters$plot.order, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("shape.panel"), "Shape Panel",
                 value = .get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8")
@@ -311,9 +337,15 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     "solid", "dashed", "dotted", "dotdash",
                     "longdash", "twodash"
                 ),
-                selected = .get_default(defaults, "contour.linetype", "solid",
-                    function(x) x %in% c("solid", "dashed", "dotted", "dotdash",
-                        "longdash", "twodash"))
+                selected = .get_default(
+                    defaults, "contour.linetype", "solid",
+                    function(x) {
+                        x %in% c(
+                            "solid", "dashed", "dotted", "dotdash",
+                            "longdash", "twodash"
+                        )
+                    }
+                )
             ), documentParameters$contour.linetype, placement = "top", options = list(container = "body")),
             uiOutput(ns("color.panel.ui"))
         ),
@@ -328,92 +360,131 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("multivar.split.dir"), "Multivar Split Dir",
                 choices = c("col", "row"),
-                selected = .get_default(defaults, "multivar.split.dir", "col",
-                    function(x) x %in% c("col", "row"))
+                selected = .get_default(
+                    defaults, "multivar.split.dir", "col",
+                    function(x) x %in% c("col", "row")
+                )
             ), documentParameters$multivar.split.dir, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("split.adjust.scales"), "Facet Scales",
-                choices = c("fixed", "free", "free_x", "free_y"),
-                selected = .get_default(defaults, "split.adjust.scales", "fixed",
-                    function(x) x %in% c("fixed", "free", "free_x", "free_y"))
-            ), "Control whether facet panels share the same axis scales or allow them to vary independently",
-                placement = "top", options = list(container = "body"))
+            tipify(
+                selectInput(ns("split.adjust.scales"), "Facet Scales",
+                    choices = c("fixed", "free", "free_x", "free_y"),
+                    selected = .get_default(
+                        defaults, "split.adjust.scales", "fixed",
+                        function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                    )
+                ), "Control whether facet panels share the same axis scales or allow them to vary independently",
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Annotations" = tagList(
-            tipify(selectInput(ns("annotate.by"), "Annotate By",
-                choices = choices,
-                selected = .get_default(defaults, "annotate.by", "",
-                    function(x) x %in% choices)
-            ), "Select a column whose values will be used to identify points for highlighting and annotation",
-                placement = "top", options = list(container = "body")),
-            tipify(textAreaInput(ns("highlight.points"), "Points to Highlight",
-                placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
-                value = .get_default(defaults, "highlight.points", ""),
-                rows = 3
-            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
-                placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("highlight.color"), "Highlight Fill",
-                value = .get_default(defaults, "highlight.color", "#00FFF7"),
-                allowTransparent = TRUE
-            ), "Choose the fill color for highlighted points",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("highlight.size"), "Highlight Size",
-                min = 0.1, step = 0.5,
-                value = .get_default(defaults, "highlight.size", 7, is.numeric)
-            ), "Set the size of highlighted points on the plot",
-                placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("highlight.border.color"), "Highlight Border Color",
-                value = .get_default(defaults, "highlight.border.color", "#000000")
-            ), "Choose the border color for highlighted points",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("highlight.border.width"), "Highlight Border Width",
-                min = 0, step = 0.25,
-                value = .get_default(defaults, "highlight.border.width", 1, is.numeric)
-            ), "Set the width of the border around highlighted points",
-                placement = "top", options = list(container = "body")),
-            tipify(checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
-                value = .get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
-            ), "When enabled, automatically adds text labels to highlighted points using their 'Annotate By' values",
-                placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("annotation.color"), "Annotation Color",
-                value = .get_default(defaults, "annotation.color", "black")
-            ), "Set the text color for annotation labels",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("annotation.ax"), "Annotation X Offset",
-                step = 1,
-                value = .get_default(defaults, "annotation.ax", 20, is.numeric)
-            ), "Horizontal pixel offset of annotation labels from their target points",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("annotation.ay"), "Annotation Y Offset",
-                step = 1,
-                value = .get_default(defaults, "annotation.ay", -20, is.numeric)
-            ), "Vertical pixel offset of annotation labels from their target points (negative values move up)",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("annotation.size"), "Annotation Size",
-                min = 1, step = 0.5,
-                value = .get_default(defaults, "annotation.size", 10, is.numeric)
-            ), "Set the font size of annotation text labels in points",
-                placement = "top", options = list(container = "body")),
-            tipify(checkboxInput(ns("annotation.showarrow"), "Show Arrow",
-                value = .get_default(defaults, "annotation.showarrow", TRUE, is.logical)
-            ), "Toggle whether an arrow is drawn from the annotation label to the target point",
-                placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("annotation.arrowcolor"), "Arrow Color",
-                value = .get_default(defaults, "annotation.arrowcolor", "black")
-            ), "Set the color of the annotation arrow connecting the label to the point",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
-                min = 0, step = 1, max = 7,
-                value = .get_default(defaults, "annotation.arrowhead", 2, is.numeric)
-            ), "Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead",
-                placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
-                min = 0.1, step = 0.25,
-                value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
-            ), "Set the line width of the annotation arrow",
-                placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("annotate.by"), "Annotate By",
+                    choices = choices,
+                    selected = .get_default(
+                        defaults, "annotate.by", "",
+                        function(x) x %in% choices
+                    )
+                ), "Select a column whose values will be used to identify points for highlighting and annotation",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                textAreaInput(ns("highlight.points"), "Points to Highlight",
+                    placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
+                    value = .get_default(defaults, "highlight.points", ""),
+                    rows = 3
+                ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourInput(ns("highlight.color"), "Highlight Fill",
+                    value = .get_default(defaults, "highlight.color", "#00FFF7"),
+                    allowTransparent = TRUE
+                ), "Choose the fill color for highlighted points",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("highlight.size"), "Highlight Size",
+                    min = 0.1, step = 0.5,
+                    value = .get_default(defaults, "highlight.size", 7, is.numeric)
+                ), "Set the size of highlighted points on the plot",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourInput(ns("highlight.border.color"), "Highlight Border Color",
+                    value = .get_default(defaults, "highlight.border.color", "#000000")
+                ), "Choose the border color for highlighted points",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("highlight.border.width"), "Highlight Border Width",
+                    min = 0, step = 0.25,
+                    value = .get_default(defaults, "highlight.border.width", 1, is.numeric)
+                ), "Set the width of the border around highlighted points",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
+                    value = .get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
+                ), "When enabled, automatically adds text labels to highlighted points using their 'Annotate By' values",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourInput(ns("annotation.color"), "Annotation Color",
+                    value = .get_default(defaults, "annotation.color", "black")
+                ), "Set the text color for annotation labels",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("annotation.ax"), "Annotation X Offset",
+                    step = 1,
+                    value = .get_default(defaults, "annotation.ax", 20, is.numeric)
+                ), "Horizontal pixel offset of annotation labels from their target points",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("annotation.ay"), "Annotation Y Offset",
+                    step = 1,
+                    value = .get_default(defaults, "annotation.ay", -20, is.numeric)
+                ), "Vertical pixel offset of annotation labels from their target points (negative values move up)",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("annotation.size"), "Annotation Size",
+                    min = 1, step = 0.5,
+                    value = .get_default(defaults, "annotation.size", 10, is.numeric)
+                ), "Set the font size of annotation text labels in points",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                checkboxInput(ns("annotation.showarrow"), "Show Arrow",
+                    value = .get_default(defaults, "annotation.showarrow", TRUE, is.logical)
+                ), "Toggle whether an arrow is drawn from the annotation label to the target point",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourInput(ns("annotation.arrowcolor"), "Arrow Color",
+                    value = .get_default(defaults, "annotation.arrowcolor", "black")
+                ), "Set the color of the annotation arrow connecting the label to the point",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
+                    min = 0, step = 1, max = 7,
+                    value = .get_default(defaults, "annotation.arrowhead", 2, is.numeric)
+                ), "Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
+                    min = 0.1, step = 0.25,
+                    value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
+                ), "Set the line width of the annotation arrow",
+                placement = "top", options = list(container = "body")
+            ),
             tipify(actionButton(ns("annotation.clear"), "Clear Annotations"),
                 "Remove all annotation labels and arrows from the current plot",
-                placement = "top", options = list(container = "body"))
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Legend/Scale" = tagList(
             tipify(checkboxInput(ns("legend.show"), "Show Legend",
@@ -444,8 +515,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         "Trajectory" = tagList(
             tipify(selectInput(ns("trajectory.group.by"), "Trajectory Group By",
                 choices = cat.choices,
-                selected = .get_default(defaults, "trajectory.group.by", "",
-                    function(x) x %in% cat.choices)
+                selected = .get_default(
+                    defaults, "trajectory.group.by", "",
+                    function(x) x %in% cat.choices
+                )
             ), documentParameters$trajectory.group.by, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
                 placeholder = "e.g. [A,B],[C,D,E]",
@@ -472,8 +545,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(selectizeInput(ns("hover.data"), "Hover Data",
                 choices = choices,
                 multiple = TRUE,
-                selected = .get_default(defaults, "hover.data", "",
-                    function(x) all(x %in% choices))
+                selected = .get_default(
+                    defaults, "hover.data", "",
+                    function(x) all(x %in% choices)
+                )
             ), documentParameters$hover.data, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("hover.round.digits"), "Hover Round Digits",
                 value = .get_default(defaults, "hover.round.digits", 5, is.numeric),

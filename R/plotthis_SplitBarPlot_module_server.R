@@ -14,7 +14,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide show
-#' 
+#'
 #' @export
 #'
 #' @seealso [plotthis::SplitBarPlot()], [VizModules::organize_inputs()],
@@ -31,25 +31,25 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         axis_scale <- reactive({
             axis_scale_factor <- input$axis.scale.factor
         })
-        #Initial call of .calculate_range() made into a reactive to be used later on in server 
+        # Initial call of .calculate_range() made into a reactive to be used later on in server
         axis_range <- reactive({
             return(.calculate_range(
-                        df                = data(),
-                        data_col_x        = input$y.data,
-                        data_col_y        = input$x.data,
-                        axis_scale_factor = axis_scale(),
-                        grouping          = TRUE
-                    ))
+                df                = data(),
+                data_col_x        = input$y.data,
+                data_col_y        = input$x.data,
+                axis_scale_factor = axis_scale(),
+                grouping          = TRUE
+            ))
         })
 
-        
+
         # Hide individual inputs if specified
         if (!is.null(hide.inputs)) {
             for (input.name in hide.inputs) hide(input.name)
         }
 
         # Hide tabs if specified
-    
+
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
         }
@@ -144,7 +144,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!initialized()) {
                 # Only require y.data, other inputs can be empty
                 req(input$y.data)
-                
+
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$x.data) && input$x.data != "") {
                     x_range <- axis_range()
@@ -186,7 +186,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            
+
             # Calculate x.max and x.min from the default selections
             default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
             default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
@@ -216,7 +216,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateNumericInput(session, "facet.nrow", value = NA)
             updateMaterialSwitch(session, "facet.by.row", value = TRUE)
             updateSelectInput(session, "split.by", selected = "")
-          #Aesthetics
+            # Aesthetics
             updateSelectInput(session, "theme", selected = "theme_this")
             updateSelectInput(session, "alpha.by", selected = "")
             updateMaterialSwitch(session, "alpha.reverse", value = FALSE)
@@ -239,7 +239,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Lines
             .reset_lines_inputs(session)
-
         })
 
         # Update x-axis range when data columns or fill.by change (when auto-update is off)
@@ -271,7 +270,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 split.by <- isolate_fn(input$split.by)
             }
             fill.by <- NULL
-            if (!isolate_fn(input$fill.by) == ""){
+            if (!isolate_fn(input$fill.by) == "") {
                 fill.by <- isolate_fn(input$fill.by)
             }
 
@@ -304,11 +303,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
 
             alpha.by <- NULL
-            if (!isolate_fn(input$alpha.by) == ""){
-              alpha.by <- isolate_fn(input$alpha.by)
+            if (!isolate_fn(input$alpha.by) == "") {
+                alpha.by <- isolate_fn(input$alpha.by)
             }
-          
-          
+
+
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
 
@@ -330,7 +329,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 x_max = isolate_fn(input$x.max),
                 theme = "theme_this",
                 theme_args = theme_args,
-                alpha_by  = alpha.by,
+                alpha_by = alpha.by,
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
@@ -344,7 +343,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # to replace it with user-controlled positioning. This is necessary because
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
-            
+
 
             if (!isolate_fn(input$rotate)) {
                 p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
@@ -357,14 +356,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         axis.ticks.y = ggplot2::element_line()
                     )
                 } else {
-                    # #Determining wether each y value is positive or negative 
+                    # #Determining wether each y value is positive or negative
                     # Show category labels at the slider-controlled position on the x axis
                     position <- isolate_fn(input$text.position)
                     lineheight <- 0.5
 
 
                     p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers 
+                        data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers
                         aes(
                             x = position, y = !!sym(y),
                             label = ifelse(
@@ -381,12 +380,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         lineheight = lineheight,
                         inherit.aes = FALSE
                     ) +
-                    ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
-                    
+                        ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
                     p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers 
+                        data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
                         aes(
-                            x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction 
+                            x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction
                             label = ifelse(
                                 is.na(!!sym(y)), " NA ",
                                 ifelse(
@@ -401,7 +400,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         lineheight = lineheight,
                         inherit.aes = FALSE
                     ) +
-                    ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                        ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                 }
             }
             fig <- ggplotly(p) |>
@@ -447,7 +446,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         # Render the plot output
         output$SplitBarPlot <- renderPlotly({
-
             x_input <- input$x.data
             y_input <- input$y.data
 
@@ -482,6 +480,4 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             filename_base = "SplitBarPlot"
         )
     })
-
 }
-

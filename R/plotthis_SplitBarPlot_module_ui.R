@@ -12,7 +12,7 @@
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Nearly all parameters for [plotthis::SplitBarPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
-#' 
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::SplitBarPlot()] parameters are not available via UI inputs:
 #' \itemize{
@@ -69,7 +69,7 @@
 #'   \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
 #' }
-#' 
+#'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
@@ -145,9 +145,11 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     max.x <- max(numeric.data, na.rm = TRUE)
     min.x <- min(numeric.data, na.rm = TRUE)
 
-    selected <- list("x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
-            "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
-            "facet_byrow", "split_by", "x_min", "x_max")
+    selected <- list(
+        "x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
+        "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
+        "facet_byrow", "split_by", "x_min", "x_max"
+    )
 
     documentParameters <- get_documentation(
         package_name = "plotthis::SplitBarPlot", type = "param",

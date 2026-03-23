@@ -2,40 +2,29 @@ library(shiny)
 library(VizModules)
 
 # ---------------------------------------------------------------------------
-# Inline datasets used only in this gallery
-# ---------------------------------------------------------------------------
-Bar <- data.frame(
-    Group  = c("A", "B", "C", "D", "E"),
-    Type   = c("Alpha", "Beta", "Alpha", "Gamma", "Beta"),
-    Values = c(22, 35, 18, 41, 29),
-    Numbers = c(15, -8, 22, -5, 12),
-    Score  = c(7, -3, 15, 8, -2)
-)
-
-# ---------------------------------------------------------------------------
 # Derived summary dataset (pie plot)
 # ---------------------------------------------------------------------------
-sales_by_product <- aggregate(revenue ~ product_line, gallery_sales, sum)
+sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
 
 # ---------------------------------------------------------------------------
 # One dataset per module
 # ---------------------------------------------------------------------------
 module_data <- list(
-    area     = gallery_sales,
-    bar      = Bar,
-    box      = gallery_demographics,
-    density  = gallery_demographics,
+    area     = example_sales,
+    bar      = example_bar,
+    box      = example_demographics,
+    density  = example_demographics,
     dumbbell = example_school_earnings,
-    histogram = gallery_demographics,
-    line     = gallery_sales,
-    parallel = gallery_sales,
+    histogram = example_demographics,
+    line     = example_sales,
+    parallel = example_sales,
     pie      = sales_by_product,
     radar    = example_skills,
-    scatter  = gallery_sales,
-    splitbar = Bar,
+    scatter  = example_sales,
+    splitbar = example_bar,
     ternary  = example_roles,
-    violin   = gallery_demographics,
-    yplot    = gallery_demographics
+    violin   = example_demographics,
+    yplot    = example_demographics
 )
 
 # ---------------------------------------------------------------------------

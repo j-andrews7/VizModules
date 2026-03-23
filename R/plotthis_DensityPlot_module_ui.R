@@ -12,7 +12,7 @@
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #' Nearly all parameters for [plotthis::DensityPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
-#' 
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::DensityPlot()] parameters are not available via UI inputs:
 #' \itemize{
@@ -62,7 +62,7 @@
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
 #' }
-#' 
+#'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
@@ -114,7 +114,7 @@
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
-#' 
+#'
 #' @export
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::DensityPlot()], [VizModules::organize_inputs()],
@@ -134,9 +134,11 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-    selected <- list("x", "group_by", "position", "alpha",
-            "add_bars", "bar_height", "bar_alpha", "bar_width",
-            "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow")
+    selected <- list(
+        "x", "group_by", "position", "alpha",
+        "add_bars", "bar_height", "bar_alpha", "bar_width",
+        "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow"
+    )
 
     documentParameters <- get_documentation(
         package_name = "plotthis::DensityPlot", type = "param",
@@ -145,44 +147,75 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Data", selected = .get_default(defaults, "x.data", num.choices[2],
-                    function(x) x %in% num.choices),
-                choices = num.choices), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group By",
-                selected = .get_default(defaults, "group.by", "",
-                    function(x) x %in% c("", cat.choices)),
-                choices = c("", cat.choices)),
-                documentParameters$group_by, placement = "top", options = list(container = "body"))
+            tipify(selectInput(ns("x.data"), "X Data",
+                selected = .get_default(
+                    defaults, "x.data", num.choices[2],
+                    function(x) x %in% num.choices
+                ),
+                choices = num.choices
+            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("group.by"), "Group By",
+                    selected = .get_default(
+                        defaults, "group.by", "",
+                        function(x) x %in% c("", cat.choices)
+                    ),
+                    choices = c("", cat.choices)
+                ),
+                documentParameters$group_by,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
-                documentParameters$facet_by, placement = "top", options = list(container = "body")),
+                documentParameters$facet_by,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
-                documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+                documentParameters$facet_scales,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
-                documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+                documentParameters$facet_ncol,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
-                documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+                documentParameters$facet_nrow,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
-                documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
+                documentParameters$facet_byrow,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Aesthetics" = tagList(
             tipify(numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
-                documentParameters$alpha, placement = "top", options = list(container = "body")),
+                documentParameters$alpha,
+                placement = "top", options = list(container = "body")
+            ),
             uiOutput(ns("palette.selection")),
-            tipify(selectInput(ns("position"), "Position", selected = "identity",
+            tipify(selectInput(ns("position"), "Position",
+                selected = "identity",
                 choices = c("identity", "stack", "dodge", "fill")
             ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
             tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
-                documentParameters$add_bars, placement = "top", options = list(container = "body")),
+                documentParameters$add_bars,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
-                documentParameters$bar_height, placement = "top", options = list(container = "body")),
+                documentParameters$bar_height,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
-                documentParameters$bar_alpha, placement = "top", options = list(container = "body")),
+                documentParameters$bar_alpha,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
-                documentParameters$bar_width, placement = "top", options = list(container = "body"))
+                documentParameters$bar_width,
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),

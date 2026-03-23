@@ -44,15 +44,20 @@
                                     sig.threshold = 0.05) {
     # Helper to run a single test on two vectors
     .run_test <- function(vals1, vals2, test_type, paired_test) {
-        if (length(vals1) < 2 || length(vals2) < 2) return(NA_real_)
-        tryCatch({
-            result <- switch(test_type,
-                "wilcox.test" = stats::wilcox.test(vals1, vals2, paired = paired_test),
-                "t.test" = stats::t.test(vals1, vals2, paired = paired_test),
-                stop("Unsupported pairwise test: ", test_type)
-            )
-            result$p.value
-        }, error = function(e) NA_real_)
+        if (length(vals1) < 2 || length(vals2) < 2) {
+            return(NA_real_)
+        }
+        tryCatch(
+            {
+                result <- switch(test_type,
+                    "wilcox.test" = stats::wilcox.test(vals1, vals2, paired = paired_test),
+                    "t.test" = stats::t.test(vals1, vals2, paired = paired_test),
+                    stop("Unsupported pairwise test: ", test_type)
+                )
+                result$p.value
+            },
+            error = function(e) NA_real_
+        )
     }
 
     # Helper to convert p-value to significance symbol
@@ -61,7 +66,11 @@
             ifelse(p <= 0.0001, "****",
                 ifelse(p <= 0.001, "***",
                     ifelse(p <= 0.01, "**",
-                        ifelse(p <= sig.threshold, "*", "ns")))))
+                        ifelse(p <= sig.threshold, "*", "ns")
+                    )
+                )
+            )
+        )
     }
 
     # Core function to compute stats for a single data subset
@@ -80,15 +89,21 @@
             results <- lapply(x_levels, function(xlev) {
                 x_sub <- sub_df[as.character(sub_df[[x]]) == xlev, ]
                 grp_vals <- as.character(x_sub[[group.by]])
-                if (length(unique(grp_vals)) < 2) return(NULL)
-                p_val <- tryCatch({
-                    if (test == "kruskal.test") {
-                        stats::kruskal.test(x_sub[[y]] ~ factor(x_sub[[group.by]]))$p.value
-                    } else {
-                        summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", group.by, "`)")),
-                            data = x_sub))[[1]][["Pr(>F)"]][1]
-                    }
-                }, error = function(e) NA_real_)
+                if (length(unique(grp_vals)) < 2) {
+                    return(NULL)
+                }
+                p_val <- tryCatch(
+                    {
+                        if (test == "kruskal.test") {
+                            stats::kruskal.test(x_sub[[y]] ~ factor(x_sub[[group.by]]))$p.value
+                        } else {
+                            summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", group.by, "`)")),
+                                data = x_sub
+                            ))[[1]][["Pr(>F)"]][1]
+                        }
+                    },
+                    error = function(e) NA_real_
+                )
                 data.frame(
                     group1 = "all", group2 = "all", p.value = p_val,
                     test = test, facet_level = facet_level, x_level = xlev,
@@ -98,15 +113,21 @@
             do.call(rbind, Filter(Negate(is.null), results))
         } else {
             # Test across x-levels overall
-            if (length(unique(as.character(sub_df[[x]]))) < 2) return(NULL)
-            p_val <- tryCatch({
-                if (test == "kruskal.test") {
-                    stats::kruskal.test(sub_df[[y]] ~ factor(sub_df[[x]]))$p.value
-                } else {
-                    summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", x, "`)")),
-                        data = sub_df))[[1]][["Pr(>F)"]][1]
-                }
-            }, error = function(e) NA_real_)
+            if (length(unique(as.character(sub_df[[x]]))) < 2) {
+                return(NULL)
+            }
+            p_val <- tryCatch(
+                {
+                    if (test == "kruskal.test") {
+                        stats::kruskal.test(sub_df[[y]] ~ factor(sub_df[[x]]))$p.value
+                    } else {
+                        summary(stats::aov(as.formula(paste0("`", y, "` ~ factor(`", x, "`)")),
+                            data = sub_df
+                        ))[[1]][["Pr(>F)"]][1]
+                    }
+                },
+                error = function(e) NA_real_
+            )
             data.frame(
                 group1 = "all", group2 = "all", p.value = p_val,
                 test = test, facet_level = facet_level, x_level = NA_character_,
@@ -121,7 +142,9 @@
             # Compare group.by levels within each x-level
             x_levels <- unique(as.character(sub_df[[x]]))
             grp_levels <- unique(as.character(sub_df[[group.by]]))
-            if (length(grp_levels) < 2) return(NULL)
+            if (length(grp_levels) < 2) {
+                return(NULL)
+            }
 
             grp_pairs <- if (!is.null(pairs)) {
                 pairs
@@ -147,7 +170,9 @@
         } else {
             # Standard: compare x-levels pairwise
             x_levels <- unique(as.character(sub_df[[x]]))
-            if (length(x_levels) < 2) return(NULL)
+            if (length(x_levels) < 2) {
+                return(NULL)
+            }
 
             test_pairs <- if (!is.null(pairs)) {
                 pairs
@@ -257,12 +282,16 @@
                                      bracket.inset = 0.025) {
     empty_result <- list(annotations = list(), shapes = list(), y.max = NULL)
 
-    if (is.null(stats_df) || nrow(stats_df) == 0) return(empty_result)
+    if (is.null(stats_df) || nrow(stats_df) == 0) {
+        return(empty_result)
+    }
 
     # Filter non-significant if requested
     if (hide.ns) {
         stats_df <- stats_df[!is.na(stats_df$p.adj) & stats_df$p.adj <= sig.threshold, ]
-        if (nrow(stats_df) == 0) return(empty_result)
+        if (nrow(stats_df) == 0) {
+            return(empty_result)
+        }
     }
 
     # Remove omnibus tests (kruskal/anova) - they don't have pairwise brackets
@@ -326,15 +355,17 @@
     .get_x_pos <- function(group_label, x_level = NA) {
         if (!is.null(group.by) && nzchar(group.by) && !is.na(x_level)) {
             # Nested grouping: position within the x-level category
-            x_idx <- match(x_level, x.order)  # 1-based
+            x_idx <- match(x_level, x.order) # 1-based
             grp_levels <- unique(as.character(df[[group.by]]))
             n_grps <- length(grp_levels)
             grp_idx <- match(group_label, grp_levels) - 1
-            if (n_grps == 1) return(x_idx)
+            if (n_grps == 1) {
+                return(x_idx)
+            }
             offset <- (grp_idx / (n_grps - 1) - 0.5) * 0.8
             x_idx + offset
         } else {
-            match(group_label, x.order)  # 1-based
+            match(group_label, x.order) # 1-based
         }
     }
 
@@ -669,11 +700,15 @@
 .generate_pair_strings <- function(df, x, group.by = NULL) {
     if (!is.null(group.by) && nzchar(group.by) && group.by %in% names(df)) {
         grp_levels <- unique(as.character(df[[group.by]]))
-        if (length(grp_levels) < 2) return(character(0))
+        if (length(grp_levels) < 2) {
+            return(character(0))
+        }
         pairs_list <- utils::combn(grp_levels, 2, simplify = FALSE)
     } else {
         x_levels <- unique(as.character(df[[x]]))
-        if (length(x_levels) < 2) return(character(0))
+        if (length(x_levels) < 2) {
+            return(character(0))
+        }
         pairs_list <- utils::combn(x_levels, 2, simplify = FALSE)
     }
     vapply(pairs_list, paste, character(1), collapse = " vs ")
@@ -743,8 +778,10 @@
     stats_df$p.adjust.method <- p.adjust.method
 
     # Reorder columns for clarity
-    col_order <- c("group1", "group2", "test", "p.value", "p.adjust.method",
-                   "p.adj", "p.signif")
+    col_order <- c(
+        "group1", "group2", "test", "p.value", "p.adjust.method",
+        "p.adj", "p.signif"
+    )
     extra_cols <- setdiff(names(stats_df), col_order)
     stats_df <- stats_df[, c(col_order, extra_cols), drop = FALSE]
 

@@ -37,31 +37,31 @@
 #'
 #' @examples
 #' fig <- parallelCoordinatesPlot(
-#'   data = mtcars,
-#'   dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
-#'   color.by = "mpg",
-#'   color.scale = "Viridis",
-#'   line.opacity = 0.6
+#'     data = mtcars,
+#'     dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
+#'     color.by = "mpg",
+#'     color.scale = "Viridis",
+#'     line.opacity = 0.6
 #' )
 parallelCoordinatesPlot <- function(
-    data,
-    dimensions,
-    color.by = NULL,
-    color.scale = "Viridis",
-    line.opacity = 0.5,
-    line.width = 1,
-    show.colorbar = TRUE,
-    label.font.size = 12,
-    label.font.color = "black",
-    label.font.family = "Arial",
-    tick.font.size = 10,
-    tick.font.color = "black",
-    tick.font.family = "Arial",
-    title.text = "",
-    title.font.size = 16,
-    title.font.family = "Arial",
-    title.text.color = "black",
-    bgcolor = "#FFFFFF"
+  data,
+  dimensions,
+  color.by = NULL,
+  color.scale = "Viridis",
+  line.opacity = 0.5,
+  line.width = 1,
+  show.colorbar = TRUE,
+  label.font.size = 12,
+  label.font.color = "black",
+  label.font.family = "Arial",
+  tick.font.size = 10,
+  tick.font.color = "black",
+  tick.font.family = "Arial",
+  title.text = "",
+  title.font.size = 16,
+  title.font.family = "Arial",
+  title.text.color = "black",
+  bgcolor = "#FFFFFF"
 ) {
     df <- data
 
@@ -86,26 +86,26 @@ parallelCoordinatesPlot <- function(
     # Build line spec
     if (!is.null(color.by) && nzchar(color.by) && color.by %in% names(df)) {
         color_vals <- df[[color.by]]
-        
+
         # Map categorical color column to integers
         if (!is.numeric(color_vals)) {
             lvls <- sort(unique(as.character(color_vals)))
             color_vals <- match(as.character(color_vals), lvls)
         }
-        
+
         line_spec <- list(
-                color = color_vals,
-                colorscale = color.scale,
-                showscale = show.colorbar,
-                opacity = line.opacity,
-                cmin = min(color_vals, na.rm = TRUE),
-                cmax = max(color_vals, na.rm = TRUE),
-                colorbar = list(
-                    title = list(text = "color.by")
-                )
+            color = color_vals,
+            colorscale = color.scale,
+            showscale = show.colorbar,
+            opacity = line.opacity,
+            cmin = min(color_vals, na.rm = TRUE),
+            cmax = max(color_vals, na.rm = TRUE),
+            colorbar = list(
+                title = list(text = "color.by")
             )
-        
-        
+        )
+
+
         if (line.width != 1) {
             line_spec$width <- line.width
         }

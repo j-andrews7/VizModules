@@ -77,12 +77,14 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "sans-serif", "serif", "monospace"
     )
 
-    selected <- list("labels", "values", "sort", "direction", "rotation", "hole",
+    selected <- list(
+        "labels", "values", "sort", "direction", "rotation", "hole",
         "slice.line.color", "slice.line.width", "textinfo", "textposition",
         "insidetextorientation", "text.font.size", "text.font.family", "text.font.color",
         "title.x", "title.font.size", "title.font.family", "title.font.color",
         "show.legend", "legend.orientation", "legend.font.family",
-        "legend.font.size", "legend.font.color")
+        "legend.font.size", "legend.font.color"
+    )
 
     documentParameters <- get_documentation(
         package_name = "VizModules::piePlot", type = "param",
@@ -91,16 +93,28 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("labels"), "Label column (summary data):",
-                selected = .get_default(defaults, "labels", cat.choices[2],
-                    function(x) x %in% cat.choices),
-                choices = cat.choices),
-                documentParameters$labels, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("values"), "Aggregated value column:",
-                selected = .get_default(defaults, "values", num.choices[2],
-                    function(x) x %in% num.choices),
-                choices = num.choices),
-                documentParameters$values, placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("labels"), "Label column (summary data):",
+                    selected = .get_default(
+                        defaults, "labels", cat.choices[2],
+                        function(x) x %in% cat.choices
+                    ),
+                    choices = cat.choices
+                ),
+                documentParameters$labels,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("values"), "Aggregated value column:",
+                    selected = .get_default(
+                        defaults, "values", num.choices[2],
+                        function(x) x %in% num.choices
+                    ),
+                    choices = num.choices
+                ),
+                documentParameters$values,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(checkboxInput(ns("sort.slices"), "Sort slices by value",
                 value = .get_default(defaults, "sort.slices", TRUE, is.logical)
             ), documentParameters$sort, placement = "top", options = list(container = "body")),
@@ -151,8 +165,10 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             ), documentParameters$text.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("text.font.family"), "Slice text font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "text.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "text.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$text.font.family, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("text.font.color"), "Slice text color:",
                 value = .get_default(defaults, "text.font.color", "#000000")
@@ -170,8 +186,10 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "title.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "title.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
                 value = .get_default(defaults, "title.font.color", "#000000")
@@ -185,8 +203,10 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend font:",
                 choices = font.choices,
-                selected = .get_default(defaults, "legend.font.family", "Arial",
-                    function(x) x %in% font.choices)
+                selected = .get_default(
+                    defaults, "legend.font.family", "Arial",
+                    function(x) x %in% font.choices
+                )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend font size:",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),
