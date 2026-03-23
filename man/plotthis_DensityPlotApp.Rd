@@ -8,7 +8,7 @@ plotthis_DensityPlotApp(data_list = NULL)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("demographics" = gallery_demographics)} is used as example data.}
+\code{list("demographics" = example_demographics)} is used as example data.}
 }
 \value{
 A Shiny app object.
@@ -21,7 +21,7 @@ for configuring and displaying an interactive density plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{gallery_demographics} as an example dataset. Uploaded data files are added
+\code{example_demographics} as an example dataset. Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
@@ -35,7 +35,7 @@ app <- plotthis_DensityPlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- plotthis_DensityPlotApp(list("demographics" = gallery_demographics))
+app2 <- plotthis_DensityPlotApp(list("demographics" = example_demographics))
 if (interactive()) runApp(app2)
 }
 \author{

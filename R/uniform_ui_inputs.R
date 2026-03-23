@@ -618,7 +618,7 @@
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
-                value = .get_default(defaults, "margin.t", 100, is.numeric),
+                value = .get_default(defaults, "margin.t", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Top margin of the plot in pixels",
@@ -626,7 +626,7 @@
         ),
         tipify(
             numericInput(ns("margin.b"), "Margin Bottom",
-                value = .get_default(defaults, "margin.b", 100, is.numeric),
+                value = .get_default(defaults, "margin.b", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Bottom margin of the plot in pixels",
@@ -634,7 +634,7 @@
         ),
         tipify(
             numericInput(ns("margin.l"), "Margin Left",
-                value = .get_default(defaults, "margin.l", 90, is.numeric),
+                value = .get_default(defaults, "margin.l", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Left margin of the plot in pixels",
@@ -642,7 +642,7 @@
         ),
         tipify(
             numericInput(ns("margin.r"), "Margin Right",
-                value = .get_default(defaults, "margin.r", 90, is.numeric),
+                value = .get_default(defaults, "margin.r", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Right margin of the plot in pixels",
@@ -650,7 +650,7 @@
         ),
         tipify(
             numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.05, is.numeric),
+                value = .get_default(defaults, "subplot.margin", 0.4, is.numeric),
                 min = 0, max = 0.5, step = 0.01
             ),
             paste(

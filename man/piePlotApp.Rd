@@ -22,7 +22,7 @@ for configuring and displaying an interactive pie plot.
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-an aggregated \code{gallery_sales} dataset (revenue by product line). Uploaded data files are added
+an aggregated \code{example_sales} dataset (revenue by product line). Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.
@@ -36,7 +36,7 @@ app <- piePlotApp()
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-sales_summary <- aggregate(revenue ~ product_line, gallery_sales, sum)
+sales_summary <- aggregate(revenue ~ product_line, example_sales, sum)
 app2 <- piePlotApp(list("sales" = sales_summary))
 if (interactive()) runApp(app2)
 }

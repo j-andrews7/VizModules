@@ -1588,7 +1588,7 @@ is_pure_type <- function(inputs, d) {
 #'
 #' @return The modified plotly figure with added traces.
 #'
-#' @author Jacob Martin, Jared Andrews
+#' @author Jared Andrews
 #' @rdname INTERNAL_add_multi_axis_traces
 #' @keywords internal
 .add_multi_axis_traces <- function(fig, data, x, y, order.cols, plot.mode,

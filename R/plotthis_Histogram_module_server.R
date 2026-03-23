@@ -177,84 +177,83 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                     palcolor_arg <- single_color
                 }
             }
-        }
-          
-        #Facet rows and columns na to null
-        facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-        facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))          
-        
-        theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-        theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
-            
-        p <- plotthis::Histogram(
-            data = data(),
-            x = isolate_fn(input$x.data),
-            group_by = group.by,
-            facet_by = facet.by,
-            facet_scales = isolate_fn(input$facet.scale),
-            facet_ncol = facet.ncol,
-            facet_nrow = facet.nrow,
-            facet_byrow = isolate_fn(input$facet.by.row),
-            alpha = isolate_fn(input$plot.alpha),
-            flip = isolate_fn(input$rotate),
-            bins = bins,
-            binwidth = bin.width,
-            use_trend = isolate_fn(input$use.trend),
-            trend_skip_zero = isolate_fn(input$trend.skip.zero),
-            add_trend = isolate_fn(input$add.trend),
-            trend_alpha = isolate_fn(input$trend.alpha),
-            trend_linewidth = isolate_fn(input$trend.linewidth),
-            trend_pt_size = isolate_fn(input$trend.pt.size),
-            add_bars = isolate_fn(input$add.bars),
-            bar_height = isolate_fn(input$bar.height),
-            bar_alpha = isolate_fn(input$bar.alpha),
-            bar_width = isolate_fn(input$bar.width),
-            theme = "theme_this",
-            theme_args = theme_args,
-            palcolor = palcolor_arg,
-            position = isolate_fn(input$position)
-          )
+
+            # Facet rows and columns na to null
+            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+
+            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+
+            p <- plotthis::Histogram(
+                data = data(),
+                x = isolate_fn(input$x.data),
+                group_by = group.by,
+                facet_by = facet.by,
+                facet_scales = isolate_fn(input$facet.scale),
+                facet_ncol = facet.ncol,
+                facet_nrow = facet.nrow,
+                facet_byrow = isolate_fn(input$facet.by.row),
+                alpha = isolate_fn(input$plot.alpha),
+                flip = isolate_fn(input$rotate),
+                bins = bins,
+                binwidth = bin.width,
+                use_trend = isolate_fn(input$use.trend),
+                trend_skip_zero = isolate_fn(input$trend.skip.zero),
+                add_trend = isolate_fn(input$add.trend),
+                trend_alpha = isolate_fn(input$trend.alpha),
+                trend_linewidth = isolate_fn(input$trend.linewidth),
+                trend_pt_size = isolate_fn(input$trend.pt.size),
+                add_bars = isolate_fn(input$add.bars),
+                bar_height = isolate_fn(input$bar.height),
+                bar_alpha = isolate_fn(input$bar.alpha),
+                bar_width = isolate_fn(input$bar.width),
+                theme = "theme_this",
+                theme_args = theme_args,
+                palcolor = palcolor_arg,
+                position = isolate_fn(input$position)
+            )
 
 
-          fig <- ggplotly(p) |>
-              plotly::layout(
-                  title = list(
-                      font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
-                      x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                  )
-              )
+            fig <- ggplotly(p) |>
+                plotly::layout(
+                    title = list(
+                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                    )
+                )
 
-          # Apply axis styling to all subplot axes (handles faceting/split_by)
-          xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-          yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-          fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
-          # Add reference lines
-          fig <- .add_reference_lines(fig,
-              hline.intercepts = isolate_fn(input$hline.intercepts),
-              hline.colors = isolate_fn(input$hline.colors),
-              hline.widths = isolate_fn(input$hline.widths),
-              hline.linetypes = isolate_fn(input$hline.linetypes),
-              hline.opacities = isolate_fn(input$hline.opacities),
-              vline.intercepts = isolate_fn(input$vline.intercepts),
-              vline.colors = isolate_fn(input$vline.colors),
-              vline.widths = isolate_fn(input$vline.widths),
-              vline.linetypes = isolate_fn(input$vline.linetypes),
-              vline.opacities = isolate_fn(input$vline.opacities),
-              abline.slopes = isolate_fn(input$abline.slopes),
-              abline.intercepts = isolate_fn(input$abline.intercepts),
-              abline.colors = isolate_fn(input$abline.colors),
-              abline.widths = isolate_fn(input$abline.widths),
-              abline.linetypes = isolate_fn(input$abline.linetypes),
-              abline.opacities = isolate_fn(input$abline.opacities)
-          )
+            # Add reference lines
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
+            )
 
-          config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
-          fig <- do.call(config, c(list(p = fig), config_list))
-          fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
-          return(fig)
+            return(fig)
         })
 
         # Render the plot output
