@@ -171,8 +171,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "title.font.size", value = 28)
             .reset_axes_inputs(session)
 
-            # Action Button (unchanged)
-            updateSelectInput(session, "download.format", selected = "png")
+            # Plotly
+            .reset_plotly_inputs(session)
 
             # Lines
             .reset_lines_inputs(session)
@@ -266,6 +266,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
             # bar Plot
             p <- plotthis::BarPlot(
                 data(),
@@ -328,6 +329,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -360,7 +362,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- generate_BarPlot() |>
                     layout(
-                        margin = list(t = 50, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

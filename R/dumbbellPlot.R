@@ -15,6 +15,7 @@
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
 #' @param axis.linecolor Character, hex color for axis lines. Default: "black".
@@ -77,6 +78,7 @@
 dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
+                        subplot.margin = 0.06,
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
                         axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial", 
                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
@@ -157,7 +159,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 
         fig <- subplot(
             plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = TRUE, titleY = TRUE, margin = 0.06
+            titleX = TRUE, titleY = TRUE, margin = subplot.margin
         )
 
         annotations <- .build_facet_annotations(facet_levels)

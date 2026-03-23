@@ -117,8 +117,8 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateMaterialSwitch(session, "scale.y", value = FALSE)
             .reset_axes_inputs(session)
 
-            # Action Button
-            updateSelectInput(session, "download.format", selected = "png")
+            # Plotly
+            .reset_plotly_inputs(session)
 
             # Lines
             .reset_lines_inputs(session)
@@ -152,6 +152,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
 
             p <- plotthis::AreaPlot(
                 data(),
@@ -213,6 +214,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -241,7 +243,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             } else {
                 fig <- generate_AreaPlot() |>
                     layout(
-                        margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                     )
             }
 

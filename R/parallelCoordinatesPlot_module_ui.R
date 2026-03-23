@@ -167,7 +167,8 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             tipify(colourpicker::colourInput(ns("bgcolor"), "Background color:",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
-        )
+        ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

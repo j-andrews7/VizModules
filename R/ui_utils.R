@@ -190,14 +190,12 @@ default_palettes <- function() {
 #' Create standard tack UI for module inputs
 #'
 #' Generates a consistent set of control buttons for VizModules that includes
-#' Auto Update toggle, Update button, Reset button, Download Interactive Plot button,
-#' and Download Format selector. This ensures all modules have a uniform interface.
+#' Auto Update toggle, Update button, and Reset button. Download controls and
+#' plot styling are provided via the "Plotly" tab from
+#' [.uniform_plotly_inputs_ui()].
 #'
 #' @param ns Namespace function from the module (e.g., `ns <- NS(id)`).
-#' @param defaults Optional named list of default values. Currently supports:
-#'   \itemize{
-#'     \item \code{download.format} - Default download format ("svg" or "png"), defaults to "svg"
-#'   }
+#' @param defaults Optional named list of default values. Reserved for future use.
 #' @param has.stats Logical; if TRUE, include a "Save Stats" download button.
 #'   Default FALSE.
 #'
@@ -213,9 +211,6 @@ default_palettes <- function() {
 #' library(shiny)
 #' ns <- NS("myModule")
 #' module_tack_ui(ns)
-#'
-#' # With custom defaults
-#' module_tack_ui(ns, defaults = list(download.format = "png"))
 module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
     tagList(
         fluidRow(
@@ -248,19 +243,8 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 ),
                 style = "margin-top: 25px;"
             ),
-            column(
-                3,
-                downloadButton(
-                    ns("download.interactive"),
-                    "Save Interactive",
-                    class = "btn-secondary",
-                    icon = icon("download"),
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
             if (has.stats) shinyjs::hidden(column(
-                2,
+                3,
                 downloadButton(
                     ns("download.stats"),
                     "Save Stats",
@@ -270,22 +254,7 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 ),
                 id = ns("download.stats.col"),
                 style = "margin-top: 25px;"
-            )),
-            column(
-                2,
-                selectInput(
-                    ns("download.format"),
-                    "Download Format",
-                    selected = ifelse(
-                        "download.format" %in% names(defaults) &&
-                        defaults[["download.format"]] %in% c("svg", "png"),
-                        defaults[["download.format"]],
-                        "svg"
-                    ),
-                    choices = c("png", "svg"),
-                    width = "100%"
-                )
-            )
+            ))
         ),
         br()
     )

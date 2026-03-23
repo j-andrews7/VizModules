@@ -184,6 +184,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
                 documentParameters$bar_width, placement = "top", options = list(container = "body"))
         ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )

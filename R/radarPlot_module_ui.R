@@ -250,7 +250,8 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             tipify(colourpicker::colourInput(ns("polar.bgcolor"), "Polar area background:",
                 value = .get_default(defaults, "polar.bgcolor", "#FFFFFF")
             ), documentParameters$polar.bgcolor, placement = "top", options = list(container = "body"))
-        )
+        ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

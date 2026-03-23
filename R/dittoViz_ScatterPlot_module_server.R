@@ -267,16 +267,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateTextInput(session, "add.trajectory.by.groups", value = "")
             updateNumericInput(session, "trajectory.arrow.size", value = 0.15)
 
-            # Plotly
+            # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = TRUE)
-            updateSelectInput(session, "download.format", selected = "svg")
-            colourpicker::updateColourInput(session, "shape.fill", value = "rgba(0, 0, 0, 0)")
-            colourpicker::updateColourInput(session, "shape.line.color", value = "black")
-            updateNumericInput(session, "shape.line.width", value = 4)
-            updateSelectInput(session, "shape.linetype", selected = "solid")
-            updateNumericInput(session, "shape.opacity", value = 1)
-
-            # Extras
+            .reset_plotly_inputs(session)
             updateCheckboxInput(session, "do.ellipse", value = FALSE)
             updateCheckboxInput(session, "do.contour", value = FALSE)
             updateSelectizeInput(session, "hover.data", selected = "")
@@ -348,7 +341,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             current_color_levels <- isolate_fn(color_levels())
             
             additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_style <- theme_bw() + theme(panel.border = additional_theme$panel.border, axis.line = additional_theme$axis.line, axis.ticks = additional_theme$axis.ticks)
+            theme_style <- theme_bw() + theme(
+                panel.border = additional_theme$panel.border,
+                axis.line = additional_theme$axis.line,
+                axis.ticks = additional_theme$axis.ticks,
+                panel.spacing = ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            )
                 
             p <- dittoViz::scatterPlot(
                 data(),
@@ -650,18 +648,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 }
             }
 
-            fig <- fig |> plotly::layout(
-                newshape = list(
-                    fillcolor = isolate_fn(input$shape.fill),
-                    line = list(
-                        color = isolate_fn(input$shape.line.color),
-                        width = isolate_fn(input$shape.line.width),
-                        dash = isolate_fn(input$shape.linetype)
-                    ),
-                    opacity = isolate_fn(input$shape.opacity)
-                ),
-                annotations = annos
-            )
+            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- fig |> plotly::layout(annotations = annos)
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
@@ -731,7 +719,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         output$scatterPlot <- renderPlotly({
             fig <- generate_scatterPlot() |>
                 layout(
-                    margin = list(t = 100, l = 90, r = 90, b = 100, autoexpand = TRUE)
+                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
                 )
             fig$x$source <- plot_source
             fig

@@ -228,6 +228,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     ),
 
 
+    "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
     "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
     "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
