@@ -13,7 +13,8 @@ example_sales <- data.frame(
     year = factor(years_sales),
     month = factor(months, levels = month.abb),
     units = sample(100:500, 720, replace = TRUE),
-    sale_id = paste0("Sale_", seq_len(720))
+    sale_id = paste0("Sale_", seq_len(720)),
+    product_line = sample(c("Gadgets", "Widgets", "Doohickeys"), 720, replace = TRUE)
 )
 
 # Population data: 50 years × 8 age groups = 400 rows

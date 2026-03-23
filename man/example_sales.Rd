@@ -5,7 +5,7 @@
 \alias{example_sales}
 \title{Example sales dataset}
 \format{
-A data frame with 80 rows and 9 columns:
+A data frame with 720 rows and 7 columns:
 \describe{
 \item{region}{Region of the sale (factor: North, South, East, West, Central, International)}
 \item{revenue}{Revenue for month}
@@ -13,6 +13,7 @@ A data frame with 80 rows and 9 columns:
 \item{month}{The month}
 \item{units}{Units sold}
 \item{sale_id}{Unique sale identifier}
+\item{product_line}{Product line (factor: Gadgets, Widgets, Doohickeys)}
 }
 }
 \source{
@@ -22,8 +23,8 @@ Generated in data-raw/generate_example_data.R.
 example_sales
 }
 \description{
-A simulated product-sales dataset covering five product lines over four years
-and four quarters (80 rows total). Designed to showcase bar, box, violin,
+A simulated product-sales dataset (720 rows total).
+Designed to showcase bar, box, violin,
 area, line, scatter, split-bar, density, and histogram plot modules.
 }
 \author{

@@ -487,17 +487,19 @@ validate_expression <- function(expr_text, col_names) {
 #'   not found in the documentation.
 #'
 #' @importFrom roclang extract_roc_text
+#' 
 #' @author Jacob Martin, Jared Andrews
 #' @export
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
     docs <- lapply(selected, function(s) {
         doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
-        doc %>%
-            gsub("\\\\n", " ", .data) %>%
-            gsub("\\\\", "", .data) %>%
-            gsub("code\\{([^}]+)\\}", "`\\1`", .data) %>%
-            gsub("\n", " ", .data) %>%
-            trimws()
+
+        doc |>
+            gsub("\\\\n", " ", x = _) |>
+            gsub("\\\\", "", x = _) |>
+            gsub("code\\{([^}]+)\\}", "`\\1`", x = _) |>
+            gsub("\n", " ", x = _) |>
+            trimws(x = _)
     })
 
     # Expand co-documented parameters (e.g., c("x.by", "y.by")) into
