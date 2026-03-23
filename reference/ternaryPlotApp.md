@@ -16,9 +16,9 @@ ternaryPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  example datasets with three numeric columns are used. Each data frame
-  should contain numeric columns for the three ternary axes (a, b, c).
-  For multiple traces, include a grouping column.
+  `list("roles" = example_roles)` is used. Each data frame should
+  contain numeric columns for the three ternary axes (a, b, c). For
+  multiple traces, include a grouping column.
 
 ## Value
 
@@ -27,7 +27,7 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-example `roles` and `teams` datasets. Uploaded data files are added to
+`example_roles` as an example dataset. Uploaded data files are added to
 the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is
 overwritten with a warning.

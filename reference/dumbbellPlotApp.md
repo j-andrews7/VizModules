@@ -16,7 +16,8 @@ dumbbellPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("iris" = iris, "mtcars" = mtcars)` is used as example data.
+  `list("school_earnings" = example_school_earnings)` is used as example
+  data.
 
 ## Value
 
@@ -25,8 +26,8 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`iris` and `mtcars` as example datasets. Uploaded data files are added
-to the available datasets and can be selected for plotting. If an
+`example_school_earnings` as an example dataset. Uploaded data files are
+added to the available datasets and can be selected for plotting. If an
 uploaded file shares a name with an existing dataset, the existing one
 is overwritten with a warning.
 
@@ -54,10 +55,10 @@ if (interactive()) runApp(app)
 
 # Launch with custom data:
 data <- data.frame(
-  School = c("MIT", "Stanford", "Harvard"),
-  Women = c(94, 96, 112),
-  Men = c(152, 151, 165),
-  Group = c("A", "B", "A")
+    School = c("MIT", "Stanford", "Harvard"),
+    Women = c(94, 96, 112),
+    Men = c(152, 151, 165),
+    Group = c("A", "B", "A")
 )
 app2 <- dumbbellPlotApp(list("School Earnings" = data))
 if (interactive()) runApp(app2)

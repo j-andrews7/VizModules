@@ -57,7 +57,7 @@ and Download Format selector. This ensures all modules have a uniform interface.
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">module_tack_ui</span><span class="op">(</span><span class="va">ns</span>, defaults <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">module_tack_ui</span><span class="op">(</span><span class="va">ns</span>, defaults <span class="op">=</span> <span class="cn">NULL</span>, has.stats <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,6 +71,11 @@ and Download Format selector. This ensures all modules have a uniform interface.
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
 <dd><p>Optional named list of default values. Currently supports:</p><ul><li><p><code>download.format</code> - Default download format ("svg" or "png"), defaults to "svg"</p></li>
 </ul></dd>
+
+
+<dt id="arg-has-stats">has.stats<a class="anchor" aria-label="anchor" href="#arg-has-stats"></a></dt>
+<dd><p>Logical; if TRUE, include a "Save Stats" download button.
+Default FALSE.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -110,7 +115,7 @@ and Download Format selector. This ensures all modules have a uniform interface.
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Save Interactive</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="myModule-download.format-label" for="myModule-download.format"&gt;Download Format&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>
@@ -147,7 +152,7 @@ and Download Format selector. This ensures all modules have a uniform interface.
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Save Interactive</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="myModule-download.format-label" for="myModule-download.format"&gt;Download Format&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>

@@ -80,7 +80,7 @@ contain a label column and an aggregated numeric value column.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When <code>data_list</code> is not provided (or <code>NULL</code>), the app launches with
-aggregated <code>example_sales</code> and <code>example_population</code> datasets. Uploaded data files are added
+an aggregated <code>gallery_sales</code> dataset (revenue by product line). Uploaded data files are added
 to the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is overwritten
 with a warning.</p>
@@ -101,11 +101,14 @@ with a warning.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Launch with default example data:</span></span></span>
 <span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">piePlotApp</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(m$data, parent.frame()):</span> object 'gallery_sales' not found</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Launch with custom data:</span></span></span>
-<span class="r-in"><span><span class="va">sales_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">revenue</span> <span class="op">~</span> <span class="va">region</span>, <span class="va">example_sales</span>, <span class="va">sum</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sales_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">revenue</span> <span class="op">~</span> <span class="va">product_line</span>, <span class="va">gallery_sales</span>, <span class="va">sum</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(m$data, parent.frame()):</span> object 'gallery_sales' not found</span>
 <span class="r-in"><span><span class="va">app2</span> <span class="op">&lt;-</span> <span class="fu">piePlotApp</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"sales"</span> <span class="op">=</span> <span class="va">sales_summary</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'sales_summary' not found</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app2</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>

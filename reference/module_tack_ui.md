@@ -8,7 +8,7 @@ modules have a uniform interface.
 ## Usage
 
 ``` r
-module_tack_ui(ns, defaults = NULL)
+module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
 ```
 
 ## Arguments
@@ -23,6 +23,11 @@ module_tack_ui(ns, defaults = NULL)
 
   - `download.format` - Default download format ("svg" or "png"),
     defaults to "svg"
+
+- has.stats:
+
+  Logical; if TRUE, include a "Save Stats" download button. Default
+  FALSE.
 
 ## Value
 
@@ -61,7 +66,7 @@ module_tack_ui(ns)
 #>       Save Interactive
 #>     </a>
 #>   </div>
-#>   <div class="col-sm-3">
+#>   <div class="col-sm-2">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
 #>       <label class="control-label" id="myModule-download.format-label" for="myModule-download.format">Download Format</label>
 #>       <div>
@@ -98,7 +103,7 @@ module_tack_ui(ns, defaults = list(download.format = "png"))
 #>       Save Interactive
 #>     </a>
 #>   </div>
-#>   <div class="col-sm-3">
+#>   <div class="col-sm-2">
 #>     <div class="form-group shiny-input-container" style="width:100%;">
 #>       <label class="control-label" id="myModule-download.format-label" for="myModule-download.format">Download Format</label>
 #>       <div>

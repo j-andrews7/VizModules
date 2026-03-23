@@ -18,8 +18,8 @@ parallelCoordinatesPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("mtcars" = mtcars, "iris" = iris)` is used as example data. Each
-  data frame should contain at least two numeric or categorical columns.
+  `list("sales" = gallery_sales)` is used as example data. Each data
+  frame should contain at least two numeric or categorical columns.
 
 ## Value
 
@@ -28,10 +28,10 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`iris` and `mtcars` as example datasets. Uploaded data files are added
-to the available datasets and can be selected for plotting. If an
-uploaded file shares a name with an existing dataset, the existing one
-is overwritten with a warning.
+`gallery_sales` as an example dataset. Uploaded data files are added to
+the available datasets and can be selected for plotting. If an uploaded
+file shares a name with an existing dataset, the existing one is
+overwritten with a warning.
 
 This is a convenience wrapper around
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
@@ -53,9 +53,11 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- parallelCoordinatesPlotApp()
+#> Error in parallelCoordinatesPlotApp(): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales, "population" = example_population))
+app2 <- parallelCoordinatesPlotApp(list("sales" = gallery_sales))
+#> Error: object 'gallery_sales' not found
 if (interactive()) runApp(app2)
 ```

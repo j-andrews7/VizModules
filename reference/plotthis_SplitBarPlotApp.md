@@ -17,8 +17,7 @@ plotthis_SplitBarPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("sales" = example_sales, "population" = example_population)` is
-  used as example data.
+  `list("Bar" = Bar)` is used as example data.
 
 ## Value
 
@@ -27,10 +26,10 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`example_sales` and `example_population` as example datasets. Uploaded
-data files are added to the available datasets and can be selected for
-plotting. If an uploaded file shares a name with an existing dataset,
-the existing one is overwritten with a warning.
+`Bar` as an example dataset. Uploaded data files are added to the
+available datasets and can be selected for plotting. If an uploaded file
+shares a name with an existing dataset, the existing one is overwritten
+with a warning.
 
 This is a convenience wrapper around
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
@@ -45,14 +44,11 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- plotthis_SplitBarPlotApp()
+#> Error in plotthis_SplitBarPlotApp(): object 'Bar' not found
 if (interactive()) runApp(app)
 
-#Launch with custom data:
-df <- data.frame(
-    group = c("A", "B", "C", "D", "E"),
-    value = c(43, 78, 25, 61, 89),
-    count = c(12, -7, 34, 19, -15)
-)
-app2 <- plotthis_SplitBarPlotApp(list("data" = df))
+# Launch with custom data:
+app2 <- plotthis_SplitBarPlotApp(list("Bar" = Bar))
+#> Error: object 'Bar' not found
 if (interactive()) runApp(app2)
 ```

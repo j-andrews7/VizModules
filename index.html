@@ -224,6 +224,40 @@
 </div>
 </div>
 <div class="section level2">
+<h2 id="statistical-testing">Statistical Testing<a class="anchor" aria-label="anchor" href="#statistical-testing"></a>
+</h2>
+<p>The <strong>BoxPlot</strong>, <strong>ViolinPlot</strong>, and <strong>yPlot</strong> modules include a <strong>Stats</strong> tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure.</p>
+<div class="section level3">
+<h3 id="supported-tests">Supported Tests<a class="anchor" aria-label="anchor" href="#supported-tests"></a>
+</h3>
+<ul>
+<li>
+<strong>Pairwise</strong>: Wilcoxon rank-sum test, t-test (paired or unpaired)</li>
+<li>
+<strong>Omnibus</strong>: Kruskal-Wallis, ANOVA</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h3>
+<ul>
+<li>Bracket annotations with capped or flat style, placed via an interval packing algorithm to minimize vertical space</li>
+<li>Multiple display modes: adjusted p-values, raw p-values, or significance symbols (<code>*</code>, <code>**</code>, <code>***</code>, <code>****</code>)</li>
+<li>P-value correction via any <code>p.adjust</code> method (Holm, Bonferroni, BH, etc.)</li>
+<li>Configurable significance threshold, bracket spacing, inset, and line styling</li>
+<li>Per-facet testing: run tests independently within each facet panel, or across the full dataset</li>
+<li>Nested grouping: compare <code>group.by</code> levels within each x-axis category</li>
+<li>Omnibus test results shown as a draggable text annotation</li>
+<li>Download computed statistics as a CSV with metadata header (correction method, threshold, symbol legend)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="data-format-for-paired-tests">Data Format for Paired Tests<a class="anchor" aria-label="anchor" href="#data-format-for-paired-tests"></a>
+</h3>
+<p>When using paired tests (Wilcoxon signed-rank or paired t-test), each group must have the <strong>same number of observations</strong> in corresponding order. Data should be sorted so that paired samples align row-by-row within each group.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="modules-planned">Modules Planned<a class="anchor" aria-label="anchor" href="#modules-planned"></a>
 </h2>
 <div class="section level3">

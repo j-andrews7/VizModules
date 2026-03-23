@@ -333,6 +333,102 @@ stable, build the module UI/server/app wrappers around it.</label></li>
 </ul>
 </div>
 <div class="section level2">
+<h2 id="integrating-statistical-testing-stats-tab">Integrating Statistical Testing (Stats Tab)<a class="anchor" aria-label="anchor" href="#integrating-statistical-testing-stats-tab"></a>
+</h2>
+<p>Modules for categorical-vs-numeric plots (box, violin, etc.) can
+include an optional <strong>Stats</strong> tab that provides pairwise
+statistical testing with plotly bracket annotations. If your new module
+supports grouped comparisons along a categorical x-axis, follow this
+pattern:</p>
+<div class="section level3">
+<h3 id="ui">UI<a class="anchor" aria-label="anchor" href="#ui"></a>
+</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Add a <code>"Stats"</code> tab to
+the module’s <code>tabsetPanel</code> containing
+<code>.uniform_stats_inputs_ui(ns, defaults)</code>.</label></li>
+<li><label><input type="checkbox">Pass <code>has.stats = TRUE</code>
+to <code><a href="../reference/module_tack_ui.html">module_tack_ui()</a></code> so the conditionally visible “Save
+Stats” button is included.</label></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="server">Server<a class="anchor" aria-label="anchor" href="#server"></a>
+</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Create a <code>reactiveVal</code> to
+store the last computed stats table:
+<code>last_stats_df &lt;- reactiveVal(NULL)</code>.</label></li>
+<li><label><input type="checkbox">When
+<code>input$stats.enabled</code> is TRUE in the plot rendering block,
+call <code>.compute_pairwise_stats()</code> to run tests, then
+<code>.create_stat_annotations()</code> to build bracket
+shapes/annotations, then <code>.apply_stat_annotations()</code> to
+append them to the plotly figure.</label></li>
+<li><label><input type="checkbox">Store the result:
+<code>last_stats_df(stats_df)</code>.</label></li>
+<li><label><input type="checkbox">Add an <code>observeEvent</code> to
+update <code>stat.pairs</code> choices when the x or grouping column
+changes, using <code>.generate_pair_strings()</code>.</label></li>
+<li><label><input type="checkbox">Add an
+<code>observeEvent(input$stats.enabled)</code> to show/hide the “Save
+Stats” button via <code>shinyjs::show("download.stats.col")</code> /
+<code>shinyjs::hide("download.stats.col")</code>.</label></li>
+<li><label><input type="checkbox">Add a <code>downloadHandler</code>
+for <code>output$download.stats</code> that calls
+<code>.write_stats_csv()</code>.</label></li>
+<li><label><input type="checkbox">Call
+<code>.reset_stats_inputs(session)</code> in the reset
+observer.</label></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="key-helpers-all-in-rstat_helper-r">Key helpers (all in <code>R/stat_helper.R</code>)<a class="anchor" aria-label="anchor" href="#key-helpers-all-in-rstat_helper-r"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>.compute_pairwise_stats()</code></td>
+<td>Run pairwise or omnibus tests with p-value adjustment</td>
+</tr>
+<tr class="even">
+<td><code>.create_stat_annotations()</code></td>
+<td>Convert stats to plotly shapes/annotations with bracket packing</td>
+</tr>
+<tr class="odd">
+<td><code>.apply_stat_annotations()</code></td>
+<td>Append shapes/annotations to the plotly figure and adjust
+y-axes</td>
+</tr>
+<tr class="even">
+<td><code>.generate_pair_strings()</code></td>
+<td>Build <code>"A vs B"</code> strings for the comparison selector</td>
+</tr>
+<tr class="odd">
+<td><code>.parse_pair_strings()</code></td>
+<td>Convert selected pair strings back to list of length-2 vectors</td>
+</tr>
+<tr class="even">
+<td><code>.write_stats_csv()</code></td>
+<td>Write stats CSV with metadata comment header</td>
+</tr>
+</tbody>
+</table>
+<p>See the <code>plotthis_BoxPlotServer</code>,
+<code>plotthis_ViolinPlotServer</code>, or
+<code>dittoViz_yPlotServer</code> implementations for complete
+integration examples.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="gallery-app">Gallery App<a class="anchor" aria-label="anchor" href="#gallery-app"></a>
 </h2>
 <ul class="task-list">

@@ -121,10 +121,10 @@ Jacob Martin, Jared Andrews
 
 ``` r
 fig <- parallelCoordinatesPlot(
-  data = mtcars,
-  dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
-  color.by = "mpg",
-  color.scale = "Viridis",
-  line.opacity = 0.6
+    data = mtcars,
+    dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
+    color.by = "mpg",
+    color.scale = "Viridis",
+    line.opacity = 0.6
 )
 ```

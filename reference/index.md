@@ -265,7 +265,19 @@ General-purpose helper functions for data handling and validation.
 
 Built-in datasets for demos and testing.
 
-- [`example_population`](https://j-andrews7.github.io/VizModules/reference/example_population.md)
-  : Example population dataset for module apps
+- [`example_roles`](https://j-andrews7.github.io/VizModules/reference/example_roles.md)
+  : Example roles dataset for ternary plots
+- [`example_school_earnings`](https://j-andrews7.github.io/VizModules/reference/example_school_earnings.md)
+  : Example school earnings dataset for dumbbell plots
+- [`example_skills`](https://j-andrews7.github.io/VizModules/reference/example_skills.md)
+  : Example multi-player skills dataset for radar plots
+- [`example_bar`](https://j-andrews7.github.io/VizModules/reference/example_bar.md)
+  : Bar dataset for bar and split bar plot examples
+- [`example_demographics`](https://j-andrews7.github.io/VizModules/reference/example_demographics.md)
+  : Example demographics dataset
 - [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
-  : Example sales dataset for module apps
+  : Example sales dataset
+- [`example_iris`](https://j-andrews7.github.io/VizModules/reference/example_iris.md)
+  : Example grouped iris dataset
+- [`example_mtcars`](https://j-andrews7.github.io/VizModules/reference/example_mtcars.md)
+  : Example mtcars dataset with factors

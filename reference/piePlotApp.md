@@ -26,8 +26,8 @@ A Shiny app object.
 
 ## Details
 
-When `data_list` is not provided (or `NULL`), the app launches with
-aggregated `example_sales` and `example_population` datasets. Uploaded
+When `data_list` is not provided (or `NULL`), the app launches with an
+aggregated `gallery_sales` dataset (revenue by product line). Uploaded
 data files are added to the available datasets and can be selected for
 plotting. If an uploaded file shares a name with an existing dataset,
 the existing one is overwritten with a warning.
@@ -52,10 +52,13 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- piePlotApp()
+#> Error in eval(m$data, parent.frame()): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-sales_summary <- aggregate(revenue ~ region, example_sales, sum)
+sales_summary <- aggregate(revenue ~ product_line, gallery_sales, sum)
+#> Error in eval(m$data, parent.frame()): object 'gallery_sales' not found
 app2 <- piePlotApp(list("sales" = sales_summary))
+#> Error: object 'sales_summary' not found
 if (interactive()) runApp(app2)
 ```

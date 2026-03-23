@@ -16,8 +16,7 @@ plotthis_HistogramApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("sales" = example_sales, "population" = example_population)` is
-  used as example data.
+  `list("demographics" = gallery_demographics)` is used as example data.
 
 ## Value
 
@@ -26,10 +25,10 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`example_sales` and `example_population` as example datasets. Uploaded
-data files are added to the available datasets and can be selected for
-plotting. If an uploaded file shares a name with an existing dataset,
-the existing one is overwritten with a warning.
+`gallery_demographics` as an example dataset. Uploaded data files are
+added to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 This is a convenience wrapper around
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).
@@ -44,9 +43,11 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- plotthis_HistogramApp()
+#> Error in plotthis_HistogramApp(): object 'gallery_demographics' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- plotthis_HistogramApp(list("sales" = example_sales, "population" = example_population))
+app2 <- plotthis_HistogramApp(list("demographics" = gallery_demographics))
+#> Error: object 'gallery_demographics' not found
 if (interactive()) runApp(app2)
 ```

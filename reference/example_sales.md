@@ -1,7 +1,9 @@
-# Example sales dataset for module apps
+# Example sales dataset
 
-A dataset containing simulated sales records across years, months, and
-regions.
+A simulated product-sales dataset covering five product lines over four
+years and four quarters (80 rows total). Designed to showcase bar, box,
+violin, area, line, scatter, split-bar, density, and histogram plot
+modules.
 
 ## Usage
 
@@ -11,31 +13,43 @@ example_sales
 
 ## Format
 
-A data frame with 720 rows and 6 columns:
+A data frame with 80 rows and 9 columns:
 
-- sale_id:
+- product_line:
 
-  Unique sale record identifier
+  Product category (factor: Electronics, Clothing, Food, Sports, Home)
 
 - year:
 
-  Year of the sale
+  Year of the record (factor: 2020-2023)
 
-- month:
+- quarter:
 
-  Month of the sale
-
-- region:
-
-  Sales region
+  Quarter of the year (factor: Q1-Q4)
 
 - revenue:
 
-  Revenue amount
+  Total quarterly revenue
+
+- profit:
+
+  Quarterly profit (can be negative)
 
 - units:
 
   Units sold
+
+- growth_pct:
+
+  Year-over-year growth percentage (can be negative)
+
+- rating:
+
+  Average customer rating (3.0–5.0)
+
+- online_pct:
+
+  Percentage of sales made online (20–80)
 
 ## Source
 
