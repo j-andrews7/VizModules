@@ -14,6 +14,8 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide show
+#' @importFrom stats na.omit setNames
+#' @importFrom ggplot2 sym .data
 #'
 #' @export
 #'
@@ -57,9 +59,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Toggle text.position slider visibility based on label.on.y.axis switch
         observeEvent(input$label.on.y.axis, {
             if (isTRUE(input$label.on.y.axis)) {
-                shinyjs::hide("text.position")
+                hide("text.position")
             } else {
-                shinyjs::show("text.position")
+                show("text.position")
             }
         })
 
@@ -92,9 +94,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             y_col <- input$y.data
 
             if (!is.null(fill_col) && nzchar(fill_col) && fill_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[fill_col]])))
+                unique(na.omit(as.character(df[[fill_col]])))
             } else if (!is.null(y_col) && nzchar(y_col) && y_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[y_col]])))
+                unique(na.omit(as.character(df[[y_col]])))
             } else {
                 character(0)
             }
@@ -109,7 +111,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 # Build choices with palette names as values (selectInput needs atomic values)
                 raw_choices <- default_palettes()[["choices"]]
                 palette_choices <- lapply(raw_choices, function(group) {
-                    stats::setNames(names(group), names(group))
+                    setNames(names(group), names(group))
                 })
                 selectInput(
                     ns("gradient.palette"),

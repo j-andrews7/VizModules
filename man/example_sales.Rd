@@ -7,19 +7,16 @@
 \format{
 A data frame with 80 rows and 9 columns:
 \describe{
-\item{product_line}{Product category (factor: Electronics, Clothing, Food, Sports, Home)}
-\item{year}{Year of the record (factor: 2020-2023)}
-\item{quarter}{Quarter of the year (factor: Q1-Q4)}
-\item{revenue}{Total quarterly revenue}
-\item{profit}{Quarterly profit (can be negative)}
+\item{region}{Region of the sale (factor: North, South, East, West, Central, International)}
+\item{revenue}{Revenue for month}
+\item{year}{The year}
+\item{month}{The month}
 \item{units}{Units sold}
-\item{growth_pct}{Year-over-year growth percentage (can be negative)}
-\item{rating}{Average customer rating (3.0–5.0)}
-\item{online_pct}{Percentage of sales made online (20–80)}
+\item{sale_id}{Unique sale identifier}
 }
 }
 \source{
-Simulated in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 }
 \usage{
 example_sales
@@ -28,11 +25,6 @@ example_sales
 A simulated product-sales dataset covering five product lines over four years
 and four quarters (80 rows total). Designed to showcase bar, box, violin,
 area, line, scatter, split-bar, density, and histogram plot modules.
-}
-\examples{
-library(VizModules)
-head(example_sales)
-
 }
 \author{
 Jared Andrews

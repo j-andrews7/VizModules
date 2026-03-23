@@ -14,7 +14,7 @@ A data frame with 6 rows and 4 columns:
 }
 }
 \source{
-Simulated in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 }
 \usage{
 example_school_earnings
@@ -23,12 +23,7 @@ example_school_earnings
 A small dataset of median annual earnings for men and women at six
 universities, suitable for dumbbell plot examples.
 }
-\examples{
-library(VizModules)
-example_school_earnings
-
-}
 \author{
-Jared Andrews
+Jacob Martin
 }
 \keyword{datasets}

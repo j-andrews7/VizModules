@@ -336,6 +336,9 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #' JavaScript payload into a named vector of hex codes.
 #'
 #' @return Invisibly returns the result of `registerInputHandler()`.
+#' 
+#' @importFrom stats setNames
+#' @importFrom shiny registerInputHandler
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_register_multi_color_picker_handler

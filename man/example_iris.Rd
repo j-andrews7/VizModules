@@ -24,11 +24,6 @@ example_iris
 \description{
 The classic iris dataset with an added 'Group' column to facilitate multi-group plot examples.
 }
-\examples{
-library(VizModules)
-head(example_iris)
-
-}
 \author{
 Jared Andrews
 }

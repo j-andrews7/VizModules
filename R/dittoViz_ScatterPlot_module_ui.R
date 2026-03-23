@@ -166,8 +166,7 @@
 #' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
 #' @examples
 #' library(VizModules)
-#' data(mtcars)
-#' dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
+#' dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 

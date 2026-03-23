@@ -29,11 +29,6 @@ example_mtcars
 \description{
 The classic mtcars dataset with key numeric columns converted to factors for categorical plotting examples.
 }
-\examples{
-library(VizModules)
-head(example_mtcars)
-
-}
 \author{
 Jared Andrews
 }

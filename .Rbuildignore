@@ -9,4 +9,5 @@
 ^\.vscode$
 ^\.DS_Store$
 ^\.Rhistory$
-^paper*$
+^paper\.bib$
+^paper\.md$

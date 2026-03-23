@@ -204,6 +204,8 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 #' @param show.legend Logical, whether to display the legend for this subplot.
 #'
 #' @return A plotly object representing the dumbbell (or single dot) plot for the supplied data.
+#' 
+#' @importFrom stats reformulate
 #'
 #' @author Jacob Martin
 #' @rdname INTERNAL_create_dumbbell_plot

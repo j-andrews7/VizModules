@@ -21,6 +21,7 @@
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()]
 #'
+#' @importFrom stats aggregate
 #' @export
 #' @author Jacob Martin, Jared Andrews
 #' @examples
