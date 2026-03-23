@@ -396,49 +396,48 @@ Jared Andrews
 
 ``` r
 library(VizModules)
-data(mtcars)
-dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
+dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="5688">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="7011">
 #>     <li class="active">
-#>       <a href="#tab-5688-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7011-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-7011-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-7011-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-7011-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7011-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-7011-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-7011-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-7011-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-7011-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-7011-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7011-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5688-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7011-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5688">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5688-1">
+#>   <div class="tab-content" data-tabsetid="7011">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7011-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify807502">
@@ -509,7 +508,10 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>           <div class="form-group shiny-input-container" id="tipify1572085">
 #>             <label class="control-label" id="scatterPlot-shape.by-label" for="scatterPlot-shape.by">Shape By</label>
 #>             <div>
-#>               <select id="scatterPlot-shape.by" class="shiny-input-select"><option value="" selected></option></select>
+#>               <select id="scatterPlot-shape.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="cyl">cyl</option>
+#> <option value="vs">vs</option>
+#> <option value="gear">gear</option></select>
 #>               <script type="application/json" data-for="scatterPlot-shape.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
@@ -521,7 +523,10 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>           <div class="form-group shiny-input-container" id="tipify73995">
 #>             <label class="control-label" id="scatterPlot-split.by-label" for="scatterPlot-split.by">Split By</label>
 #>             <div>
-#>               <select class="shiny-input-select form-control" id="scatterPlot-split.by" multiple="multiple"><option value="" selected></option></select>
+#>               <select class="shiny-input-select form-control" id="scatterPlot-split.by" multiple="multiple"><option value="" selected></option>
+#> <option value="cyl">cyl</option>
+#> <option value="vs">vs</option>
+#> <option value="gear">gear</option></select>
 #>               <script type="application/json" data-for="scatterPlot-split.by">{"maxItems":2,"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
@@ -529,7 +534,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5688-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-7011-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4663935">
@@ -627,7 +632,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-5688-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-7011-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1749407">
@@ -691,7 +696,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-5688-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-7011-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify636615">
@@ -738,7 +743,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5688-5">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7011-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6783804">
@@ -782,7 +787,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-5688-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-7011-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7415215">
@@ -931,7 +936,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-5688-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-7011-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6801629">
@@ -994,13 +999,16 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-5688-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-7011-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9907123">
 #>             <label class="control-label" id="scatterPlot-trajectory.group.by-label" for="scatterPlot-trajectory.group.by">Trajectory Group By</label>
 #>             <div>
-#>               <select id="scatterPlot-trajectory.group.by" class="shiny-input-select"><option value="" selected></option></select>
+#>               <select id="scatterPlot-trajectory.group.by" class="shiny-input-select"><option value="" selected></option>
+#> <option value="cyl">cyl</option>
+#> <option value="vs">vs</option>
+#> <option value="gear">gear</option></select>
 #>               <script type="application/json" data-for="scatterPlot-trajectory.group.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
@@ -1024,46 +1032,94 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5688-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-7011-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4611865">
-#>             <div class="checkbox">
-#>               <label>
-#>                 <input id="scatterPlot-webgl" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Plot with webGL</span>
-#>               </label>
-#>             </div>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4611865', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Enable WebGL rendering for improved performance with large datasets at the cost of some visual features'})}, 500)});</script>
+#>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="scatterPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
+#>             <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+#>             Save Interactive
+#>           </a>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3152418">
-#>             <label class="control-label" for="scatterPlot-shape.fill">Shape Fill</label>
-#>             <input id="scatterPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           <div class="form-group shiny-input-container" style="width:100%;">
+#>             <label class="control-label" id="scatterPlot-download.format-label" for="scatterPlot-download.format">Download Format</label>
+#>             <div>
+#>               <select id="scatterPlot-download.format" class="shiny-input-select"><option value="svg" selected>svg</option>
+#> <option value="png">png</option>
+#> <option value="jpeg">jpeg</option>
+#> <option value="webp">webp</option></select>
+#>               <script type="application/json" data-for="scatterPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3152418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the interior fill color for plotly marker shapes. Use transparent for unfilled markers'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1746759">
-#>             <label class="control-label" for="scatterPlot-shape.line.color">Shape Line Color</label>
-#>             <input id="scatterPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           <div class="form-group shiny-input-container" id="tipify4611865">
+#>             <label class="control-label" id="scatterPlot-margin.t-label" for="scatterPlot-margin.t">Margin Top</label>
+#>             <input id="scatterPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1746759', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the outline color for plotly marker shapes'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4611865', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3152418">
+#>             <label class="control-label" id="scatterPlot-margin.b-label" for="scatterPlot-margin.b">Margin Bottom</label>
+#>             <input id="scatterPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3152418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify1746759">
+#>             <label class="control-label" id="scatterPlot-margin.l-label" for="scatterPlot-margin.l">Margin Left</label>
+#>             <input id="scatterPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1746759', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5315735">
-#>             <label class="control-label" id="scatterPlot-shape.line.width-label" for="scatterPlot-shape.line.width">Shape Line Width</label>
-#>             <input id="scatterPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
+#>             <label class="control-label" id="scatterPlot-margin.r-label" for="scatterPlot-margin.r">Margin Right</label>
+#>             <input id="scatterPlot-margin.r" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5315735', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the outline width for plotly marker shapes'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5315735', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4936370">
+#>             <label class="control-label" id="scatterPlot-subplot.margin-label" for="scatterPlot-subplot.margin">Subplot Spacing</label>
+#>             <input id="scatterPlot-subplot.margin" type="number" class="shiny-input-number form-control" value="0.4" data-update-on="change" min="0" max="0.5" step="0.01"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4936370', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7793086">
+#>             <label class="control-label" for="scatterPlot-shape.fill">Shape Fill</label>
+#>             <input id="scatterPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7793086', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2041784">
+#>             <label class="control-label" for="scatterPlot-shape.line.color">Shape Line Color</label>
+#>             <input id="scatterPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2041784', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7133973">
+#>             <label class="control-label" id="scatterPlot-shape.line.width-label" for="scatterPlot-shape.line.width">Shape Line Width</label>
+#>             <input id="scatterPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7133973', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify652162">
 #>             <label class="control-label" id="scatterPlot-shape.linetype-label" for="scatterPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
 #>               <select id="scatterPlot-shape.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
@@ -1075,21 +1131,32 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>               <script type="application/json" data-for="scatterPlot-shape.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4936370', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Choose the line dash style for plotly marker shape outlines'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify652162', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7793086">
+#>           <div class="form-group shiny-input-container" id="tipify3542068">
 #>             <label class="control-label" id="scatterPlot-shape.opacity-label" for="scatterPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="scatterPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7793086', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Set the opacity of plotly marker shapes, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3542068', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-5688-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-7011-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2041784">
+#>           <div class="form-group shiny-input-container" id="tipify8251994">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="scatterPlot-webgl" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Plot with webGL</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8251994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Enable WebGL rendering for improved performance with large datasets at the cost of some visual features'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2738183">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="scatterPlot-do.ellipse" type="checkbox" class="shiny-input-checkbox"/>
@@ -1097,10 +1164,12 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2041784', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether `color.by` groups should be surrounded by median-centered ellipses.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2738183', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether `color.by` groups should be surrounded by median-centered ellipses.'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7133973">
+#>           <div class="form-group shiny-input-container" id="tipify5700449">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="scatterPlot-do.contour" type="checkbox" class="shiny-input-checkbox"/>
@@ -1108,12 +1177,10 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7133973', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether density-based contours should be displayed.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5700449', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical. Whether density-based contours should be displayed.'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify652162">
+#>           <div class="form-group shiny-input-container" id="tipify3357191">
 #>             <label class="control-label" id="scatterPlot-hover.data-label" for="scatterPlot-hover.data">Hover Data</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="scatterPlot-hover.data" multiple="multiple"><option value="" selected></option>
@@ -1131,25 +1198,27 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>               <script type="application/json" data-for="scatterPlot-hover.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify652162', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector which denotes what data to show for each data point, upon hover, when `do.hover` is set to `TRUE`. Defaults to all data expected to be useful. Only values present in the plotting data are actually used. These can be column names of `data_frame` and any column names which will be created to accommodate multivar and data adjustment functionality. You can run the function with `data.out = TRUE` and inspect the `$Target_data` output&#39;s columns to view your available options.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3357191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'String vector which denotes what data to show for each data point, upon hover, when `do.hover` is set to `TRUE`. Defaults to all data expected to be useful. Only values present in the plotting data are actually used. These can be column names of `data_frame` and any column names which will be created to accommodate multivar and data adjustment functionality. You can run the function with `data.out = TRUE` and inspect the `$Target_data` output&#39;s columns to view your available options.'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3542068">
+#>           <div class="form-group shiny-input-container" id="tipify5962628">
 #>             <label class="control-label" id="scatterPlot-hover.round.digits-label" for="scatterPlot-hover.round.digits">Hover Round Digits</label>
 #>             <input id="scatterPlot-hover.round.digits" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="1" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3542068', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer number specifying the number of decimal digits to round displayed numeric values to, when `do.hover` is set to `TRUE`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5962628', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Integer number specifying the number of decimal digits to round displayed numeric values to, when `do.hover` is set to `TRUE`.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5688-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7011-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8251994">
+#>           <div class="form-group shiny-input-container" id="tipify1915181">
 #>             <label class="control-label" id="scatterPlot-hline.intercepts-label" for="scatterPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="scatterPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8251994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1915181', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-hline.colors-label" for="scatterPlot-hline.colors">Colors</label>
 #>             <input id="scatterPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
@@ -1166,12 +1235,11 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>             <label class="control-label" id="scatterPlot-hline.opacities-label" for="scatterPlot-hline.opacities">Opacities (0-1)</label>
 #>             <input id="scatterPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <br/>
-#>           <div class="form-group shiny-input-container" id="tipify2738183">
+#>           <div class="form-group shiny-input-container" id="tipify9477639">
 #>             <label class="control-label" id="scatterPlot-vline.intercepts-label" for="scatterPlot-vline.intercepts">X-intercepts</label>
 #>             <input id="scatterPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2738183', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9477639', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="scatterPlot-vline.colors-label" for="scatterPlot-vline.colors">Colors</label>
 #>             <input id="scatterPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
@@ -1188,7 +1256,6 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>             <label class="control-label" id="scatterPlot-vline.opacities-label" for="scatterPlot-vline.opacities">Opacities (0-1)</label>
 #>             <input id="scatterPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <br/>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1220,7 +1287,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5688-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7011-12">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -1465,22 +1532,5 @@ dittoViz_scatterPlotInputsUI("scatterPlot", mtcars)
 #>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="scatterPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
-#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="scatterPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
-#>       <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
-#>       Save Interactive
-#>     </a>
-#>   </div>
-#>   <div class="col-sm-2">
-#>     <div class="form-group shiny-input-container" style="width:100%;">
-#>       <label class="control-label" id="scatterPlot-download.format-label" for="scatterPlot-download.format">Download Format</label>
-#>       <div>
-#>         <select id="scatterPlot-download.format" class="shiny-input-select"><option value="png">png</option>
-#> <option value="svg" selected>svg</option></select>
-#>         <script type="application/json" data-for="scatterPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>       </div>
-#>     </div>
-#>   </div>
 #> </div>
-#> <br/>
 ```

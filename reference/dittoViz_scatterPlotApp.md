@@ -51,11 +51,9 @@ Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- dittoViz_scatterPlotApp()
-#> Error in dittoViz_scatterPlotApp(): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_scatterPlotApp(list("sales" = gallery_sales))
-#> Error: object 'gallery_sales' not found
+app2 <- dittoViz_scatterPlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 ```

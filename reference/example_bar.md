@@ -38,21 +38,8 @@ A data frame with 5 rows and 5 columns:
 
 ## Source
 
-Defined in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 
 ## Author
 
-Jared Andrews
-
-## Examples
-
-``` r
-library(VizModules)
-example_bar
-#>   Group  Type Values Numbers Score
-#> 1     A Alpha     22      15     7
-#> 2     B  Beta     35      -8    -3
-#> 3     C Alpha     18      22    15
-#> 4     D Gamma     41      -5     8
-#> 5     E  Beta     29      12    -2
-```
+Jacob Martin

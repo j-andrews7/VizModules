@@ -620,6 +620,10 @@ Built-in datasets for demos and testing.
   : Example grouped iris dataset
 - [`example_mtcars`](https://j-andrews7.github.io/VizModules/reference/example_mtcars.md)
   : Example mtcars dataset with factors
+- [`example_population`](https://j-andrews7.github.io/VizModules/reference/example_population.md)
+  : Example population dataset A simulated population dataset with 400
+  rows covering 50 years and 8 age groups. Designed for line, area, and
+  stacked bar plot examples.
 
 # Articles
 

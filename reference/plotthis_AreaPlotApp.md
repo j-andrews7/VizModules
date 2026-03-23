@@ -17,7 +17,7 @@ plotthis_AreaPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("sales" = gallery_sales)` is used as example data.
+  `list("sales" = example_sales)` is used as example data.
 
 ## Value
 
@@ -26,7 +26,7 @@ A Shiny app object.
 ## Details
 
 When `data_list` is not provided (or `NULL`), the app launches with
-`gallery_sales` as an example dataset. Uploaded data files are added to
+`example_sales` as an example dataset. Uploaded data files are added to
 the available datasets and can be selected for plotting. If an uploaded
 file shares a name with an existing dataset, the existing one is
 overwritten with a warning.
@@ -44,11 +44,9 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- plotthis_AreaPlotApp()
-#> Error in plotthis_AreaPlotApp(): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- plotthis_AreaPlotApp(list("sales" = gallery_sales))
-#> Error: object 'gallery_sales' not found
+app2 <- plotthis_AreaPlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 ```

@@ -1,9 +1,8 @@
 # Example sales dataset
 
-A simulated product-sales dataset covering five product lines over four
-years and four quarters (80 rows total). Designed to showcase bar, box,
-violin, area, line, scatter, split-bar, density, and histogram plot
-modules.
+A simulated product-sales dataset (720 rows total). Designed to showcase
+bar, box, violin, area, line, scatter, split-bar, density, and histogram
+plot modules.
 
 ## Usage
 
@@ -13,62 +12,41 @@ example_sales
 
 ## Format
 
-A data frame with 80 rows and 9 columns:
+A data frame with 720 rows and 7 columns:
 
-- product_line:
+- region:
 
-  Product category (factor: Electronics, Clothing, Food, Sports, Home)
-
-- year:
-
-  Year of the record (factor: 2020-2023)
-
-- quarter:
-
-  Quarter of the year (factor: Q1-Q4)
+  Region of the sale (factor: North, South, East, West, Central,
+  International)
 
 - revenue:
 
-  Total quarterly revenue
+  Revenue for month
 
-- profit:
+- year:
 
-  Quarterly profit (can be negative)
+  The year
+
+- month:
+
+  The month
 
 - units:
 
   Units sold
 
-- growth_pct:
+- sale_id:
 
-  Year-over-year growth percentage (can be negative)
+  Unique sale identifier
 
-- rating:
+- product_line:
 
-  Average customer rating (3.0–5.0)
-
-- online_pct:
-
-  Percentage of sales made online (20–80)
+  Product line (factor: Gadgets, Widgets, Doohickeys)
 
 ## Source
 
-Simulated in data-raw/generate_example_data.R.
+Generated in data-raw/generate_example_data.R.
 
 ## Author
 
 Jared Andrews
-
-## Examples
-
-``` r
-library(VizModules)
-head(example_sales)
-#>          region revenue year month units sale_id
-#> 1         North   198.3 2015   Jan   243  Sale_1
-#> 2         South   110.1 2015   Jan   103  Sale_2
-#> 3          East    68.3 2015   Jan   275  Sale_3
-#> 4          West    61.9 2015   Jan   212  Sale_4
-#> 5       Central    88.5 2015   Jan   156  Sale_5
-#> 6 International   171.2 2015   Jan   205  Sale_6
-```

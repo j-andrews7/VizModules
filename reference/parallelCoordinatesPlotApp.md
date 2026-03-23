@@ -18,7 +18,7 @@ parallelCoordinatesPlotApp(data_list = NULL)
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("sales" = gallery_sales)` is used as example data. Each data
+  `list("sales" = example_sales)` is used as example data. Each data
   frame should contain at least two numeric or categorical columns.
 
 ## Value
@@ -53,11 +53,9 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- parallelCoordinatesPlotApp()
-#> Error in parallelCoordinatesPlotApp(): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- parallelCoordinatesPlotApp(list("sales" = gallery_sales))
-#> Error: object 'gallery_sales' not found
+app2 <- parallelCoordinatesPlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 ```

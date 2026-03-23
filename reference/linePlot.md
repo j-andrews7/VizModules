@@ -17,6 +17,7 @@ linePlot(
   show.legend,
   facet.by = NULL,
   facet.scales = "fixed",
+  subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",
@@ -100,6 +101,11 @@ linePlot(
   Character, controls axis scaling across facets. Options: "fixed" (same
   for all), "free" (independent), "free_x" (independent x-axis),
   "free_y" (independent y-axis). Default: "fixed".
+
+- subplot.margin:
+
+  Numeric, spacing between facet panels as a fraction of the plot area.
+  Default: 0.05.
 
 - axis.showline:
 

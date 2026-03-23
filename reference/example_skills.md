@@ -31,27 +31,4 @@ Simulated in data-raw/generate_example_data.R.
 
 ## Author
 
-Jared Andrews
-
-## Examples
-
-``` r
-library(VizModules)
-example_skills
-#>    category value   player
-#> 1     Speed     8 Player A
-#> 2  Strength     6 Player A
-#> 3   Defense     7 Player A
-#> 4   Stamina     9 Player A
-#> 5   Agility     7 Player A
-#> 6     Speed     5 Player B
-#> 7  Strength     9 Player B
-#> 8   Defense     8 Player B
-#> 9   Stamina     6 Player B
-#> 10  Agility     4 Player B
-#> 11    Speed     7 Player C
-#> 12 Strength     7 Player C
-#> 13  Defense     5 Player C
-#> 14  Stamina     8 Player C
-#> 15  Agility     9 Player C
-```
+Jacob Martin

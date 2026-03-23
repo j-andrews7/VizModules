@@ -59,24 +59,3 @@ Simulated in data-raw/generate_example_data.R.
 ## Author
 
 Jared Andrews
-
-## Examples
-
-``` r
-library(VizModules)
-head(example_demographics)
-#>    department job_level gender age salary satisfaction performance tenure_years
-#> 1     Finance    Senior   Male  32  81928          4.6         5.7          1.4
-#> 2   Marketing      Lead   Male  28  77390          6.0         5.7          4.9
-#> 3     Finance    Senior   Male  67  84606          5.3         5.8          2.8
-#> 4   Marketing    Senior   Male  32  50164          7.6         8.8          6.8
-#> 5 Engineering      Lead Female  55  53708          9.0         8.0          1.1
-#> 6          HR    Senior Female  35  46496          1.4         6.6          8.6
-#>   weekly_hours
-#> 1         37.4
-#> 2         41.5
-#> 3         38.0
-#> 4         40.2
-#> 5         42.2
-#> 6         38.9
-```

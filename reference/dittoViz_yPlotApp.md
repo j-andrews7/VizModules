@@ -51,11 +51,9 @@ Jared Andrews
 library(VizModules)
 # Launch with default example data:
 app <- dittoViz_yPlotApp()
-#> Error in dittoViz_yPlotApp(): object 'gallery_demographics' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- dittoViz_yPlotApp(list("demographics" = gallery_demographics))
-#> Error: object 'gallery_demographics' not found
+app2 <- dittoViz_yPlotApp(list("demographics" = example_demographics))
 if (interactive()) runApp(app2)
 ```

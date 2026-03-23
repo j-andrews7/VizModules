@@ -49,13 +49,11 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-# Launch with default example data (gallery_sales):
+# Launch with default example data (example_sales):
 app <- linePlotApp()
-#> Error in linePlotApp(): object 'gallery_sales' not found
 if (interactive()) runApp(app)
 
 # Launch with custom data:
-app2 <- linePlotApp(list("sales" = gallery_sales))
-#> Error: object 'gallery_sales' not found
+app2 <- linePlotApp(list("sales" = example_sales))
 if (interactive()) runApp(app2)
 ```
