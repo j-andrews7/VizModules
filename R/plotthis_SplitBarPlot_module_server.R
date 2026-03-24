@@ -456,12 +456,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             if (length(x_input) == 0 || !nzchar(x_input)) {
                 return_empty <- TRUE
-                txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.")
+                txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.\n")
             }
 
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
-                txt <- c(txt, "Y variable input must not be empty. Please select a categorical variable.")
+                txt <- c(txt, "Y variable input must not be empty. Please select a categorical variable.\n")
             }
 
             if (return_empty) {

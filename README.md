@@ -283,5 +283,5 @@ To contribute a new module to the package, see the vignette for clear guidelines
 [19]: https://pwwang.github.io/plotthis/reference/AreaPlot.html
 [20]: https://pwwang.github.io/plotthis/reference/boxviolinplot.html
 [21]: https://pwwang.github.io/plotthis/reference/densityhistoplot.html
-[22]: https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html
+[22]: https://cran.r-project.org/package=dittoViz
 [23]: https://pwwang.github.io/plotthis/reference/barplot.html

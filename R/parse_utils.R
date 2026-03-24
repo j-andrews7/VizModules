@@ -11,6 +11,7 @@
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_string_to_list_of_vectors
+#' @keywords internal
 .string_to_list_of_vectors <- function(x) {
     if (!is.null(x)) {
         if (x != "") {
@@ -46,6 +47,7 @@
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_string_to_vector
+#' @keywords internal
 .string_to_vector <- function(x) {
     if (!is.null(x)) {
         if (x != "") {
@@ -70,6 +72,7 @@
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_string_to_linetypes
+#' @keywords internal
 .string_to_linetypes <- function(x) {
     valid_linetypes <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
 
@@ -79,15 +82,13 @@
 
     # Split string on commas and trim whitespace
     linetypes <- trimws(strsplit(x, ",")[[1]])
-
-    # Remove empty strings that might result from trailing commas
     linetypes <- linetypes[linetypes != ""]
 
     if (length(linetypes) == 0) {
         return("solid")
     }
 
-    # Validate each linetype
+    # Validate 
     validated <- vapply(linetypes, function(lt) {
         lt_lower <- tolower(lt)
         if (lt_lower %in% valid_linetypes) {
@@ -247,7 +248,6 @@ setup_auto_update_logic <- function(input) {
         input$update
     }
 
-    # Set up wrapper function based on switch state
     if (auto_update) identity else isolate
 }
 
