@@ -175,16 +175,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         })
 
         output$axes_control <- renderUI({
+            facet.by <- isTRUE(nzchar(input$facet.by))
             facet.by <- FALSE
-            if (!input$facet.by == ""){
-                facet.by <- TRUE
-            }
             .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE, facet.by = facet.by)
         })
 
         generate_BoxPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
-
+            req(input$axis.showline, input$axis.title.font.size, input$show.grid.x)
             # Facet By Null option Upstream:
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
