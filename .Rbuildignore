@@ -11,3 +11,4 @@
 ^\.Rhistory$
 ^paper\.bib$
 ^paper\.md$
+^inst/apps/module-gallery/manifest\.json
