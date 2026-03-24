@@ -15,12 +15,12 @@ They also provide developers a way to dramatically save time and reduce complexi
 
 ## Install
 
-Note that this package is in development and may contain bugs and general wonkiness.
-
-Currently, the package can be installed from Github:
-
 ```r
-devtools::install_github("j-andrews7/VizModules")
+# CRAN
+install.packages("VizModules")
+
+# Development version
+remotes::install_github("j-andrews7/VizModules")
 ```
 
 ## Quick Start
