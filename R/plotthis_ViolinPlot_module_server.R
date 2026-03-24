@@ -80,6 +80,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             )
         })
 
+        output$axes_control <- renderUI({
+            facet.by <- isTRUE(nzchar(input$facet.by))
+            .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, facet.by = facet.by)
+        })
+
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]

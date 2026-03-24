@@ -176,7 +176,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         output$axes_control <- renderUI({
             facet.by <- isTRUE(nzchar(input$facet.by))
-            facet.by <- FALSE
             .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE, facet.by = facet.by)
         })
 
