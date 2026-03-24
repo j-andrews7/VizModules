@@ -9,7 +9,7 @@ Authors@R:
                 role = c("aut"),
                 comment = c(ORCID = "0009-0007-6896-4796"),
                 email = "jacob@martin-email.com"))
-Description: VizModules offers a core selection of interactivity-first Shiny modules for many 
+Description: Offers a core selection of interactivity-first Shiny modules for many 
     plot types meant to serve as flexible building blocks for applications and 
     as the base for more complex modules. These modules
     allow for the rapid and convenient construction of Shiny apps with very few lines

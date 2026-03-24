@@ -21,7 +21,7 @@ The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic such as data filtering, transformations,
 or additional UI controls while reusing the full functionality of the base modules.
 
-This vignette demonstrates how to create a custom  module by building on top of the `scatterPlot` module.
+This vignette demonstrates how to create a custom module by building on top of the `scatterPlot` module.
 
 ## The Pattern
 
@@ -49,18 +49,18 @@ minimalModuleUI <- function(id) {
         checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
         hr(),
         # Base module UI - pass the bare 'id', not ns(id)
-        dittoViz_ScatterPlotInputsUI(id, iris)
+        dittoViz_scatterPlotInputsUI(id, iris)
     )
 }
 
 minimalModuleOutput <- function(id) {
     # Simply delegate to the base module's output UI
-    dittoViz_ScatterPlotOutputUI(id)
+    dittoViz_scatterPlotOutputUI(id)
 }
 ```
 
 Notice that `checkboxInput()` uses `ns("filter_setosa")` to namespace the custom input,
-while `dittoViz_ScatterPlotInputsUI()` receives the bare `id`. This ensures the base module creates its inputs in the correct namespace.
+while `dittoViz_scatterPlotInputsUI()` receives the bare `id`. This ensures the base module creates its inputs in the correct namespace.
 
 ### The Server
 
@@ -85,16 +85,16 @@ minimalModuleServer <- function(id, data_reactive) {
 
     # Step 2: Call the base module server OUTSIDE the moduleServer block
     # This is critical! If we called this inside the moduleServer above,
-    # dittoViz_ScatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
-    dittoViz_ScatterPlotServer(id, filtered_data)
+    # dittoViz_scatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
+    dittoViz_scatterPlotServer(id, filtered_data)
 }
 ```
 
 **Why this pattern?**
 
 - `moduleServer(id, ...)` gives us access to `input$filter_setosa`, which is namespaced to our wrapper's `id`.
-- By calling `dittoViz_ScatterPlotServer(id, filtered_data)` *outside* the `moduleServer()` closure, the base module attaches to the same namespace as our UI, not a nested one.
-- If we called `dittoViz_ScatterPlotServer()` inside the `moduleServer()` block, it would create nested namespaces like `id-id-x_axis`, which wouldn't match the actual input IDs in the UI.
+- By calling `dittoViz_scatterPlotServer(id, filtered_data)` *outside* the `moduleServer()` closure, the base module attaches to the same namespace as our UI, not a nested one.
+- If we called `dittoViz_scatterPlotServer()` inside the `moduleServer()` block, it would create nested namespaces like `id-id-x_axis`, which wouldn't match the actual input IDs in the UI.
 
 ### Putting It Together
 
@@ -130,8 +130,8 @@ focusedModuleUI <- function(id) {
     ns <- NS(id)
     tagList(
         h4("Simplified Scatter Plot"),
-        # Only show essential controls
-        dittoViz_ScatterPlotInputsUI(id, iris,
+        # Hide a few parameters
+        dittoViz_scatterPlotInputsUI(id, iris,
             hide.inputs = c("shape.by", "color.by")
         )
     )
@@ -153,4 +153,4 @@ A common symptom of namespace issues is that inputs seem to have no effect.
 
 ## See Also
 
-- The base modules (`dittoViz_ScatterPlotInputsUI`, `dittoViz_ScatterPlotOutputUI`, `dittoViz_ScatterPlotServer`) are documented in the package reference.
+- The base modules (`dittoViz_scatterPlotInputsUI`, `dittoViz_scatterPlotOutputUI`, `dittoViz_scatterPlotServer`) are documented in the package reference.

@@ -15,12 +15,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-This checklist walks through how to add a new plotting module to **vizModules** so it matches the package's organization, documentation, and testing standards.
+This checklist walks through how to add a new plotting module to **VizModules** so it matches the package's organization, documentation, and testing standards.
 
 ## Quick Checklist
 
 - [ ] Pick the plot function you are wrapping and name your module accordingly:
-  - For **dittoViz** functions: use `dittoViz_<PlotName>` (e.g., `dittoViz_ScatterPlot` for `dittoViz::scatterPlot`)
+  - For **dittoViz** functions: use `dittoViz_<PlotName>` (e.g., `dittoViz_scatterPlot` for `dittoViz::scatterPlot`)
   - For **plotthis** functions: use `plotthis_<PlotName>` (e.g., `plotthis_AreaPlot` for `plotthis::AreaPlot`)
   - For **custom/standalone** functions: use the plot name directly (e.g., `linePlot`, `piePlot`)
 - [ ] If adding a brand-new plotting function (e.g., `piePlot`), define and document that plot function first, then wrap it with the module.

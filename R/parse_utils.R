@@ -3,7 +3,7 @@
 #' Used to parse text inputs into a list of vectors.
 #'
 #' @param x A string indicating a set of vectors.
-#'   Supported formats include "(a, b), (c)", "<a, b>, <c>", or brackets.
+#'   Supported formats include `"(a, b), (c)"`, `"<a, b>, <c>"`, or brackets.
 #'   Should not contain internal quotes around elements.
 #'
 #' @return A list like `list(c("a", "b", "c"), c("d", "e"))`.
