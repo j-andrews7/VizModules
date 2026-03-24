@@ -1,5 +1,5 @@
 # Changelog
 
-## vizModules 1.0.0
+## vizModules 0.1.0
 
 - Submitted to CRAN.
