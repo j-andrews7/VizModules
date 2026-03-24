@@ -57,21 +57,26 @@ organize_inputs <- function(
 ) {
   # Check if tag.list is a list of named lists
   if (!is(tag.list, "shiny.tag.list")) {
-    # Create a tabsetPanel with a tabPanel for each list element
-    tabs <- c(
-      lapply(names(tag.list), function(tab.name) {
-        tabPanel(
-          tab.name,
-          do.call(tagList, organize_inputs(tag.list[[tab.name]], columns = columns, rows = rows))
-        )
-      })
-    )
+    if (is(tag.list, "shiny.tag")) {
+      # Single HTML tag (e.g., uiOutput) — return as-is without grid wrapping
+      out <- list(tag.list)
+    } else {
+      # Create a tabsetPanel with a tabPanel for each list element
+      tabs <- c(
+        lapply(names(tag.list), function(tab.name) {
+          tabPanel(
+            tab.name,
+            do.call(tagList, organize_inputs(tag.list[[tab.name]], columns = columns, rows = rows))
+          )
+        })
+      )
 
-    if (!is.null(id)) {
-      tabs[["id"]] <- id
+      if (!is.null(id)) {
+        tabs[["id"]] <- id
+      }
+
+      out <- do.call(tabsetPanel, tabs)
     }
-
-    out <- do.call(tabsetPanel, tabs)
   } else {
     n.tags <- length(tag.list)
 
