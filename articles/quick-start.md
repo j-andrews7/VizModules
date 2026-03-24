@@ -19,13 +19,12 @@ All modules follow the same pattern: `*InputsUI()` for controls,
 minimal `scatterPlot` example:
 
 ``` r
-library(shiny)
 library(VizModules)
 
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_ScatterPlotInputsUI("cars",
+            dittoViz_scatterPlotInputsUI("cars",
                 mtcars,
                 defaults = list(
                     x.by = "wt",
@@ -34,20 +33,16 @@ ui <- fluidPage(
                 )
             )
         ),
-        mainPanel(dittoViz_ScatterPlotOutputUI("cars"))
+        mainPanel(dittoViz_scatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_ScatterPlotServer("cars", data = reactive(mtcars))
+    dittoViz_scatterPlotServer("cars", data = reactive(mtcars))
 }
 
 shinyApp(ui, server)
 ```
-
-Replace `scatterPlot` with any other module name (e.g., `AreaPlot`,
-`BarPlot`, `BoxPlot`, `linePlot`, `piePlot`, `volcanoPlot`) to swap the
-visualization.
 
 ## Set defaults and hide controls
 
@@ -62,7 +57,7 @@ visualization.
   (e.g., `"Plotly"` or `"Legend/Scale"` in `scatterPlot`).
 
 ``` r
-dittoViz_ScatterPlotServer(
+dittoViz_scatterPlotServer(
     "cars",
     data = reactive(mtcars),
     hide.inputs = c("split.by", "rows.use"),
@@ -110,9 +105,10 @@ native plotting functions. To see which arguments are available in a
 module:
 
 1.  Open the module input help page, e.g.,
-    `?dittoViz_ScatterPlotInputsUI` or `?AreaPlotInputsUI`. The
-    **Details** section notes which arguments from the underlying plot
-    function are wired through and any that are intentionally omitted.
+    [`?dittoViz_scatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md)
+    or `?AreaPlotInputsUI`. The **Details** section notes which
+    arguments from the underlying plot function are wired through and
+    any that are intentionally omitted.
 2.  Cross-reference the base plot documentation
     ([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
     [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),

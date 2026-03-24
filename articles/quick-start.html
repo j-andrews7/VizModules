@@ -92,13 +92,12 @@ controls, <code>*OutputUI()</code> for the plot, and
 <code>*Server()</code> for the logic. Here is a minimal
 <code>scatterPlot</code> example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
-<span>            <span class="fu">dittoViz_ScatterPlotInputsUI</span><span class="op">(</span><span class="st">"cars"</span>,</span>
+<span>            <span class="fu"><a href="../reference/dittoViz_scatterPlotInputsUI.html">dittoViz_scatterPlotInputsUI</a></span><span class="op">(</span><span class="st">"cars"</span>,</span>
 <span>                <span class="va">mtcars</span>,</span>
 <span>                defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>                    x.by <span class="op">=</span> <span class="st">"wt"</span>,</span>
@@ -107,19 +106,15 @@ controls, <code>*OutputUI()</code> for the plot, and
 <span>                <span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu">dittoViz_ScatterPlotOutputUI</span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="../reference/dittoViz_scatterPlotOutputUI.html">dittoViz_scatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"cars"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">dittoViz_ScatterPlotServer</span><span class="op">(</span><span class="st">"cars"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="st">"cars"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>Replace <code>scatterPlot</code> with any other module name (e.g.,
-<code>AreaPlot</code>, <code>BarPlot</code>, <code>BoxPlot</code>,
-<code>linePlot</code>, <code>piePlot</code>, <code>volcanoPlot</code>)
-to swap the visualization.</p>
 </div>
 <div class="section level2">
 <h2 id="set-defaults-and-hide-controls">Set defaults and hide controls<a class="anchor" aria-label="anchor" href="#set-defaults-and-hide-controls"></a>
@@ -140,7 +135,7 @@ whole groups of controls (e.g., <code>"Plotly"</code> or
 <code>"Legend/Scale"</code> in <code>scatterPlot</code>).</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dittoViz_ScatterPlotServer</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span></span>
 <span>    <span class="st">"cars"</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>,</span>
 <span>    hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"split.by"</span>, <span class="st">"rows.use"</span><span class="op">)</span>,</span>
@@ -182,7 +177,7 @@ default data. You can also pass custom wrapper module functions to
 arguments are available in a module:</p>
 <ol style="list-style-type: decimal">
 <li>Open the module input help page, e.g.,
-<code>?dittoViz_ScatterPlotInputsUI</code> or
+<code><a href="../reference/dittoViz_scatterPlotInputsUI.html">?dittoViz_scatterPlotInputsUI</a></code> or
 <code>?AreaPlotInputsUI</code>. The <strong>Details</strong> section
 notes which arguments from the underlying plot function are wired
 through and any that are intentionally omitted.</li>

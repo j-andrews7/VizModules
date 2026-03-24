@@ -1,7 +1,7 @@
 # Adding a New Module
 
 This checklist walks through how to add a new plotting module to
-**vizModules** so it matches the package’s organization, documentation,
+**VizModules** so it matches the package’s organization, documentation,
 and testing standards.
 
 ## Quick Checklist
@@ -10,7 +10,7 @@ Pick the plot function you are wrapping and name your module
 accordingly:
 
 - For **dittoViz** functions: use `dittoViz_<PlotName>` (e.g.,
-  `dittoViz_ScatterPlot` for
+  `dittoViz_scatterPlot` for
   [`dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html))
 - For **plotthis** functions: use `plotthis_<PlotName>` (e.g.,
   `plotthis_AreaPlot` for
