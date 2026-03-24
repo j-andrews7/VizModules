@@ -50,9 +50,9 @@
     shinyWidgets::updateMaterialSwitch(session, "flip.x", value = FALSE)
     shinyWidgets::updateMaterialSwitch(session, "flip.y", value = FALSE)
     #Facet control: 
-    updateNumericInput(session, "facet.title.font.size", value = .get_default(defaults, "facet.title.font.size", 18, is.numeric))
-    updateColourInput(session, "facet.title.font.color", value = .get_default(defaults, "facet.title.font.color", "#000000"))
-    updateSelectInput(session, "facet.title.font.family", selected = "Arial", choices = font_choices)
+    updateNumericInput(session, "facet.title.font.size", value = 18)
+    colourpicker::updateColourInput(session, "facet.title.font.color", value = "#000000")
+    updateSelectInput(session, "facet.title.font.family", selected = "Arial")
 
     # Title font
     updateSelectInput(session, "title.font.family", selected = "Arial")
