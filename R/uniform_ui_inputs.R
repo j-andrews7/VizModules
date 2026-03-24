@@ -40,37 +40,37 @@
 #'
 #' @importFrom shiny updateSelectInput updateNumericInput updateCheckboxInput
 #' @importFrom colourpicker updateColourInput
+#' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_reset_axes_inputs
 #' @keywords internal
 .reset_axes_inputs <- function(session) {
     # Optional conditional inputs (harmless if absent)
-    shinyWidgets::updateMaterialSwitch(session, "rotate", value = FALSE)
-    shinyWidgets::updateMaterialSwitch(session, "flip.x", value = FALSE)
-    shinyWidgets::updateMaterialSwitch(session, "flip.y", value = FALSE)
-    # Title font
+    updateMaterialSwitch(session, "rotate", value = FALSE)
+    updateMaterialSwitch(session, "flip.x", value = FALSE)
+    updateMaterialSwitch(session, "flip.y", value = FALSE)
+    updateNumericInput(session, "facet.title.font.size", value = .get_default(defaults, "facet.title.font.size", 18, is.numeric))
+    updateColourInput(session, "facet.title.font.color", value = .get_default(defaults, "facet.title.font.color", "#000000"))
+    updateSelectInput(session, "facet.title.font.family", selected = "Arial", choices = font_choices)
     updateSelectInput(session, "title.font.family", selected = "Arial")
-    colourpicker::updateColourInput(session, "text.colour", value = "#000000")
-    # Axis title
+    updateColourInput(session, "text.colour", value = "#000000")
     updateNumericInput(session, "axis.title.font.size", value = 18)
-    colourpicker::updateColourInput(session, "axis.title.font.color", value = "#000000")
+    updateColourInput(session, "axis.title.font.color", value = "#000000")
     updateSelectInput(session, "axis.title.font.family", selected = "Arial")
-    # Borders & gridlines
     updateCheckboxInput(session, "axis.showline", value = TRUE)
     updateCheckboxInput(session, "axis.mirror", value = TRUE)
     updateCheckboxInput(session, "show.grid.x", value = TRUE)
     updateCheckboxInput(session, "show.grid.y", value = TRUE)
-    colourpicker::updateColourInput(session, "axis.linecolor", value = "black")
+    updateColourInput(session, "axis.linecolor", value = "black")
     updateNumericInput(session, "axis.linewidth", value = 0.5)
-    # Tick marks
     updateNumericInput(session, "axis.tickfont.size", value = 12)
-    colourpicker::updateColourInput(session, "axis.tickfont.color", value = "black")
+    updateColourInput(session, "axis.tickfont.color", value = "black")
     updateSelectInput(session, "axis.tickfont.family", selected = "Arial")
     updateNumericInput(session, "axis.tickangle.x", value = 0)
     updateNumericInput(session, "axis.tickangle.y", value = 0)
     updateSelectInput(session, "axis.ticks", selected = "outside")
-    colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
+    updateColourInput(session, "axis.tickcolor", value = "black")
     updateNumericInput(session, "axis.ticklen", value = 5)
     updateNumericInput(session, "axis.tickwidth", value = 1)
     invisible(NULL)
@@ -98,19 +98,16 @@
 #' @rdname INTERNAL_reset_lines_inputs
 #' @keywords internal
 .reset_lines_inputs <- function(session, include.fit.lines = FALSE) {
-    # Horizontal lines
     updateTextInput(session, "hline.intercepts", value = "")
     updateTextInput(session, "hline.colors", value = "#000000")
     updateTextInput(session, "hline.widths", value = "1")
     updateTextInput(session, "hline.linetypes", value = "dashed")
     updateTextInput(session, "hline.opacities", value = "1")
-    # Vertical lines
     updateTextInput(session, "vline.intercepts", value = "")
     updateTextInput(session, "vline.colors", value = "#000000")
     updateTextInput(session, "vline.widths", value = "1")
     updateTextInput(session, "vline.linetypes", value = "dashed")
     updateTextInput(session, "vline.opacities", value = "1")
-    # Diagonal lines
     updateTextInput(session, "abline.slopes", value = "")
     updateTextInput(session, "abline.intercepts", value = "")
     updateTextInput(session, "abline.colors", value = "#000000")
@@ -119,10 +116,10 @@
     updateTextInput(session, "abline.opacities", value = "1")
 
     if (include.fit.lines) {
-        shinyWidgets::updateMaterialSwitch(session, "best.fit", value = FALSE)
+        updateMaterialSwitch(session, "best.fit", value = FALSE)
         updateNumericInput(session, "line.best.smoothness", value = 1)
-        colourpicker::updateColourInput(session, "line.best.colour", value = "#000000")
-        shinyWidgets::updateMaterialSwitch(session, "linear.model", value = FALSE)
+        updateColourInput(session, "line.best.colour", value = "#000000")
+        updateMaterialSwitch(session, "linear.model", value = FALSE)
     }
     invisible(NULL)
 }
@@ -213,7 +210,7 @@
                 min = 0,
                 max = 10000
             ),
-            colourpicker::colourInput(ns("line.best.colour"), "Line of best fit colour:",
+            colourInput(ns("line.best.colour"), "Line of best fit colour:",
                 value = "#000000"
             ),
             materialSwitch(ns("linear.model"), "Linear model line",
@@ -376,6 +373,21 @@
             value = .get_default(defaults, "axis.tickwidth", 1, is.numeric),
             min = 0,
             step = 0.1
+        ),
+        numericInput(ns("facet.title.font.size"), "Facet Subplot Title Size",
+            value = .get_default(defaults, "facet.title.font.size", 18, is.numeric),
+            min = 1,
+            step = 1
+        ),
+        colourInput(ns("facet.title.font.color"), "Facet Title Color",
+            value = .get_default(defaults, "facet.title.font.color", "#000000")
+        ),
+        selectInput(ns("facet.title.font.family"), "Facet Title Font",
+            choices = font_choices,
+            selected = .get_default(
+                defaults, "facet.title.font.family", "Arial",
+                function(x) x %in% font_choices
+            )
         )
     )
 }
@@ -650,8 +662,8 @@
         ),
         tipify(
             numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.4, is.numeric),
-                min = 0, max = 0.5, step = 0.01
+                value = .get_default(defaults, "subplot.margin", 0.6, is.numeric),
+                min = 0, max = 5, step = 0.01
             ),
             paste(
                 "Spacing between facet panels as a fraction of the plot area.",
@@ -727,8 +739,8 @@
     updateNumericInput(session, "margin.l", value = 90)
     updateNumericInput(session, "margin.r", value = 90)
     updateNumericInput(session, "subplot.margin", value = 0.05)
-    colourpicker::updateColourInput(session, "shape.fill", value = "rgba(0, 0, 0, 0)")
-    colourpicker::updateColourInput(session, "shape.line.color", value = "black")
+    updateColourInput(session, "shape.fill", value = "rgba(0, 0, 0, 0)")
+    updateColourInput(session, "shape.line.color", value = "black")
     updateNumericInput(session, "shape.line.width", value = 4)
     updateSelectInput(session, "shape.linetype", selected = "solid")
     updateNumericInput(session, "shape.opacity", value = 1)

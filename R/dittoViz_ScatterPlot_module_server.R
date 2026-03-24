@@ -280,6 +280,18 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             .reset_axes_inputs(session)
         })
 
+        observeEvent(input$split.by, {
+            if (!is.null(input$split.by) && nzchar(input$split.by)) {
+                show("facet.title.font.size")
+                show("facet.title.font.color")
+                show("facet.title.font.family")
+            } else {
+                hide("facet.title.font.size")
+                hide("facet.title.font.color")
+                hide("facet.title.font.family")
+            }
+        })
+
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
             req(input$x.by, input$y.by, data())
@@ -657,6 +669,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
 
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes

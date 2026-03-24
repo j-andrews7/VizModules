@@ -202,6 +202,7 @@ default_palettes <- function() {
 #' @return A Shiny tagList containing the standard control buttons and inputs.
 #'
 #' @import shiny
+#' @importFrom shinyjs hidden
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @export
@@ -243,7 +244,7 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 ),
                 style = "margin-top: 25px;"
             ),
-            if (has.stats) shinyjs::hidden(column(
+            if (has.stats) hidden(column(
                 3,
                 downloadButton(
                     ns("download.stats"),
