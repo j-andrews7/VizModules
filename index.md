@@ -51,7 +51,7 @@ library(VizModules)
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_ScatterPlotInputsUI(
+            dittoViz_scatterPlotInputsUI(
                 "cars",
                 mtcars,
                 defaults = list(
@@ -61,12 +61,12 @@ ui <- fluidPage(
                 )
             )
         ),
-        mainPanel(dittoViz_ScatterPlotOutputUI("cars"))
+        mainPanel(dittoViz_scatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_ScatterPlotServer(
+    dittoViz_scatterPlotServer(
         "cars",
         data = reactive(mtcars)
     )
@@ -187,7 +187,7 @@ following visualization functions:
 
 ### Plotting Functions Defined in VizModules
 
-Via direct use of plotly.
+Via direct implementation with plotly.
 
 - `linePlot` - Line plots
 - `piePlot` - Pie and donut plots
@@ -242,7 +242,7 @@ within each group.
   per sample/group.
 
 [dittoViz](https://github.com/dtm2451/dittoViz) is under active
-development, so additional modules may be addedas more visualization
+development, so additional modules may be added as more visualization
 functions are added.
 
 ## Contributing a New Module
