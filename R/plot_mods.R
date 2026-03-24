@@ -1683,6 +1683,12 @@ is_pure_type <- function(inputs, d) {
         color  = isolate_fn(input$axis.title.font.color)
     )
 
+    facet_font <- list(
+        size   = isolate_fn(input$facet.title.font.size),
+        family = isolate_fn(input$facet.title.font.family),
+        color  = isolate_fn(input$facet.title.font.color)
+    )
+
     for (i in seq_along(annotations)) {
         ann <- annotations[[i]]
 
@@ -1699,6 +1705,10 @@ is_pure_type <- function(inputs, d) {
 
         if (is_axis) {
             fig$x$layout$annotations[[i]]$font <- axis_font
+        }
+        is_facet_title <- is.null(ann$annotationType) && ann$xanchor == "center"
+        if (is_facet_title){
+            fig$x$layout$annotations[[i]]$font <- facet_font
         }
     }
 

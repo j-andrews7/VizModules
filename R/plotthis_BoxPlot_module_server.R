@@ -174,12 +174,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
-        output$axes_control <- renderUI({
-            facet.by <- FALSE
+        observeEvent(input$facet.by, {
             if (!input$facet.by == ""){
-                facet.by <- TRUE
+              show("facet.title.font.size")
+              show("facet.title.font.color")
+              show("facet.title.font.family")
+            } else {
+              hide("facet.title.font.size")
+              hide("facet.title.font.color")
+              hide("facet.title.font.family")
             }
-            .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE, facet.by = facet.by)
         })
 
         generate_BoxPlot <- reactive({
