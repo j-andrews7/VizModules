@@ -73,6 +73,10 @@
     colourpicker::updateColourInput(session, "axis.tickcolor", value = "black")
     updateNumericInput(session, "axis.ticklen", value = 5)
     updateNumericInput(session, "axis.tickwidth", value = 1)
+    # Facet label inputs (optional, harmless if absent)
+    colourpicker::updateColourInput(session, "facet.label.colour", value = "#000000")
+    updateNumericInput(session, "facet.label.size", value = 12)
+    updateSelectInput(session, "facet.label.family", selected = "Arial")
     invisible(NULL)
 }
 
@@ -239,18 +243,25 @@
 #'   x and y axes (e.g., horizontal bar plots). Default is FALSE.
 #' @param include.flip Logical; whether to include the "Flip" input for flipping
 #'   the axis. Default is FALSE.
+#' @param include.facet.labels Logical; whether to include facet subplot title styling
+#'   inputs (colour, size, font). These inputs are initially hidden and should be shown
+#'   or hidden via [shinyjs::show()] / [shinyjs::hide()] on `"facet_label_inputs"` in
+#'   the module server based on whether a facet variable is selected. Default is FALSE.
 #'
 #' @return A `tagList` containing the axis input UI elements.
 #'
-#' @importFrom shiny numericInput checkboxInput selectInput tagList
+#' @importFrom shiny numericInput checkboxInput selectInput tagList div tags
 #' @importFrom colourpicker colourInput
-#'
+#' @importFrom shinyjs hidden
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_uniform_axes_inputs_ui
 #' @keywords internal
-.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
+.uniform_axes_inputs_ui <- function(
+    ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE,
+    include.facet.labels = FALSE
+) {
     font_choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
         "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -279,6 +290,33 @@
     } else {
         flip_x <- NULL
         flip_y <- NULL
+    }
+
+    facet_label_inputs <- if (include.facet.labels) {
+        shinyjs::hidden(
+            div(
+                id = ns("facet_label_inputs"),
+                tags$hr(),
+                tags$strong("Facet Label Styling"),
+                colourInput(ns("facet.label.colour"), "Facet Label Colour",
+                    value = .get_default(defaults, "facet.label.colour", "#000000")
+                ),
+                numericInput(ns("facet.label.size"), "Facet Label Size",
+                    value = .get_default(defaults, "facet.label.size", 12, is.numeric),
+                    min = 1,
+                    step = 1
+                ),
+                selectInput(ns("facet.label.family"), "Facet Label Font",
+                    choices = font_choices,
+                    selected = .get_default(
+                        defaults, "facet.label.family", "Arial",
+                        function(x) x %in% font_choices
+                    )
+                )
+            )
+        )
+    } else {
+        NULL
     }
 
     tagList(
@@ -376,7 +414,8 @@
             value = .get_default(defaults, "axis.tickwidth", 1, is.numeric),
             min = 0,
             step = 0.1
-        )
+        ),
+        facet_label_inputs
     )
 }
 

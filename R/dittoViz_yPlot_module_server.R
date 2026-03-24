@@ -13,7 +13,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom dittoViz yPlot
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
@@ -34,6 +34,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
         }
+
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$split.by, {
+            if (!is.null(input$split.by) && nzchar(input$split.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
 
         # Conditionally show/hide Stats tab based on plot type selection
         observeEvent(input$plots, {

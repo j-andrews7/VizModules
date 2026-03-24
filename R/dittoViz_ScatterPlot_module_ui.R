@@ -556,7 +556,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$hover.round.digits, placement = "top", options = list(container = "body"))
         ),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults, include.fit.lines = TRUE),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults)
+        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.facet.labels = TRUE)
     )
 
     organize_inputs(

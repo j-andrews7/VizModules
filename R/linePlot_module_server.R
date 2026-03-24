@@ -12,7 +12,7 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #'
 #' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
 #' [VizModules::linePlotOutputUI()], [VizModules::linePlotApp()]
@@ -46,6 +46,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
         }
+
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$facet.by, {
+            if (!is.null(input$facet.by) && nzchar(input$facet.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
 
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])

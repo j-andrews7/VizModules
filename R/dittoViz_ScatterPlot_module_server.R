@@ -15,7 +15,7 @@
 #' @import plotly
 #' @importFrom dittoViz scatterPlot colLevels
 #' @importFrom ggplot2 theme_bw waiver theme
-#' @importFrom shinyjs hide runjs
+#' @importFrom shinyjs hide show runjs
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
 #' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotApp()]
@@ -38,6 +38,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
         }
+
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$split.by, {
+            if (!is.null(input$split.by) && nzchar(input$split.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
 
         # Available color groups for the current color.by selection
         # NOTE: We intentionally don't use colLevels() here because it converts

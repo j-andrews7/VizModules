@@ -65,6 +65,15 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
         })
 
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$facet.by, {
+            if (!is.null(input$facet.by) && nzchar(input$facet.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
+
         ns <- session$ns
         default_palette_name <- "dittoColors"
         default_gradient_palette <- "Spectral"

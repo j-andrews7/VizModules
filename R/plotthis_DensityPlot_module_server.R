@@ -14,6 +14,7 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom shinyjs show hide
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -30,6 +31,15 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "DensityPlotTabsetPanel", target = tab.name)
         }
+
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$facet.by, {
+            if (!is.null(input$facet.by) && nzchar(input$facet.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
 
         ns <- session$ns
         default_palette_name <- "dittoColors"

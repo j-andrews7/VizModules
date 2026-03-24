@@ -241,7 +241,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     ),
 
     "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.facet.labels = TRUE),
     "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
 

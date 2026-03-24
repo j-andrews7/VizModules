@@ -13,7 +13,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom plotthis AreaPlot
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
@@ -31,6 +31,15 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "AreaPlotTabsetPanel", target = tab.name)
         }
+
+        # Toggle facet label styling visibility in Axes tab
+        observeEvent(input$facet.by, {
+            if (!is.null(input$facet.by) && nzchar(input$facet.by)) {
+                show("facet_label_inputs")
+            } else {
+                hide("facet_label_inputs")
+            }
+        }, ignoreNULL = FALSE)
 
         ns <- session$ns
         default_palette_name <- "dittoColors"
