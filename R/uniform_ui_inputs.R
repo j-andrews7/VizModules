@@ -49,6 +49,11 @@
     shinyWidgets::updateMaterialSwitch(session, "rotate", value = FALSE)
     shinyWidgets::updateMaterialSwitch(session, "flip.x", value = FALSE)
     shinyWidgets::updateMaterialSwitch(session, "flip.y", value = FALSE)
+    #Facet control: 
+    updateNumericInput(session, "facet.title.font.size", value = .get_default(defaults, "facet.title.font.size", 18, is.numeric))
+    updateColourInput(session, "facet.title.font.color", value = .get_default(defaults, "facet.title.font.color", "#000000"))
+    updateSelectInput(session, "facet.title.font.family", selected = "Arial", choices = font_choices)
+
     # Title font
     updateSelectInput(session, "title.font.family", selected = "Arial")
     colourpicker::updateColourInput(session, "text.colour", value = "#000000")
@@ -250,7 +255,7 @@
 #' @author Jared Andrews
 #' @rdname INTERNAL_uniform_axes_inputs_ui
 #' @keywords internal
-.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
+.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE, facet.by = FALSE) {
     font_choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
         "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -279,6 +284,27 @@
     } else {
         flip_x <- NULL
         flip_y <- NULL
+    }
+    if (facet.by){
+        facet_title_size <- numericInput(ns("facet.title.font.size"), "Facet Subplot Title Size",
+            value = .get_default(defaults, "facet.title.font.size", 18, is.numeric),
+            min = 1,
+            step = 1
+        )
+        facet_font_color <- colourInput(ns("facet.title.font.color"), "Facet Title Color",
+            value = .get_default(defaults, "facet.title.font.color", "#000000")
+        )
+        facet_font_type <- selectInput(ns("facet.title.font.family"), "Facet Title Font",
+            choices = font_choices,
+            selected = .get_default(
+                defaults, "facet.title.font.family", "Arial",
+                function(x) x %in% font_choices
+            )
+        )
+    } else {
+        facet_title_size <- NULL
+        facet_font_color <- NULL
+        facet_font_type <- NULL
     }
 
     tagList(
@@ -376,7 +402,10 @@
             value = .get_default(defaults, "axis.tickwidth", 1, is.numeric),
             min = 0,
             step = 0.1
-        )
+        ),
+        facet_title_size,
+        facet_font_color,
+        facet_font_type
     )
 }
 

@@ -174,6 +174,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        output$axes_control <- renderUI({
+            facet.by <- FALSE
+            if (!input$facet.by == ""){
+                facet.by <- TRUE
+            }
+            .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE, facet.by = facet.by)
+        })
+
         generate_BoxPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
@@ -305,6 +313,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
 
             # Add reference lines
             fig <- .add_reference_lines(fig,

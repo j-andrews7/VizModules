@@ -1653,3 +1653,54 @@ is_pure_type <- function(inputs, d) {
 
     fig
 }
+
+#' Apply axis title font styling to shared facet axis annotations
+#'
+#' When ggplotly converts a faceted ggplot, shared axis titles become
+#' annotations rather than axis title properties. This function finds
+#' those shared title annotations and applies the user's axis title
+#' font settings to them.
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object containing axis title font fields.
+#' @param isolate_fn Function to isolate reactive values. Defaults to
+#'   \code{shiny::isolate}.
+#'
+#' @return The modified plotly figure with updated annotation fonts.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_apply_axis_title_to_annotations
+.apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
+    annotations <- fig$x$layout$annotations
+    if (is.null(annotations) || length(annotations) == 0) {
+        return(fig)
+    }
+
+    axis_font <- list(
+        size   = isolate_fn(input$axis.title.font.size),
+        family = isolate_fn(input$axis.title.font.family),
+        color  = isolate_fn(input$axis.title.font.color)
+    )
+
+    for (i in seq_along(annotations)) {
+        ann <- annotations[[i]]
+
+        # Skip annotations that aren't paper-referenced
+        if (is.null(ann$xref) || ann$xref != "paper" ||
+            is.null(ann$yref) || ann$yref != "paper") {
+            next
+        }
+
+
+
+        # Shared Y-axis title: near left of plot, rotated -90
+        is_axis <- !is.null(ann$annotationType) && ann$annotationType == "axis"
+
+        if (is_axis) {
+            fig$x$layout$annotations[[i]]$font <- axis_font
+        }
+    }
+
+    fig
+}
