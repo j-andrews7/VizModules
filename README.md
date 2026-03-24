@@ -39,7 +39,7 @@ library(VizModules)
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_ScatterPlotInputsUI(
+            dittoViz_scatterPlotInputsUI(
                 "cars",
                 mtcars,
                 defaults = list(
@@ -49,12 +49,12 @@ ui <- fluidPage(
                 )
             )
         ),
-        mainPanel(dittoViz_ScatterPlotOutputUI("cars"))
+        mainPanel(dittoViz_scatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_ScatterPlotServer(
+    dittoViz_scatterPlotServer(
         "cars",
         data = reactive(mtcars)
     )
@@ -134,7 +134,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### Plotting Functions Defined in VizModules
 
-Via direct use of plotly.
+Via direct implementation with plotly.
 
 * `linePlot` - Line plots
 * `piePlot` - Pie and donut plots
@@ -175,7 +175,7 @@ When using paired tests (Wilcoxon signed-rank or paired t-test), each group must
 * **barPlot** - compositional barplots.
 * **freqPlot** - box/jitter plots for discrete observation frequencies per sample/group.
 
-[dittoViz](https://github.com/dtm2451/dittoViz) is under active development, so additional modules may be addedas more visualization functions are added.
+[dittoViz](https://github.com/dtm2451/dittoViz) is under active development, so additional modules may be added as more visualization functions are added.
 
 ## Contributing a New Module
 
