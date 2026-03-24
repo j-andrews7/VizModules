@@ -304,7 +304,7 @@ Function)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 [dittoViz_ScatterPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html)
 
 [(Source Plotting
-Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
+Function)](https://cran.r-project.org/package=dittoViz)
 
 ![](reference/figures/ScatterPlot.png)
 
@@ -329,7 +329,7 @@ Function)](https://pwwang.github.io/plotthis/reference/boxviolinplot.html)
 [dittoViz_yPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html)
 
 [(Source Plotting
-Function)](https://cran.r-project.org/web/packages/dittoViz/refman/dittoViz.html)
+Function)](https://cran.r-project.org/package=dittoViz)
 
 ![](reference/figures/yPlot.png)
 
