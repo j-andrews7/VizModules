@@ -214,6 +214,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             }
         })
 
+        observeEvent(input$split.by, {
+            if (!is.null(input$split.by) && nzchar(input$split.by)) {
+                show("facet.title.font.size")
+                show("facet.title.font.color")
+                show("facet.title.font.family")
+            } else {
+                hide("facet.title.font.size")
+                hide("facet.title.font.color")
+                hide("facet.title.font.family")
+            }
+        })
+
         # Generate yPlot reactive
         generate_yPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
@@ -336,6 +348,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(split.by) && nzchar(split.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
 
             # Add reference lines
             fig <- .add_reference_lines(fig,

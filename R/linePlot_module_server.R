@@ -138,6 +138,18 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
         })
 
 
+        observeEvent(input$facet.by, {
+            if (!input$facet.by == "") {
+                show("facet.title.font.size")
+                show("facet.title.font.color")
+                show("facet.title.font.family")
+            } else {
+                hide("facet.title.font.size")
+                hide("facet.title.font.color")
+                hide("facet.title.font.family")
+            }
+        })
+
         # Reactive expression to generate the plot (used by both output and download)
         generate_linePlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
@@ -263,6 +275,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
                 error.width = isolate_fn(input$errorBarWidth),
                 error.bar = isolate_fn(input$errorBar)
             )
+
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
 
             # Add reference lines
             fig <- .add_reference_lines(fig,
