@@ -753,6 +753,8 @@
 #' @param sig.threshold Numeric; significance threshold used.
 #'
 #' @return Called for side effects; writes to `file`.
+#' 
+#' @importFrom utils write.csv
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_write_stats_csv
@@ -793,6 +795,6 @@
     con <- file(file, open = "wt")
     on.exit(close(con))
     writeLines(header, con)
-    utils::write.csv(stats_df, con, row.names = FALSE)
+    write.csv(stats_df, con, row.names = FALSE)
     invisible(NULL)
 }
