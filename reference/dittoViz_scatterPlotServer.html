@@ -56,7 +56,8 @@
 <span>  <span class="va">data</span>,</span>
 <span>  hide.inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hide.tabs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  manual.colors <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  manual.colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  defaults <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -86,6 +87,12 @@ but the user will not be able to see/adjust them in the UI.</p></dd>
 
 <dt id="arg-manual-colors">manual.colors<a class="anchor" aria-label="anchor" href="#arg-manual-colors"></a></dt>
 <dd><p>A named character vector of colors or a reactive returning a named character vector of colors.</p></dd>
+
+
+<dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
+<dd><p>A named list of default values for the inputs. When the reset button is
+clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+the same list passed to the corresponding UI function.</p></dd>
 
 </dl></div>
     <div class="section level2">

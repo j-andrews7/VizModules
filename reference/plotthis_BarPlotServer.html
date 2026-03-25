@@ -51,7 +51,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotthis_BarPlotServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, hide.inputs <span class="op">=</span> <span class="cn">NULL</span>, hide.tabs <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotthis_BarPlotServer</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  hide.inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hide.tabs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  defaults <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -76,6 +82,12 @@ but the user will not be able to see/adjust them in the UI.</p></dd>
 <dd><p>A character vector of tab names to hide.
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.</p></dd>
+
+
+<dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
+<dd><p>A named list of default values for the inputs. When the reset button is
+clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+the same list passed to the corresponding UI function.</p></dd>
 
 </dl></div>
     <div class="section level2">

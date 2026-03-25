@@ -10,7 +10,8 @@ dittoViz_scatterPlotServer(
   data,
   hide.inputs = NULL,
   hide.tabs = NULL,
-  manual.colors = NULL
+  manual.colors = NULL,
+  defaults = NULL
 )
 ```
 
@@ -40,6 +41,13 @@ dittoViz_scatterPlotServer(
 
   A named character vector of colors or a reactive returning a named
   character vector of colors.
+
+- defaults:
+
+  A named list of default values for the inputs. When the reset button
+  is clicked, inputs are reset to these values rather than hardcoded
+  fallbacks. Typically the same list passed to the corresponding UI
+  function.
 
 ## Value
 
