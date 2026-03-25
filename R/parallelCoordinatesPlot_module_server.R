@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the parallelCoordinatesPlot module.
 #'
 #' @import shiny
@@ -19,7 +22,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -37,24 +40,41 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         # Reset functionality
         observeEvent(input$reset, {
             d <- data_reactive()
-            updateSelectInput(session, "dimensions", selected = names(d))
-            updateSelectInput(session, "color.by", selected = "")
-            updateSelectInput(session, "color.scale", selected = "Viridis")
-            updateSliderInput(session, "line.opacity", value = 0.5)
-            updateNumericInput(session, "line.width", value = 1)
-            updateCheckboxInput(session, "show.colorbar", value = TRUE)
-            updateNumericInput(session, "label.font.size", value = 12)
-            colourpicker::updateColourInput(session, "label.font.color", value = "black")
-            updateSelectInput(session, "label.font.family", selected = "Arial")
-            updateNumericInput(session, "tick.font.size", value = 10)
-            colourpicker::updateColourInput(session, "tick.font.color", value = "black")
-            updateSelectInput(session, "tick.font.family", selected = "Arial")
-            updateNumericInput(session, "title.font.size", value = 16)
-            updateSelectInput(session, "title.font.family", selected = "Arial")
-            colourpicker::updateColourInput(session, "title.text.color", value = "#000000")
-            colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
+            all.choices <- c("", names(d))
+            updateSelectInput(session, "dimensions",
+                selected = .get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d))))
+            updateSelectInput(session, "color.by",
+                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices))
+            updateSelectInput(session, "color.scale",
+                selected = .get_default(defaults, "color.scale", "Viridis"))
+            updateSliderInput(session, "line.opacity",
+                value = .get_default(defaults, "line.opacity", 0.5, is.numeric))
+            updateNumericInput(session, "line.width",
+                value = .get_default(defaults, "line.width", 1, is.numeric))
+            updateCheckboxInput(session, "show.colorbar",
+                value = .get_default(defaults, "show.colorbar", TRUE, is.logical))
+            updateNumericInput(session, "label.font.size",
+                value = .get_default(defaults, "label.font.size", 12, is.numeric))
+            colourpicker::updateColourInput(session, "label.font.color",
+                value = .get_default(defaults, "label.font.color", "black"))
+            updateSelectInput(session, "label.font.family",
+                selected = .get_default(defaults, "label.font.family", "Arial"))
+            updateNumericInput(session, "tick.font.size",
+                value = .get_default(defaults, "tick.font.size", 10, is.numeric))
+            colourpicker::updateColourInput(session, "tick.font.color",
+                value = .get_default(defaults, "tick.font.color", "black"))
+            updateSelectInput(session, "tick.font.family",
+                selected = .get_default(defaults, "tick.font.family", "Arial"))
+            updateNumericInput(session, "title.font.size",
+                value = .get_default(defaults, "title.font.size", 16, is.numeric))
+            updateSelectInput(session, "title.font.family",
+                selected = .get_default(defaults, "title.font.family", "Arial"))
+            colourpicker::updateColourInput(session, "title.text.color",
+                value = .get_default(defaults, "title.text.color", "#000000"))
+            colourpicker::updateColourInput(session, "bgcolor",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
 
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
         })
 
         # Reactive expression to generate the plot (used by both output and download)

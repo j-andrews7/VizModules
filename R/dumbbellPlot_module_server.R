@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the dumbbellPlot module.
 #'
 #' @import shiny
@@ -19,7 +22,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -112,31 +115,35 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             # Reset Data columns to default. First and second index of data named list
 
             # Data tab
-            updateSelectInput(session, "x.value", selected = num.choices[2])
-            updateSelectInput(session, "y.value", selected = cat.choices[2])
+            updateSelectInput(session, "x.value",
+                selected = .get_default(defaults, "x.value", num.choices[2], function(x) x %in% num.choices))
+            updateSelectInput(session, "y.value",
+                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) x %in% cat.choices))
 
-            updateSelectInput(session, "x.adjustment", selected = "")
-            updateSelectInput(session, "colour.by", selected = "X variables")
+            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "colour.by",
+                selected = .get_default(defaults, "colour.by", "X variables"))
 
             # Facet tab
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scales", selected = "fixed")
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices))
+            updateSelectInput(session, "facet.scales", selected = .get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
-            colourpicker::updateColourInput(session, "line.colour", value = "red")
-
+            colourpicker::updateColourInput(session, "line.colour",
+                value = .get_default(defaults, "line.colour", "red"))
 
             shinyjs::click("reset_palette")
 
 
             # Axes
-            .reset_axes_inputs(session)
+            .reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {

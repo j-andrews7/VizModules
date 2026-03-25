@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #'
 #' @return The `moduleServer` function for the SplitBarPlot module.
 #'
@@ -24,7 +27,7 @@
 #' [VizModules::plotthis_SplitBarPlotApp()]
 #'
 #' @author Jacob Martin, Jared Andrews
-plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -207,40 +210,54 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Data
             # Data Section
-            updateSelectInput(session, "x.data", selected = num.choices[2])
-            updateSelectInput(session, "y.data", selected = char.choices[2])
-            updateSelectInput(session, "fill.by", selected = char.choices[2])
+            updateSelectInput(session, "x.data",
+                selected = .get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices))
+            updateSelectInput(session, "y.data",
+                selected = .get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices))
+            updateSelectInput(session, "fill.by",
+                selected = .get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices))
 
             # Facet Section
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scale", selected = "free_y")
-            updateNumericInput(session, "facet.ncol", value = NA) # Using NA for NULL in numericInput
-            updateNumericInput(session, "facet.nrow", value = NA)
-            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
-            updateSelectInput(session, "split.by", selected = "")
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
+            updateSelectInput(session, "facet.scale",
+                selected = .get_default(defaults, "facet.scale", "free_y"))
+            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateMaterialSwitch(session, "facet.by.row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+            updateSelectInput(session, "split.by",
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
             # Aesthetics
-            updateSelectInput(session, "theme", selected = "theme_this")
-            updateSelectInput(session, "alpha.by", selected = "")
-            updateMaterialSwitch(session, "alpha.reverse", value = FALSE)
-            updateTextInput(session, "alpha.name", value = "")
-            updateNumericInput(session, "bar.height", value = 0.9)
-            updateNumericInput(session, "line.height", value = 0.5)
-            updateMaterialSwitch(session, "label.on.y.axis", value = FALSE)
-            updateSliderInput(session, "axis.scale.factor", value = 1.2)
-            updateSliderInput(session, "text.position", value = 0)
+            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "alpha.by",
+                selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices))
+            updateMaterialSwitch(session, "alpha.reverse",
+                value = .get_default(defaults, "alpha.reverse", FALSE, is.logical))
+            updateTextInput(session, "alpha.name", value = .get_default(defaults, "alpha.name", ""))
+            updateNumericInput(session, "bar.height", value = .get_default(defaults, "bar.height", 0.9, is.numeric))
+            updateNumericInput(session, "line.height", value = .get_default(defaults, "line.height", 0.5, is.numeric))
+            updateMaterialSwitch(session, "label.on.y.axis",
+                value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical))
+            updateSliderInput(session, "axis.scale.factor",
+                value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric))
+            updateSliderInput(session, "text.position",
+                value = .get_default(defaults, "text.position", 0, is.numeric))
             # Axes
-            updateMaterialSwitch(session, "rotate", value = FALSE)
-            updateNumericInput(session, "x.max", value = max.x)
-            updateNumericInput(session, "x.min", value = min.x)
-            updateNumericInput(session, "axis.font.size", value = 18)
-            updateNumericInput(session, "title.font.size", value = 28)
-            .reset_axes_inputs(session)
+            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
+            updateNumericInput(session, "x.min", value = .get_default(defaults, "x.min", min.x, is.numeric))
+            updateNumericInput(session, "axis.font.size",
+                value = .get_default(defaults, "axis.font.size", 18, is.numeric))
+            updateNumericInput(session, "title.font.size",
+                value = .get_default(defaults, "title.font.size", 28, is.numeric))
+            .reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
         })
 
         # Update x-axis range when data columns or fill.by change (when auto-update is off)

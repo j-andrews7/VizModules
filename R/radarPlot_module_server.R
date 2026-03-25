@@ -10,6 +10,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the radarPlot module.
 #'
 #' @import shiny
@@ -21,7 +24,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -71,50 +74,75 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             all.choices <- c("", names(data_reactive()))
 
             # Data
-            updateSelectInput(session, "theta", selected = cat.choices[2])
-            updateSelectInput(session, "r", selected = numeric.data[2])
-            updateSelectInput(session, "group", selected = "")
+            updateSelectInput(session, "theta",
+                selected = .get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
+            updateSelectInput(session, "r",
+                selected = .get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
+            updateSelectInput(session, "group",
+                selected = .get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
 
             # Trace style
-            updateSelectInput(session, "fill", selected = "toself")
-            updateNumericInput(session, "line.width", value = 2)
-            updateSelectInput(session, "line.dash", selected = "solid")
-            updateNumericInput(session, "marker.size", value = 5)
-            updateSelectInput(session, "marker.symbol", selected = "circle")
-            updateSliderInput(session, "opacity", value = 0.6)
+            updateSelectInput(session, "fill", selected = .get_default(defaults, "fill", "toself"))
+            updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 2, is.numeric))
+            updateSelectInput(session, "line.dash", selected = .get_default(defaults, "line.dash", "solid"))
+            updateNumericInput(session, "marker.size",
+                value = .get_default(defaults, "marker.size", 5, is.numeric))
+            updateSelectInput(session, "marker.symbol",
+                selected = .get_default(defaults, "marker.symbol", "circle"))
+            updateSliderInput(session, "opacity", value = .get_default(defaults, "opacity", 0.6, is.numeric))
 
             # Radial axis
-            updateCheckboxInput(session, "radial.visible", value = TRUE)
-            updateCheckboxInput(session, "auto.radial.range", value = TRUE)
-            updateNumericInput(session, "radial.min", value = 0)
-            updateNumericInput(session, "radial.max", value = 100)
-            updateCheckboxInput(session, "radial.showline", value = TRUE)
-            colourpicker::updateColourInput(session, "radial.linecolor", value = "#444444")
-            colourpicker::updateColourInput(session, "radial.gridcolor", value = "#EEEEEE")
+            updateCheckboxInput(session, "radial.visible",
+                value = .get_default(defaults, "radial.visible", TRUE, is.logical))
+            updateCheckboxInput(session, "auto.radial.range",
+                value = .get_default(defaults, "auto.radial.range", TRUE, is.logical))
+            updateNumericInput(session, "radial.min",
+                value = .get_default(defaults, "radial.min", 0, is.numeric))
+            updateNumericInput(session, "radial.max",
+                value = .get_default(defaults, "radial.max", 100, is.numeric))
+            updateCheckboxInput(session, "radial.showline",
+                value = .get_default(defaults, "radial.showline", TRUE, is.logical))
+            colourpicker::updateColourInput(session, "radial.linecolor",
+                value = .get_default(defaults, "radial.linecolor", "#444444"))
+            colourpicker::updateColourInput(session, "radial.gridcolor",
+                value = .get_default(defaults, "radial.gridcolor", "#EEEEEE"))
 
             # Angular axis
-            updateSelectInput(session, "angular.direction", selected = "clockwise")
-            updateSliderInput(session, "angular.rotation", value = 90)
-            colourpicker::updateColourInput(session, "angular.gridcolor", value = "#EEEEEE")
+            updateSelectInput(session, "angular.direction",
+                selected = .get_default(defaults, "angular.direction", "clockwise"))
+            updateSliderInput(session, "angular.rotation",
+                value = .get_default(defaults, "angular.rotation", 90, is.numeric))
+            colourpicker::updateColourInput(session, "angular.gridcolor",
+                value = .get_default(defaults, "angular.gridcolor", "#EEEEEE"))
 
             # Title
-            updateSliderInput(session, "title.x", value = 0.5)
-            updateNumericInput(session, "title.font.size", value = 18)
-            updateSelectInput(session, "title.font.family", selected = "Arial")
-            colourpicker::updateColourInput(session, "title.font.color", value = "#000000")
+            updateSliderInput(session, "title.x", value = .get_default(defaults, "title.x", 0.5, is.numeric))
+            updateNumericInput(session, "title.font.size",
+                value = .get_default(defaults, "title.font.size", 18, is.numeric))
+            updateSelectInput(session, "title.font.family",
+                selected = .get_default(defaults, "title.font.family", "Arial"))
+            colourpicker::updateColourInput(session, "title.font.color",
+                value = .get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
-            updateCheckboxInput(session, "show.legend", value = TRUE)
-            updateSelectInput(session, "legend.orientation", selected = "h")
-            updateSelectInput(session, "legend.font.family", selected = "Arial")
-            updateNumericInput(session, "legend.font.size", value = 12)
-            colourpicker::updateColourInput(session, "legend.font.color", value = "#000000")
+            updateCheckboxInput(session, "show.legend",
+                value = .get_default(defaults, "show.legend", TRUE, is.logical))
+            updateSelectInput(session, "legend.orientation",
+                selected = .get_default(defaults, "legend.orientation", "h"))
+            updateSelectInput(session, "legend.font.family",
+                selected = .get_default(defaults, "legend.font.family", "Arial"))
+            updateNumericInput(session, "legend.font.size",
+                value = .get_default(defaults, "legend.font.size", 12, is.numeric))
+            colourpicker::updateColourInput(session, "legend.font.color",
+                value = .get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
-            colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
-            colourpicker::updateColourInput(session, "polar.bgcolor", value = "#FFFFFF")
+            colourpicker::updateColourInput(session, "bgcolor",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
+            colourpicker::updateColourInput(session, "polar.bgcolor",
+                value = .get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
         })
 
         # Reactive expression to generate the plot (used by both output and download)

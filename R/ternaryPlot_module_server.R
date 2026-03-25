@@ -10,6 +10,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the ternaryPlot module.
 #'
 #' @import shiny
@@ -21,7 +24,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -75,49 +78,72 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
             default_c <- if (length(numeric.data) > 3) numeric.data[4] else ""
 
             # Data
-            updateSelectInput(session, "a", selected = default_a)
-            updateSelectInput(session, "b", selected = default_b)
-            updateSelectInput(session, "c", selected = default_c)
-            updateSelectInput(session, "group", selected = "")
-            updateNumericInput(session, "sum", value = 100)
+            updateSelectInput(session, "a",
+                selected = .get_default(defaults, "a", default_a, function(x) x == "" || x %in% numeric.data))
+            updateSelectInput(session, "b",
+                selected = .get_default(defaults, "b", default_b, function(x) x == "" || x %in% numeric.data))
+            updateSelectInput(session, "c",
+                selected = .get_default(defaults, "c", default_c, function(x) x == "" || x %in% numeric.data))
+            updateSelectInput(session, "group",
+                selected = .get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
+            updateNumericInput(session, "sum", value = .get_default(defaults, "sum", 100, is.numeric))
 
             # Trace style
-            updateSelectInput(session, "mode", selected = "markers")
-            updateNumericInput(session, "marker.size", value = 8)
-            updateSelectInput(session, "marker.symbol", selected = "circle")
-            updateNumericInput(session, "marker.line.width", value = 0)
-            colourpicker::updateColourInput(session, "marker.line.color", value = "#000000")
-            updateNumericInput(session, "line.width", value = 2)
-            updateSelectInput(session, "line.dash", selected = "solid")
-            updateSliderInput(session, "opacity", value = 1)
+            updateSelectInput(session, "mode", selected = .get_default(defaults, "mode", "markers"))
+            updateNumericInput(session, "marker.size",
+                value = .get_default(defaults, "marker.size", 8, is.numeric))
+            updateSelectInput(session, "marker.symbol",
+                selected = .get_default(defaults, "marker.symbol", "circle"))
+            updateNumericInput(session, "marker.line.width",
+                value = .get_default(defaults, "marker.line.width", 0, is.numeric))
+            colourpicker::updateColourInput(session, "marker.line.color",
+                value = .get_default(defaults, "marker.line.color", "#000000"))
+            updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 2, is.numeric))
+            updateSelectInput(session, "line.dash", selected = .get_default(defaults, "line.dash", "solid"))
+            updateSliderInput(session, "opacity", value = .get_default(defaults, "opacity", 1, is.numeric))
 
             # Axes
-            updateTextInput(session, "a.title", value = "")
-            updateTextInput(session, "b.title", value = "")
-            updateTextInput(session, "c.title", value = "")
-            updateNumericInput(session, "a.titlefont.size", value = 16)
-            updateNumericInput(session, "b.titlefont.size", value = 16)
-            updateNumericInput(session, "c.titlefont.size", value = 16)
-            colourpicker::updateColourInput(session, "a.gridcolor", value = "#EEEEEE")
-            colourpicker::updateColourInput(session, "b.gridcolor", value = "#EEEEEE")
-            colourpicker::updateColourInput(session, "c.gridcolor", value = "#EEEEEE")
+            updateTextInput(session, "a.title", value = .get_default(defaults, "a.title", ""))
+            updateTextInput(session, "b.title", value = .get_default(defaults, "b.title", ""))
+            updateTextInput(session, "c.title", value = .get_default(defaults, "c.title", ""))
+            updateNumericInput(session, "a.titlefont.size",
+                value = .get_default(defaults, "a.titlefont.size", 16, is.numeric))
+            updateNumericInput(session, "b.titlefont.size",
+                value = .get_default(defaults, "b.titlefont.size", 16, is.numeric))
+            updateNumericInput(session, "c.titlefont.size",
+                value = .get_default(defaults, "c.titlefont.size", 16, is.numeric))
+            colourpicker::updateColourInput(session, "a.gridcolor",
+                value = .get_default(defaults, "a.gridcolor", "#EEEEEE"))
+            colourpicker::updateColourInput(session, "b.gridcolor",
+                value = .get_default(defaults, "b.gridcolor", "#EEEEEE"))
+            colourpicker::updateColourInput(session, "c.gridcolor",
+                value = .get_default(defaults, "c.gridcolor", "#EEEEEE"))
 
             # Title
-            updateNumericInput(session, "title.font.size", value = 18)
-            updateSelectInput(session, "title.font.family", selected = "Arial")
-            colourpicker::updateColourInput(session, "title.font.color", value = "#000000")
+            updateNumericInput(session, "title.font.size",
+                value = .get_default(defaults, "title.font.size", 18, is.numeric))
+            updateSelectInput(session, "title.font.family",
+                selected = .get_default(defaults, "title.font.family", "Arial"))
+            colourpicker::updateColourInput(session, "title.font.color",
+                value = .get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
-            updateCheckboxInput(session, "show.legend", value = TRUE)
-            updateSelectInput(session, "legend.orientation", selected = "h")
-            updateSelectInput(session, "legend.font.family", selected = "Arial")
-            updateNumericInput(session, "legend.font.size", value = 12)
-            colourpicker::updateColourInput(session, "legend.font.color", value = "#000000")
+            updateCheckboxInput(session, "show.legend",
+                value = .get_default(defaults, "show.legend", TRUE, is.logical))
+            updateSelectInput(session, "legend.orientation",
+                selected = .get_default(defaults, "legend.orientation", "h"))
+            updateSelectInput(session, "legend.font.family",
+                selected = .get_default(defaults, "legend.font.family", "Arial"))
+            updateNumericInput(session, "legend.font.size",
+                value = .get_default(defaults, "legend.font.size", 12, is.numeric))
+            colourpicker::updateColourInput(session, "legend.font.color",
+                value = .get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
-            colourpicker::updateColourInput(session, "bgcolor", value = "#FFFFFF")
+            colourpicker::updateColourInput(session, "bgcolor",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
 
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
         })
 
         # Reactive expression to generate the plot (used by both output and download)

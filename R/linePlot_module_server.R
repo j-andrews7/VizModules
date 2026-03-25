@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the linePlot module.
 #'
 #' @import shiny
@@ -19,7 +22,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
     data_reactive <- data
 
@@ -111,30 +114,42 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
 
         # Reset functionality
         observeEvent(input$reset, {
+            choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
-            updateSelectInput(session, "x.value", selected = names(data())[1])
-            updateSelectInput(session, "y.value", selected = names(data())[2])
-            updateSelectInput(session, "plot.type", selected = "lines")
-            updateSelectInput(session, "line.type", selected = "solid")
-            updateMaterialSwitch(session, "order.by", value = FALSE)
-            updateMaterialSwitch(session, "flip.x", value = FALSE)
-            updateMaterialSwitch(session, "flip.y", value = FALSE)
-            updateSelectInput(session, "group.by", selected = "")
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scales", selected = "fixed")
-            updateSelectInput(session, "x.adjustment", selected = "")
-            updateSelectInput(session, "y.adjustment", selected = "")
-            updateMaterialSwitch(session, "errorBar", value = TRUE)
-            updateNumericInput(session, "errorBarWidth", value = 1)
-            colourpicker::updateColourInput(session, "errorBarColour", value = "#000000")
+            updateSelectInput(session, "x.value",
+                selected = .get_default(defaults, "x.value", names(data())[1], function(x) x %in% choices))
+            updateSelectInput(session, "y.value",
+                selected = .get_default(defaults, "y.value", names(data())[2], function(x) x %in% choices))
+            updateSelectInput(session, "plot.type", selected = .get_default(defaults, "plot.type", "lines"))
+            updateSelectInput(session, "line.type", selected = .get_default(defaults, "line.type", "solid"))
+            updateMaterialSwitch(session, "order.by",
+                value = .get_default(defaults, "order.by", FALSE, is.logical))
+            updateMaterialSwitch(session, "flip.x",
+                value = .get_default(defaults, "flip.x", FALSE, is.logical))
+            updateMaterialSwitch(session, "flip.y",
+                value = .get_default(defaults, "flip.y", FALSE, is.logical))
+            updateSelectInput(session, "group.by",
+                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
+            updateSelectInput(session, "facet.scales",
+                selected = .get_default(defaults, "facet.scales", "fixed"))
+            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
+            updateMaterialSwitch(session, "errorBar",
+                value = .get_default(defaults, "errorBar", TRUE, is.logical))
+            updateNumericInput(session, "errorBarWidth",
+                value = .get_default(defaults, "errorBarWidth", 1, is.numeric))
+            colourpicker::updateColourInput(session, "errorBarColour",
+                value = .get_default(defaults, "errorBarColour", "#000000"))
 
-            .reset_axes_inputs(session)
+            .reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
         })
 
 
