@@ -59,7 +59,7 @@ linePlot(
 
 \item{line.type}{Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".}
 
-\item{colour.group.by}{Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.}
+\item{colour.group.by}{Character, column name to group lines by color, or a hex color string to apply a single color to all lines.}
 
 \item{palette.selection}{Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.}
 

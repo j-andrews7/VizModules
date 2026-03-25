@@ -7,7 +7,7 @@
 #' @param y Character vector of column name(s) for the y-axis. Multiple columns create separate traces.
 #' @param plot.mode Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".
 #' @param line.type Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
-#' @param colour.group.by Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.
+#' @param colour.group.by Character, column name to group lines by color, or a hex color string to apply a single color to all lines.
 #' @param palette.selection Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
 #' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
@@ -194,7 +194,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
                 y = reformulate(y),
                 type = "scatter",
                 mode = plot.mode,
-                color = colour.group.by,
+                color = if (length(colour.group.by) == 1 && colour.group.by %in% names(facet_data)) facet_data[[colour.group.by]] else colour.group.by,
                 colors = palette.selection,
                 showlegend = show.legend
             )
@@ -254,7 +254,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
             y = reformulate(y),
             type = "scatter",
             mode = plot.mode,
-            color = colour.group.by,
+            color = if (length(colour.group.by) == 1 && colour.group.by %in% names(plot_data)) plot_data[[colour.group.by]] else colour.group.by,
             colors = palette.selection,
             showlegend = show.legend
         )
