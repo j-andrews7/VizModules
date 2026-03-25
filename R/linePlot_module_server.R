@@ -181,7 +181,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 default_palette_values
             )
 
-            palette_selection <- unname(palette_values)
+            palette_selection <- palette_values
             if (is.null(palette_selection) || length(palette_selection) == 0) {
                 palette_selection <- default_palette_values
             }

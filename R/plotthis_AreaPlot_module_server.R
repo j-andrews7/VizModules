@@ -162,12 +162,15 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Convert NA to NULL for facet.ncol and facet.nrow
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+
             palcolor_arg <- NULL
+
             if (!is.null(palette_values) && length(palette_values) > 0) {
                 palcolor_arg <- as.list(palette_values)
             }
