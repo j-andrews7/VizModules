@@ -61,6 +61,10 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
+    # Compute facet.by choices excluding the default y column (categorical axis)
+    y_default <- .get_default(defaults, "y.value", cat.choices[2], function(x) x %in% cat.choices)
+    group_facet_choices <- setdiff(cat.choices, y_default)
+
     adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
     selected <- list(
@@ -97,7 +101,11 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by:",
-                selected = "", choices = cat.choices
+                selected = .get_default(
+                    defaults, "facet.by", "",
+                    function(x) x == "" || x %in% group_facet_choices
+                ),
+                choices = group_facet_choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
                 choices = c("fixed", "free", "free_x", "free_y"),

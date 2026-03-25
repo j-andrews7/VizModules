@@ -50,6 +50,17 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
         }
 
+        # Update facet.by choices to exclude the currently selected x columns
+        observeEvent(input$x.value, {
+            cat.choices <- c("", names(data_reactive())[
+                vapply(data_reactive(), function(x) !is.numeric(x), logical(1))
+            ])
+            group_facet_choices <- setdiff(cat.choices, input$x.value)
+            updateSelectInput(session, "facet.by",
+                choices = group_facet_choices,
+                selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
+        })
+
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -115,9 +126,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # Reset functionality
         observeEvent(input$reset, {
             choices <- c("", names(data()))
+            cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             # Reset Data columns to default. First and second index of data named list
+            # x_default validated via .get_default (all values must exist in data)
+            x_default <- .get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% names(data())))
+            group_facet_choices <- setdiff(cat.choices, x_default)
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", names(data())[1], function(x) x %in% choices))
+                selected = x_default)
             updateSelectInput(session, "y.value",
                 selected = .get_default(defaults, "y.value", names(data())[2], function(x) x %in% choices))
             updateSelectInput(session, "plot.type", selected = .get_default(defaults, "plot.type", "lines"))
@@ -131,7 +146,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             updateSelectInput(session, "group.by",
                 selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
+                choices = group_facet_choices,
+                selected = .get_default(defaults, "facet.by", "",
+                    function(x) x == "" || x %in% group_facet_choices))
             updateSelectInput(session, "facet.scales",
                 selected = .get_default(defaults, "facet.scales", "fixed"))
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))

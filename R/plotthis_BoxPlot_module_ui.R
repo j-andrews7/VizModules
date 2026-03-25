@@ -189,6 +189,10 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         min.y <- 0
     }
 
+    # Compute facet.by choices excluding the default x.data column
+    x_default <- .get_default(defaults, "x.data", cat.choices[2], function(x) x %in% cat.choices)
+    group_facet_choices <- setdiff(cat.choices, x_default)
+
     selected <- list(
         "x", "y", "group_by", "sort_x",
         "y_max", "y_min", "add_point", "pt_size", "pt_alpha",
@@ -297,7 +301,14 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             )
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet by", selected = "", choices = c(cat.choices, "")),
+            tipify(
+                selectInput(ns("facet.by"), "Facet by",
+                    selected = .get_default(
+                        defaults, "facet.by", "",
+                        function(x) x == "" || x %in% group_facet_choices
+                    ),
+                    choices = group_facet_choices
+                ),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),

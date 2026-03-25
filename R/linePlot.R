@@ -87,8 +87,6 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
 
-    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-
     if (!is.null(x.adjustment) && x.adjustment != "") {
         data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
@@ -124,12 +122,15 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         colour.group.by <- colour.group.by.new
     }
 
+    # Compute cat.choices after adjustments so adjusted categorical columns are detected correctly
+    cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+
 
     if (length(x) == 1 && x %in% cat.choices) {
         # Compute per-group mean and SD for error bars
         group_vars <- x
         if (!is.null(facet.by) && nzchar(facet.by)) {
-            group_vars <- c(facet.by, x)
+            group_vars <- unique(c(facet.by, x))
         }
         ex <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>

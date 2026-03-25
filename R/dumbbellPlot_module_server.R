@@ -37,6 +37,17 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             for (tab.name in hide.tabs) hideTab(inputId = "dumbbellPlotTabsetPanel", target = tab.name)
         }
 
+        # Update facet.by choices to exclude the currently selected y column (categorical axis)
+        observeEvent(input$y.value, {
+            cat.choices <- c("", names(data_reactive())[
+                vapply(data_reactive(), function(x) !is.numeric(x), logical(1))
+            ])
+            group_facet_choices <- setdiff(cat.choices, input$y.value)
+            updateSelectInput(session, "facet.by",
+                choices = group_facet_choices,
+                selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
+        })
+
         ns <- session$ns
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
@@ -125,8 +136,12 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 selected = .get_default(defaults, "colour.by", "X variables"))
 
             # Facet tab
+            y_default <- .get_default(defaults, "y.value", cat.choices[2], function(x) x %in% cat.choices)
+            group_facet_choices <- setdiff(cat.choices, y_default)
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices))
+                choices = group_facet_choices,
+                selected = .get_default(defaults, "facet.by", "",
+                    function(x) x == "" || x %in% group_facet_choices))
             updateSelectInput(session, "facet.scales", selected = .get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
