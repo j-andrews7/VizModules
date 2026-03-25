@@ -4,7 +4,13 @@
 \alias{linePlotInputsUI}
 \title{Input UI components for the linePlot module}
 \usage{
-linePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
+linePlotInputsUI(
+  id,
+  data,
+  defaults = list(subplot.margin = 0.05),
+  title = NULL,
+  columns = 2
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}

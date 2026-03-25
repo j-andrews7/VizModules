@@ -180,15 +180,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
-            palette_selection <- unname(palette_values)
+
+            palette_selection <- palette_values
             if (is.null(palette_selection) || length(palette_selection) == 0) {
                 palette_selection <- default_palette_values
             }
 
-            group.by <- palette_selection[1]
+            group.by <- NULL
             show_legend <- FALSE
             if (isolate_fn(input$group.by) != "" && length(x_input) == 1 && length(y_input) == 1) {
-                group.by <- reformulate(isolate_fn(input$group.by))
+                group.by <- isolate_fn(input$group.by)
                 show_legend <- TRUE
             } else if (length(x_input) > 1 || length(y_input) > 1) {
                 show_legend <- TRUE
@@ -201,7 +202,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             axis_min_x <- NULL
             axis_max_x <- NULL
 
-            # Choosing which axis to order by:
+            # Order by selected axis
             order_by <- x_input
             if (isolate_fn(input$order.by)) {
                 order_by <- y_input
@@ -215,7 +216,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 d <- d[do.call(order, d[, order_by, drop = FALSE]), ]
             }
 
-            # Axis title:
+
             x_title <- x_input[1]
             if (length(x_input) > 1) {
                 x_title <- "Value"
@@ -245,20 +246,22 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 updateSelectInput(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
+
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
+
             fig <- linePlot(
                 data = d,
-                x = x_input,
-                y = y_input,
+                x = isolate_fn(input$x.value),
+                y = isolate_fn(input$y.value),
                 plot.mode = isolate_fn(input$plot.type),
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
                 show.legend = show_legend,
-                facet.by = isolate_fn(input$facet.by),
+                facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
@@ -345,7 +348,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             return_empty <- FALSE
             txt <- c()
 
-
             if (x_is_cat && y_is_cat) {
                 return_empty <- TRUE
                 txt <- c(txt, "X and Y categories cannot both be discrete data types")
@@ -362,12 +364,19 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }
+
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
                 fig <- generate_linePlot() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

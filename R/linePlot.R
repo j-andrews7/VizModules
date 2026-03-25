@@ -3,14 +3,22 @@
 #' Generates a customizable interactive line plot using plotly, supporting grouping, faceting, axis adjustments, and color palettes.
 #'
 #' @param data A data.frame or tibble containing the data to plot.
-#' @param x Character vector of column name(s) for the x-axis. Multiple columns create separate traces.
-#' @param y Character vector of column name(s) for the y-axis. Multiple columns create separate traces.
-#' @param plot.mode Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".
-#' @param line.type Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
-#' @param colour.group.by Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.
-#' @param palette.selection Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.
+#' @param x Character vector of column name(s) for the x-axis.
+#'   Multiple columns create separate traces.
+#' @param y Character vector of column name(s) for the y-axis.
+#'   Multiple columns create separate traces.
+#' @param palette.selection Character vector of hex colors for line colors.
+#'   Used to assign colors to groups or traces.
+#' @param plot.mode Character, plotly mode for plot type.
+#'   Options: "lines", "markers", "lines+markers". Default: "lines".
+#' @param line.type Character, line style.
+#'   Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
+#' @param colour.group.by Character or formula, column name(s) to group lines by color.
+#'   Can be a formula like \code{~ column_name}. Ignored if multiple `x` or `y` columns are provided.
+#'   Default: `NULL`.
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
-#' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
+#' @param facet.by Optional character, column name to facet plots by.
+#'   Creates subplots for each unique value. Default: NULL.
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.
@@ -68,7 +76,10 @@
 #'     palette.selection = palette,
 #'     show.legend = TRUE
 #' )
-linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.selection, show.legend, facet.by = NULL,
+linePlot <- function(data, x, y, palette.selection, 
+                     plot.mode = "lines", line.type = "solid", 
+                     colour.group.by = NULL,
+                     show.legend = TRUE, facet.by = NULL,
                      facet.scales = "fixed",
                      subplot.margin = 0.05,
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
@@ -89,7 +100,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
 
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
-    if (!is.null(x.adjustment) && x.adjustment != "") {
+    if (!is.null(x.adjustment) && nzchar(x.adjustment)) {
         data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
         for (i in seq_along(x)) {
@@ -101,7 +112,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         x <- x.new
     }
 
-    if (!is.null(y.adjustment) && y.adjustment != "") {
+    if (!is.null(y.adjustment) && nzchar(y.adjustment)) {
         data <- .adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
         y.new <- y
         for (i in seq_along(y)) {
@@ -112,25 +123,27 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         }
         y <- y.new
     }
-    if (!is.null(color.adjustment) && color.adjustment != "") {
-        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
-        colour.group.by.new <- colour.group.by
-        for (i in seq_along(colour.group.by)) {
-            adj_name <- paste(colour.group.by[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                colour.group.by.new[i] <- adj_name
-            }
-        }
-        colour.group.by <- colour.group.by.new
-    }
 
+    if (!is.null(color.adjustment) && nzchar(color.adjustment) && !is.null(colour.group.by) && nzchar(colour.group.by)) {
+        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
+        adj_name <- paste(colour.group.by, "adj", sep = ".")
+
+        if (adj_name %in% names(data)) {
+            colour.group.by <- adj_name
+        }
+    }
 
     if (length(x) == 1 && x %in% cat.choices) {
         # Compute per-group mean and SD for error bars
         group_vars <- x
         if (!is.null(facet.by) && nzchar(facet.by)) {
-            group_vars <- c(facet.by, x)
+            group_vars <- c(facet.by, group_vars)
         }
+
+        if (!is.null(colour.group.by) && nzchar(colour.group.by)) {
+            group_vars <- c(colour.group.by, group_vars)
+        }
+
         ex <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
             dplyr::summarise(
@@ -168,8 +181,6 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         yaxis_style$title <- NULL
     }
 
-
-
     order.cols <- order.by
     if (is.null(order.cols)) {
         order.cols <- x
@@ -181,6 +192,12 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
     }
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
+
+    if (!is.null(colour.group.by) && nzchar(colour.group.by)) {
+        color <- reformulate(colour.group.by)
+    } else {
+        color <- NULL
+    }
 
     if (!is.null(facet.by) && facet.by != "" && !multi_axis) {
         # Split data by facet variable
@@ -194,7 +211,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
                 y = reformulate(y),
                 type = "scatter",
                 mode = plot.mode,
-                color = colour.group.by,
+                color = color,
                 colors = palette.selection,
                 showlegend = show.legend
             )
@@ -254,7 +271,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
             y = reformulate(y),
             type = "scatter",
             mode = plot.mode,
-            color = colour.group.by,
+            color = color,
             colors = palette.selection,
             showlegend = show.legend
         )

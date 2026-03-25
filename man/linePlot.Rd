@@ -8,11 +8,11 @@ linePlot(
   data,
   x,
   y,
-  plot.mode,
-  line.type,
-  colour.group.by,
   palette.selection,
-  show.legend,
+  plot.mode = "lines",
+  line.type = "solid",
+  colour.group.by = NULL,
+  show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
   subplot.margin = 0.05,
@@ -51,21 +51,29 @@ linePlot(
 \arguments{
 \item{data}{A data.frame or tibble containing the data to plot.}
 
-\item{x}{Character vector of column name(s) for the x-axis. Multiple columns create separate traces.}
+\item{x}{Character vector of column name(s) for the x-axis.
+Multiple columns create separate traces.}
 
-\item{y}{Character vector of column name(s) for the y-axis. Multiple columns create separate traces.}
+\item{y}{Character vector of column name(s) for the y-axis.
+Multiple columns create separate traces.}
 
-\item{plot.mode}{Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".}
+\item{palette.selection}{Character vector of hex colors for line colors.
+Used to assign colors to groups or traces.}
 
-\item{line.type}{Character, line style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".}
+\item{plot.mode}{Character, plotly mode for plot type.
+Options: "lines", "markers", "lines+markers". Default: "lines".}
 
-\item{colour.group.by}{Character or formula, column name(s) to group lines by color. Can be a formula like \code{~ column_name}.}
+\item{line.type}{Character, line style.
+Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".}
 
-\item{palette.selection}{Character vector of hex colors or palette name for line colors. Used to assign colors to groups or traces.}
+\item{colour.group.by}{Character or formula, column name(s) to group lines by color.
+Can be a formula like \code{~ column_name}. Ignored if multiple \code{x} or \code{y} columns are provided.
+Default: \code{NULL}.}
 
 \item{show.legend}{Logical, whether to display the legend. Default: TRUE.}
 
-\item{facet.by}{Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.}
+\item{facet.by}{Optional character, column name to facet plots by.
+Creates subplots for each unique value. Default: NULL.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
