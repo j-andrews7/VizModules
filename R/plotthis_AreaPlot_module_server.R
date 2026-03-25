@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the AreaPlot module.
 #'
 #' @import shiny
@@ -18,7 +21,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -87,41 +90,47 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # Reset functionality
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
-            max.y <- max(numeric.data, na.rm = TRUE)
-            min.y <- min(numeric.data, na.rm = TRUE)
+            x_default <- .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+            group_facet_choices <- setdiff(char.choices, x_default)
 
             # Data
-            updateSelectInput(session, "x.data", selected = char.choices[2])
-            updateSelectInput(session, "y.data", selected = num.choices[2])
-            updateSelectInput(session, "group.by", selected = char.choices[3])
+            updateSelectInput(session, "x.data", selected = x_default)
+            updateSelectInput(session, "y.data",
+                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
+            updateSelectInput(session, "group.by",
+                selected = .get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
 
             # Facet
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scale", selected = "fixed")
-            updateNumericInput(session, "facet.ncol", value = NULL)
-            updateNumericInput(session, "facet.nrow", value = NULL)
-            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% group_facet_choices))
+            updateSelectInput(session, "facet.scale",
+                selected = .get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateMaterialSwitch(session, "facet.by.row", value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
 
             # Aesthetic
             # (palette.selection is UI output, so no reset call here)
-            updateSelectInput(session, "theme", selected = "theme_this")
-            updateNumericInput(session, "alpha", value = 1)
-            updateSelectInput(session, "legend.direction", selected = "vertical")
+            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
+            updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
+            updateSelectInput(session, "legend.direction",
+                selected = .get_default(defaults, "legend.direction", "vertical"))
 
             # Axes
-            updateNumericInput(session, "axis.font.size", value = 18)
-            updateNumericInput(session, "title.font.size", value = 28)
-            updateMaterialSwitch(session, "scale.y", value = FALSE)
-            .reset_axes_inputs(session)
+            updateNumericInput(session, "axis.font.size",
+                value = .get_default(defaults, "axis.font.size", 18, is.numeric))
+            updateNumericInput(session, "title.font.size",
+                value = .get_default(defaults, "title.font.size", 28, is.numeric))
+            updateMaterialSwitch(session, "scale.y", value = .get_default(defaults, "scale.y", FALSE, is.logical))
+            .reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {

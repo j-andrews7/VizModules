@@ -4,7 +4,13 @@
 \alias{plotthis_AreaPlotServer}
 \title{Server logic for AreaPlot module}
 \usage{
-plotthis_AreaPlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+plotthis_AreaPlotServer(
+  id,
+  data,
+  hide.inputs = NULL,
+  hide.tabs = NULL,
+  defaults = NULL
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -18,6 +24,10 @@ but the user will not be able to see/adjust them in the UI.}
 \item{hide.tabs}{A character vector of tab names to hide.
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
+
+\item{defaults}{A named list of default values for the inputs. When the reset button is
+clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+the same list passed to the corresponding UI function.}
 }
 \value{
 The \code{moduleServer} function for the AreaPlot module.

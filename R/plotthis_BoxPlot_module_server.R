@@ -8,6 +8,9 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #' @return The `moduleServer` function for the BoxPlot module.
 #'
 #' @import shiny
@@ -18,7 +21,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -117,52 +120,63 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by", selected = "")
-            updateSelectInput(session, "x.data", selected = char.choices[2])
-            updateSelectInput(session, "y.data", selected = num.choices[2])
-            updateMaterialSwitch(session, "show.outliers", value = TRUE)
+            updateSelectInput(session, "group.by",
+                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices))
+            updateSelectInput(session, "x.data",
+                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
+            updateSelectInput(session, "y.data",
+                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
+            updateMaterialSwitch(session, "show.outliers",
+                value = .get_default(defaults, "show.outliers", TRUE, is.logical))
 
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = "")
-            updateMaterialSwitch(session, "rotate", value = FALSE)
-            updateNumericInput(session, "y.min", value = min.y)
-            updateNumericInput(session, "y.max", value = max.y)
+            updateSelectInput(session, "sort_x", selected = .get_default(defaults, "sort_x", ""))
+            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
+            updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
 
             # Points
-            updateMaterialSwitch(session, "add.points", value = FALSE)
-            updateNumericInput(session, "pt.size", value = 1)
-            updateNumericInput(session, "pt.alpha", value = 1)
-            updateNumericInput(session, "jitter.width", value = 0.3)
-            updateNumericInput(session, "boxplot.width", value = 0.8)
+            updateMaterialSwitch(session, "add.points", value = .get_default(defaults, "add.points", FALSE, is.logical))
+            updateNumericInput(session, "pt.size", value = .get_default(defaults, "pt.size", 1, is.numeric))
+            updateNumericInput(session, "pt.alpha", value = .get_default(defaults, "pt.alpha", 1, is.numeric))
+            updateNumericInput(session, "jitter.width", value = .get_default(defaults, "jitter.width", 0.3, is.numeric))
+            updateNumericInput(session, "boxplot.width", value = .get_default(defaults, "boxplot.width", 0.8, is.numeric))
 
             # Colors
-            colourpicker::updateColourInput(session, "pt.color", value = "#000000")
-            updateNumericInput(session, "alpha", value = 1)
+            colourpicker::updateColourInput(session, "pt.color",
+                value = .get_default(defaults, "pt.color", "#000000"))
+            updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
             # Annotations
-            updateTextInput(session, "highlight", value = "")
-            colourpicker::updateColourInput(session, "highlight.colour", value = "#000000")
-            updateNumericInput(session, "highlight.size", value = 1)
-            updateNumericInput(session, "highlight.alpha", value = 1)
+            updateTextInput(session, "highlight", value = .get_default(defaults, "highlight", ""))
+            colourpicker::updateColourInput(session, "highlight.colour",
+                value = .get_default(defaults, "highlight.colour", "#000000"))
+            updateNumericInput(session, "highlight.size",
+                value = .get_default(defaults, "highlight.size", 1, is.numeric))
+            updateNumericInput(session, "highlight.alpha",
+                value = .get_default(defaults, "highlight.alpha", 1, is.numeric))
 
             # Facet
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scale", selected = "fixed")
-            updateNumericInput(session, "facet.ncol", value = NULL)
-            updateNumericInput(session, "facet.nrow", value = NULL)
-            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
+            updateSelectInput(session, "facet.scale",
+                selected = .get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateMaterialSwitch(session, "facet.by.row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
 
             # Action Button
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
 
             # Axes
-            .reset_axes_inputs(session)
+            .reset_axes_inputs(session, defaults)
 
             # Stats
-            .reset_stats_inputs(session)
+            .reset_stats_inputs(session, defaults)
         })
 
         # Update y-axis range when y data column is changed

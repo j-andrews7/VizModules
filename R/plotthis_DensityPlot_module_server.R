@@ -9,6 +9,9 @@
 #' @param data \code{reactive} A reactive expression returning a data frame to be plotted.
 #' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
+#' @param defaults A named list of default values for the inputs. When the reset button is
+#'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+#'   the same list passed to the corresponding UI function.
 #'
 #' @return The `moduleServer` function for the DensityPlot module.
 #'
@@ -17,7 +20,7 @@
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL) {
+plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -87,37 +90,47 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Reset functionality
         observeEvent(input$reset, {
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
-            max.y <- max(numeric.data, na.rm = TRUE)
-            min.y <- min(numeric.data, na.rm = TRUE)
+            all.choices <- c("", names(data()))
+            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
+            num.choices <- names(numeric.data)
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data", selected = names(numeric.data)[1])
-            updateSelectInput(session, "group.by", selected = "")
-            updateSelectInput(session, "facet.by", selected = "")
-            updateSelectInput(session, "facet.scale", selected = "fixed")
-            updateNumericInput(session, "facet.ncol", value = NULL)
-            updateNumericInput(session, "facet.nrow", value = NULL)
-            updateMaterialSwitch(session, "facet.by.row", value = TRUE)
-            updateSelectInput(session, "split.by", selected = "")
-            updateMaterialSwitch(session, "rotate", value = FALSE)
-            updateMaterialSwitch(session, "add.bars", value = FALSE)
-            updateNumericInput(session, "bar.height", value = 0.04)
-            updateSliderInput(session, "bar.alpha", value = 1)
-            updateNumericInput(session, "bar.width", value = 1)
-            updateSliderInput(session, "plot.alpha", value = 0.5)
-            updateSelectInput(session, "theme", selected = "theme_this")
-            updateSelectInput(session, "position", selected = "identity")
-            colourpicker::updateColourInput(session, "single.fill.color", value = default_palette_values[1])
+            updateSelectInput(session, "x.data",
+                selected = .get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
+            updateSelectInput(session, "group.by",
+                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
+            updateSelectInput(session, "facet.by",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
+            updateSelectInput(session, "facet.scale",
+                selected = .get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateMaterialSwitch(session, "facet.by.row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+            updateSelectInput(session, "split.by",
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
+            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+            updateMaterialSwitch(session, "add.bars",
+                value = .get_default(defaults, "add.bars", FALSE, is.logical))
+            updateNumericInput(session, "bar.height",
+                value = .get_default(defaults, "bar.height", 0.04, is.numeric))
+            updateSliderInput(session, "bar.alpha", value = .get_default(defaults, "bar.alpha", 1, is.numeric))
+            updateNumericInput(session, "bar.width", value = .get_default(defaults, "bar.width", 1, is.numeric))
+            updateSliderInput(session, "plot.alpha", value = .get_default(defaults, "plot.alpha", 0.5, is.numeric))
+            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "position", selected = .get_default(defaults, "position", "identity"))
+            colourpicker::updateColourInput(session, "single.fill.color",
+                value = .get_default(defaults, "single.fill.color", default_palette_values[1]))
 
             # Action Button
-            .reset_plotly_inputs(session)
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session)
+            .reset_lines_inputs(session, defaults = defaults)
 
             # Axes
-            .reset_axes_inputs(session)
+            .reset_axes_inputs(session, defaults)
         })
 
 

@@ -4,7 +4,13 @@
 \alias{plotthis_HistogramServer}
 \title{Histogram Plot Server Module}
 \usage{
-plotthis_HistogramServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
+plotthis_HistogramServer(
+  id,
+  data,
+  hide.inputs = NULL,
+  hide.tabs = NULL,
+  defaults = NULL
+)
 }
 \arguments{
 \item{id}{\code{character} unique ID for the shiny namespace.}
@@ -14,6 +20,10 @@ plotthis_HistogramServer(id, data, hide.inputs = NULL, hide.tabs = NULL)
 \item{hide.inputs}{\code{character} vector of input IDs to hide in the UI. Default is NULL.}
 
 \item{hide.tabs}{\code{character} vector of tab names to hide within the module. Default is NULL.}
+
+\item{defaults}{A named list of default values for the inputs. When the reset button is
+clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
+the same list passed to the corresponding UI function.}
 }
 \value{
 The \code{moduleServer} function for the Histogram module.
