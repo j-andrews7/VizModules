@@ -50,7 +50,7 @@
 #'     Men = c(152, 151, 165)
 #' )
 #' dumbbellPlotInputsUI("dumbbellPlot", data)
-dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05), title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.

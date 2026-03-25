@@ -92,7 +92,7 @@
 #' library(VizModules)
 #' data(mtcars)
 #' linePlotInputsUI("linePlot", mtcars)
-linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
+linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05), title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.

@@ -261,7 +261,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
                 show.legend = show_legend,
-                facet.by = isolate_fn(input$facet.by),
+                facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
