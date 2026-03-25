@@ -10,11 +10,11 @@ linePlot(
   data,
   x,
   y,
-  plot.mode,
-  line.type,
-  colour.group.by,
   palette.selection,
-  show.legend,
+  plot.mode = "lines",
+  line.type = "solid",
+  colour.group.by = NULL,
+  show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
   subplot.margin = 0.05,
@@ -67,6 +67,11 @@ linePlot(
   Character vector of column name(s) for the y-axis. Multiple columns
   create separate traces.
 
+- palette.selection:
+
+  Character vector of hex colors for line colors. Used to assign colors
+  to groups or traces.
+
 - plot.mode:
 
   Character, plotly mode for plot type. Options: "lines", "markers",
@@ -80,12 +85,8 @@ linePlot(
 - colour.group.by:
 
   Character or formula, column name(s) to group lines by color. Can be a
-  formula like `~ column_name`.
-
-- palette.selection:
-
-  Character vector of hex colors or palette name for line colors. Used
-  to assign colors to groups or traces.
+  formula like `~ column_name`. Ignored if multiple `x` or `y` columns
+  are provided. Default: `NULL`.
 
 - show.legend:
 
