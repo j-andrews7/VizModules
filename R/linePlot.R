@@ -89,6 +89,42 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
 
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
+    if (!is.null(x.adjustment) && x.adjustment != "") {
+        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
+        x.new <- x
+        for (i in seq_along(x)) {
+            adj_name <- paste(x[i], "adj", sep = ".")
+            if (adj_name %in% names(data)) {
+                x.new[i] <- adj_name
+            }
+        }
+        x <- x.new
+    }
+
+    if (!is.null(y.adjustment) && y.adjustment != "") {
+        data <- .adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
+        y.new <- y
+        for (i in seq_along(y)) {
+            adj_name <- paste(y[i], "adj", sep = ".")
+            if (adj_name %in% names(data)) {
+                y.new[i] <- adj_name
+            }
+        }
+        y <- y.new
+    }
+    if (!is.null(color.adjustment) && color.adjustment != "") {
+        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
+        colour.group.by.new <- colour.group.by
+        for (i in seq_along(colour.group.by)) {
+            adj_name <- paste(colour.group.by[i], "adj", sep = ".")
+            if (adj_name %in% names(data)) {
+                colour.group.by.new[i] <- adj_name
+            }
+        }
+        colour.group.by <- colour.group.by.new
+    }
+
+
     if (length(x) == 1 && x %in% cat.choices) {
         # Compute per-group mean and SD for error bars
         group_vars <- x
@@ -132,42 +168,7 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         yaxis_style$title <- NULL
     }
 
-    # Making axis adjustments if the parameters are not NULL
-    if (!is.null(x.adjustment) && x.adjustment != "") {
-        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
-        x.new <- x
-        for (i in seq_along(x)) {
-            adj_name <- paste(x[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                x.new[i] <- adj_name
-            }
-        }
-        x <- x.new
-    }
 
-    if (!is.null(y.adjustment) && y.adjustment != "") {
-        data <- .adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
-        y.new <- y
-        for (i in seq_along(y)) {
-            adj_name <- paste(y[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                y.new[i] <- adj_name
-            }
-        }
-        y <- y.new
-    }
-
-    if (!is.null(color.adjustment) && color.adjustment != "") {
-        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
-        colour.group.by.new <- colour.group.by
-        for (i in seq_along(colour.group.by)) {
-            adj_name <- paste(colour.group.by[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                colour.group.by.new[i] <- adj_name
-            }
-        }
-        colour.group.by <- colour.group.by.new
-    }
 
     order.cols <- order.by
     if (is.null(order.cols)) {
