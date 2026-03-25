@@ -131,6 +131,10 @@ linePlot <- function(data, x, y, plot.mode, line.type, colour.group.by, palette.
         if (!is.null(facet.by) && nzchar(facet.by)) {
             group_vars <- c(facet.by, x)
         }
+        # Include the colour group-by column so that each group gets its own mean/SD
+        if (length(colour.group.by) == 1 && colour.group.by %in% names(data)) {
+            group_vars <- unique(c(group_vars, colour.group.by))
+        }
         ex <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
             dplyr::summarise(
