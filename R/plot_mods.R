@@ -1548,6 +1548,7 @@ is_pure_type <- function(inputs, d) {
             showarrow = FALSE,
             xanchor = "center",
             yanchor = "top",
+            annotationType = "axis",
             font = list(size = title.font.size)
         )))
     }
@@ -1564,6 +1565,7 @@ is_pure_type <- function(inputs, d) {
             xanchor = "center",
             yanchor = "middle",
             textangle = -90,
+            annotationType = "axis",
             font = list(size = title.font.size)
         )))
     }

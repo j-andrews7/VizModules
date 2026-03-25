@@ -93,15 +93,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
-        # Update facet.by choices to exclude the currently selected x.data column
-        observeEvent(input$x.data, {
-            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
-            group_facet_choices <- setdiff(char.choices, input$x.data)
-            updateSelectInput(session, "facet.by",
-                choices = group_facet_choices,
-                selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
-        })
-
         # Show/hide Save Stats button based on stats.enabled
         observeEvent(input$stats.enabled, {
             if (isTRUE(input$stats.enabled)) {
@@ -166,11 +157,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 value = .get_default(defaults, "highlight.alpha", 1, is.numeric))
 
             # Facet
-            x_default <- .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
-            group_facet_choices <- setdiff(char.choices, x_default)
             updateSelectInput(session, "facet.by",
-                choices = group_facet_choices,
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% group_facet_choices))
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
             updateSelectInput(session, "facet.scale",
                 selected = .get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
