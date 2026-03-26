@@ -210,19 +210,26 @@
 
 #' Adjust numeric column values in a data frame using mathematical transformations
 #'
-#' Applies supplied transformation
-#' to a specified numeric column in a data frame, adding the transformation as a new column.
-#' Returns original data frame unchanged when no transformation is specified or input is invalid.
+#' Applies a named mathematical transformation to a specified numeric column in a data frame,
+#' adding the transformed values as a new column (original column name + ".adj").
+#' The transformation name must be one of the allowed functions listed in `safe_resolve_adj_fxn`
+#' (e.g., "log2", "log10", "sqrt", "abs", "as.factor"). The original data frame is returned unchanged
+#' if no transformation is specified or if the supplied name is invalid.
 #'
-#' @param df A data frame containing the column to be transformed
-#' @param x.col Character. Name of the column for x-axis values.
-#' @param y.col Character. Name of the column for y-axis values.
-#' @param color.col Character. Name of the column for color values.
-#' @param x.adj.fun Character. Transformation function to apply to x-axis values, interpretable by `eval`.
-#' @param y.adj.fun Character. Transformation function to apply to y-axis values, interpretable by `eval`.
-#' @param color.adj.fun Character. Transformation function to apply to color values, interpretable by `eval`.
+#' @param df A data frame containing the column to be transformed.
+#' @param x.col Character scalar. Name of the column for x‑axis values (optional).
+#' @param y.col Character scalar. Name of the column for y‑axis values (optional).
+#' @param color.col Character scalar. Name of the column for color values (optional).
+#' @param x.adj.fun Character scalar. Name of a transformation function to apply to x‑axis values,
+#'   as accepted by `safe_resolve_adj_fxn` (e.g., "log2", "log10", "sqrt"). If `NULL` or an empty string,
+#'   x‑axis values are left unchanged.
+#' @param y.adj.fun Character scalar. Name of a transformation function to apply to y‑axis values,
+#'   as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty string, y‑axis values are left unchanged.
+#' @param color.adj.fun Character scalar. Name of a transformation function to apply to color values,
+#'   as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty string, color values are left unchanged.
 #'
-#' @return A data frame identical to input \code{df} but with transformed columns added.
+#' @return A data frame identical to input \code{df} but with transformed columns added
+#'   (e.g., \code{mpg.adj}) when valid transformations are specified.
 #'
 #' @examples
 #' data(mtcars)
@@ -231,31 +238,31 @@
 #'
 #' @author Jacob Martin, Jared Andrews
 #' @keywords internal
-#' @export
-.adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL, x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL) {
-    apply_trans <- function(d, cols, fun) {
-        if (is.null(fun) || is.null(cols) || fun == "") {
-            return(d)
-        }
+.adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL,
+                                  x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL) {
 
-        fun_expr <- tryCatch(parse(text = fun), error = function(e) NULL)
-        if (is.null(fun_expr)) {
-            return(d)
-        }
+  apply_trans <- function(d, cols, adj_name) {
+    out <- d
 
+    if (!is.null(adj_name) && nzchar(as.character(adj_name))) {
+      adj_fun <- safe_resolve_adj_fxn(adj_name) #Safety check for string input
+
+      if (!is.null(adj_fun)) {
         for (col in cols) {
-            if (col %in% names(d) && is.numeric(d[[col]])) {
-                d[[paste(col, "adj", sep = ".")]] <- eval(fun_expr)(d[[col]])
-            }
+          if (col %in% names(out) && is.numeric(out[[col]])) {
+            out[[paste(col, "adj", sep = ".")]] <- adj_fun(out[[col]])
+          }
         }
-        return(d)
+      }
     }
+    return(out)
+  }
 
-    df <- apply_trans(df, x.col, x.adj.fun)
-    df <- apply_trans(df, y.col, y.adj.fun)
-    df <- apply_trans(df, color.col, color.adj.fun)
+  df <- apply_trans(df, x.col,       x.adj.fun)
+  df <- apply_trans(df, y.col,       y.adj.fun)
+  df <- apply_trans(df, color.col,   color.adj.fun)
 
-    return(df)
+  return(df)
 }
 
 #' Create default Plotly configuration
