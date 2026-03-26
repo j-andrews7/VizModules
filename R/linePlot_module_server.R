@@ -31,13 +31,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
         observeEvent(input$x.value, {
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                hide("errorBarWidth")
-                hide("errorBarColour")
-                hide("errorBar")
+                hide("error.bar.width")
+                hide("error.bar.colour")
+                hide("error.bar")
             } else {
-                show("errorBar")
-                show("errorBarWidth")
-                show("errorBarColour")
+                show("error.bar")
+                show("error.bar.width")
+                show("error.bar.colour")
             }
         })
 
@@ -120,7 +120,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = .get_default(defaults, "x.value", names(data())[1], function(x) x %in% choices))
             updateSelectInput(session, "y.value",
                 selected = .get_default(defaults, "y.value", names(data())[2], function(x) x %in% choices))
-            updateSelectInput(session, "plot.type", selected = .get_default(defaults, "plot.type", "lines"))
+            updateSelectInput(session, "plot.mode", selected = .get_default(defaults, "plot.mode", "lines"))
             updateSelectInput(session, "line.type", selected = .get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",
                 value = .get_default(defaults, "order.by", FALSE, is.logical))
@@ -136,12 +136,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = .get_default(defaults, "facet.scales", "fixed"))
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
-            updateMaterialSwitch(session, "errorBar",
-                value = .get_default(defaults, "errorBar", TRUE, is.logical))
-            updateNumericInput(session, "errorBarWidth",
-                value = .get_default(defaults, "errorBarWidth", 1, is.numeric))
-            colourpicker::updateColourInput(session, "errorBarColour",
-                value = .get_default(defaults, "errorBarColour", "#000000"))
+            updateMaterialSwitch(session, "error.bar",
+                value = .get_default(defaults, "error.bar", TRUE, is.logical))
+            updateNumericInput(session, "error.bar.width",
+                value = .get_default(defaults, "error.bar.width", 1, is.numeric))
+            colourpicker::updateColourInput(session, "error.bar.colour",
+                value = .get_default(defaults, "error.bar.colour", "#000000"))
 
             .reset_axes_inputs(session, defaults)
 
@@ -256,7 +256,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 data = d,
                 x = isolate_fn(input$x.value),
                 y = isolate_fn(input$y.value),
-                plot.mode = isolate_fn(input$plot.type),
+                plot.mode = isolate_fn(input$plot.mode),
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
@@ -289,9 +289,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment,
                 y.adjustment = y.adjustment,
-                error.colour = isolate_fn(input$errorBarColour),
-                error.width = isolate_fn(input$errorBarWidth),
-                error.bar = isolate_fn(input$errorBar)
+                error.colour = isolate_fn(input$error.bar.colour),
+                error.width = isolate_fn(input$error.bar.width),
+                error.bar = isolate_fn(input$error.bar)
             )
 
             # Apply axis title font to shared facet annotation titles

@@ -139,7 +139,7 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
                 ),
                 choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("errorBar"), "Error Bars:", value = TRUE),
+            tipify(materialSwitch(ns("error.bar"), "Error Bars:", value = TRUE),
                 documentParameters$error.bar,
                 placement = "top", options = list(container = "body")
             ),
@@ -175,7 +175,7 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("plot.type"), "Plot type:",
+            tipify(selectInput(ns("plot.mode"), "Plot type:",
                 selected = "lines",
                 choices  = c("lines", "markers", "lines+markers")
             ), documentParameters$plot.mode, placement = "top", options = list(container = "body")),
@@ -184,11 +184,11 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
                 choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ), documentParameters$line.type, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
-            tipify(colourpicker::colourInput(ns("errorBarColour"), "Error Bar Colour", value = "#000000"),
+            tipify(colourpicker::colourInput(ns("error.bar.colour"), "Error Bar Colour", value = "#000000"),
                 documentParameters$error.colour,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("errorBarWidth"), "Error Bar Width", value = 1, min = 0.1),
+            tipify(numericInput(ns("error.bar.width"), "Error Bar Width", value = 1, min = 0.1),
                 documentParameters$error.width,
                 placement = "top", options = list(container = "body")
             )
