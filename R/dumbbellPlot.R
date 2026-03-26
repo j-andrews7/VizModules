@@ -117,7 +117,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 
     # Making axis adjustments if the parameters are not NULL
     if (!is.null(x.adjustment) && x.adjustment != "") {
-        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
+        data <- adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
         for (i in seq_along(x)) {
             adj_name <- paste(x[i], "adj", sep = ".")

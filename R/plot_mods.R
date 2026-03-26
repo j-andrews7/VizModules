@@ -233,7 +233,7 @@
 #'
 #' @examples
 #' data(mtcars)
-#' mtcars_mod <- .adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2")
+#' mtcars_mod <- adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2")
 #' head(mtcars_mod$mpg.adj)
 #'
 #' @author Jacob Martin, Jared Andrews
