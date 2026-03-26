@@ -237,7 +237,7 @@
 #' head(mtcars_mod$mpg.adj)
 #'
 #' @author Jacob Martin, Jared Andrews
-#' @keywords internal
+#' @export
 .adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL,
                                   x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL) {
 

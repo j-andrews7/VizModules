@@ -49,7 +49,7 @@ The following \code{\link[=dumbbellPlot]{dumbbellPlot()}} parameters can be acce
 \item \code{colour.by} - Color by X or Y (UI: "Colour by", options: "X variables", "Y variables")
 \item \code{facet.by} - Faceting variable (UI: "Facet by")
 \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-\item \code{line.colour} - Color of connecting lines (UI: "Colour Of connectors", default: "red")
+\item \code{line.colour} - Color of connecting lines (UI: "Colour Of connectors", default: "gray30")
 \item \code{palette.selection} - Color palette (UI: palette picker)
 \item \code{axis.*} - Various axis styling options (UI: via .uniform_axes_inputs_ui)
 \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)

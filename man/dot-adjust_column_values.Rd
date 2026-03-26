@@ -15,27 +15,34 @@
 )
 }
 \arguments{
-\item{df}{A data frame containing the column to be transformed}
+\item{df}{A data frame containing the column to be transformed.}
 
-\item{x.col}{Character. Name of the column for x-axis values.}
+\item{x.col}{Character scalar. Name of the column for x‑axis values (optional).}
 
-\item{y.col}{Character. Name of the column for y-axis values.}
+\item{y.col}{Character scalar. Name of the column for y‑axis values (optional).}
 
-\item{color.col}{Character. Name of the column for color values.}
+\item{color.col}{Character scalar. Name of the column for color values (optional).}
 
-\item{x.adj.fun}{Character. Transformation function to apply to x-axis values, interpretable by \code{eval}.}
+\item{x.adj.fun}{Character scalar. Name of a transformation function to apply to x‑axis values,
+as accepted by \code{safe_resolve_adj_fxn} (e.g., "log2", "log10", "sqrt"). If \code{NULL} or an empty string,
+x‑axis values are left unchanged.}
 
-\item{y.adj.fun}{Character. Transformation function to apply to y-axis values, interpretable by \code{eval}.}
+\item{y.adj.fun}{Character scalar. Name of a transformation function to apply to y‑axis values,
+as accepted by \code{safe_resolve_adj_fxn}. If \code{NULL} or an empty string, y‑axis values are left unchanged.}
 
-\item{color.adj.fun}{Character. Transformation function to apply to color values, interpretable by \code{eval}.}
+\item{color.adj.fun}{Character scalar. Name of a transformation function to apply to color values,
+as accepted by \code{safe_resolve_adj_fxn}. If \code{NULL} or an empty string, color values are left unchanged.}
 }
 \value{
-A data frame identical to input \code{df} but with transformed columns added.
+A data frame identical to input \code{df} but with transformed columns added
+(e.g., \code{mpg.adj}) when valid transformations are specified.
 }
 \description{
-Applies supplied transformation
-to a specified numeric column in a data frame, adding the transformation as a new column.
-Returns original data frame unchanged when no transformation is specified or input is invalid.
+Applies a named mathematical transformation to a specified numeric column in a data frame,
+adding the transformed values as a new column (original column name + ".adj").
+The transformation name must be one of the allowed functions listed in \code{safe_resolve_adj_fxn}
+(e.g., "log2", "log10", "sqrt", "abs", "as.factor"). The original data frame is returned unchanged
+if no transformation is specified or if the supplied name is invalid.
 }
 \examples{
 data(mtcars)
