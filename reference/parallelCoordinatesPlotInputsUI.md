@@ -128,25 +128,25 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="9536">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="7817">
 #>     <li class="active">
-#>       <a href="#tab-9536-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7817-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9536-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7817-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9536-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-7817-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9536-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Background">Title &amp; Background</a>
+#>       <a href="#tab-7817-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Background">Title &amp; Background</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9536-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-7817-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9536">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9536-1">
+#>   <div class="tab-content" data-tabsetid="7817">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7817-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2384531">
@@ -191,7 +191,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9536-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7817-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9435164">
@@ -249,7 +249,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-9536-3">
+#>     <div class="tab-pane" data-value="Labels" id="tab-7817-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4079732">
@@ -337,7 +337,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Background" id="tab-9536-4">
+#>     <div class="tab-pane" data-value="Title &amp; Background" id="tab-7817-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify769834">
@@ -390,7 +390,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9536-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-7817-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="parcoords-download.interactive" tabindex="-1" target="_blank" width="100%">

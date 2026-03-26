@@ -317,31 +317,31 @@ library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="6312">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="9859">
 #>     <li class="active">
-#>       <a href="#tab-6312-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9859-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9859-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-9859-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-9859-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-9859-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9859-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6312-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9859-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6312">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6312-1">
+#>   <div class="tab-content" data-tabsetid="9859">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9859-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2813335">
@@ -399,7 +399,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6312-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9859-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify40185">
@@ -468,7 +468,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6312-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9859-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="splitBarPlot-palette.selection" class="shiny-html-output"></div>
@@ -550,7 +550,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-6312-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9859-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9131580">
@@ -568,7 +568,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-6312-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-9859-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="splitBarPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -678,7 +678,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6312-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9859-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -960,7 +960,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-6312-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9859-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2633087">
