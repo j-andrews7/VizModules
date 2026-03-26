@@ -18,7 +18,8 @@
 #' @import plotly
 #' @importFrom shinyjs hide show
 #' @importFrom stats na.omit setNames
-#' @importFrom ggplot2 sym .data
+#' @importFrom ggplot2 sym .data element_text element_line theme unit
+#' @importFrom plotthis SplitBarPlot
 #'
 #' @export
 #'
@@ -211,52 +212,63 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # Data
             # Data Section
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices))
+                selected = .get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
+            )
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices))
+                selected = .get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
+            )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices))
+                selected = .get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
+            )
 
             # Facet Section
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+            )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "free_y"))
+                selected = .get_default(defaults, "facet.scale", "free_y")
+            )
             updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+            )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+            )
             # Aesthetics
             updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
             updateSelectInput(session, "alpha.by",
-                selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
+            )
             updateMaterialSwitch(session, "alpha.reverse",
-                value = .get_default(defaults, "alpha.reverse", FALSE, is.logical))
+                value = .get_default(defaults, "alpha.reverse", FALSE, is.logical)
+            )
             updateTextInput(session, "alpha.name", value = .get_default(defaults, "alpha.name", ""))
             updateNumericInput(session, "bar.height", value = .get_default(defaults, "bar.height", 0.9, is.numeric))
             updateNumericInput(session, "line.height", value = .get_default(defaults, "line.height", 0.5, is.numeric))
             updateMaterialSwitch(session, "label.on.y.axis",
-                value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical))
+                value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical)
+            )
             updateSliderInput(session, "axis.scale.factor",
-                value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric))
+                value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric)
+            )
             updateSliderInput(session, "text.position",
-                value = .get_default(defaults, "text.position", 0, is.numeric))
+                value = .get_default(defaults, "text.position", 0, is.numeric)
+            )
             # Axes
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
             updateNumericInput(session, "x.min", value = .get_default(defaults, "x.min", min.x, is.numeric))
             updateNumericInput(session, "axis.font.size",
-                value = .get_default(defaults, "axis.font.size", 18, is.numeric))
+                value = .get_default(defaults, "axis.font.size", 18, is.numeric)
+            )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric))
+                value = .get_default(defaults, "title.font.size", 28, is.numeric)
+            )
+
             .reset_axes_inputs(session, defaults)
-
-            # Plotly
             .reset_plotly_inputs(session, defaults)
-
-            # Lines
             .reset_lines_inputs(session, defaults = defaults)
         })
 
@@ -340,10 +352,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
             # bar Plot
-            p <- plotthis::SplitBarPlot(
+            p <- SplitBarPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
@@ -382,9 +394,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 if (isTRUE(isolate_fn(input$label.on.y.axis))) {
                     # Show category labels on the Y axis by re-enabling axis text
                     # that plotthis::SplitBarPlot() hides internally
-                    p <- p + ggplot2::theme(
-                        axis.text.y = ggplot2::element_text(),
-                        axis.ticks.y = ggplot2::element_line()
+                    p <- p + theme(
+                        axis.text.y = element_text(),
+                        axis.ticks.y = element_line()
                     )
                 } else {
                     # #Determining wether each y value is positive or negative
@@ -411,7 +423,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         lineheight = lineheight,
                         inherit.aes = FALSE
                     ) +
-                        ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
                     p <- p + geom_text(
                         data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
@@ -431,13 +443,17 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         lineheight = lineheight,
                         inherit.aes = FALSE
                     ) +
-                        ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                 }
             }
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
-                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$title.font.family),
+                            color = isolate_fn(input$title.font.color)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )
@@ -503,7 +519,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             } else {
                 fig <- generate_SplitBarPlot() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

@@ -4,13 +4,7 @@
 \alias{dumbbellPlotInputsUI}
 \title{Input UI components for the dumbbellPlot module}
 \usage{
-dumbbellPlotInputsUI(
-  id,
-  data,
-  defaults = list(subplot.margin = 0.05),
-  title = NULL,
-  columns = 2
-)
+dumbbellPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}

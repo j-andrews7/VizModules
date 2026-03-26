@@ -167,7 +167,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 min = 0,
                 step = 0.5
             ), documentParameters$marker.line.width, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("marker.line.color"), "Marker border color:",
+            tipify(colourInput(ns("marker.line.color"), "Marker border color:",
                 value = .get_default(defaults, "marker.line.color", "#000000")
             ), documentParameters$marker.line.color, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line width:",
@@ -215,13 +215,13 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 value = .get_default(defaults, "c.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$c.titlefont.size, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("a.gridcolor"), "A-axis grid color:",
+            tipify(colourInput(ns("a.gridcolor"), "A-axis grid color:",
                 value = .get_default(defaults, "a.gridcolor", "#EEEEEE")
             ), documentParameters$a.gridcolor, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("b.gridcolor"), "B-axis grid color:",
+            tipify(colourInput(ns("b.gridcolor"), "B-axis grid color:",
                 value = .get_default(defaults, "b.gridcolor", "#EEEEEE")
             ), documentParameters$b.gridcolor, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("c.gridcolor"), "C-axis grid color:",
+            tipify(colourInput(ns("c.gridcolor"), "C-axis grid color:",
                 value = .get_default(defaults, "c.gridcolor", "#EEEEEE")
             ), documentParameters$c.gridcolor, placement = "top", options = list(container = "body"))
         ),
@@ -237,7 +237,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     function(x) x %in% font.choices
                 )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
+            tipify(colourInput(ns("title.font.color"), "Title font color:",
                 value = .get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.legend"), "Show legend",
@@ -259,12 +259,12 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("legend.font.color"), "Legend font color:",
+            tipify(colourInput(ns("legend.font.color"), "Legend font color:",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
         "Background" = tagList(
-            tipify(colourpicker::colourInput(ns("bgcolor"), "Background color:",
+            tipify(colourInput(ns("bgcolor"), "Background color:",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),

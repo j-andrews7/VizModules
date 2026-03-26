@@ -15,6 +15,7 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom colourpicker updateColourInput
 #' @importFrom shinyjs hide
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
@@ -42,37 +43,53 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             d <- data_reactive()
             all.choices <- c("", names(d))
             updateSelectInput(session, "dimensions",
-                selected = .get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d))))
+                selected = .get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
+            )
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices))
+                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
+            )
             updateSelectInput(session, "color.scale",
-                selected = .get_default(defaults, "color.scale", "Viridis"))
+                selected = .get_default(defaults, "color.scale", "Viridis")
+            )
             updateSliderInput(session, "line.opacity",
-                value = .get_default(defaults, "line.opacity", 0.5, is.numeric))
+                value = .get_default(defaults, "line.opacity", 0.5, is.numeric)
+            )
             updateNumericInput(session, "line.width",
-                value = .get_default(defaults, "line.width", 1, is.numeric))
+                value = .get_default(defaults, "line.width", 1, is.numeric)
+            )
             updateCheckboxInput(session, "show.colorbar",
-                value = .get_default(defaults, "show.colorbar", TRUE, is.logical))
+                value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
+            )
             updateNumericInput(session, "label.font.size",
-                value = .get_default(defaults, "label.font.size", 12, is.numeric))
-            colourpicker::updateColourInput(session, "label.font.color",
-                value = .get_default(defaults, "label.font.color", "black"))
+                value = .get_default(defaults, "label.font.size", 12, is.numeric)
+            )
+            updateColourInput(session, "label.font.color",
+                value = .get_default(defaults, "label.font.color", "black")
+            )
             updateSelectInput(session, "label.font.family",
-                selected = .get_default(defaults, "label.font.family", "Arial"))
+                selected = .get_default(defaults, "label.font.family", "Arial")
+            )
             updateNumericInput(session, "tick.font.size",
-                value = .get_default(defaults, "tick.font.size", 10, is.numeric))
-            colourpicker::updateColourInput(session, "tick.font.color",
-                value = .get_default(defaults, "tick.font.color", "black"))
+                value = .get_default(defaults, "tick.font.size", 10, is.numeric)
+            )
+            updateColourInput(session, "tick.font.color",
+                value = .get_default(defaults, "tick.font.color", "black")
+            )
             updateSelectInput(session, "tick.font.family",
-                selected = .get_default(defaults, "tick.font.family", "Arial"))
+                selected = .get_default(defaults, "tick.font.family", "Arial")
+            )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 16, is.numeric))
+                value = .get_default(defaults, "title.font.size", 16, is.numeric)
+            )
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial"))
-            colourpicker::updateColourInput(session, "title.text.color",
-                value = .get_default(defaults, "title.text.color", "#000000"))
-            colourpicker::updateColourInput(session, "bgcolor",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
+                selected = .get_default(defaults, "title.font.family", "Arial")
+            )
+            updateColourInput(session, "title.font.color",
+                value = .get_default(defaults, "title.font.color", "#000000")
+            )
+            updateColourInput(session, "bgcolor",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+            )
 
             .reset_plotly_inputs(session, defaults)
         })
@@ -122,7 +139,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 tick.font.family = isolate_fn(input$tick.font.family),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
-                title.text.color = isolate_fn(input$title.text.color),
+                title.font.color = isolate_fn(input$title.font.color),
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
@@ -130,7 +147,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = FALSE
             )
-            fig <- do.call(plotly::config, c(list(p = fig), config_list))
+            fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -140,7 +157,13 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         output$parallelCoordinatesPlot <- renderPlotly({
             generate_parallelCoordinatesPlot() |>
                 layout(
-                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
+                    )
                 )
         })
 

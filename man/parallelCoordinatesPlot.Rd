@@ -21,7 +21,7 @@ parallelCoordinatesPlot(
   title.text = "",
   title.font.size = 16,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   bgcolor = "#FFFFFF"
 )
 }
@@ -64,7 +64,7 @@ Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
 
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
-\item{title.text.color}{Character, hex color for plot title text. Default: "black".}
+\item{title.font.color}{Character, hex color for plot title text. Default: "black".}
 
 \item{bgcolor}{Character, hex color for the plot background. Default: "#FFFFFF".}
 }

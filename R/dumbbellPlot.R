@@ -30,9 +30,9 @@
 #' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
 #' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
 #' @param title.text Character, main title text for the plot. Default: "".
-#' @param title.font.size Numeric, font size for plot title. Default: 14.
+#' @param title.font.size Numeric, font size for plot title. Default: 26.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
-#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param title.font.color Character, hex color for plot title text. Default: "black".
 #' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
@@ -78,13 +78,13 @@
 dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
-                        subplot.margin = 0.06,
+                        subplot.margin = 0.05,
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
                         axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial", 
                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                         axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, 
-                        title.text = "", title.font.size = 14, title.font.family = "Arial",
-                        title.text.color = "black", y.title = NULL, x.title = NULL, 
+                        title.text = "", title.font.size = 26, title.font.family = "Arial",
+                        title.font.color = "black", y.title = NULL, x.title = NULL, 
                         flip.x = FALSE, flip.y = FALSE,
                         x.adjustment = NULL, order.by = NULL) {
     
@@ -179,10 +179,10 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     fig <- fig |> layout(
         title = list(
             text = title.text,
-            font = list(size = title.font.size, family = title.font.family, color = title.text.color),
+            font = list(size = title.font.size, family = title.font.family, color = title.font.color),
             x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
-        margin = list(t = 80),
+        margin = list(t = 70),
         showlegend = show.legend,
         xaxis = xaxis_style,
         yaxis = yaxis_style

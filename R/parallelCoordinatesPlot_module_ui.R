@@ -32,7 +32,7 @@
 #'   \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
 #'   \item \code{title.font.size} - Title font size (UI: "Title font size", default: 16)
 #'   \item \code{title.font.family} - Title font family (UI: "Title font", default: "Arial")
-#'   \item \code{title.text.color} - Title text color (UI: "Title color", default: "black")
+#'   \item \code{title.font.color} - Title font color (UI: "Title color", default: "black")
 #'   \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
 #' }
 #'
@@ -87,7 +87,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         "line.opacity", "line.width", "show.colorbar",
         "label.font.size", "label.font.color", "label.font.family",
         "tick.font.size", "tick.font.color", "tick.font.family",
-        "title.font.size", "title.font.family", "title.text.color", "bgcolor"
+        "title.font.size", "title.font.family", "title.font.color", "bgcolor"
     )
 
     documentParameters <- get_documentation(
@@ -134,7 +134,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 value = .get_default(defaults, "label.font.size", 12, is.numeric),
                 min = 1, step = 1
             ), documentParameters$label.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("label.font.color"), "Label font color:",
+            tipify(colourInput(ns("label.font.color"), "Label font color:",
                 value = .get_default(defaults, "label.font.color", "black")
             ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("label.font.family"), "Label font:",
@@ -148,7 +148,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 value = .get_default(defaults, "tick.font.size", 10, is.numeric),
                 min = 1, step = 1
             ), documentParameters$tick.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("tick.font.color"), "Tick font color:",
+            tipify(colourInput(ns("tick.font.color"), "Tick font color:",
                 value = .get_default(defaults, "tick.font.color", "black")
             ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("tick.font.family"), "Tick font:",
@@ -171,10 +171,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                     function(x) x %in% font.choices
                 )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("title.text.color"), "Title color:",
-                value = .get_default(defaults, "title.text.color", "black")
-            ), documentParameters$title.text.color, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("bgcolor"), "Background color:",
+            tipify(colourInput(ns("title.font.color"), "Title color:",
+                value = .get_default(defaults, "title.font.color", "black")
+            ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("bgcolor"), "Background color:",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),

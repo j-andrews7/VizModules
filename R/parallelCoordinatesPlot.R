@@ -25,7 +25,7 @@
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 16.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
-#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param title.font.color Character, hex color for plot title text. Default: "black".
 #' @param bgcolor Character, hex color for the plot background. Default: "#FFFFFF".
 #'
 #' @return A plotly object representing the interactive parallel coordinates plot.
@@ -60,7 +60,7 @@ parallelCoordinatesPlot <- function(
   title.text = "",
   title.font.size = 16,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   bgcolor = "#FFFFFF"
 ) {
     df <- data
@@ -101,7 +101,7 @@ parallelCoordinatesPlot <- function(
             cmin = min(color_vals, na.rm = TRUE),
             cmax = max(color_vals, na.rm = TRUE),
             colorbar = list(
-                title = list(text = "color.by")
+                title = list(text = color.by)
             )
         )
 
@@ -141,7 +141,7 @@ parallelCoordinatesPlot <- function(
             font = list(
                 size = title.font.size,
                 family = title.font.family,
-                color = title.text.color
+                color = title.font.color
             ),
             x = 0.47, xanchor = "center", y = 0.98, yanchor = "top", pad = list(t = 20)
         ),

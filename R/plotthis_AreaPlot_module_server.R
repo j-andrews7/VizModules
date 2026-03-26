@@ -15,6 +15,8 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom stats na.omit
+#' @importFrom ggplot2 unit
 #' @importFrom plotthis AreaPlot
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
@@ -53,9 +55,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             x_col <- input$x.data
 
             if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+                unique(na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+                unique(na.omit(as.character(df[[x_col]])))
             } else {
                 character(0)
             }
@@ -176,9 +178,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
-            p <- plotthis::AreaPlot(
+            p <- AreaPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
@@ -199,12 +201,12 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Remove ggplot panel borders to prevent double borders with plotly
 
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
                         font = list(
                             size = isolate_fn(input$title.font.size),
                             family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$text.colour)
+                            color = isolate_fn(input$title.font.color)
                         ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
@@ -271,7 +273,13 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             } else {
                 fig <- generate_AreaPlot() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

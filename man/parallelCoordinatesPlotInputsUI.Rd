@@ -61,7 +61,7 @@ and/or the \code{defaults} argument:
 \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
 \item \code{title.font.size} - Title font size (UI: "Title font size", default: 16)
 \item \code{title.font.family} - Title font family (UI: "Title font", default: "Arial")
-\item \code{title.text.color} - Title text color (UI: "Title color", default: "black")
+\item \code{title.font.color} - Title font color (UI: "Title color", default: "black")
 \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
 }
 }

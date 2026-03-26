@@ -17,6 +17,10 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom plotthis Histogram
+#' @importFrom colourpicker updateColourInput colourInput
+#' @importFrom ggplot2 unit
+#' @importFrom stats na.omit
 #'
 #' @export
 #'
@@ -53,7 +57,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
             # Only return groups when group.by is set to a valid categorical column
             if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                col_data <- stats::na.omit(df[[group_col]])
+                col_data <- na.omit(df[[group_col]])
                 # Use factor level order to match ggplot2/plotthis color assignment.
                 if (is.factor(col_data)) {
                     levels(col_data)
@@ -74,7 +78,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                 if (is.null(initial_color) || !nzchar(initial_color)) {
                     initial_color <- default_palette_values[1]
                 }
-                return(colourpicker::colourInput(
+                return(colourInput(
                     ns("single.fill.color"),
                     label = "Fill color",
                     value = initial_color
@@ -140,17 +144,12 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateSliderInput(session, "plot.alpha", value = .get_default(defaults, "plot.alpha", 1, is.numeric))
             updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
             updateSelectInput(session, "position", selected = .get_default(defaults, "position", "identity"))
-            colourpicker::updateColourInput(session, "single.fill.color",
+            updateColourInput(session, "single.fill.color",
                 value = .get_default(defaults, "single.fill.color", default_palette_values[1]))
 
 
-            # Action Button
             .reset_plotly_inputs(session, defaults)
-
-            # Lines
             .reset_lines_inputs(session, defaults = defaults)
-
-            # Axes
             .reset_axes_inputs(session, defaults)
         })
 
@@ -213,9 +212,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
-            p <- plotthis::Histogram(
+            p <- Histogram(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 group_by = group.by,
@@ -246,9 +245,13 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
 
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$title.font.family),
+                            color = isolate_fn(input$title.font.color)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )

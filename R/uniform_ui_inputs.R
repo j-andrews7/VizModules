@@ -192,8 +192,13 @@
                 function(x) x %in% font_choices
             )
         ),
-        colourInput(ns("text.colour"), "Title Color",
-            value = .get_default(defaults, "text.colour", "#000000")
+        colourInput(ns("title.font.color"), "Title Color",
+            value = .get_default(defaults, "title.font.color", "#000000")
+        ),
+        numericInput(ns("title.font.size"), "Title Size",
+            value = .get_default(defaults, "title.font.size", 26, is.numeric),
+            min = 1,
+            step = 1
         ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
             value = .get_default(defaults, "axis.title.font.size", 18, is.numeric),
@@ -529,8 +534,8 @@
         ),
         tipify(
             numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.6, is.numeric),
-                min = 0, max = 5, step = 0.01
+                value = .get_default(defaults, "subplot.margin", 0.04, is.numeric),
+                min = 0, max = 1, step = 0.01
             ),
             paste(
                 "Spacing between facet panels as a fraction of the plot area.",
