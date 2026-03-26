@@ -586,7 +586,7 @@ General-purpose helper functions for data handling and validation.
 
 - [`get_documentation()`](https://j-andrews7.github.io/VizModules/reference/get_documentation.md)
   : Extract parameter documentation from an R function help page
-- [`.adjust_column_values()`](https://j-andrews7.github.io/VizModules/reference/dot-adjust_column_values.md)
+- [`adjust_column_values()`](https://j-andrews7.github.io/VizModules/reference/adjust_column_values.md)
   : Adjust numeric column values in a data frame using mathematical
   transformations
 - [`is_pure_type()`](https://j-andrews7.github.io/VizModules/reference/is_pure_type.md)

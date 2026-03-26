@@ -11,6 +11,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/news/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/paper.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/adjust_column_values.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/createModuleApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterUI.html</loc></url>
@@ -23,7 +24,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/dot-adjust_column_values.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotInputsUI.html</loc></url>
