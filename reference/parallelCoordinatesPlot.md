@@ -23,7 +23,7 @@ parallelCoordinatesPlot(
   title.text = "",
   title.font.size = 16,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   bgcolor = "#FFFFFF"
 )
 ```
@@ -101,7 +101,7 @@ parallelCoordinatesPlot(
 
   Character, font family for plot title. Default: "Arial".
 
-- title.text.color:
+- title.font.color:
 
   Character, hex color for plot title text. Default: "black".
 

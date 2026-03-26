@@ -40,7 +40,7 @@ safe_resolve_adj_fxn("log2") # returns log2
 #> function (x)  .Primitive("log2")
 safe_resolve_adj_fxn("") # NULL
 #> NULL
-safe_resolve_adj_fxn("system") # NULL + warning
+safe_resolve_adj_fxn("system") # warning + NULL
 #> Warning: Unrecognized adjustment function: system
 #> NULL
 ```

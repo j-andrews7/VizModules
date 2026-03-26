@@ -36,7 +36,7 @@ linePlot(
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -182,7 +182,7 @@ linePlot(
 
   Character, font family for plot title. Default: "Arial".
 
-- title.text.color:
+- title.font.color:
 
   Character, hex color for plot title text. Default: "black".
 
