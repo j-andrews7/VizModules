@@ -106,9 +106,11 @@ module:
 
 1.  Open the module input help page, e.g.,
     [`?dittoViz_scatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md)
-    or `?AreaPlotInputsUI`. The **Details** section notes which
-    arguments from the underlying plot function are wired through and
-    any that are intentionally omitted.
+    or
+    [`?plotthis_AreaPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotInputsUI.md).
+    The **Details** section notes which arguments from the underlying
+    plot function are wired through and any that are intentionally
+    omitted.
 2.  Cross-reference the base plot documentation
     ([`?dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html),
     [`?plotthis::AreaPlot`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),

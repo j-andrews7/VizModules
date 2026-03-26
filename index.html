@@ -125,7 +125,7 @@
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 <p>Every module uses the same trio of functions: <code>*InputsUI()</code> for controls, <code>*OutputUI()</code> for the plot, and <code>*Server()</code> for the logic. The separation of InputsUI and OutputUI allows you to place input controls and the actual plot wherever you’d like.</p>
 <p>Use <code>defaults</code> to pre-fill inputs, and <code>hide.inputs</code>/<code>hide.tabs</code> to hide controls while keeping their values so you can enforce app-level defaults without exposing them.</p>
-<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code>?dittoViz_ScatterPlotInputsUI</code>, <code><a href="reference/plotthis_AreaPlotInputsUI.html">?plotthis_AreaPlotInputsUI</a></code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
+<p>Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., <code><a href="reference/dittoViz_scatterPlotInputsUI.html">?dittoViz_scatterPlotInputsUI</a></code>, <code><a href="reference/plotthis_AreaPlotInputsUI.html">?plotthis_AreaPlotInputsUI</a></code>) list what is wired through and any omissions; cross-reference the underlying plot docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) to see the full parameter set.</p>
 </div>
 <div class="section level3">
 <h3 id="example-apps-for-each-module">Example Apps for Each Module<a class="anchor" aria-label="anchor" href="#example-apps-for-each-module"></a>
@@ -217,7 +217,7 @@
 <li>
 <code>radarPlot</code> - Radar plots</li>
 <li>
-<code>parallelCoordinatePlot</code> - Parallel coordinate plots</li>
+<code>parallelCoordinatesPlot</code> - Parallel coordinate plots</li>
 <li>
 <code>ternaryPlot</code> - Ternary plots</li>
 <li>
@@ -296,12 +296,12 @@
 <p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.html">plotthis_DensityPlot:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">(Source Plotting Function)</a></p>
 <p><img src="reference/figures/DensityPlot.png"></p>
-<p><a href="https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html">dumbellPlot:</a></p>
+<p><a href="https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html">dumbbellPlot:</a></p>
 <p><img src="reference/figures/DumbellPlot.png"></p>
-<p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html">plotthis_HistogramPlot:</a></p>
+<p><a href="https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html">plotthis_Histogram:</a></p>
 <p><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">(Source Plotting Function)</a></p>
 <p><img src="reference/figures/HistogramPlot.png"></p>
-<p><a href="https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html">parallelCoordinatePlot:</a></p>
+<p><a href="https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html">parallelCoordinatesPlot:</a></p>
 <p><img src="reference/figures/ParallelPlot.png"></p>
 <p><a href="https://j-andrews7.github.io/VizModules/reference/piePlotApp.html">piePlot:</a></p>
 <p><img src="reference/figures/PiePlot.png"></p>

@@ -85,7 +85,7 @@ defaults without exposing them.
 
 Modules built on plotting functions from other packages expose most of
 the underlying arguments. The module input help pages (e.g.,
-`?dittoViz_ScatterPlotInputsUI`,
+[`?dittoViz_scatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md),
 [`?plotthis_AreaPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotInputsUI.md))
 list what is wired through and any omissions; cross-reference the
 underlying plot docs
@@ -191,7 +191,7 @@ Via direct implementation with plotly.
 - `linePlot` - Line plots
 - `piePlot` - Pie and donut plots
 - `radarPlot` - Radar plots
-- `parallelCoordinatePlot` - Parallel coordinate plots
+- `parallelCoordinatesPlot` - Parallel coordinate plots
 - `ternaryPlot` - Ternary plots
 - `dumbbellPlot` - Dumbbell plots
 
@@ -277,18 +277,18 @@ Function)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
 ![](reference/figures/DensityPlot.png)
 
-[dumbellPlot:](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html)
+[dumbbellPlot:](https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html)
 
 ![](reference/figures/DumbellPlot.png)
 
-[plotthis_HistogramPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
+[plotthis_Histogram:](https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html)
 
 [(Source Plotting
 Function)](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)
 
 ![](reference/figures/HistogramPlot.png)
 
-[parallelCoordinatePlot:](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html)
+[parallelCoordinatesPlot:](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotApp.html)
 
 ![](reference/figures/ParallelPlot.png)
 
