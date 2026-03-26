@@ -67,7 +67,7 @@ Every module uses the same trio of functions: `*InputsUI()` for controls, `*Outp
 
 Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide controls while keeping their values so you can enforce app-level defaults without exposing them.
 
-Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_ScatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
+Modules built on plotting functions from other packages expose most of the underlying arguments. The module input help pages (e.g., `?dittoViz_scatterPlotInputsUI`, `?plotthis_AreaPlotInputsUI`) list what is wired through and any omissions; cross-reference the underlying plot docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) to see the full parameter set.
 
 ### Example Apps for Each Module
 
@@ -139,7 +139,7 @@ Via direct implementation with plotly.
 * `linePlot` - Line plots
 * `piePlot` - Pie and donut plots
 * `radarPlot` - Radar plots
-* `parallelCoordinatePlot` - Parallel coordinate plots
+* `parallelCoordinatesPlot` - Parallel coordinate plots
 * `ternaryPlot` - Ternary plots
 * `dumbbellPlot` - Dumbbell plots
 
@@ -206,17 +206,17 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/DensityPlot.png)
 
-[dumbellPlot:][5]
+[dumbbellPlot:][5]
 
 ![](man/figures/DumbellPlot.png)
 
-[plotthis_HistogramPlot:][6]
+[plotthis_Histogram:][6]
 
 [(Source Plotting Function)][21]
 
 ![](man/figures/HistogramPlot.png)
 
-[parallelCoordinatePlot:][7]
+[parallelCoordinatesPlot:][7]
 
 ![](man/figures/ParallelPlot.png)
 
