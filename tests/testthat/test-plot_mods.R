@@ -170,38 +170,38 @@ test_that(".linetype_to_dash is case-insensitive and defaults to solid", {
   expect_equal(VizModules:::.linetype_to_dash("unknown"), "solid")
 })
 
-# ─── .adjust_column_values ───────────────────────────────────────────────────
+# ─── adjust_column_values ───────────────────────────────────────────────────
 
-test_that(".adjust_column_values applies log2 transformation", {
+test_that("adjust_column_values applies log2 transformation", {
   df <- data.frame(x = c(1, 2, 4, 8))
-  result <- VizModules:::.adjust_column_values(df, x.col = "x", x.adj.fun = "log2")
+  result <- VizModules::adjust_column_values(df, x.col = "x", x.adj.fun = "log2")
   expect_true("x.adj" %in% names(result))
   expect_equal(result$x.adj, c(0, 1, 2, 3))
 })
 
-test_that(".adjust_column_values applies transformations to multiple axes", {
+test_that("adjust_column_values applies transformations to multiple axes", {
   df <- data.frame(x = c(1, 10, 100), y = c(2, 4, 8))
-  result <- VizModules:::.adjust_column_values(df, x.col = "x", y.col = "y",
+  result <- VizModules::adjust_column_values(df, x.col = "x", y.col = "y",
     x.adj.fun = "log10", y.adj.fun = "sqrt")
   expect_equal(result$x.adj, c(0, 1, 2))
   expect_equal(result$y.adj, sqrt(c(2, 4, 8)))
 })
 
-test_that(".adjust_column_values returns unchanged df for NULL/empty fun", {
+test_that("adjust_column_values returns unchanged df for NULL/empty fun", {
   df <- data.frame(x = 1:3)
-  expect_identical(VizModules:::.adjust_column_values(df, x.col = "x", x.adj.fun = NULL), df)
-  expect_identical(VizModules:::.adjust_column_values(df, x.col = "x", x.adj.fun = ""), df)
+  expect_identical(VizModules::adjust_column_values(df, x.col = "x", x.adj.fun = NULL), df)
+  expect_identical(VizModules::adjust_column_values(df, x.col = "x", x.adj.fun = ""), df)
 })
 
-test_that(".adjust_column_values ignores non-numeric columns", {
+test_that("adjust_column_values ignores non-numeric columns", {
   df <- data.frame(x = letters[1:3], stringsAsFactors = FALSE)
-  result <- VizModules:::.adjust_column_values(df, x.col = "x", x.adj.fun = "log2")
+  result <- VizModules::adjust_column_values(df, x.col = "x", x.adj.fun = "log2")
   expect_false("x.adj" %in% names(result))
 })
 
-test_that(".adjust_column_values handles invalid expression gracefully", {
+test_that("adjust_column_values handles invalid expression gracefully", {
   df <- data.frame(x = 1:3)
-  result <- VizModules:::.adjust_column_values(df, x.col = "x", x.adj.fun = "{{invalid")
+  result <- VizModules::adjust_column_values(df, x.col = "x", x.adj.fun = "{{invalid")
   expect_identical(result, df)
 })
 

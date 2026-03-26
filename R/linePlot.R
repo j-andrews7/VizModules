@@ -101,7 +101,7 @@ linePlot <- function(data, x, y, palette.selection,
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     if (!is.null(x.adjustment) && nzchar(x.adjustment)) {
-        data <- .adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
+        data <- adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
         x.new <- x
         for (i in seq_along(x)) {
             adj_name <- paste(x[i], "adj", sep = ".")
@@ -113,7 +113,7 @@ linePlot <- function(data, x, y, palette.selection,
     }
 
     if (!is.null(y.adjustment) && nzchar(y.adjustment)) {
-        data <- .adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
+        data <- adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
         y.new <- y
         for (i in seq_along(y)) {
             adj_name <- paste(y[i], "adj", sep = ".")
@@ -125,7 +125,7 @@ linePlot <- function(data, x, y, palette.selection,
     }
 
     if (!is.null(color.adjustment) && nzchar(color.adjustment) && !is.null(colour.group.by) && nzchar(colour.group.by)) {
-        data <- .adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
+        data <- adjust_column_values(df = data, color.col = colour.group.by, color.adj.fun = color.adjustment)
         adj_name <- paste(colour.group.by, "adj", sep = ".")
 
         if (adj_name %in% names(data)) {
