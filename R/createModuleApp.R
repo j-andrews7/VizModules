@@ -36,6 +36,7 @@
 #' @importFrom shinyjs useShinyjs
 #' @importFrom readxl read_excel
 #' @importFrom utils read.csv read.delim
+#' @importFrom tools file_ext file_path_sans_ext
 #'
 #' @export
 #' @author Jared Andrews
@@ -116,14 +117,14 @@ createModuleApp <- function(inputs_ui_fn,
                 {
                     filepath <- input$file_upload$datapath
                     ext <- tolower(
-                        tools::file_ext(input$file_upload$name)
+                        file_ext(input$file_upload$name)
                     )
                     new_data <- switch(ext,
                         xlsx = as.data.frame(
-                            readxl::read_excel(filepath)
+                            read_excel(filepath)
                         ),
                         xls = as.data.frame(
-                            readxl::read_excel(filepath)
+                            read_excel(filepath)
                         ),
                         csv = read.csv(
                             filepath,
@@ -141,7 +142,7 @@ createModuleApp <- function(inputs_ui_fn,
                     )
 
                     new_data <- as.data.frame(new_data)
-                    name <- tools::file_path_sans_ext(
+                    name <- file_path_sans_ext(
                         input$file_upload$name
                     )
 
