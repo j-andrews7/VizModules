@@ -147,7 +147,7 @@
 #'
 #' @importFrom shinyWidgets materialSwitch
 #'
-#' @author Jared Andrews
+#' @author Jared Andrews Jacob Martin
 #' @rdname INTERNAL_uniform_axes_inputs_ui
 #' @keywords internal
 .uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {

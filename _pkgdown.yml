@@ -156,7 +156,7 @@ reference:
     desc: "General-purpose helper functions for data handling and validation."
     contents:
       - get_documentation
-      - .adjust_column_values
+      - adjust_column_values
       - is_pure_type
       - safe_eval_filter
       - safe_resolve_adj_fxn
