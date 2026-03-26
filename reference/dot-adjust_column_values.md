@@ -1,8 +1,12 @@
 # Adjust numeric column values in a data frame using mathematical transformations
 
-Applies supplied transformation to a specified numeric column in a data
-frame, adding the transformation as a new column. Returns original data
-frame unchanged when no transformation is specified or input is invalid.
+Applies a named mathematical transformation to a specified numeric
+column in a data frame, adding the transformed values as a new column
+(original column name + ".adj"). The transformation name must be one of
+the allowed functions listed in `safe_resolve_adj_fxn` (e.g., "log2",
+"log10", "sqrt", "abs", "as.factor"). The original data frame is
+returned unchanged if no transformation is specified or if the supplied
+name is invalid.
 
 ## Usage
 
@@ -22,38 +26,43 @@ frame unchanged when no transformation is specified or input is invalid.
 
 - df:
 
-  A data frame containing the column to be transformed
+  A data frame containing the column to be transformed.
 
 - x.col:
 
-  Character. Name of the column for x-axis values.
+  Character scalar. Name of the column for x‑axis values (optional).
 
 - y.col:
 
-  Character. Name of the column for y-axis values.
+  Character scalar. Name of the column for y‑axis values (optional).
 
 - color.col:
 
-  Character. Name of the column for color values.
+  Character scalar. Name of the column for color values (optional).
 
 - x.adj.fun:
 
-  Character. Transformation function to apply to x-axis values,
-  interpretable by `eval`.
+  Character scalar. Name of a transformation function to apply to x‑axis
+  values, as accepted by `safe_resolve_adj_fxn` (e.g., "log2", "log10",
+  "sqrt"). If `NULL` or an empty string, x‑axis values are left
+  unchanged.
 
 - y.adj.fun:
 
-  Character. Transformation function to apply to y-axis values,
-  interpretable by `eval`.
+  Character scalar. Name of a transformation function to apply to y‑axis
+  values, as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty
+  string, y‑axis values are left unchanged.
 
 - color.adj.fun:
 
-  Character. Transformation function to apply to color values,
-  interpretable by `eval`.
+  Character scalar. Name of a transformation function to apply to color
+  values, as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty
+  string, color values are left unchanged.
 
 ## Value
 
-A data frame identical to input `df` but with transformed columns added.
+A data frame identical to input `df` but with transformed columns added
+(e.g., `mpg.adj`) when valid transformations are specified.
 
 ## Author
 
@@ -64,6 +73,7 @@ Jacob Martin, Jared Andrews
 ``` r
 data(mtcars)
 mtcars_mod <- .adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2")
+#> Error in .adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2"): could not find function ".adjust_column_values"
 head(mtcars_mod$mpg.adj)
-#> [1] 4.392317 4.392317 4.510962 4.419539 4.224966 4.177918
+#> Error: object 'mtcars_mod' not found
 ```
