@@ -43,3 +43,5 @@ linePlotApp <- function(data_list = NULL) {
         title        = "Modular linePlots"
     )
 }
+
+

@@ -30,6 +30,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # Hide individual inputs if specified
 
         observeEvent(input$x.value, {
+            req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
                 hide("error.bar.width")
                 hide("error.bar.colour")
