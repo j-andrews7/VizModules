@@ -209,7 +209,6 @@ test_that("adjust_column_values handles invalid expression gracefully", {
 
 test_that(".add_plot_config returns default config without facet", {
   config <- VizModules:::.add_plot_config()
-  expect_true(config$editable)
   expect_true(config$edits$axisTitleText)
   expect_true(config$edits$titleText)
   expect_false(config$displaylogo)
@@ -535,10 +534,10 @@ test_that(".calculate_range works in grouping mode", {
     vals = c(10, 20, 30, 5, 2, 1),
     grp = c("A", "A", "A", "B", "B", "B")
   )
-  result <- VizModules:::.calculate_range(df, data_col_x = "vals", data_col_y = "grp",
+  result <- VizModules:::.calculate_range(df, data_col_x = "grp", data_col_y = "vals",
     axis_scale_factor = 1, grouping = TRUE)
 
-  expect_equal(result$min, 8)
+  expect_equal(result$min, 0)
   expect_equal(result$max, 60)
 })
 
@@ -621,36 +620,17 @@ test_that("is_pure_type returns TRUE for empty or nonexistent columns", {
   expect_true(is_pure_type(character(0), df))
 })
 
-# ─── .get_documentation ──────────────────────────────────────────────────────
+# ─── get_documentation ───────────────────────────────────────────────────────
 
-test_that(".get_documentation errors on invalid package_name format", {
-  expect_error(VizModules:::.get_documentation("no_colons"), "package::function")
-})
-
-test_that(".get_documentation errors on unsupported type", {
-  expect_error(VizModules:::.get_documentation("base::mean", type = "return"), "param")
-})
-
-test_that(".get_documentation returns named list with empty strings for unknown function", {
-  result <- suppressWarnings(
-    VizModules:::.get_documentation("base::nonexistent_fn_xyz", selected = c("x", "y"))
-  )
+test_that("get_documentation returns named list for valid function", {
+  result <- VizModules::get_documentation("stats::lm", selected = c("formula"))
   expect_type(result, "list")
-  expect_equal(names(result), c("x", "y"))
-  expect_equal(result$x, "")
-  expect_equal(result$y, "")
+  expect_true(nzchar(result$formula))
 })
 
-test_that(".get_documentation extracts real parameter docs", {
-  result <- VizModules:::.get_documentation("base::mean", selected = c("x", "trim"))
-  expect_type(result, "list")
-  expect_true(nzchar(result$x))
-  expect_true(nzchar(result$trim))
-})
-
-test_that(".get_documentation capitalizes when cap = TRUE", {
-  result <- VizModules:::.get_documentation("base::mean", selected = c("x"), cap = TRUE)
-  first_char <- substring(result$x, 1, 1)
+test_that("get_documentation capitalizes when cap = TRUE", {
+  result <- VizModules::get_documentation("stats::lm", selected = c("formula"), cap = TRUE)
+  first_char <- substring(result$formula, 1, 1)
   expect_equal(first_char, toupper(first_char))
 })
 

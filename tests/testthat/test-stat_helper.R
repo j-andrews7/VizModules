@@ -1,5 +1,3 @@
-# ─── Test Data ────────────────────────────────────────────────────────────────
-
 test_df <- data.frame(
     group = rep(c("A", "B", "C"), each = 20),
     value = c(rnorm(20, 5), rnorm(20, 8), rnorm(20, 5)),

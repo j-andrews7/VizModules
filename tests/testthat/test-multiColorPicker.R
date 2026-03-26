@@ -51,7 +51,7 @@ test_that("multiColorPicker respects selected palette and manual overrides", {
 test_that("input handler returns named vector and handles null", {
   .register_multi_color_picker_handler()
   registry <- getFromNamespace("inputHandlers", "shiny")
-  handler <- registry$get("vizModules.multiColorPicker")
+  handler <- registry$get("VizModules.multiColorPicker")
 
   data <- list(
     list(name = "setosa", value = "#E69F00"),

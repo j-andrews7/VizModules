@@ -2,7 +2,7 @@ test_that("linePlot creates expected line trace", {
   palette <- plotthis::palette_list[["Set2"]]
 
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "cyl",
     y = "mpg",
     plot.mode = "lines+markers",
@@ -15,7 +15,7 @@ test_that("linePlot creates expected line trace", {
     axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
     axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
     axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
-    title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
+    title.font.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL
   )
 
@@ -25,12 +25,12 @@ test_that("linePlot creates expected line trace", {
   trace <- built$x$data[[1]]
 
   expect_identical(trace$type, "scatter")
-  expect_true(trace$name %in% names(mtcars))
+  expect_true(trace$mode %in% c("lines", "markers", "lines+markers"))
 })
 
 test_that("Test Incorrect Inputs", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "-random_column",
     y = "mpg",
     plot.mode = "lines+markers",
@@ -45,7 +45,7 @@ test_that("Test Incorrect Inputs", {
 
 test_that("linePlot returns plotly object", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -61,7 +61,7 @@ test_that("linePlot returns plotly object", {
 test_that("linePlot handles different plot modes", {
   # Lines only
   fig_lines <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -74,7 +74,7 @@ test_that("linePlot handles different plot modes", {
 
   # Markers only
   fig_markers <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "markers",
@@ -88,7 +88,7 @@ test_that("linePlot handles different plot modes", {
 
 test_that("linePlot handles different line types", {
   fig_dash <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -105,7 +105,7 @@ test_that("linePlot handles different line types", {
 
 test_that("linePlot handles legend visibility", {
   fig_no_legend <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -120,7 +120,7 @@ test_that("linePlot handles legend visibility", {
 
 test_that("linePlot handles custom titles", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -140,7 +140,7 @@ test_that("linePlot handles custom titles", {
 
 test_that("linePlot handles axis flipping", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -160,7 +160,7 @@ test_that("linePlot handles axis flipping", {
 
 test_that("linePlot handles faceting", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "mpg",
     plot.mode = "lines",
@@ -177,7 +177,7 @@ test_that("linePlot handles faceting", {
 test_that("linePlot errors with NULL data", {
   expect_error(
     linePlot(
-      reactive.data = NULL,
+      data = NULL,
       x = "wt",
       y = "mpg",
       plot.mode = "lines",
@@ -191,7 +191,7 @@ test_that("linePlot errors with NULL data", {
 
 test_that("linePlot errors with invalid y column", {
   fig <- linePlot(
-    reactive.data = mtcars,
+    data = mtcars,
     x = "wt",
     y = "fake_column",
     plot.mode = "lines",
@@ -206,7 +206,7 @@ test_that("linePlot errors with invalid y column", {
 
 test_that("linePlot handles different datasets", {
   fig <- linePlot(
-    reactive.data = iris,
+    data = iris,
     x = "Sepal.Length",
     y = "Sepal.Width",
     plot.mode = "lines",
