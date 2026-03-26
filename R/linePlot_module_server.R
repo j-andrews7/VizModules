@@ -117,9 +117,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", names(data())[1], function(x) x %in% choices))
+                selected = .get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", names(data())[2], function(x) x %in% choices))
+                selected = .get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
             updateSelectInput(session, "plot.mode", selected = .get_default(defaults, "plot.mode", "lines"))
             updateSelectInput(session, "line.type", selected = .get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",

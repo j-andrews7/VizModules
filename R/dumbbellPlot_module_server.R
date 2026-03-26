@@ -116,9 +116,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Data tab
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", num.choices[2], function(x) x %in% num.choices))
+                selected = .get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices)))
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) x %in% cat.choices))
+                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices)))
 
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "colour.by",
