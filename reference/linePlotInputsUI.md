@@ -228,28 +228,28 @@ library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="7599">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="7768">
 #>     <li class="active">
-#>       <a href="#tab-7599-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7768-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7599-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7768-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7599-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7768-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7599-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-7768-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7599-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7768-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7599-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7768-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7599">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7599-1">
+#>   <div class="tab-content" data-tabsetid="7768">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7768-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5935538">
@@ -306,9 +306,9 @@ linePlotInputsUI("linePlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8188730">
 #>             <div class="material-switch">
-#>               <label for="linePlot-errorBar" style="padding-right: 10px;">Error Bars:</label>
-#>               <input id="linePlot-errorBar" type="checkbox" checked="checked"/>
-#>               <label class="switch label-default bg-default" for="linePlot-errorBar"></label>
+#>               <label for="linePlot-error.bar" style="padding-right: 10px;">Error Bars:</label>
+#>               <input id="linePlot-error.bar" type="checkbox" checked="checked"/>
+#>               <label class="switch label-default bg-default" for="linePlot-error.bar"></label>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8188730', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable'})}, 500)});</script>
@@ -365,7 +365,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7599-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7768-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2170845">
@@ -392,16 +392,16 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7599-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7768-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3327998">
-#>             <label class="control-label" id="linePlot-plot.type-label" for="linePlot-plot.type">Plot type:</label>
+#>             <label class="control-label" id="linePlot-plot.mode-label" for="linePlot-plot.mode">Plot type:</label>
 #>             <div>
-#>               <select id="linePlot-plot.type" class="shiny-input-select"><option value="lines" selected>lines</option>
+#>               <select id="linePlot-plot.mode" class="shiny-input-select"><option value="lines" selected>lines</option>
 #> <option value="markers">markers</option>
 #> <option value="lines+markers">lines+markers</option></select>
-#>               <script type="application/json" data-for="linePlot-plot.type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>               <script type="application/json" data-for="linePlot-plot.mode" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3327998', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, plotly mode for plot type. Options: "lines", "markers", "lines+markers". Default: "lines".'})}, 500)});</script>
@@ -428,8 +428,8 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2522057">
-#>             <label class="control-label" for="linePlot-errorBarColour">Error Bar Colour</label>
-#>             <input id="linePlot-errorBarColour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
+#>             <label class="control-label" for="linePlot-error.bar.colour">Error Bar Colour</label>
+#>             <input id="linePlot-error.bar.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2522057', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable'})}, 500)});</script>
 #>         </div>
@@ -437,14 +437,14 @@ linePlotInputsUI("linePlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4640136">
-#>             <label class="control-label" id="linePlot-errorBarWidth-label" for="linePlot-errorBarWidth">Error Bar Width</label>
-#>             <input id="linePlot-errorBarWidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1"/>
+#>             <label class="control-label" id="linePlot-error.bar.width-label" for="linePlot-error.bar.width">Error Bar Width</label>
+#>             <input id="linePlot-error.bar.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4640136', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7599-4">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-7768-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="linePlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -554,7 +554,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7599-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7768-5">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -836,7 +836,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7599-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7768-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7217597">
