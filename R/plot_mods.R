@@ -238,7 +238,7 @@
 #'
 #' @author Jacob Martin, Jared Andrews
 #' @export
-.adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL,
+adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL,
                                   x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL) {
 
   apply_trans <- function(d, cols, adj_name) {
