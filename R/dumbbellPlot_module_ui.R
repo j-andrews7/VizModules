@@ -50,7 +50,7 @@
 #'     Men = c(152, 151, 165)
 #' )
 #' dumbbellPlotInputsUI("dumbbellPlot", data)
-dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05), title = NULL, columns = 2) {
+dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
     # Get variables of data.
@@ -124,7 +124,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            tipify(colourpicker::colourInput(ns("line.colour"), "Colour of connectors",
+            tipify(colourInput(ns("line.colour"), "Colour of connectors",
                 value = .get_default(defaults, "line.colour", "gray30")),
                 documentParameters$line.colour,
                 placement = "top", options = list(container = "body")

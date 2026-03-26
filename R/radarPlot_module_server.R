@@ -18,6 +18,8 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
+#' @importFrom colourpicker colourInput updateColourInput
+#' @importFrom stats na.omit
 #'
 #' @seealso [VizModules::radarPlot()], [VizModules::radarPlotInputsUI()],
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotApp()]
@@ -47,13 +49,13 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             # Only show color picker if group is selected
             if (is.null(grp) || grp == "" || !grp %in% names(d)) {
                 return(tagList(
-                    colourpicker::colourInput(ns("single.color"), "Trace color:",
+                    colourInput(ns("single.color"), "Trace color:",
                         value = "#1F77B4"
                     )
                 ))
             }
 
-            groups <- unique(stats::na.omit(as.character(d[[grp]])))
+            groups <- unique(na.omit(as.character(d[[grp]])))
             if (length(groups) == 0) {
                 return(NULL)
             }
@@ -102,9 +104,9 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = .get_default(defaults, "radial.max", 100, is.numeric))
             updateCheckboxInput(session, "radial.showline",
                 value = .get_default(defaults, "radial.showline", TRUE, is.logical))
-            colourpicker::updateColourInput(session, "radial.linecolor",
+            updateColourInput(session, "radial.linecolor",
                 value = .get_default(defaults, "radial.linecolor", "#444444"))
-            colourpicker::updateColourInput(session, "radial.gridcolor",
+            updateColourInput(session, "radial.gridcolor",
                 value = .get_default(defaults, "radial.gridcolor", "#EEEEEE"))
 
             # Angular axis
@@ -112,7 +114,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 selected = .get_default(defaults, "angular.direction", "clockwise"))
             updateSliderInput(session, "angular.rotation",
                 value = .get_default(defaults, "angular.rotation", 90, is.numeric))
-            colourpicker::updateColourInput(session, "angular.gridcolor",
+            updateColourInput(session, "angular.gridcolor",
                 value = .get_default(defaults, "angular.gridcolor", "#EEEEEE"))
 
             # Title
@@ -121,7 +123,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = .get_default(defaults, "title.font.size", 18, is.numeric))
             updateSelectInput(session, "title.font.family",
                 selected = .get_default(defaults, "title.font.family", "Arial"))
-            colourpicker::updateColourInput(session, "title.font.color",
+            updateColourInput(session, "title.font.color",
                 value = .get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
@@ -133,13 +135,13 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 selected = .get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric))
-            colourpicker::updateColourInput(session, "legend.font.color",
+            updateColourInput(session, "legend.font.color",
                 value = .get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
-            colourpicker::updateColourInput(session, "bgcolor",
+            updateColourInput(session, "bgcolor",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF"))
-            colourpicker::updateColourInput(session, "polar.bgcolor",
+            updateColourInput(session, "polar.bgcolor",
                 value = .get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
             .reset_plotly_inputs(session, defaults)
@@ -256,7 +258,13 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
         output$radarPlot <- renderPlotly({
             generate_radarPlot() |>
                 layout(
-                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
+                    )
                 )
         })
 

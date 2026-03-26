@@ -18,6 +18,8 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom shinyjs hide
+#' @importFrom stats na.omit setNames
+#' @importFrom colourpicker updateColourInput colourInput
 #'
 #' @seealso [VizModules::ternaryPlot()], [VizModules::ternaryPlotInputsUI()],
 #' [VizModules::ternaryPlotOutputUI()], [VizModules::ternaryPlotApp()]
@@ -47,13 +49,13 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             # Only show color picker if group is selected
             if (is.null(grp) || grp == "" || !grp %in% names(d)) {
                 return(tagList(
-                    colourpicker::colourInput(ns("single.color"), "Trace color:",
+                    colourInput(ns("single.color"), "Trace color:",
                         value = "#1F77B4"
                     )
                 ))
             }
 
-            groups <- unique(stats::na.omit(as.character(d[[grp]])))
+            groups <- unique(na.omit(as.character(d[[grp]])))
             if (length(groups) == 0) {
                 return(NULL)
             }
@@ -96,7 +98,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 selected = .get_default(defaults, "marker.symbol", "circle"))
             updateNumericInput(session, "marker.line.width",
                 value = .get_default(defaults, "marker.line.width", 0, is.numeric))
-            colourpicker::updateColourInput(session, "marker.line.color",
+            updateColourInput(session, "marker.line.color",
                 value = .get_default(defaults, "marker.line.color", "#000000"))
             updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 2, is.numeric))
             updateSelectInput(session, "line.dash", selected = .get_default(defaults, "line.dash", "solid"))
@@ -112,11 +114,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 value = .get_default(defaults, "b.titlefont.size", 16, is.numeric))
             updateNumericInput(session, "c.titlefont.size",
                 value = .get_default(defaults, "c.titlefont.size", 16, is.numeric))
-            colourpicker::updateColourInput(session, "a.gridcolor",
+            updateColourInput(session, "a.gridcolor",
                 value = .get_default(defaults, "a.gridcolor", "#EEEEEE"))
-            colourpicker::updateColourInput(session, "b.gridcolor",
+            updateColourInput(session, "b.gridcolor",
                 value = .get_default(defaults, "b.gridcolor", "#EEEEEE"))
-            colourpicker::updateColourInput(session, "c.gridcolor",
+            updateColourInput(session, "c.gridcolor",
                 value = .get_default(defaults, "c.gridcolor", "#EEEEEE"))
 
             # Title
@@ -124,7 +126,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 value = .get_default(defaults, "title.font.size", 18, is.numeric))
             updateSelectInput(session, "title.font.family",
                 selected = .get_default(defaults, "title.font.family", "Arial"))
-            colourpicker::updateColourInput(session, "title.font.color",
+            updateColourInput(session, "title.font.color",
                 value = .get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
@@ -136,11 +138,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 selected = .get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric))
-            colourpicker::updateColourInput(session, "legend.font.color",
+            updateColourInput(session, "legend.font.color",
                 value = .get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
-            colourpicker::updateColourInput(session, "bgcolor",
+            updateColourInput(session, "bgcolor",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF"))
 
             .reset_plotly_inputs(session, defaults)
@@ -195,7 +197,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 if (is.null(color_map) || length(color_map) == 0) {
                     group_values <- unique(d[[group_col]])
                     default_cols <- default_palettes()$choices$Defaults$dittoColors
-                    color_map <- stats::setNames(
+                    color_map <- setNames(
                         rep_len(default_cols, length(group_values)),
                         group_values
                     )
@@ -268,7 +270,13 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
         output$ternaryPlot <- renderPlotly({
             generate_ternaryPlot() |>
                 layout(
-                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
+                    )
                 )
         })
 

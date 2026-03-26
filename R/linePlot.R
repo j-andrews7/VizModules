@@ -41,7 +41,7 @@
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 14.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
-#' @param title.text.color Character, hex color for plot title text. Default: "black".
+#' @param title.font.color Character, hex color for plot title text. Default: "black".
 #' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
@@ -86,7 +86,7 @@ linePlot <- function(data, x, y, palette.selection,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
-                     title.text.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
+                     title.font.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
@@ -298,7 +298,7 @@ linePlot <- function(data, x, y, palette.selection,
     fig <- fig |> layout(
         title = list(
             text = title.text,
-            font = list(size = title.font.size, family = title.font.family, color = title.text.color),
+            font = list(size = title.font.size, family = title.font.family, color = title.font.color),
             x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
         margin = list(t = 70),

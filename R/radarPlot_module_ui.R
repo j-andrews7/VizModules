@@ -119,7 +119,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 ),
                 choices = num.choices
             ), documentParameters$r, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group"), "Group column (optional):",
+            tipify(selectInput(ns("group"), "Group column:",
                 selected = .get_default(defaults, "group", ""),
                 choices = all.choices
             ), documentParameters$group, placement = "top", options = list(container = "body"))
@@ -189,10 +189,10 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             tipify(checkboxInput(ns("radial.showline"), "Show radial line",
                 value = .get_default(defaults, "radial.showline", TRUE, is.logical)
             ), documentParameters$radial.showline, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("radial.linecolor"), "Radial line color:",
+            tipify(colourInput(ns("radial.linecolor"), "Radial line color:",
                 value = .get_default(defaults, "radial.linecolor", "#444444")
             ), documentParameters$radial.linecolor, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("radial.gridcolor"), "Radial grid color:",
+            tipify(colourInput(ns("radial.gridcolor"), "Radial grid color:",
                 value = .get_default(defaults, "radial.gridcolor", "#EEEEEE")
             ), documentParameters$radial.gridcolor, placement = "top", options = list(container = "body"))
         ),
@@ -206,7 +206,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 value = .get_default(defaults, "angular.rotation", 90),
                 step = 5
             ), documentParameters$angular.rotation, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("angular.gridcolor"), "Angular grid color:",
+            tipify(colourInput(ns("angular.gridcolor"), "Angular grid color:",
                 value = .get_default(defaults, "angular.gridcolor", "#EEEEEE")
             ), documentParameters$angular.gridcolor, placement = "top", options = list(container = "body"))
         ),
@@ -227,7 +227,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     function(x) x %in% font.choices
                 )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("title.font.color"), "Title font color:",
+            tipify(colourInput(ns("title.font.color"), "Title font color:",
                 value = .get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.legend"), "Show legend",
@@ -249,15 +249,15 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("legend.font.color"), "Legend font color:",
+            tipify(colourInput(ns("legend.font.color"), "Legend font color:",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
         "Background" = tagList(
-            tipify(colourpicker::colourInput(ns("bgcolor"), "Plot background color:",
+            tipify(colourInput(ns("bgcolor"), "Plot background color:",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body")),
-            tipify(colourpicker::colourInput(ns("polar.bgcolor"), "Polar area background:",
+            tipify(colourInput(ns("polar.bgcolor"), "Polar area background:",
                 value = .get_default(defaults, "polar.bgcolor", "#FFFFFF")
             ), documentParameters$polar.bgcolor, placement = "top", options = list(container = "body"))
         ),

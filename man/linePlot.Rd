@@ -34,7 +34,7 @@ linePlot(
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -116,7 +116,7 @@ Creates subplots for each unique value. Default: NULL.}
 
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
-\item{title.text.color}{Character, hex color for plot title text. Default: "black".}
+\item{title.font.color}{Character, hex color for plot title text. Default: "black".}
 
 \item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 

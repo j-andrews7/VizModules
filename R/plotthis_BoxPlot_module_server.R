@@ -231,12 +231,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
-                # plotthis::BoxPlot expects a named list for palcolor when manually setting colors
+                # BoxPlot expects a named list for palcolor when manually setting colors
                 palcolor_arg <- as.list(palette_values)
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
             # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -246,7 +246,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fill.by <- group.by
                 group.by <- NULL
             }
-            p <- plotthis::BoxPlot(
+            p <- BoxPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
@@ -277,9 +277,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
 
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$title.font.family),
+                            color = isolate_fn(input$title.font.color)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     ),
                     boxmode = ifelse(!is.null(group.by), "group", "overlay"),

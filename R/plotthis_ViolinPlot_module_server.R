@@ -16,8 +16,10 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom plotthis ViolinPlot
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom stats na.omit
+#' @importFrom colourpicker updateColourInput
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -56,9 +58,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             x_col <- input$x.data
 
             if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+                unique(na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+                unique(na.omit(as.character(df[[x_col]])))
             } else {
                 character(0)
             }
@@ -121,18 +123,18 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             # Box
             updateMaterialSwitch(session, "add.box", value = .get_default(defaults, "add.box", FALSE, is.logical))
-            colourpicker::updateColourInput(session, "box.color",
+            updateColourInput(session, "box.color",
                 value = .get_default(defaults, "box.color", "#000000"))
             updateNumericInput(session, "box.width", value = .get_default(defaults, "box.width", 0.1, is.numeric))
             updateNumericInput(session, "box.ptsize", value = .get_default(defaults, "box.ptsize", 2.5, is.numeric))
 
             # Colors
-            colourpicker::updateColourInput(session, "pt.color",
+            updateColourInput(session, "pt.color",
                 value = .get_default(defaults, "pt.color", "#000000"))
 
             # Annotations
             updateTextInput(session, "highlight", value = .get_default(defaults, "highlight", ""))
-            colourpicker::updateColourInput(session, "highlight.colour",
+            updateColourInput(session, "highlight.colour",
                 value = .get_default(defaults, "highlight.colour", "#000000"))
             updateNumericInput(session, "highlight.size",
                 value = .get_default(defaults, "highlight.size", 1, is.numeric))
@@ -149,16 +151,10 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateMaterialSwitch(session, "facet.by.row",
                 value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
 
-            # Action Button:
+
             .reset_plotly_inputs(session, defaults)
-
-            # Lines
             .reset_lines_inputs(session, defaults = defaults)
-
-            # Axes
             .reset_axes_inputs(session, defaults)
-
-            # Stats
             .reset_stats_inputs(session, defaults)
         })
 
@@ -172,9 +168,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         # Show/hide Save Stats button based on stats.enabled
         observeEvent(input$stats.enabled, {
             if (isTRUE(input$stats.enabled)) {
-                shinyjs::show("download.stats.col")
+                show("download.stats.col")
             } else {
-                shinyjs::hide("download.stats.col")
+                hide("download.stats.col")
             }
         })
 
@@ -232,9 +228,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 sort.x <- isolate_fn(input$sort_x)
             }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
-            p <- plotthis::ViolinPlot(
+            p <- ViolinPlot(
                 data = data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
@@ -273,9 +269,12 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
 
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(size = isolate_fn(input$title.font.size), 
+                        family = isolate_fn(input$title.font.family),
+                        color = isolate_fn(input$title.font.color)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )

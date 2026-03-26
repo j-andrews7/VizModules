@@ -15,6 +15,8 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom stats na.omit
+#' @importFrom colourpicker updateColourInput
 #' @importFrom shinyjs hide
 #'
 #' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
@@ -79,7 +81,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                return(unique(stats::na.omit(as.character(df[[group_col]]))))
+                return(unique(na.omit(as.character(df[[group_col]]))))
             }
 
             if (!is.null(x_vals) && length(x_vals) > 0) {
@@ -141,7 +143,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 value = .get_default(defaults, "error.bar", TRUE, is.logical))
             updateNumericInput(session, "error.bar.width",
                 value = .get_default(defaults, "error.bar.width", 1, is.numeric))
-            colourpicker::updateColourInput(session, "error.bar.colour",
+            updateColourInput(session, "error.bar.colour",
                 value = .get_default(defaults, "error.bar.colour", "#000000"))
 
             .reset_axes_inputs(session, defaults)
@@ -283,7 +285,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show.grid.y = isolate_fn(input$show.grid.y),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
-                title.text.color = isolate_fn(input$text.colour),
+                title.font.color = isolate_fn(input$title.font.color),
                 x.title = x_title,
                 y.title = y_title,
                 flip.x = isolate_fn(input$flip.x),

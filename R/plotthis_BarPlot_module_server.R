@@ -15,6 +15,10 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom colourpicker updateColourInput
+#' @importFrom plotthis BarPlot
+#' @importFrom stats na.omit
+#' @importFrom ggplot2 unit
 #' @importFrom shinyjs hide
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
@@ -76,7 +80,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             if (!is.null(col_to_use)) {
-                col_data <- stats::na.omit(df[[col_to_use]])
+                col_data <- na.omit(df[[col_to_use]])
                 # Use factor level order to match ggplot2/plotthis color assignment.
                 # For factors, use the defined levels (preserves order);
                 # for character/other, convert to factor (alphabetical order).
@@ -137,26 +141,34 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Data
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
+                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+            )
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
+                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
+            )
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
+                selected = .get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices)
+            )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% char.choices)
+            )
 
 
             # Facet
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+            )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed"))
+                selected = .get_default(defaults, "facet.scale", "fixed")
+            )
             updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+            )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+            )
 
             # Aesthetics
             updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
@@ -166,8 +178,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Extras
             updateNumericInput(session, "add.line", value = .get_default(defaults, "add.line", NA, is.numeric))
-            colourpicker::updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "#000000"))
+            updateColourInput(session, "line.colour",
+                value = .get_default(defaults, "line.colour", "#000000")
+            )
             updateNumericInput(session, "line.type", value = .get_default(defaults, "line.type", 1, is.numeric))
             updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 0.6, is.numeric))
             updateTextInput(session, "line.name", value = .get_default(defaults, "line.name", ""))
@@ -177,9 +190,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
             updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
             updateNumericInput(session, "axis.font.size",
-                value = .get_default(defaults, "axis.font.size", 18, is.numeric))
+                value = .get_default(defaults, "axis.font.size", 18, is.numeric)
+            )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric))
+                value = .get_default(defaults, "title.font.size", 28, is.numeric)
+            )
             .reset_axes_inputs(session, defaults)
 
             # Plotly
@@ -286,9 +301,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
-            # bar Plot
-            p <- plotthis::BarPlot(
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+
+            p <- BarPlot(
                 data(),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
@@ -313,9 +328,13 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             fig <- ggplotly(p) |>
-                plotly::layout(
+                layout(
                     title = list(
-                        font = list(size = isolate_fn(input$title.font.size), family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$title.font.family),
+                            color = isolate_fn(input$title.font.color)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
                     )
                 )

@@ -16,6 +16,8 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom colourpicker updateColourInput
+#' @importFrom stats na.omit
 #' @importFrom shinyjs hide
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
@@ -44,7 +46,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             lbl <- input$labels
             req(!is.null(lbl), lbl %in% names(d))
 
-            groups <- unique(stats::na.omit(as.character(d[[lbl]])))
+            groups <- unique(na.omit(as.character(d[[lbl]])))
             if (length(groups) == 0) {
                 return(NULL)
             }
@@ -88,7 +90,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 value = .get_default(defaults, "text.font.size", 12, is.numeric))
             updateSelectInput(session, "text.font.family",
                 selected = .get_default(defaults, "text.font.family", "Arial"))
-            colourpicker::updateColourInput(session, "text.font.color",
+            updateColourInput(session, "text.font.color",
                 value = .get_default(defaults, "text.font.color", "#000000"))
 
             # Title
@@ -97,7 +99,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 value = .get_default(defaults, "title.font.size", 28, is.numeric))
             updateSelectInput(session, "title.font.family",
                 selected = .get_default(defaults, "title.font.family", "Arial"))
-            colourpicker::updateColourInput(session, "title.font.color",
+            updateColourInput(session, "title.font.color",
                 value = .get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
@@ -109,11 +111,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 selected = .get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric))
-            colourpicker::updateColourInput(session, "legend.font.color",
+            updateColourInput(session, "legend.font.color",
                 value = .get_default(defaults, "legend.font.color", "#000000"))
 
             # Slice borders
-            colourpicker::updateColourInput(session, "slice.line.color",
+            updateColourInput(session, "slice.line.color",
                 value = .get_default(defaults, "slice.line.color", "#FFFFFF"))
             updateNumericInput(session, "slice.line.width",
                 value = .get_default(defaults, "slice.line.width", 0, is.numeric))
@@ -215,7 +217,13 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
         output$piePlot <- renderPlotly({
             generate_piePlot() |>
                 layout(
-                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
+                    )
                 )
         })
 

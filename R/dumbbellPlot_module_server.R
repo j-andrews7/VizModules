@@ -15,7 +15,9 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom shinyjs hide
+#' @importFrom stats na.omit
+#' @importFrom colourpicker updateColourInput
+#' @importFrom shinyjs hide click
 #'
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
@@ -68,7 +70,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             } else {
                 # Color by Y variables
                 if (!is.null(y_val) && nzchar(y_val) && y_val %in% names(df)) {
-                    return(unique(stats::na.omit(as.character(df[[y_val]]))))
+                    return(unique(na.omit(as.character(df[[y_val]]))))
                 }
             }
 
@@ -116,24 +118,29 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Data tab
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices)))
+                selected = .get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
+            )
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices)))
+                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
+            )
 
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "colour.by",
-                selected = .get_default(defaults, "colour.by", "X variables"))
+                selected = .get_default(defaults, "colour.by", "X variables")
+            )
 
             # Facet tab
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices))
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
+            )
             updateSelectInput(session, "facet.scales", selected = .get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
-            colourpicker::updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "gray30"))
+            updateColourInput(session, "line.colour",
+                value = .get_default(defaults, "line.colour", "gray30")
+            )
 
-            shinyjs::click("reset_palette")
+            click("reset_palette")
 
 
             # Axes
@@ -178,6 +185,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 isolate_fn(input$palette.colours),
                 default_palette_values
             )
+
             palette_selection <- unname(palette_values)
             if (is.null(palette_selection) || length(palette_selection) == 0) {
                 palette_selection <- default_palette_values
@@ -231,7 +239,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
-                title.text.color = isolate_fn(input$text.colour),
+                title.font.color = isolate_fn(input$title.font.color),
                 x.title = x_title,
                 y.title = y_title,
                 flip.x = isolate_fn(input$flip.x),
@@ -265,7 +273,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             )
 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
-            fig <- do.call(plotly::config, c(list(p = fig), config_list))
+            fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -294,7 +302,13 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             } else {
                 fig <- generate_dumbbellPlot() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

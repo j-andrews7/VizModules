@@ -19,6 +19,8 @@
 #' @importFrom dittoViz scatterPlot colLevels
 #' @importFrom ggplot2 theme_bw waiver theme
 #' @importFrom shinyjs hide runjs
+#' @importFrom stats setNames
+#' @importFrom colourpicker colourInput updateColourInput
 #'
 #' @seealso [dittoViz::scatterPlot()], [VizModules::dittoViz_scatterPlotInputsUI()],
 #' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotApp()]
@@ -92,7 +94,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 if (is.null(initial_color) || !nzchar(initial_color)) {
                     initial_color <- "#000000"
                 }
-                return(colourpicker::colourInput(
+                return(colourInput(
                     ns("single.point.color"),
                     label = "Point color",
                     value = initial_color
@@ -160,7 +162,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette <- rep_len(palette, length(levels))
             palette <- palette[seq_len(length(levels))]
-            palette <- stats::setNames(palette, levels)
+            palette <- setNames(palette, levels)
 
             palette
         })
@@ -171,7 +173,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Observer to add selected data to selected.data
         observeEvent(
             event_data("plotly_selected", source = plot_source),
-            # suspended = TRUE,
             {
                 selected <- event_data("plotly_selected", source = plot_source)
                 selected.full <- rbind(selected.data(), selected)
@@ -201,15 +202,20 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Data
             updateSelectInput(session, "x.by",
-                selected = .get_default(defaults, "x.by", choices[2], function(x) x %in% choices))
+                selected = .get_default(defaults, "x.by", choices[2], function(x) x %in% choices)
+            )
             updateSelectInput(session, "y.by",
-                selected = .get_default(defaults, "y.by", choices[3], function(x) x %in% choices))
+                selected = .get_default(defaults, "y.by", choices[3], function(x) x %in% choices)
+            )
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% choices)
+            )
             updateSelectInput(session, "shape.by",
-                selected = .get_default(defaults, "shape.by", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "shape.by", "", function(x) x == "" || x %in% choices)
+            )
             updateSelectizeInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% choices)
+            )
 
             # Adjustments
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
@@ -223,24 +229,32 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "size", value = .get_default(defaults, "size", 1, is.numeric))
             updateNumericInput(session, "opacity", value = .get_default(defaults, "opacity", 1, is.numeric))
             updateCheckboxInput(session, "show.others",
-                value = .get_default(defaults, "show.others", TRUE, is.logical))
+                value = .get_default(defaults, "show.others", TRUE, is.logical)
+            )
             updateCheckboxInput(session, "split.show.all.others",
-                value = .get_default(defaults, "split.show.all.others", TRUE, is.logical))
+                value = .get_default(defaults, "split.show.all.others", TRUE, is.logical)
+            )
             updateSelectInput(session, "plot.order", selected = .get_default(defaults, "plot.order", "unordered"))
             updateTextInput(session, "shape.panel",
-                value = .get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8"))
+                value = .get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8")
+            )
 
             # Colors
-            colourpicker::updateColourInput(session, "min.color",
-                value = .get_default(defaults, "min.color", "#F0E442"))
-            colourpicker::updateColourInput(session, "max.color",
-                value = .get_default(defaults, "max.color", "#0072B2"))
-            colourpicker::updateColourInput(session, "contour.color",
-                value = .get_default(defaults, "contour.color", "black"))
+            updateColourInput(session, "min.color",
+                value = .get_default(defaults, "min.color", "#F0E442")
+            )
+            updateColourInput(session, "max.color",
+                value = .get_default(defaults, "max.color", "#0072B2")
+            )
+            updateColourInput(session, "contour.color",
+                value = .get_default(defaults, "contour.color", "black")
+            )
             updateSelectInput(session, "contour.linetype",
-                selected = .get_default(defaults, "contour.linetype", "solid"))
-            colourpicker::updateColourInput(session, "single.point.color",
-                value = .get_default(defaults, "single.point.color", "#000000"))
+                selected = .get_default(defaults, "contour.linetype", "solid")
+            )
+            updateColourInput(session, "single.point.color",
+                value = .get_default(defaults, "single.point.color", "#000000")
+            )
 
             # Reset multiColorPicker to its initial palette
             updateMultiColorPicker(session, "color.panel", reset = TRUE)
@@ -249,75 +263,104 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "split.nrow", value = .get_default(defaults, "split.nrow", NA, is.numeric))
             updateNumericInput(session, "split.ncol", value = .get_default(defaults, "split.ncol", NA, is.numeric))
             updateSelectInput(session, "multivar.split.dir",
-                selected = .get_default(defaults, "multivar.split.dir", "col"))
+                selected = .get_default(defaults, "multivar.split.dir", "col")
+            )
             updateSelectInput(session, "split.adjust.scales",
-                selected = .get_default(defaults, "split.adjust.scales", "fixed"))
+                selected = .get_default(defaults, "split.adjust.scales", "fixed")
+            )
 
             # Annotations
             updateSelectInput(session, "annotate.by",
-                selected = .get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices)
+            )
             updateTextAreaInput(session, "highlight.points",
-                value = .get_default(defaults, "highlight.points", ""))
-            colourpicker::updateColourInput(session, "highlight.color",
-                value = .get_default(defaults, "highlight.color", "#00FFF7"))
+                value = .get_default(defaults, "highlight.points", "")
+            )
+            updateColourInput(session, "highlight.color",
+                value = .get_default(defaults, "highlight.color", "#00FFF7")
+            )
             updateNumericInput(session, "highlight.size",
-                value = .get_default(defaults, "highlight.size", 7, is.numeric))
-            colourpicker::updateColourInput(session, "highlight.border.color",
-                value = .get_default(defaults, "highlight.border.color", "#000000"))
+                value = .get_default(defaults, "highlight.size", 7, is.numeric)
+            )
+            updateColourInput(session, "highlight.border.color",
+                value = .get_default(defaults, "highlight.border.color", "#000000")
+            )
             updateNumericInput(session, "highlight.border.width",
-                value = .get_default(defaults, "highlight.border.width", 1, is.numeric))
+                value = .get_default(defaults, "highlight.border.width", 1, is.numeric)
+            )
             updateCheckboxInput(session, "highlight.auto.annotate",
-                value = .get_default(defaults, "highlight.auto.annotate", TRUE, is.logical))
-            colourpicker::updateColourInput(session, "annotation.color",
-                value = .get_default(defaults, "annotation.color", "black"))
+                value = .get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
+            )
+            updateColourInput(session, "annotation.color",
+                value = .get_default(defaults, "annotation.color", "black")
+            )
             updateNumericInput(session, "annotation.ax",
-                value = .get_default(defaults, "annotation.ax", 20, is.numeric))
+                value = .get_default(defaults, "annotation.ax", 20, is.numeric)
+            )
             updateNumericInput(session, "annotation.ay",
-                value = .get_default(defaults, "annotation.ay", -20, is.numeric))
+                value = .get_default(defaults, "annotation.ay", -20, is.numeric)
+            )
             updateNumericInput(session, "annotation.size",
-                value = .get_default(defaults, "annotation.size", 10, is.numeric))
+                value = .get_default(defaults, "annotation.size", 10, is.numeric)
+            )
             updateCheckboxInput(session, "annotation.showarrow",
-                value = .get_default(defaults, "annotation.showarrow", TRUE, is.logical))
-            colourpicker::updateColourInput(session, "annotation.arrowcolor",
-                value = .get_default(defaults, "annotation.arrowcolor", "black"))
+                value = .get_default(defaults, "annotation.showarrow", TRUE, is.logical)
+            )
+            updateColourInput(session, "annotation.arrowcolor",
+                value = .get_default(defaults, "annotation.arrowcolor", "black")
+            )
             updateNumericInput(session, "annotation.arrowhead",
-                value = .get_default(defaults, "annotation.arrowhead", 2, is.numeric))
+                value = .get_default(defaults, "annotation.arrowhead", 2, is.numeric)
+            )
             updateNumericInput(session, "annotation.arrowwidth",
-                value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric))
+                value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
+            )
 
             # Legend/Scale
             updateCheckboxInput(session, "legend.show",
-                value = .get_default(defaults, "legend.show", TRUE, is.logical))
+                value = .get_default(defaults, "legend.show", TRUE, is.logical)
+            )
             updateTextInput(session, "legend.color.title",
-                value = .get_default(defaults, "legend.color.title", "make"))
+                value = .get_default(defaults, "legend.color.title", "make")
+            )
             updateNumericInput(session, "legend.color.size",
-                value = .get_default(defaults, "legend.color.size", 5, is.numeric))
+                value = .get_default(defaults, "legend.color.size", 5, is.numeric)
+            )
             updateNumericInput(session, "legend.shape.size",
-                value = .get_default(defaults, "legend.shape.size", 5, is.numeric))
+                value = .get_default(defaults, "legend.shape.size", 5, is.numeric)
+            )
             updateTextInput(session, "legend.color.breaks",
-                value = .get_default(defaults, "legend.color.breaks", ""))
+                value = .get_default(defaults, "legend.color.breaks", "")
+            )
             updateNumericInput(session, "min.value", value = .get_default(defaults, "min.value", NA, is.numeric))
             updateNumericInput(session, "max.value", value = .get_default(defaults, "max.value", NA, is.numeric))
 
             # Trajectory
             updateSelectInput(session, "trajectory.group.by",
-                selected = .get_default(defaults, "trajectory.group.by", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "trajectory.group.by", "", function(x) x == "" || x %in% choices)
+            )
             updateTextInput(session, "add.trajectory.by.groups",
-                value = .get_default(defaults, "add.trajectory.by.groups", ""))
+                value = .get_default(defaults, "add.trajectory.by.groups", "")
+            )
             updateNumericInput(session, "trajectory.arrow.size",
-                value = .get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric))
+                value = .get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric)
+            )
 
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = .get_default(defaults, "webgl", TRUE, is.logical))
             .reset_plotly_inputs(session, defaults)
             updateCheckboxInput(session, "do.ellipse",
-                value = .get_default(defaults, "do.ellipse", FALSE, is.logical))
+                value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
+            )
             updateCheckboxInput(session, "do.contour",
-                value = .get_default(defaults, "do.contour", FALSE, is.logical))
+                value = .get_default(defaults, "do.contour", FALSE, is.logical)
+            )
             updateSelectizeInput(session, "hover.data",
-                selected = .get_default(defaults, "hover.data", "", function(x) x == "" || x %in% choices))
+                selected = .get_default(defaults, "hover.data", "", function(x) x == "" || x %in% choices)
+            )
             updateNumericInput(session, "hover.round.digits",
-                value = .get_default(defaults, "hover.round.digits", 5, is.numeric))
+                value = .get_default(defaults, "hover.round.digits", 5, is.numeric)
+            )
 
             # Lines & Axes
             .reset_lines_inputs(session, include.fit.lines = TRUE, defaults = defaults)
@@ -395,16 +438,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
-            
+
             additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
                 axis.ticks = additional_theme$axis.ticks,
-                panel.spacing = ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+                panel.spacing = unit(isolate_fn(input$subplot.margin), "lines")
             )
-                
-            p <- dittoViz::scatterPlot(
+
+            p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
                 y.by = isolate_fn(input$y.by),
@@ -466,7 +509,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 NULL
             }
 
-            if (!is.null(null.na.inputs$split.by)){
+            if (!is.null(null.na.inputs$split.by)) {
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = TRUE)
             } else {
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
@@ -678,7 +721,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         annotation_params = annotation_params,
                         show.others = isolate_fn(input$show.others)
                     )
-                    
+
                     # Combine with existing annotations (avoiding duplicates)
                     if (!is.null(highlight_annos)) {
                         if (is.null(annos)) {
@@ -688,9 +731,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                             get_anno_key <- function(a) {
                                 paste0(round(a$x, 10), "_", round(a$y, 10), "_", a$text)
                             }
-                            
+
                             existing_keys <- vapply(annos, get_anno_key, character(1))
-                            
+
                             # Add only highlight annotations that don't already exist
                             for (ha in highlight_annos) {
                                 ha_key <- get_anno_key(ha)
@@ -705,7 +748,17 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- fig |> plotly::layout(annotations = annos)
+            fig <- fig |> layout(
+                annotations = annos,
+                title = list(
+                    font = list(
+                        size = isolate_fn(input$title.font.size),
+                        family = isolate_fn(input$title.font.family),
+                        color = isolate_fn(input$title.font.color)
+                    ),
+                    x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
+                )
+            )
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
@@ -779,7 +832,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         output$scatterPlot <- renderPlotly({
             fig <- generate_scatterPlot() |>
                 layout(
-                    margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
+                    )
                 )
             fig$x$source <- plot_source
             fig

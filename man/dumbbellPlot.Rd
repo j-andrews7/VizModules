@@ -14,7 +14,7 @@ dumbbellPlot(
   facet.by = NULL,
   line.colour = "gray80",
   facet.scales = "fixed",
-  subplot.margin = 0.06,
+  subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",
@@ -29,9 +29,9 @@ dumbbellPlot(
   axis.ticklen = 5,
   axis.tickwidth = 1,
   title.text = "",
-  title.font.size = 14,
+  title.font.size = 26,
   title.font.family = "Arial",
-  title.text.color = "black",
+  title.font.color = "black",
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -92,11 +92,11 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 
 \item{title.text}{Character, main title text for the plot. Default: "".}
 
-\item{title.font.size}{Numeric, font size for plot title. Default: 14.}
+\item{title.font.size}{Numeric, font size for plot title. Default: 26.}
 
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
-\item{title.text.color}{Character, hex color for plot title text. Default: "black".}
+\item{title.font.color}{Character, hex color for plot title text. Default: "black".}
 
 \item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 
