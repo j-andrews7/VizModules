@@ -76,11 +76,19 @@ dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.value"), "Select X values (max 2):",
-                selected = if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
+                selected = .get_default(
+                    defaults, "x.value",
+                    if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
+                    function(x) all(x %in% num.choices)
+                ),
                 choices = num.choices, multiple = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Select Y value:",
-                selected = if (length(cat.choices) > 1) cat.choices[2] else "",
+                selected = .get_default(
+                    defaults, "y.value",
+                    if (length(cat.choices) > 1) cat.choices[2] else "",
+                    function(x) x %in% cat.choices
+                ),
                 choices = cat.choices, multiple = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment:",
@@ -92,12 +100,19 @@ dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("colour.by"), "Colour by:",
                 choices = c("X variables", "Y variables"),
-                selected = "X variables"
+                selected = .get_default(
+                    defaults, "colour.by", "X variables",
+                    function(x) x %in% c("X variables", "Y variables")
+                )
             ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by:",
-                selected = "", choices = cat.choices
+                selected = .get_default(
+                    defaults, "facet.by", "",
+                    function(x) x == "" || x %in% cat.choices
+                ),
+                choices = cat.choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
@@ -109,7 +124,8 @@ dumbbellPlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            tipify(colourpicker::colourInput(ns("line.colour"), "Colour of connectors", value = "gray30"),
+            tipify(colourpicker::colourInput(ns("line.colour"), "Colour of connectors",
+                value = .get_default(defaults, "line.colour", "gray30")),
                 documentParameters$line.colour,
                 placement = "top", options = list(container = "body")
             )

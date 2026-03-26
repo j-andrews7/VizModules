@@ -195,48 +195,58 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         choices = c("", names(data))
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill by:",
-        selected = "", choices = c("", names(data))),
+        selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
+            choices = c("", names(data))),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet by:",
-        selected = "", choices = c(char.choices, "")
+        selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+        choices = c(char.choices, "")
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet scale:",
-        selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")
+        selected = .get_default(
+            defaults, "facet.scale", "fixed",
+            function(x) x %in% c("fixed", "free", "free_x", "free_y")
+        ),
+        choices = c("fixed", "free", "free_x", "free_y")
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",
-        value = NULL, min = 0, max = 20
+        value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.nrow"), "Facet number of rows:",
-        value = NULL, min = 0, max = 20
+        value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
         tipify(materialSwitch(ns("facet.by.row"), "Facet by row:",
-        value = TRUE, status = "success"),
+        value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split by:",
-        selected = "", choices = c(char.choices, "")
+        selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
+        choices = c(char.choices, "")
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        tipify(numericInput(ns("alpha"), "Alpha", value = 1, min = 0, max = 1),
+        tipify(numericInput(ns("alpha"), "Alpha",
+            value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
             documentParameters$alpha, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("width"), "Width", value = NA),
+        tipify(numericInput(ns("width"), "Width",
+            value = .get_default(defaults, "width", NA, is.numeric)),
             documentParameters$width, placement = "top", options = list(container = "body")),
-        tipify(textInput(ns("expand"), "Expand", value = "",
+        tipify(textInput(ns("expand"), "Expand",
+            value = .get_default(defaults, "expand", ""),
         placeholder = "e.g. 1,2,3,4"
         ), documentParameters$expand, placement = "top", options = list(container = "body"))
     ),
 
     "Adjustments" = tagList(
         tipify(numericInput(ns("y.min"), "Y-axis min:",
-            value = min.y
+            value = .get_default(defaults, "y.min", min.y, is.numeric)
         ), documentParameters$y_min, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("y.max"), "Y-axis max:",
-            value = max.y
+            value = .get_default(defaults, "y.max", max.y, is.numeric)
         ), documentParameters$y_max, placement = "top", options = list(container = "body"))
     ),
 

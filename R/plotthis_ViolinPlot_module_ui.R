@@ -244,92 +244,119 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            tipify(shiny::textInput(ns("sort_x"), "Sort X By", value = "", placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("y.max"), "Y Max", value = max.y),
+            tipify(shiny::textInput(ns("sort_x"), "Sort X By",
+                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("y.max"), "Y Max",
+                value = .get_default(defaults, "y.max", max.y, is.numeric)),
                 documentParameters$y_max,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("y.min"), "Y Min", value = min.y),
+            tipify(numericInput(ns("y.min"), "Y Min",
+                value = .get_default(defaults, "y.min", min.y, is.numeric)),
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("add.points"), "Add Jitter Points", value = FALSE, status = "success"),
+            tipify(materialSwitch(ns("add.points"), "Add Jitter Points",
+                value = .get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
                 documentParameters$add_point,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1, value = 1),
+            tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1,
+                value = .get_default(defaults, "pt.size", 1, is.numeric)),
                 documentParameters$pt_size,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1, value = 1),
+            tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1,
+                value = .get_default(defaults, "pt.alpha", 1, is.numeric)),
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1, value = 0.5),
+            tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
+                value = .get_default(defaults, "jitter.width", 0.5, is.numeric)),
                 documentParameters$jitter_width,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1, value = 0),
+            tipify(numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1,
+                value = .get_default(defaults, "jitter.height", 0, is.numeric)),
                 documentParameters$jitter_height,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("pt.color"), "Point Outline Colour", value = "#000000"),
+            tipify(colourpicker::colourInput(ns("pt.color"), "Point Outline Colour",
+                value = .get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("add.box"), "Add Box", value = FALSE, status = "success"),
+            tipify(materialSwitch(ns("add.box"), "Add Box",
+                value = .get_default(defaults, "add.box", FALSE, is.logical), status = "success"),
                 documentParameters$add_box,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("box.color"), "Box Colour", value = "#000000"),
+            tipify(colourpicker::colourInput(ns("box.color"), "Box Colour",
+                value = .get_default(defaults, "box.color", "#000000")),
                 documentParameters$box_color,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("box.width"), "Box Width", min = 0, max = 1, value = 0.1),
+            tipify(numericInput(ns("box.width"), "Box Width", min = 0, max = 1,
+                value = .get_default(defaults, "box.width", 0.1, is.numeric)),
                 documentParameters$box_width,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10, value = 2.5),
+            tipify(numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10,
+                value = .get_default(defaults, "box.ptsize", 2.5, is.numeric)),
                 documentParameters$box_ptsize,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Highlight" = tagList(
-            tipify(textInput(ns("highlight"), "Highlight", value = "", placeholder = "E.g. y > 0"),
+            tipify(textInput(ns("highlight"), "Highlight",
+                value = .get_default(defaults, "highlight", ""), placeholder = "E.g. y > 0"),
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour", value = "#000000"),
+            tipify(colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour",
+                value = .get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("highlight.size"), "Highlight Size", value = 1, min = 0),
+            tipify(numericInput(ns("highlight.size"), "Highlight Size",
+                value = .get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
                 documentParameters$highlight_size,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha", value = 1, min = 0, max = 1),
+            tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha",
+                value = .get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
                 documentParameters$highlight_alpha,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c(char.choices, "")),
+            tipify(selectInput(ns("facet.by"), "Facet By",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+                choices = c(char.choices, "")),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+                selected = .get_default(
+                    defaults, "facet.scale", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                ),
+                choices = c("fixed", "free", "free_x", "free_y")),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.ncol"), "Columns", value = NULL, min = 0),
+            tipify(numericInput(ns("facet.ncol"), "Columns",
+                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.nrow"), "Rows", value = NULL, min = 0),
+            tipify(numericInput(ns("facet.nrow"), "Rows",
+                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("facet.by.row"), "Facet By Row", value = TRUE, status = "success"),
+            tipify(materialSwitch(ns("facet.by.row"), "Facet By Row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             )

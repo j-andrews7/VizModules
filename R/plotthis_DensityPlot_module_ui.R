@@ -167,52 +167,70 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             )
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By", selected = "", choices = c("", cat.choices)),
+            tipify(selectInput(ns("facet.by"), "Facet By",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
+                choices = c("", cat.choices)),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(selectInput(ns("facet.scale"), "Facet Scale", selected = "fixed", choices = c("fixed", "free", "free_x", "free_y")),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+                selected = .get_default(
+                    defaults, "facet.scale", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                ),
+                choices = c("fixed", "free", "free_x", "free_y")),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.ncol"), "Number of Columns", value = NULL, min = 0, max = 20),
+            tipify(numericInput(ns("facet.ncol"), "Number of Columns",
+                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.nrow"), "Number of Rows", value = NULL, min = 0, max = 20),
+            tipify(numericInput(ns("facet.nrow"), "Number of Rows",
+                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("facet.by.row"), "Facet by Row", value = TRUE, status = "success"),
+            tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
+                value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Aesthetics" = tagList(
-            tipify(numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1, value = 0.5),
+            tipify(numericInput(ns("plot.alpha"), "Plot Alpha", min = 0, max = 1,
+                value = .get_default(defaults, "plot.alpha", 0.5, is.numeric)),
                 documentParameters$alpha,
                 placement = "top", options = list(container = "body")
             ),
             uiOutput(ns("palette.selection")),
             tipify(selectInput(ns("position"), "Position",
-                selected = "identity",
+                selected = .get_default(
+                    defaults, "position", "identity",
+                    function(x) x %in% c("identity", "stack", "dodge", "fill")
+                ),
                 choices = c("identity", "stack", "dodge", "fill")
             ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
-            tipify(materialSwitch(ns("add.bars"), "Add Rug Plot", value = FALSE, status = "success"),
+            tipify(materialSwitch(ns("add.bars"), "Add Rug Plot",
+                value = .get_default(defaults, "add.bars", FALSE, is.logical), status = "success"),
                 documentParameters$add_bars,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("bar.height"), "Rug Bar Height", value = 0.04),
+            tipify(numericInput(ns("bar.height"), "Rug Bar Height",
+                value = .get_default(defaults, "bar.height", 0.04, is.numeric)),
                 documentParameters$bar_height,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1, value = 1, step = 0.05),
+            tipify(sliderInput(ns("bar.alpha"), "Rug Bar Alpha", min = 0, max = 1,
+                value = .get_default(defaults, "bar.alpha", 1, is.numeric), step = 0.05),
                 documentParameters$bar_alpha,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("bar.width"), "Rug Bar Width", value = 1, min = 0, step = 0.05),
+            tipify(numericInput(ns("bar.width"), "Rug Bar Width",
+                value = .get_default(defaults, "bar.width", 1, is.numeric), min = 0, step = 0.05),
                 documentParameters$bar_width,
                 placement = "top", options = list(container = "body")
             )
