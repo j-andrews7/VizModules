@@ -166,28 +166,28 @@ df <- data.frame(
 )
 ternaryPlotInputsUI("ternaryPlot", df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="7494">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="1629">
 #>     <li class="active">
-#>       <a href="#tab-7494-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1629-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7494-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
+#>       <a href="#tab-1629-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7494-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1629-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7494-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-1629-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7494-5" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
+#>       <a href="#tab-1629-5" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7494-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-1629-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7494">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7494-1">
+#>   <div class="tab-content" data-tabsetid="1629">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1629-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1333486">
@@ -254,7 +254,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trace Style" id="tab-7494-2">
+#>     <div class="tab-pane" data-value="Trace Style" id="tab-1629-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6140056">
@@ -346,7 +346,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7494-3">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1629-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5594912">
@@ -421,7 +421,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-7494-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-1629-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify783283">
@@ -533,7 +533,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Background" id="tab-7494-5">
+#>     <div class="tab-pane" data-value="Background" id="tab-1629-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6227988">
@@ -544,7 +544,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7494-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-1629-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="ternaryPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
