@@ -25,6 +25,7 @@
     updateNumericInput(session, "facet.title.font.size", value = .get_default(defaults, "facet.title.font.size", 18, is.numeric))
     updateColourInput(session, "facet.title.font.color", value = .get_default(defaults, "facet.title.font.color", "#000000"))
     updateSelectInput(session, "facet.title.font.family", selected = .get_default(defaults, "facet.title.font.family", "Arial"))
+    updateNumericInput(session, "title.font.size", value = .get_default(defaults, "title.font.size", 28, is.numeric))
     updateSelectInput(session, "title.font.family", selected = .get_default(defaults, "title.font.family", "Arial"))
     updateColourInput(session, "text.colour", value = .get_default(defaults, "text.colour", "#000000"))
     updateNumericInput(session, "axis.title.font.size", value = .get_default(defaults, "axis.title.font.size", 18, is.numeric))

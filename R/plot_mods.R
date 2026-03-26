@@ -424,6 +424,60 @@
     return(style)
 }
 
+#' Apply plot title font styling while preserving existing title text
+#'
+#' Updates a plotly figure's title font settings using the shared module title
+#' inputs without overwriting the existing title text or positioning.
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object containing title font fields.
+#' @param isolate_fn Function used to isolate reactive values. Defaults to
+#'   \code{shiny::isolate}.
+#' @param default_size Numeric fallback title font size when the input is not
+#'   available. Defaults to \code{28}.
+#'
+#' @return The modified plotly figure with updated title font styling.
+#'
+#' @importFrom utils modifyList
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_apply_plot_title_styling
+.apply_plot_title_styling <- function(fig, input, isolate_fn = isolate, default_size = 28) {
+    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout$title)) {
+        return(fig)
+    }
+
+    title <- fig$x$layout$title
+
+    if (is.character(title)) {
+        title <- list(text = title[[1]])
+    }
+
+    if (is.null(title$text) || !nzchar(title$text)) {
+        return(fig)
+    }
+
+    title_size <- isolate_fn(input$title.font.size)
+    if (is.null(title_size) || length(title_size) == 0 || is.na(title_size)) {
+        title_size <- default_size
+    }
+
+    title_style <- list(
+        font = list(
+            size = title_size,
+            family = isolate_fn(input$title.font.family),
+            color = isolate_fn(input$text.colour)
+        ),
+        x = if (!is.null(title$x)) title$x else 0.5,
+        xanchor = if (!is.null(title$xanchor)) title$xanchor else "center",
+        y = if (!is.null(title$y)) title$y else 0.98,
+        yanchor = if (!is.null(title$yanchor)) title$yanchor else "top"
+    )
+
+    fig |> plotly::layout(title = modifyList(title, title_style))
+}
+
 #' Create ggplot axis styling theme arguments
 #'
 #' Creates ggplot2 theme arguments for axis borders and lines based on user inputs.

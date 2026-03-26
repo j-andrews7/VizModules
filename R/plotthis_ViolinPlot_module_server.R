@@ -275,7 +275,11 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             fig <- ggplotly(p) |>
                 plotly::layout(
                     title = list(
-                        font = list(size = 28, family = isolate_fn(input$title.font.family), color = isolate_fn(input$text.colour)),
+                        font = list(
+                            size = isolate_fn(input$title.font.size),
+                            family = isolate_fn(input$title.font.family),
+                            color = isolate_fn(input$text.colour)
+                        ),
                         x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                     )
                 )

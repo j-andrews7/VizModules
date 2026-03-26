@@ -739,6 +739,52 @@ test_that(".create_axis_styles excludes line props when ggplot.axis.styling is T
   expect_equal(result2$linecolor, "red")
 })
 
+# ─── .apply_plot_title_styling ────────────────────────────────────────────────
+
+test_that(".apply_plot_title_styling preserves title text and updates title font", {
+  fig <- make_plotly(layout = list(
+    title = list(
+      text = "cyl",
+      x = 0.25
+    )
+  ))
+
+  mock_input <- list(
+    title.font.size = 32,
+    title.font.family = "Courier New",
+    text.colour = "#DB0FCA"
+  )
+
+  result <- VizModules:::.apply_plot_title_styling(fig, mock_input, isolate_fn = identity)
+
+  layout_update <- result$x$layoutAttrs[[1]]
+  expect_equal(layout_update$title$text, "cyl")
+  expect_equal(layout_update$title$font$size, 32)
+  expect_equal(layout_update$title$font$family, "Courier New")
+  expect_equal(layout_update$title$font$color, "#DB0FCA")
+  expect_equal(layout_update$title$x, 0.25)
+  expect_equal(layout_update$title$xanchor, "center")
+  expect_equal(layout_update$title$yanchor, "top")
+})
+
+test_that(".apply_plot_title_styling handles character titles and missing size input", {
+  fig <- make_plotly(layout = list(title = "gear"))
+
+  mock_input <- list(
+    title.font.size = NULL,
+    title.font.family = "Arial",
+    text.colour = "#111111"
+  )
+
+  result <- VizModules:::.apply_plot_title_styling(fig, mock_input, isolate_fn = identity)
+
+  layout_update <- result$x$layoutAttrs[[1]]
+  expect_equal(layout_update$title$text, "gear")
+  expect_equal(layout_update$title$font$size, 28)
+  expect_equal(layout_update$title$font$family, "Arial")
+  expect_equal(layout_update$title$font$color, "#111111")
+})
+
 # ─── .create_ggplot_axis_style ───────────────────────────────────────────────
 
 test_that(".create_ggplot_axis_style returns full border when showline + mirror", {

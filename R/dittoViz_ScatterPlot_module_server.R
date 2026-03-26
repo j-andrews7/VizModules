@@ -472,6 +472,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             }
             fig <- do.call(config, c(list(p = p$plot), config_list))
+            fig <- .apply_plot_title_styling(fig, input, isolate_fn)
 
             # Apply single point color when color.by is not set
             if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {

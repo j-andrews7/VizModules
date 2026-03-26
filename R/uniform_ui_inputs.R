@@ -185,6 +185,11 @@
         rotate_input,
         flip_x,
         flip_y,
+        numericInput(ns("title.font.size"), "Title Size",
+            value = .get_default(defaults, "title.font.size", 28, is.numeric),
+            min = 1,
+            step = 1
+        ),
         selectInput(ns("title.font.family"), "Title Font",
             choices = font_choices,
             selected = .get_default(
@@ -581,4 +586,3 @@
         )
     )
 }
-
