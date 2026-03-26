@@ -139,7 +139,8 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
                 ),
                 choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("error.bar"), "Error Bars:", value = TRUE),
+            tipify(materialSwitch(ns("error.bar"), "Error Bars:",
+                value = .get_default(defaults, "error.bar", TRUE, is.logical)),
                 documentParameters$error.bar,
                 placement = "top", options = list(container = "body")
             ),
@@ -164,7 +165,11 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet by:",
-                selected = "", choices = cat.choices
+                selected = .get_default(
+                    defaults, "facet.by", "",
+                    function(x) x == "" || x %in% cat.choices
+                ),
+                choices = cat.choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
@@ -176,19 +181,27 @@ linePlotInputsUI <- function(id, data, defaults = list("subplot.margin" = 0.05),
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("plot.mode"), "Plot type:",
-                selected = "lines",
+                selected = .get_default(
+                    defaults, "plot.mode", "lines",
+                    function(x) x %in% c("lines", "markers", "lines+markers")
+                ),
                 choices  = c("lines", "markers", "lines+markers")
             ), documentParameters$plot.mode, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("line.type"), "Line type:",
-                selected = "solid",
+                selected = .get_default(
+                    defaults, "line.type", "solid",
+                    function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
+                ),
                 choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ), documentParameters$line.type, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
-            tipify(colourpicker::colourInput(ns("error.bar.colour"), "Error Bar Colour", value = "#000000"),
+            tipify(colourpicker::colourInput(ns("error.bar.colour"), "Error Bar Colour",
+                value = .get_default(defaults, "error.bar.colour", "#000000")),
                 documentParameters$error.colour,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("error.bar.width"), "Error Bar Width", value = 1, min = 0.1),
+            tipify(numericInput(ns("error.bar.width"), "Error Bar Width",
+                value = .get_default(defaults, "error.bar.width", 1, is.numeric), min = 0.1),
                 documentParameters$error.width,
                 placement = "top", options = list(container = "body")
             )

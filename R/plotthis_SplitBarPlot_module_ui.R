@@ -179,42 +179,56 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet by",
-        selected = "", choices = c(char.choices, "")
+        selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+        choices = c(char.choices, "")
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet scale",
-        selected = "free_y", choices = c("fixed", "free", "free_x", "free_y")
+        selected = .get_default(
+            defaults, "facet.scale", "free_y",
+            function(x) x %in% c("fixed", "free", "free_x", "free_y")
+        ),
+        choices = c("fixed", "free", "free_x", "free_y")
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Facet number of columns",
-        value = NULL, min = 0, max = 20
+        value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.nrow"), "Facet number of rows",
-        value = NULL, min = 0, max = 20
+        value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
         tipify(materialSwitch(ns("facet.by.row"), "Facet by row",
-        value = TRUE, status = "success"),
+        value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split by",
-        selected = "", choices = c(char.choices, "")
+        selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
+        choices = c(char.choices, "")
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
     ),
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        tipify(selectInput(ns("alpha.by"), "Alpha by", selected = "", choices = c("", num.choices)),
+        tipify(selectInput(ns("alpha.by"), "Alpha by",
+            selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
+            choices = c("", num.choices)),
             documentParameters$alpha_by, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse", value = FALSE, status = "success"),
+        tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse",
+            value = .get_default(defaults, "alpha.reverse", FALSE, is.logical), status = "success"),
             documentParameters$alpha_reverse, placement = "top", options = list(container = "body")),
-        tipify(textInput(ns("alpha.name"), "Alpha name", value = ""),
+        tipify(textInput(ns("alpha.name"), "Alpha name",
+            value = .get_default(defaults, "alpha.name", "")),
             documentParameters$alpha_name, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("bar.height"), "Bar height", value = 0.9, min = 0),
+        tipify(numericInput(ns("bar.height"), "Bar height",
+            value = .get_default(defaults, "bar.height", 0.9, is.numeric), min = 0),
             documentParameters$bar_height, placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis", min = 0, max = 5, value = 1.2, step = 0.2),
+        tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis",
+            min = 0, max = 5, value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric), step = 0.2),
             "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
             placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis", value = FALSE, status = "success"),
+        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis",
+            value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical), status = "success"),
             "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
             placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("text.position"), "Position of category labels: ", value = 0, min = 0, max = 100),
+        tipify(sliderInput(ns("text.position"), "Position of category labels: ",
+            value = .get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100),
             "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
             placement = "top", options = list(container = "body"))
 
@@ -222,10 +236,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     "Adjustments" = tagList(
         tipify(numericInput(ns("x.min"), "X-axis min:",
-            value = min.x
+            value = .get_default(defaults, "x.min", min.x, is.numeric)
         ), documentParameters$x_min, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("x.max"), "X-axis max:",
-            value = max.x
+            value = .get_default(defaults, "x.max", max.x, is.numeric)
         ), documentParameters$x_max, placement = "top", options = list(container = "body"))
     ),
 

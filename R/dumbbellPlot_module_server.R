@@ -131,7 +131,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Aesthetics tab
             colourpicker::updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "red"))
+                value = .get_default(defaults, "line.colour", "gray30"))
 
             shinyjs::click("reset_palette")
 
