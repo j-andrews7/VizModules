@@ -331,6 +331,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
         # Render the plot output
         output$linePlot <- renderPlotly({
+            req(input$x.value, input$y.value)
+
             d <- data_reactive()
             x_input <- input$x.value
             y_input <- input$y.value
@@ -341,8 +343,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             # Error Prone conditions
             x_is_cat <- length(x_input) == 1 && nzchar(x_input) && !is.numeric(d[[x_input]])
             y_is_cat <- length(y_input) == 1 && nzchar(y_input) && !is.numeric(d[[y_input]])
-            x_not_0 <- length(x_input) == 0
-            y_not_0 <- length(y_input) == 0
             multi_axis <- xor(length(x_input) > 1, length(y_input) > 1)
             dual_multiAxis <- length(x_input) > 1 && length(y_input) > 1
             x_pure <- is_pure_type(c(x_input), d)
@@ -354,9 +354,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (x_is_cat && y_is_cat) {
                 return_empty <- TRUE
                 txt <- c(txt, "X and Y categories cannot both be discrete data types")
-            } else if (x_not_0 || y_not_0) {
-                return_empty <- TRUE
-                txt <- c(txt, "Both X and Y variable inputs must not be empty. Please select a variable input.")
             } else if (!x_pure || !y_pure) {
                 return_empty <- TRUE
                 txt <- c(txt, "Cant have a discrete and non discrete data input on the same axis.")

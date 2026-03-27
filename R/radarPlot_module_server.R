@@ -152,23 +152,10 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
-            req(nrow(d) > 0)
 
             theta_col <- isolate_fn(input$theta)
             r_col <- isolate_fn(input$r)
             group_col <- isolate_fn(input$group)
-
-            validate(
-                need(
-                    !is.null(theta_col) && theta_col %in% names(d),
-                    "Select a category column for theta (angular axes)."
-                ),
-                need(
-                    !is.null(r_col) && r_col %in% names(d),
-                    "Select a numeric column for r (radial values)."
-                ),
-                need(is.numeric(d[[r_col]]), "The r column must contain numeric data.")
-            )
 
             # Handle group column
             if (!is.null(group_col) && group_col == "") {
@@ -256,16 +243,44 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
 
         # Render the plot output
         output$radarPlot <- renderPlotly({
-            generate_radarPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
+            req(data_reactive(), input$theta, input$r)
+
+            d <- data_reactive()
+            theta_col <- input$theta
+            r_col <- input$r
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (!theta_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a category column for theta (angular axes).")
+            }
+
+            if (!r_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a numeric column for r (radial values).")
+            } else if (!is.numeric(d[[r_col]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "The r column must contain numeric data.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_radarPlot() |>
+                    layout(
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
-                )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

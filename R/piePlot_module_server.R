@@ -141,16 +141,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
-            req(nrow(d) > 0)
 
             label_col <- isolate_fn(input$labels)
             value_col <- isolate_fn(input$values)
-
-            validate(
-                need(!is.null(label_col) && label_col %in% names(d), "Select a label column for the slices."),
-                need(!is.null(value_col) && value_col %in% names(d), "Select a numeric column for slice values."),
-                need(is.numeric(d[[value_col]]), "The value column must contain numeric, aggregated data.")
-            )
 
             textinfo <- build_textinfo(isolate_fn(input$textinfo))
             textposition <- isolate_fn(input$textposition)
@@ -215,16 +208,44 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
 
         # Render the plot output
         output$piePlot <- renderPlotly({
-            generate_piePlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
+            req(data_reactive(), input$labels, input$values)
+
+            d <- data_reactive()
+            label_col <- input$labels
+            value_col <- input$values
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (!label_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a label column for the slices.")
+            }
+
+            if (!value_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a numeric column for slice values.")
+            } else if (!is.numeric(d[[value_col]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "The value column must contain numeric, aggregated data.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_piePlot() |>
+                    layout(
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
-                )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

@@ -456,30 +456,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         # Render the plot output
         output$yPlot <- renderPlotly({
-            var_input <- input$var
+            req(input$var)
 
-            return_empty <- FALSE
-            txt <- c()
-
-            if (length(var_input) == 0 || !nzchar(var_input)) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            }
-
-            if (return_empty) {
-                fig <- .empty_plot(text = txt, plotly = TRUE)
-            } else {
-                fig <- generate_yPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
+            fig <- generate_yPlot() |>
+                layout(
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
                     )
-            }
+                )
 
             return(fig)
         })

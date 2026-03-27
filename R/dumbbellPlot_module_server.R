@@ -281,36 +281,18 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
         # Render the plot output
         output$dumbbellPlot <- renderPlotly({
-            x_input <- input$x.value
-            y_input <- input$y.value
+            req(input$x.value, input$y.value)
 
-            return_empty <- FALSE
-            txt <- c()
-
-            if (length(x_input) == 0) {
-                return_empty <- TRUE
-                txt <- c(txt, "X variable input must not be empty. Please select at least one numeric variable.")
-            }
-
-            if (length(y_input) == 0 || !nzchar(y_input)) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable input must not be empty. Please select a categorical variable.")
-            }
-
-            if (return_empty) {
-                fig <- .empty_plot(text = txt, plotly = TRUE)
-            } else {
-                fig <- generate_dumbbellPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
+            fig <- generate_dumbbellPlot() |>
+                layout(
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
                     )
-            }
+                )
 
             return(fig)
         })

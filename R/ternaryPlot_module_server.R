@@ -153,30 +153,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
-            req(nrow(d) > 0)
 
             a_col <- isolate_fn(input$a)
             b_col <- isolate_fn(input$b)
             c_col <- isolate_fn(input$c)
             group_col <- isolate_fn(input$group)
-
-            validate(
-                need(
-                    !is.null(a_col) && a_col != "" && a_col %in% names(d),
-                    "Select a numeric column for the a-axis."
-                ),
-                need(
-                    !is.null(b_col) && b_col != "" && b_col %in% names(d),
-                    "Select a numeric column for the b-axis."
-                ),
-                need(
-                    !is.null(c_col) && c_col != "" && c_col %in% names(d),
-                    "Select a numeric column for the c-axis."
-                ),
-                need(is.numeric(d[[a_col]]), "The a-axis column must contain numeric data."),
-                need(is.numeric(d[[b_col]]), "The b-axis column must contain numeric data."),
-                need(is.numeric(d[[c_col]]), "The c-axis column must contain numeric data.")
-            )
 
             # Handle group column
             if (!is.null(group_col) && group_col == "") {
@@ -268,16 +249,56 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
 
         # Render the plot output
         output$ternaryPlot <- renderPlotly({
-            generate_ternaryPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
+            req(data_reactive(), input$a, input$b, input$c)
+
+            d <- data_reactive()
+            a_col <- input$a
+            b_col <- input$b
+            c_col <- input$c
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (!a_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a numeric column for the a-axis.")
+            } else if (!is.numeric(d[[a_col]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "The a-axis column must contain numeric data.")
+            }
+
+            if (!b_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a numeric column for the b-axis.")
+            } else if (!is.numeric(d[[b_col]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "The b-axis column must contain numeric data.")
+            }
+
+            if (!c_col %in% names(d)) {
+                return_empty <- TRUE
+                txt <- c(txt, "Select a numeric column for the c-axis.")
+            } else if (!is.numeric(d[[c_col]])) {
+                return_empty <- TRUE
+                txt <- c(txt, "The c-axis column must contain numeric data.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_ternaryPlot() |>
+                    layout(
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
-                )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

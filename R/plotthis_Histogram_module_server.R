@@ -296,30 +296,18 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
         # Render the plot output
         output$histogramPlot <- renderPlotly({
-            x_input <- input$x.data
+            req(input$x.data)
 
-            return_empty <- FALSE
-            txt <- c()
-
-            if (length(x_input) == 0 || !nzchar(x_input)) {
-                return_empty <- TRUE
-                txt <- c(txt, "X variable input must not be empty. Please select a numeric variable.")
-            }
-
-            if (return_empty) {
-                fig <- .empty_plot(text = txt, plotly = TRUE)
-            } else {
-                fig <- generate_Histogram() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
+            fig <- generate_Histogram() |>
+                layout(
+                    margin = list(
+                        t = input$margin.t,
+                        b = input$margin.b,
+                        l = input$margin.l,
+                        r = input$margin.r,
+                        autoexpand = TRUE
                     )
-            }
+                )
 
             return(fig)
         })

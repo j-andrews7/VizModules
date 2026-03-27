@@ -99,24 +99,11 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             isolate_fn <- setup_auto_update_logic(input)
 
             d <- data_reactive()
-            req(nrow(d) > 0)
 
             dims <- isolate_fn(input$dimensions)
-            validate(
-                need(
-                    !is.null(dims) && length(dims) >= 2,
-                    "Please select at least two dimension columns."
-                )
-            )
 
             # Filter to valid columns
             dims <- dims[dims %in% names(d)]
-            validate(
-                need(
-                    length(dims) >= 2,
-                    "Please select at least two valid dimension columns."
-                )
-            )
 
             color.by <- isolate_fn(input$color.by)
             if (is.null(color.by) || !nzchar(color.by)) {
@@ -155,16 +142,36 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
 
         # Render the plot output
         output$parallelCoordinatesPlot <- renderPlotly({
-            generate_parallelCoordinatesPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
+            req(data_reactive(), input$dimensions)
+
+            d <- data_reactive()
+            dims <- input$dimensions
+            dims <- dims[dims %in% names(d)]
+
+            return_empty <- FALSE
+            txt <- c()
+
+            if (length(dims) < 2) {
+                return_empty <- TRUE
+                txt <- c(txt, "Please select at least two valid dimension columns.")
+            }
+
+            if (return_empty) {
+                fig <- .empty_plot(text = txt, plotly = TRUE)
+            } else {
+                fig <- generate_parallelCoordinatesPlot() |>
+                    layout(
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
-                )
+            }
+
+            return(fig)
         })
 
         # Download handler for interactive plot

@@ -380,22 +380,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Render the plot output
         output$BarPlot <- renderPlotly({
-            x_input <- input$x.data
-            y_input <- input$y.data
+            req(input$x.data, input$y.data)
 
             return_empty <- FALSE
             txt <- c()
 
-            if (length(x_input) == 0 || !nzchar(x_input)) {
-                return_empty <- TRUE
-                txt <- c(txt, "X variable input must not be empty. Please select a variable.")
-            }
-
-            if (length(y_input) == 0 || !nzchar(y_input)) {
-                return_empty <- TRUE
-                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
-            }
-            if (y_input == input$group.by) {
+            if (input$y.data == input$group.by) {
                 return_empty <- TRUE
                 txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs.")
             }
