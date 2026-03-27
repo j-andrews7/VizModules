@@ -298,96 +298,107 @@ plotly-specific features are also available:
 - `axis.title.font.family` - Axis title font family (UI: "Axis Title
   Font", default: "Arial")
 
-- `axis.showline` - Show axis lines (UI: via .uniform_axes_inputs_ui)
+- `axis.showline` - Show axis border lines (UI: "Show Axis Borders",
+  default: TRUE)
 
-- `axis.mirror` - Mirror axis lines (UI: via .uniform_axes_inputs_ui)
+- `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis
+  Borders", default: TRUE)
 
-- `show.grid.x` - Show X gridlines (UI: via .uniform_axes_inputs_ui)
+- `show.grid.x` - Show X-axis major gridlines (UI: "Show X Gridlines",
+  default: TRUE)
 
-- `show.grid.y` - Show Y gridlines (UI: via .uniform_axes_inputs_ui)
+- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y Gridlines",
+  default: TRUE)
 
-- `axis.linecolor` - Axis line color (UI: via .uniform_axes_inputs_ui)
+- `grid.color` - Gridline color (UI: "Gridline Color", default:
+  "#CCCCCC")
 
-- `axis.linewidth` - Axis line width (UI: via .uniform_axes_inputs_ui)
+- `axis.linecolor` - Color of axis lines (UI: "Axis Line Color",
+  default: "black")
 
-- `axis.tickfont.size` - Tick label size (UI: via
-  .uniform_axes_inputs_ui)
+- `axis.linewidth` - Width of axis lines (UI: "Axis Line Width",
+  default: 0.5)
 
-- `axis.tickfont.color` - Tick label color (UI: via
-  .uniform_axes_inputs_ui)
+- `axis.tickfont.size` - Size of tick labels (UI: "Tick Label Size",
+  default: 12)
 
-- `axis.tickfont.family` - Tick label font (UI: via
-  .uniform_axes_inputs_ui)
+- `axis.tickfont.color` - Color of tick labels (UI: "Tick Label Color",
+  default: "black")
 
-- `axis.tickangle.x` - X-axis tick angle (UI: via
-  .uniform_axes_inputs_ui)
+- `axis.tickfont.family` - Font family for tick labels (UI: "Tick Label
+  Font", default: "Arial")
 
-- `axis.tickangle.y` - Y-axis tick angle (UI: via
-  .uniform_axes_inputs_ui)
+- `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI: "X
+  Tick Label Angle", default: 0)
 
-- `axis.ticks` - Tick position (UI: via .uniform_axes_inputs_ui)
+- `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI: "Y
+  Tick Label Angle", default: 0)
 
-- `axis.tickcolor` - Tick mark color (UI: via .uniform_axes_inputs_ui)
+- `axis.ticks` - Position of tick marks (UI: "Tick Position", default:
+  "outside")
 
-- `axis.ticklen` - Tick mark length (UI: via .uniform_axes_inputs_ui)
+- `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color",
+  default: "black")
 
-- `axis.tickwidth` - Tick mark width (UI: via .uniform_axes_inputs_ui)
+- `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length",
+  default: 5)
 
-- `hline.intercepts` - Horizontal line Y-intercepts (UI: via
-  .uniform_lines_inputs_ui)
+- `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width",
+  default: 1)
 
-- `hline.colors` - Horizontal line colors (UI: via
-  .uniform_lines_inputs_ui)
+- `facet.title.font.size` - Facet subplot title font size (UI: "Facet
+  Subplot Title Size", default: 18)
 
-- `hline.widths` - Horizontal line widths (UI: via
-  .uniform_lines_inputs_ui)
+- `facet.title.font.color` - Facet subplot title font color (UI: "Facet
+  Title Color", default: "#000000")
 
-- `hline.linetypes` - Horizontal line types (UI: via
-  .uniform_lines_inputs_ui)
+- `facet.title.font.family` - Facet subplot title font family (UI:
+  "Facet Title Font", default: "Arial")
 
-- `hline.opacities` - Horizontal line opacities (UI: via
-  .uniform_lines_inputs_ui)
+- `hline.intercepts` - Y-coordinates for horizontal reference lines (UI:
+  "Y-intercepts", default: "")
 
-- `vline.intercepts` - Vertical line X-intercepts (UI: via
-  .uniform_lines_inputs_ui)
+- `hline.colors` - Colors for horizontal lines (UI: "Colors", default:
+  "#000000")
 
-- `vline.colors` - Vertical line colors (UI: via
-  .uniform_lines_inputs_ui)
+- `hline.widths` - Widths for horizontal lines (UI: "Widths", default:
+  "1")
 
-- `vline.widths` - Vertical line widths (UI: via
-  .uniform_lines_inputs_ui)
+- `hline.linetypes` - Line types for horizontal lines (UI: "Line Types",
+  default: "dashed")
 
-- `vline.linetypes` - Vertical line types (UI: via
-  .uniform_lines_inputs_ui)
+- `hline.opacities` - Opacities for horizontal lines (UI: "Opacities
+  (0-1)", default: "1")
 
-- `vline.opacities` - Vertical line opacities (UI: via
-  .uniform_lines_inputs_ui)
+- `vline.intercepts` - X-coordinates for vertical reference lines (UI:
+  "X-intercepts", default: "")
 
-- `abline.slopes` - Diagonal line slopes (UI: via
-  .uniform_lines_inputs_ui)
+- `vline.colors` - Colors for vertical lines (UI: "Colors", default:
+  "#000000")
 
-- `abline.intercepts` - Diagonal line Y-intercepts (UI: via
-  .uniform_lines_inputs_ui)
+- `vline.widths` - Widths for vertical lines (UI: "Widths", default:
+  "1")
 
-- `abline.colors` - Diagonal line colors (UI: via
-  .uniform_lines_inputs_ui)
+- `vline.linetypes` - Line types for vertical lines (UI: "Line Types",
+  default: "dashed")
 
-- `abline.widths` - Diagonal line widths (UI: via
-  .uniform_lines_inputs_ui)
+- `vline.opacities` - Opacities for vertical lines (UI: "Opacities
+  (0-1)", default: "1")
 
-- `abline.linetypes` - Diagonal line types (UI: via
-  .uniform_lines_inputs_ui)
+- `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes",
+  default: "")
 
-- `abline.opacities` - Diagonal line opacities (UI: via
-  .uniform_lines_inputs_ui)
+- `best.fit` - Enable line of best fit (UI: "Line of best fit:",
+  default: FALSE)
 
-- `fit.line` - Fit line (UI: via .uniform_lines_inputs_ui)
+- `line.best.smoothness` - Smoothness of line of best fit (UI:
+  "Smoothness of line of best fit:", default: 1)
 
-- `fit.line.color` - Fit line color (UI: via .uniform_lines_inputs_ui)
+- `line.best.colour` - Color of line of best fit (UI: "Line of best fit
+  colour:", default: "#000000")
 
-- `fit.line.width` - Fit line width (UI: via .uniform_lines_inputs_ui)
-
-- `fit.line.type` - Fit line type (UI: via .uniform_lines_inputs_ui)
+- `linear.model` - Enable linear model line (UI: "Linear model line",
+  default: FALSE)
 
 ## See also
 
@@ -407,46 +418,46 @@ Jared Andrews
 library(VizModules)
 dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="9721">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="scatterPlot-scatterPlotTabsetPanel" data-tabsetid="6871">
 #>     <li class="active">
-#>       <a href="#tab-9721-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6871-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6871-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
+#>       <a href="#tab-6871-3" data-toggle="tab" data-bs-toggle="tab" data-value="Points">Points</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-6871-4" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6871-5" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-6871-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
+#>       <a href="#tab-6871-7" data-toggle="tab" data-bs-toggle="tab" data-value="Legend/Scale">Legend/Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
+#>       <a href="#tab-6871-8" data-toggle="tab" data-bs-toggle="tab" data-value="Trajectory">Trajectory</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6871-9" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
+#>       <a href="#tab-6871-10" data-toggle="tab" data-bs-toggle="tab" data-value="Extras">Extras</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6871-11" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9721-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6871-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9721">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9721-1">
+#>   <div class="tab-content" data-tabsetid="6871">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6871-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify807502">
@@ -543,7 +554,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9721-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6871-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4663935">
@@ -641,7 +652,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Points" id="tab-9721-3">
+#>     <div class="tab-pane" data-value="Points" id="tab-6871-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1749407">
@@ -705,7 +716,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-9721-4">
+#>     <div class="tab-pane" data-value="Colors" id="tab-6871-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify636615">
@@ -752,7 +763,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9721-5">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6871-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6783804">
@@ -796,7 +807,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-9721-6">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-6871-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7415215">
@@ -945,7 +956,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-9721-7">
+#>     <div class="tab-pane" data-value="Legend/Scale" id="tab-6871-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6801629">
@@ -1008,7 +1019,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trajectory" id="tab-9721-8">
+#>     <div class="tab-pane" data-value="Trajectory" id="tab-6871-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9907123">
@@ -1041,7 +1052,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9721-9">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6871-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="scatterPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -1151,7 +1162,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Extras" id="tab-9721-10">
+#>     <div class="tab-pane" data-value="Extras" id="tab-6871-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8251994">
@@ -1220,7 +1231,7 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9721-11">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6871-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1915181">
@@ -1228,75 +1239,113 @@ dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 #>             <input id="scatterPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1915181', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-hline.colors-label" for="scatterPlot-hline.colors">Colors</label>
+#>           <div class="form-group shiny-input-container" id="tipify9477639">
+#>             <label class="control-label" id="scatterPlot-hline.colors-label" for="scatterPlot-hline.colors">Y Colors</label>
 #>             <input id="scatterPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-hline.widths-label" for="scatterPlot-hline.widths">Widths</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9477639', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify5424804">
+#>             <label class="control-label" id="scatterPlot-hline.widths-label" for="scatterPlot-hline.widths">Y Widths</label>
 #>             <input id="scatterPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-hline.linetypes-label" for="scatterPlot-hline.linetypes">Line Types</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5424804', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify5446034">
+#>             <label class="control-label" id="scatterPlot-hline.linetypes-label" for="scatterPlot-hline.linetypes">Y Line Types</label>
 #>             <input id="scatterPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-hline.opacities-label" for="scatterPlot-hline.opacities">Opacities (0-1)</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5446034', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify2785972">
+#>             <label class="control-label" id="scatterPlot-hline.opacities-label" for="scatterPlot-hline.opacities">Y Opacities (0-1)</label>
 #>             <input id="scatterPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container" id="tipify9477639">
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2785972', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify4467025">
 #>             <label class="control-label" id="scatterPlot-vline.intercepts-label" for="scatterPlot-vline.intercepts">X-intercepts</label>
 #>             <input id="scatterPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9477639', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-vline.colors-label" for="scatterPlot-vline.colors">Colors</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4467025', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify3715112">
+#>             <label class="control-label" id="scatterPlot-vline.colors-label" for="scatterPlot-vline.colors">X Colors</label>
 #>             <input id="scatterPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-vline.widths-label" for="scatterPlot-vline.widths">Widths</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3715112', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify280610">
+#>             <label class="control-label" id="scatterPlot-vline.widths-label" for="scatterPlot-vline.widths">X Widths</label>
 #>             <input id="scatterPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-vline.linetypes-label" for="scatterPlot-vline.linetypes">Line Types</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify280610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify4659872">
+#>             <label class="control-label" id="scatterPlot-vline.linetypes-label" for="scatterPlot-vline.linetypes">X Line Types</label>
 #>             <input id="scatterPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-vline.opacities-label" for="scatterPlot-vline.opacities">Opacities (0-1)</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4659872', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify3900314">
+#>             <label class="control-label" id="scatterPlot-vline.opacities-label" for="scatterPlot-vline.opacities">X Opacities (0-1)</label>
 #>             <input id="scatterPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-abline.slopes-label" for="scatterPlot-abline.slopes">Slopes</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3900314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify200653">
+#>             <label class="control-label" id="scatterPlot-abline.slopes-label" for="scatterPlot-abline.slopes">Ab Slopes</label>
 #>             <input id="scatterPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify200653', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify3769709">
+#>             <label class="control-label" id="scatterPlot-abline.intercepts-label" for="scatterPlot-abline.intercepts">Ab Y-intercepts</label>
+#>             <input id="scatterPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3769709', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify5599128">
+#>             <label class="control-label" id="scatterPlot-abline.colors-label" for="scatterPlot-abline.colors">Ab Colors</label>
+#>             <input id="scatterPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5599128', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify8570836">
+#>             <label class="control-label" id="scatterPlot-abline.widths-label" for="scatterPlot-abline.widths">Ab Widths</label>
+#>             <input id="scatterPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8570836', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify3848097">
+#>             <label class="control-label" id="scatterPlot-abline.linetypes-label" for="scatterPlot-abline.linetypes">Ab Line Types</label>
+#>             <input id="scatterPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3848097', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify5279170">
+#>             <label class="control-label" id="scatterPlot-abline.opacities-label" for="scatterPlot-abline.opacities">Ab Opacities (0-1)</label>
+#>             <input id="scatterPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5279170', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6006375">
 #>             <div class="material-switch">
-#>               <label for="scatterPlot-best.fit" style="padding-right: 10px;">Line of best fit:</label>
+#>               <label for="scatterPlot-best.fit" style="padding-right: 10px;">Plot Best Fit Line</label>
 #>               <input id="scatterPlot-best.fit" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="scatterPlot-best.fit"></label>
 #>             </div>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="scatterPlot-line.best.smoothness-label" for="scatterPlot-line.best.smoothness">Smoothness of line of best fit:</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6006375', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Add a LOESS smoothed curve of best fit to the scatter plot'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify2613714">
+#>             <label class="control-label" id="scatterPlot-line.best.smoothness-label" for="scatterPlot-line.best.smoothness">Best Fit Line Smoothness</label>
 #>             <input id="scatterPlot-line.best.smoothness" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="10000"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
-#>             <label class="control-label" for="scatterPlot-line.best.colour">Line of best fit colour:</label>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2613714', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Smoothing span for the LOESS curve; higher values produce a smoother, less wiggly fit'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2900502">
+#>             <label class="control-label" for="scatterPlot-line.best.colour">Best Fit Line Color</label>
 #>             <input id="scatterPlot-line.best.colour" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <div class="form-group shiny-input-container">
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2900502', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for the LOESS best fit line'})}, 500)});</script>
+#>           <div class="form-group shiny-input-container" id="tipify4800752">
 #>             <div class="material-switch">
-#>               <label for="scatterPlot-linear.model" style="padding-right: 10px;">Linear model line</label>
+#>               <label for="scatterPlot-linear.model" style="padding-right: 10px;">Linear Model Line</label>
 #>               <input id="scatterPlot-linear.model" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="scatterPlot-linear.model"></label>
 #>             </div>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4800752', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Add a linear regression line to the scatter plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9721-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6871-12">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>

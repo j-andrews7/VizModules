@@ -325,34 +325,34 @@ library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="9688">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="3983">
 #>     <li class="active">
-#>       <a href="#tab-9688-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3983-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3983-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3983-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-3983-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3983-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3983-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9688-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3983-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9688">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9688-1">
+#>   <div class="tab-content" data-tabsetid="3983">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3983-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2813335">
+#>           <div class="form-group shiny-input-container" id="tipify2726462">
 #>             <label class="control-label" id="splitBarPlot-x.data-label" for="splitBarPlot-x.data">X Values</label>
 #>             <div>
 #>               <select id="splitBarPlot-x.data" class="shiny-input-select"><option value=""></option>
@@ -369,10 +369,10 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-x.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2813335', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8809342">
+#>           <div class="form-group shiny-input-container" id="tipify6536994">
 #>             <label class="control-label" id="splitBarPlot-y.data-label" for="splitBarPlot-y.data">Y Values</label>
 #>             <div>
 #>               <select id="splitBarPlot-y.data" class="shiny-input-select"><option value=""></option>
@@ -380,12 +380,12 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-y.data">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8809342', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Select the categorical column to use for the Y axis groupings'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Select the categorical column to use for the Y axis groupings'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9611162">
+#>           <div class="form-group shiny-input-container" id="tipify9278701">
 #>             <label class="control-label" id="splitBarPlot-fill.by-label" for="splitBarPlot-fill.by">Fill By</label>
 #>             <div>
 #>               <select id="splitBarPlot-fill.by" class="shiny-input-select"><option value=""></option>
@@ -403,14 +403,14 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-fill.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9611162', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9688-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3983-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify40185">
+#>           <div class="form-group shiny-input-container" id="tipify266247">
 #>             <label class="control-label" id="splitBarPlot-facet.by-label" for="splitBarPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="splitBarPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
@@ -419,10 +419,10 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify40185', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5529002">
+#>           <div class="form-group shiny-input-container" id="tipify5594912">
 #>             <label class="control-label" id="splitBarPlot-facet.scale-label" for="splitBarPlot-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select id="splitBarPlot-facet.scale" class="shiny-input-select"><option value="fixed">fixed</option>
@@ -432,38 +432,38 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-facet.scale" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5529002', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2192360">
+#>           <div class="form-group shiny-input-container" id="tipify8541736">
 #>             <label class="control-label" id="splitBarPlot-facet.ncol-label" for="splitBarPlot-facet.ncol">Columns</label>
 #>             <input id="splitBarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2192360', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6467271">
+#>           <div class="form-group shiny-input-container" id="tipify758831">
 #>             <label class="control-label" id="splitBarPlot-facet.nrow-label" for="splitBarPlot-facet.nrow">Rows</label>
 #>             <input id="splitBarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6467271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7277020">
+#>           <div class="form-group shiny-input-container" id="tipify2058289">
 #>             <div class="material-switch">
 #>               <label for="splitBarPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="splitBarPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7277020', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8725874">
+#>           <div class="form-group shiny-input-container" id="tipify4958896">
 #>             <label class="control-label" id="splitBarPlot-split.by-label" for="splitBarPlot-split.by">Split By</label>
 #>             <div>
 #>               <select id="splitBarPlot-split.by" class="shiny-input-select"><option value="" selected></option>
@@ -472,17 +472,17 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-split.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8725874', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9688-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3983-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="splitBarPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3819816">
+#>           <div class="form-group shiny-input-container" id="tipify2618570">
 #>             <label class="control-label" id="splitBarPlot-alpha.by-label" for="splitBarPlot-alpha.by">Alpha By</label>
 #>             <div>
 #>               <select id="splitBarPlot-alpha.by" class="shiny-input-select"><option value="" selected></option>
@@ -500,83 +500,83 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-alpha.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3819816', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string indicating the column name to use for the transparency of the bars.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string indicating the column name to use for the transparency of the bars.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8927457">
+#>           <div class="form-group shiny-input-container" id="tipify4159615">
 #>             <div class="material-switch">
 #>               <label for="splitBarPlot-alpha.reverse" style="padding-right: 10px;">Alpha Reverse</label>
 #>               <input id="splitBarPlot-alpha.reverse" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-alpha.reverse"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8927457', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the transparency.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the transparency.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8438703">
+#>           <div class="form-group shiny-input-container" id="tipify4391500">
 #>             <label class="control-label" id="splitBarPlot-alpha.name-label" for="splitBarPlot-alpha.name">Alpha Name</label>
 #>             <input id="splitBarPlot-alpha.name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8438703', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string indicating the legend name of the transparency.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string indicating the legend name of the transparency.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7297612">
+#>           <div class="form-group shiny-input-container" id="tipify1823780">
 #>             <label class="control-label" id="splitBarPlot-bar.height-label" for="splitBarPlot-bar.height">Bar Height</label>
 #>             <input id="splitBarPlot-bar.height" type="number" class="shiny-input-number form-control" value="0.9" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7297612', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the height of the bars.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the height of the bars.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify384150">
+#>           <div class="form-group shiny-input-container" id="tipify783283">
 #>             <label class="control-label" id="splitBarPlot-axis.scale.factor-label" for="splitBarPlot-axis.scale.factor">Axis Scale Factor</label>
 #>             <input class="js-range-slider" id="splitBarPlot-axis.scale.factor" data-skin="shiny" data-min="0" data-max="5" data-from="1.2" data-step="0.2" data-grid="true" data-grid-num="8.33333333333333" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify384150', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3338233">
+#>           <div class="form-group shiny-input-container" id="tipify177700">
 #>             <div class="material-switch">
 #>               <label for="splitBarPlot-label.on.y.axis" style="padding-right: 10px;">Labels on Y Axis</label>
 #>               <input id="splitBarPlot-label.on.y.axis" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-label.on.y.axis"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3338233', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7492726">
+#>           <div class="form-group shiny-input-container" id="tipify7281800">
 #>             <label class="control-label" id="splitBarPlot-text.position-label" for="splitBarPlot-text.position">Category Label Position</label>
 #>             <input class="js-range-slider" id="splitBarPlot-text.position" data-skin="shiny" data-min="0" data-max="100" data-from="0" data-step="1" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7492726', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Adjust the horizontal position of category labels along the X axis when labels are shown on the plot'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Adjust the horizontal position of category labels along the X axis when labels are shown on the plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9688-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-3983-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9131580">
+#>           <div class="form-group shiny-input-container" id="tipify9708450">
 #>             <label class="control-label" id="splitBarPlot-x.min-label" for="splitBarPlot-x.min">X-axis Min</label>
 #>             <input id="splitBarPlot-x.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9131580', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the minimum value of the x axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the minimum value of the x axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2043291">
+#>           <div class="form-group shiny-input-container" id="tipify5352176">
 #>             <label class="control-label" id="splitBarPlot-x.max-label" for="splitBarPlot-x.max">X-axis Max</label>
 #>             <input id="splitBarPlot-x.max" type="number" class="shiny-input-number form-control" value="472" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2043291', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the maximum value of the x axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the maximum value of the x axis.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9688-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3983-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="splitBarPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -599,71 +599,71 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4717556">
+#>           <div class="form-group shiny-input-container" id="tipify1664908">
 #>             <label class="control-label" id="splitBarPlot-margin.t-label" for="splitBarPlot-margin.t">Margin Top</label>
 #>             <input id="splitBarPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4717556', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3851831">
+#>           <div class="form-group shiny-input-container" id="tipify581757">
 #>             <label class="control-label" id="splitBarPlot-margin.b-label" for="splitBarPlot-margin.b">Margin Bottom</label>
 #>             <input id="splitBarPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3851831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3927519">
+#>           <div class="form-group shiny-input-container" id="tipify4591390">
 #>             <label class="control-label" id="splitBarPlot-margin.l-label" for="splitBarPlot-margin.l">Margin Left</label>
 #>             <input id="splitBarPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3927519', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4591390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2183385">
+#>           <div class="form-group shiny-input-container" id="tipify6227988">
 #>             <label class="control-label" id="splitBarPlot-margin.r-label" for="splitBarPlot-margin.r">Margin Right</label>
 #>             <input id="splitBarPlot-margin.r" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2183385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6227988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify72090">
+#>           <div class="form-group shiny-input-container" id="tipify5948192">
 #>             <label class="control-label" id="splitBarPlot-subplot.margin-label" for="splitBarPlot-subplot.margin">Subplot Spacing</label>
 #>             <input id="splitBarPlot-subplot.margin" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify72090', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5948192', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3637122">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7430182">
 #>             <label class="control-label" for="splitBarPlot-shape.fill">Shape Fill</label>
 #>             <input id="splitBarPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3637122', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7430182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5261067">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5242801">
 #>             <label class="control-label" for="splitBarPlot-shape.line.color">Shape Line Color</label>
 #>             <input id="splitBarPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5261067', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5242801', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8441634">
+#>           <div class="form-group shiny-input-container" id="tipify4968253">
 #>             <label class="control-label" id="splitBarPlot-shape.line.width-label" for="splitBarPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="splitBarPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8441634', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4968253', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1359912">
+#>           <div class="form-group shiny-input-container" id="tipify147189">
 #>             <label class="control-label" id="splitBarPlot-shape.linetype-label" for="splitBarPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
 #>               <select id="splitBarPlot-shape.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
@@ -675,18 +675,18 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>               <script type="application/json" data-for="splitBarPlot-shape.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1359912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3764673">
+#>           <div class="form-group shiny-input-container" id="tipify9579191">
 #>             <label class="control-label" id="splitBarPlot-shape.opacity-label" for="splitBarPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="splitBarPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3764673', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9688-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3983-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -974,77 +974,133 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9688-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3983-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2633087">
+#>           <div class="form-group shiny-input-container" id="tipify4530892">
 #>             <label class="control-label" id="splitBarPlot-hline.intercepts-label" for="splitBarPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="splitBarPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2633087', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-hline.colors-label" for="splitBarPlot-hline.colors">Colors</label>
+#>           <div class="form-group shiny-input-container" id="tipify9815318">
+#>             <label class="control-label" id="splitBarPlot-hline.colors-label" for="splitBarPlot-hline.colors">Y Colors</label>
 #>             <input id="splitBarPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-hline.widths-label" for="splitBarPlot-hline.widths">Widths</label>
+#>           <div class="form-group shiny-input-container" id="tipify5447052">
+#>             <label class="control-label" id="splitBarPlot-hline.widths-label" for="splitBarPlot-hline.widths">Y Widths</label>
 #>             <input id="splitBarPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-hline.linetypes-label" for="splitBarPlot-hline.linetypes">Line Types</label>
+#>           <div class="form-group shiny-input-container" id="tipify3600424">
+#>             <label class="control-label" id="splitBarPlot-hline.linetypes-label" for="splitBarPlot-hline.linetypes">Y Line Types</label>
 #>             <input id="splitBarPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-hline.opacities-label" for="splitBarPlot-hline.opacities">Opacities (0-1)</label>
+#>           <div class="form-group shiny-input-container" id="tipify5031461">
+#>             <label class="control-label" id="splitBarPlot-hline.opacities-label" for="splitBarPlot-hline.opacities">Y Opacities (0-1)</label>
 #>             <input id="splitBarPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5031461', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4978530">
+#>           <div class="form-group shiny-input-container" id="tipify746337">
 #>             <label class="control-label" id="splitBarPlot-vline.intercepts-label" for="splitBarPlot-vline.intercepts">X-intercepts</label>
 #>             <input id="splitBarPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4978530', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify746337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-vline.colors-label" for="splitBarPlot-vline.colors">Colors</label>
+#>           <div class="form-group shiny-input-container" id="tipify9697918">
+#>             <label class="control-label" id="splitBarPlot-vline.colors-label" for="splitBarPlot-vline.colors">X Colors</label>
 #>             <input id="splitBarPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9697918', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-vline.widths-label" for="splitBarPlot-vline.widths">Widths</label>
+#>           <div class="form-group shiny-input-container" id="tipify6485013">
+#>             <label class="control-label" id="splitBarPlot-vline.widths-label" for="splitBarPlot-vline.widths">X Widths</label>
 #>             <input id="splitBarPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6485013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-vline.linetypes-label" for="splitBarPlot-vline.linetypes">Line Types</label>
+#>           <div class="form-group shiny-input-container" id="tipify9845654">
+#>             <label class="control-label" id="splitBarPlot-vline.linetypes-label" for="splitBarPlot-vline.linetypes">X Line Types</label>
 #>             <input id="splitBarPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9845654', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-vline.opacities-label" for="splitBarPlot-vline.opacities">Opacities (0-1)</label>
+#>           <div class="form-group shiny-input-container" id="tipify5361333">
+#>             <label class="control-label" id="splitBarPlot-vline.opacities-label" for="splitBarPlot-vline.opacities">X Opacities (0-1)</label>
 #>             <input id="splitBarPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5361333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7610594">
+#>             <label class="control-label" id="splitBarPlot-abline.slopes-label" for="splitBarPlot-abline.slopes">Ab Slopes</label>
+#>             <input id="splitBarPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7610594', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify5643857">
+#>             <label class="control-label" id="splitBarPlot-abline.intercepts-label" for="splitBarPlot-abline.intercepts">Ab Y-intercepts</label>
+#>             <input id="splitBarPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5643857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify7784543">
+#>             <label class="control-label" id="splitBarPlot-abline.colors-label" for="splitBarPlot-abline.colors">Ab Colors</label>
+#>             <input id="splitBarPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6390610">
+#>             <label class="control-label" id="splitBarPlot-abline.widths-label" for="splitBarPlot-abline.widths">Ab Widths</label>
+#>             <input id="splitBarPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3789607">
+#>             <label class="control-label" id="splitBarPlot-abline.linetypes-label" for="splitBarPlot-abline.linetypes">Ab Line Types</label>
+#>             <input id="splitBarPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3595307">
+#>             <label class="control-label" id="splitBarPlot-abline.opacities-label" for="splitBarPlot-abline.opacities">Ab Opacities (0-1)</label>
+#>             <input id="splitBarPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>

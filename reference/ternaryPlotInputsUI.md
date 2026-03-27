@@ -196,31 +196,31 @@ df <- data.frame(
 )
 ternaryPlotInputsUI("ternaryPlot", df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="1680">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="8723">
 #>     <li class="active">
-#>       <a href="#tab-1680-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8723-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1680-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
+#>       <a href="#tab-8723-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1680-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8723-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1680-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-8723-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1680-5" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
+#>       <a href="#tab-8723-5" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1680-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8723-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1680">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1680-1">
+#>   <div class="tab-content" data-tabsetid="8723">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8723-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1333486">
+#>           <div class="form-group shiny-input-container" id="tipify6000373">
 #>             <label class="control-label" id="ternaryPlot-a-label" for="ternaryPlot-a">A-axis Column</label>
 #>             <div>
 #>               <select id="ternaryPlot-a" class="shiny-input-select"><option value=""></option>
@@ -230,10 +230,10 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-a">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1333486', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the a-axis (top vertex).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6000373', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the a-axis (top vertex).'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9272817">
+#>           <div class="form-group shiny-input-container" id="tipify4327882">
 #>             <label class="control-label" id="ternaryPlot-b-label" for="ternaryPlot-b">B-axis Column</label>
 #>             <div>
 #>               <select id="ternaryPlot-b" class="shiny-input-select"><option value=""></option>
@@ -243,12 +243,12 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-b">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the b-axis (bottom-left vertex).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4327882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the b-axis (bottom-left vertex).'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8941226">
+#>           <div class="form-group shiny-input-container" id="tipify9202758">
 #>             <label class="control-label" id="ternaryPlot-c-label" for="ternaryPlot-c">C-axis Column</label>
 #>             <div>
 #>               <select id="ternaryPlot-c" class="shiny-input-select"><option value=""></option>
@@ -258,10 +258,10 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-c">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the c-axis (bottom-right vertex).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9202758', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, name of the column to use for the c-axis (bottom-right vertex).'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2036644">
+#>           <div class="form-group shiny-input-container" id="tipify6160144">
 #>             <label class="control-label" id="ternaryPlot-group-label" for="ternaryPlot-group">Colour By</label>
 #>             <div>
 #>               <select id="ternaryPlot-group" class="shiny-input-select"><option value="" selected></option>
@@ -271,23 +271,23 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-group">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character, name of the column to use for grouping multiple traces. If NULL, a single trace is plotted. Default: NULL.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6160144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character, name of the column to use for grouping multiple traces. If NULL, a single trace is plotted. Default: NULL.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2569829">
+#>           <div class="form-group shiny-input-container" id="tipify4357182">
 #>             <label class="control-label" id="ternaryPlot-sum-label" for="ternaryPlot-sum">Sum</label>
 #>             <input id="ternaryPlot-sum" type="number" class="shiny-input-number form-control" value="100" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, the constant sum for the ternary axes (e.g., 100 for percentages, 1 for proportions). All data points should sum to this value. Default: 100.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4357182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, the constant sum for the ternary axes (e.g., 100 for percentages, 1 for proportions). All data points should sum to this value. Default: 100.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trace Style" id="tab-1680-2">
+#>     <div class="tab-pane" data-value="Trace Style" id="tab-8723-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6140056">
+#>           <div class="form-group shiny-input-container" id="tipify8973044">
 #>             <label class="control-label" id="ternaryPlot-mode-label" for="ternaryPlot-mode">Mode</label>
 #>             <div>
 #>               <select id="ternaryPlot-mode" class="shiny-input-select"><option value="markers" selected>Markers</option>
@@ -295,19 +295,19 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-mode" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, the trace mode. Options: "markers", "lines", "lines+markers". Default: "markers".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8973044', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, the trace mode. Options: "markers", "lines", "lines+markers". Default: "markers".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4414992">
+#>           <div class="form-group shiny-input-container" id="tipify7690135">
 #>             <label class="control-label" id="ternaryPlot-marker.size-label" for="ternaryPlot-marker.size">Marker Size</label>
 #>             <input id="ternaryPlot-marker.size" type="number" class="shiny-input-number form-control" value="8" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, size of the markers on the trace. Default: 8.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7690135', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, size of the markers on the trace. Default: 8.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3155947">
+#>           <div class="form-group shiny-input-container" id="tipify1281158">
 #>             <label class="control-label" id="ternaryPlot-marker.symbol-label" for="ternaryPlot-marker.symbol">Marker Symbol</label>
 #>             <div>
 #>               <select id="ternaryPlot-marker.symbol" class="shiny-input-select"><option value="circle" selected>Circle</option>
@@ -320,35 +320,35 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-marker.symbol" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, marker symbol. Options: "circle", "square", "diamond", "cross", "x", "triangle-up", etc. Default: "circle".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1281158', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, marker symbol. Options: "circle", "square", "diamond", "cross", "x", "triangle-up", etc. Default: "circle".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1013138">
+#>           <div class="form-group shiny-input-container" id="tipify5386331">
 #>             <label class="control-label" id="ternaryPlot-marker.line.width-label" for="ternaryPlot-marker.line.width">Marker Border Width</label>
 #>             <input id="ternaryPlot-marker.line.width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of the marker border line. Default: 0.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5386331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of the marker border line. Default: 0.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2726462">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1290163">
 #>             <label class="control-label" for="ternaryPlot-marker.line.color">Marker Border Color</label>
 #>             <input id="ternaryPlot-marker.line.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the marker border. Default: "#000000".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1290163', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the marker border. Default: "#000000".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6536994">
+#>           <div class="form-group shiny-input-container" id="tipify5109649">
 #>             <label class="control-label" id="ternaryPlot-line.width-label" for="ternaryPlot-line.width">Line Width</label>
 #>             <input id="ternaryPlot-line.width" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of the trace lines in pixels (only used if mode includes "lines"). Default: 2.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5109649', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of the trace lines in pixels (only used if mode includes "lines"). Default: 2.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9278701">
+#>           <div class="form-group shiny-input-container" id="tipify5437927">
 #>             <label class="control-label" id="ternaryPlot-line.dash-label" for="ternaryPlot-line.dash">Line Style</label>
 #>             <div>
 #>               <select id="ternaryPlot-line.dash" class="shiny-input-select"><option value="solid" selected>Solid</option>
@@ -360,14 +360,14 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-line.dash" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, line dash style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5437927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, line dash style. Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify266247">
+#>           <div class="form-group shiny-input-container" id="tipify2417761">
 #>             <label class="control-label" id="ternaryPlot-opacity-label" for="ternaryPlot-opacity">Opacity</label>
 #>             <input class="js-range-slider" id="ternaryPlot-opacity" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of the traces (0-1). Default: 1.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2417761', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of the traces (0-1). Default: 1.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
@@ -376,92 +376,92 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1680-3">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8723-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5594912">
+#>           <div class="form-group shiny-input-container" id="tipify8031441">
 #>             <label class="control-label" id="ternaryPlot-a.title-label" for="ternaryPlot-a.title">A-axis Title</label>
 #>             <input id="ternaryPlot-a.title" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the a-axis. Default: "a".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8031441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the a-axis. Default: "a".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8541736">
+#>           <div class="form-group shiny-input-container" id="tipify9479137">
 #>             <label class="control-label" id="ternaryPlot-b.title-label" for="ternaryPlot-b.title">B-axis Title</label>
 #>             <input id="ternaryPlot-b.title" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the b-axis. Default: "b".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9479137', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the b-axis. Default: "b".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify758831">
+#>           <div class="form-group shiny-input-container" id="tipify4073614">
 #>             <label class="control-label" id="ternaryPlot-c.title-label" for="ternaryPlot-c.title">C-axis Title</label>
 #>             <input id="ternaryPlot-c.title" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the c-axis. Default: "c".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4073614', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, title for the c-axis. Default: "c".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2058289">
+#>           <div class="form-group shiny-input-container" id="tipify5147446">
 #>             <label class="control-label" id="ternaryPlot-a.titlefont.size-label" for="ternaryPlot-a.titlefont.size">A-axis Title Size</label>
 #>             <input id="ternaryPlot-a.titlefont.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the a-axis title. Default: 16.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5147446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the a-axis title. Default: 16.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4958896">
+#>           <div class="form-group shiny-input-container" id="tipify9815418">
 #>             <label class="control-label" id="ternaryPlot-b.titlefont.size-label" for="ternaryPlot-b.titlefont.size">B-axis Title Size</label>
 #>             <input id="ternaryPlot-b.titlefont.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the b-axis title. Default: 16.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the b-axis title. Default: 16.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2618570">
+#>           <div class="form-group shiny-input-container" id="tipify3541867">
 #>             <label class="control-label" id="ternaryPlot-c.titlefont.size-label" for="ternaryPlot-c.titlefont.size">C-axis Title Size</label>
 #>             <input id="ternaryPlot-c.titlefont.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the c-axis title. Default: 16.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3541867', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the c-axis title. Default: 16.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4159615">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4558402">
 #>             <label class="control-label" for="ternaryPlot-a.gridcolor">A-axis Grid Color</label>
 #>             <input id="ternaryPlot-a.gridcolor" type="text" class="form-control shiny-colour-input" data-init-value="#EEEEEE" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the a-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4558402', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the a-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4391500">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2200247">
 #>             <label class="control-label" for="ternaryPlot-b.gridcolor">B-axis Grid Color</label>
 #>             <input id="ternaryPlot-b.gridcolor" type="text" class="form-control shiny-colour-input" data-init-value="#EEEEEE" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the b-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2200247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the b-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1823780">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify818331">
 #>             <label class="control-label" for="ternaryPlot-c.gridcolor">C-axis Grid Color</label>
 #>             <input id="ternaryPlot-c.gridcolor" type="text" class="form-control shiny-colour-input" data-init-value="#EEEEEE" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the c-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify818331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the c-axis gridlines. Default: "#EEEEEE".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-1680-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-8723-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify783283">
+#>           <div class="form-group shiny-input-container" id="tipify3692361">
 #>             <label class="control-label" id="ternaryPlot-title.font.size-label" for="ternaryPlot-title.font.size">Title Size</label>
 #>             <input id="ternaryPlot-title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="0"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the title text. Default: 18.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3692361', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the title text. Default: 18.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify177700">
+#>           <div class="form-group shiny-input-container" id="tipify1266666">
 #>             <label class="control-label" id="ternaryPlot-title.font.family-label" for="ternaryPlot-title.font.family">Title Font</label>
 #>             <div>
 #>               <select id="ternaryPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
@@ -484,19 +484,19 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the title text. Default: "Arial".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1266666', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the title text. Default: "Arial".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7281800">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7398725">
 #>             <label class="control-label" for="ternaryPlot-title.font.color">Title Color</label>
 #>             <input id="ternaryPlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the title text. Default: "#000000".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7398725', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the title text. Default: "#000000".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9708450">
+#>           <div class="form-group shiny-input-container" id="tipify9558662">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="ternaryPlot-show.legend" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -504,12 +504,12 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to display the legend. Default: TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9558662', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to display the legend. Default: TRUE.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5352176">
+#>           <div class="form-group shiny-input-container" id="tipify6686745">
 #>             <label class="control-label" id="ternaryPlot-legend.orientation-label" for="ternaryPlot-legend.orientation">Legend Orientation</label>
 #>             <div>
 #>               <select id="ternaryPlot-legend.orientation" class="shiny-input-select"><option value="h" selected>Horizontal</option>
@@ -517,10 +517,10 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-legend.orientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, legend orientation. Options: "h" (horizontal) or "v" (vertical). Default: "h".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6686745', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, legend orientation. Options: "h" (horizontal) or "v" (vertical). Default: "h".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1664908">
+#>           <div class="form-group shiny-input-container" id="tipify4680894">
 #>             <label class="control-label" id="ternaryPlot-legend.font.family-label" for="ternaryPlot-legend.font.family">Legend Font</label>
 #>             <div>
 #>               <select id="ternaryPlot-legend.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
@@ -543,38 +543,38 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-legend.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the legend text. Default: "Arial".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4680894', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for the legend text. Default: "Arial".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify581757">
+#>           <div class="form-group shiny-input-container" id="tipify5381924">
 #>             <label class="control-label" id="ternaryPlot-legend.font.size-label" for="ternaryPlot-legend.font.size">Legend Font Size</label>
 #>             <input id="ternaryPlot-legend.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the legend text. Default: 12.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5381924', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the legend text. Default: 12.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4591390">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3309537">
 #>             <label class="control-label" for="ternaryPlot-legend.font.color">Legend Font Color</label>
 #>             <input id="ternaryPlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4591390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the legend text. Default: "#000000".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3309537', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the legend text. Default: "#000000".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Background" id="tab-1680-5">
+#>     <div class="tab-pane" data-value="Background" id="tab-8723-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6227988">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6286821">
 #>             <label class="control-label" for="ternaryPlot-bgcolor">Background Color</label>
 #>             <input id="ternaryPlot-bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6227988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6286821', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-1680-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8723-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="ternaryPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -597,71 +597,71 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5948192">
+#>           <div class="form-group shiny-input-container" id="tipify4525525">
 #>             <label class="control-label" id="ternaryPlot-margin.t-label" for="ternaryPlot-margin.t">Margin Top</label>
 #>             <input id="ternaryPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5948192', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4525525', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7430182">
+#>           <div class="form-group shiny-input-container" id="tipify8880151">
 #>             <label class="control-label" id="ternaryPlot-margin.b-label" for="ternaryPlot-margin.b">Margin Bottom</label>
 #>             <input id="ternaryPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7430182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8880151', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5242801">
+#>           <div class="form-group shiny-input-container" id="tipify7842018">
 #>             <label class="control-label" id="ternaryPlot-margin.l-label" for="ternaryPlot-margin.l">Margin Left</label>
 #>             <input id="ternaryPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5242801', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7842018', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4968253">
+#>           <div class="form-group shiny-input-container" id="tipify1380596">
 #>             <label class="control-label" id="ternaryPlot-margin.r-label" for="ternaryPlot-margin.r">Margin Right</label>
 #>             <input id="ternaryPlot-margin.r" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4968253', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1380596', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify147189">
+#>           <div class="form-group shiny-input-container" id="tipify2813131">
 #>             <label class="control-label" id="ternaryPlot-subplot.margin-label" for="ternaryPlot-subplot.margin">Subplot Spacing</label>
 #>             <input id="ternaryPlot-subplot.margin" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2813131', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9579191">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7069465">
 #>             <label class="control-label" for="ternaryPlot-shape.fill">Shape Fill</label>
 #>             <input id="ternaryPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7069465', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4530892">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4421869">
 #>             <label class="control-label" for="ternaryPlot-shape.line.color">Shape Line Color</label>
 #>             <input id="ternaryPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4421869', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9815318">
+#>           <div class="form-group shiny-input-container" id="tipify6776985">
 #>             <label class="control-label" id="ternaryPlot-shape.line.width-label" for="ternaryPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="ternaryPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6776985', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5447052">
+#>           <div class="form-group shiny-input-container" id="tipify7007150">
 #>             <label class="control-label" id="ternaryPlot-shape.linetype-label" for="ternaryPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
 #>               <select id="ternaryPlot-shape.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
@@ -673,14 +673,14 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>               <script type="application/json" data-for="ternaryPlot-shape.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7007150', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3600424">
+#>           <div class="form-group shiny-input-container" id="tipify684065">
 #>             <label class="control-label" id="ternaryPlot-shape.opacity-label" for="ternaryPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="ternaryPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify684065', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
