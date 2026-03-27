@@ -167,7 +167,8 @@
 #' @export
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::BoxPlot()], [VizModules::organize_inputs()],
-#' [VizModules::plotthis_BoxPlotOutputUI()], [VizModules::plotthis_BoxPlotServer()], [VizModules::plotthis_BoxPlotApp()]
+#' [VizModules::plotthis_BoxPlotOutputUI()], [VizModules::plotthis_BoxPlotServer()],
+#' [VizModules::plotthis_BoxPlotApp()]
 #' @examples
 #' library(VizModules)
 #' data(mtcars)
@@ -250,8 +251,9 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 "Set the relative width of each boxplot, where 1 fills the entire available space",
                 placement = "top", options = list(container = "body")
             ),
-            tipify(shiny::textInput(ns("sort_x"), "Sort X By",
-                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y data col name)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+            tipify(textInput(ns("sort_x"), "Sort X By",
+                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y data col name)"), 
+                documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Max Value of Y Axis",
                 value = .get_default(defaults, "y.max", max.y, is.numeric), min = -Inf, max = Inf),
                 documentParameters$y_max,
@@ -282,7 +284,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$jitter_width,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("pt.color"), "Point Outline Colour",
+            tipify(colourInput(ns("pt.color"), "Point Outline Colour",
                 value = .get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
@@ -294,7 +296,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour",
+            tipify(colourInput(ns("highlight.colour"), "Highlight Colour",
                 value = .get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")

@@ -187,7 +187,8 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 }
 \seealso{
 \code{\link[plotthis:boxviolinplot]{plotthis::BoxPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=plotthis_BoxPlotOutputUI]{plotthis_BoxPlotOutputUI()}}, \code{\link[=plotthis_BoxPlotServer]{plotthis_BoxPlotServer()}}, \code{\link[=plotthis_BoxPlotApp]{plotthis_BoxPlotApp()}}
+\code{\link[=plotthis_BoxPlotOutputUI]{plotthis_BoxPlotOutputUI()}}, \code{\link[=plotthis_BoxPlotServer]{plotthis_BoxPlotServer()}},
+\code{\link[=plotthis_BoxPlotApp]{plotthis_BoxPlotApp()}}
 }
 \author{
 Jacob Martin, Jared Andrews

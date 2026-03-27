@@ -34,6 +34,7 @@
     updateCheckboxInput(session, "axis.mirror", value = .get_default(defaults, "axis.mirror", TRUE, is.logical))
     updateCheckboxInput(session, "show.grid.x", value = .get_default(defaults, "show.grid.x", TRUE, is.logical))
     updateCheckboxInput(session, "show.grid.y", value = .get_default(defaults, "show.grid.y", TRUE, is.logical))
+    updateColourInput(session, "grid.color", value = .get_default(defaults, "grid.color", "#CCCCCC"))
     updateColourInput(session, "axis.linecolor", value = .get_default(defaults, "axis.linecolor", "black"))
     updateNumericInput(session, "axis.linewidth", value = .get_default(defaults, "axis.linewidth", 0.5, is.numeric))
     updateNumericInput(session, "axis.tickfont.size", value = .get_default(defaults, "axis.tickfont.size", 12, is.numeric))

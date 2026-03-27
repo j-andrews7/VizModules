@@ -652,6 +652,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
     axis.tickwidth = 1,
     show.grid.x = TRUE,
     show.grid.y = FALSE,
+    grid.color = "#CCCCCC",
     axis.showline = TRUE,
     axis.mirror = FALSE,
     axis.linecolor = "black",
@@ -664,6 +665,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
   expect_equal(result$title$font$family, "Arial")
   expect_equal(result$tickangle, -45)
   expect_true(result$showgrid)
+  expect_equal(result$gridcolor, "#CCCCCC")
 })
 
 test_that(".create_axis_styles returns expected structure for y axis", {
@@ -682,6 +684,7 @@ test_that(".create_axis_styles returns expected structure for y axis", {
     axis.tickwidth = 1,
     show.grid.x = TRUE,
     show.grid.y = FALSE,
+    grid.color = "#CCCCCC",
     axis.showline = TRUE,
     axis.mirror = FALSE,
     axis.linecolor = "black",
@@ -692,6 +695,7 @@ test_that(".create_axis_styles returns expected structure for y axis", {
 
   expect_equal(result$tickangle, -90)
   expect_false(result$showgrid)
+  expect_equal(result$gridcolor, "#CCCCCC")
 })
 
 test_that(".create_axis_styles excludes line props when ggplot.axis.styling is TRUE", {
@@ -703,6 +707,7 @@ test_that(".create_axis_styles excludes line props when ggplot.axis.styling is T
     axis.ticks = "outside", axis.tickcolor = "black",
     axis.ticklen = 5, axis.tickwidth = 1,
     show.grid.x = TRUE, show.grid.y = TRUE,
+    grid.color = "#CCCCCC",
     axis.showline = TRUE, axis.mirror = TRUE,
     axis.linecolor = "red", axis.linewidth = 2
   )

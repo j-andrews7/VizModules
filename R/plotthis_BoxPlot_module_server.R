@@ -15,8 +15,10 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom stats na.omit
+#' @importFrom colourpicker updateColourInput
 #' @importFrom plotthis BoxPlot
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
@@ -59,9 +61,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             x_col <- input$x.data
 
             if (!is.null(group_col) && nzchar(group_col) && group_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[group_col]])))
+                unique(na.omit(as.character(df[[group_col]])))
             } else if (!is.null(x_col) && nzchar(x_col) && x_col %in% names(df)) {
-                unique(stats::na.omit(as.character(df[[x_col]])))
+                unique(na.omit(as.character(df[[x_col]])))
             } else {
                 character(0)
             }
@@ -96,9 +98,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Show/hide Save Stats button based on stats.enabled
         observeEvent(input$stats.enabled, {
             if (isTRUE(input$stats.enabled)) {
-                shinyjs::show("download.stats.col")
+                show("download.stats.col")
             } else {
-                shinyjs::hide("download.stats.col")
+                hide("download.stats.col")
             }
         })
 
@@ -143,13 +145,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "boxplot.width", value = .get_default(defaults, "boxplot.width", 0.8, is.numeric))
 
             # Colors
-            colourpicker::updateColourInput(session, "pt.color",
+            updateColourInput(session, "pt.color",
                 value = .get_default(defaults, "pt.color", "#000000"))
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
             # Annotations
             updateTextInput(session, "highlight", value = .get_default(defaults, "highlight", ""))
-            colourpicker::updateColourInput(session, "highlight.colour",
+            updateColourInput(session, "highlight.colour",
                 value = .get_default(defaults, "highlight.colour", "#000000"))
             updateNumericInput(session, "highlight.size",
                 value = .get_default(defaults, "highlight.size", 1, is.numeric))

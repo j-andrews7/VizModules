@@ -227,6 +227,9 @@
         checkboxInput(ns("show.grid.y"), "Show Y Gridlines",
             value = .get_default(defaults, "show.grid.y", TRUE, is.logical)
         ),
+        colourInput(ns("grid.color"), "Gridline Color",
+            value = .get_default(defaults, "grid.color", "#CCCCCC")
+        ),
         colourInput(ns("axis.linecolor"), "Axis Line Color",
             value = .get_default(defaults, "axis.linecolor", "black")
         ),

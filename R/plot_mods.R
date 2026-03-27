@@ -359,7 +359,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
 #'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
 #'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.grid.x},
-#'   and \code{show.grid.y}.
+#'   \code{show.grid.y}, and \code{grid.color}.
 #' @param axis_side Character. Which axis to style, either \code{"x"} or
 #'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
 #'   \code{axis.tickangle.y} is used for the tick angle, and which
@@ -412,7 +412,8 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
         tickcolor = isolate_fn(input$axis.tickcolor),
         ticklen = isolate_fn(input$axis.ticklen),
         tickwidth = isolate_fn(input$axis.tickwidth),
-        showgrid = show_grid
+        showgrid = show_grid,
+        gridcolor = isolate_fn(input$grid.color)
     )
     if (!ggplot.axis.styling) {
         style$showline <- isolate_fn(input$axis.showline)
