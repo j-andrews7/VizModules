@@ -312,31 +312,31 @@ library(VizModules)
 data(mtcars)
 plotthis_HistogramInputsUI("histogram", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="9463">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="4874">
 #>     <li class="active">
-#>       <a href="#tab-9463-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4874-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4874-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-4874-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-4874-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4874-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4874-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9463-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4874-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9463">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9463-1">
+#>   <div class="tab-content" data-tabsetid="4874">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4874-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1116803">
@@ -372,7 +372,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9463-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4874-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8000977">
@@ -428,7 +428,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9463-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4874-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1487828">
@@ -530,7 +530,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-9463-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-4874-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9768753">
@@ -567,7 +567,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9463-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4874-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="histogram-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -677,7 +677,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9463-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4874-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -959,7 +959,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9463-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4874-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2051798">
