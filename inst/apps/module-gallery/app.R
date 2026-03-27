@@ -283,6 +283,7 @@ ui <- do.call(navbarPage, c(
         id       = "active_tab",
         position = "static-top",
         header   = tagList(
+            shinyjs::useShinyjs(),
             tags$head(
                 tags$style(HTML(
                     paste(
