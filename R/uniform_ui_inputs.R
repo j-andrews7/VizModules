@@ -63,18 +63,34 @@
             intercept_tip,
             placement = "top", options = list(container = "body")
         ),
-        textInput(ns("hline.colors"), "Colors",
-            value = .get_default(defaults, "hline.colors", "#000000")
+        tipify(
+            textInput(ns("hline.colors"), "Y Colors",
+                value = .get_default(defaults, "hline.colors", "#000000")
+            ),
+            "Color(s) for horizontal reference lines, as comma-separated hex codes or color names",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("hline.widths"), "Widths",
-            value = .get_default(defaults, "hline.widths", "1")
+        tipify(
+            textInput(ns("hline.widths"), "Y Widths",
+                value = .get_default(defaults, "hline.widths", "1")
+            ),
+            "Width(s) for horizontal reference lines in pixels, as comma-separated values",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("hline.linetypes"), "Line Types",
-            placeholder = "solid, dashed, dotted, ...",
-            value = .get_default(defaults, "hline.linetypes", "dashed")
+        tipify(
+            textInput(ns("hline.linetypes"), "Y Line Types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = .get_default(defaults, "hline.linetypes", "dashed")
+            ),
+            "Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("hline.opacities"), "Opacities (0-1)",
-            value = .get_default(defaults, "hline.opacities", "1")
+        tipify(
+            textInput(ns("hline.opacities"), "Y Opacities (0-1)",
+                value = .get_default(defaults, "hline.opacities", "1")
+            ),
+            "Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
+            placement = "top", options = list(container = "body")
         ),
         tipify(
             textInput(ns("vline.intercepts"), "X-intercepts",
@@ -84,41 +100,114 @@
             intercept_tip,
             placement = "top", options = list(container = "body")
         ),
-        textInput(ns("vline.colors"), "Colors",
-            value = .get_default(defaults, "vline.colors", "#000000")
+        tipify(
+            textInput(ns("vline.colors"), "X Colors",
+                value = .get_default(defaults, "vline.colors", "#000000")
+            ),
+            "Color(s) for vertical reference lines, as comma-separated hex codes or color names",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("vline.widths"), "Widths",
-            value = .get_default(defaults, "vline.widths", "1")
+        tipify(
+            textInput(ns("vline.widths"), "X Widths",
+                value = .get_default(defaults, "vline.widths", "1")
+            ),
+            "Width(s) for vertical reference lines in pixels, as comma-separated values",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("vline.linetypes"), "Line Types",
-            placeholder = "solid, dashed, dotted, ...",
-            value = .get_default(defaults, "vline.linetypes", "dashed")
+        tipify(
+            textInput(ns("vline.linetypes"), "X Line Types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = .get_default(defaults, "vline.linetypes", "dashed")
+            ),
+            "Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)",
+            placement = "top", options = list(container = "body")
         ),
-        textInput(ns("vline.opacities"), "Opacities (0-1)",
-            value = .get_default(defaults, "vline.opacities", "1")
+        tipify(
+            textInput(ns("vline.opacities"), "X Opacities (0-1)",
+                value = .get_default(defaults, "vline.opacities", "1")
+            ),
+            "Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.slopes"), "Ab Slopes",
+                value = .get_default(defaults, "abline.slopes", "")
+            ),
+            "Slope(s) of diagonal reference lines (rise/run), as comma-separated values",
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.intercepts"), "Ab Y-intercepts",
+                value = .get_default(defaults, "abline.intercepts", "")
+            ),
+            intercept_tip,
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.colors"), "Ab Colors",
+                value = .get_default(defaults, "abline.colors", "#000000")
+            ),
+            "Color(s) for diagonal reference lines, as comma-separated hex codes or color names",
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.widths"), "Ab Widths",
+                value = .get_default(defaults, "abline.widths", "1")
+            ),
+            "Width(s) for diagonal reference lines in pixels, as comma-separated values",
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.linetypes"), "Ab Line Types",
+                placeholder = "solid, dashed, dotted, ...",
+                value = .get_default(defaults, "abline.linetypes", "dashed")
+            ),
+            "Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            placement = "top", options = list(container = "body")
+        ),
+        tipify(
+            textInput(ns("abline.opacities"), "Ab Opacities (0-1)",
+                value = .get_default(defaults, "abline.opacities", "1")
+            ),
+            "Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
+            placement = "top", options = list(container = "body")
         )
     )
 
     if (include.fit.lines) {
+        tip_opts <- list(container = "body")
         fit_inputs <- tagList(
-            textInput(ns("abline.slopes"), "Slopes",
-                value = .get_default(defaults, "abline.slopes", "")
+            tipify(
+                materialSwitch(ns("best.fit"), "Plot Best Fit Line",
+                    value = FALSE,
+                    status = "success"
+                ),
+                "Add a LOESS smoothed curve of best fit to the scatter plot",
+                placement = "top", options = tip_opts
             ),
-            materialSwitch(ns("best.fit"), "Line of best fit:",
-                value = FALSE,
-                status = "success"
+            tipify(
+                numericInput(ns("line.best.smoothness"), "Best Fit Line Smoothness",
+                    value = 1,
+                    min = 0,
+                    max = 10000
+                ),
+                "Smoothing span for the LOESS curve; higher values produce a smoother, less wiggly fit",
+                placement = "top", options = tip_opts
             ),
-            numericInput(ns("line.best.smoothness"), "Smoothness of line of best fit:",
-                value = 1,
-                min = 0,
-                max = 10000
+            tipify(
+                colourInput(ns("line.best.colour"), "Best Fit Line Color",
+                    value = "#000000"
+                ),
+                "Color for the LOESS best fit line",
+                placement = "top", options = tip_opts
             ),
-            colourInput(ns("line.best.colour"), "Line of best fit colour:",
-                value = "#000000"
-            ),
-            materialSwitch(ns("linear.model"), "Linear model line",
-                value = FALSE,
-                status = "success"
+            tipify(
+                materialSwitch(ns("linear.model"), "Linear Model Line",
+                    value = FALSE,
+                    status = "success"
+                ),
+                "Add a linear regression line to the scatter plot",
+                placement = "top", options = tip_opts
             )
         )
 
@@ -498,8 +587,10 @@
         selectInput(
             ns("download.format"),
             "Download Format",
-            selected = .get_default(defaults, "download.format", "svg",
-                function(x) x %in% c("svg", "png", "jpeg", "webp")),
+            selected = .get_default(
+                defaults, "download.format", "svg",
+                function(x) x %in% c("svg", "png", "jpeg", "webp")
+            ),
             choices = c("svg", "png", "jpeg", "webp"),
             width = "100%"
         ),
@@ -573,8 +664,10 @@
         tipify(
             selectInput(ns("shape.linetype"), "Shape Linetype",
                 choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"),
-                selected = .get_default(defaults, "shape.linetype", "solid",
-                    function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"))
+                selected = .get_default(
+                    defaults, "shape.linetype", "solid",
+                    function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
+                )
             ),
             "Line dash style for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts
@@ -589,4 +682,3 @@
         )
     )
 }
-
