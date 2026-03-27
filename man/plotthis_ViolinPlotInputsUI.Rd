@@ -198,7 +198,8 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 }
 \seealso{
 \code{\link[plotthis:boxviolinplot]{plotthis::ViolinPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
-\code{\link[=plotthis_ViolinPlotOutputUI]{plotthis_ViolinPlotOutputUI()}}, \code{\link[=plotthis_ViolinPlotServer]{plotthis_ViolinPlotServer()}}, \code{\link[=plotthis_ViolinPlotApp]{plotthis_ViolinPlotApp()}}
+\code{\link[=plotthis_ViolinPlotOutputUI]{plotthis_ViolinPlotOutputUI()}}, \code{\link[=plotthis_ViolinPlotServer]{plotthis_ViolinPlotServer()}},
+\code{\link[=plotthis_ViolinPlotApp]{plotthis_ViolinPlotApp()}}
 }
 \author{
 Jacob Martin, Jared Andrews

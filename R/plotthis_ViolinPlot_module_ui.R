@@ -172,7 +172,8 @@
 #' @export
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::ViolinPlot()], [VizModules::organize_inputs()],
-#' [VizModules::plotthis_ViolinPlotOutputUI()], [VizModules::plotthis_ViolinPlotServer()], [VizModules::plotthis_ViolinPlotApp()]
+#' [VizModules::plotthis_ViolinPlotOutputUI()], [VizModules::plotthis_ViolinPlotServer()],
+#' [VizModules::plotthis_ViolinPlotApp()]
 #' @examples
 #' library(VizModules)
 #' data(mtcars)
