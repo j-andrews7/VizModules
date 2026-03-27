@@ -296,6 +296,103 @@ Confirm UI text/tooltips mention any missing or altered plot features.
 Verify both module instances in the example app work independently
 (namespacing correct).
 
+## Style Guide
+
+Following a consistent style makes the package easier to read, maintain,
+and extend. Apply these conventions to every new module.
+
+### Input Labels
+
+- **Capitalize** the first word of every input label: `"Group By"`, not
+  `"group by"`.
+- **Be concise** — prefer short, scannable labels over long
+  descriptions. Move detail into a `tipify` tooltip instead.
+- **Avoid redundant words.** `"Color"` is better than
+  `"Select a Color"`.
+- **Match plotthis/dittoViz parameter names loosely**, so users can
+  cross-reference the upstream docs. E.g., label the `group_by` input
+  `"Group By"`.
+
+### Tooltips with `tipify`
+
+Wrap any non-obvious input in
+[`shinyBS::tipify()`](https://rdrr.io/pkg/shinyBS/man/tipify.html) to
+show a tooltip on hover. This keeps labels concise while still informing
+the user.
+
+Apply `tipify` when:
+
+- The input’s purpose is not immediately clear from its label alone.
+- The input accepts a specific format that users might not guess (e.g.,
+  comma-separated values, index positions for categorical axes).
+- The input has a non-trivial effect on the plot (e.g., stat correction
+  methods, bracket inset).
+
+Standard pattern — always use `placement = "top"` and
+`options = list(container = "body")` so tooltips render correctly inside
+sidebar panels:
+
+``` r
+tipify(
+    textInput(ns("hline.intercepts"), "Y-intercepts",
+        placeholder = "e.g. 2, -2",
+        value = .get_default(defaults, "hline.intercepts", "")
+    ),
+    paste(
+        "For categorical or factor axes, enter the index (position) of the",
+        "category rather than its name."
+    ),
+    placement = "top", options = list(container = "body")
+)
+```
+
+Inputs that are self-explanatory from their label (e.g., `"Plot Title"`,
+`"X-axis Variable"`) do not need a tooltip.
+
+### Reuse Uniform Input Helpers
+
+In time, these helpers will be further formalized and exported, but they
+can be used with the `VizModules:::` prefix in the meantime.
+
+Before writing custom inputs, check whether a uniform helper already
+covers your needs:
+
+| Helper                        | Provides                                                           |
+|-------------------------------|--------------------------------------------------------------------|
+| `.uniform_lines_inputs_ui()`  | Horizontal, vertical, and diagonal reference line controls         |
+| `.uniform_axes_inputs_ui()`   | Font, axis border, gridline, tick, and facet styling               |
+| `.uniform_stats_inputs_ui()`  | Pairwise statistical testing and bracket annotation controls       |
+| `.uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
+
+Pass `ns` and a `defaults` list to each helper. Use the `include.*`
+arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE`
+for scatter plots, `include.rotate = TRUE` for bar plots).
+
+Using the uniform helpers ensures that shared inputs behave identically
+across every module and that future changes to those helpers propagate
+automatically.
+
+### Imports: `@importFrom` Over `::`
+
+- **Always use `@importFrom pkg fun`** in the roxygen header of any file
+  that calls an external function, then call the function directly
+  (`fun()`) in the body.
+- **Avoid `pkg::fun()` calls** in module code.
+
+The only exception is a one-off call in an `@examples` block or vignette
+where the full qualified name aids readability.
+
+### Additional Conventions
+
+- Use **4-space indentation** and keep lines to **120 characters** max
+  (enforced by `.lintr`).
+- Avoid [`sapply()`](https://rdrr.io/r/base/lapply.html) — use
+  [`vapply()`](https://rdrr.io/r/base/lapply.html) or
+  [`lapply()`](https://rdrr.io/r/base/lapply.html) with explicit types
+  instead.
+- Do not edit `NAMESPACE` manually; always regenerate with
+  `devtools::document()`.
+
 ## Sanitizing User-Provided Expressions
 
 **Never use `eval(str2expression())` or `eval(parse())` on raw user

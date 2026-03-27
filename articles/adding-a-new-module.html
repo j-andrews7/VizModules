@@ -460,6 +460,140 @@ example app work independently (namespacing correct).</label></li>
 </ul>
 </div>
 <div class="section level2">
+<h2 id="style-guide">Style Guide<a class="anchor" aria-label="anchor" href="#style-guide"></a>
+</h2>
+<p>Following a consistent style makes the package easier to read,
+maintain, and extend. Apply these conventions to every new module.</p>
+<div class="section level3">
+<h3 id="input-labels">Input Labels<a class="anchor" aria-label="anchor" href="#input-labels"></a>
+</h3>
+<ul>
+<li>
+<strong>Capitalize</strong> the first word of every input label:
+<code>"Group By"</code>, not <code>"group by"</code>.</li>
+<li>
+<strong>Be concise</strong> — prefer short, scannable labels over
+long descriptions. Move detail into a <code>tipify</code> tooltip
+instead.</li>
+<li>
+<strong>Avoid redundant words.</strong> <code>"Color"</code> is
+better than <code>"Select a Color"</code>.</li>
+<li>
+<strong>Match plotthis/dittoViz parameter names loosely</strong>, so
+users can cross-reference the upstream docs. E.g., label the
+<code>group_by</code> input <code>"Group By"</code>.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="tooltips-with-tipify">Tooltips with <code>tipify</code><a class="anchor" aria-label="anchor" href="#tooltips-with-tipify"></a>
+</h3>
+<p>Wrap any non-obvious input in <code><a href="https://rdrr.io/pkg/shinyBS/man/tipify.html" class="external-link">shinyBS::tipify()</a></code> to show
+a tooltip on hover. This keeps labels concise while still informing the
+user.</p>
+<p>Apply <code>tipify</code> when:</p>
+<ul>
+<li>The input’s purpose is not immediately clear from its label
+alone.</li>
+<li>The input accepts a specific format that users might not guess
+(e.g., comma-separated values, index positions for categorical
+axes).</li>
+<li>The input has a non-trivial effect on the plot (e.g., stat
+correction methods, bracket inset).</li>
+</ul>
+<p>Standard pattern — always use <code>placement = "top"</code> and
+<code>options = list(container = "body")</code> so tooltips render
+correctly inside sidebar panels:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shinyBS/man/tipify.html" class="external-link">tipify</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"hline.intercepts"</span><span class="op">)</span>, <span class="st">"Y-intercepts"</span>,</span>
+<span>        placeholder <span class="op">=</span> <span class="st">"e.g. 2, -2"</span>,</span>
+<span>        value <span class="op">=</span> <span class="fu">.get_default</span><span class="op">(</span><span class="va">defaults</span>, <span class="st">"hline.intercepts"</span>, <span class="st">""</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span>        <span class="st">"For categorical or factor axes, enter the index (position) of the"</span>,</span>
+<span>        <span class="st">"category rather than its name."</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    placement <span class="op">=</span> <span class="st">"top"</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>container <span class="op">=</span> <span class="st">"body"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Inputs that are self-explanatory from their label (e.g.,
+<code>"Plot Title"</code>, <code>"X-axis Variable"</code>) do not need a
+tooltip.</p>
+</div>
+<div class="section level3">
+<h3 id="reuse-uniform-input-helpers">Reuse Uniform Input Helpers<a class="anchor" aria-label="anchor" href="#reuse-uniform-input-helpers"></a>
+</h3>
+<p>In time, these helpers will be further formalized and exported, but
+they can be used with the <code>VizModules:::</code> prefix in the
+meantime.</p>
+<p>Before writing custom inputs, check whether a uniform helper already
+covers your needs:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Helper</th>
+<th>Provides</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>.uniform_lines_inputs_ui()</code></td>
+<td>Horizontal, vertical, and diagonal reference line controls</td>
+</tr>
+<tr class="even">
+<td><code>.uniform_axes_inputs_ui()</code></td>
+<td>Font, axis border, gridline, tick, and facet styling</td>
+</tr>
+<tr class="odd">
+<td><code>.uniform_stats_inputs_ui()</code></td>
+<td>Pairwise statistical testing and bracket annotation controls</td>
+</tr>
+<tr class="even">
+<td><code>.uniform_plotly_inputs_ui()</code></td>
+<td>Download buttons, margins, subplot spacing, and draw-shape
+styling</td>
+</tr>
+</tbody>
+</table>
+<p>Pass <code>ns</code> and a <code>defaults</code> list to each helper.
+Use the <code>include.*</code> arguments to opt in to optional groups
+(e.g., <code>include.fit.lines = TRUE</code> for scatter plots,
+<code>include.rotate = TRUE</code> for bar plots).</p>
+<p>Using the uniform helpers ensures that shared inputs behave
+identically across every module and that future changes to those helpers
+propagate automatically.</p>
+</div>
+<div class="section level3">
+<h3 id="imports-importfrom-over">Imports: <code>@importFrom</code> Over <code>::</code><a class="anchor" aria-label="anchor" href="#imports-importfrom-over"></a>
+</h3>
+<ul>
+<li>
+<strong>Always use <code>@importFrom pkg fun</code></strong> in the
+roxygen header of any file that calls an external function, then call
+the function directly (<code>fun()</code>) in the body.</li>
+<li>
+<strong>Avoid <code>pkg::fun()</code> calls</strong> in module
+code.</li>
+</ul>
+<p>The only exception is a one-off call in an <code>@examples</code>
+block or vignette where the full qualified name aids readability.</p>
+</div>
+<div class="section level3">
+<h3 id="additional-conventions">Additional Conventions<a class="anchor" aria-label="anchor" href="#additional-conventions"></a>
+</h3>
+<ul>
+<li>Use <strong>4-space indentation</strong> and keep lines to
+<strong>120 characters</strong> max (enforced by
+<code>.lintr</code>).</li>
+<li>Avoid <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply()</a></code> — use <code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply()</a></code> or
+<code><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply()</a></code> with explicit types instead.</li>
+<li>Do not edit <code>NAMESPACE</code> manually; always regenerate with
+<code>devtools::document()</code>.</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
 <h2 id="sanitizing-user-provided-expressions">Sanitizing User-Provided Expressions<a class="anchor" aria-label="anchor" href="#sanitizing-user-provided-expressions"></a>
 </h2>
 <p><strong>Never use <code>eval(str2expression())</code> or
@@ -479,7 +613,7 @@ expression is parsed, its AST is walked to ensure only allowed
 operations are present (comparisons, logical operators, column
 references, and literals), and then it is evaluated in a restricted
 environment containing only the data frame’s columns.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — filtering rows by a textInput:</span></span>
 <span><span class="va">rows.use</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rows.use</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns a logical vector (same length as <code>nrow(data)</code>), or
@@ -494,7 +628,7 @@ disallowed operations.</p>
 string through to a downstream plotting function that will evaluate it
 internally (e.g., <code>plotthis::BoxPlot(highlight = ...)</code>). The
 string is validated but not executed.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — passing a highlight expression to plotthis:</span></span>
 <span><span class="va">highlight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_expression.html">validate_expression</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">highlight</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the original string if safe, or <code>NULL</code>.</p>
@@ -510,7 +644,7 @@ the allowed list (<code>"log2"</code>, <code>"log"</code>,
 <code>"log10"</code>, <code>"neg_log10"</code>, <code>"log1p"</code>,
 <code>"as.factor"</code>, <code>"abs"</code>, <code>"sqrt"</code>) are
 accepted.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — resolving an adjustment function:</span></span>
 <span><span class="va">x.adj.fxn</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.adj.fxn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the function, or <code>NULL</code> if the name is empty or
