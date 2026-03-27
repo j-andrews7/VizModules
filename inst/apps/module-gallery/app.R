@@ -3,6 +3,56 @@ library(VizModules)
 # Derived summary dataset (pie plot)
 sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
 
+pkg_desc <- utils::packageDescription("VizModules")
+pkg_name <- pkg_desc[["Package"]]
+if (is.null(pkg_name) || is.na(pkg_name) || !nzchar(pkg_name)) {
+    pkg_name <- "VizModules"
+}
+pkg_authors <- NA_character_
+pkg_authors_field <- pkg_desc[["Authors@R"]]
+if (!is.null(pkg_authors_field) && !is.na(pkg_authors_field) &&
+    nzchar(trimws(pkg_authors_field))) {
+    pkg_authors <- tryCatch({
+        authors <- eval(str2expression(pkg_authors_field))
+        paste(
+            vapply(seq_along(authors), function(i) {
+                trimws(paste(c(authors[[i]]$given, authors[[i]]$family),
+                             collapse = " "))
+            }, character(1)),
+            collapse = ", "
+        )
+    }, error = function(e) NA_character_)
+}
+if (is.na(pkg_authors) || !nzchar(trimws(pkg_authors))) {
+    pkg_author_field <- pkg_desc[["Author"]]
+    if (!is.null(pkg_author_field) && !is.na(pkg_author_field) &&
+        nzchar(trimws(pkg_author_field))) {
+        pkg_authors <- pkg_author_field
+    }
+}
+if (is.na(pkg_authors) || !nzchar(trimws(pkg_authors))) {
+    pkg_authors <- "Unavailable"
+}
+pkg_authors <- gsub("[[:space:]]+", " ", trimws(pkg_authors))
+pkg_version <- as.character(utils::packageVersion("VizModules"))
+pkg_url_field <- pkg_desc[["URL"]]
+if (is.null(pkg_url_field) || is.na(pkg_url_field)) {
+    pkg_url_field <- ""
+}
+pkg_urls <- trimws(strsplit(pkg_url_field, ",")[[1]])
+docs_url <- pkg_urls[grepl("github\\.io|pkgdown", pkg_urls)][1]
+repo_url <- pkg_urls[grepl("github\\.com", pkg_urls)][1]
+
+if (is.na(docs_url) || !nzchar(docs_url)) {
+    docs_url <- sprintf("https://j-andrews7.github.io/%s/", pkg_name)
+}
+
+if (is.na(repo_url) || !nzchar(repo_url)) {
+    repo_url <- "https://github.com/j-andrews7/VizModules"
+}
+
+cran_url <- sprintf("https://cran.r-project.org/package=%s", pkg_name)
+
 
 module_data <- list(
     area     = example_sales,
@@ -175,16 +225,142 @@ build_tab <- function(mod) {
     )
 }
 
+about_tab <- tabPanel(
+    "About",
+    value = "about",
+    fluidPage(
+        fluidRow(
+            column(
+                width = 9,
+                h2("About VizModules"),
+                p(pkg_desc$Title),
+                p(pkg_desc$Description),
+                tags$p(
+                    tags$strong("Authors: "),
+                    pkg_authors
+                ),
+                p(
+                    "This gallery app showcases VizModules' interactive",
+                    "Shiny modules using bundled example datasets so you can",
+                    "preview each plot type and its configurable inputs."
+                ),
+                tags$p(
+                    tags$strong("Repository: "),
+                    tags$a(
+                        href = repo_url,
+                        target = "_blank",
+                        rel = "noopener noreferrer",
+                        repo_url
+                    )
+                ),
+                tags$p(
+                    tags$strong("Documentation: "),
+                    tags$a(
+                        href = docs_url,
+                        target = "_blank",
+                        rel = "noopener noreferrer",
+                        docs_url
+                    )
+                ),
+                tags$p(
+                    tags$strong("CRAN package page: "),
+                    tags$a(
+                        href = cran_url,
+                        target = "_blank",
+                        rel = "noopener noreferrer",
+                        cran_url
+                    )
+                )
+            )
+        )
+    )
+)
+
 
 ui <- do.call(navbarPage, c(
     list(
         title    = "VizModules Gallery",
         id       = "active_tab",
         position = "static-top",
-        header   = tags$head(tags$style(HTML(
-            ".navbar { margin-bottom: 0; }"
-        )))
+        header   = tagList(
+            tags$head(
+                tags$style(HTML(
+                    paste(
+                        ".navbar { margin-bottom: 0; }",
+                        ".navbar .navbar-right .navbar-version-label {",
+                        "  color: #9d9d9d;",
+                        "  display: block;",
+                        "  padding: 15px;",
+                        "}",
+                        ".navbar .navbar-right a.repo-link {",
+                        "  display: flex;",
+                        "  align-items: center;",
+                        "  gap: 6px;",
+                        "}",
+                        sep = "\n"
+                    )
+                )),
+                tags$script(HTML(
+                    paste(
+                        "(function() {",
+                        "  function addNavbarItems() {",
+                        "    var navContainer = document.querySelector('.navbar .navbar-collapse') ||",
+                        "      document.querySelector('.navbar .container-fluid') ||",
+                        "      document.querySelector('.navbar .container');",
+                        "    var extras = document.getElementById('navbar-right-items');",
+                        "    if (!navContainer || !extras || navContainer.querySelector('.navbar-right')) {",
+                        "      return;",
+                        "    }",
+                        "    var extraNav = extras.querySelector('ul.navbar-right');",
+                        "    if (extraNav) {",
+                        "      navContainer.appendChild(extraNav.cloneNode(true));",
+                        "    }",
+                        "  }",
+                        "  if (document.readyState === 'loading') {",
+                        "    document.addEventListener('DOMContentLoaded', addNavbarItems);",
+                        "  } else {",
+                        "    addNavbarItems();",
+                        "  }",
+                        "})();",
+                        sep = "\n"
+                    )
+                ))
+            ),
+            tags$div(
+                id = "navbar-right-items",
+                style = "display: none;",
+                tags$ul(
+                    class = "nav navbar-nav navbar-right",
+                    tags$li(
+                        tags$a(
+                            class = "repo-link",
+                            href = repo_url,
+                            target = "_blank",
+                            rel = "noopener noreferrer",
+                            icon("github"),
+                            "Repo"
+                        )
+                    ),
+                    tags$li(
+                        tags$a(
+                            class = "repo-link",
+                            href = docs_url,
+                            target = "_blank",
+                            rel = "noopener noreferrer",
+                            "Docs"
+                        )
+                    ),
+                    tags$li(
+                        tags$span(
+                            class = "navbar-version-label",
+                            paste0("v", pkg_version)
+                        )
+                    )
+                )
+            )
+        )
     ),
+    list(about_tab),
     lapply(module_registry, build_tab)
 ))
 
