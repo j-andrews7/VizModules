@@ -37,13 +37,13 @@ Defaults can be set for each input by providing a named list of values to the \c
 
 The following \code{\link[=dumbbellPlot]{dumbbellPlot()}} parameters can be accessed via UI inputs:
 \itemize{
-\item \code{x} - X values (UI: "Select X values (max 2)", multiple: TRUE, max 2 enforced)
-\item \code{y} - Y value (UI: "Select Y value", single selection)
+\item \code{x} - X values (UI: "Select X values (max 2)", defaults key: \code{x.value}, multiple: TRUE, max 2 enforced)
+\item \code{y} - Y value (UI: "Select Y value", defaults key: \code{y.value}, single selection)
 \item \code{x.adjustment} - X-axis transformation (UI: "X Adjustment")
 \item \code{colour.by} - Color by X or Y (UI: "Colour by", options: "X variables", "Y variables")
-\item \code{facet.by} - Faceting variable (UI: "Facet by")
+\item \code{facet.by} - Faceting variable (UI: "Facet By")
 \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-\item \code{line.colour} - Color of connecting lines (UI: "Colour Of connectors", default: "gray30")
+\item \code{line.colour} - Color of connecting lines (UI: "Colour Of Connectors", default: "gray30")
 \item \code{palette.selection} - Color palette (UI: palette picker)
 \item \code{axis.*} - Various axis styling options (UI: via .uniform_axes_inputs_ui)
 \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)

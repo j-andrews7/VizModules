@@ -39,8 +39,14 @@ for that function for an exhaustive list.
 
 The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
-\item \code{x} - X-axis variable(s) (UI: "Select X values", default: 1st column, multiple: TRUE)
-\item \code{y} - Y-axis variable(s) (UI: "Select Y values", default: 2nd column, multiple: TRUE)
+\item \code{x} - X-axis variable(s) (UI: "Select X values", defaults key: \code{x.value}, default: 1st column, multiple: TRUE)
+\item \code{y} - Y-axis variable(s) (UI: "Select Y values", defaults key: \code{y.value}, default: 2nd column, multiple: TRUE)
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+\item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+\item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+\item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 \item \code{group.by} - Grouping variable (UI: "Group by", default: 1st categorical variable)
 \item \code{order.by} - Order by Y values (UI: "Order by Y", default: FALSE)
 \item \code{x.adjustment} - X-axis adjustment function (UI: "X Adjustment", default: "")
@@ -65,9 +71,6 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 \item \code{axis.tickwidth} - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)
 \item \code{show.grid.x} - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
 \item \code{show.grid.y} - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
-\item \code{title.font.size} - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)
-\item \code{title.font.family} - Title font family (UI: "Font", default: "Arial")
-\item \code{title.text.color} - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")
 \item \code{x.title} - X-axis title (auto-calculated from data)
 \item \code{y.title} - Y-axis title (auto-calculated from data)
 \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)

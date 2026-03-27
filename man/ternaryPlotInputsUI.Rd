@@ -37,6 +37,26 @@ include a grouping column.
 Nearly all parameters for \code{\link[=ternaryPlot]{ternaryPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[=ternaryPlot]{ternaryPlot()}} parameters are not accessible via UI inputs:
+\itemize{
+\item \code{a.titlefont.family}, \code{b.titlefont.family}, \code{c.titlefont.family} -
+Axis title font families (use \code{defaults} to set)
+\item \code{a.titlefont.color}, \code{b.titlefont.color}, \code{c.titlefont.color} -
+Axis title font colors (use \code{defaults} to set)
+\item \code{a.tickfont.size}, \code{b.tickfont.size}, \code{c.tickfont.size} -
+Axis tick label font sizes (use \code{defaults} to set)
+\item \code{a.tickcolor}, \code{b.tickcolor}, \code{c.tickcolor} -
+Axis tick colors (use \code{defaults} to set)
+\item \code{a.ticklen}, \code{b.ticklen}, \code{c.ticklen} -
+Axis tick length (use \code{defaults} to set)
+\item \code{legend.x}, \code{legend.y} - Legend position offsets (use \code{defaults} to set)
+\item \code{title.x} - Title horizontal position (use \code{defaults} to set)
+\item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
+}
+}
+
 \section{Plot parameters and defaults}{
 
 The following \code{\link[=ternaryPlot]{ternaryPlot()}} parameters can be accessed via UI inputs
@@ -67,9 +87,9 @@ and/or the \code{defaults} argument:
 \item \code{a.gridcolor} - A-axis grid color (UI: "A-axis grid color", default: "#EEEEEE")
 \item \code{b.gridcolor} - B-axis grid color (UI: "B-axis grid color", default: "#EEEEEE")
 \item \code{c.gridcolor} - C-axis grid color (UI: "C-axis grid color", default: "#EEEEEE")
-\item \code{title.font.size} - Title font size (UI: "Title font size", default: 18)
-\item \code{title.font.family} - Title font (UI: "Title font", default: "Arial")
-\item \code{title.font.color} - Title font color (UI: "Title font color", default: "#000000")
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
 \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
 \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")

@@ -39,9 +39,9 @@
 #'   \item \code{angular.rotation} - Angular axis rotation (UI: "Angular rotation", default: 90)
 #'   \item \code{angular.gridcolor} - Angular grid color (UI: "Angular grid color", default: "#EEEEEE")
 #'   \item \code{title.x} - Title horizontal position (UI: "Title horizontal position", default: 0.5)
-#'   \item \code{title.font.size} - Title font size (UI: "Title font size", default: 18)
-#'   \item \code{title.font.family} - Title font (UI: "Title font", default: "Arial")
-#'   \item \code{title.font.color} - Title font color (UI: "Title font color", default: "#000000")
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 #'   \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
 #'   \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
 #'   \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
@@ -105,39 +105,39 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("theta"), "Category column (theta):",
+            tipify(selectInput(ns("theta"), "Category (theta)",
                 selected = .get_default(
                     defaults, "theta", cat.choices[2],
                     function(x) x %in% all.choices
                 ),
                 choices = all.choices
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("r"), "Values column (r):",
+            tipify(selectInput(ns("r"), "Values (r)",
                 selected = .get_default(
                     defaults, "r", num.choices[2],
                     function(x) x %in% num.choices
                 ),
                 choices = num.choices
             ), documentParameters$r, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group"), "Group column:",
+            tipify(selectInput(ns("group"), "Group",
                 selected = .get_default(defaults, "group", ""),
                 choices = all.choices
             ), documentParameters$group, placement = "top", options = list(container = "body"))
         ),
         "Trace Style" = tagList(
-            tipify(selectInput(ns("fill"), "Fill area:",
+            tipify(selectInput(ns("fill"), "Fill Area",
                 choices = c(
                     "Fill" = "toself",
                     "No fill" = "none"
                 ),
                 selected = .get_default(defaults, "fill", "toself")
             ), documentParameters$fill, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("line.width"), "Line width:",
+            tipify(numericInput(ns("line.width"), "Line Width",
                 value = .get_default(defaults, "line.width", 2, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("line.dash"), "Line style:",
+            tipify(selectInput(ns("line.dash"), "Line Style",
                 choices = c(
                     "Solid" = "solid",
                     "Dot" = "dot",
@@ -148,12 +148,12 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 ),
                 selected = .get_default(defaults, "line.dash", "solid")
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("marker.size"), "Marker size:",
+            tipify(numericInput(ns("marker.size"), "Marker Size",
                 value = .get_default(defaults, "marker.size", 5, is.numeric),
                 min = 0,
                 step = 1
             ), documentParameters$marker.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("marker.symbol"), "Marker symbol:",
+            tipify(selectInput(ns("marker.symbol"), "Marker Symbol",
                 choices = c(
                     "Circle" = "circle",
                     "Square" = "square",
@@ -165,7 +165,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 ),
                 selected = .get_default(defaults, "marker.symbol", "circle")
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
-            tipify(sliderInput(ns("opacity"), "Opacity:",
+            tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
                 value = .get_default(defaults, "opacity", 0.6),
                 step = 0.05
@@ -173,91 +173,93 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             uiOutput(ns("color.picker"))
         ),
         "Radial Axis" = tagList(
-            tipify(checkboxInput(ns("radial.visible"), "Show radial axis",
+            tipify(checkboxInput(ns("radial.visible"), "Show Radial Axis",
                 value = .get_default(defaults, "radial.visible", TRUE, is.logical)
             ), documentParameters$radial.visible, placement = "top", options = list(container = "body")),
-            checkboxInput(ns("auto.radial.range"), "Auto radial range",
+            checkboxInput(ns("auto.radial.range"), "Auto Radial Range",
                 value = .get_default(defaults, "auto.radial.range", TRUE, is.logical)
             ),
-            tipify(numericInput(ns("radial.min"), "Radial min:",
+            tipify(numericInput(ns("radial.min"), "Radial Min",
                 value = .get_default(defaults, "radial.min", 0, is.numeric)
             ), documentParameters$radial.range, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("radial.max"), "Radial max:",
+            tipify(numericInput(ns("radial.max"), "Radial Max",
                 value = .get_default(defaults, "radial.max", 100, is.numeric),
                 min = 0
             ), documentParameters$radial.range, placement = "top", options = list(container = "body")),
-            tipify(checkboxInput(ns("radial.showline"), "Show radial line",
+            tipify(checkboxInput(ns("radial.showline"), "Show Radial Line",
                 value = .get_default(defaults, "radial.showline", TRUE, is.logical)
             ), documentParameters$radial.showline, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("radial.linecolor"), "Radial line color:",
+            tipify(colourInput(ns("radial.linecolor"), "Radial Line Color",
                 value = .get_default(defaults, "radial.linecolor", "#444444")
             ), documentParameters$radial.linecolor, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("radial.gridcolor"), "Radial grid color:",
+            tipify(colourInput(ns("radial.gridcolor"), "Radial Grid Color",
                 value = .get_default(defaults, "radial.gridcolor", "#EEEEEE")
             ), documentParameters$radial.gridcolor, placement = "top", options = list(container = "body"))
         ),
         "Angular Axis" = tagList(
-            tipify(selectInput(ns("angular.direction"), "Angular direction:",
+            tipify(selectInput(ns("angular.direction"), "Angular Direction",
                 choices = c("Clockwise" = "clockwise", "Counterclockwise" = "counterclockwise"),
                 selected = .get_default(defaults, "angular.direction", "clockwise")
             ), documentParameters$angular.direction, placement = "top", options = list(container = "body")),
-            tipify(sliderInput(ns("angular.rotation"), "Angular rotation (degrees):",
+            tipify(sliderInput(ns("angular.rotation"), "Angular Rotation (degrees)",
                 min = 0, max = 360,
                 value = .get_default(defaults, "angular.rotation", 90),
                 step = 5
             ), documentParameters$angular.rotation, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("angular.gridcolor"), "Angular grid color:",
+            tipify(colourInput(ns("angular.gridcolor"), "Angular Grid Color",
+
                 value = .get_default(defaults, "angular.gridcolor", "#EEEEEE")
             ), documentParameters$angular.gridcolor, placement = "top", options = list(container = "body"))
         ),
         "Title & Legend" = tagList(
-            tipify(sliderInput(ns("title.x"), "Title horizontal position:",
+            tipify(sliderInput(ns("title.x"), "Title Position",
                 min = 0, max = 1,
                 value = .get_default(defaults, "title.x", 0.5),
                 step = 0.01
             ), documentParameters$title.x, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("title.font.size"), "Title font size:",
+            tipify(numericInput(ns("title.font.size"), "Title Size",
                 value = .get_default(defaults, "title.font.size", 18, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("title.font.family"), "Title font:",
+            tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("title.font.color"), "Title font color:",
+            tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
-            tipify(checkboxInput(ns("show.legend"), "Show legend",
+            tipify(checkboxInput(ns("show.legend"), "Show Legend",
                 value = .get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.orientation"), "Legend orientation:",
+            tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
                 selected = .get_default(defaults, "legend.orientation", "h")
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.font.family"), "Legend font:",
+            tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
                 )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("legend.font.size"), "Legend font size:",
+            tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("legend.font.color"), "Legend font color:",
+            tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
         "Background" = tagList(
-            tipify(colourInput(ns("bgcolor"), "Plot background color:",
+            tipify(colourInput(ns("bgcolor"), "Plot Background Color",
+
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("polar.bgcolor"), "Polar area background:",
+            tipify(colourInput(ns("polar.bgcolor"), "Polar Area Background Color",
                 value = .get_default(defaults, "polar.bgcolor", "#FFFFFF")
             ), documentParameters$polar.bgcolor, placement = "top", options = list(container = "body"))
         ),

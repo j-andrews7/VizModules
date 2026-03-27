@@ -16,8 +16,14 @@
 #' @section Plot parameters and defaults:
 #' The following [VizModules::linePlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 #' \itemize{
-#'   \item \code{x} - X-axis variable(s) (UI: "Select X values", default: 1st column, multiple: TRUE)
-#'   \item \code{y} - Y-axis variable(s) (UI: "Select Y values", default: 2nd column, multiple: TRUE)
+#'   \item \code{x} - X-axis variable(s) (UI: "Select X values", defaults key: \code{x.value}, default: 1st column, multiple: TRUE)
+#'   \item \code{y} - Y-axis variable(s) (UI: "Select Y values", defaults key: \code{y.value}, default: 2nd column, multiple: TRUE)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{group.by} - Grouping variable (UI: "Group by", default: 1st categorical variable)
 #'   \item \code{order.by} - Order by Y values (UI: "Order by Y", default: FALSE)
 #'   \item \code{x.adjustment} - X-axis adjustment function (UI: "X Adjustment", default: "")
@@ -42,9 +48,6 @@
 #'   \item \code{axis.tickwidth} - Tick width (UI: via .uniform_axes_inputs_ui, default: 1)
 #'   \item \code{show.grid.x} - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
 #'   \item \code{show.grid.y} - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
-#'   \item \code{title.font.size} - Title font size (UI: via .uniform_axes_inputs_ui, default: 28)
-#'   \item \code{title.font.family} - Title font family (UI: "Font", default: "Arial")
-#'   \item \code{title.text.color} - Title text color (UI: via .uniform_axes_inputs_ui, default: "#000000")
 #'   \item \code{x.title} - X-axis title (auto-calculated from data)
 #'   \item \code{y.title} - Y-axis title (auto-calculated from data)
 #'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
@@ -118,28 +121,28 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.value"), "Select X values:",
+            tipify(selectInput(ns("x.value"), "X Values",
                 selected = .get_default(
                     defaults, "x.value", names(data)[1],
                     function(x) all(x %in% names(data))
                 ),
                 choices = names(data), multiple = TRUE
             ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.value"), "Select Y values:",
+            tipify(selectInput(ns("y.value"), "Y Values",
                 selected = .get_default(
                     defaults, "y.value", names(data)[2],
                     function(x) all(x %in% names(data))
                 ),
                 choices = names(data), multiple = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group by:",
+            tipify(selectInput(ns("group.by"), "Group By",
                 selected = .get_default(
                     defaults, "group.by", cat.choices[1],
                     function(x) x %in% cat.choices
                 ),
                 choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
-            tipify(materialSwitch(ns("error.bar"), "Error Bars:",
+            tipify(materialSwitch(ns("error.bar"), "Error Bars",
                 value = .get_default(defaults, "error.bar", TRUE, is.logical)),
                 documentParameters$error.bar,
                 placement = "top", options = list(container = "body")
@@ -164,14 +167,14 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet by:",
+            tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
                 choices = cat.choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scales"), "Facet scales",
+            tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = .get_default(
                     defaults, "facet.scales", "fixed",
@@ -180,14 +183,14 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("plot.mode"), "Plot type:",
+            tipify(selectInput(ns("plot.mode"), "Plot Type",
                 selected = .get_default(
                     defaults, "plot.mode", "lines",
                     function(x) x %in% c("lines", "markers", "lines+markers")
                 ),
                 choices  = c("lines", "markers", "lines+markers")
             ), documentParameters$plot.mode, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("line.type"), "Line type:",
+            tipify(selectInput(ns("line.type"), "Line Type",
                 selected = .get_default(
                     defaults, "line.type", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")

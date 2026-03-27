@@ -40,6 +40,9 @@ for that function for an exhaustive list.
 
 The following \code{\link[=piePlot]{piePlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 \item \code{labels} - Label column (UI: "Label column (summary data)", default: 2nd categorical column)
 \item \code{values} - Aggregated value column (UI: "Aggregated value column", default: 2nd numeric column)
 \item \code{sort} - Sort slices by value (UI: "Sort slices by value", default: TRUE)
@@ -56,9 +59,6 @@ The following \code{\link[=piePlot]{piePlot()}} parameters can be accessed via U
 \item \code{text.font.family} - Slice text font (UI: "Slice text font", default: "Arial")
 \item \code{text.font.color} - Slice text color (UI: "Slice text color", default: "#000000")
 \item \code{title.x} - Title horizontal position (UI: "Title horizontal position", default: 0.5)
-\item \code{title.font.size} - Title font size (UI: "Title font size", default: 28)
-\item \code{title.font.family} - Title font (UI: "Title font", default: "Arial")
-\item \code{title.font.color} - Title font color (UI: "Title font color", default: "#000000")
 \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
 \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
 \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")

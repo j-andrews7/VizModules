@@ -69,7 +69,7 @@
         textInput(ns("hline.widths"), "Widths",
             value = .get_default(defaults, "hline.widths", "1")
         ),
-        textInput(ns("hline.linetypes"), "Line types",
+        textInput(ns("hline.linetypes"), "Line Types",
             placeholder = "solid, dashed, dotted, ...",
             value = .get_default(defaults, "hline.linetypes", "dashed")
         ),
@@ -90,7 +90,7 @@
         textInput(ns("vline.widths"), "Widths",
             value = .get_default(defaults, "vline.widths", "1")
         ),
-        textInput(ns("vline.linetypes"), "Line types",
+        textInput(ns("vline.linetypes"), "Line Types",
             placeholder = "solid, dashed, dotted, ...",
             value = .get_default(defaults, "vline.linetypes", "dashed")
         ),

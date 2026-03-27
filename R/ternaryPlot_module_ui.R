@@ -15,6 +15,24 @@
 #' Nearly all parameters for [VizModules::ternaryPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [VizModules::ternaryPlot()] parameters are not accessible via UI inputs:
+#' \itemize{
+#'   \item \code{a.titlefont.family}, \code{b.titlefont.family}, \code{c.titlefont.family} -
+#'     Axis title font families (use \code{defaults} to set)
+#'   \item \code{a.titlefont.color}, \code{b.titlefont.color}, \code{c.titlefont.color} -
+#'     Axis title font colors (use \code{defaults} to set)
+#'   \item \code{a.tickfont.size}, \code{b.tickfont.size}, \code{c.tickfont.size} -
+#'     Axis tick label font sizes (use \code{defaults} to set)
+#'   \item \code{a.tickcolor}, \code{b.tickcolor}, \code{c.tickcolor} -
+#'     Axis tick colors (use \code{defaults} to set)
+#'   \item \code{a.ticklen}, \code{b.ticklen}, \code{c.ticklen} -
+#'     Axis tick length (use \code{defaults} to set)
+#'   \item \code{legend.x}, \code{legend.y} - Legend position offsets (use \code{defaults} to set)
+#'   \item \code{title.x} - Title horizontal position (use \code{defaults} to set)
+#'   \item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
+#' }
+#'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::ternaryPlot()] parameters can be accessed via UI inputs
 #' and/or the \code{defaults} argument:
@@ -44,9 +62,9 @@
 #'   \item \code{a.gridcolor} - A-axis grid color (UI: "A-axis grid color", default: "#EEEEEE")
 #'   \item \code{b.gridcolor} - B-axis grid color (UI: "B-axis grid color", default: "#EEEEEE")
 #'   \item \code{c.gridcolor} - C-axis grid color (UI: "C-axis grid color", default: "#EEEEEE")
-#'   \item \code{title.font.size} - Title font size (UI: "Title font size", default: 18)
-#'   \item \code{title.font.family} - Title font (UI: "Title font", default: "Arial")
-#'   \item \code{title.font.color} - Title font color (UI: "Title font color", default: "#000000")
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 #'   \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
 #'   \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
 #'   \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
@@ -116,41 +134,41 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("a"), "A-axis column:",
+            tipify(selectInput(ns("a"), "A-axis Column",
                 selected = .get_default(defaults, "a", default_a),
                 choices = num.choices
             ), documentParameters$a, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("b"), "B-axis column:",
+            tipify(selectInput(ns("b"), "B-axis Column",
                 selected = .get_default(defaults, "b", default_b),
                 choices = num.choices
             ), documentParameters$b, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("c"), "C-axis column:",
+            tipify(selectInput(ns("c"), "C-axis Column",
                 selected = .get_default(defaults, "c", default_c),
                 choices = num.choices
             ), documentParameters$c, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group"), "Colour By:",
+            tipify(selectInput(ns("group"), "Colour By",
                 selected = .get_default(defaults, "group", ""),
                 choices = all.choices
             ), documentParameters$group, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("sum"), "Sum:",
+            tipify(numericInput(ns("sum"), "Sum",
                 value = .get_default(defaults, "sum", 100, is.numeric),
                 min = 0
             ), documentParameters$sum, placement = "top", options = list(container = "body"))
         ),
         "Trace Style" = tagList(
-            tipify(selectInput(ns("mode"), "Mode:",
+            tipify(selectInput(ns("mode"), "Mode",
                 choices = c(
                     "Markers" = "markers",
                     "Lines + Markers" = "lines+markers"
                 ),
                 selected = .get_default(defaults, "mode", "markers")
             ), documentParameters$mode, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("marker.size"), "Marker size:",
+            tipify(numericInput(ns("marker.size"), "Marker Size",
                 value = .get_default(defaults, "marker.size", 8, is.numeric),
                 min = 0,
                 step = 1
             ), documentParameters$marker.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("marker.symbol"), "Marker symbol:",
+            tipify(selectInput(ns("marker.symbol"), "Marker Symbol",
                 choices = c(
                     "Circle" = "circle",
                     "Square" = "square",
@@ -162,20 +180,20 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 ),
                 selected = .get_default(defaults, "marker.symbol", "circle")
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("marker.line.width"), "Marker border width:",
+            tipify(numericInput(ns("marker.line.width"), "Marker Border Width",
                 value = .get_default(defaults, "marker.line.width", 0, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$marker.line.width, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("marker.line.color"), "Marker border color:",
+            tipify(colourInput(ns("marker.line.color"), "Marker Border Color",
                 value = .get_default(defaults, "marker.line.color", "#000000")
             ), documentParameters$marker.line.color, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("line.width"), "Line width:",
+            tipify(numericInput(ns("line.width"), "Line Width",
                 value = .get_default(defaults, "line.width", 2, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("line.dash"), "Line style:",
+            tipify(selectInput(ns("line.dash"), "Line Style",
                 choices = c(
                     "Solid" = "solid",
                     "Dot" = "dot",
@@ -186,7 +204,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 ),
                 selected = .get_default(defaults, "line.dash", "solid")
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
-            tipify(sliderInput(ns("opacity"), "Opacity:",
+            tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
                 value = .get_default(defaults, "opacity", 1),
                 step = 0.05
@@ -194,77 +212,77 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             uiOutput(ns("color.picker"))
         ),
         "Axes" = tagList(
-            tipify(textInput(ns("a.title"), "A-axis title:",
+            tipify(textInput(ns("a.title"), "A-axis Title",
                 value = .get_default(defaults, "a.title", "")
             ), documentParameters$a.title, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("b.title"), "B-axis title:",
+            tipify(textInput(ns("b.title"), "B-axis Title",
                 value = .get_default(defaults, "b.title", "")
             ), documentParameters$b.title, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("c.title"), "C-axis title:",
+            tipify(textInput(ns("c.title"), "C-axis Title",
                 value = .get_default(defaults, "c.title", "")
             ), documentParameters$c.title, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("a.titlefont.size"), "A-axis title size:",
+            tipify(numericInput(ns("a.titlefont.size"), "A-axis Title Size",
                 value = .get_default(defaults, "a.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$a.titlefont.size, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("b.titlefont.size"), "B-axis title size:",
+            tipify(numericInput(ns("b.titlefont.size"), "B-axis Title Size",
                 value = .get_default(defaults, "b.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$b.titlefont.size, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("c.titlefont.size"), "C-axis title size:",
+            tipify(numericInput(ns("c.titlefont.size"), "C-axis Title Size",
                 value = .get_default(defaults, "c.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$c.titlefont.size, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("a.gridcolor"), "A-axis grid color:",
+            tipify(colourInput(ns("a.gridcolor"), "A-axis Grid Color",
                 value = .get_default(defaults, "a.gridcolor", "#EEEEEE")
             ), documentParameters$a.gridcolor, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("b.gridcolor"), "B-axis grid color:",
+            tipify(colourInput(ns("b.gridcolor"), "B-axis Grid Color",
                 value = .get_default(defaults, "b.gridcolor", "#EEEEEE")
             ), documentParameters$b.gridcolor, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("c.gridcolor"), "C-axis grid color:",
+            tipify(colourInput(ns("c.gridcolor"), "C-axis Grid Color",
                 value = .get_default(defaults, "c.gridcolor", "#EEEEEE")
             ), documentParameters$c.gridcolor, placement = "top", options = list(container = "body"))
         ),
         "Title & Legend" = tagList(
-            tipify(numericInput(ns("title.font.size"), "Title font size:",
+            tipify(numericInput(ns("title.font.size"), "Title Size",
                 value = .get_default(defaults, "title.font.size", 18, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("title.font.family"), "Title font:",
+            tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("title.font.color"), "Title font color:",
+            tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
-            tipify(checkboxInput(ns("show.legend"), "Show legend",
+            tipify(checkboxInput(ns("show.legend"), "Show Legend",
                 value = .get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.orientation"), "Legend orientation:",
+            tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
                 selected = .get_default(defaults, "legend.orientation", "h")
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.font.family"), "Legend font:",
+            tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
                 )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("legend.font.size"), "Legend font size:",
+            tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("legend.font.color"), "Legend font color:",
+            tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
         "Background" = tagList(
-            tipify(colourInput(ns("bgcolor"), "Background color:",
+            tipify(colourInput(ns("bgcolor"), "Background Color",
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),

@@ -47,6 +47,9 @@ so see the help for that function for an exhaustive list.
 The following \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} parameters can be accessed via UI inputs
 and/or the \code{defaults} argument:
 \itemize{
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
 \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
 \item \code{color.scale} - Colorscale for lines (UI: "Color scale", default: "Viridis")
@@ -59,9 +62,6 @@ and/or the \code{defaults} argument:
 \item \code{tick.font.size} - Tick label font size (UI: "Tick font size", default: 10)
 \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
 \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
-\item \code{title.font.size} - Title font size (UI: "Title font size", default: 16)
-\item \code{title.font.family} - Title font family (UI: "Title font", default: "Arial")
-\item \code{title.font.color} - Title font color (UI: "Title color", default: "black")
 \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
 }
 }

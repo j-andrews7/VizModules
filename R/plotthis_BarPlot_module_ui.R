@@ -91,10 +91,12 @@
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
-#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 #'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
@@ -179,49 +181,49 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
     "Data" = tagList(
-        tipify(selectInput(ns("x.data"), "X values:",
+        tipify(selectInput(ns("x.data"), "X Values",
         selected = .get_default(defaults, "x.data", char.choices[2],
             function(x) x %in% char.choices),
         choices = char.choices
         ), documentParameters$x, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("y.data"), "Y values:",
+        tipify(selectInput(ns("y.data"), "Y Values",
         selected = .get_default(defaults, "y.data", num.choices[2],
             function(x) x %in% num.choices),
         choices = num.choices
         ), documentParameters$y, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("group.by"), "Group by:",
+        tipify(selectInput(ns("group.by"), "Group By",
         selected = .get_default(defaults, "group.by", char.choices[2],
             function(x) x %in% c("", names(data))),
         choices = c("", names(data))
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("fill.by"), "Fill by:",
+        tipify(selectInput(ns("fill.by"), "Fill By",
         selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
             choices = c("", names(data))),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 
     "Facet" = tagList(
-        tipify(selectInput(ns("facet.by"), "Facet by:",
+        tipify(selectInput(ns("facet.by"), "Facet By",
         selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, "")
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("facet.scale"), "Facet scale:",
+        tipify(selectInput(ns("facet.scale"), "Facet Scale",
         selected = .get_default(
             defaults, "facet.scale", "fixed",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
         choices = c("fixed", "free", "free_x", "free_y")
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.ncol"), "Facet number of columns:",
+        tipify(numericInput(ns("facet.ncol"), "Columns",
         value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.nrow"), "Facet number of rows:",
+        tipify(numericInput(ns("facet.nrow"), "Rows",
         value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("facet.by.row"), "Facet by row:",
+        tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
         value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("split.by"), "Split by:",
+        tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, "")
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
@@ -242,10 +244,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     ),
 
     "Adjustments" = tagList(
-        tipify(numericInput(ns("y.min"), "Y-axis min:",
+        tipify(numericInput(ns("y.min"), "Y-axis Min",
             value = .get_default(defaults, "y.min", min.y, is.numeric)
         ), documentParameters$y_min, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("y.max"), "Y-axis max:",
+        tipify(numericInput(ns("y.max"), "Y-axis Max",
             value = .get_default(defaults, "y.max", max.y, is.numeric)
         ), documentParameters$y_max, placement = "top", options = list(container = "body"))
     ),

@@ -74,10 +74,12 @@
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
-#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 #'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
@@ -192,12 +194,12 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.ncol"), "Number of Columns",
+            tipify(numericInput(ns("facet.ncol"), "Columns",
                 value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.nrow"), "Number of Rows",
+            tipify(numericInput(ns("facet.nrow"), "Rows",
                 value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
@@ -224,12 +226,12 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                 documentParameters$use_trend,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("trend.skip.zero"), "Skip Zero Values",
+            tipify(materialSwitch(ns("trend.skip.zero"), "Skip Zeros",
                 value = .get_default(defaults, "trend.skip.zero", FALSE, is.logical), status = "success"),
                 documentParameters$trend_skip_zero,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("add.trend"), "Add Trend to Histogram",
+            tipify(materialSwitch(ns("add.trend"), "Add Trend",
                 value = .get_default(defaults, "add.trend", FALSE, is.logical), status = "success"),
                 documentParameters$add_trend,
                 placement = "top", options = list(container = "body")

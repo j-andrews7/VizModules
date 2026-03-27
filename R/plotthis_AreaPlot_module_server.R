@@ -115,17 +115,14 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             # Aesthetic
             # (palette.selection is UI output, so no reset call here)
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
-            updateSelectInput(session, "legend.direction",
-                selected = .get_default(defaults, "legend.direction", "vertical"))
+            updateMaterialSwitch(session, "scale.y", value = .get_default(defaults, "scale.y", FALSE, is.logical))
 
             # Axes
-            updateNumericInput(session, "axis.font.size",
-                value = .get_default(defaults, "axis.font.size", 18, is.numeric))
+            updateNumericInput(session, "axis.title.font.size",
+                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric))
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric))
-            updateMaterialSwitch(session, "scale.y", value = .get_default(defaults, "scale.y", FALSE, is.logical))
+                value = .get_default(defaults, "title.font.size", 26, is.numeric))
             .reset_axes_inputs(session, defaults)
 
             # Plotly

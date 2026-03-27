@@ -51,7 +51,6 @@ The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameter
 \item \code{subtitle} - Plot subtitle (not supported in plotly)
 \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
 \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
-\item \code{y} - Y-axis variable (automatically set from data structure)
 \item \code{y_sep} - Separator for y columns (not applicable in UI context)
 \item \code{flip} - Flip axes (not implemented in current UI)
 \item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
@@ -84,7 +83,8 @@ The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameter
 
 The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
-\item \code{x} - X-axis variable (UI: "X values", default: 2nd numeric variable)
+\item \code{x} - X-axis variable (UI: "X values", defaults key: \code{x.data}, default: 2nd numeric variable)
+\item \code{y} - Y-axis grouping variable (UI: "Y values", defaults key: \code{y.data}, default: 2nd categorical variable)
 \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable)
 \item \code{alpha_by} - Variable for alpha transparency (UI: "Alpha by", default: "")
 \item \code{alpha_reverse} - Reverse alpha order (UI: "Alpha reverse", default: FALSE)
@@ -110,10 +110,12 @@ The following parameters implementing new functionality or controlling plotly-sp
 When enabled, the text position slider is hidden and labels appear as Y-axis tick labels.
 \item \code{text.position} - Position of category labels along the X axis (UI: "Position of category labels", default: 0).
 Only visible when \code{label.on.y.axis} is FALSE.
-\item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-\item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-\item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+\item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+\item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+\item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)

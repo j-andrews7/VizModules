@@ -72,10 +72,8 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters c
 \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
 \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
-\item \code{theme} - ggplot2 theme (UI: "Theme", default: "theme_this")
 \item \code{alpha} - Area fill transparency (UI: "Alpha", default: 1)
 \item \code{scale_y} - Scale y-axis by total (UI: "Scale y-axis by total", default: FALSE)
-\item \code{legend_direction} - Legend orientation (UI: "Legend direction", default: "vertical")
 }
 }
 
@@ -83,10 +81,12 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters c
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
-\item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-\item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+\item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-\item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+\item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+\item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+\item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+\item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)

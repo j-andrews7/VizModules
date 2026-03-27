@@ -115,10 +115,13 @@
 #' \itemize{
 #'   \item \code{boxplot.width} - Width of boxplot (UI: "Boxplot Width", default: 0.8)
 #'   \item \code{show.outliers} - Show outlier points (UI: "Show Outliers", default: TRUE)
-#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis title size", default: 18)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 #'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
@@ -206,7 +209,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     inputs <- list(
         "Data" = tagList(
             tipify(
-                selectInput(ns("x.data"), "X data",
+                selectInput(ns("x.data"), "X Data",
                     choices = cat.choices,
                     selected = .get_default(
                         defaults, "x.data", cat.choices[2],
@@ -217,7 +220,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("y.data"), "Y data",
+                selectInput(ns("y.data"), "Y Data",
                     choices = num.choices,
                     selected = .get_default(
                         defaults, "y.data", num.choices[2],
@@ -228,7 +231,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("group.by"), "Group by",
+                selectInput(ns("group.by"), "Group By",
                     selected = .get_default(
                         defaults, "group.by", "",
                         function(x) x %in% c("", cat.choices)
@@ -259,7 +262,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$y_max,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("y.min"), "Min Value of Y Axis",
+            tipify(numericInput(ns("y.min"), "Y Axis Min",
                 value = .get_default(defaults, "y.min", min.y, is.numeric), min = -Inf, max = Inf),
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
@@ -313,7 +316,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             )
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet by",
+            tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
                 choices = c(cat.choices, "")),
                 documentParameters$facet_by,

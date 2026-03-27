@@ -14,13 +14,13 @@
 #' @section Plot parameters and defaults:
 #' The following [VizModules::dumbbellPlot()] parameters can be accessed via UI inputs:
 #' \itemize{
-#'   \item \code{x} - X values (UI: "Select X values (max 2)", multiple: TRUE, max 2 enforced)
-#'   \item \code{y} - Y value (UI: "Select Y value", single selection)
+#'   \item \code{x} - X values (UI: "Select X values (max 2)", defaults key: \code{x.value}, multiple: TRUE, max 2 enforced)
+#'   \item \code{y} - Y value (UI: "Select Y value", defaults key: \code{y.value}, single selection)
 #'   \item \code{x.adjustment} - X-axis transformation (UI: "X Adjustment")
 #'   \item \code{colour.by} - Color by X or Y (UI: "Colour by", options: "X variables", "Y variables")
-#'   \item \code{facet.by} - Faceting variable (UI: "Facet by")
+#'   \item \code{facet.by} - Faceting variable (UI: "Facet By")
 #'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-#'   \item \code{line.colour} - Color of connecting lines (UI: "Colour Of connectors", default: "gray30")
+#'   \item \code{line.colour} - Color of connecting lines (UI: "Colour Of Connectors", default: "gray30")
 #'   \item \code{palette.selection} - Color palette (UI: palette picker)
 #'   \item \code{axis.*} - Various axis styling options (UI: via .uniform_axes_inputs_ui)
 #'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
@@ -75,7 +75,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.value"), "Select X values (max 2):",
+            tipify(selectInput(ns("x.value"), "X Values (max 2)",
                 selected = .get_default(
                     defaults, "x.value",
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
@@ -83,7 +83,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                 ),
                 choices = num.choices, multiple = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.value"), "Select Y value:",
+            tipify(selectInput(ns("y.value"), "Y Value",
                 selected = .get_default(
                     defaults, "y.value",
                     if (length(cat.choices) > 1) cat.choices[2] else "",
@@ -91,14 +91,14 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                 ),
                 choices = cat.choices, multiple = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("x.adjustment"), "X Adjustment:",
+            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = .get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
                 )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("colour.by"), "Colour by:",
+            tipify(selectInput(ns("colour.by"), "Colour By",
                 choices = c("X variables", "Y variables"),
                 selected = .get_default(
                     defaults, "colour.by", "X variables",
@@ -107,14 +107,14 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
             ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet by:",
+            tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
                 choices = cat.choices
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scales"), "Facet scales",
+            tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = .get_default(
                     defaults, "facet.scales", "fixed",
@@ -124,7 +124,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
-            tipify(colourInput(ns("line.colour"), "Colour of connectors",
+            tipify(colourInput(ns("line.colour"), "Colour of Connectors",
                 value = .get_default(defaults, "line.colour", "gray30")),
                 documentParameters$line.colour,
                 placement = "top", options = list(container = "body")

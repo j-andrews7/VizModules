@@ -260,11 +260,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
             updateNumericInput(session, "x.min", value = .get_default(defaults, "x.min", min.x, is.numeric))
-            updateNumericInput(session, "axis.font.size",
-                value = .get_default(defaults, "axis.font.size", 18, is.numeric)
+            updateNumericInput(session, "axis.title.font.size",
+                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric)
+                value = .get_default(defaults, "title.font.size", 26, is.numeric)
             )
 
             .reset_axes_inputs(session, defaults)

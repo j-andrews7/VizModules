@@ -22,7 +22,6 @@
 #'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
 #'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
 #'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
-#'   \item \code{y} - Y-axis variable (automatically set from data structure)
 #'   \item \code{y_sep} - Separator for y columns (not applicable in UI context)
 #'   \item \code{flip} - Flip axes (not implemented in current UI)
 #'   \item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
@@ -53,7 +52,8 @@
 #' @section Plot parameters and defaults:
 #' The following [plotthis::SplitBarPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 #' \itemize{
-#'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd numeric variable)
+#'   \item \code{x} - X-axis variable (UI: "X values", defaults key: \code{x.data}, default: 2nd numeric variable)
+#'   \item \code{y} - Y-axis grouping variable (UI: "Y values", defaults key: \code{y.data}, default: 2nd categorical variable)
 #'   \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable)
 #'   \item \code{alpha_by} - Variable for alpha transparency (UI: "Alpha by", default: "")
 #'   \item \code{alpha_reverse} - Reverse alpha order (UI: "Alpha reverse", default: FALSE)
@@ -77,10 +77,12 @@
 #'     When enabled, the text position slider is hidden and labels appear as Y-axis tick labels.
 #'   \item \code{text.position} - Position of category labels along the X axis (UI: "Position of category labels", default: 0).
 #'     Only visible when \code{label.on.y.axis} is FALSE.
-#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 #'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
@@ -158,19 +160,19 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     inputs <- list(
       "Data" = tagList(
-      tipify(selectInput(ns("x.data"), "X values",
+      tipify(selectInput(ns("x.data"), "X Values",
         selected = .get_default(defaults, "x.data", num.choices[2],
             function(x) x %in% num.choices),
         choices = num.choices
       ), documentParameters$x, placement = "top", options = list(container = "body")),
-      tipify(selectInput(ns("y.data"), "Y values",
+      tipify(selectInput(ns("y.data"), "Y Values",
         selected = .get_default(defaults, "y.data", char.choices[2],
             function(x) x %in% char.choices),
         choices = char.choices
       ), "Select the categorical column to use for the Y axis groupings",
         placement = "top", options = list(container = "body")),
       # Changed from group.by to fill.by
-      tipify(selectInput(ns("fill.by"), "Fill by",
+      tipify(selectInput(ns("fill.by"), "Fill By",
         selected = .get_default(defaults, "fill.by", choices[2],
             function(x) x %in% choices),
         choices = choices
@@ -178,27 +180,27 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
 
     "Facet" = tagList(
-        tipify(selectInput(ns("facet.by"), "Facet by",
+        tipify(selectInput(ns("facet.by"), "Facet By",
         selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, "")
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("facet.scale"), "Facet scale",
+        tipify(selectInput(ns("facet.scale"), "Facet Scale",
         selected = .get_default(
             defaults, "facet.scale", "free_y",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
         choices = c("fixed", "free", "free_x", "free_y")
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.ncol"), "Facet number of columns",
+        tipify(numericInput(ns("facet.ncol"), "Columns",
         value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.nrow"), "Facet number of rows",
+        tipify(numericInput(ns("facet.nrow"), "Rows",
         value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("facet.by.row"), "Facet by row",
+        tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
         value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("split.by"), "Split by",
+        tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, "")
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
@@ -206,28 +208,28 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
-        tipify(selectInput(ns("alpha.by"), "Alpha by",
+        tipify(selectInput(ns("alpha.by"), "Alpha By",
             selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
             choices = c("", num.choices)),
             documentParameters$alpha_by, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("alpha.reverse"), "Alpha reverse",
+        tipify(materialSwitch(ns("alpha.reverse"), "Alpha Reverse",
             value = .get_default(defaults, "alpha.reverse", FALSE, is.logical), status = "success"),
             documentParameters$alpha_reverse, placement = "top", options = list(container = "body")),
-        tipify(textInput(ns("alpha.name"), "Alpha name",
+        tipify(textInput(ns("alpha.name"), "Alpha Name",
             value = .get_default(defaults, "alpha.name", "")),
             documentParameters$alpha_name, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("bar.height"), "Bar height",
+        tipify(numericInput(ns("bar.height"), "Bar Height",
             value = .get_default(defaults, "bar.height", 0.9, is.numeric), min = 0),
             documentParameters$bar_height, placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("axis.scale.factor"), "Factor to which the bars fill the axis",
+        tipify(sliderInput(ns("axis.scale.factor"), "Axis Scale Factor",
             min = 0, max = 5, value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric), step = 0.2),
             "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
             placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y axis",
+        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y Axis",
             value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical), status = "success"),
             "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
             placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("text.position"), "Position of category labels: ",
+        tipify(sliderInput(ns("text.position"), "Category Label Position",
             value = .get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100),
             "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
             placement = "top", options = list(container = "body"))
@@ -235,10 +237,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     ),
 
     "Adjustments" = tagList(
-        tipify(numericInput(ns("x.min"), "X-axis min:",
+        tipify(numericInput(ns("x.min"), "X-axis Min",
             value = .get_default(defaults, "x.min", min.x, is.numeric)
         ), documentParameters$x_min, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("x.max"), "X-axis max:",
+        tipify(numericInput(ns("x.max"), "X-axis Max",
             value = .get_default(defaults, "x.max", max.x, is.numeric)
         ), documentParameters$x_max, placement = "top", options = list(container = "body"))
     ),

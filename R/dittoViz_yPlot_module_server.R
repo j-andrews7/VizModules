@@ -15,9 +15,12 @@
 #'
 #' @import shiny
 #' @import plotly
+#' @importFrom ggplot2 theme_bw theme unit
+#' @importFrom stats na.omit
 #' @importFrom dittoViz yPlot
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show
 #' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom colourpicker updateColourInput
 #'
 #' @seealso [dittoViz::yPlot()], [VizModules::dittoViz_yPlotInputsUI()],
 #' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotApp()]
@@ -58,9 +61,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         # Show/hide Save Stats button based on stats.enabled
         observeEvent(input$stats.enabled, {
             if (isTRUE(input$stats.enabled)) {
-                shinyjs::show("download.stats.col")
+                show("download.stats.col")
             } else {
-                shinyjs::hide("download.stats.col")
+                hide("download.stats.col")
             }
         })
 
@@ -95,7 +98,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
             if (!is.null(col_to_use)) {
-                col_data <- stats::na.omit(df[[col_to_use]])
+                col_data <- na.omit(df[[col_to_use]])
                 # Use factor level order to match ggplot2/dittoViz color assignment.
                 # For factors, use the defined levels (preserves order);
                 # for character/other, convert to factor (alphabetical order).
@@ -167,19 +170,17 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Jitter
             updateNumericInput(session, "jitter.size", value = .get_default(defaults, "jitter.size", 1, is.numeric))
             updateNumericInput(session, "jitter.width", value = .get_default(defaults, "jitter.width", 0.2, is.numeric))
-            colourpicker::updateColourInput(session, "jitter.color",
+            updateColourInput(session, "jitter.color",
                 value = .get_default(defaults, "jitter.color", "#000000"))
             updateNumericInput(session, "jitter.shape.legend.size",
                 value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric))
             updateMaterialSwitch(session, "jitter.shape.legend.show",
                 value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical))
-            updateNumericInput(session, "jitter.position.dodge",
-                value = .get_default(defaults, "jitter.position.dodge", NA, is.numeric))
 
             # Box
-            updateMaterialSwitch(session, "show.outliers",
-                value = .get_default(defaults, "show.outliers", FALSE, is.logical))
-            colourpicker::updateColourInput(session, "boxplot.color",
+            updateMaterialSwitch(session, "boxplot.show.outliers",
+                value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical))
+            updateColourInput(session, "boxplot.color",
                 value = .get_default(defaults, "boxplot.color", "#000000"))
             updateMaterialSwitch(session, "boxplot.fill",
                 value = .get_default(defaults, "boxplot.fill", TRUE, is.logical))
@@ -191,8 +192,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Violin
             updateNumericInput(session, "vlnplot.lineweight",
                 value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
-            updateNumericInput(session, "vlnplot.width",
-                value = .get_default(defaults, "vlnplot.width", 1, is.numeric))
             updateSelectInput(session, "vlnplot.scaling",
                 selected = .get_default(defaults, "vlnplot.scaling", "area"))
             updateTextInput(session, "vlnplot.quantiles",
@@ -335,7 +334,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
                 jitter.position.dodge = 1 - isolate_fn(input$boxgap),
                 boxplot.color = isolate_fn(input$boxplot.color),
-                boxplot.show.outliers = TRUE,
+                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
                 boxplot.fill = isolate_fn(input$boxplot.fill),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
@@ -348,14 +347,14 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE, 
-                theme = theme_bw() + ggplot2::theme(
-                    panel.spacing = ggplot2::unit(isolate_fn(input$subplot.margin), "lines")
+                legend.show = TRUE,
+                theme = theme_bw() + theme(
+                    panel.spacing = unit(isolate_fn(input$subplot.margin), "npc")
                 )
             )
 
             fig <- p |>
-                plotly::layout(
+                layout(
                     title = list(
                         font = list(
                             size = isolate_fn(input$title.font.size),

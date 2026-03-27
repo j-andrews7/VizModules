@@ -171,29 +171,19 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Aesthetics
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
             updateNumericInput(session, "width", value = .get_default(defaults, "width", NA, is.numeric))
             updateTextInput(session, "expand", value = .get_default(defaults, "expand", ""))
-
-            # Extras
-            updateNumericInput(session, "add.line", value = .get_default(defaults, "add.line", NA, is.numeric))
-            updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "#000000")
-            )
-            updateNumericInput(session, "line.type", value = .get_default(defaults, "line.type", 1, is.numeric))
-            updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 0.6, is.numeric))
-            updateTextInput(session, "line.name", value = .get_default(defaults, "line.name", ""))
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
             updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "axis.font.size",
-                value = .get_default(defaults, "axis.font.size", 18, is.numeric)
+            updateNumericInput(session, "axis.title.font.size",
+                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric)
+                value = .get_default(defaults, "title.font.size", 26, is.numeric)
             )
             .reset_axes_inputs(session, defaults)
 
@@ -253,7 +243,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            line.name <- .na_to_null(isolate_fn(input$line.name))
             expand <- waiver()
             expand.input <- .na_to_null(isolate_fn(input$expand))
             if (!is.null(expand.input)) {

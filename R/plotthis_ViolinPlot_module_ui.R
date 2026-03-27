@@ -118,10 +118,12 @@
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
-#'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title font size", default: 28)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{text.colour} - Color for axis labels (UI: "Label colour", default: "#000000")
+#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
+#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
+#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
 #'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
 #'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
 #'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
@@ -244,7 +246,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
-            tipify(shiny::textInput(ns("sort_x"), "Sort X By",
+            tipify(textInput(ns("sort_x"), "Sort X By",
                 value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Y Max",
                 value = .get_default(defaults, "y.max", max.y, is.numeric)),
@@ -256,7 +258,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(materialSwitch(ns("add.points"), "Add Jitter Points",
+            tipify(materialSwitch(ns("add.points"), "Add Jitter",
                 value = .get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
                 documentParameters$add_point,
                 placement = "top", options = list(container = "body")
@@ -281,7 +283,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 documentParameters$jitter_height,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("pt.color"), "Point Outline Colour",
+            tipify(colourInput(ns("pt.color"), "Point Outline Colour",
                 value = .get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
@@ -291,7 +293,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 documentParameters$add_box,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("box.color"), "Box Colour",
+            tipify(colourInput(ns("box.color"), "Box Colour",
                 value = .get_default(defaults, "box.color", "#000000")),
                 documentParameters$box_color,
                 placement = "top", options = list(container = "body")
@@ -313,7 +315,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(colourpicker::colourInput(ns("highlight.colour"), "Highlight Colour",
+            tipify(colourInput(ns("highlight.colour"), "Highlight Colour",
                 value = .get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")
