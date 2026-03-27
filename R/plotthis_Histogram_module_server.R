@@ -311,7 +311,13 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             } else {
                 fig <- generate_Histogram() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

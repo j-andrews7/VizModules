@@ -367,12 +367,12 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             if (length(x_input) == 0 || !nzchar(x_input)) {
                 return_empty <- TRUE
-                txt <- c(txt, "X variable input must not be empty. Please select a variable.\n")
+                txt <- c(txt, "X variable input must not be empty. Please select a variable.")
             }
 
             if (length(y_input) == 0 || !nzchar(y_input)) {
                 return_empty <- TRUE
-                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.\n")
+                txt <- c(txt, "Y variable input must not be empty. Please select a numeric variable.")
             }
 
 
@@ -381,7 +381,13 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             } else {
                 fig <- generate_ViolinPlot() |>
                     layout(
-                        margin = list(t = input$margin.t, b = input$margin.b, l = input$margin.l, r = input$margin.r, autoexpand = TRUE)
+                        margin = list(
+                            t = input$margin.t,
+                            b = input$margin.b,
+                            l = input$margin.l,
+                            r = input$margin.r,
+                            autoexpand = TRUE
+                        )
                     )
             }
 

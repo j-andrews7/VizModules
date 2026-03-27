@@ -1400,6 +1400,9 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
 #' @importFrom plotly ggplotly layout
 .empty_plot <- function(text = NULL, plotly = FALSE) {
+    if (length(text) > 1) {
+        text <- paste(text, collapse = "\n")
+    }
     plot <- ggplot() +
         theme_void() +
         theme(plot.margin = margin(1, 1, 1, 1, "cm")) +
