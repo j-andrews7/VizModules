@@ -66,6 +66,15 @@ The following
 [`parallelCoordinatesPlot()`](https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlot.md)
 parameters can be accessed via UI inputs and/or the `defaults` argument:
 
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
+
+- `title.font.family` - Font family for title text (UI: "Title Font",
+  default: "Arial")
+
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
+  "#000000")
+
 - `dimensions` - Columns to use as axes (UI: "Select dimensions",
   multiple: TRUE)
 
@@ -98,15 +107,6 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `tick.font.family` - Tick label font family (UI: "Tick font", default:
   "Arial")
 
-- `title.font.size` - Title font size (UI: "Title font size", default:
-  16)
-
-- `title.font.family` - Title font family (UI: "Title font", default:
-  "Arial")
-
-- `title.font.color` - Title font color (UI: "Title color", default:
-  "black")
-
 - `bgcolor` - Plot background color (UI: "Background color", default:
   "#FFFFFF")
 
@@ -128,29 +128,29 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="6593">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="5626">
 #>     <li class="active">
-#>       <a href="#tab-6593-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5626-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6593-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-5626-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6593-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-5626-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6593-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Background">Title &amp; Background</a>
+#>       <a href="#tab-5626-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Background">Title &amp; Background</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6593-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-5626-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6593">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6593-1">
+#>   <div class="tab-content" data-tabsetid="5626">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5626-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2384531">
-#>             <label class="control-label" id="parcoords-dimensions-label" for="parcoords-dimensions">Select dimensions:</label>
+#>             <label class="control-label" id="parcoords-dimensions-label" for="parcoords-dimensions">Dimensions</label>
 #>             <div>
 #>               <select id="parcoords-dimensions" class="shiny-input-select" multiple="multiple"><option value="mpg" selected>mpg</option>
 #> <option value="cyl" selected>cyl</option>
@@ -170,7 +170,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify44964">
-#>             <label class="control-label" id="parcoords-color.by-label" for="parcoords-color.by">Color by:</label>
+#>             <label class="control-label" id="parcoords-color.by-label" for="parcoords-color.by">Color By</label>
 #>             <div>
 #>               <select id="parcoords-color.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="mpg">mpg</option>
@@ -191,11 +191,11 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6593-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5626-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9435164">
-#>             <label class="control-label" id="parcoords-color.scale-label" for="parcoords-color.scale">Color scale:</label>
+#>             <label class="control-label" id="parcoords-color.scale-label" for="parcoords-color.scale">Color Scale</label>
 #>             <div>
 #>               <select id="parcoords-color.scale" class="shiny-input-select"><option value="Blackbody">Blackbody</option>
 #> <option value="Bluered">Bluered</option>
@@ -222,7 +222,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4381372">
-#>             <label class="control-label" id="parcoords-line.opacity-label" for="parcoords-line.opacity">Line opacity:</label>
+#>             <label class="control-label" id="parcoords-line.opacity-label" for="parcoords-line.opacity">Line Opacity</label>
 #>             <input class="js-range-slider" id="parcoords-line.opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4381372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of lines between 0 and 1. Default: 0.5.'})}, 500)});</script>
@@ -231,7 +231,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7506033">
-#>             <label class="control-label" id="parcoords-line.width-label" for="parcoords-line.width">Line width:</label>
+#>             <label class="control-label" id="parcoords-line.width-label" for="parcoords-line.width">Line Width</label>
 #>             <input id="parcoords-line.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.5" step="0.5"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7506033', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of lines in pixels. Default: 1.'})}, 500)});</script>
@@ -241,7 +241,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="parcoords-show.colorbar" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show colorbar</span>
+#>                 <span>Show Colorbar</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -249,18 +249,18 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-6593-3">
+#>     <div class="tab-pane" data-value="Labels" id="tab-5626-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4079732">
-#>             <label class="control-label" id="parcoords-label.font.size-label" for="parcoords-label.font.size">Label font size:</label>
+#>             <label class="control-label" id="parcoords-label.font.size-label" for="parcoords-label.font.size">Label Size</label>
 #>             <input id="parcoords-label.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4079732', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for dimension labels. Default: 12.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3512488">
-#>             <label class="control-label" for="parcoords-label.font.color">Label font color:</label>
+#>             <label class="control-label" for="parcoords-label.font.color">Label Color</label>
 #>             <input id="parcoords-label.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3512488', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for dimension labels. Default: "black".'})}, 500)});</script>
@@ -269,7 +269,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7380915">
-#>             <label class="control-label" id="parcoords-label.font.family-label" for="parcoords-label.font.family">Label font:</label>
+#>             <label class="control-label" id="parcoords-label.font.family-label" for="parcoords-label.font.family">Label Font</label>
 #>             <div>
 #>               <select id="parcoords-label.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -295,7 +295,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6642855">
-#>             <label class="control-label" id="parcoords-tick.font.size-label" for="parcoords-tick.font.size">Tick font size:</label>
+#>             <label class="control-label" id="parcoords-tick.font.size-label" for="parcoords-tick.font.size">Tick Font Size</label>
 #>             <input id="parcoords-tick.font.size" type="number" class="shiny-input-number form-control" value="10" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6642855', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for axis tick labels. Default: 10.'})}, 500)});</script>
@@ -304,14 +304,14 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify852247">
-#>             <label class="control-label" for="parcoords-tick.font.color">Tick font color:</label>
+#>             <label class="control-label" for="parcoords-tick.font.color">Tick Font Color</label>
 #>             <input id="parcoords-tick.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify852247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for axis tick labels. Default: "black".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8561321">
-#>             <label class="control-label" id="parcoords-tick.font.family-label" for="parcoords-tick.font.family">Tick font:</label>
+#>             <label class="control-label" id="parcoords-tick.font.family-label" for="parcoords-tick.font.family">Tick Font</label>
 #>             <div>
 #>               <select id="parcoords-tick.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -337,18 +337,18 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Background" id="tab-6593-4">
+#>     <div class="tab-pane" data-value="Title &amp; Background" id="tab-5626-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify769834">
-#>             <label class="control-label" id="parcoords-title.font.size-label" for="parcoords-title.font.size">Title font size:</label>
-#>             <input id="parcoords-title.font.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="1" step="1"/>
+#>             <label class="control-label" id="parcoords-title.font.size-label" for="parcoords-title.font.size">Title Size</label>
+#>             <input id="parcoords-title.font.size" type="number" class="shiny-input-number form-control" value="26" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify769834', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for plot title. Default: 16.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8528448">
-#>             <label class="control-label" id="parcoords-title.font.family-label" for="parcoords-title.font.family">Title font:</label>
+#>             <label class="control-label" id="parcoords-title.font.family-label" for="parcoords-title.font.family">Title Font</label>
 #>             <div>
 #>               <select id="parcoords-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -376,21 +376,21 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1063470">
-#>             <label class="control-label" for="parcoords-title.font.color">Title color:</label>
+#>             <label class="control-label" for="parcoords-title.font.color">Title Color</label>
 #>             <input id="parcoords-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1063470', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for plot title text. Default: "black".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4848028">
-#>             <label class="control-label" for="parcoords-bgcolor">Background color:</label>
+#>             <label class="control-label" for="parcoords-bgcolor">Background Color</label>
 #>             <input id="parcoords-bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4848028', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-6593-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-5626-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="parcoords-download.interactive" tabindex="-1" target="_blank" width="100%">

@@ -60,11 +60,29 @@ The following
 [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
 parameters can be accessed via UI inputs and/or the `defaults` argument:
 
-- `x` - X-axis variable(s) (UI: "Select X values", default: 1st column,
-  multiple: TRUE)
+- `x` - X-axis variable(s) (UI: "Select X values", defaults key:
+  `x.value`, default: 1st column, multiple: TRUE)
 
-- `y` - Y-axis variable(s) (UI: "Select Y values", default: 2nd column,
-  multiple: TRUE)
+- `y` - Y-axis variable(s) (UI: "Select Y values", defaults key:
+  `y.value`, default: 2nd column, multiple: TRUE)
+
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
+
+- `title.font.family` - Font family for title text (UI: "Title Font",
+  default: "Arial")
+
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
+  "#000000")
+
+- `axis.title.font.size` - Axis title font size (UI: "Axis Title Size",
+  default: 18)
+
+- `axis.title.font.color` - Axis title font color (UI: "Axis Title
+  Color", default: "#000000")
+
+- `axis.title.font.family` - Axis title font family (UI: "Axis Title
+  Font", default: "Arial")
 
 - `group.by` - Grouping variable (UI: "Group by", default: 1st
   categorical variable)
@@ -133,14 +151,6 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `show.grid.y` - Show Y-axis gridlines (UI: "Show Y Gridlines",
   default: TRUE)
-
-- `title.font.size` - Title font size (UI: via .uniform_axes_inputs_ui,
-  default: 28)
-
-- `title.font.family` - Title font family (UI: "Font", default: "Arial")
-
-- `title.text.color` - Title text color (UI: via
-  .uniform_axes_inputs_ui, default: "#000000")
 
 - `x.title` - X-axis title (auto-calculated from data)
 
@@ -222,32 +232,32 @@ library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="8243">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="linePlot-linePlotTabsetPanel" data-tabsetid="8695">
 #>     <li class="active">
-#>       <a href="#tab-8243-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8695-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8243-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-8695-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8243-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-8695-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8243-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8695-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8243-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8695-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8243-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8695-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8243">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8243-1">
+#>   <div class="tab-content" data-tabsetid="8695">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8695-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5935538">
-#>             <label class="control-label" id="linePlot-x.value-label" for="linePlot-x.value">Select X values:</label>
+#>             <label class="control-label" id="linePlot-x.value-label" for="linePlot-x.value">X Values</label>
 #>             <div>
 #>               <select id="linePlot-x.value" class="shiny-input-select" multiple="multiple"><option value="mpg" selected>mpg</option>
 #> <option value="cyl">cyl</option>
@@ -267,7 +277,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2369776">
-#>             <label class="control-label" id="linePlot-y.value-label" for="linePlot-y.value">Select Y values:</label>
+#>             <label class="control-label" id="linePlot-y.value-label" for="linePlot-y.value">Y Values</label>
 #>             <div>
 #>               <select id="linePlot-y.value" class="shiny-input-select" multiple="multiple"><option value="mpg">mpg</option>
 #> <option value="cyl" selected>cyl</option>
@@ -289,7 +299,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9062972">
-#>             <label class="control-label" id="linePlot-group.by-label" for="linePlot-group.by">Group by:</label>
+#>             <label class="control-label" id="linePlot-group.by-label" for="linePlot-group.by">Group By</label>
 #>             <div>
 #>               <select id="linePlot-group.by" class="shiny-input-select"><option value="" selected></option></select>
 #>               <script type="application/json" data-for="linePlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -300,7 +310,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8188730">
 #>             <div class="material-switch">
-#>               <label for="linePlot-error.bar" style="padding-right: 10px;">Error Bars:</label>
+#>               <label for="linePlot-error.bar" style="padding-right: 10px;">Error Bars</label>
 #>               <input id="linePlot-error.bar" type="checkbox" checked="checked"/>
 #>               <label class="switch label-default bg-default" for="linePlot-error.bar"></label>
 #>             </div>
@@ -359,11 +369,11 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-8243-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-8695-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2170845">
-#>             <label class="control-label" id="linePlot-facet.by-label" for="linePlot-facet.by">Facet by:</label>
+#>             <label class="control-label" id="linePlot-facet.by-label" for="linePlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="linePlot-facet.by" class="shiny-input-select"><option value="" selected></option></select>
 #>               <script type="application/json" data-for="linePlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -373,7 +383,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4562302">
-#>             <label class="control-label" id="linePlot-facet.scales-label" for="linePlot-facet.scales">Facet scales</label>
+#>             <label class="control-label" id="linePlot-facet.scales-label" for="linePlot-facet.scales">Facet Scales</label>
 #>             <div>
 #>               <select id="linePlot-facet.scales" class="shiny-input-select"><option value="fixed" selected>fixed</option>
 #> <option value="free">free</option>
@@ -386,11 +396,11 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-8243-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-8695-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3327998">
-#>             <label class="control-label" id="linePlot-plot.mode-label" for="linePlot-plot.mode">Plot type:</label>
+#>             <label class="control-label" id="linePlot-plot.mode-label" for="linePlot-plot.mode">Plot Type</label>
 #>             <div>
 #>               <select id="linePlot-plot.mode" class="shiny-input-select"><option value="lines" selected>lines</option>
 #> <option value="markers">markers</option>
@@ -402,7 +412,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5683527">
-#>             <label class="control-label" id="linePlot-line.type-label" for="linePlot-line.type">Line type:</label>
+#>             <label class="control-label" id="linePlot-line.type-label" for="linePlot-line.type">Line Type</label>
 #>             <div>
 #>               <select id="linePlot-line.type" class="shiny-input-select"><option value="solid" selected>solid</option>
 #> <option value="dot">dot</option>
@@ -438,7 +448,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-8243-4">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8695-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="linePlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -548,7 +558,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-8243-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8695-5">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -844,7 +854,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-8243-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8695-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7217597">
@@ -869,7 +879,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="linePlot-hline.linetypes-label" for="linePlot-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="linePlot-hline.linetypes-label" for="linePlot-hline.linetypes">Line Types</label>
 #>             <input id="linePlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -906,7 +916,7 @@ linePlotInputsUI("linePlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="linePlot-vline.linetypes-label" for="linePlot-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="linePlot-vline.linetypes-label" for="linePlot-vline.linetypes">Line Types</label>
 #>             <input id="linePlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>

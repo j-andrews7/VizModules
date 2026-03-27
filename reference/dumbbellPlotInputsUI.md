@@ -57,22 +57,23 @@ The following
 [`dumbbellPlot()`](https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.md)
 parameters can be accessed via UI inputs:
 
-- `x` - X values (UI: "Select X values (max 2)", multiple: TRUE, max 2
-  enforced)
+- `x` - X values (UI: "Select X values (max 2)", defaults key:
+  `x.value`, multiple: TRUE, max 2 enforced)
 
-- `y` - Y value (UI: "Select Y value", single selection)
+- `y` - Y value (UI: "Select Y value", defaults key: `y.value`, single
+  selection)
 
 - `x.adjustment` - X-axis transformation (UI: "X Adjustment")
 
 - `colour.by` - Color by X or Y (UI: "Colour by", options: "X
   variables", "Y variables")
 
-- `facet.by` - Faceting variable (UI: "Facet by")
+- `facet.by` - Faceting variable (UI: "Facet By")
 
 - `facet.scales` - Facet scale behavior (UI: "Facet scales", default:
   "fixed")
 
-- `line.colour` - Color of connecting lines (UI: "Colour Of connectors",
+- `line.colour` - Color of connecting lines (UI: "Colour Of Connectors",
   default: "gray30")
 
 - `palette.selection` - Color palette (UI: palette picker)
@@ -107,32 +108,32 @@ data <- data.frame(
 )
 dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="2173">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="2269">
 #>     <li class="active">
-#>       <a href="#tab-2173-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2269-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2173-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-2269-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2173-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-2269-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2173-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-2269-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2173-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-2269-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2173-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-2269-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2173">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2173-1">
+#>   <div class="tab-content" data-tabsetid="2269">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2269-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7696301">
-#>             <label class="control-label" id="dumbbellPlot-x.value-label" for="dumbbellPlot-x.value">Select X values (max 2):</label>
+#>             <label class="control-label" id="dumbbellPlot-x.value-label" for="dumbbellPlot-x.value">X Values (max 2)</label>
 #>             <div>
 #>               <select id="dumbbellPlot-x.value" class="shiny-input-select" multiple="multiple"><option value=""></option>
 #> <option value="Women" selected>Women</option>
@@ -144,7 +145,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1194854">
-#>             <label class="control-label" id="dumbbellPlot-y.value-label" for="dumbbellPlot-y.value">Select Y value:</label>
+#>             <label class="control-label" id="dumbbellPlot-y.value-label" for="dumbbellPlot-y.value">Y Value</label>
 #>             <div>
 #>               <select id="dumbbellPlot-y.value" class="shiny-input-select"><option value=""></option>
 #> <option value="School" selected>School</option></select>
@@ -157,7 +158,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1946950">
-#>             <label class="control-label" id="dumbbellPlot-x.adjustment-label" for="dumbbellPlot-x.adjustment">X Adjustment:</label>
+#>             <label class="control-label" id="dumbbellPlot-x.adjustment-label" for="dumbbellPlot-x.adjustment">X Adjustment</label>
 #>             <div>
 #>               <select id="dumbbellPlot-x.adjustment" class="shiny-input-select"><option value="" selected></option>
 #> <option value="log2">log2</option>
@@ -175,7 +176,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1645693">
-#>             <label class="control-label" id="dumbbellPlot-colour.by-label" for="dumbbellPlot-colour.by">Colour by:</label>
+#>             <label class="control-label" id="dumbbellPlot-colour.by-label" for="dumbbellPlot-colour.by">Colour By</label>
 #>             <div>
 #>               <select id="dumbbellPlot-colour.by" class="shiny-input-select"><option value="X variables" selected>X variables</option>
 #> <option value="Y variables">Y variables</option></select>
@@ -186,11 +187,11 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2173-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-2269-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6632066">
-#>             <label class="control-label" id="dumbbellPlot-facet.by-label" for="dumbbellPlot-facet.by">Facet by:</label>
+#>             <label class="control-label" id="dumbbellPlot-facet.by-label" for="dumbbellPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="dumbbellPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="School">School</option></select>
@@ -201,7 +202,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8565750">
-#>             <label class="control-label" id="dumbbellPlot-facet.scales-label" for="dumbbellPlot-facet.scales">Facet scales</label>
+#>             <label class="control-label" id="dumbbellPlot-facet.scales-label" for="dumbbellPlot-facet.scales">Facet Scales</label>
 #>             <div>
 #>               <select id="dumbbellPlot-facet.scales" class="shiny-input-select"><option value="fixed" selected>fixed</option>
 #> <option value="free">free</option>
@@ -214,21 +215,21 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2173-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2269-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="dumbbellPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9265464">
-#>             <label class="control-label" for="dumbbellPlot-line.colour">Colour of connectors</label>
+#>             <label class="control-label" for="dumbbellPlot-line.colour">Colour of Connectors</label>
 #>             <input id="dumbbellPlot-line.colour" type="text" class="form-control shiny-colour-input" data-init-value="gray30" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9265464', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the connecting lines between dumbbell points. Default: "gray80".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2173-4">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-2269-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="dumbbellPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -338,7 +339,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2173-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-2269-5">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -634,7 +635,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2173-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-2269-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9094409">
@@ -659,7 +660,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="dumbbellPlot-hline.linetypes-label" for="dumbbellPlot-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="dumbbellPlot-hline.linetypes-label" for="dumbbellPlot-hline.linetypes">Line Types</label>
 #>             <input id="dumbbellPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -696,7 +697,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="dumbbellPlot-vline.linetypes-label" for="dumbbellPlot-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="dumbbellPlot-vline.linetypes-label" for="dumbbellPlot-vline.linetypes">Line Types</label>
 #>             <input id="dumbbellPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>

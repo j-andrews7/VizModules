@@ -277,17 +277,23 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 The following parameters implementing new functionality or controlling
 plotly-specific features are also available:
 
-- `axis.font.size` - Axis title font size (UI: "Axis font size",
-  default: 18)
-
-- `title.font.size` - Plot title font size (UI: "Title font size",
-  default: 28)
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
 
 - `title.font.family` - Font family for title text (UI: "Title Font",
   default: "Arial")
 
-- `text.colour` - Color for axis labels (UI: "Label colour", default:
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
   "#000000")
+
+- `axis.title.font.size` - Axis title font size (UI: "Axis Title Size",
+  default: 18)
+
+- `axis.title.font.color` - Axis title font color (UI: "Axis Title
+  Color", default: "#000000")
+
+- `axis.title.font.family` - Axis title font family (UI: "Axis Title
+  Font", default: "Arial")
 
 - `axis.showline` - Show axis border lines (UI: "Show axis lines",
   default: TRUE)
@@ -401,34 +407,34 @@ library(VizModules)
 data(mtcars)
 plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="9012">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="6344">
 #>     <li class="active">
-#>       <a href="#tab-9012-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6344-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6344-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-6344-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6344-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-6344-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6344-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6344-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9012-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6344-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9012">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9012-1">
+#>   <div class="tab-content" data-tabsetid="6344">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6344-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify195253">
@@ -479,7 +485,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9012-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6344-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9421322">
@@ -507,7 +513,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3666881">
 #>             <div class="material-switch">
-#>               <label for="ViolinPlot-add.points" style="padding-right: 10px;">Add Jitter Points</label>
+#>               <label for="ViolinPlot-add.points" style="padding-right: 10px;">Add Jitter</label>
 #>               <input id="ViolinPlot-add.points" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="ViolinPlot-add.points"></label>
 #>             </div>
@@ -592,7 +598,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-9012-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-6344-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7117534">
@@ -626,7 +632,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9012-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6344-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify732092">
@@ -682,7 +688,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-9012-5">
+#>     <div class="tab-pane" data-value="Stats" id="tab-6344-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5234284">
@@ -845,7 +851,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9012-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6344-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="ViolinPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -955,7 +961,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9012-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6344-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1243,7 +1249,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9012-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6344-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify590830">
@@ -1268,7 +1274,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-hline.linetypes-label" for="ViolinPlot-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="ViolinPlot-hline.linetypes-label" for="ViolinPlot-hline.linetypes">Line Types</label>
 #>             <input id="ViolinPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -1305,7 +1311,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="ViolinPlot-vline.linetypes-label" for="ViolinPlot-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="ViolinPlot-vline.linetypes-label" for="ViolinPlot-vline.linetypes">Line Types</label>
 #>             <input id="ViolinPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>

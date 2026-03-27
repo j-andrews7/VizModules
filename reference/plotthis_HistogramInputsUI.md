@@ -188,17 +188,23 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 The following parameters implementing new functionality or controlling
 plotly-specific features are also available:
 
-- `axis.font.size` - Axis title font size (UI: "Axis font size",
-  default: 18)
-
-- `title.font.size` - Plot title font size (UI: "Title font size",
-  default: 28)
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
 
 - `title.font.family` - Font family for title text (UI: "Title Font",
   default: "Arial")
 
-- `text.colour` - Color for axis labels (UI: "Label colour", default:
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
   "#000000")
+
+- `axis.title.font.size` - Axis title font size (UI: "Axis Title Size",
+  default: 18)
+
+- `axis.title.font.color` - Axis title font color (UI: "Axis Title
+  Color", default: "#000000")
+
+- `axis.title.font.family` - Axis title font family (UI: "Axis Title
+  Font", default: "Arial")
 
 - `axis.showline` - Show axis border lines (UI: "Show axis lines",
   default: TRUE)
@@ -312,31 +318,31 @@ library(VizModules)
 data(mtcars)
 plotthis_HistogramInputsUI("histogram", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="5259">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="3534">
 #>     <li class="active">
-#>       <a href="#tab-5259-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3534-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3534-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3534-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-3534-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3534-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3534-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5259-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3534-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5259">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5259-1">
+#>   <div class="tab-content" data-tabsetid="3534">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3534-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1116803">
@@ -372,7 +378,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5259-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3534-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8000977">
@@ -402,14 +408,14 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify527010">
-#>             <label class="control-label" id="histogram-facet.ncol-label" for="histogram-facet.ncol">Number of Columns</label>
+#>             <label class="control-label" id="histogram-facet.ncol-label" for="histogram-facet.ncol">Columns</label>
 #>             <input id="histogram-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify527010', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9865086">
-#>             <label class="control-label" id="histogram-facet.nrow-label" for="histogram-facet.nrow">Number of Rows</label>
+#>             <label class="control-label" id="histogram-facet.nrow-label" for="histogram-facet.nrow">Rows</label>
 #>             <input id="histogram-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9865086', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
@@ -428,7 +434,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5259-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3534-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1487828">
@@ -459,7 +465,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9631817">
 #>             <div class="material-switch">
-#>               <label for="histogram-trend.skip.zero" style="padding-right: 10px;">Skip Zero Values</label>
+#>               <label for="histogram-trend.skip.zero" style="padding-right: 10px;">Skip Zeros</label>
 #>               <input id="histogram-trend.skip.zero" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-trend.skip.zero"></label>
 #>             </div>
@@ -471,7 +477,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify469351">
 #>             <div class="material-switch">
-#>               <label for="histogram-add.trend" style="padding-right: 10px;">Add Trend to Histogram</label>
+#>               <label for="histogram-add.trend" style="padding-right: 10px;">Add Trend</label>
 #>               <input id="histogram-add.trend" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="histogram-add.trend"></label>
 #>             </div>
@@ -530,7 +536,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-5259-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-3534-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9768753">
@@ -567,7 +573,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5259-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3534-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="histogram-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -677,7 +683,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5259-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3534-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -965,7 +971,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5259-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3534-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2051798">
@@ -990,7 +996,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="histogram-hline.linetypes-label" for="histogram-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="histogram-hline.linetypes-label" for="histogram-hline.linetypes">Line Types</label>
 #>             <input id="histogram-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -1027,7 +1033,7 @@ plotthis_HistogramInputsUI("histogram", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="histogram-vline.linetypes-label" for="histogram-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="histogram-vline.linetypes-label" for="histogram-vline.linetypes">Line Types</label>
 #>             <input id="histogram-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>

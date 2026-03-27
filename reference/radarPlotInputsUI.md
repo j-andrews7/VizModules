@@ -113,13 +113,14 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `title.x` - Title horizontal position (UI: "Title horizontal
   position", default: 0.5)
 
-- `title.font.size` - Title font size (UI: "Title font size", default:
-  18)
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
 
-- `title.font.family` - Title font (UI: "Title font", default: "Arial")
+- `title.font.family` - Font family for title text (UI: "Title Font",
+  default: "Arial")
 
-- `title.font.color` - Title font color (UI: "Title font color",
-  default: "#000000")
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
+  "#000000")
 
 - `show.legend` - Show legend (UI: "Show legend", default: TRUE)
 
@@ -163,35 +164,35 @@ skills <- data.frame(
 )
 radarPlotInputsUI("radarPlot", skills)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="radarPlot-radarPlotTabsetPanel" data-tabsetid="8621">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="radarPlot-radarPlotTabsetPanel" data-tabsetid="4602">
 #>     <li class="active">
-#>       <a href="#tab-8621-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4602-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
+#>       <a href="#tab-4602-2" data-toggle="tab" data-bs-toggle="tab" data-value="Trace Style">Trace Style</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-3" data-toggle="tab" data-bs-toggle="tab" data-value="Radial Axis">Radial Axis</a>
+#>       <a href="#tab-4602-3" data-toggle="tab" data-bs-toggle="tab" data-value="Radial Axis">Radial Axis</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-4" data-toggle="tab" data-bs-toggle="tab" data-value="Angular Axis">Angular Axis</a>
+#>       <a href="#tab-4602-4" data-toggle="tab" data-bs-toggle="tab" data-value="Angular Axis">Angular Axis</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-5" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-4602-5" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-6" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
+#>       <a href="#tab-4602-6" data-toggle="tab" data-bs-toggle="tab" data-value="Background">Background</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8621-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4602-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8621">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8621-1">
+#>   <div class="tab-content" data-tabsetid="4602">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4602-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5283224">
-#>             <label class="control-label" id="radarPlot-theta-label" for="radarPlot-theta">Category column (theta):</label>
+#>             <label class="control-label" id="radarPlot-theta-label" for="radarPlot-theta">Category (theta)</label>
 #>             <div>
 #>               <select id="radarPlot-theta" class="shiny-input-select"><option value=""></option>
 #> <option value="category" selected>category</option>
@@ -203,7 +204,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2758051">
-#>             <label class="control-label" id="radarPlot-r-label" for="radarPlot-r">Values column (r):</label>
+#>             <label class="control-label" id="radarPlot-r-label" for="radarPlot-r">Values (r)</label>
 #>             <div>
 #>               <select id="radarPlot-r" class="shiny-input-select"><option value=""></option>
 #> <option value="value" selected>value</option></select>
@@ -216,7 +217,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2612376">
-#>             <label class="control-label" id="radarPlot-group-label" for="radarPlot-group">Group column:</label>
+#>             <label class="control-label" id="radarPlot-group-label" for="radarPlot-group">Group</label>
 #>             <div>
 #>               <select id="radarPlot-group" class="shiny-input-select"><option value="" selected></option>
 #> <option value="category">category</option>
@@ -228,11 +229,11 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Trace Style" id="tab-8621-2">
+#>     <div class="tab-pane" data-value="Trace Style" id="tab-4602-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5438312">
-#>             <label class="control-label" id="radarPlot-fill-label" for="radarPlot-fill">Fill area:</label>
+#>             <label class="control-label" id="radarPlot-fill-label" for="radarPlot-fill">Fill Area</label>
 #>             <div>
 #>               <select id="radarPlot-fill" class="shiny-input-select"><option value="toself" selected>Fill</option>
 #> <option value="none">No fill</option></select>
@@ -243,7 +244,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1990008">
-#>             <label class="control-label" id="radarPlot-line.width-label" for="radarPlot-line.width">Line width:</label>
+#>             <label class="control-label" id="radarPlot-line.width-label" for="radarPlot-line.width">Line Width</label>
 #>             <input id="radarPlot-line.width" type="number" class="shiny-input-number form-control" value="2" data-update-on="change" min="0" step="0.5"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1990008', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of the trace lines in pixels. Default: 2.'})}, 500)});</script>
@@ -252,7 +253,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6450548">
-#>             <label class="control-label" id="radarPlot-line.dash-label" for="radarPlot-line.dash">Line style:</label>
+#>             <label class="control-label" id="radarPlot-line.dash-label" for="radarPlot-line.dash">Line Style</label>
 #>             <div>
 #>               <select id="radarPlot-line.dash" class="shiny-input-select"><option value="solid" selected>Solid</option>
 #> <option value="dot">Dot</option>
@@ -267,7 +268,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7502398">
-#>             <label class="control-label" id="radarPlot-marker.size-label" for="radarPlot-marker.size">Marker size:</label>
+#>             <label class="control-label" id="radarPlot-marker.size-label" for="radarPlot-marker.size">Marker Size</label>
 #>             <input id="radarPlot-marker.size" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7502398', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, size of the markers on the trace. Default: 5.'})}, 500)});</script>
@@ -276,7 +277,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2709779">
-#>             <label class="control-label" id="radarPlot-marker.symbol-label" for="radarPlot-marker.symbol">Marker symbol:</label>
+#>             <label class="control-label" id="radarPlot-marker.symbol-label" for="radarPlot-marker.symbol">Marker Symbol</label>
 #>             <div>
 #>               <select id="radarPlot-marker.symbol" class="shiny-input-select"><option value="circle" selected>Circle</option>
 #> <option value="square">Square</option>
@@ -292,7 +293,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8756219">
-#>             <label class="control-label" id="radarPlot-opacity-label" for="radarPlot-opacity">Opacity:</label>
+#>             <label class="control-label" id="radarPlot-opacity-label" for="radarPlot-opacity">Opacity</label>
 #>             <input class="js-range-slider" id="radarPlot-opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.6" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8756219', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of the traces (0-1). Default: 0.6.'})}, 500)});</script>
@@ -304,14 +305,14 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Radial Axis" id="tab-8621-3">
+#>     <div class="tab-pane" data-value="Radial Axis" id="tab-4602-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8517431">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="radarPlot-radial.visible" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show radial axis</span>
+#>                 <span>Show Radial Axis</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -322,7 +323,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="radarPlot-auto.radial.range" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Auto radial range</span>
+#>                 <span>Auto Radial Range</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -331,14 +332,14 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify458494">
-#>             <label class="control-label" id="radarPlot-radial.min-label" for="radarPlot-radial.min">Radial min:</label>
+#>             <label class="control-label" id="radarPlot-radial.min-label" for="radarPlot-radial.min">Radial Min</label>
 #>             <input id="radarPlot-radial.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify458494', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional numeric vector of length 2 specifying the range of the radial axis (e.g., c(0, 100)). If NULL, automatically determined. Default: NULL.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3810569">
-#>             <label class="control-label" id="radarPlot-radial.max-label" for="radarPlot-radial.max">Radial max:</label>
+#>             <label class="control-label" id="radarPlot-radial.max-label" for="radarPlot-radial.max">Radial Max</label>
 #>             <input id="radarPlot-radial.max" type="number" class="shiny-input-number form-control" value="100" data-update-on="change" min="0"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3810569', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional numeric vector of length 2 specifying the range of the radial axis (e.g., c(0, 100)). If NULL, automatically determined. Default: NULL.'})}, 500)});</script>
@@ -350,7 +351,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="radarPlot-radial.showline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show radial line</span>
+#>                 <span>Show Radial Line</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -358,7 +359,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9217996">
-#>             <label class="control-label" for="radarPlot-radial.linecolor">Radial line color:</label>
+#>             <label class="control-label" for="radarPlot-radial.linecolor">Radial Line Color</label>
 #>             <input id="radarPlot-radial.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="#444444" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9217996', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the radial axis line. Default: "#444444".'})}, 500)});</script>
@@ -367,18 +368,18 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9061868">
-#>             <label class="control-label" for="radarPlot-radial.gridcolor">Radial grid color:</label>
+#>             <label class="control-label" for="radarPlot-radial.gridcolor">Radial Grid Color</label>
 #>             <input id="radarPlot-radial.gridcolor" type="text" class="form-control shiny-colour-input" data-init-value="#EEEEEE" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9061868', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the radial grid lines. Default: "#EEEEEE".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Angular Axis" id="tab-8621-4">
+#>     <div class="tab-pane" data-value="Angular Axis" id="tab-4602-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1929433">
-#>             <label class="control-label" id="radarPlot-angular.direction-label" for="radarPlot-angular.direction">Angular direction:</label>
+#>             <label class="control-label" id="radarPlot-angular.direction-label" for="radarPlot-angular.direction">Angular Direction</label>
 #>             <div>
 #>               <select id="radarPlot-angular.direction" class="shiny-input-select"><option value="clockwise" selected>Clockwise</option>
 #> <option value="counterclockwise">Counterclockwise</option></select>
@@ -389,7 +390,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8643752">
-#>             <label class="control-label" id="radarPlot-angular.rotation-label" for="radarPlot-angular.rotation">Angular rotation (degrees):</label>
+#>             <label class="control-label" id="radarPlot-angular.rotation-label" for="radarPlot-angular.rotation">Angular Rotation (degrees)</label>
 #>             <input class="js-range-slider" id="radarPlot-angular.rotation" data-skin="shiny" data-min="0" data-max="360" data-from="90" data-step="5" data-grid="true" data-grid-num="9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8643752', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, rotation angle for the angular axis in degrees. Default: 90.'})}, 500)});</script>
@@ -398,25 +399,25 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify132727">
-#>             <label class="control-label" for="radarPlot-angular.gridcolor">Angular grid color:</label>
+#>             <label class="control-label" for="radarPlot-angular.gridcolor">Angular Grid Color</label>
 #>             <input id="radarPlot-angular.gridcolor" type="text" class="form-control shiny-colour-input" data-init-value="#EEEEEE" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify132727', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the angular grid lines. Default: "#EEEEEE".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-8621-5">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-4602-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8856603">
-#>             <label class="control-label" id="radarPlot-title.x-label" for="radarPlot-title.x">Title horizontal position:</label>
+#>             <label class="control-label" id="radarPlot-title.x-label" for="radarPlot-title.x">Title Position</label>
 #>             <input class="js-range-slider" id="radarPlot-title.x" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8856603', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, horizontal position for the plot title (0-1). Default: 0.5.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3915421">
-#>             <label class="control-label" id="radarPlot-title.font.size-label" for="radarPlot-title.font.size">Title font size:</label>
+#>             <label class="control-label" id="radarPlot-title.font.size-label" for="radarPlot-title.font.size">Title Size</label>
 #>             <input id="radarPlot-title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="0"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3915421', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the title text. Default: 18.'})}, 500)});</script>
@@ -425,7 +426,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify761764">
-#>             <label class="control-label" id="radarPlot-title.font.family-label" for="radarPlot-title.font.family">Title font:</label>
+#>             <label class="control-label" id="radarPlot-title.font.family-label" for="radarPlot-title.font.family">Title Font</label>
 #>             <div>
 #>               <select id="radarPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -451,7 +452,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6467813">
-#>             <label class="control-label" for="radarPlot-title.font.color">Title font color:</label>
+#>             <label class="control-label" for="radarPlot-title.font.color">Title Color</label>
 #>             <input id="radarPlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6467813', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the title text. Default: "#000000".'})}, 500)});</script>
@@ -463,7 +464,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="radarPlot-show.legend" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Show legend</span>
+#>                 <span>Show Legend</span>
 #>               </label>
 #>             </div>
 #>           </div>
@@ -471,7 +472,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8345086">
-#>             <label class="control-label" id="radarPlot-legend.orientation-label" for="radarPlot-legend.orientation">Legend orientation:</label>
+#>             <label class="control-label" id="radarPlot-legend.orientation-label" for="radarPlot-legend.orientation">Legend Orientation</label>
 #>             <div>
 #>               <select id="radarPlot-legend.orientation" class="shiny-input-select"><option value="h" selected>Horizontal</option>
 #> <option value="v">Vertical</option></select>
@@ -484,7 +485,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5012471">
-#>             <label class="control-label" id="radarPlot-legend.font.family-label" for="radarPlot-legend.font.family">Legend font:</label>
+#>             <label class="control-label" id="radarPlot-legend.font.family-label" for="radarPlot-legend.font.family">Legend Font</label>
 #>             <div>
 #>               <select id="radarPlot-legend.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
@@ -510,7 +511,7 @@ radarPlotInputsUI("radarPlot", skills)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6021448">
-#>             <label class="control-label" id="radarPlot-legend.font.size-label" for="radarPlot-legend.font.size">Legend font size:</label>
+#>             <label class="control-label" id="radarPlot-legend.font.size-label" for="radarPlot-legend.font.size">Legend Font Size</label>
 #>             <input id="radarPlot-legend.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6021448', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for the legend text. Default: 12.'})}, 500)});</script>
@@ -519,32 +520,32 @@ radarPlotInputsUI("radarPlot", skills)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4689590">
-#>             <label class="control-label" for="radarPlot-legend.font.color">Legend font color:</label>
+#>             <label class="control-label" for="radarPlot-legend.font.color">Legend Font Color</label>
 #>             <input id="radarPlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4689590', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the legend text. Default: "#000000".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Background" id="tab-8621-6">
+#>     <div class="tab-pane" data-value="Background" id="tab-4602-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8863742">
-#>             <label class="control-label" for="radarPlot-bgcolor">Plot background color:</label>
+#>             <label class="control-label" for="radarPlot-bgcolor">Plot Background Color</label>
 #>             <input id="radarPlot-bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8863742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6705485">
-#>             <label class="control-label" for="radarPlot-polar.bgcolor">Polar area background:</label>
+#>             <label class="control-label" for="radarPlot-polar.bgcolor">Polar Area Background Color</label>
 #>             <input id="radarPlot-polar.bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6705485', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the polar area background. Default: "#FFFFFF".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-8621-7">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4602-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="radarPlot-download.interactive" tabindex="-1" target="_blank" width="100%">

@@ -137,8 +137,7 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `jitter.position.dodge` - Jitter position dodge (calculated from
   boxgap)
 
-- `boxplot.show.outliers` - Show boxplot outliers (always TRUE in
-  implementation)
+- `boxplot.show.outliers` - Show boxplot outliers
 
 - `boxplot.color` - Boxplot outline color (UI: "Boxplot Color", default:
   "#000000")
@@ -157,7 +156,8 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `vlnplot.quantiles` - Violin quantiles (UI: "Violin Quantiles (0-1)",
   default: "")
 
-- `vlnplot.width` - Violin width (calculated from boxgap)
+- `vlnplot.width` - Violin width (derived from `boxgap`; not directly
+  settable)
 
 - `ridgeplot.lineweight` - Ridge line weight (UI: "Ridge Line Weight",
   default: 0.5)
@@ -175,7 +175,7 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `ridgeplot.binwidth` - Ridge binwidth (UI: "Ridge Binwidth", default:
   NULL)
 
-- `legend.show` - Show legend (always TRUE in implementation)
+- `legend.show` - Show legend (always `TRUE`; not directly settable)
 
 ## Parameters controlling additional functionality
 
@@ -191,64 +191,67 @@ plotly-specific features are also available:
 - `boxgroupgap` - Boxplot group dodge (UI: "Boxplot Group Dodge",
   default: 0.2)
 
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
+
 - `title.font.family` - Font family for title text (UI: "Title Font",
   default: "Arial")
 
-- `text.colour` - Color for title text (UI: "Label colour", default:
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
   "#000000")
 
-- `axis.title.font.size` - Axis title font size (UI: "Axis font size",
+- `axis.title.font.size` - Axis title font size (UI: "Axis Title Size",
   default: 18)
 
-- `axis.title.font.color` - Axis title font color (UI: "Axis title font
-  color", default: "#000000")
+- `axis.title.font.color` - Axis title font color (UI: "Axis Title
+  Color", default: "#000000")
 
-- `axis.title.font.family` - Axis title font family (UI: "Axis title
-  font family", default: "Arial")
+- `axis.title.font.family` - Axis title font family (UI: "Axis Title
+  Font", default: "Arial")
 
-- `axis.showline` - Show axis border lines (UI: "Show axis lines",
+- `axis.showline` - Show axis border lines (UI: "Show Axis Lines",
   default: TRUE)
 
-- `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis
-  lines", default: TRUE)
+- `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis
+  Lines", default: TRUE)
 
-- `show.grid.x` - Show X-axis major gridlines (UI: "Show X major
-  gridlines", default: TRUE)
+- `show.grid.x` - Show X-axis major gridlines (UI: "Show X Major
+  Gridlines", default: TRUE)
 
-- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y major
-  gridlines", default: TRUE)
+- `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y Major
+  Gridlines", default: TRUE)
 
-- `axis.linecolor` - Color of axis lines (UI: "Axis line color",
+- `axis.linecolor` - Color of axis lines (UI: "Axis Line Color",
   default: "black")
 
-- `axis.linewidth` - Width of axis lines (UI: "Axis line width",
+- `axis.linewidth` - Width of axis lines (UI: "Axis Line Width",
   default: 0.5)
 
-- `axis.tickfont.size` - Size of tick labels (UI: "Tick label size",
+- `axis.tickfont.size` - Size of tick labels (UI: "Tick Label Size",
   default: 12)
 
-- `axis.tickfont.color` - Color of tick labels (UI: "Tick label color",
+- `axis.tickfont.color` - Color of tick labels (UI: "Tick Label Color",
   default: "black")
 
-- `axis.tickfont.family` - Font family for tick labels (UI: "Tick label
-  font", default: "Arial")
+- `axis.tickfont.family` - Font family for tick labels (UI: "Tick Label
+  Font", default: "Arial")
 
 - `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI:
-  "X-axis tick label angle", default: 0)
+  "X-axis Tick Label Angle", default: 0)
 
 - `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI:
-  "Y-axis tick label angle", default: 0)
+  "Y-axis Tick Label Angle", default: 0)
 
-- `axis.ticks` - Position of tick marks (UI: "Tick position", default:
+- `axis.ticks` - Position of tick marks (UI: "Tick Position", default:
   "outside")
 
-- `axis.tickcolor` - Color of tick marks (UI: "Tick mark color",
+- `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color",
   default: "black")
 
-- `axis.ticklen` - Length of tick marks (UI: "Tick mark length",
+- `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length",
   default: 5)
 
-- `axis.tickwidth` - Width of tick marks (UI: "Tick mark width",
+- `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width",
   default: 1)
 
 - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI:
@@ -260,7 +263,7 @@ plotly-specific features are also available:
 - `hline.widths` - Widths for horizontal lines (UI: "Widths", default:
   "1")
 
-- `hline.linetypes` - Line types for horizontal lines (UI: "Line types",
+- `hline.linetypes` - Line types for horizontal lines (UI: "Line Types",
   default: "dashed")
 
 - `hline.opacities` - Opacities for horizontal lines (UI: "Opacities
@@ -275,7 +278,7 @@ plotly-specific features are also available:
 - `vline.widths` - Widths for vertical lines (UI: "Widths", default:
   "1")
 
-- `vline.linetypes` - Line types for vertical lines (UI: "Line types",
+- `vline.linetypes` - Line types for vertical lines (UI: "Line Types",
   default: "dashed")
 
 - `vline.opacities` - Opacities for vertical lines (UI: "Opacities
@@ -293,7 +296,7 @@ plotly-specific features are also available:
 - `abline.widths` - Widths for diagonal lines (UI: "Widths", default:
   "1")
 
-- `abline.linetypes` - Line types for diagonal lines (UI: "Line types",
+- `abline.linetypes` - Line types for diagonal lines (UI: "Line Types",
   default: "dashed")
 
 - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities
@@ -318,50 +321,50 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="3843">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="6884">
 #>     <li class="active">
-#>       <a href="#tab-3843-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6884-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-6884-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6884-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-6884-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-6884-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-6884-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-6884-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-6884-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6884-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-10" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6884-10" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-11" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6884-11" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3843-12" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6884-12" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3843">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3843-1">
+#>   <div class="tab-content" data-tabsetid="6884">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6884-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5424804">
-#>             <label class="control-label" id="yPlot-var-label" for="yPlot-var">Y data (var)</label>
+#>             <label class="control-label" id="yPlot-var-label" for="yPlot-var">Y Data</label>
 #>             <div>
 #>               <select id="yPlot-var" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
@@ -382,7 +385,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5446034">
-#>             <label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by">Group by</label>
+#>             <label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by">Group By</label>
 #>             <div>
 #>               <select id="yPlot-group.by" class="shiny-input-select"><option value=""></option></select>
 #>               <script type="application/json" data-for="yPlot-group.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -394,7 +397,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2785972">
-#>             <label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by">Color by</label>
+#>             <label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by">Color By</label>
 #>             <div>
 #>               <select id="yPlot-color.by" class="shiny-input-select"><option value="" selected></option></select>
 #>               <script type="application/json" data-for="yPlot-color.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -404,7 +407,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4467025">
-#>             <label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by">Shape by</label>
+#>             <label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by">Shape By</label>
 #>             <div>
 #>               <select id="yPlot-shape.by" class="shiny-input-select"><option value="" selected></option></select>
 #>               <script type="application/json" data-for="yPlot-shape.by">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -419,11 +422,11 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-3843-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-6884-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3715112">
-#>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plots to show:</label>
+#>             <label class="control-label" id="yPlot-plots-label" for="yPlot-plots">Plots</label>
 #>             <div>
 #>               <select id="yPlot-plots" class="shiny-input-select" multiple="multiple"><option value="vlnplot">Violin</option>
 #> <option value="boxplot" selected>Box</option>
@@ -439,7 +442,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-3843-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6884-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify280610">
@@ -476,7 +479,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-3843-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-6884-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3769709">
@@ -522,14 +525,14 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-3843-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-6884-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6006375">
 #>             <div class="material-switch">
-#>               <label for="yPlot-show.outliers" style="padding-right: 10px;">Show Outliers</label>
-#>               <input id="yPlot-show.outliers" type="checkbox"/>
-#>               <label class="switch label-success bg-success" for="yPlot-show.outliers"></label>
+#>               <label for="yPlot-boxplot.show.outliers" style="padding-right: 10px;">Show Outliers</label>
+#>               <input id="yPlot-boxplot.show.outliers" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="yPlot-boxplot.show.outliers"></label>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6006375', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether outliers should by including in the boxplot. Default is `FALSE` when there is a jitter plotted, `TRUE` if there is no jitter.'})}, 500)});</script>
@@ -578,7 +581,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-3843-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-6884-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2131727">
@@ -610,7 +613,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-3843-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-6884-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9970691">
@@ -664,7 +667,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-3843-8">
+#>     <div class="tab-pane" data-value="Stats" id="tab-6884-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5470434">
@@ -827,7 +830,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-3843-9">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6884-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8742059">
@@ -870,7 +873,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-3843-10">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6884-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="yPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -980,7 +983,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3843-11">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6884-11">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -1260,7 +1263,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3843-12">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6884-12">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2485387">
@@ -1285,7 +1288,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-hline.linetypes-label" for="yPlot-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="yPlot-hline.linetypes-label" for="yPlot-hline.linetypes">Line Types</label>
 #>             <input id="yPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -1322,7 +1325,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="yPlot-vline.linetypes-label" for="yPlot-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="yPlot-vline.linetypes-label" for="yPlot-vline.linetypes">Line Types</label>
 #>             <input id="yPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>

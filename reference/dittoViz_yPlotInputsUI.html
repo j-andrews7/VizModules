@@ -133,21 +133,21 @@ for that function for an exhaustive list.</p>
 <li><p><code>jitter.shape.legend.size</code> - Shape legend size (UI: "Shape Legend Size", default: 5)</p></li>
 <li><p><code>jitter.shape.legend.show</code> - Show shape legend (UI: "Show Shape Legend", default: TRUE)</p></li>
 <li><p><code>jitter.position.dodge</code> - Jitter position dodge (calculated from boxgap)</p></li>
-<li><p><code>boxplot.show.outliers</code> - Show boxplot outliers (always TRUE in implementation)</p></li>
+<li><p><code>boxplot.show.outliers</code> - Show boxplot outliers</p></li>
 <li><p><code>boxplot.color</code> - Boxplot outline color (UI: "Boxplot Color", default: "#000000")</p></li>
 <li><p><code>boxplot.fill</code> - Fill boxplot (UI: "Fill Boxplot", default: TRUE)</p></li>
 <li><p><code>boxplot.lineweight</code> - Boxplot line weight (UI: "Boxplot Line Weight", default: 0.5)</p></li>
 <li><p><code>vlnplot.lineweight</code> - Violin line weight (UI: "Violin Line Weight", default: 0.5)</p></li>
 <li><p><code>vlnplot.scaling</code> - Violin scaling method (UI: "Violin Scaling", default: "area")</p></li>
 <li><p><code>vlnplot.quantiles</code> - Violin quantiles (UI: "Violin Quantiles (0-1)", default: "")</p></li>
-<li><p><code>vlnplot.width</code> - Violin width (calculated from boxgap)</p></li>
+<li><p><code>vlnplot.width</code> - Violin width (derived from <code>boxgap</code>; not directly settable)</p></li>
 <li><p><code>ridgeplot.lineweight</code> - Ridge line weight (UI: "Ridge Line Weight", default: 0.5)</p></li>
 <li><p><code>ridgeplot.scale</code> - Ridge overlap scale (UI: "Ridge Scale (overlap)", default: 1.25)</p></li>
 <li><p><code>ridgeplot.ymax.expansion</code> - Ridge Y-max expansion (UI: "Ridge Y-max Expansion", default: NA)</p></li>
 <li><p><code>ridgeplot.shape</code> - Ridge shape (UI: "Ridge Shape", default: "smooth")</p></li>
 <li><p><code>ridgeplot.bins</code> - Ridge bins (UI: "Ridge Bins", default: 30)</p></li>
 <li><p><code>ridgeplot.binwidth</code> - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)</p></li>
-<li><p><code>legend.show</code> - Show legend (always TRUE in implementation)</p></li>
+<li><p><code>legend.show</code> - Show legend (always <code>TRUE</code>; not directly settable)</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="parameters-controlling-additional-functionality">Parameters controlling additional functionality<a class="anchor" aria-label="anchor" href="#parameters-controlling-additional-functionality"></a></h2>
@@ -156,47 +156,49 @@ for that function for an exhaustive list.</p>
 <p>The following parameters implementing new functionality or controlling plotly-specific features are also available:</p><ul><li><p><code>boxmode</code> - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)</p></li>
 <li><p><code>boxgap</code> - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)</p></li>
 <li><p><code>boxgroupgap</code> - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)</p></li>
+<li><p><code>title.font.size</code> - Plot title font size (UI: "Title Size", default: 26)</p></li>
 <li><p><code>title.font.family</code> - Font family for title text (UI: "Title Font", default: "Arial")</p></li>
-<li><p><code>text.colour</code> - Color for title text (UI: "Label colour", default: "#000000")</p></li>
-<li><p><code>axis.title.font.size</code> - Axis title font size (UI: "Axis font size", default: 18)</p></li>
-<li><p><code>axis.title.font.color</code> - Axis title font color (UI: "Axis title font color", default: "#000000")</p></li>
-<li><p><code>axis.title.font.family</code> - Axis title font family (UI: "Axis title font family", default: "Arial")</p></li>
-<li><p><code>axis.showline</code> - Show axis border lines (UI: "Show axis lines", default: TRUE)</p></li>
-<li><p><code>axis.mirror</code> - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)</p></li>
-<li><p><code>show.grid.x</code> - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)</p></li>
-<li><p><code>show.grid.y</code> - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)</p></li>
-<li><p><code>axis.linecolor</code> - Color of axis lines (UI: "Axis line color", default: "black")</p></li>
-<li><p><code>axis.linewidth</code> - Width of axis lines (UI: "Axis line width", default: 0.5)</p></li>
-<li><p><code>axis.tickfont.size</code> - Size of tick labels (UI: "Tick label size", default: 12)</p></li>
-<li><p><code>axis.tickfont.color</code> - Color of tick labels (UI: "Tick label color", default: "black")</p></li>
-<li><p><code>axis.tickfont.family</code> - Font family for tick labels (UI: "Tick label font", default: "Arial")</p></li>
-<li><p><code>axis.tickangle.x</code> - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)</p></li>
-<li><p><code>axis.tickangle.y</code> - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)</p></li>
-<li><p><code>axis.ticks</code> - Position of tick marks (UI: "Tick position", default: "outside")</p></li>
-<li><p><code>axis.tickcolor</code> - Color of tick marks (UI: "Tick mark color", default: "black")</p></li>
-<li><p><code>axis.ticklen</code> - Length of tick marks (UI: "Tick mark length", default: 5)</p></li>
-<li><p><code>axis.tickwidth</code> - Width of tick marks (UI: "Tick mark width", default: 1)</p></li>
+<li><p><code>title.font.color</code> - Color for plot title (UI: "Title Color", default: "#000000")</p></li>
+<li><p><code>axis.title.font.size</code> - Axis title font size (UI: "Axis Title Size", default: 18)</p></li>
+<li><p><code>axis.title.font.color</code> - Axis title font color (UI: "Axis Title Color", default: "#000000")</p></li>
+<li><p><code>axis.title.font.family</code> - Axis title font family (UI: "Axis Title Font", default: "Arial")</p></li>
+<li><p><code>axis.showline</code> - Show axis border lines (UI: "Show Axis Lines", default: TRUE)</p></li>
+<li><p><code>axis.mirror</code> - Mirror axis lines on opposite side (UI: "Mirror Axis Lines", default: TRUE)</p></li>
+<li><p><code>show.grid.x</code> - Show X-axis major gridlines (UI: "Show X Major Gridlines", default: TRUE)</p></li>
+<li><p><code>show.grid.y</code> - Show Y-axis major gridlines (UI: "Show Y Major Gridlines", default: TRUE)</p></li>
+<li><p><code>axis.linecolor</code> - Color of axis lines (UI: "Axis Line Color", default: "black")</p></li>
+<li><p><code>axis.linewidth</code> - Width of axis lines (UI: "Axis Line Width", default: 0.5)</p></li>
+<li><p><code>axis.tickfont.size</code> - Size of tick labels (UI: "Tick Label Size", default: 12)</p></li>
+<li><p><code>axis.tickfont.color</code> - Color of tick labels (UI: "Tick Label Color", default: "black")</p></li>
+<li><p><code>axis.tickfont.family</code> - Font family for tick labels (UI: "Tick Label Font", default: "Arial")</p></li>
+<li><p><code>axis.tickangle.x</code> - Rotation angle for X-axis tick labels (UI: "X-axis Tick Label Angle", default: 0)</p></li>
+<li><p><code>axis.tickangle.y</code> - Rotation angle for Y-axis tick labels (UI: "Y-axis Tick Label Angle", default: 0)</p></li>
+<li><p><code>axis.ticks</code> - Position of tick marks (UI: "Tick Position", default: "outside")</p></li>
+<li><p><code>axis.tickcolor</code> - Color of tick marks (UI: "Tick Mark Color", default: "black")</p></li>
+<li><p><code>axis.ticklen</code> - Length of tick marks (UI: "Tick Mark Length", default: 5)</p></li>
+<li><p><code>axis.tickwidth</code> - Width of tick marks (UI: "Tick Mark Width", default: 1)</p></li>
 <li><p><code>hline.intercepts</code> - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")</p></li>
 <li><p><code>hline.colors</code> - Colors for horizontal lines (UI: "Colors", default: "#000000")</p></li>
 <li><p><code>hline.widths</code> - Widths for horizontal lines (UI: "Widths", default: "1")</p></li>
-<li><p><code>hline.linetypes</code> - Line types for horizontal lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>hline.linetypes</code> - Line types for horizontal lines (UI: "Line Types", default: "dashed")</p></li>
 <li><p><code>hline.opacities</code> - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")</p></li>
 <li><p><code>vline.intercepts</code> - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")</p></li>
 <li><p><code>vline.colors</code> - Colors for vertical lines (UI: "Colors", default: "#000000")</p></li>
 <li><p><code>vline.widths</code> - Widths for vertical lines (UI: "Widths", default: "1")</p></li>
-<li><p><code>vline.linetypes</code> - Line types for vertical lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>vline.linetypes</code> - Line types for vertical lines (UI: "Line Types", default: "dashed")</p></li>
 <li><p><code>vline.opacities</code> - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")</p></li>
 <li><p><code>abline.slopes</code> - Slopes for diagonal reference lines (UI: "Slopes", default: "")</p></li>
 <li><p><code>abline.intercepts</code> - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")</p></li>
 <li><p><code>abline.colors</code> - Colors for diagonal lines (UI: "Colors", default: "#000000")</p></li>
 <li><p><code>abline.widths</code> - Widths for diagonal lines (UI: "Widths", default: "1")</p></li>
-<li><p><code>abline.linetypes</code> - Line types for diagonal lines (UI: "Line types", default: "dashed")</p></li>
+<li><p><code>abline.linetypes</code> - Line types for diagonal lines (UI: "Line Types", default: "dashed")</p></li>
 <li><p><code>abline.opacities</code> - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">dittoViz::yPlot()</a></code>, <code><a href="organize_inputs.html">organize_inputs()</a></code>,
-<code><a href="dittoViz_yPlotOutputUI.html">dittoViz_yPlotOutputUI()</a></code>, <code><a href="dittoViz_yPlotServer.html">dittoViz_yPlotServer()</a></code>, <code><a href="dittoViz_yPlotApp.html">dittoViz_yPlotApp()</a></code></p></div>
+<code><a href="dittoViz_yPlotOutputUI.html">dittoViz_yPlotOutputUI()</a></code>, <code><a href="dittoViz_yPlotServer.html">dittoViz_yPlotServer()</a></code>,
+<code><a href="dittoViz_yPlotApp.html">dittoViz_yPlotApp()</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -209,50 +211,50 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">dittoViz_yPlotInputsUI</span><span class="op">(</span><span class="st">"yPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="3843"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="6884"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type"&gt;Plot Type&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type"&gt;Plot Type&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter"&gt;Jitter&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter"&gt;Jitter&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box"&gt;Box&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box"&gt;Box&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin"&gt;Violin&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin"&gt;Violin&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge"&gt;Ridge&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge"&gt;Ridge&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats"&gt;Stats&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats"&gt;Stats&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-10" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-10" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-11" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-11" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3843-12" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6884-12" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="3843"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-3843-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="6884"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-6884-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5424804"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-var-label" for="yPlot-var"&gt;Y data (var)&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-var-label" for="yPlot-var"&gt;Y Data&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-var" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="mpg" selected&gt;mpg&lt;/option&gt;</span>
@@ -273,7 +275,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5446034"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by"&gt;Group by&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-group.by-label" for="yPlot-group.by"&gt;Group By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-group.by" class="shiny-input-select"&gt;&lt;option value=""&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-group.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
@@ -285,7 +287,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2785972"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by"&gt;Color by&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-color.by-label" for="yPlot-color.by"&gt;Color By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-color.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-color.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
@@ -295,7 +297,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4467025"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by"&gt;Shape by&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-shape.by-label" for="yPlot-shape.by"&gt;Shape By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-shape.by" class="shiny-input-select"&gt;&lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="yPlot-shape.by"&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
@@ -310,11 +312,11 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plot Type" id="tab-3843-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plot Type" id="tab-6884-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3715112"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-plots-label" for="yPlot-plots"&gt;Plots to show:&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-plots-label" for="yPlot-plots"&gt;Plots&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="yPlot-plots" class="shiny-input-select" multiple="multiple"&gt;&lt;option value="vlnplot"&gt;Violin&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="boxplot" selected&gt;Box&lt;/option&gt;</span>
@@ -330,7 +332,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-3843-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-6884-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify280610"&gt;</span>
@@ -367,7 +369,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Jitter" id="tab-3843-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Jitter" id="tab-6884-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3769709"&gt;</span>
@@ -413,14 +415,14 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Box" id="tab-3843-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Box" id="tab-6884-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6006375"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-show.outliers" style="padding-right: 10px;"&gt;Show Outliers&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-show.outliers" type="checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-show.outliers"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="yPlot-boxplot.show.outliers" style="padding-right: 10px;"&gt;Show Outliers&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="yPlot-boxplot.show.outliers" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="yPlot-boxplot.show.outliers"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6006375', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether outliers should by including in the boxplot. Default is `FALSE` when there is a jitter plotted, `TRUE` if there is no jitter.'})}, 500)});&lt;/script&gt;</span>
@@ -469,7 +471,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Violin" id="tab-3843-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Violin" id="tab-6884-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2131727"&gt;</span>
@@ -501,7 +503,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Ridge" id="tab-3843-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Ridge" id="tab-6884-7"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9970691"&gt;</span>
@@ -555,7 +557,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Stats" id="tab-3843-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Stats" id="tab-6884-8"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5470434"&gt;</span>
@@ -718,7 +720,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-3843-9"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-6884-9"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8742059"&gt;</span>
@@ -761,7 +763,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-3843-10"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-6884-10"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="yPlot-download.interactive" tabindex="-1" target="_blank" width="100%"&gt;</span>
@@ -871,7 +873,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-3843-11"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-6884-11"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;&lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;&lt;/div&gt;</span>
@@ -1151,7 +1153,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-3843-12"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-6884-12"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2485387"&gt;</span>
@@ -1176,7 +1178,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.linetypes-label" for="yPlot-hline.linetypes"&gt;Line types&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-hline.linetypes-label" for="yPlot-hline.linetypes"&gt;Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
@@ -1213,7 +1215,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.linetypes-label" for="yPlot-vline.linetypes"&gt;Line types&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="yPlot-vline.linetypes-label" for="yPlot-vline.linetypes"&gt;Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="yPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>

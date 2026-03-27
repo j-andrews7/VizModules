@@ -79,8 +79,6 @@ parameters are not available via UI inputs:
 - `legend.position` - Legend positioning (plotly allows interactive
   repositioning)
 
-- `y` - Y-axis variable (automatically set from data structure)
-
 - `y_sep` - Separator for y columns (not applicable in UI context)
 
 - `flip` - Flip axes (not implemented in current UI)
@@ -140,7 +138,11 @@ The following
 [`plotthis::SplitBarPlot()`](https://pwwang.github.io/plotthis/reference/barplot.html)
 parameters can be accessed via UI inputs and/or the `defaults` argument:
 
-- `x` - X-axis variable (UI: "X values", default: 2nd numeric variable)
+- `x` - X-axis variable (UI: "X values", defaults key: `x.data`,
+  default: 2nd numeric variable)
+
+- `y` - Y-axis grouping variable (UI: "Y values", defaults key:
+  `y.data`, default: 2nd categorical variable)
 
 - `fill_by` - Fill color variable (UI: "Fill by", default: 2nd variable)
 
@@ -193,17 +195,23 @@ plotly-specific features are also available:
   "Position of category labels", default: 0). Only visible when
   `label.on.y.axis` is FALSE.
 
-- `axis.font.size` - Axis title font size (UI: "Axis font size",
-  default: 18)
-
-- `title.font.size` - Plot title font size (UI: "Title font size",
-  default: 28)
+- `title.font.size` - Plot title font size (UI: "Title Size", default:
+  26)
 
 - `title.font.family` - Font family for title text (UI: "Title Font",
   default: "Arial")
 
-- `text.colour` - Color for axis labels (UI: "Label colour", default:
+- `title.font.color` - Color for plot title (UI: "Title Color", default:
   "#000000")
+
+- `axis.title.font.size` - Axis title font size (UI: "Axis Title Size",
+  default: 18)
+
+- `axis.title.font.color` - Axis title font color (UI: "Axis Title
+  Color", default: "#000000")
+
+- `axis.title.font.family` - Axis title font family (UI: "Axis Title
+  Font", default: "Arial")
 
 - `axis.showline` - Show axis border lines (UI: "Show axis lines",
   default: TRUE)
@@ -317,35 +325,35 @@ library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="4821">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="2220">
 #>     <li class="active">
-#>       <a href="#tab-4821-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2220-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-2220-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-2220-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-2220-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-2220-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-2220-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4821-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-2220-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="4821">
-#>     <div class="tab-pane active" data-value="Data" id="tab-4821-1">
+#>   <div class="tab-content" data-tabsetid="2220">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2220-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2813335">
-#>             <label class="control-label" id="splitBarPlot-x.data-label" for="splitBarPlot-x.data">X values</label>
+#>             <label class="control-label" id="splitBarPlot-x.data-label" for="splitBarPlot-x.data">X Values</label>
 #>             <div>
 #>               <select id="splitBarPlot-x.data" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
@@ -365,7 +373,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8809342">
-#>             <label class="control-label" id="splitBarPlot-y.data-label" for="splitBarPlot-y.data">Y values</label>
+#>             <label class="control-label" id="splitBarPlot-y.data-label" for="splitBarPlot-y.data">Y Values</label>
 #>             <div>
 #>               <select id="splitBarPlot-y.data" class="shiny-input-select"><option value=""></option>
 #> <option value="cyl" selected>cyl</option></select>
@@ -378,7 +386,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9611162">
-#>             <label class="control-label" id="splitBarPlot-fill.by-label" for="splitBarPlot-fill.by">Fill by</label>
+#>             <label class="control-label" id="splitBarPlot-fill.by-label" for="splitBarPlot-fill.by">Fill By</label>
 #>             <div>
 #>               <select id="splitBarPlot-fill.by" class="shiny-input-select"><option value=""></option>
 #> <option value="mpg" selected>mpg</option>
@@ -399,11 +407,11 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-4821-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-2220-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify40185">
-#>             <label class="control-label" id="splitBarPlot-facet.by-label" for="splitBarPlot-facet.by">Facet by</label>
+#>             <label class="control-label" id="splitBarPlot-facet.by-label" for="splitBarPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select id="splitBarPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="cyl">cyl</option>
@@ -415,7 +423,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5529002">
-#>             <label class="control-label" id="splitBarPlot-facet.scale-label" for="splitBarPlot-facet.scale">Facet scale</label>
+#>             <label class="control-label" id="splitBarPlot-facet.scale-label" for="splitBarPlot-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select id="splitBarPlot-facet.scale" class="shiny-input-select"><option value="fixed">fixed</option>
 #> <option value="free">free</option>
@@ -430,14 +438,14 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2192360">
-#>             <label class="control-label" id="splitBarPlot-facet.ncol-label" for="splitBarPlot-facet.ncol">Facet number of columns</label>
+#>             <label class="control-label" id="splitBarPlot-facet.ncol-label" for="splitBarPlot-facet.ncol">Columns</label>
 #>             <input id="splitBarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2192360', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6467271">
-#>             <label class="control-label" id="splitBarPlot-facet.nrow-label" for="splitBarPlot-facet.nrow">Facet number of rows</label>
+#>             <label class="control-label" id="splitBarPlot-facet.nrow-label" for="splitBarPlot-facet.nrow">Rows</label>
 #>             <input id="splitBarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6467271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
@@ -447,7 +455,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7277020">
 #>             <div class="material-switch">
-#>               <label for="splitBarPlot-facet.by.row" style="padding-right: 10px;">Facet by row</label>
+#>               <label for="splitBarPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="splitBarPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-facet.by.row"></label>
 #>             </div>
@@ -456,7 +464,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8725874">
-#>             <label class="control-label" id="splitBarPlot-split.by-label" for="splitBarPlot-split.by">Split by</label>
+#>             <label class="control-label" id="splitBarPlot-split.by-label" for="splitBarPlot-split.by">Split By</label>
 #>             <div>
 #>               <select id="splitBarPlot-split.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="cyl">cyl</option>
@@ -468,14 +476,14 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4821-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2220-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="splitBarPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3819816">
-#>             <label class="control-label" id="splitBarPlot-alpha.by-label" for="splitBarPlot-alpha.by">Alpha by</label>
+#>             <label class="control-label" id="splitBarPlot-alpha.by-label" for="splitBarPlot-alpha.by">Alpha By</label>
 #>             <div>
 #>               <select id="splitBarPlot-alpha.by" class="shiny-input-select"><option value="" selected></option>
 #> <option value="" selected></option>
@@ -499,7 +507,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8927457">
 #>             <div class="material-switch">
-#>               <label for="splitBarPlot-alpha.reverse" style="padding-right: 10px;">Alpha reverse</label>
+#>               <label for="splitBarPlot-alpha.reverse" style="padding-right: 10px;">Alpha Reverse</label>
 #>               <input id="splitBarPlot-alpha.reverse" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-alpha.reverse"></label>
 #>             </div>
@@ -508,7 +516,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8438703">
-#>             <label class="control-label" id="splitBarPlot-alpha.name-label" for="splitBarPlot-alpha.name">Alpha name</label>
+#>             <label class="control-label" id="splitBarPlot-alpha.name-label" for="splitBarPlot-alpha.name">Alpha Name</label>
 #>             <input id="splitBarPlot-alpha.name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8438703', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string indicating the legend name of the transparency.'})}, 500)});</script>
@@ -517,14 +525,14 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7297612">
-#>             <label class="control-label" id="splitBarPlot-bar.height-label" for="splitBarPlot-bar.height">Bar height</label>
+#>             <label class="control-label" id="splitBarPlot-bar.height-label" for="splitBarPlot-bar.height">Bar Height</label>
 #>             <input id="splitBarPlot-bar.height" type="number" class="shiny-input-number form-control" value="0.9" data-update-on="change" min="0"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7297612', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the height of the bars.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify384150">
-#>             <label class="control-label" id="splitBarPlot-axis.scale.factor-label" for="splitBarPlot-axis.scale.factor">Factor to which the bars fill the axis</label>
+#>             <label class="control-label" id="splitBarPlot-axis.scale.factor-label" for="splitBarPlot-axis.scale.factor">Axis Scale Factor</label>
 #>             <input class="js-range-slider" id="splitBarPlot-axis.scale.factor" data-skin="shiny" data-min="0" data-max="5" data-from="1.2" data-step="0.2" data-grid="true" data-grid-num="8.33333333333333" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify384150', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range'})}, 500)});</script>
@@ -534,7 +542,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3338233">
 #>             <div class="material-switch">
-#>               <label for="splitBarPlot-label.on.y.axis" style="padding-right: 10px;">Labels on Y axis</label>
+#>               <label for="splitBarPlot-label.on.y.axis" style="padding-right: 10px;">Labels on Y Axis</label>
 #>               <input id="splitBarPlot-label.on.y.axis" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="splitBarPlot-label.on.y.axis"></label>
 #>             </div>
@@ -543,32 +551,32 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7492726">
-#>             <label class="control-label" id="splitBarPlot-text.position-label" for="splitBarPlot-text.position">Position of category labels: </label>
+#>             <label class="control-label" id="splitBarPlot-text.position-label" for="splitBarPlot-text.position">Category Label Position</label>
 #>             <input class="js-range-slider" id="splitBarPlot-text.position" data-skin="shiny" data-min="0" data-max="100" data-from="0" data-step="1" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7492726', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Adjust the horizontal position of category labels along the X axis when labels are shown on the plot'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-4821-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-2220-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9131580">
-#>             <label class="control-label" id="splitBarPlot-x.min-label" for="splitBarPlot-x.min">X-axis min:</label>
+#>             <label class="control-label" id="splitBarPlot-x.min-label" for="splitBarPlot-x.min">X-axis Min</label>
 #>             <input id="splitBarPlot-x.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9131580', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the minimum value of the x axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2043291">
-#>             <label class="control-label" id="splitBarPlot-x.max-label" for="splitBarPlot-x.max">X-axis max:</label>
+#>             <label class="control-label" id="splitBarPlot-x.max-label" for="splitBarPlot-x.max">X-axis Max</label>
 #>             <input id="splitBarPlot-x.max" type="number" class="shiny-input-number form-control" value="472" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2043291', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value indicating the maximum value of the x axis.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-4821-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-2220-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="splitBarPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
@@ -678,7 +686,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-4821-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-2220-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -966,7 +974,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-4821-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-2220-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2633087">
@@ -991,7 +999,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-hline.linetypes-label" for="splitBarPlot-hline.linetypes">Line types</label>
+#>             <label class="control-label" id="splitBarPlot-hline.linetypes-label" for="splitBarPlot-hline.linetypes">Line Types</label>
 #>             <input id="splitBarPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
@@ -1028,7 +1036,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="splitBarPlot-vline.linetypes-label" for="splitBarPlot-vline.linetypes">Line types</label>
+#>             <label class="control-label" id="splitBarPlot-vline.linetypes-label" for="splitBarPlot-vline.linetypes">Line Types</label>
 #>             <input id="splitBarPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
 #>         </div>
