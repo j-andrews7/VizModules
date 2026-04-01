@@ -41,14 +41,29 @@ output$plot <- renderPlotly({
 }
 }
 \examples{
-\dontrun{
-# In a module server function:
-output$myPlot <- renderPlot({
-    isolate_fn <- setup_auto_update_logic(input)
-    # Use isolate_fn to wrap inputs that should respect auto-update setting
-    ggplot(data(), aes(x = isolate_fn(input$x_var), y = isolate_fn(input$y_var))) +
-        geom_point()
-})
+if (interactive()) {
+    library(shiny)
+    library(plotly)
+
+    ui <- fluidPage(
+        selectInput("x_var", "X variable", choices = names(mtcars), selected = "wt"),
+        selectInput("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
+        checkboxInput("auto.update", "Auto-update", value = TRUE),
+        actionButton("update", "Update"),
+        plotlyOutput("myPlot")
+    )
+
+    server <- function(input, output, session) {
+        output$myPlot <- renderPlotly({
+            isolate_fn <- setup_auto_update_logic(input)
+            x_val <- isolate_fn(input$x_var)
+            y_val <- isolate_fn(input$y_var)
+            plot_ly(mtcars, x = ~ .data[[x_val]], y = ~ .data[[y_val]], type = "scatter",
+                mode = "markers")
+        })
+    }
+
+    shinyApp(ui, server)
 }
 }
 \author{

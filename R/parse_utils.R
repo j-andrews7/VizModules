@@ -158,7 +158,6 @@ neg_log10 <- function(x) {
 #' @export
 #' @author Jared Andrews
 #' @examples
-#' \dontrun{
 #' groups <- c("A", "B", "C")
 #' colors <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
 #' resolve_palette(groups, colors)
@@ -166,7 +165,7 @@ neg_log10 <- function(x) {
 #'
 #' # Using default palette
 #' resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
-#' }
+#' # Returns: c(A = "#1B9E77", B = "#D95F02", C = "#7570B3")
 resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL) {
     if (length(groups) == 0) {
         return(NULL)
@@ -230,14 +229,29 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #' @export
 #' @author Jared Andrews
 #' @examples
-#' \dontrun{
-#' # In a module server function:
-#' output$myPlot <- renderPlot({
-#'     isolate_fn <- setup_auto_update_logic(input)
-#'     # Use isolate_fn to wrap inputs that should respect auto-update setting
-#'     ggplot(data(), aes(x = isolate_fn(input$x_var), y = isolate_fn(input$y_var))) +
-#'         geom_point()
-#' })
+#' if (interactive()) {
+#'     library(shiny)
+#'     library(plotly)
+#'
+#'     ui <- fluidPage(
+#'         selectInput("x_var", "X variable", choices = names(mtcars), selected = "wt"),
+#'         selectInput("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
+#'         checkboxInput("auto.update", "Auto-update", value = TRUE),
+#'         actionButton("update", "Update"),
+#'         plotlyOutput("myPlot")
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'         output$myPlot <- renderPlotly({
+#'             isolate_fn <- setup_auto_update_logic(input)
+#'             x_val <- isolate_fn(input$x_var)
+#'             y_val <- isolate_fn(input$y_var)
+#'             plot_ly(mtcars, x = ~ .data[[x_val]], y = ~ .data[[y_val]], type = "scatter",
+#'                 mode = "markers")
+#'         })
+#'     }
+#'
+#'     shinyApp(ui, server)
 #' }
 setup_auto_update_logic <- function(input) {
     auto_update <- input$auto.update
