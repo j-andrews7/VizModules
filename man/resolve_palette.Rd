@@ -27,7 +27,6 @@ named color vectors by matching to group names, fills in missing colors with
 fallback values, and ensures the output vector is named and matches group length.
 }
 \examples{
-\dontrun{
 groups <- c("A", "B", "C")
 colors <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
 resolve_palette(groups, colors)
@@ -35,7 +34,7 @@ resolve_palette(groups, colors)
 
 # Using default palette
 resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
-}
+# Returns: c(A = "#1B9E77", B = "#D95F02", C = "#7570B3")
 }
 \author{
 Jared Andrews

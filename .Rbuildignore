@@ -13,3 +13,4 @@
 ^paper\.md$
 ^inst/apps/module-gallery/manifest\.json
 ^.*\.Rproj$
+^cran-comments\.md$

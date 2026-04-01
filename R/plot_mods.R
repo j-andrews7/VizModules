@@ -960,17 +960,6 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' @author Jared Andrews
 #' @rdname INTERNAL_create_download_handler
 #' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' # In a Shiny module server:
-#' output$download.interactive <- .create_plot_download_handler(
-#'     plot_reactive = reactive({
-#'         my_plotly_plot
-#'     }),
-#'     filename_base = "my_plot"
-#' )
-#' }
 .create_plot_download_handler <- function(plot_reactive, filename_base = "interactive_plot") {
     downloadHandler(
         filename = function() {
