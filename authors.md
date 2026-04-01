@@ -10,16 +10,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/j-andrews7/VizModules/blob/v0.1.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/j-andrews7/VizModules/blob/devel/DESCRIPTION)
 
-Andrews J, Martin J (2026). *VizModules: Flexible, Interactive Shiny
-Modules for Almost Any Plot*. R package version 0.1.0,
+Andrews J, Martin J (2026). *VizModules: Flexible, Interactive 'shiny'
+Modules for Almost Any Plot*. R package version 0.1.1,
 <https://j-andrews7.github.io/VizModules/>.
 
     @Manual{,
-      title = {VizModules: Flexible, Interactive Shiny Modules for Almost Any Plot},
+      title = {VizModules: Flexible, Interactive 'shiny' Modules for Almost Any Plot},
       author = {Jared Andrews and Jacob Martin},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 0.1.1},
       url = {https://j-andrews7.github.io/VizModules/},
     }
