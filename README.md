@@ -260,7 +260,12 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/UI_Overview.png)
 
+## AI Usage
 
+The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation and editing, documentation writing, and test creation.
+AI assistance was used to accelerate development and reduce manual effort, but all AI-generated content was reviewed and edited by human developers to ensure accuracy and quality.
+Our own hands are all over this project, and we are invested in it. 
+Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
 [2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
