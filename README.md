@@ -1,9 +1,9 @@
 # VizModules
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml)
-[![Tests](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml)
-[![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
+[![R-CMD-check](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml)
+[![Tests](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml)
+[![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis) along with native plotting functions) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
