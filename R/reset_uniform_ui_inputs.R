@@ -162,7 +162,7 @@
     updateNumericInput(session, "margin.b", value = .get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = .get_default(defaults, "margin.l", 70, is.numeric))
     updateNumericInput(session, "margin.r", value = .get_default(defaults, "margin.r", 70, is.numeric))
-    updateNumericInput(session, "subplot.margin", value = .get_default(defaults, "subplot.margin", 0.6, is.numeric))
+    updateNumericInput(session, "subplot.margin", value = .get_default(defaults, "subplot.margin", 0.01, is.numeric))
     updateColourInput(session, "shape.fill", value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))
     updateColourInput(session, "shape.line.color", value = .get_default(defaults, "shape.line.color", "black"))
     updateNumericInput(session, "shape.line.width", value = .get_default(defaults, "shape.line.width", 4, is.numeric))
