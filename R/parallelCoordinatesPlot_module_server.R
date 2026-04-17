@@ -130,11 +130,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            config_list <- .add_plot_config(
-                download.format = isolate_fn(input$download.format),
-                include.modebar.buttons = FALSE
-            )
-            fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plot_config(fig, input, isolate_fn, include.modebar.buttons = FALSE)
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -159,16 +155,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_parallelCoordinatesPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
-                    )
+                fig <- .apply_render_margins(generate_parallelCoordinatesPlot(), input)
             }
 
             return(fig)

@@ -253,27 +253,11 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
+            fig <- .add_reference_lines_from_input(fig, input, isolate_fn)
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
-            fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plot_config(fig, input, isolate_fn,
+                                      include.modebar.buttons = FALSE,
+                                      facet.by = facet.by)
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -283,16 +267,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         output$dumbbellPlot <- renderPlotly({
             req(input$x.value, input$y.value)
 
-            fig <- generate_dumbbellPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_dumbbellPlot(), input)
 
             return(fig)
         })

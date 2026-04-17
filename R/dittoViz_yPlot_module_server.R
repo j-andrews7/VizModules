@@ -366,36 +366,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig <- .fix_boxplot_facet_positions(fig)
             }
 
-            # Apply axis styling
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
+            fig <- .apply_axis_post_processing(fig, input, isolate_fn,
+                                               facet.by = split.by,
+                                               ggplot.axis.styling = FALSE)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(split.by) && nzchar(split.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            # Add reference lines
-            fig <- .add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
+            fig <- .add_reference_lines_from_input(fig, input, isolate_fn)
 
             # Remove outliers if jitter is shown or if user explicitly disabled outliers
             if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$show.outliers)) {
@@ -439,8 +414,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
-            fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plot_config(fig, input, isolate_fn, facet.by = split.by)
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -450,16 +424,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         output$yPlot <- renderPlotly({
             req(input$var)
 
-            fig <- generate_yPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_yPlot(), input)
 
             return(fig)
         })

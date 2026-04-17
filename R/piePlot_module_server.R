@@ -199,8 +199,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 slice.line.width = isolate_fn(input$slice.line.width)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
-            fig <- do.call(config, c(list(p = fig), config_list))
+            fig <- .apply_plot_config(fig, input, isolate_fn)
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
@@ -233,16 +232,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_piePlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
-                    )
+                fig <- .apply_render_margins(generate_piePlot(), input)
             }
 
             return(fig)
