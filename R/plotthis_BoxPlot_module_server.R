@@ -283,7 +283,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
-            fig <- ggplotly(p)
+
+            fig <- ggplotly(p) |>
+                layout(
+                    boxmode = ifelse(!is.null(group.by), "group", "overlay"),
+                    boxgap = 0.1,
+                    boxgroupgap = 1 - isolate_fn(input$boxplot.width)
+                )
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
 
             # Fix boxplot positioning across faceted subplots

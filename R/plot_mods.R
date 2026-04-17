@@ -1719,7 +1719,7 @@ is_pure_type <- function(inputs, d) {
 #' Applies title font settings from the Shiny input object to an
 #' existing plotly figure. The title is centered horizontally and
 #' positioned using the supplied \code{title_y} value in the plotly
-#' layout. [web:7]
+#' layout.
 #'
 #' @param fig A plotly figure object.
 #' @param input Shiny input object containing title font fields.
