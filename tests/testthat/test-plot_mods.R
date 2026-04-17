@@ -934,3 +934,48 @@ test_that(".fix_ggplotly_facet_domains updates fig$x$layout directly (not layout
   expect_true(result$x$layout$xaxis$showgrid)
   expect_true(result$x$layout$xaxis2$showgrid)
 })
+
+test_that(".fix_ggplotly_facet_domains correctly identifies columns with per-row x-start variation", {
+  # Simulates the case where free_y scale causes ggplotly to assign slightly different
+  # x-start positions for the same column across rows (e.g. wider y-axis labels in row 1
+  # shift all panels rightward).  A rounding-based approach with small tolerance would
+  # miscount columns; gap-based clustering must correctly identify 3 columns here.
+  fig <- make_plotly(layout = list(
+    # Row 1 is shifted right by 0.02 due to wider y-axis labels
+    xaxis  = list(domain = c(0.02, 0.34)),   # row 1, col 1
+    xaxis2 = list(domain = c(0.36, 0.66)),   # row 1, col 2
+    xaxis3 = list(domain = c(0.68, 1.00)),   # row 1, col 3
+    # Rows 2-3 start at 0
+    xaxis4 = list(domain = c(0.00, 0.32)),   # row 2, col 1
+    xaxis5 = list(domain = c(0.34, 0.64)),   # row 2, col 2
+    xaxis6 = list(domain = c(0.66, 0.98)),   # row 2, col 3
+    xaxis7 = list(domain = c(0.00, 0.32)),   # row 3, col 1
+    xaxis8 = list(domain = c(0.34, 0.64)),   # row 3, col 2
+    xaxis9 = list(domain = c(0.66, 0.98)),   # row 3, col 3
+    yaxis  = list(domain = c(0.70, 1.00)),
+    yaxis2 = list(domain = c(0.70, 1.00)),
+    yaxis3 = list(domain = c(0.70, 1.00)),
+    yaxis4 = list(domain = c(0.35, 0.65)),
+    yaxis5 = list(domain = c(0.35, 0.65)),
+    yaxis6 = list(domain = c(0.35, 0.65)),
+    yaxis7 = list(domain = c(0.00, 0.30)),
+    yaxis8 = list(domain = c(0.00, 0.30)),
+    yaxis9 = list(domain = c(0.00, 0.30))
+  ))
+
+  result <- VizModules:::.fix_ggplotly_facet_domains(fig, margin = 0.02)
+  layout <- result$x$layout
+
+  # Must correctly detect 3 columns and 3 rows (not more)
+  expected_col_width  <- (1 - 0.02 * 2) / 3
+  expected_row_height <- (1 - 0.02 * 2) / 3
+
+  for (nm in paste0("xaxis", c("", 2:9))) {
+    d <- layout[[nm]]$domain
+    expect_equal(d[[2]] - d[[1]], expected_col_width, tolerance = 1e-6, label = nm)
+  }
+  for (nm in paste0("yaxis", c("", 2:9))) {
+    d <- layout[[nm]]$domain
+    expect_equal(d[[2]] - d[[1]], expected_row_height, tolerance = 1e-6, label = nm)
+  }
+})

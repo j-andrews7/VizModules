@@ -152,30 +152,63 @@
     x_starts <- vapply(x_domain_data, function(dd) dd$domain[[1]], numeric(1))
     y_starts <- vapply(y_domain_data, function(dd) dd$domain[[1]], numeric(1))
 
-    # Cluster by domain start position (round to 3 dp) to identify columns/rows
-    unique_x_starts <- sort(unique(round(x_starts, 3)))
-    unique_y_starts <- sort(unique(round(y_starts, 3)))
+    # Gap-based clustering: sort unique start values and split into clusters wherever
+    # the gap between consecutive values exceeds 50% of the largest gap in that set.
+    # This correctly groups axes in the same column/row even when free-scale faceting
+    # causes small per-row shifts in x-start positions (which rounding to fixed decimal
+    # places cannot reliably handle for all grid sizes).
+    .gap_cluster <- function(starts) {
+        sv  <- sort(unique(starts))
+        n   <- length(sv)
+        if (n == 0L) return(list(sorted = sv, ids = setNames(integer(0), character(0))))
+        if (n == 1L) return(list(sorted = sv, ids = setNames(1L, as.character(sv))))
+        gaps      <- diff(sv)
+        # Threshold: 50% of the largest gap. Between-column spacing is always much
+        # larger than within-column per-row variation, so the largest gap reliably
+        # belongs to a column boundary and 50% of it cleanly separates the two.
+        threshold <- max(gaps) * 0.5
+        ids <- integer(n)
+        ids[1L] <- 1L
+        cid <- 1L
+        for (i in seq_along(gaps)) {
+            if (gaps[i] > threshold) cid <- cid + 1L
+            ids[i + 1L] <- cid
+        }
+        list(sorted = sv, ids = setNames(ids, as.character(sv)))
+    }
 
-    n_cols <- length(unique_x_starts)
-    n_rows <- length(unique_y_starts)
+    xc <- .gap_cluster(x_starts)
+    yc <- .gap_cluster(y_starts)
 
-    if (n_cols <= 1 && n_rows <= 1) {
+    n_cols <- if (length(xc$ids) > 0L) max(xc$ids) else 1L
+    n_rows <- if (length(yc$ids) > 0L) max(yc$ids) else 1L
+
+    if (n_cols <= 1L && n_rows <= 1L) {
         return(fig)
     }
 
+    # For each axis, map its start value to the nearest clustered value to get column/row index.
+    .assign_cluster <- function(start, sorted_vals, cluster_ids) {
+        key <- as.character(sorted_vals[which.min(abs(sorted_vals - start))])
+        cluster_ids[[key]]
+    }
+
+    x_col_assignments <- vapply(x_starts, .assign_cluster, integer(1),
+        sorted_vals = xc$sorted, cluster_ids = xc$ids)
+    y_row_assignments <- vapply(y_starts, .assign_cluster, integer(1),
+        sorted_vals = yc$sorted, cluster_ids = yc$ids)
+
     # Record old domain midpoints / tops BEFORE redistribution (used later for annotations)
-    old_x_mid_per_col <- vapply(seq_along(unique_x_starts), function(i) {
-        s <- unique_x_starts[i]
-        matching <- x_domain_data[abs(x_starts - s) < 0.001]
-        if (length(matching) == 0) return(NA_real_)
-        mean(vapply(matching, function(dd) (dd$domain[[1]] + dd$domain[[2]]) / 2, numeric(1)))
+    old_x_mid_per_col <- vapply(seq_len(n_cols), function(ci) {
+        mask <- x_col_assignments == ci
+        if (!any(mask)) return(NA_real_)
+        mean(vapply(x_domain_data[mask], function(dd) (dd$domain[[1]] + dd$domain[[2]]) / 2, numeric(1)))
     }, numeric(1))
 
-    old_y_top_per_row <- vapply(seq_along(unique_y_starts), function(i) {
-        s <- unique_y_starts[i]
-        matching <- y_domain_data[abs(y_starts - s) < 0.001]
-        if (length(matching) == 0) return(NA_real_)
-        mean(vapply(matching, function(dd) dd$domain[[2]], numeric(1)))
+    old_y_top_per_row <- vapply(seq_len(n_rows), function(ri) {
+        mask <- y_row_assignments == ri
+        if (!any(mask)) return(NA_real_)
+        mean(vapply(y_domain_data[mask], function(dd) dd$domain[[2]], numeric(1)))
     }, numeric(1))
 
     # Compute new uniform domains for columns
@@ -196,39 +229,23 @@
     new_x_mid_per_col <- vapply(new_x_domains, function(d) (d[[1]] + d[[2]]) / 2, numeric(1))
     new_y_top_per_row <- vapply(new_y_domains, function(d) d[[2]], numeric(1))
 
-    # Build index maps: old start (rounded) -> column / row index
-    x_col_map <- setNames(seq_along(unique_x_starts), as.character(unique_x_starts))
-    y_row_map <- setNames(seq_along(unique_y_starts), as.character(unique_y_starts))
-
-    # Update axis domains
-    layout_updates <- list()
-    for (dd in x_domain_data) {
-        old_key <- as.character(round(dd$domain[[1]], 3))
-        col_i <- x_col_map[old_key]
-        if (!is.na(col_i)) {
-            ax <- layout[[dd$name]]
-            ax$domain <- new_x_domains[[col_i]]
-            layout_updates[[dd$name]] <- ax
-        }
-    }
-    for (dd in y_domain_data) {
-        old_key <- as.character(round(dd$domain[[1]], 3))
-        row_i <- y_row_map[old_key]
-        if (!is.na(row_i)) {
-            ax <- layout[[dd$name]]
-            ax$domain <- new_y_domains[[row_i]]
-            layout_updates[[dd$name]] <- ax
-        }
-    }
-
     # Update axis domains directly in fig$x$layout so that subsequent
     # plotly::layout() calls (e.g. .apply_subplot_axis_styling) read the
     # updated domains when building their layoutAttrs entries.  Using
     # do.call(plotly::layout, ...) here would store the new domains in
     # layoutAttrs, but the later axis-styling call would overwrite them with
     # the original domains from fig$x$layout.
-    for (nm in names(layout_updates)) {
-        fig$x$layout[[nm]] <- layout_updates[[nm]]
+    for (i in seq_along(x_domain_data)) {
+        dd  <- x_domain_data[[i]]
+        ax  <- fig$x$layout[[dd$name]]
+        ax$domain <- new_x_domains[[x_col_assignments[[i]]]]
+        fig$x$layout[[dd$name]] <- ax
+    }
+    for (i in seq_along(y_domain_data)) {
+        dd  <- y_domain_data[[i]]
+        ax  <- fig$x$layout[[dd$name]]
+        ax$domain <- new_y_domains[[y_row_assignments[[i]]]]
+        fig$x$layout[[dd$name]] <- ax
     }
 
     # Reposition paper-referenced annotations (facet strip labels) to match new domains.
@@ -243,7 +260,7 @@
             # Update x: match annotation x to nearest old column midpoint.
             # Use half the column width as the tolerance: anything beyond half a
             # column width from the nearest midpoint is unlikely to be a strip label.
-            if (!is.null(a$x) && n_cols > 1 && !all(is.na(old_x_mid_per_col))) {
+            if (!is.null(a$x) && n_cols > 1L && !all(is.na(old_x_mid_per_col))) {
                 dists <- abs(old_x_mid_per_col - a$x)
                 nearest_col <- which.min(dists)
                 if (dists[nearest_col] < col_width / 2) {
@@ -253,7 +270,7 @@
 
             # Update y: match annotation y to nearest old row top (preserve any offset above).
             # Use half the row height as the tolerance for the same reason as above.
-            if (!is.null(a$y) && n_rows > 1 && !all(is.na(old_y_top_per_row))) {
+            if (!is.null(a$y) && n_rows > 1L && !all(is.na(old_y_top_per_row))) {
                 dists <- abs(old_y_top_per_row - a$y)
                 nearest_row <- which.min(dists)
                 if (dists[nearest_row] < row_height / 2) {
