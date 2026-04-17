@@ -442,7 +442,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
                 axis.ticks = additional_theme$axis.ticks,
-                panel.spacing = unit(isolate_fn(input$subplot.margin), "lines")
+                panel.spacing = unit(isolate_fn(input$subplot.margin), "npc")
             )
 
             p <- scatterPlot(
@@ -757,6 +757,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
                 )
             )
+
+            # Fix subplot domain spacing for uniform panel layout (especially with free scales)
+            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+                fig <- .fix_ggplotly_facet_domains(fig, margin = isolate_fn(input$subplot.margin))
+            }
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)

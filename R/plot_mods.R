@@ -92,6 +92,177 @@
     fig
 }
 
+#' Fix ggplotly facet subplot domain spacing
+#'
+#' After \code{ggplotly()} converts a faceted ggplot, the subplot axis domains
+#' can have irregular spacing, especially when \code{facet_scales = "free"} and
+#' there are many subplots. This function detects the subplot grid layout from
+#' the existing axis domains and redistributes them to ensure uniform spacing
+#' between all panels.
+#'
+#' Annotations (e.g. facet strip labels) that are positioned relative to the
+#' subplot domains are also repositioned to maintain their correct placement
+#' after the domain redistribution.
+#'
+#' @param fig A plotly figure object, typically produced by \code{ggplotly()}.
+#' @param margin Numeric, fraction of the total plot area to use as the gap
+#'   between adjacent subplot panels (both horizontal and vertical).
+#'   Default: \code{0.02}.
+#'
+#' @return The modified plotly figure with uniformly-spaced subplot domains.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_fix_ggplotly_facet_domains
+.fix_ggplotly_facet_domains <- function(fig, margin = 0.02) {
+    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
+        return(fig)
+    }
+
+    layout <- fig$x$layout
+    layout_names <- names(layout)
+
+    # Find all x and y axes
+    xaxis_names <- grep("^xaxis[0-9]*$", layout_names, value = TRUE)
+    yaxis_names <- grep("^yaxis[0-9]*$", layout_names, value = TRUE)
+
+    if (length(xaxis_names) <= 1 && length(yaxis_names) <= 1) {
+        return(fig)
+    }
+
+    # Extract valid x domains (need both start and end, in [0, 1])
+    x_domain_data <- Filter(Negate(is.null), lapply(
+        setNames(xaxis_names, xaxis_names),
+        function(nm) {
+            d <- layout[[nm]]$domain
+            if (!is.null(d) && length(d) == 2) list(name = nm, domain = as.numeric(d)) else NULL
+        }
+    ))
+
+    # Extract valid y domains
+    y_domain_data <- Filter(Negate(is.null), lapply(
+        setNames(yaxis_names, yaxis_names),
+        function(nm) {
+            d <- layout[[nm]]$domain
+            if (!is.null(d) && length(d) == 2) list(name = nm, domain = as.numeric(d)) else NULL
+        }
+    ))
+
+    if (length(x_domain_data) == 0 || length(y_domain_data) == 0) {
+        return(fig)
+    }
+
+    x_starts <- vapply(x_domain_data, function(dd) dd$domain[[1]], numeric(1))
+    y_starts <- vapply(y_domain_data, function(dd) dd$domain[[1]], numeric(1))
+
+    # Cluster by domain start position (round to 3 dp) to identify columns/rows
+    unique_x_starts <- sort(unique(round(x_starts, 3)))
+    unique_y_starts <- sort(unique(round(y_starts, 3)))
+
+    n_cols <- length(unique_x_starts)
+    n_rows <- length(unique_y_starts)
+
+    if (n_cols <= 1 && n_rows <= 1) {
+        return(fig)
+    }
+
+    # Record old domain midpoints / tops BEFORE redistribution (used later for annotations)
+    old_x_mid_per_col <- vapply(seq_along(unique_x_starts), function(i) {
+        s <- unique_x_starts[i]
+        matching <- x_domain_data[abs(x_starts - s) < 0.001]
+        if (length(matching) == 0) return(NA_real_)
+        mean(vapply(matching, function(dd) (dd$domain[[1]] + dd$domain[[2]]) / 2, numeric(1)))
+    }, numeric(1))
+
+    old_y_top_per_row <- vapply(seq_along(unique_y_starts), function(i) {
+        s <- unique_y_starts[i]
+        matching <- y_domain_data[abs(y_starts - s) < 0.001]
+        if (length(matching) == 0) return(NA_real_)
+        mean(vapply(matching, function(dd) dd$domain[[2]], numeric(1)))
+    }, numeric(1))
+
+    # Compute new uniform domains for columns
+    col_width <- (1.0 - margin * max(n_cols - 1L, 0L)) / n_cols
+    new_x_domains <- lapply(seq_len(n_cols), function(i) {
+        start <- (i - 1L) * (col_width + margin)
+        c(start, start + col_width)
+    })
+
+    # Compute new uniform domains for rows (plotly/ggplotly uses bottom-to-top ordering)
+    row_height <- (1.0 - margin * max(n_rows - 1L, 0L)) / n_rows
+    new_y_domains <- lapply(seq_len(n_rows), function(i) {
+        start <- (i - 1L) * (row_height + margin)
+        c(start, start + row_height)
+    })
+
+    # New midpoints / tops after redistribution
+    new_x_mid_per_col <- vapply(new_x_domains, function(d) (d[[1]] + d[[2]]) / 2, numeric(1))
+    new_y_top_per_row <- vapply(new_y_domains, function(d) d[[2]], numeric(1))
+
+    # Build index maps: old start (rounded) -> column / row index
+    x_col_map <- setNames(seq_along(unique_x_starts), as.character(unique_x_starts))
+    y_row_map <- setNames(seq_along(unique_y_starts), as.character(unique_y_starts))
+
+    # Update axis domains
+    layout_updates <- list()
+    for (dd in x_domain_data) {
+        old_key <- as.character(round(dd$domain[[1]], 3))
+        col_i <- x_col_map[old_key]
+        if (!is.na(col_i)) {
+            ax <- layout[[dd$name]]
+            ax$domain <- new_x_domains[[col_i]]
+            layout_updates[[dd$name]] <- ax
+        }
+    }
+    for (dd in y_domain_data) {
+        old_key <- as.character(round(dd$domain[[1]], 3))
+        row_i <- y_row_map[old_key]
+        if (!is.na(row_i)) {
+            ax <- layout[[dd$name]]
+            ax$domain <- new_y_domains[[row_i]]
+            layout_updates[[dd$name]] <- ax
+        }
+    }
+
+    if (length(layout_updates) > 0) {
+        fig <- do.call(plotly::layout, c(list(p = fig), layout_updates))
+    }
+
+    # Reposition paper-referenced annotations (facet strip labels) to match new domains.
+    # Shared axis title annotations (annotationType == "axis") are left untouched.
+    annotations <- fig$x$layout$annotations
+    if (!is.null(annotations) && length(annotations) > 0 && (n_cols > 1 || n_rows > 1)) {
+        fig$x$layout$annotations <- lapply(annotations, function(a) {
+            if (is.null(a$xref) || a$xref != "paper") return(a)
+            if (is.null(a$yref) || a$yref != "paper") return(a)
+            if (!is.null(a$annotationType) && a$annotationType == "axis") return(a)
+
+            # Update x: match annotation x to nearest old column midpoint
+            if (!is.null(a$x) && n_cols > 1 && !all(is.na(old_x_mid_per_col))) {
+                dists <- abs(old_x_mid_per_col - a$x)
+                nearest_col <- which.min(dists)
+                if (dists[nearest_col] < col_width / 2) {
+                    a$x <- new_x_mid_per_col[nearest_col]
+                }
+            }
+
+            # Update y: match annotation y to nearest old row top (preserve any offset above)
+            if (!is.null(a$y) && n_rows > 1 && !all(is.na(old_y_top_per_row))) {
+                dists <- abs(old_y_top_per_row - a$y)
+                nearest_row <- which.min(dists)
+                if (dists[nearest_row] < row_height / 2) {
+                    offset <- a$y - old_y_top_per_row[nearest_row]
+                    a$y <- new_y_top_per_row[nearest_row] + offset
+                }
+            }
+
+            a
+        })
+    }
+
+    fig
+}
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.

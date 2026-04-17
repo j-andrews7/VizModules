@@ -299,6 +299,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
 
+            # Fix subplot domain spacing for uniform panel layout (especially with free scales)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .fix_ggplotly_facet_domains(fig, margin = isolate_fn(input$subplot.margin))
+            }
+
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)

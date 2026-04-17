@@ -458,6 +458,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     )
                 )
 
+            # Fix subplot domain spacing for uniform panel layout (especially with free scales)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .fix_ggplotly_facet_domains(fig, margin = isolate_fn(input$subplot.margin))
+            }
+
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)

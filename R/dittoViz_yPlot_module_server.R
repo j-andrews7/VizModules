@@ -368,6 +368,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
 
+            # Fix subplot domain spacing for uniform panel layout (especially with free scales)
+            if (!is.null(split.by) && nzchar(split.by)) {
+                fig <- .fix_ggplotly_facet_domains(fig, margin = isolate_fn(input$subplot.margin))
+            }
+
             # Fix boxplot positioning across faceted subplots
             if (!is.null(split.by) && nzchar(split.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)
