@@ -130,23 +130,20 @@
         return(fig)
     }
 
-    # Extract valid x domains (need both start and end, in [0, 1])
-    x_domain_data <- Filter(Negate(is.null), lapply(
-        setNames(xaxis_names, xaxis_names),
-        function(nm) {
-            d <- layout[[nm]]$domain
-            if (!is.null(d) && length(d) == 2) list(name = nm, domain = as.numeric(d)) else NULL
-        }
-    ))
+    # Extract valid domains for a set of axis names: returns a named list of
+    # list(name, domain) elements, filtering out axes with no valid domain.
+    .extract_domains <- function(axis_names) {
+        Filter(Negate(is.null), lapply(
+            setNames(axis_names, axis_names),
+            function(nm) {
+                d <- layout[[nm]]$domain
+                if (!is.null(d) && length(d) == 2) list(name = nm, domain = as.numeric(d)) else NULL
+            }
+        ))
+    }
 
-    # Extract valid y domains
-    y_domain_data <- Filter(Negate(is.null), lapply(
-        setNames(yaxis_names, yaxis_names),
-        function(nm) {
-            d <- layout[[nm]]$domain
-            if (!is.null(d) && length(d) == 2) list(name = nm, domain = as.numeric(d)) else NULL
-        }
-    ))
+    x_domain_data <- .extract_domains(xaxis_names)
+    y_domain_data <- .extract_domains(yaxis_names)
 
     if (length(x_domain_data) == 0 || length(y_domain_data) == 0) {
         return(fig)
@@ -237,7 +234,9 @@
             if (is.null(a$yref) || a$yref != "paper") return(a)
             if (!is.null(a$annotationType) && a$annotationType == "axis") return(a)
 
-            # Update x: match annotation x to nearest old column midpoint
+            # Update x: match annotation x to nearest old column midpoint.
+            # Use half the column width as the tolerance: anything beyond half a
+            # column width from the nearest midpoint is unlikely to be a strip label.
             if (!is.null(a$x) && n_cols > 1 && !all(is.na(old_x_mid_per_col))) {
                 dists <- abs(old_x_mid_per_col - a$x)
                 nearest_col <- which.min(dists)
@@ -246,7 +245,8 @@
                 }
             }
 
-            # Update y: match annotation y to nearest old row top (preserve any offset above)
+            # Update y: match annotation y to nearest old row top (preserve any offset above).
+            # Use half the row height as the tolerance for the same reason as above.
             if (!is.null(a$y) && n_rows > 1 && !all(is.na(old_y_top_per_row))) {
                 dists <- abs(old_y_top_per_row - a$y)
                 nearest_row <- which.min(dists)
