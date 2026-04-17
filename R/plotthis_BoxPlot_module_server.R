@@ -331,9 +331,36 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
 
-            fig <- .apply_axis_post_processing(fig, input, isolate_fn, facet.by = facet.by)
+            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-            fig <- .add_reference_lines_from_input(fig, input, isolate_fn)
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
+
+            # Add reference lines
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
+            )
 
             # Remove outliers if jitter points are shown or if user explicitly disabled outliers
             if (isolate_fn(input$add.points) || !isolate_fn(input$show.outliers)) {
@@ -345,7 +372,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            fig <- .apply_plot_config(fig, input, isolate_fn, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)

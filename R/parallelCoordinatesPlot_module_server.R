@@ -130,7 +130,11 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            fig <- .apply_plot_config(fig, input, isolate_fn, include.modebar.buttons = FALSE)
+            config_list <- .add_plot_config(
+                download.format = isolate_fn(input$download.format),
+                include.modebar.buttons = FALSE
+            )
+            fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)

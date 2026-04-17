@@ -507,8 +507,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 NULL
             }
 
-            fig <- .apply_plot_config(p$plot, input, isolate_fn,
-                                      facet.by = if (!is.null(null.na.inputs$split.by)) TRUE else NULL)
+            if (!is.null(null.na.inputs$split.by)) {
+                config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = TRUE)
+            } else {
+                config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
+            }
+            fig <- do.call(config, c(list(p = p$plot), config_list))
 
             # Apply single point color when color.by is not set
             if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {
@@ -530,7 +534,24 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             # Add reference lines
-            fig <- .add_reference_lines_from_input(fig, input, isolate_fn)
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
+            )
 
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate_fn(input$highlight.points)
@@ -729,8 +750,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
-            fig <- .apply_axis_post_processing(fig, input, isolate_fn,
-                                               facet.by = null.na.inputs$split.by)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+
+            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
+            # Apply axis title font to shared facet annotation titles
+            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+            }
 
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes

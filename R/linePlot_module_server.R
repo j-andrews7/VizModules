@@ -303,11 +303,27 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             # Add reference lines
-            fig <- .add_reference_lines_from_input(fig, input, isolate_fn)
+            fig <- .add_reference_lines(fig,
+                hline.intercepts = isolate_fn(input$hline.intercepts),
+                hline.colors = isolate_fn(input$hline.colors),
+                hline.widths = isolate_fn(input$hline.widths),
+                hline.linetypes = isolate_fn(input$hline.linetypes),
+                hline.opacities = isolate_fn(input$hline.opacities),
+                vline.intercepts = isolate_fn(input$vline.intercepts),
+                vline.colors = isolate_fn(input$vline.colors),
+                vline.widths = isolate_fn(input$vline.widths),
+                vline.linetypes = isolate_fn(input$vline.linetypes),
+                vline.opacities = isolate_fn(input$vline.opacities),
+                abline.slopes = isolate_fn(input$abline.slopes),
+                abline.intercepts = isolate_fn(input$abline.intercepts),
+                abline.colors = isolate_fn(input$abline.colors),
+                abline.widths = isolate_fn(input$abline.widths),
+                abline.linetypes = isolate_fn(input$abline.linetypes),
+                abline.opacities = isolate_fn(input$abline.opacities)
+            )
 
-            fig <- .apply_plot_config(fig, input, isolate_fn,
-                                      include.modebar.buttons = FALSE,
-                                      facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
+            fig <- do.call(plotly::config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)

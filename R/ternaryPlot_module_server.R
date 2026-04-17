@@ -237,7 +237,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            fig <- .apply_plot_config(fig, input, isolate_fn)
+            config_list <- .add_plot_config(
+                download.format = isolate_fn(input$download.format),
+                include.modebar.buttons = TRUE
+            )
+            fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
