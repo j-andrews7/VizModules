@@ -235,6 +235,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        observeEvent(c(input$facet.by, input$x.data), {
+        if (input$facet.by == input$x.data){
+            updateSelectInput(session, "facet.scale", selected = "free_x")
+        }
+        }, ignoreInit = FALSE)
+
         generate_BarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
