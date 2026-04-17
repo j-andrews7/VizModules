@@ -1714,3 +1714,35 @@ is_pure_type <- function(inputs, d) {
 
     fig
 }
+#' Apply plot title styling to a plotly figure
+#'
+#' Applies title font settings from the Shiny input object to an
+#' existing plotly figure. The title is centered horizontally and
+#' positioned using the supplied \code{title_y} value in the plotly
+#' layout. [web:7]
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object containing title font fields.
+#' @param isolate_fn Function to isolate reactive values.
+#' @param title_y Numeric y position for the plot title in the plotly
+#'   layout. Defaults to \code{0.05}. [web:7]
+#'
+#' @return The modified plotly figure with updated title styling. [web:7]
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_apply_title_layout
+.apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95){
+    fig <- ggplotly(plot) |> 
+        layout(
+            title = list(
+                font = list(
+                    size = isolate_fn(input$title.font.size),
+                    family = isolate_fn(input$title.font.family),
+                    color = isolate_fn(input$title.font.color)
+                ),
+                x = 0.5, xanchor = "center", y = title_y, yanchor = "top"
+            )
+        )
+    return(fig)
+}
