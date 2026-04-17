@@ -190,7 +190,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
-        observeEvent(input$facet.by, {
+        observeEvent(c(input$facet.by, input$x.data), {
+            if (input$facet.by == input$x.data){
+                updateSelectInput(session, "facet.scale", selected = "free_x")
+            }
+        }, ignoreInit = FALSE)
+
+        observeEvent(input$facet.by,  {
             if (!input$facet.by == ""){
               show("facet.title.font.size")
               show("facet.title.font.color")
