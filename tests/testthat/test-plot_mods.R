@@ -796,14 +796,14 @@ test_that(".fix_ggplotly_facet_domains redistributes uneven y domains uniformly"
   ))
 
   result <- VizModules:::.fix_ggplotly_facet_domains(fig, margin = 0.05)
-  # Extract updated domains from layoutAttrs (set by plotly::layout)
-  updated <- result$x$layoutAttrs[[1]]
+  # Domains are updated directly in fig$x$layout (not via layoutAttrs)
+  layout <- result$x$layout
 
   # Each row should have the same height = (1 - 0.05*2) / 3 = 0.3
   expected_height <- (1 - 0.05 * 2) / 3
   y_axes <- c("yaxis", "yaxis2", "yaxis3")
   for (nm in y_axes) {
-    d <- updated[[nm]]$domain
+    d <- layout[[nm]]$domain
     expect_equal(d[[2]] - d[[1]], expected_height, tolerance = 1e-10)
   }
 })
@@ -818,12 +818,12 @@ test_that(".fix_ggplotly_facet_domains redistributes uneven x domains uniformly"
   ))
 
   result <- VizModules:::.fix_ggplotly_facet_domains(fig, margin = 0.04)
-  updated <- result$x$layoutAttrs[[1]]
+  layout <- result$x$layout
 
   expected_width <- (1 - 0.04) / 2
   x_axes <- c("xaxis", "xaxis2")
   for (nm in x_axes) {
-    d <- updated[[nm]]$domain
+    d <- layout[[nm]]$domain
     expect_equal(d[[2]] - d[[1]], expected_width, tolerance = 1e-10)
   }
 })
@@ -842,20 +842,20 @@ test_that(".fix_ggplotly_facet_domains handles 2x2 grid correctly", {
   ))
 
   result <- VizModules:::.fix_ggplotly_facet_domains(fig, margin = 0.05)
-  updated <- result$x$layoutAttrs[[1]]
+  layout <- result$x$layout
 
   expected_col_width <- (1 - 0.05) / 2
   expected_row_height <- (1 - 0.05) / 2
 
   # Check column widths
   for (nm in c("xaxis", "xaxis2", "xaxis3", "xaxis4")) {
-    d <- updated[[nm]]$domain
+    d <- layout[[nm]]$domain
     expect_equal(d[[2]] - d[[1]], expected_col_width, tolerance = 1e-10)
   }
 
   # Check row heights
   for (nm in c("yaxis", "yaxis2", "yaxis3", "yaxis4")) {
-    d <- updated[[nm]]$domain
+    d <- layout[[nm]]$domain
     expect_equal(d[[2]] - d[[1]], expected_row_height, tolerance = 1e-10)
   }
 })
@@ -910,4 +910,27 @@ test_that(".fix_ggplotly_facet_domains skips axis-type annotations", {
   annos <- result$x$layout$annotations
   # The "axis" annotation x should NOT be changed
   expect_equal(annos[[1]]$x, 0.5)
+})
+
+test_that(".fix_ggplotly_facet_domains updates fig$x$layout directly (not layoutAttrs)", {
+  # Critical: domain updates must be in fig$x$layout so that subsequent
+  # plotly::layout() calls (e.g. apply_subplot_axis_styling) read the corrected
+  # domains rather than the original broken ones.
+  fig <- make_plotly(layout = list(
+    xaxis  = list(domain = c(0.00, 0.40), showgrid = TRUE),
+    xaxis2 = list(domain = c(0.50, 0.80), showgrid = TRUE),
+    yaxis  = list(domain = c(0, 1)),
+    yaxis2 = list(domain = c(0, 1))
+  ))
+
+  result <- VizModules:::.fix_ggplotly_facet_domains(fig, margin = 0.04)
+
+  # Domains must be in fig$x$layout, not just in layoutAttrs
+  expected_width <- (1 - 0.04) / 2
+  expect_equal(diff(result$x$layout$xaxis$domain),  expected_width, tolerance = 1e-10)
+  expect_equal(diff(result$x$layout$xaxis2$domain), expected_width, tolerance = 1e-10)
+
+  # Other axis properties must be preserved
+  expect_true(result$x$layout$xaxis$showgrid)
+  expect_true(result$x$layout$xaxis2$showgrid)
 })

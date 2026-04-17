@@ -221,8 +221,14 @@
         }
     }
 
-    if (length(layout_updates) > 0) {
-        fig <- do.call(plotly::layout, c(list(p = fig), layout_updates))
+    # Update axis domains directly in fig$x$layout so that subsequent
+    # plotly::layout() calls (e.g. .apply_subplot_axis_styling) read the
+    # updated domains when building their layoutAttrs entries.  Using
+    # do.call(plotly::layout, ...) here would store the new domains in
+    # layoutAttrs, but the later axis-styling call would overwrite them with
+    # the original domains from fig$x$layout.
+    for (nm in names(layout_updates)) {
+        fig$x$layout[[nm]] <- layout_updates[[nm]]
     }
 
     # Reposition paper-referenced annotations (facet strip labels) to match new domains.
