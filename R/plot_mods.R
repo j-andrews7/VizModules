@@ -129,8 +129,10 @@
         return(fig)
     }
 
-    equalize_group <- function(axis_names) {
-        if (length(axis_names) < 2) return(NULL)
+    # Returns a named list of new $domain vectors to overwrite on fig$x$layout.
+    compute_group_updates <- function(axis_names) {
+        updates <- list()
+        if (length(axis_names) < 2) return(updates)
         axes <- fig$x$layout[axis_names]
 
         # Group axes by their anchor (all x-axes anchored to the same y-axis
@@ -170,13 +172,19 @@
 
             for (i in seq_len(k)) {
                 start <- span_lo + (i - 1) * (new_w + gap)
-                fig$x$layout[[grp_names[i]]]$domain <<- c(start, start + new_w)
+                updates[[grp_names[i]]] <- c(start, start + new_w)
             }
         }
+        updates
     }
 
-    equalize_group(grep("^xaxis[0-9]*$", layout_names, value = TRUE))
-    equalize_group(grep("^yaxis[0-9]*$", layout_names, value = TRUE))
+    all_updates <- c(
+        compute_group_updates(grep("^xaxis[0-9]*$", layout_names, value = TRUE)),
+        compute_group_updates(grep("^yaxis[0-9]*$", layout_names, value = TRUE))
+    )
+    for (axis_name in names(all_updates)) {
+        fig$x$layout[[axis_name]]$domain <- all_updates[[axis_name]]
+    }
 
     fig
 }
