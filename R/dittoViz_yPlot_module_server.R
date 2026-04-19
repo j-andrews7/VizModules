@@ -349,7 +349,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_bw() + theme(
-                    panel.spacing = unit(isolate_fn(input$subplot.margin), "npc")
+                    panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
                 )
             )
 

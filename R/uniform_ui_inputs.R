@@ -627,11 +627,11 @@
         ),
         tipify(
             numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.04, is.numeric),
-                min = 0, max = 1, step = 0.01
+                value = .get_default(defaults, "subplot.margin", 5, is.numeric),
+                min = 0, max = 50, step = 1
             ),
             paste(
-                "Spacing between facet panels as a fraction of the plot area.",
+                "Spacing between facet panels, in points.",
                 "Only applies when faceting is active."
             ),
             placement = "top", options = tip_opts

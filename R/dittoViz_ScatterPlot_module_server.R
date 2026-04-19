@@ -442,7 +442,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
                 axis.ticks = additional_theme$axis.ticks,
-                panel.spacing = unit(isolate_fn(input$subplot.margin), "lines")
+                panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
             )
 
             p <- scatterPlot(
