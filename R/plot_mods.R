@@ -1156,6 +1156,117 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     fig
 }
 
+#' Apply custom subplot spacing to a faceted ggplotly figure
+#'
+#' `ggplotly()` assigns panel layout via plotly domain coordinates
+#' (`fig$x$layout$xaxis*/yaxis*$domain`) rather than honouring the ggplot2
+#' `panel.spacing` theme option. This helper rewrites those domains so that
+#' each facet panel has a uniform size and the gap between panels is exactly
+#' `spacing` (expressed as a fraction of the plot area, e.g. `0.04`).
+#'
+#' The number of columns and rows can be supplied manually, or detected
+#' automatically from the distinct x / y domain starts already present in the
+#' ggplotly output.
+#'
+#' @param fig A plotly figure object (typically the result of `ggplotly()`).
+#' @param spacing Numeric fraction of the plot area to leave between panels
+#'   (default `0.04`). Must satisfy `spacing * (ncol - 1) < 1` and
+#'   `spacing * (nrow - 1) < 1`; otherwise the figure is returned unchanged.
+#' @param ncol Optional integer. Number of facet columns. If `NULL` or `NA`,
+#'   detected from the number of distinct x-axis domain starts.
+#' @param nrow Optional integer. Number of facet rows. If `NULL` or `NA`,
+#'   detected from the number of distinct y-axis domain starts.
+#'
+#' @return The modified plotly figure with rewritten axis domains. Figures
+#'   with a single panel (or no layout) are returned unchanged.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_apply_facet_subplot_spacing
+.apply_facet_subplot_spacing <- function(fig, spacing = 0.04, ncol = NULL, nrow = NULL) {
+    stopifnot("plotly" %in% class(fig))
+    if (is.null(fig$x) || is.null(fig$x$layout)) {
+        return(fig)
+    }
+
+    layout_names <- names(fig$x$layout)
+    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
+    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
+
+    if (length(x_axes) <= 1 && length(y_axes) <= 1) {
+        return(fig)
+    }
+
+    # Sort axes by numeric suffix ("xaxis", "xaxis2", ...)
+    axis_order <- function(nms) {
+        nums <- suppressWarnings(as.integer(sub("^[xy]axis", "", nms)))
+        nums[is.na(nums)] <- 1L
+        nms[order(nums)]
+    }
+    x_axes <- axis_order(x_axes)
+    y_axes <- axis_order(y_axes)
+
+    # Pull existing domain starts; skip axes without a numeric 2-length domain
+    domain_start <- function(a) {
+        d <- fig$x$layout[[a]]$domain
+        if (is.numeric(d) && length(d) == 2L) d[1] else NA_real_
+    }
+    x_starts <- vapply(x_axes, domain_start, numeric(1))
+    y_starts <- vapply(y_axes, domain_start, numeric(1))
+
+    valid_x <- !is.na(x_starts)
+    valid_y <- !is.na(y_starts)
+    if (!any(valid_x) || !any(valid_y)) {
+        return(fig)
+    }
+
+    # Auto-detect grid dimensions from distinct domain starts in the ggplotly output.
+    unique_x_starts <- sort(unique(round(x_starts[valid_x], 6)))
+    # Largest y-start = top row, so order descending to get row 1 = top.
+    unique_y_starts <- sort(unique(round(y_starts[valid_y], 6)), decreasing = TRUE)
+
+    detected_ncol <- length(unique_x_starts)
+    detected_nrow <- length(unique_y_starts)
+
+    if (is.null(ncol) || is.na(ncol)) ncol <- detected_ncol
+    if (is.null(nrow) || is.na(nrow)) nrow <- detected_nrow
+    ncol <- as.integer(ncol)
+    nrow <- as.integer(nrow)
+    if (!is.finite(ncol) || !is.finite(nrow) || ncol < 1L || nrow < 1L) {
+        return(fig)
+    }
+
+    # Guard against invalid spacing that would leave no room for panels.
+    if (!is.numeric(spacing) || length(spacing) != 1L || is.na(spacing) || spacing < 0) {
+        return(fig)
+    }
+    cell_w <- (1 - spacing * (ncol - 1)) / ncol
+    cell_h <- (1 - spacing * (nrow - 1)) / nrow
+    if (cell_w <= 0 || cell_h <= 0) {
+        return(fig)
+    }
+
+    # Map each axis to a column / row using its current domain start relative
+    # to the detected unique starts (smallest x = col 1, largest y = row 1).
+    col_idx <- match(round(x_starts, 6), unique_x_starts)
+    row_idx <- match(round(y_starts, 6), unique_y_starts)
+
+    for (i in seq_along(x_axes)) {
+        c <- col_idx[i]
+        if (is.na(c) || c < 1L || c > ncol) next
+        x0 <- (c - 1) * (cell_w + spacing)
+        fig$x$layout[[x_axes[i]]]$domain <- c(x0, x0 + cell_w)
+    }
+    for (i in seq_along(y_axes)) {
+        r <- row_idx[i]
+        if (is.na(r) || r < 1L || r > nrow) next
+        y1 <- 1 - (r - 1) * (cell_h + spacing)
+        fig$x$layout[[y_axes[i]]]$domain <- c(y1 - cell_h, y1)
+    }
+
+    fig
+}
+
 #' Hide jitter points from plotly legend
 #'
 #' Hides jitter point traces from the legend by setting showlegend to FALSE.
