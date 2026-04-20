@@ -1189,7 +1189,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   remapped paper-anchored annotations/shapes. Figures with a single panel
 #'   (or no layout) are returned unchanged.
 #'
-#' @author Jared Andrews
+#' @author Jacob Martin
 #' @importFrom stats approx
 #' @keywords internal
 #' @rdname INTERNAL_apply_facet_subplot_spacing
