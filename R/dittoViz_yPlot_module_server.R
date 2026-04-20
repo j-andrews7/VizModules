@@ -349,7 +349,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_bw() + theme(
-                    panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
+                    panel.border       = element_blank(),
+                    axis.line          = element_line(colour = "black"),  # draws only bottom + left
+                    axis.ticks.top     = element_blank(),
+                    axis.ticks.right   = element_blank()
                 )
             )
 
@@ -464,7 +467,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             req(input$var)
 
             fig <- .apply_render_margins(generate_yPlot(), input)
-            browser()
+
 
             return(fig)
         })
