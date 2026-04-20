@@ -441,8 +441,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
-                axis.ticks = additional_theme$axis.ticks,
-                panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
+                axis.ticks = additional_theme$axis.ticks
+                # panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
             )
 
             p <- scatterPlot(
@@ -496,8 +496,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 legend.shape.size = isolate_fn(input$legend.shape.size),
                 data.out = TRUE
             )
-
+            
             plot_data <- p$Target_data
+
 
             # Colour mapping for fit lines — palette_values from color.panel() is already
             # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
@@ -513,6 +514,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             }
             fig <- do.call(config, c(list(p = p$plot), config_list))
+
+            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = null.na.inputs$split.ncol,
+                    nrow = null.na.inputs$split.nrow
+                )
+            }
 
             # Apply single point color when color.by is not set
             if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {
@@ -552,6 +562,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 abline.linetypes = isolate_fn(input$abline.linetypes),
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
+
 
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate_fn(input$highlight.points)
