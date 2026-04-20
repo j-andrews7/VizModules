@@ -168,9 +168,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row",
                 value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
 
-            # Action Button
-            .reset_plotly_inputs(session, defaults)
-
             # Lines
             .reset_lines_inputs(session, defaults = defaults)
 
@@ -244,7 +241,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -372,9 +368,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- .add_plot_config(download.format = "svg", include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -383,16 +378,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$BoxPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- .apply_render_margins(generate_BoxPlot(), input)
-
-            return(fig)
+            return(generate_BoxPlot())
         })
-
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_BoxPlot,
-            filename_base = "BoxPlot"
-        )
 
         # Download handler for stats table
         output$download.stats <- downloadHandler(
