@@ -246,12 +246,13 @@ linePlot <- function(data, x, y, palette.selection,
         )
 
         fig <- fig |> layout(annotations = annotations)
-      
+        
+        ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
         fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
-                    ncol = facet.ncol,
-                    nrow = facet.ncol
+                    spacing = subplot.margin,
+                    ncol = ncols,
+                    nrow = nrows
                 )      
       
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
@@ -286,12 +287,13 @@ linePlot <- function(data, x, y, palette.selection,
 
         fig <- fig |> layout(annotations = annotations)
       
+        ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
         fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
-                    ncol = facet.ncol,
-                    nrow = facet.ncol
-                )
+                    spacing = subplot.margin,
+                    ncol = ncols,
+                    nrow = nrows
+                ) 
       
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
