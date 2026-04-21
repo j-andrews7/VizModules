@@ -266,6 +266,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show.legend = show_legend,
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
+                subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
                 axis.showline = isolate_fn(input$axis.showline),
                 axis.mirror = isolate_fn(input$axis.mirror),
@@ -293,10 +294,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 y.adjustment = y.adjustment,
                 error.colour = isolate_fn(input$error.bar.colour),
                 error.width = isolate_fn(input$error.bar.width),
-                error.bar = isolate_fn(input$error.bar),
-                subplot.margin = isolate_fn(input$subplot.margin)
+                error.bar = isolate_fn(input$error.bar)
             )
-
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
