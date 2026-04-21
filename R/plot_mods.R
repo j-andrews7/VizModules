@@ -1709,10 +1709,56 @@ is_pure_type <- function(inputs, d) {
     list(shareX = shareX, shareY = shareY)
 }
 
+#' Resolve number of rows for a faceted subplot grid
+#'
+#' Given the number of facet levels and optional user-supplied
+#' \code{facet.nrow} / \code{facet.ncol} values, computes the \code{nrows}
+#' argument to pass to \code{plotly::subplot}.
+#'
+#' Resolution rules:
+#' \itemize{
+#'   \item Both \code{NULL}/\code{NA}: returns 1 (single row, preserves legacy behaviour).
+#'   \item Only \code{facet.nrow} supplied: returns that value.
+#'   \item Only \code{facet.ncol} supplied: returns \code{ceiling(n_facets / facet.ncol)}.
+#'   \item Both supplied: \code{facet.nrow} wins.
+#' }
+#' The result is clamped to the range \code{[1, n_facets]}.
+#'
+#' @param n_facets Integer, number of facet panels.
+#' @param facet.nrow Optional integer, user-requested number of rows.
+#' @param facet.ncol Optional integer, user-requested number of columns.
+#'
+#' @return A positive integer giving the number of rows for
+#'   \code{plotly::subplot}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_resolve_facet_layout
+#' @keywords internal
+.resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
+    n_facets <- max(1L, as.integer(n_facets))
+
+    .is_set <- function(x) {
+        !is.null(x) && length(x) == 1L && !is.na(x) && is.numeric(x) && as.integer(x) >= 1L
+    }
+
+    if (.is_set(facet.nrow)) {
+        nrows <- as.integer(facet.nrow)
+    } else if (.is_set(facet.ncol)) {
+        nrows <- as.integer(ceiling(n_facets / as.integer(facet.ncol)))
+    } else {
+        nrows <- 1L
+    }
+
+    # Clamp to [1, n_facets]
+    nrows <- max(1L, min(nrows, n_facets))
+    nrows
+}
+
 #' Build facet subplot annotations
 #'
 #' Creates a list of plotly annotation objects suitable for labelling faceted
-#' subplots arranged in a single row.
+#' subplots arranged in a grid of \code{nrows} rows. When \code{nrows = 1}
+#' (the default) the behaviour matches the previous single-row layout.
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
@@ -1721,6 +1767,17 @@ is_pure_type <- function(inputs, d) {
 #' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
+#' @param nrows Integer, number of rows the faceted subplots are arranged in.
+#'   Used to compute per-subplot annotation coordinates for multi-row grids
+#'   when \code{fig} is not supplied. Default: 1.
+#' @param fig Optional plotly figure. When supplied, per-panel title
+#'   coordinates are read directly from the figure's xaxis/yaxis domains so
+#'   that titles stay aligned with panels after domain-rewriting helpers such
+#'   as \code{.apply_facet_subplot_spacing()}. If \code{NULL} (the default),
+#'   coordinates are computed from \code{nrows} assuming evenly spaced
+#'   panels filling the full paper area.
+#' @param title.offset Numeric fraction of the figure height to place each
+#'   subplot title above the top of its panel. Default: \code{0.02}.
 #'
 #' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
 #'
@@ -1729,16 +1786,58 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 .build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
-                                     title.font.size = 14) {
+                                     title.font.size = 14,
+                                     nrows = 1,
+                                     fig = NULL,
+                                     title.offset = 0.02) {
     n_facets <- length(facet_levels)
-    subplot_width <- 1.0 / n_facets
 
-    # Per-subplot title annotations
+    # Prefer actual axis domains on the figure (if supplied) so titles follow
+    # any domain rewriting performed by e.g. .apply_facet_subplot_spacing().
+    panel_coords <- NULL
+    if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
+        axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
+        coords <- lapply(seq_len(n_facets), function(i) {
+            xa <- fig$x$layout[[axis_name("xaxis", i)]]
+            ya <- fig$x$layout[[axis_name("yaxis", i)]]
+            if (is.null(xa) || is.null(ya)) {
+                return(NULL)
+            }
+            xd <- xa$domain
+            yd <- ya$domain
+            if (!is.numeric(xd) || length(xd) != 2L ||
+                !is.numeric(yd) || length(yd) != 2L) {
+                return(NULL)
+            }
+            list(x_center = mean(xd), y_title = yd[2] + title.offset)
+        })
+        if (!any(vapply(coords, is.null, logical(1)))) {
+            panel_coords <- coords
+        }
+    }
+
+    # Fallback: compute from nrows/ncols assuming even, full-paper panels.
+    if (is.null(panel_coords)) {
+        nrows <- max(1L, as.integer(nrows))
+        ncols <- max(1L, as.integer(ceiling(n_facets / nrows)))
+        subplot_width <- 1.0 / ncols
+        subplot_height <- 1.0 / nrows
+        panel_coords <- lapply(seq_len(n_facets), function(i) {
+            col_idx <- ((i - 1L) %% ncols)
+            row_idx <- ((i - 1L) %/% ncols)
+            list(
+                x_center = col_idx * subplot_width + (subplot_width / 2),
+                y_title = (1 - row_idx * subplot_height) + 0.05 * subplot_height
+            )
+        })
+    }
+
+    # Per-subplot title annotations anchored just above each panel's top edge.
     annotations <- lapply(seq_along(facet_levels), function(i) {
-        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+        pc <- panel_coords[[i]]
         list(
-            x = x_pos,
-            y = 1.05,
+            x = pc$x_center,
+            y = pc$y_title,
             xref = "paper",
             yref = "paper",
             text = as.character(facet_levels[i]),
@@ -1984,4 +2083,32 @@ is_pure_type <- function(inputs, d) {
                 autoexpand = TRUE
             )
         )
+}
+#' Clean and validate facet dimension value for lineplot module
+#'
+#' @description Internal helper function that validates and sanitizes a numeric 
+#'   value intended for use as a **facet dimension** (rows or columns) in a 
+#'   **ggplot2 faceting layout**. Ensures the value is a positive numeric 
+#'   greater than or equal to 1, returning `NULL` for invalid inputs to 
+#'   gracefully handle missing or malformed facet specifications.
+#'
+#' @details This function is used within **VizModules** lineplot functions to 
+#'   process user-supplied facet dimensions before passing to `facet_grid()` or 
+#'   `facet_wrap()`. Invalid values trigger sensible defaults rather than 
+#'   breaking the plot layout.
+#'   **Valid inputs** return unchanged. **Invalid inputs** (NULL, NA, non-numeric, 
+#'   < 1) return `NULL`.
+#' @param val `numeric(1)` or `NULL`  
+#'   Proposed facet dimension value (number of rows or columns).
+#' @return `numeric(1)` or `NULL`  
+#'   Validated facet dimension value, or `NULL` if invalid.
+#' @author Jacob Martin
+#' @keywords internal
+#'
+.clean_facet_dim <- function(val) {
+    if (is.null(val) || length(val) == 0 || is.na(val) ||
+        !is.numeric(val) || val < 1) {
+        return(NULL)
+    }
+    val
 }

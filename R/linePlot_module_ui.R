@@ -30,6 +30,8 @@
 #'   \item \code{y.adjustment} - Y-axis adjustment function (UI: "Y Adjustment", default: "")
 #'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
+#'   \item \code{facet.nrow} - Number of rows in the facet grid (UI: "Facet Rows", default: NULL; blank = auto)
+#'   \item \code{facet.ncol} - Number of columns in the facet grid (UI: "Facet Columns", default: NULL; blank = auto)
 #'   \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
 #'   \item \code{line.type} - Line type (UI: "Line type", default: "solid")
 #'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
@@ -101,6 +103,11 @@
 #' linePlotInputsUI("linePlot", mtcars)
 linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
+
+    # linePlot-specific default for subplot spacing (tighter than the global 0.1)
+    if (is.null(defaults) || is.null(defaults[["subplot.margin"]])) {
+        defaults <- c(defaults, list("subplot.margin" = 0.05))
+    }
 
     # Get variables of data.
     choices <- c("", names(data))
@@ -184,7 +191,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 )
-            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.nrow"), "Facet Rows",
+                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 1),
+                paste("Number of rows in the facet grid.",
+                    "Leave blank to auto-compute; only one of rows/columns needs to be set."),
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(numericInput(ns("facet.ncol"), "Facet Columns",
+                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 1),
+                paste("Number of columns in the facet grid.",
+                    "Leave blank to auto-compute; only one of rows/columns needs to be set."),
+                placement = "top", options = list(container = "body")
+            )
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("plot.mode"), "Plot Type",

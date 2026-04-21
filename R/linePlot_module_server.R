@@ -28,6 +28,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
     stopifnot(is.reactive(data))
     data_reactive <- data
 
+    # linePlot-specific default for subplot spacing (tighter than the global 0.1),
+    # matching the default used in linePlotInputsUI().
+    if (is.null(defaults) || is.null(defaults[["subplot.margin"]])) {
+        defaults <- c(defaults, list("subplot.margin" = 0.05))
+    }
+
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
 
@@ -137,6 +143,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.scales",
                 selected = .get_default(defaults, "facet.scales", "fixed"))
+            updateNumericInput(session, "facet.nrow",
+                value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol",
+                value = .get_default(defaults, "facet.ncol", NA, is.numeric))
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
@@ -161,10 +171,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show("facet.title.font.size")
                 show("facet.title.font.color")
                 show("facet.title.font.family")
+                show("facet.nrow")
+                show("facet.ncol")
             } else {
                 hide("facet.title.font.size")
                 hide("facet.title.font.color")
                 hide("facet.title.font.family")
+                hide("facet.nrow")
+                hide("facet.ncol")
             }
         })
 
@@ -254,6 +268,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
+            facet.nrow.val <- .clean_facet_dim(isolate_fn(input$facet.nrow))
+            facet.ncol.val <- .clean_facet_dim(isolate_fn(input$facet.ncol))
 
             fig <- linePlot(
                 data = d,
@@ -266,6 +282,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show.legend = show_legend,
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
+                facet.nrow = facet.nrow.val,
+                facet.ncol = facet.ncol.val,
                 subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
                 axis.showline = isolate_fn(input$axis.showline),

@@ -203,7 +203,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                     fig,
                     spacing = isolate_fn(input$subplot.margin),
                     ncol = facet.ncol,
-                    nrow = facet.ncol
+                    nrow = facet.nrow
                 )
             }
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
