@@ -355,18 +355,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             fig <- p |>
                 layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    ),
                     boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
                     boxgap = isolate_fn(input$boxgap),
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
+
+            fig <- .apply_title_layout(fig, input, isolate_fn,
+                title_y = 0.98,
+                title_x = isolate_fn(input$axis.title.horizontal.position)
+            )
 
             # Fix boxplot positioning across faceted subplots
             if (!is.null(split.by) && nzchar(split.by)) {

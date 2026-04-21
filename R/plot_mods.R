@@ -1714,3 +1714,68 @@ is_pure_type <- function(inputs, d) {
 
     fig
 }
+
+#' Apply plot title layout to a plotly figure
+#'
+#' Applies the uniform title font settings (family, color, size) and position
+#' (horizontal `x` via the \code{axis.title.horizontal.position} uniform input,
+#' and vertical `y` via the `title_y` argument) to a plotly figure. Merges with
+#' any existing title properties (such as the title text) rather than replacing
+#' them.
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object containing title font fields and the
+#'   \code{axis.title.horizontal.position} numeric input.
+#' @param isolate_fn Function to isolate reactive values. Defaults to
+#'   \code{shiny::isolate}.
+#' @param title_y Numeric, vertical position of the title in paper
+#'   coordinates (0-1). Default: 0.95.
+#' @param title_x Numeric, horizontal position of the title in paper
+#'   coordinates (0-1). Defaults to
+#'   \code{isolate_fn(input$axis.title.horizontal.position)} when available,
+#'   otherwise 0.5.
+#'
+#' @return The modified plotly figure with the title layout applied.
+#'
+#' @importFrom utils modifyList
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_apply_title_layout
+.apply_title_layout <- function(fig, input, isolate_fn = isolate,
+                                title_y = 0.95,
+                                title_x = isolate_fn(input$axis.title.horizontal.position)) {
+    if (is.null(title_x) || !is.numeric(title_x) || is.na(title_x)) {
+        title_x <- 0.5
+    }
+    if (is.null(title_y) || !is.numeric(title_y) || is.na(title_y)) {
+        title_y <- 0.95
+    }
+
+    new_title <- list(
+        font = list(
+            size = isolate_fn(input$title.font.size),
+            family = isolate_fn(input$title.font.family),
+            color = isolate_fn(input$title.font.color)
+        ),
+        x = title_x,
+        xanchor = "center",
+        y = title_y,
+        yanchor = "top"
+    )
+
+    existing <- NULL
+    if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
+        existing <- fig$x$layout$title
+    }
+
+    # If the existing title is a plain character string (e.g. from ggplotly),
+    # preserve it as the `text` field of the merged list.
+    if (is.character(existing)) {
+        existing <- list(text = existing)
+    }
+
+    merged <- if (is.list(existing)) modifyList(existing, new_title) else new_title
+
+    fig |> plotly::layout(title = merged)
+}

@@ -747,15 +747,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
             fig <- fig |> layout(
-                annotations = annos,
-                title = list(
-                    font = list(
-                        size = isolate_fn(input$title.font.size),
-                        family = isolate_fn(input$title.font.family),
-                        color = isolate_fn(input$title.font.color)
-                    ),
-                    x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                )
+                annotations = annos
+            )
+
+            fig <- .apply_title_layout(fig, input, isolate_fn,
+                title_y = 0.98,
+                title_x = isolate_fn(input$axis.title.horizontal.position)
             )
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)

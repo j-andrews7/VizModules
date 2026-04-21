@@ -42,6 +42,7 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 \item \code{x} - X-axis variable(s) (UI: "Select X values", defaults key: \code{x.value}, default: 1st column, multiple: TRUE)
 \item \code{y} - Y-axis variable(s) (UI: "Select Y values", defaults key: \code{y.value}, default: 2nd column, multiple: TRUE)
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{axis.title.horizontal.position} - Title horizontal position (UI: "Title Horizontal Position", default: 0.5)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)

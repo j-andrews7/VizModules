@@ -322,17 +322,12 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fill_by = fill.by
             )
 
-            fig <- ggplotly(p) |>
-                layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
-                    )
-                )
+            fig <- ggplotly(p)
+
+            fig <- .apply_title_layout(fig, input, isolate_fn,
+                title_y = 0.95,
+                title_x = isolate_fn(input$axis.title.horizontal.position)
+            )
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             # Disable plotly borders since we're handling them through ggplot theme_args

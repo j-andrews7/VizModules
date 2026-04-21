@@ -142,6 +142,7 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{shape.linetype} - Shape linetype (UI: "Shape Linetype", default: "solid")
 \item \code{shape.opacity} - Shape opacity (UI: "Shape Opacity", default: 1)
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+\item \code{axis.title.horizontal.position} - Title horizontal position (UI: "Title Horizontal Position", default: 0.5)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)

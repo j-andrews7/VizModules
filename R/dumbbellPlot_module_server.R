@@ -252,6 +252,12 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
+            # Apply uniform plot title layout (font + configurable horizontal position)
+            fig <- .apply_title_layout(fig, input, isolate_fn,
+                title_y = 0.95,
+                title_x = isolate_fn(input$axis.title.horizontal.position)
+            )
+
             # Add reference lines
             fig <- .add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),

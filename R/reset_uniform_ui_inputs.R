@@ -28,6 +28,7 @@
     updateSelectInput(session, "title.font.family", selected = .get_default(defaults, "title.font.family", "Arial"))
     updateColourInput(session, "title.font.color", value = .get_default(defaults, "title.font.color", "#000000"))
     updateNumericInput(session, "title.font.size", value = .get_default(defaults, "title.font.size", 26, is.numeric))
+    updateNumericInput(session, "axis.title.horizontal.position", value = .get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric))
     updateColourInput(session, "axis.title.font.color", value = .get_default(defaults, "axis.title.font.color", "#000000"))
     updateSelectInput(session, "axis.title.font.family", selected = .get_default(defaults, "axis.title.font.family", "Arial"))
     updateCheckboxInput(session, "axis.showline", value = .get_default(defaults, "axis.showline", TRUE, is.logical))

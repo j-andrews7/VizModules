@@ -288,6 +288,12 @@
             min = 1,
             step = 1
         ),
+        numericInput(ns("axis.title.horizontal.position"), "Title Horizontal Position",
+            value = .get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric),
+            min = 0,
+            max = 1,
+            step = 0.05
+        ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
             value = .get_default(defaults, "axis.title.font.size", 18, is.numeric),
             min = 1,
