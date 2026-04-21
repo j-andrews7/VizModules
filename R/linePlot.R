@@ -310,7 +310,9 @@ linePlot <- function(data, x, y, palette.selection,
     if (!is.null(facet.by) && nzchar(facet.by)) {
         fig <- .apply_facet_subplot_spacing(
             fig,
-            spacing = subplot.margin
+            spacing = subplot.margin,
+            ncol = 3,
+            nrow = 4
         )
     }
     # Apply axis styling to all subplot axes (handles faceting)
