@@ -627,7 +627,7 @@
         ),
         tipify(
             numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.04, is.numeric),
+                value = .get_default(defaults, "subplot.margin", 0.1, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(

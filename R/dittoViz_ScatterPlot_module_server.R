@@ -441,10 +441,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
-                axis.ticks = additional_theme$axis.ticks
+                axis.ticks = additional_theme$axis.ticks,
+                strip.background = element_blank()
                 # panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
             )
 
+                        
+                        
             p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -761,8 +764,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = TRUE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling =  TRUE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 

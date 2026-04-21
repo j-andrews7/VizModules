@@ -294,10 +294,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)
-                # Manually rewrite subplot domains so the gap between facet
-                # panels matches the user-supplied spacing fraction. ggplotly
-                # ignores ggplot2's panel.spacing theme option, so we set
-                # xaxis*/yaxis* domains directly here.
                 fig <- .apply_facet_subplot_spacing(
                     fig,
                     spacing = isolate_fn(input$subplot.margin),

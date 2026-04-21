@@ -275,6 +275,16 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
 
             fig <- ggplotly(p)
+
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )
+            }
+            
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)

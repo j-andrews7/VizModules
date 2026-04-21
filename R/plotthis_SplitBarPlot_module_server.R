@@ -387,7 +387,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
 
-
+            
             if (!isolate_fn(input$rotate)) {
                 p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
@@ -447,6 +447,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             fig <- ggplotly(p)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )
+            }
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)

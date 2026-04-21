@@ -349,10 +349,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_bw() + theme(
-                    panel.border       = element_blank(),
-                    axis.line          = element_line(colour = "black"),  # draws only bottom + left
-                    axis.ticks.top     = element_blank(),
-                    axis.ticks.right   = element_blank()
+                    panel.border = element_blank(),
+                    axis.line = element_line(colour = "black"),  # draws only bottom + left
+                    axis.ticks.top = element_blank(),
+                    axis.ticks.right = element_blank(),
+                    strip.background = element_blank()
                 )
             )
 
