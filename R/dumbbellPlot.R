@@ -169,7 +169,9 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
+        annotations <- .build_facet_annotations(
+            facet_levels, x.title = x.title, y.title = y.title, fig = fig
+        )
         fig <- fig |> layout(annotations = annotations)
     } else {
         # WITHOUT FACETING
