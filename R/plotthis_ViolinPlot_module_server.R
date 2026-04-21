@@ -281,7 +281,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                     fig,
                     spacing = isolate_fn(input$subplot.margin),
                     ncol = facet.ncol,
-                    nrow = facet.ncol
+                    nrow = facet.nrow
                 )
             }
             
