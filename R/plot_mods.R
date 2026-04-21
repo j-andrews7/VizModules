@@ -1937,9 +1937,9 @@ is_pure_type <- function(inputs, d) {
 #' @param input Shiny input object containing title font fields.
 #' @param isolate_fn Function to isolate reactive values.
 #' @param title_y Numeric y position for the plot title in the plotly
-#'   layout. Defaults to \code{0.05}. [web:7]
+#'   layout. Defaults to \code{0.05}. 
 #'
-#' @return The modified plotly figure with updated title styling. [web:7]
+#' @return The modified plotly figure with updated title styling.
 #'
 #' @author Jacob Martin
 #' @keywords internal
