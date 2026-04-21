@@ -244,8 +244,16 @@ linePlot <- function(data, x, y, palette.selection,
         annotations <- .build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
         )
-        browser()
+
         fig <- fig |> layout(annotations = annotations)
+      
+        fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )      
+      
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
@@ -268,15 +276,23 @@ linePlot <- function(data, x, y, palette.selection,
 
         fig <- subplot(
             plots, nrows = nrows, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE
         )
 
         annotations <- .build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
         )
       
-        browser()
+
         fig <- fig |> layout(annotations = annotations)
+      
+        fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )
+      
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
