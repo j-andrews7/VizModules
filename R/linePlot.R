@@ -241,19 +241,21 @@ linePlot <- function(data, x, y, palette.selection,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
-        )
-
-        fig <- fig |> layout(annotations = annotations)
-        
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
         fig <- .apply_facet_subplot_spacing(
                     fig,
                     spacing = subplot.margin,
                     ncol = ncols,
                     nrow = nrows
-                )      
+                )    
+      
+        annotations <- .build_facet_annotations(
+            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
+        )
+
+        fig <- fig |> layout(annotations = annotations)
+        
+  
       
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
@@ -279,13 +281,6 @@ linePlot <- function(data, x, y, palette.selection,
             plots, nrows = nrows, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE
         )
-
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
-        )
-      
-
-        fig <- fig |> layout(annotations = annotations)
       
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
         fig <- .apply_facet_subplot_spacing(
@@ -295,6 +290,14 @@ linePlot <- function(data, x, y, palette.selection,
                     nrow = nrows
                 ) 
       
+        annotations <- .build_facet_annotations(
+            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
+        )
+      
+
+        fig <- fig |> layout(annotations = annotations)
+      
+
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace
         fig <- plot_ly(data = plot_data, type = "scatter")
