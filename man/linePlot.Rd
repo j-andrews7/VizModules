@@ -15,7 +15,6 @@ linePlot(
   show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
-  subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",
@@ -45,7 +44,8 @@ linePlot(
   order.by = NULL,
   error.colour = NULL,
   error.width = NULL,
-  error.bar = FALSE
+  error.bar = FALSE,
+  subplot.margin = 0.1
 )
 }
 \arguments{
@@ -77,8 +77,6 @@ Creates subplots for each unique value. Default: NULL.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
-
-\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 
@@ -142,6 +140,8 @@ Same options as x.adjustment and y.adjustment. Default: NULL.}
 \item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
 
 \item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable}
+
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.1.}
 }
 \value{
 A plotly object representing the interactive line plot.
