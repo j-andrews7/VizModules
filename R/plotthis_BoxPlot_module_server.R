@@ -289,8 +289,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1,
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
-
+          
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)
@@ -301,6 +300,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.nrow
                 )
             }
+          
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {

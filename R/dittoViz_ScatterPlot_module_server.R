@@ -443,11 +443,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 axis.line = additional_theme$axis.line,
                 axis.ticks = additional_theme$axis.ticks,
                 strip.background = element_blank()
-                # panel.spacing = unit(isolate_fn(input$subplot.margin), "pt")
             )
-
-                        
-                        
+              
             p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -501,8 +498,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
             
             plot_data <- p$Target_data
-
-
             # Colour mapping for fit lines — palette_values from color.panel() is already
             # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
             color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
