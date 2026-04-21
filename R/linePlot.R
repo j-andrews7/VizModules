@@ -232,9 +232,7 @@ linePlot <- function(data, x, y, palette.selection,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, fig = fig
-        )
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
@@ -260,9 +258,7 @@ linePlot <- function(data, x, y, palette.selection,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, fig = fig
-        )
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace

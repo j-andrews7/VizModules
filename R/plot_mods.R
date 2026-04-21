@@ -1716,21 +1716,11 @@ is_pure_type <- function(inputs, d) {
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
-#' When `fig` is supplied, each facet title's x-position is derived from the
-#' centre of the corresponding `xaxis*$domain` already present in the built
-#' subplot. This makes the titles track the actual panel positions chosen by
-#' `plotly::subplot()` for any value of `margin`/`subplot.margin`, so titles
-#' stay aligned with their panels when the inter-panel gap changes. When
-#' `fig` is `NULL`, the function falls back to evenly spaced positions
-#' (`(i - 0.5) / n_facets`) for backward compatibility.
-#'
 #' @param facet_levels Character vector of facet level labels, one per subplot.
 #' @param x.title Optional character, shared X-axis title. Default: \code{NULL}.
 #' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
-#' @param fig Optional plotly figure (the result of `plotly::subplot()`)
-#'   from which to read actual axis domains. Default: \code{NULL}.
 #'
 #' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
 #'
@@ -1739,39 +1729,15 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 .build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
-                                     title.font.size = 14,
-                                     fig = NULL) {
+                                     title.font.size = 14) {
     n_facets <- length(facet_levels)
     subplot_width <- 1.0 / n_facets
 
-    # Default per-panel x-centres: evenly spaced ignoring subplot margin.
-    x_centres <- ((seq_len(n_facets) - 1) * subplot_width) + (subplot_width / 2)
-
-    # If a built figure is supplied, prefer real axis-domain centres so that
-    # facet titles track the actual panel positions chosen by subplot().
-    if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
-        layout_names <- names(fig$x$layout)
-        x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
-        if (length(x_axes) > 0L) {
-            nums <- suppressWarnings(as.integer(sub("^xaxis", "", x_axes)))
-            nums[is.na(nums)] <- 1L
-            x_axes <- x_axes[order(nums)]
-            domain_centre <- function(a) {
-                d <- fig$x$layout[[a]]$domain
-                if (is.numeric(d) && length(d) == 2L) mean(d) else NA_real_
-            }
-            centres <- vapply(x_axes, domain_centre, numeric(1))
-            centres <- centres[!is.na(centres)]
-            if (length(centres) >= n_facets) {
-                x_centres <- centres[seq_len(n_facets)]
-            }
-        }
-    }
-
     # Per-subplot title annotations
     annotations <- lapply(seq_along(facet_levels), function(i) {
+        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
         list(
-            x = x_centres[i],
+            x = x_pos,
             y = 1.05,
             xref = "paper",
             yref = "paper",
