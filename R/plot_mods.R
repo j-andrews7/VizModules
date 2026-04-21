@@ -1768,8 +1768,16 @@ is_pure_type <- function(inputs, d) {
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
 #' @param nrows Integer, number of rows the faceted subplots are arranged in.
-#'   Used to compute per-subplot annotation coordinates for multi-row grids.
-#'   Default: 1.
+#'   Used to compute per-subplot annotation coordinates for multi-row grids
+#'   when \code{fig} is not supplied. Default: 1.
+#' @param fig Optional plotly figure. When supplied, per-panel title
+#'   coordinates are read directly from the figure's xaxis/yaxis domains so
+#'   that titles stay aligned with panels after domain-rewriting helpers such
+#'   as \code{.apply_facet_subplot_spacing()}. If \code{NULL} (the default),
+#'   coordinates are computed from \code{nrows} assuming evenly spaced
+#'   panels filling the full paper area.
+#' @param title.offset Numeric fraction of the figure height to place each
+#'   subplot title above the top of its panel. Default: \code{0.02}.
 #'
 #' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
 #'
@@ -1779,26 +1787,57 @@ is_pure_type <- function(inputs, d) {
 .build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
                                      title.font.size = 14,
-                                     nrows = 1) {
+                                     nrows = 1,
+                                     fig = NULL,
+                                     title.offset = 0.02) {
     n_facets <- length(facet_levels)
-    nrows <- max(1L, as.integer(nrows))
-    ncols <- max(1L, as.integer(ceiling(n_facets / nrows)))
-    subplot_width <- 1.0 / ncols
-    subplot_height <- 1.0 / nrows
 
-    # Per-subplot title annotations. plotly::subplot fills by row, so
-    # subplot i occupies row floor((i-1)/ncols) (counting from the top) and
-    # column ((i-1) %% ncols).
+    # Prefer actual axis domains on the figure (if supplied) so titles follow
+    # any domain rewriting performed by e.g. .apply_facet_subplot_spacing().
+    panel_coords <- NULL
+    if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
+        axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
+        coords <- lapply(seq_len(n_facets), function(i) {
+            xa <- fig$x$layout[[axis_name("xaxis", i)]]
+            ya <- fig$x$layout[[axis_name("yaxis", i)]]
+            if (is.null(xa) || is.null(ya)) {
+                return(NULL)
+            }
+            xd <- xa$domain
+            yd <- ya$domain
+            if (!is.numeric(xd) || length(xd) != 2L ||
+                !is.numeric(yd) || length(yd) != 2L) {
+                return(NULL)
+            }
+            list(x_center = mean(xd), y_title = yd[2] + title.offset)
+        })
+        if (!any(vapply(coords, is.null, logical(1)))) {
+            panel_coords <- coords
+        }
+    }
+
+    # Fallback: compute from nrows/ncols assuming even, full-paper panels.
+    if (is.null(panel_coords)) {
+        nrows <- max(1L, as.integer(nrows))
+        ncols <- max(1L, as.integer(ceiling(n_facets / nrows)))
+        subplot_width <- 1.0 / ncols
+        subplot_height <- 1.0 / nrows
+        panel_coords <- lapply(seq_len(n_facets), function(i) {
+            col_idx <- ((i - 1L) %% ncols)
+            row_idx <- ((i - 1L) %/% ncols)
+            list(
+                x_center = col_idx * subplot_width + (subplot_width / 2),
+                y_title = (1 - row_idx * subplot_height) + 0.05 * subplot_height
+            )
+        })
+    }
+
+    # Per-subplot title annotations anchored just above each panel's top edge.
     annotations <- lapply(seq_along(facet_levels), function(i) {
-        col_idx <- ((i - 1L) %% ncols)
-        row_idx <- ((i - 1L) %/% ncols)
-        x_pos <- col_idx * subplot_width + (subplot_width / 2)
-        # Place title just above the top of its row (y = 1 is top of figure)
-        y_top <- 1 - row_idx * subplot_height
-        y_pos <- y_top + 0.05 * subplot_height
+        pc <- panel_coords[[i]]
         list(
-            x = x_pos,
-            y = y_pos,
+            x = pc$x_center,
+            y = pc$y_title,
             xref = "paper",
             yref = "paper",
             text = as.character(facet_levels[i]),

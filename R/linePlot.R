@@ -250,7 +250,8 @@ linePlot <- function(data, x, y, palette.selection,
                 )    
       
         annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
+            facet_levels, x.title = x.title, y.title = y.title,
+            nrows = nrows, fig = fig
         )
 
         fig <- fig |> layout(annotations = annotations)
@@ -291,7 +292,8 @@ linePlot <- function(data, x, y, palette.selection,
                 ) 
       
         annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows
+            facet_levels, x.title = x.title, y.title = y.title,
+            nrows = nrows, fig = fig
         )
       
 
