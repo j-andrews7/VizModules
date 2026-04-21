@@ -2084,3 +2084,31 @@ is_pure_type <- function(inputs, d) {
             )
         )
 }
+#' Clean and validate facet dimension value for lineplot module
+#'
+#' @description Internal helper function that validates and sanitizes a numeric 
+#'   value intended for use as a **facet dimension** (rows or columns) in a 
+#'   **ggplot2 faceting layout**. Ensures the value is a positive numeric 
+#'   greater than or equal to 1, returning `NULL` for invalid inputs to 
+#'   gracefully handle missing or malformed facet specifications.
+#'
+#' @details This function is used within **VizModules** lineplot functions to 
+#'   process user-supplied facet dimensions before passing to `facet_grid()` or 
+#'   `facet_wrap()`. Invalid values trigger sensible defaults rather than 
+#'   breaking the plot layout.
+#'   **Valid inputs** return unchanged. **Invalid inputs** (NULL, NA, non-numeric, 
+#'   < 1) return `NULL`.
+#' @param val `numeric(1)` or `NULL`  
+#'   Proposed facet dimension value (number of rows or columns).
+#' @return `numeric(1)` or `NULL`  
+#'   Validated facet dimension value, or `NULL` if invalid.
+#' @author Jacob Martin
+#' @keywords internal
+#'
+.clean_facet_dim <- function(val) {
+    if (is.null(val) || length(val) == 0 || is.na(val) ||
+        !is.numeric(val) || val < 1) {
+        return(NULL)
+    }
+    val
+}

@@ -268,15 +268,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-
-            # Convert empty/NA numeric inputs to NULL so linePlot() auto-computes layout
-            .clean_facet_dim <- function(val) {
-                if (is.null(val) || length(val) == 0 || is.na(val) ||
-                    !is.numeric(val) || val < 1) {
-                    return(NULL)
-                }
-                val
-            }
             facet.nrow.val <- .clean_facet_dim(isolate_fn(input$facet.nrow))
             facet.ncol.val <- .clean_facet_dim(isolate_fn(input$facet.ncol))
 
