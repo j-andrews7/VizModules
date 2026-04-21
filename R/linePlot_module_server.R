@@ -28,6 +28,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
     stopifnot(is.reactive(data))
     data_reactive <- data
 
+    # linePlot-specific default for subplot spacing (tighter than the global 0.1),
+    # matching the default used in linePlotInputsUI().
+    if (is.null(defaults) || is.null(defaults[["subplot.margin"]])) {
+        defaults <- c(defaults, list("subplot.margin" = 0.05))
+    }
+
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
 
