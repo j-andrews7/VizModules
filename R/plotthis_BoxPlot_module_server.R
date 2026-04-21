@@ -301,7 +301,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
             }
           
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {

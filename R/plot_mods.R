@@ -1938,13 +1938,13 @@ is_pure_type <- function(inputs, d) {
 #' @param isolate_fn Function to isolate reactive values.
 #' @param title_y Numeric y position for the plot title in the plotly
 #'   layout. Defaults to \code{0.05}. 
-#'
+#' @param title_x Numeric position for the title in the plotly layout.
 #' @return The modified plotly figure with updated title styling.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_apply_title_layout
-.apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95){
+.apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95, title_x = 0.5){
     fig <- ggplotly(plot) |> 
         layout(
             title = list(
@@ -1953,7 +1953,7 @@ is_pure_type <- function(inputs, d) {
                     family = isolate_fn(input$title.font.family),
                     color = isolate_fn(input$title.font.color)
                 ),
-                x = 0.5, xanchor = "center", y = title_y, yanchor = "top"
+                x = title_x, xanchor = "center", y = title_y, yanchor = "top"
             )
         )
     return(fig)
