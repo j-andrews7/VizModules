@@ -158,7 +158,7 @@
 #' @keywords internal
 .reset_plotly_inputs <- function(session, defaults = NULL) {
     updateSelectInput(session, "download.format", selected = .get_default(defaults, "download.format", "svg"))
-    updateNumericInput(session, "margin.t", value = .get_default(defaults, "margin.t", 70, is.numeric))
+    updateNumericInput(session, "margin.t", value = .get_default(defaults, "margin.t", 100, is.numeric))
     updateNumericInput(session, "margin.b", value = .get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = .get_default(defaults, "margin.l", 70, is.numeric))
     updateNumericInput(session, "margin.r", value = .get_default(defaults, "margin.r", 70, is.numeric))

@@ -596,7 +596,7 @@
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
-                value = .get_default(defaults, "margin.t", 70, is.numeric),
+                value = .get_default(defaults, "margin.t", 100, is.numeric),
                 min = 0, step = 5
             ),
             "Top margin of the plot in pixels",
