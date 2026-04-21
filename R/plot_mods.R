@@ -1738,7 +1738,7 @@ is_pure_type <- function(inputs, d) {
     n_facets <- max(1L, as.integer(n_facets))
 
     .is_set <- function(x) {
-        !is.null(x) && length(x) == 1L && !is.na(x) && is.numeric(x) && x >= 1
+        !is.null(x) && length(x) == 1L && !is.na(x) && is.numeric(x) && as.integer(x) >= 1L
     }
 
     if (.is_set(facet.nrow)) {
