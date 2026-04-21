@@ -330,7 +330,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.ncol
                 )
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             # Disable plotly borders since we're handling them through ggplot theme_args

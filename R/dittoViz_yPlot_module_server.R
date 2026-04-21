@@ -372,7 +372,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 )
 
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
             
             
 
