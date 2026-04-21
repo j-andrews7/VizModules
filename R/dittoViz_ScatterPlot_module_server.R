@@ -442,9 +442,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
                 axis.ticks = additional_theme$axis.ticks,
-                panel.spacing = unit(isolate_fn(input$subplot.margin), "lines")
+                strip.background = element_blank()
             )
-
+              
             p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -496,9 +496,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 legend.shape.size = isolate_fn(input$legend.shape.size),
                 data.out = TRUE
             )
-
+            
             plot_data <- p$Target_data
-
             # Colour mapping for fit lines — palette_values from color.panel() is already
             # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
             color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
@@ -513,6 +512,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             }
             fig <- do.call(config, c(list(p = p$plot), config_list))
+
+            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = null.na.inputs$split.ncol,
+                    nrow = null.na.inputs$split.nrow
+                )
+            }
 
             # Apply single point color when color.by is not set
             if (is.null(null.na.inputs$color.by) && !is.null(fig$x$data)) {
@@ -552,6 +560,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 abline.linetypes = isolate_fn(input$abline.linetypes),
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
+
 
             # Apply highlight styling to specified points
             highlight_points_raw <- isolate_fn(input$highlight.points)
@@ -750,8 +759,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = TRUE)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling =  TRUE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
@@ -821,16 +830,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
 
-            fig <- generate_scatterPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_scatterPlot(), input)
             fig$x$source <- plot_source
             fig
         })

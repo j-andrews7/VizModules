@@ -244,7 +244,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
             # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -290,12 +289,19 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1,
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
-
+          
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.nrow
+                )
             }
+          
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95)
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
@@ -383,16 +389,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$BoxPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_BoxPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_BoxPlot(), input)
 
             return(fig)
         })

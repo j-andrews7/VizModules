@@ -349,7 +349,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_bw() + theme(
-                    panel.spacing = unit(isolate_fn(input$subplot.margin), "npc")
+                    panel.border = element_blank(),
+                    axis.line = element_line(colour = "black"),  # draws only bottom + left
+                    axis.ticks.top = element_blank(),
+                    axis.ticks.right = element_blank(),
+                    strip.background = element_blank()
                 )
             )
 
@@ -359,7 +363,19 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     boxgap = isolate_fn(input$boxgap),
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
+            if (!is.null(split.by) && nzchar(split.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = split.ncol,
+                    nrow = split.nrow
+                )
+
+            }
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
+            
+            
+
 
             # Fix boxplot positioning across faceted subplots
             if (!is.null(split.by) && nzchar(split.by)) {
@@ -371,6 +387,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(split.by) && nzchar(split.by)) {
@@ -450,16 +467,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         output$yPlot <- renderPlotly({
             req(input$var)
 
-            fig <- generate_yPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_yPlot(), input)
+
 
             return(fig)
         })

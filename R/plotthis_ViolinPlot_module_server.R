@@ -234,7 +234,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 sort.x <- isolate_fn(input$sort_x)
             }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             p <- ViolinPlot(
                 data = data(),
@@ -275,6 +275,16 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
 
             fig <- ggplotly(p)
+
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )
+            }
+            
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
@@ -359,16 +369,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         output$ViolinPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_ViolinPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_ViolinPlot(), input)
 
             return(fig)
         })

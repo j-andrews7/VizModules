@@ -352,7 +352,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             # bar Plot
             p <- SplitBarPlot(
@@ -387,7 +387,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
 
-
+            
             if (!isolate_fn(input$rotate)) {
                 p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
@@ -447,6 +447,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             fig <- ggplotly(p)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.ncol
+                )
+            }
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98)
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
@@ -491,16 +499,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         output$SplitBarPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_SplitBarPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_SplitBarPlot(), input)
 
             return(fig)
         })

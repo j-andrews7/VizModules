@@ -14,5 +14,3 @@
 ^inst/apps/module-gallery/manifest\.json
 ^.*\.Rproj$
 ^cran-comments\.md$
-^AGENTS\.md$
-^CLAUDE\.md$

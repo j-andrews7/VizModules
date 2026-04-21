@@ -283,16 +283,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         output$dumbbellPlot <- renderPlotly({
             req(input$x.value, input$y.value)
 
-            fig <- generate_dumbbellPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_dumbbellPlot(), input)
 
             return(fig)
         })
