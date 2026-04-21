@@ -15,6 +15,12 @@
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
+#' @param facet.nrow Optional integer, number of rows in the facet grid. When \code{NULL}, the number of rows is
+#'   derived from \code{facet.ncol} if supplied, otherwise defaults to 1 (a single row). Passed to
+#'   \code{plotly::subplot(nrows = ...)}. Default: NULL.
+#' @param facet.ncol Optional integer, number of columns in the facet grid. When \code{NULL} (and \code{facet.nrow}
+#'   is also \code{NULL}), all facets are placed on a single row. When supplied without \code{facet.nrow}, the
+#'   number of rows is computed as \code{ceiling(n_facets / facet.ncol)}. Default: NULL.
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
@@ -78,6 +84,7 @@
 dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
                         facet.by = NULL, line.colour = "gray80",
                         facet.scales = "fixed",
+                        facet.nrow = NULL, facet.ncol = NULL,
                         subplot.margin = 0.05,
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
                         axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial", 
@@ -164,12 +171,15 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             first <- FALSE
         }
 
+        nrows_val <- .resolve_facet_grid_nrow(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
-            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
+            plots, nrows = nrows_val, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
+        annotations <- .build_facet_annotations(
+            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows_val
+        )
         fig <- fig |> layout(annotations = annotations)
     } else {
         # WITHOUT FACETING

@@ -15,6 +15,8 @@ linePlot(
   show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
+  facet.nrow = NULL,
+  facet.ncol = NULL,
   axis.showline = TRUE,
   axis.mirror = TRUE,
   axis.linecolor = "black",
@@ -77,6 +79,14 @@ Creates subplots for each unique value. Default: NULL.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
+
+\item{facet.nrow}{Optional integer, number of rows in the facet grid. When \code{NULL}, the number of rows is
+derived from \code{facet.ncol} if supplied, otherwise defaults to 1 (a single row). Passed to
+\code{plotly::subplot(nrows = ...)}. Default: NULL.}
+
+\item{facet.ncol}{Optional integer, number of columns in the facet grid. When \code{NULL} (and \code{facet.nrow}
+is also \code{NULL}), all facets are placed on a single row. When supplied without \code{facet.nrow}, the
+number of rows is computed as \code{ceiling(n_facets / facet.ncol)}. Default: NULL.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 

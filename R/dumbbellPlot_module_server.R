@@ -223,6 +223,8 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 show.legend = TRUE,
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
+                facet.nrow = .na_to_null(isolate_fn(input$facet.nrow)),
+                facet.ncol = .na_to_null(isolate_fn(input$facet.ncol)),
                 subplot.margin = isolate_fn(input$subplot.margin),
                 axis.showline = isolate_fn(input$axis.showline),
                 axis.mirror = isolate_fn(input$axis.mirror),

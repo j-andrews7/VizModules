@@ -1709,10 +1709,47 @@ is_pure_type <- function(inputs, d) {
     list(shareX = shareX, shareY = shareY)
 }
 
+#' Resolve facet grid number of rows
+#'
+#' Computes the number of rows to pass to \code{plotly::subplot(nrows = ...)}
+#' given a requested grid shape. Rules:
+#' \itemize{
+#'   \item If \code{facet.nrow} is supplied (not \code{NULL}, not \code{NA}, > 0) it is used as-is and capped at \code{n_facets}.
+#'   \item Else if \code{facet.ncol} is supplied, rows are computed as \code{ceiling(n_facets / facet.ncol)}.
+#'   \item Otherwise defaults to 1 (single row), matching the legacy layout.
+#' }
+#' Always returns an integer \code{>= 1}.
+#'
+#' @param n_facets Integer, total number of facet subplots.
+#' @param facet.nrow Optional integer, user-requested number of rows.
+#' @param facet.ncol Optional integer, user-requested number of columns.
+#'
+#' @return A positive integer number of rows.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_resolve_facet_grid_nrow
+#' @keywords internal
+.resolve_facet_grid_nrow <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
+    n_facets <- as.integer(n_facets)
+    if (is.na(n_facets) || n_facets < 1L) n_facets <- 1L
+
+    is_valid <- function(x) !is.null(x) && length(x) == 1L && !is.na(x) && is.numeric(x) && x >= 1
+    if (is_valid(facet.nrow)) {
+        return(min(n_facets, as.integer(floor(facet.nrow))))
+    }
+    if (is_valid(facet.ncol)) {
+        ncol_i <- as.integer(floor(facet.ncol))
+        return(as.integer(ceiling(n_facets / ncol_i)))
+    }
+    1L
+}
+
 #' Build facet subplot annotations
 #'
 #' Creates a list of plotly annotation objects suitable for labelling faceted
-#' subplots arranged in a single row.
+#' subplots. Subplots may be arranged in a single row (default) or in a grid
+#' via the \code{nrows} argument, mirroring the \code{nrows} arg of
+#' \code{plotly::subplot()} (plots are laid out left-to-right, top-to-bottom).
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
@@ -1721,6 +1758,8 @@ is_pure_type <- function(inputs, d) {
 #' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
+#' @param nrows Integer, number of rows in the facet grid. Must be \code{>= 1}.
+#'   Default: 1.
 #'
 #' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
 #'
@@ -1729,16 +1768,29 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 .build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
-                                     title.font.size = 14) {
+                                     title.font.size = 14,
+                                     nrows = 1) {
     n_facets <- length(facet_levels)
-    subplot_width <- 1.0 / n_facets
+    if (!is.numeric(nrows) || length(nrows) != 1L || is.na(nrows) || nrows < 1) {
+        nrows <- 1
+    }
+    nrows <- as.integer(nrows)
+    ncols <- as.integer(ceiling(n_facets / nrows))
+    if (ncols < 1L) ncols <- 1L
 
-    # Per-subplot title annotations
+    cell_w <- 1 / ncols
+    cell_h <- 1 / nrows
+
+    # Per-subplot title annotations (plotly::subplot fills row-major: left-to-right, top-to-bottom)
     annotations <- lapply(seq_along(facet_levels), function(i) {
-        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+        col <- ((i - 1L) %% ncols) + 1L
+        row <- ((i - 1L) %/% ncols) + 1L
+        x_pos <- (col - 1L) * cell_w + (cell_w / 2)
+        # Row 1 is the top; place the title just above each row's top edge.
+        y_pos <- 1 - (row - 1L) * cell_h + 0.05 * cell_h
         list(
             x = x_pos,
-            y = 1.05,
+            y = y_pos,
             xref = "paper",
             yref = "paper",
             text = as.character(facet_levels[i]),
