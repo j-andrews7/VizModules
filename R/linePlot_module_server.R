@@ -137,6 +137,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.scales",
                 selected = .get_default(defaults, "facet.scales", "fixed"))
+            updateNumericInput(session, "facet.nrow",
+                value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol",
+                value = .get_default(defaults, "facet.ncol", NA, is.numeric))
             updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
@@ -161,10 +165,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show("facet.title.font.size")
                 show("facet.title.font.color")
                 show("facet.title.font.family")
+                show("facet.nrow")
+                show("facet.ncol")
             } else {
                 hide("facet.title.font.size")
                 hide("facet.title.font.color")
                 hide("facet.title.font.family")
+                hide("facet.nrow")
+                hide("facet.ncol")
             }
         })
 
@@ -255,6 +263,18 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 facet.by <- isolate_fn(input$facet.by)
             }
 
+            # Convert empty/NA numeric inputs to NULL so linePlot() auto-computes layout
+            facet.nrow.val <- isolate_fn(input$facet.nrow)
+            if (is.null(facet.nrow.val) || length(facet.nrow.val) == 0 ||
+                is.na(facet.nrow.val) || !is.numeric(facet.nrow.val) || facet.nrow.val < 1) {
+                facet.nrow.val <- NULL
+            }
+            facet.ncol.val <- isolate_fn(input$facet.ncol)
+            if (is.null(facet.ncol.val) || length(facet.ncol.val) == 0 ||
+                is.na(facet.ncol.val) || !is.numeric(facet.ncol.val) || facet.ncol.val < 1) {
+                facet.ncol.val <- NULL
+            }
+
             fig <- linePlot(
                 data = d,
                 x = isolate_fn(input$x.value),
@@ -266,6 +286,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 show.legend = show_legend,
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
+                facet.nrow = facet.nrow.val,
+                facet.ncol = facet.ncol.val,
                 subplot.margin = isolate_fn(input$subplot.margin),
                 order.by = order_by,
                 axis.showline = isolate_fn(input$axis.showline),

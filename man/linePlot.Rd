@@ -15,6 +15,8 @@ linePlot(
   show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
+  facet.nrow = NULL,
+  facet.ncol = NULL,
   subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
@@ -77,6 +79,15 @@ Creates subplots for each unique value. Default: NULL.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
+
+\item{facet.nrow}{Optional integer, number of rows in the faceted subplot grid.
+If \code{NULL} (default), a single row is used unless \code{facet.ncol} is supplied,
+in which case the number of rows is derived from the number of facet levels.}
+
+\item{facet.ncol}{Optional integer, number of columns in the faceted subplot grid.
+If \code{NULL} (default), columns are derived from \code{facet.nrow} and the number
+of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
+if both are provided, \code{facet.nrow} takes precedence.}
 
 \item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.}
 

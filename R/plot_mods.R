@@ -1709,10 +1709,56 @@ is_pure_type <- function(inputs, d) {
     list(shareX = shareX, shareY = shareY)
 }
 
+#' Resolve number of rows for a faceted subplot grid
+#'
+#' Given the number of facet levels and optional user-supplied
+#' \code{facet.nrow} / \code{facet.ncol} values, computes the \code{nrows}
+#' argument to pass to \code{plotly::subplot}.
+#'
+#' Resolution rules:
+#' \itemize{
+#'   \item Both \code{NULL}/\code{NA}: returns 1 (single row, preserves legacy behaviour).
+#'   \item Only \code{facet.nrow} supplied: returns that value.
+#'   \item Only \code{facet.ncol} supplied: returns \code{ceiling(n_facets / facet.ncol)}.
+#'   \item Both supplied: \code{facet.nrow} wins.
+#' }
+#' The result is clamped to the range \code{[1, n_facets]}.
+#'
+#' @param n_facets Integer, number of facet panels.
+#' @param facet.nrow Optional integer, user-requested number of rows.
+#' @param facet.ncol Optional integer, user-requested number of columns.
+#'
+#' @return A positive integer giving the number of rows for
+#'   \code{plotly::subplot}.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_resolve_facet_layout
+#' @keywords internal
+.resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
+    n_facets <- max(1L, as.integer(n_facets))
+
+    .is_set <- function(x) {
+        !is.null(x) && length(x) == 1L && !is.na(x) && is.numeric(x) && x >= 1
+    }
+
+    if (.is_set(facet.nrow)) {
+        nrows <- as.integer(facet.nrow)
+    } else if (.is_set(facet.ncol)) {
+        nrows <- as.integer(ceiling(n_facets / as.integer(facet.ncol)))
+    } else {
+        nrows <- 1L
+    }
+
+    # Clamp to [1, n_facets]
+    nrows <- max(1L, min(nrows, n_facets))
+    nrows
+}
+
 #' Build facet subplot annotations
 #'
 #' Creates a list of plotly annotation objects suitable for labelling faceted
-#' subplots arranged in a single row.
+#' subplots arranged in a grid of \code{nrows} rows. When \code{nrows = 1}
+#' (the default) the behaviour matches the previous single-row layout.
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
@@ -1721,6 +1767,9 @@ is_pure_type <- function(inputs, d) {
 #' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
+#' @param nrows Integer, number of rows the faceted subplots are arranged in.
+#'   Used to compute per-subplot annotation coordinates for multi-row grids.
+#'   Default: 1.
 #'
 #' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
 #'
@@ -1729,16 +1778,27 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 .build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
-                                     title.font.size = 14) {
+                                     title.font.size = 14,
+                                     nrows = 1) {
     n_facets <- length(facet_levels)
-    subplot_width <- 1.0 / n_facets
+    nrows <- max(1L, as.integer(nrows))
+    ncols <- max(1L, as.integer(ceiling(n_facets / nrows)))
+    subplot_width <- 1.0 / ncols
+    subplot_height <- 1.0 / nrows
 
-    # Per-subplot title annotations
+    # Per-subplot title annotations. plotly::subplot fills by row, so
+    # subplot i occupies row floor((i-1)/ncols) (counting from the top) and
+    # column ((i-1) %% ncols).
     annotations <- lapply(seq_along(facet_levels), function(i) {
-        x_pos <- (i - 1) * subplot_width + (subplot_width / 2)
+        col_idx <- ((i - 1L) %% ncols)
+        row_idx <- ((i - 1L) %/% ncols)
+        x_pos <- col_idx * subplot_width + (subplot_width / 2)
+        # Place title just above the top of its row (y = 1 is top of figure)
+        y_top <- 1 - row_idx * subplot_height
+        y_pos <- y_top + 0.05 * subplot_height
         list(
             x = x_pos,
-            y = 1.05,
+            y = y_pos,
             xref = "paper",
             yref = "paper",
             text = as.character(facet_levels[i]),
