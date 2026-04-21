@@ -114,7 +114,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     selected <- list(
         "x", "y", "x.adjustment", "colour.by",
-        "facet.by", "facet.scales", "facet.nrow", "facet.ncol", "line.colour"
+        "facet.by", "facet.scales", "line.colour"
     )
 
     documentParameters <- get_documentation(
@@ -169,13 +169,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 )
-            ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.ncol"), "Columns",
-                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 1
-            ), documentParameters$facet.ncol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.nrow"), "Rows",
-                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 1
-            ), documentParameters$facet.nrow, placement = "top", options = list(container = "body"))
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),

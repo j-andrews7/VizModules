@@ -21,12 +21,6 @@
 #'   Creates subplots for each unique value. Default: NULL.
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
-#' @param facet.nrow Optional integer, number of rows in the facet grid. When \code{NULL}, the number of rows is
-#'   derived from \code{facet.ncol} if supplied, otherwise defaults to 1 (a single row). Passed to
-#'   \code{plotly::subplot(nrows = ...)}. Default: NULL.
-#' @param facet.ncol Optional integer, number of columns in the facet grid. When \code{NULL} (and \code{facet.nrow}
-#'   is also \code{NULL}), all facets are placed on a single row. When supplied without \code{facet.nrow}, the
-#'   number of rows is computed as \code{ceiling(n_facets / facet.ncol)}. Default: NULL.
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.
 #' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
@@ -87,7 +81,6 @@ linePlot <- function(data, x, y, palette.selection,
                      colour.group.by = NULL,
                      show.legend = TRUE, facet.by = NULL,
                      facet.scales = "fixed",
-                     facet.nrow = NULL, facet.ncol = NULL,
                      subplot.margin = 0.05,
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
@@ -234,15 +227,12 @@ linePlot <- function(data, x, y, palette.selection,
         })
 
         sharing <- .resolve_facet_sharing(facet.scales)
-        nrows_val <- .resolve_facet_grid_nrow(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
-            plots, nrows = nrows_val, shareX = sharing$shareX, shareY = sharing$shareY,
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows_val
-        )
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
@@ -263,15 +253,12 @@ linePlot <- function(data, x, y, palette.selection,
             first_facet <- FALSE
         }
 
-        nrows_val <- .resolve_facet_grid_nrow(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
-            plots, nrows = nrows_val, shareX = sharing$shareX, shareY = sharing$shareY,
+            plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE, margin = subplot.margin
         )
 
-        annotations <- .build_facet_annotations(
-            facet_levels, x.title = x.title, y.title = y.title, nrows = nrows_val
-        )
+        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else if (multi_axis) {
         # Initialize empty plot for multi-axis to avoid creating initial trace

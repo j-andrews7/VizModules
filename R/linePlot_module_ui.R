@@ -115,7 +115,6 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     selected <- list(
         "x", "y", "colour.group.by", "error.bar", "order.by",
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
-        "facet.nrow", "facet.ncol",
         "plot.mode", "line.type", "error.colour", "error.width"
     )
 
@@ -185,13 +184,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 )
-            ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.ncol"), "Columns",
-                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 1
-            ), documentParameters$facet.ncol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.nrow"), "Rows",
-                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 1
-            ), documentParameters$facet.nrow, placement = "top", options = list(container = "body"))
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("plot.mode"), "Plot Type",
