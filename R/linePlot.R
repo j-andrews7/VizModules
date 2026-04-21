@@ -21,7 +21,7 @@
 #'   Creates subplots for each unique value. Default: NULL.
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
-#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.1.
 #' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
@@ -81,7 +81,6 @@ linePlot <- function(data, x, y, palette.selection,
                      colour.group.by = NULL,
                      show.legend = TRUE, facet.by = NULL,
                      facet.scales = "fixed",
-                     subplot.margin = 0.05,
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
@@ -229,7 +228,8 @@ linePlot <- function(data, x, y, palette.selection,
         sharing <- .resolve_facet_sharing(facet.scales)
         fig <- subplot(
             plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE
+            # , margin = subplot.margin
         )
 
         annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
@@ -255,7 +255,8 @@ linePlot <- function(data, x, y, palette.selection,
 
         fig <- subplot(
             plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE
+            # , margin = subplot.margin
         )
 
         annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
