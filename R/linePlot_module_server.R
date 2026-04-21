@@ -294,7 +294,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 y.adjustment = y.adjustment,
                 error.colour = isolate_fn(input$error.bar.colour),
                 error.width = isolate_fn(input$error.bar.width),
-                error.bar = isolate_fn(input$error.bar)
+                error.bar = isolate_fn(input$error.bar),
+                subplot.margin = isolate_fn(input$subplot.margin)
             )
 
 

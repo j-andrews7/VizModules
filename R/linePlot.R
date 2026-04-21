@@ -87,7 +87,7 @@ linePlot <- function(data, x, y, palette.selection,
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.font.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
-                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
+                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE, subplot.margin = 0.1) {
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -309,7 +309,7 @@ linePlot <- function(data, x, y, palette.selection,
     if (!is.null(facet.by) && nzchar(facet.by)) {
         fig <- .apply_facet_subplot_spacing(
             fig,
-            spacing = isolate_fn(input$subplot.margin)
+            spacing = subplot.margin
         )
     }
     # Apply axis styling to all subplot axes (handles faceting)
