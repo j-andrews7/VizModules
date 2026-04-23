@@ -282,13 +282,15 @@ compute_pairwise_stats <- function(df, x, y,
 #' fig <- plotly::plot_ly(
 #'     data = example_iris, x = ~Species, y = ~Sepal.Length, type = "box"
 #' )
-#' create_stat_annotations(
+#' stat_result <- create_stat_annotations(
 #'     stats_df = stats_df,
 #'     fig = fig,
 #'     df = example_iris,
 #'     x = "Species",
-#'     y = "Sepal.Length"
+#'     y = "Sepal.Length",
+#'     display = "symbol"
 #' )
+#' names(stat_result)
 #'
 #' @author Jared Andrews, Jacob Martin
 #' @export
@@ -676,7 +678,8 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 #'     fig = fig,
 #'     df = example_iris,
 #'     x = "Species",
-#'     y = "Sepal.Length"
+#'     y = "Sepal.Length",
+#'     display = "symbol"
 #' )
 #' apply_stat_annotations(fig, stat_result)
 #'

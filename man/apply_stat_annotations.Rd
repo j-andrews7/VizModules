@@ -38,7 +38,8 @@ stat_result <- create_stat_annotations(
     fig = fig,
     df = example_iris,
     x = "Species",
-    y = "Sepal.Length"
+    y = "Sepal.Length",
+    display = "symbol"
 )
 apply_stat_annotations(fig, stat_result)
 

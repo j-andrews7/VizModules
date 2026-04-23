@@ -94,13 +94,15 @@ stats_df <- compute_pairwise_stats(
 fig <- plotly::plot_ly(
     data = example_iris, x = ~Species, y = ~Sepal.Length, type = "box"
 )
-create_stat_annotations(
+stat_result <- create_stat_annotations(
     stats_df = stats_df,
     fig = fig,
     df = example_iris,
     x = "Species",
-    y = "Sepal.Length"
+    y = "Sepal.Length",
+    display = "symbol"
 )
+names(stat_result)
 
 }
 \author{
