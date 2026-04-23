@@ -30,10 +30,17 @@
 #'
 #' @importFrom stats wilcox.test t.test kruskal.test aov p.adjust as.formula
 #'
+#' @examples
+#' compute_pairwise_stats(
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length",
+#'     test = "wilcox.test"
+#' )
+#'
 #' @author Jared Andrews, Jacob Martin
-#' @rdname INTERNAL_compute_pairwise_stats
-#' @keywords internal
-.compute_pairwise_stats <- function(df, x, y,
+#' @export
+compute_pairwise_stats <- function(df, x, y,
                                     pairs = NULL,
                                     test = "wilcox.test",
                                     p.adjust.method = "holm",
@@ -224,11 +231,11 @@
 
 #' Create plotly shapes and annotations for statistical test results
 #'
-#' Converts results from [.compute_pairwise_stats()] into plotly-compatible
+#' Converts results from [compute_pairwise_stats()] into plotly-compatible
 #' shapes (brackets) and annotations (text labels). Sorts comparisons so that
 #' small-gap brackets are closest to the data and large-gap brackets are higher.
 #'
-#' @param stats_df Data frame from [.compute_pairwise_stats()].
+#' @param stats_df Data frame from [compute_pairwise_stats()].
 #' @param fig A plotly figure object. Used to detect subplot axis pairs for
 #'   faceted plots.
 #' @param df The original data frame.
@@ -265,10 +272,27 @@
 #' 
 #' @importFrom utils combn
 #'
+#' @examples
+#' stats_df <- compute_pairwise_stats(
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length",
+#'     test = "wilcox.test"
+#' )
+#' fig <- plotly::plot_ly(
+#'     data = example_iris, x = ~Species, y = ~Sepal.Length, type = "box"
+#' )
+#' create_stat_annotations(
+#'     stats_df = stats_df,
+#'     fig = fig,
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length"
+#' )
+#'
 #' @author Jared Andrews, Jacob Martin
-#' @rdname INTERNAL_create_stat_annotations
-#' @keywords internal
-.create_stat_annotations <- function(stats_df, fig, df, x, y,
+#' @export
+create_stat_annotations <- function(stats_df, fig, df, x, y,
                                      display = "p.adj",
                                      hide.ns = FALSE,
                                      sig.threshold = 0.05,
@@ -625,22 +649,40 @@
 
 #' Apply statistical annotation shapes and annotations to a plotly figure
 #'
-#' Appends the shapes and annotations from [.create_stat_annotations()] to
+#' Appends the shapes and annotations from [create_stat_annotations()] to
 #' an existing plotly figure's layout. Adjusts the y-axis range to accommodate
 #' the annotation brackets.
 #'
 #' @param fig A plotly figure object.
 #' @param stat_result List with `annotations`, `shapes`, and `y.max` as returned
-#'   by [.create_stat_annotations()].
+#'   by [create_stat_annotations()].
 #' @param y.min Numeric or NULL; minimum y-axis value. If NULL, the existing
 #'   y-axis range is preserved.
 #'
 #' @return The modified plotly figure.
 #'
+#' @examples
+#' stats_df <- compute_pairwise_stats(
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length",
+#'     test = "wilcox.test"
+#' )
+#' fig <- plotly::plot_ly(
+#'     data = example_iris, x = ~Species, y = ~Sepal.Length, type = "box"
+#' )
+#' stat_result <- create_stat_annotations(
+#'     stats_df = stats_df,
+#'     fig = fig,
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length"
+#' )
+#' apply_stat_annotations(fig, stat_result)
+#'
 #' @author Jared Andrews
-#' @rdname INTERNAL_apply_stat_annotations
-#' @keywords internal
-.apply_stat_annotations <- function(fig, stat_result, y.min = NULL) {
+#' @export
+apply_stat_annotations <- function(fig, stat_result, y.min = NULL) {
     if (length(stat_result$annotations) == 0 && length(stat_result$shapes) == 0) {
         return(fig)
     }
@@ -698,10 +740,12 @@
 #' 
 #' @importFrom utils combn
 #'
+#' @examples
+#' generate_pair_strings(example_iris, x = "Species")
+#'
 #' @author Jared Andrews
-#' @rdname INTERNAL_generate_pair_strings
-#' @keywords internal
-.generate_pair_strings <- function(df, x, group.by = NULL) {
+#' @export
+generate_pair_strings <- function(df, x, group.by = NULL) {
     if (!is.null(group.by) && nzchar(group.by) && group.by %in% names(df)) {
         grp_levels <- unique(as.character(df[[group.by]]))
         if (length(grp_levels) < 2) {
@@ -722,16 +766,18 @@
 #' Parse pair strings from UI into list of length-2 vectors
 #'
 #' Converts the "group1 vs group2" strings from the comparison selector
-#' back into a list of length-2 character vectors for [.compute_pairwise_stats()].
+#' back into a list of length-2 character vectors for [compute_pairwise_stats()].
 #'
 #' @param pair_strings Character vector of pair strings from UI input.
 #'
 #' @return A list of length-2 character vectors, or NULL if input is empty.
 #'
+#' @examples
+#' parse_pair_strings(c("setosa vs versicolor", "versicolor vs virginica"))
+#'
 #' @author Jared Andrews
-#' @rdname INTERNAL_parse_pair_strings
-#' @keywords internal
-.parse_pair_strings <- function(pair_strings) {
+#' @export
+parse_pair_strings <- function(pair_strings) {
     if (is.null(pair_strings) || length(pair_strings) == 0 ||
         all(!nzchar(pair_strings))) {
         return(NULL)
@@ -747,7 +793,7 @@
 #' containing the p-value correction method, significance threshold, and
 #' symbol legend.
 #'
-#' @param stats_df Data frame from [.compute_pairwise_stats()], or NULL.
+#' @param stats_df Data frame from [compute_pairwise_stats()], or NULL.
 #' @param file Character; path to the output file.
 #' @param p.adjust.method Character; p-value correction method used.
 #' @param sig.threshold Numeric; significance threshold used.
@@ -756,11 +802,21 @@
 #' 
 #' @importFrom utils write.csv
 #'
+#' @examples
+#' stats_df <- compute_pairwise_stats(
+#'     df = example_iris,
+#'     x = "Species",
+#'     y = "Sepal.Length",
+#'     test = "wilcox.test"
+#' )
+#' tmp <- tempfile(fileext = ".csv")
+#' write_stats_csv(stats_df, tmp)
+#' file.remove(tmp)
+#'
 #' @author Jared Andrews
-#' @rdname INTERNAL_write_stats_csv
-#' @keywords internal
-.write_stats_csv <- function(stats_df, file, p.adjust.method = "holm",
-                             sig.threshold = 0.05) {
+#' @export
+write_stats_csv <- function(stats_df, file, p.adjust.method = "holm",
+                            sig.threshold = 0.05) {
     if (is.null(stats_df) || nrow(stats_df) == 0) {
         writeLines("No stats computed. Enable stats and update the plot first.", file)
         return(invisible(NULL))

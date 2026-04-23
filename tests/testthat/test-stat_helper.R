@@ -8,10 +8,10 @@ test_df <- data.frame(
 
 set.seed(42)
 
-# ─── .compute_pairwise_stats ─────────────────────────────────────────────────
+# ─── compute_pairwise_stats ─────────────────────────────────────────────────
 
-test_that(".compute_pairwise_stats returns correct structure for wilcox.test", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats returns correct structure for wilcox.test", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "wilcox.test"
     )
     expect_s3_class(result, "data.frame")
@@ -21,8 +21,8 @@ test_that(".compute_pairwise_stats returns correct structure for wilcox.test", {
     expect_true(all(result$test == "wilcox.test"))
 })
 
-test_that(".compute_pairwise_stats works with t.test", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats works with t.test", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "t.test"
     )
     expect_s3_class(result, "data.frame")
@@ -30,8 +30,8 @@ test_that(".compute_pairwise_stats works with t.test", {
     expect_true(all(result$test == "t.test"))
 })
 
-test_that(".compute_pairwise_stats works with kruskal.test (omnibus)", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats works with kruskal.test (omnibus)", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "kruskal.test"
     )
     expect_s3_class(result, "data.frame")
@@ -41,8 +41,8 @@ test_that(".compute_pairwise_stats works with kruskal.test (omnibus)", {
     expect_true(all(result$test == "kruskal.test"))
 })
 
-test_that(".compute_pairwise_stats works with anova (omnibus)", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats works with anova (omnibus)", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "anova"
     )
     expect_s3_class(result, "data.frame")
@@ -51,8 +51,8 @@ test_that(".compute_pairwise_stats works with anova (omnibus)", {
     expect_true(all(result$test == "anova"))
 })
 
-test_that(".compute_pairwise_stats applies p-value adjustment", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats applies p-value adjustment", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", p.adjust.method = "bonferroni"
     )
@@ -60,8 +60,8 @@ test_that(".compute_pairwise_stats applies p-value adjustment", {
     expect_true(all(result$p.adj >= result$p.value, na.rm = TRUE))
 })
 
-test_that(".compute_pairwise_stats respects specific pairs", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats respects specific pairs", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test",
         pairs = list(c("A", "B"))
@@ -71,8 +71,8 @@ test_that(".compute_pairwise_stats respects specific pairs", {
     expect_equal(result$group2, "B")
 })
 
-test_that(".compute_pairwise_stats handles per-facet testing", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats handles per-facet testing", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", facet.by = "facet", per.facet = TRUE
     )
@@ -81,8 +81,8 @@ test_that(".compute_pairwise_stats handles per-facet testing", {
     expect_equal(nrow(result), 6)
 })
 
-test_that(".compute_pairwise_stats with per.facet=FALSE returns NA facet_level", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats with per.facet=FALSE returns NA facet_level", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", facet.by = "facet", per.facet = FALSE
     )
@@ -90,8 +90,8 @@ test_that(".compute_pairwise_stats with per.facet=FALSE returns NA facet_level",
     expect_true(all(is.na(result$facet_level)))
 })
 
-test_that(".compute_pairwise_stats with group.by nests within x-levels", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats with group.by nests within x-levels", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", group.by = "color"
     )
@@ -100,16 +100,16 @@ test_that(".compute_pairwise_stats with group.by nests within x-levels", {
     expect_true(all(!is.na(result$x_level)))
 })
 
-test_that(".compute_pairwise_stats returns empty df for single group", {
+test_that("compute_pairwise_stats returns empty df for single group", {
     single <- test_df[test_df$group == "A", ]
-    result <- VizModules:::.compute_pairwise_stats(
+    result <- compute_pairwise_stats(
         df = single, x = "group", y = "value", test = "wilcox.test"
     )
     expect_equal(nrow(result), 0)
 })
 
-test_that(".compute_pairwise_stats sig.threshold affects p.signif", {
-    result <- VizModules:::.compute_pairwise_stats(
+test_that("compute_pairwise_stats sig.threshold affects p.signif", {
+    result <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", sig.threshold = 1.0
     )
@@ -117,14 +117,14 @@ test_that(".compute_pairwise_stats sig.threshold affects p.signif", {
     expect_true(all(result$p.signif != "ns"))
 })
 
-test_that(".compute_pairwise_stats paired test works", {
+test_that("compute_pairwise_stats paired test works", {
     # Equal-sized groups for paired test
     paired_df <- data.frame(
         group = rep(c("A", "B"), each = 10),
         value = c(rnorm(10, 5), rnorm(10, 8)),
         stringsAsFactors = FALSE
     )
-    result <- VizModules:::.compute_pairwise_stats(
+    result <- compute_pairwise_stats(
         df = paired_df, x = "group", y = "value",
         test = "t.test", paired = TRUE
     )
@@ -132,49 +132,49 @@ test_that(".compute_pairwise_stats paired test works", {
     expect_false(is.na(result$p.value))
 })
 
-# ─── .generate_pair_strings ──────────────────────────────────────────────────
+# ─── generate_pair_strings ──────────────────────────────────────────────────
 
-test_that(".generate_pair_strings returns correct pairs", {
-    result <- VizModules:::.generate_pair_strings(test_df, "group")
+test_that("generate_pair_strings returns correct pairs", {
+    result <- generate_pair_strings(test_df, "group")
     expect_equal(length(result), 3) # C(3,2) = 3
     expect_true(all(grepl(" vs ", result)))
 })
 
-test_that(".generate_pair_strings with group.by uses group levels", {
-    result <- VizModules:::.generate_pair_strings(test_df, "group", group.by = "color")
+test_that("generate_pair_strings with group.by uses group levels", {
+    result <- generate_pair_strings(test_df, "group", group.by = "color")
     expect_equal(length(result), 1) # C(2,2) = 1 pair: red vs blue
     expect_true(grepl(" vs ", result))
 })
 
-test_that(".generate_pair_strings returns empty for single level", {
+test_that("generate_pair_strings returns empty for single level", {
     single <- test_df[test_df$group == "A", ]
-    result <- VizModules:::.generate_pair_strings(single, "group")
+    result <- generate_pair_strings(single, "group")
     expect_equal(length(result), 0)
 })
 
-# ─── .parse_pair_strings ─────────────────────────────────────────────────────
+# ─── parse_pair_strings ─────────────────────────────────────────────────────
 
-test_that(".parse_pair_strings parses valid strings", {
-    result <- VizModules:::.parse_pair_strings(c("A vs B", "B vs C"))
+test_that("parse_pair_strings parses valid strings", {
+    result <- parse_pair_strings(c("A vs B", "B vs C"))
     expect_type(result, "list")
     expect_equal(length(result), 2)
     expect_equal(result[[1]], c("A", "B"))
     expect_equal(result[[2]], c("B", "C"))
 })
 
-test_that(".parse_pair_strings returns NULL for empty input", {
-    expect_null(VizModules:::.parse_pair_strings(NULL))
-    expect_null(VizModules:::.parse_pair_strings(character(0)))
-    expect_null(VizModules:::.parse_pair_strings(""))
+test_that("parse_pair_strings returns NULL for empty input", {
+    expect_null(parse_pair_strings(NULL))
+    expect_null(parse_pair_strings(character(0)))
+    expect_null(parse_pair_strings(""))
 })
 
-# ─── .create_stat_annotations ────────────────────────────────────────────────
+# ─── create_stat_annotations ────────────────────────────────────────────────
 
-test_that(".create_stat_annotations returns correct structure", {
-    stats_df <- VizModules:::.compute_pairwise_stats(
+test_that("create_stat_annotations returns correct structure", {
+    stats_df <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "wilcox.test"
     )
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value"
     )
@@ -185,8 +185,8 @@ test_that(".create_stat_annotations returns correct structure", {
     expect_true(is.numeric(result$y.max))
 })
 
-test_that(".create_stat_annotations returns empty for NULL stats_df", {
-    result <- VizModules:::.create_stat_annotations(
+test_that("create_stat_annotations returns empty for NULL stats_df", {
+    result <- create_stat_annotations(
         stats_df = NULL, fig = NULL, df = test_df,
         x = "group", y = "value"
     )
@@ -195,13 +195,13 @@ test_that(".create_stat_annotations returns empty for NULL stats_df", {
     expect_null(result$y.max)
 })
 
-test_that(".create_stat_annotations hide.ns filters results", {
-    stats_df <- VizModules:::.compute_pairwise_stats(
+test_that("create_stat_annotations hide.ns filters results", {
+    stats_df <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", sig.threshold = 0.05
     )
     # With very low threshold, everything should be hidden
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value",
         hide.ns = TRUE, sig.threshold = 0.0001
@@ -211,14 +211,14 @@ test_that(".create_stat_annotations hide.ns filters results", {
     expect_type(result, "list")
 })
 
-test_that(".create_stat_annotations generates capped bracket shapes", {
+test_that("create_stat_annotations generates capped bracket shapes", {
     stats_df <- data.frame(
         group1 = "A", group2 = "B",
         p.value = 0.01, p.adj = 0.01, p.signif = "**",
         test = "wilcox.test", facet_level = NA_character_,
         x_level = NA_character_, stringsAsFactors = FALSE
     )
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value", bracket.style = "capped"
     )
@@ -226,14 +226,14 @@ test_that(".create_stat_annotations generates capped bracket shapes", {
     expect_equal(length(result$shapes), 3)
 })
 
-test_that(".create_stat_annotations generates flat bracket shapes", {
+test_that("create_stat_annotations generates flat bracket shapes", {
     stats_df <- data.frame(
         group1 = "A", group2 = "B",
         p.value = 0.01, p.adj = 0.01, p.signif = "**",
         test = "wilcox.test", facet_level = NA_character_,
         x_level = NA_character_, stringsAsFactors = FALSE
     )
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value", bracket.style = "flat"
     )
@@ -241,14 +241,14 @@ test_that(".create_stat_annotations generates flat bracket shapes", {
     expect_equal(length(result$shapes), 1)
 })
 
-test_that(".create_stat_annotations displays symbols", {
+test_that("create_stat_annotations displays symbols", {
     stats_df <- data.frame(
         group1 = "A", group2 = "B",
         p.value = 0.001, p.adj = 0.001, p.signif = "***",
         test = "wilcox.test", facet_level = NA_character_,
         x_level = NA_character_, stringsAsFactors = FALSE
     )
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value", display = "symbol"
     )
@@ -256,11 +256,11 @@ test_that(".create_stat_annotations displays symbols", {
     expect_equal(result$annotations[[1]]$text, "***")
 })
 
-test_that(".create_stat_annotations includes omnibus annotation", {
-    stats_df <- VizModules:::.compute_pairwise_stats(
+test_that("create_stat_annotations includes omnibus annotation", {
+    stats_df <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "kruskal.test"
     )
-    result <- VizModules:::.create_stat_annotations(
+    result <- create_stat_annotations(
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value"
     )
@@ -273,9 +273,9 @@ test_that(".create_stat_annotations includes omnibus annotation", {
     expect_equal(result$annotations[[1]]$yref, "paper")
 })
 
-# ─── .apply_stat_annotations ─────────────────────────────────────────────────
+# ─── apply_stat_annotations ─────────────────────────────────────────────────
 
-test_that(".apply_stat_annotations adds shapes and annotations to figure", {
+test_that("apply_stat_annotations adds shapes and annotations to figure", {
     fig <- list(x = list(layout = list(yaxis = list(range = c(0, 10)))))
     class(fig) <- "plotly"
 
@@ -285,7 +285,7 @@ test_that(".apply_stat_annotations adds shapes and annotations to figure", {
         y.max = 13
     )
 
-    result <- VizModules:::.apply_stat_annotations(fig, stat_result)
+    result <- apply_stat_annotations(fig, stat_result)
     expect_equal(length(result$x$layout$shapes), 1)
     expect_equal(length(result$x$layout$annotations), 1)
     expect_equal(result$x$layout$yaxis$range[2], 13)
@@ -293,7 +293,7 @@ test_that(".apply_stat_annotations adds shapes and annotations to figure", {
     expect_true(result$x$layout$yaxis$range[1] < 0)
 })
 
-test_that(".apply_stat_annotations preserves existing shapes", {
+test_that("apply_stat_annotations preserves existing shapes", {
     fig <- list(x = list(layout = list(
         yaxis = list(range = c(0, 10)),
         shapes = list(list(type = "rect")),
@@ -307,12 +307,12 @@ test_that(".apply_stat_annotations preserves existing shapes", {
         y.max = 13
     )
 
-    result <- VizModules:::.apply_stat_annotations(fig, stat_result)
+    result <- apply_stat_annotations(fig, stat_result)
     expect_equal(length(result$x$layout$shapes), 2)
     expect_equal(length(result$x$layout$annotations), 2)
 })
 
-test_that(".apply_stat_annotations updates all y-axes for faceted plots", {
+test_that("apply_stat_annotations updates all y-axes for faceted plots", {
     fig <- list(x = list(layout = list(
         yaxis = list(range = c(0, 10)),
         yaxis2 = list(range = c(0, 10))
@@ -321,7 +321,7 @@ test_that(".apply_stat_annotations updates all y-axes for faceted plots", {
 
     stat_result <- list(annotations = list(), shapes = list(list(type = "line")), y.max = 15)
 
-    result <- VizModules:::.apply_stat_annotations(fig, stat_result)
+    result <- apply_stat_annotations(fig, stat_result)
     expect_equal(result$x$layout$yaxis$range[2], 15)
     expect_equal(result$x$layout$yaxis2$range[2], 15)
     # Both axes should have bottom buffer
@@ -329,26 +329,26 @@ test_that(".apply_stat_annotations updates all y-axes for faceted plots", {
     expect_true(result$x$layout$yaxis2$range[1] < 0)
 })
 
-test_that(".apply_stat_annotations is a no-op for empty results", {
+test_that("apply_stat_annotations is a no-op for empty results", {
     fig <- list(x = list(layout = list(yaxis = list(range = c(0, 10)))))
     class(fig) <- "plotly"
 
     stat_result <- list(annotations = list(), shapes = list(), y.max = NULL)
 
-    result <- VizModules:::.apply_stat_annotations(fig, stat_result)
+    result <- apply_stat_annotations(fig, stat_result)
     expect_equal(result$x$layout$yaxis$range, c(0, 10))
 })
 
-# ─── .write_stats_csv ────────────────────────────────────────────────────────
+# ─── write_stats_csv ────────────────────────────────────────────────────────
 
-test_that(".write_stats_csv writes file with metadata header", {
-    stats_df <- VizModules:::.compute_pairwise_stats(
+test_that("write_stats_csv writes file with metadata header", {
+    stats_df <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "wilcox.test"
     )
     tmp <- tempfile(fileext = ".csv")
     on.exit(unlink(tmp))
 
-    VizModules:::.write_stats_csv(stats_df, tmp,
+    write_stats_csv(stats_df, tmp,
         p.adjust.method = "bonferroni", sig.threshold = 0.05)
 
     lines <- readLines(tmp)
@@ -360,17 +360,17 @@ test_that(".write_stats_csv writes file with metadata header", {
     expect_true(any(grepl("p.adjust.method", lines)))
 })
 
-test_that(".write_stats_csv handles NULL stats_df", {
+test_that("write_stats_csv handles NULL stats_df", {
     tmp <- tempfile(fileext = ".csv")
     on.exit(unlink(tmp))
 
-    VizModules:::.write_stats_csv(NULL, tmp)
+    write_stats_csv(NULL, tmp)
 
     lines <- readLines(tmp)
     expect_true(grepl("No stats", lines[1]))
 })
 
-test_that(".write_stats_csv handles empty stats_df", {
+test_that("write_stats_csv handles empty stats_df", {
     empty_df <- data.frame(
         group1 = character(0), group2 = character(0),
         p.value = numeric(0), p.adj = numeric(0), p.signif = character(0),
@@ -380,7 +380,7 @@ test_that(".write_stats_csv handles empty stats_df", {
     tmp <- tempfile(fileext = ".csv")
     on.exit(unlink(tmp))
 
-    VizModules:::.write_stats_csv(empty_df, tmp)
+    write_stats_csv(empty_df, tmp)
 
     lines <- readLines(tmp)
     expect_true(grepl("No stats", lines[1]))

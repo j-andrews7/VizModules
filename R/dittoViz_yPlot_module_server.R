@@ -54,7 +54,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         observeEvent(c(input$group.by, input$color.by), {
             req(input$group.by)
             color_by <- if (!is.null(input$color.by) && nzchar(input$color.by)) input$color.by else NULL
-            pair_strings <- .generate_pair_strings(data(), input$group.by, color_by)
+            pair_strings <- generate_pair_strings(data(), input$group.by, color_by)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -424,8 +424,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 # yPlot uses group.by as the x-axis, color.by for nested grouping
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
-                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
-                stats_df <- .compute_pairwise_stats(
+                stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- compute_pairwise_stats(
                     df = data(), x = xvar,
                     y = isolate_fn(input$var), pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
@@ -436,7 +436,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
                 last_stats_df(stats_df)
-                stat_result <- .create_stat_annotations(
+                stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = xvar, y = isolate_fn(input$var),
                     display = isolate_fn(input$stat.display),
@@ -450,7 +450,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
-                fig <- .apply_stat_annotations(fig, stat_result,
+                fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
             }
@@ -485,7 +485,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 paste0("stats_table_", Sys.Date(), ".csv")
             },
             content = function(file) {
-                .write_stats_csv(
+                write_stats_csv(
                     stats_df = last_stats_df(), file = file,
                     p.adjust.method = input$stat.p.adjust,
                     sig.threshold = input$stat.sig.threshold

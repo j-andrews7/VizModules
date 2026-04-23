@@ -14,7 +14,7 @@ plotthis_SplitBarPlotApp(data_list = NULL)
 A Shiny app object.
 }
 \description{
-This function generates a Shiny application with modular \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} components.
+This function generates a Shiny application with modular \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} components.
 The app features a \strong{Data Import} section for uploading data,
 a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive split bar plot.
