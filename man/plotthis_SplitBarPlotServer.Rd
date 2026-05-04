@@ -36,7 +36,7 @@ The \code{moduleServer} function for the SplitBarPlot module.
 Server logic for SplitBarPlot module
 }
 \seealso{
-\code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
 \code{\link[=plotthis_SplitBarPlotInputsUI]{plotthis_SplitBarPlotInputsUI()}}, \code{\link[=plotthis_SplitBarPlotOutputUI]{plotthis_SplitBarPlotOutputUI()}},
 \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}
 }

@@ -32,12 +32,12 @@ The inputs will automatically be organized into a grid layout via the \code{orga
 with \code{columns} controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
-Nearly all parameters for \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} can be set via these inputs, so see the help
+Nearly all parameters for \code{\link[plotthis:barplot]{plotthis::BarPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
-The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters are not available via UI inputs:
+The following \code{\link[plotthis:barplot]{plotthis::BarPlot()}} parameters are not available via UI inputs:
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (plotly allows interactive editing)
@@ -94,7 +94,7 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters are
 
 \section{Plot parameters and defaults}{
 
-The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+The following \code{\link[plotthis:barplot]{plotthis::BarPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
 \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
@@ -164,7 +164,7 @@ data(mtcars)
 plotthis_BarPlotInputsUI("BarPlot", mtcars)
 }
 \seealso{
-\code{\link[plotthis:BarPlot]{plotthis::BarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[plotthis:barplot]{plotthis::BarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
 \code{\link[=plotthis_BarPlotOutputUI]{plotthis_BarPlotOutputUI()}}, \code{\link[=plotthis_BarPlotServer]{plotthis_BarPlotServer()}}, \code{\link[=plotthis_BarPlotApp]{plotthis_BarPlotApp()}}
 }
 \author{

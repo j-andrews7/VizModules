@@ -38,12 +38,12 @@ The inputs will automatically be organized into a grid layout via the \code{orga
 with \code{columns} controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
-Nearly all parameters for \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} can be set via these inputs, so see the help
+Nearly all parameters for \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
-The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} parameters are not available via UI inputs:
+The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameters are not available via UI inputs:
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (plotly allows interactive editing)
@@ -81,7 +81,7 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 
 \section{Plot parameters and defaults}{
 
-The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+The following \code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
 \item \code{x} - X-axis variable (UI: "X values", defaults key: \code{x.data}, default: 2nd numeric variable)
 \item \code{y} - Y-axis grouping variable (UI: "Y values", defaults key: \code{y.data}, default: 2nd categorical variable)
@@ -156,7 +156,7 @@ mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 }
 \seealso{
-\code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[plotthis:barplot]{plotthis::SplitBarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
 \code{\link[=plotthis_SplitBarPlotOutputUI]{plotthis_SplitBarPlotOutputUI()}}, \code{\link[=plotthis_SplitBarPlotServer]{plotthis_SplitBarPlotServer()}}, \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}
 }
 \author{

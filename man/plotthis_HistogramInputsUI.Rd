@@ -38,12 +38,12 @@ The inputs will automatically be organized into a grid layout via the \code{orga
 with \code{columns} controlling the number of columns in the grid.
 
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
-Nearly all parameters for \code{\link[plotthis:Histogram]{plotthis::Histogram()}} can be set via these inputs, so see the help
+Nearly all parameters for \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
-The following \code{\link[plotthis:Histogram]{plotthis::Histogram()}} parameters are not available via UI inputs:
+The following \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} parameters are not available via UI inputs:
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (plotly allows interactive editing)
@@ -76,7 +76,7 @@ The following \code{\link[plotthis:Histogram]{plotthis::Histogram()}} parameters
 
 \section{Plot parameters and defaults}{
 
-The following \code{\link[plotthis:Histogram]{plotthis::Histogram()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+The following \code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
 \item \code{x} - X-axis variable (UI: "X Data", default: 2nd numeric variable)
 \item \code{group_by} - Grouping variable (UI: "Group By", default: "")
@@ -153,7 +153,7 @@ data(mtcars)
 plotthis_HistogramInputsUI("histogram", mtcars)
 }
 \seealso{
-\code{\link[plotthis:Histogram]{plotthis::Histogram()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[plotthis:densityhistoplot]{plotthis::Histogram()}}, \code{\link[=organize_inputs]{organize_inputs()}},
 \code{\link[=plotthis_HistogramOutputUI]{plotthis_HistogramOutputUI()}}, \code{\link[=plotthis_HistogramServer]{plotthis_HistogramServer()}}, \code{\link[=plotthis_HistogramApp]{plotthis_HistogramApp()}}
 }
 \author{
