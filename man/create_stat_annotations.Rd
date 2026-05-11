@@ -91,9 +91,11 @@ stats_df <- compute_pairwise_stats(
     y = "Sepal.Length",
     test = "wilcox.test"
 )
+
 fig <- plotly::plot_ly(
     data = example_iris, x = ~Species, y = ~Sepal.Length, type = "box"
 )
+
 stat_result <- create_stat_annotations(
     stats_df = stats_df,
     fig = fig,
@@ -102,6 +104,7 @@ stat_result <- create_stat_annotations(
     y = "Sepal.Length",
     display = "symbol"
 )
+
 names(stat_result)
 
 }

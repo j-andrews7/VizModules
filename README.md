@@ -1,9 +1,9 @@
 # VizModules
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml)
-[![Tests](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml)
-[![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg?branch=devel)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
+[![R-CMD-check](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml)
+[![Tests](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml)
+[![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis) along with native plotting functions) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
@@ -260,6 +260,12 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/UI_Overview.png)
 
+## AI Usage
+
+The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
+AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs to ensure accuracy and quality.
+Our own hands are all over this project, and we are invested in it. 
+Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
 [2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html

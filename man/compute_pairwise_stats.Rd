@@ -15,7 +15,8 @@ compute_pairwise_stats(
   group.by = NULL,
   facet.by = NULL,
   per.facet = TRUE,
-  sig.threshold = 0.05
+  sig.threshold = 0.05,
+  sig.levels = c(`****` = 1e-04, `***` = 0.001, `**` = 0.01)
 )
 }
 \arguments{
@@ -46,8 +47,15 @@ comparisons are made between levels of \code{group.by} within each level of \cod
 \item{per.facet}{Logical; if TRUE and \code{facet.by} is set, run tests
 independently per facet panel. Default TRUE.}
 
-\item{sig.threshold}{Numeric; significance threshold. P-values above this
-are labeled "ns". Default 0.05.}
+\item{sig.threshold}{Numeric; significance threshold for \code{*} vs \code{ns}.
+P-values at or below this are labeled \code{*}; above are labeled \code{ns}. Default 0.05.
+See \code{sig.levels} for the multi-star thresholds.}
+
+\item{sig.levels}{Named numeric vector; upper p-value bounds for multi-star
+significance symbols. Names are the displayed symbols and values are the
+thresholds. Default \code{c("****" = 0.0001, "***" = 0.001, "**" = 0.01)}.
+Any number of levels can be provided. Evaluated from smallest to largest
+threshold so the most significant symbol always wins.}
 }
 \value{
 A data.frame with columns: \code{group1}, \code{group2}, \code{p.value}, \code{p.adj},
@@ -65,6 +73,16 @@ compute_pairwise_stats(
     x = "Species",
     y = "Sepal.Length",
     test = "wilcox.test"
+)
+
+# Custom significance levels: only two-star tiers, lower threshold for *
+compute_pairwise_stats(
+    df = example_iris,
+    x = "Species",
+    y = "Sepal.Length",
+    test = "wilcox.test",
+    sig.threshold = 0.01,
+    sig.levels = c("**" = 0.001, "***" = 0.0001)
 )
 
 }

@@ -4,7 +4,13 @@
 \alias{write_stats_csv}
 \title{Write stats table CSV with metadata header}
 \usage{
-write_stats_csv(stats_df, file, p.adjust.method = "holm", sig.threshold = 0.05)
+write_stats_csv(
+  stats_df,
+  file,
+  p.adjust.method = "holm",
+  sig.threshold = 0.05,
+  sig.levels = c(`****` = 1e-04, `***` = 0.001, `**` = 0.01)
+)
 }
 \arguments{
 \item{stats_df}{Data frame from \code{\link[=compute_pairwise_stats]{compute_pairwise_stats()}}, or NULL.}
@@ -13,7 +19,11 @@ write_stats_csv(stats_df, file, p.adjust.method = "holm", sig.threshold = 0.05)
 
 \item{p.adjust.method}{Character; p-value correction method used.}
 
-\item{sig.threshold}{Numeric; significance threshold used.}
+\item{sig.threshold}{Numeric; significance threshold used for \code{*} vs \code{ns}.}
+
+\item{sig.levels}{Named numeric vector; the multi-star thresholds passed to
+\code{\link[=compute_pairwise_stats]{compute_pairwise_stats()}}. Used to generate the symbol legend in the
+header. Default \code{c("****" = 0.0001, "***" = 0.001, "**" = 0.01)}.}
 }
 \value{
 Called for side effects; writes to \code{file}.

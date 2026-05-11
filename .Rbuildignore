@@ -10,7 +10,7 @@
 ^\.DS_Store$
 ^\.Rhistory$
 ^paper\.bib$
-^paper\.md$
+^paper*\.md$
 ^inst/apps/module-gallery/manifest\.json
 ^.*\.Rproj$
 ^cran-comments\.md$
