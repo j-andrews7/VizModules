@@ -1002,7 +1002,6 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' @return A downloadHandler function that can be assigned to
 #'   `output$download.interactive.summary`.
 #'
-#' @importFrom htmlwidgets saveWidget
 #' @importFrom htmltools tagList tags browsable HTML save_html
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom plotly plotly_data
@@ -1110,7 +1109,11 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
                     ),
                     error = function(e) e
                 )
-                inlined <- file.exists(file) && file.info(file)$size > 0
+                exit_status <- attr(status, "status")
+                pandoc_ok <- !inherits(status, "error") &&
+                    (is.null(exit_status) || isTRUE(exit_status == 0))
+                inlined <- pandoc_ok && file.exists(file) &&
+                    file.info(file)$size > 0
             }
 
             if (!inlined) {
