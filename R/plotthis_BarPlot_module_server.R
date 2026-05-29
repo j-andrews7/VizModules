@@ -320,7 +320,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 split_by = split.by,
                 fill_by = fill.by
             )
-
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(

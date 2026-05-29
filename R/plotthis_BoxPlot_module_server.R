@@ -91,7 +91,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Update stat comparison pairs when x or group.by changes
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
-            pair_strings <- .generate_pair_strings(data(), input$x.data, input$group.by)
+            pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -289,7 +289,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1,
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-          
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)
@@ -305,8 +304,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
-                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
-                stats_df <- .compute_pairwise_stats(
+                stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- compute_pairwise_stats(
                     df = data(), x = isolate_fn(input$x.data),
                     y = isolate_fn(input$y.data), pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
@@ -317,7 +316,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
                 last_stats_df(stats_df)
-                stat_result <- .create_stat_annotations(
+                stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
                     display = isolate_fn(input$stat.display),
@@ -331,7 +330,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
-                fig <- .apply_stat_annotations(fig, stat_result,
+                fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
             }
@@ -406,7 +405,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 paste0("stats_table_", Sys.Date(), ".csv")
             },
             content = function(file) {
-                .write_stats_csv(
+                write_stats_csv(
                     stats_df = last_stats_df(), file = file,
                     p.adjust.method = input$stat.p.adjust,
                     sig.threshold = input$stat.sig.threshold

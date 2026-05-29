@@ -314,12 +314,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 error.width = isolate_fn(input$error.bar.width),
                 error.bar = isolate_fn(input$error.bar)
             )
-
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
-
             # Add reference lines
             fig <- .add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
