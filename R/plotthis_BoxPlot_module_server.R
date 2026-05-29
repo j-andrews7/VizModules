@@ -387,7 +387,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Render the plot output
         output$BoxPlot <- renderPlotly({
             req(input$x.data, input$y.data)
-
             fig <- .apply_render_margins(generate_BoxPlot(), input)
 
             return(fig)
@@ -398,14 +397,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             plot_reactive = generate_BoxPlot,
             filename_base = "BoxPlot"
         )
-
         # Download handler for interactive summary (plot + data + stats)
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_BoxPlot,
             stats_reactive = last_stats_df,
             filename_base = "BoxPlot_summary"
         )
-
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
