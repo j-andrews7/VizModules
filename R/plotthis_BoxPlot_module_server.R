@@ -289,7 +289,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     boxgap = 0.1,
                     boxgroupgap = 1 - isolate_fn(input$boxplot.width)
                 )
-          
             # Fix boxplot positioning across faceted subplots
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .fix_boxplot_facet_positions(fig)

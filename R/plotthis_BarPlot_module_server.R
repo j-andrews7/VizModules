@@ -320,7 +320,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 split_by = split.by,
                 fill_by = fill.by
             )
-            browser()
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
@@ -330,7 +329,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.nrow
                 )
             }
-            browser()
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
