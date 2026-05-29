@@ -840,5 +840,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             plot_reactive = generate_scatterPlot,
             filename_base = "scatterPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_scatterPlot,
+            filename_base = "scatterPlot_summary"
+        )
     })
 }

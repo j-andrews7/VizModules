@@ -260,5 +260,11 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             plot_reactive = generate_AreaPlot,
             filename_base = "AreaPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_AreaPlot,
+            filename_base = "AreaPlot_summary"
+        )
     })
 }

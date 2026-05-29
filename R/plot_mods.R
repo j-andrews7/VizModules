@@ -982,6 +982,153 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     )
 }
 
+
+#' Create download handler for an interactive plot summary
+#'
+#' Generates a Shiny downloadHandler that saves a self-contained HTML file
+#' containing the plotly plot, a `DT::datatable` view of the plot's underlying
+#' data (obtained via `plotly::plotly_data()`), and, when supplied, a
+#' `DT::datatable` view of the statistics summary. Used by all VizModules to
+#' provide the "Interactive Summary" button beside the standard control panel
+#' buttons (Auto Update / Update / Reset).
+#'
+#' @param plot_reactive A reactive expression returning a plotly plot object.
+#' @param stats_reactive Optional. A reactive expression (e.g. a `reactiveVal`)
+#'   returning the stats data.frame to include in the summary. When `NULL` or
+#'   when the reactive returns `NULL`/empty, the stats section is omitted.
+#' @param filename_base Character. Base name for the downloaded file (without
+#'   extension). Defaults to `"interactive_summary"`.
+#'
+#' @return A downloadHandler function that can be assigned to
+#'   `output$download.interactive.summary`.
+#'
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom htmltools tagList tags browsable HTML save_html
+#' @importFrom shinyjqui jqui_resizable
+#' @importFrom plotly plotly_data
+#' @importFrom DT datatable
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_create_interactive_summary_download_handler
+#' @keywords internal
+.create_interactive_summary_download_handler <- function(plot_reactive,
+                                                          stats_reactive = NULL,
+                                                          filename_base = "interactive_summary") {
+    downloadHandler(
+        filename = function() {
+            paste0(filename_base, "_", Sys.Date(), ".html")
+        },
+        content = function(file) {
+            plot <- plot_reactive()
+            # Ensure it's a plotly widget
+            if (!inherits(plot, "plotly")) {
+                stop("Plot must be a plotly object")
+            }
+
+            # Extract the plot data tibble via plotly_data().
+            plot_data <- tryCatch(
+                plotly_data(plot),
+                error = function(e) NULL
+            )
+
+            # Optional stats data
+            stats_df <- NULL
+            if (!is.null(stats_reactive)) {
+                stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
+            }
+
+            data_table <- if (!is.null(plot_data) && NROW(plot_data) > 0) {
+                datatable(
+                    as.data.frame(plot_data),
+                    options = list(scrollX = TRUE, pageLength = 10),
+                    rownames = FALSE,
+                    filter = "top"
+                )
+            } else {
+                tags$p(tags$em("No plot data available."))
+            }
+
+            stats_section <- NULL
+            if (!is.null(stats_df) && NROW(stats_df) > 0) {
+                stats_section <- tagList(
+                    tags$h2("Statistics Summary"),
+                    datatable(
+                        as.data.frame(stats_df),
+                        options = list(scrollX = TRUE, pageLength = 10),
+                        rownames = FALSE,
+                        filter = "top"
+                    )
+                )
+            }
+
+            page <- browsable(tagList(
+                tags$head(tags$title("VizModules Interactive Summary")),
+                tags$style(HTML(paste(
+                    "body{font-family:sans-serif;margin:20px;}",
+                    "h1,h2{color:#333;}",
+                    ".section{margin-bottom:40px;}",
+                    sep = "\n"
+                ))),
+                tags$h1("Interactive Plot Summary"),
+                tags$div(
+                    class = "section",
+                    tags$h2("Plot"),
+                    jqui_resizable(plot)
+                ),
+                tags$div(
+                    class = "section",
+                    tags$h2("Plot Data"),
+                    data_table
+                ),
+                if (!is.null(stats_section)) {
+                    tags$div(class = "section", stats_section)
+                }
+            ))
+
+            # Write the combined HTML (plot + tables) to a temp file alongside
+            # its dependencies, then use pandoc to inline everything into a
+            # single self-contained HTML file. This is the same approach used
+            # internally by htmlwidgets::saveWidget(selfcontained = TRUE).
+            tmpdir <- tempfile("vizmodules_summary_")
+            dir.create(tmpdir)
+            on.exit(unlink(tmpdir, recursive = TRUE), add = TRUE)
+            tmpfile <- file.path(tmpdir, "summary.html")
+            save_html(page, file = tmpfile, libdir = "lib")
+
+            inlined <- FALSE
+            pandoc <- Sys.which("pandoc")
+            if (nzchar(pandoc)) {
+                status <- tryCatch(
+                    system2(
+                        pandoc,
+                        args = c(
+                            shQuote(tmpfile),
+                            "-o", shQuote(file),
+                            "--self-contained"
+                        ),
+                        stdout = TRUE, stderr = TRUE
+                    ),
+                    error = function(e) e
+                )
+                inlined <- file.exists(file) && file.info(file)$size > 0
+            }
+
+            if (!inlined) {
+                # Fall back to copying the standalone (non-inlined) HTML. The
+                # accompanying dependency files live next to the temp file and
+                # are not delivered through the download, so the resulting file
+                # may have broken references when pandoc is unavailable.
+                file.copy(tmpfile, file, overwrite = TRUE)
+                warning(
+                    "pandoc was not available to produce a self-contained HTML; ",
+                    "the downloaded interactive summary may be missing styling ",
+                    "and interactivity."
+                )
+            }
+        }
+    )
+}
+
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a

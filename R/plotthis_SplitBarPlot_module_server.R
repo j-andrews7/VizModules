@@ -509,5 +509,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             plot_reactive = generate_SplitBarPlot,
             filename_base = "SplitBarPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_SplitBarPlot,
+            filename_base = "SplitBarPlot_summary"
+        )
     })
 }

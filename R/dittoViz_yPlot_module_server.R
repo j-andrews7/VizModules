@@ -479,6 +479,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             filename_base = "yPlot"
         )
 
+        # Download handler for interactive summary (plot + data + stats)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_yPlot,
+            stats_reactive = last_stats_df,
+            filename_base = "yPlot_summary"
+        )
+
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
