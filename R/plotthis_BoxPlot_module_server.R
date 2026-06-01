@@ -384,10 +384,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
-          
-            # Returning all UI inputs: 
-            
         })
+        #Returning all UI inputs: 
         AllInputs <- reactive({
             x <- reactiveValuesToList(input)
             return(x)
@@ -413,7 +411,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             inputs_reactive = AllInputs(),
             filename_base = "BoxPlot_summary"
         )
-        
 
         # Download handler for stats table
         output$download.stats <- downloadHandler(
