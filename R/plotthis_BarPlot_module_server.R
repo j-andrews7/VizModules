@@ -404,7 +404,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             return(x)
         })
 
-        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+        output$download.interactive.summary <- create_interactive_summary_download_handler(
             plot_reactive = generate_BarPlot,
             inputs_reactive = AllInputs(),
             filename_base = "BarPlot_summary"

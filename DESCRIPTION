@@ -39,7 +39,9 @@ Imports:
     jsonlite,
     methods,
     shinyWidgets,
-    htmlwidgets
+    htmlwidgets,
+    withr,
+    zip
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

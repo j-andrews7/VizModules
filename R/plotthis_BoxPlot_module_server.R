@@ -405,7 +405,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             filename_base = "BoxPlot"
         )
         # Download handler for interactive summary (plot + data + stats)
-        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+        output$download.interactive.summary <- create_interactive_summary_download_handler(
             plot_reactive = generate_BoxPlot,
             stats_reactive = last_stats_df,
             inputs_reactive = AllInputs(),

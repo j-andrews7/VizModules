@@ -307,7 +307,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             return(x)
         })
 
-        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+        output$download.interactive.summary <- create_interactive_summary_download_handler(
             plot_reactive = generate_Histogram,
             inputs_reactive = AllInputs(),
             filename_base = "Histogram_summary"
