@@ -147,6 +147,10 @@ Via direct implementation with plotly.
 
 The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure.
 
+## Export Summary Data:
+
+`create_interactive_summary_download_handler()' function to generate a compact zip folder of summary data for the outputed plot. Including summary statistics, plot data, UI input values, and the rendered plot. 
+
 ### Supported Tests
 
 - **Pairwise**: Wilcoxon rank-sum test, t-test (paired or unpaired)
