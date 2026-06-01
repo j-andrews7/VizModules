@@ -982,6 +982,85 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     )
 }
 
+
+#' Create download handler for an interactive plot summary
+#'
+#' Generates a Shiny [downloadHandler()] that bundles three files into a
+#' `.zip` archive: a self-contained interactive HTML of the plotly plot
+#' (rendered via [htmlwidgets::saveWidget()]), a CSV of the plot's underlying
+#' data (obtained via [plotly::plotly_data()]), and, when supplied, a CSV of
+#' the statistics summary. Used by all VizModules to provide the
+#' **"Interactive Summary"** download button beside the standard control panel
+#' buttons (Auto Update / Update / Reset).
+#'
+#' @param plot_reactive A reactive expression returning a `plotly` object.
+#' @param stats_reactive Optional. A reactive expression (e.g. a
+#'   [shiny::reactiveVal()]) returning a `data.frame` of summary statistics to
+#'   include in the archive. When `NULL` or when the reactive returns
+#'   `NULL`/an empty `data.frame`, `stats_data.csv` is omitted from the zip.
+#' @param filename_base `character(1)`. Base name for the downloaded `.zip`
+#'   file (without extension). The final filename takes the form
+#'   `<filename_base>_<Sys.Date()>.zip`. Defaults to
+#'   `"interactive_summary"`.
+#'
+#' @return A `downloadHandler` object suitable for direct assignment to
+#'   `output$download.interactive.summary`. The resulting `.zip` archive
+#'   contains:
+#'   \describe{
+#'     \item{`plot.html`}{Self-contained interactive plotly HTML widget.}
+#'     \item{`plot_data.csv`}{CSV of the data underlying the plot, as returned
+#'       by [plotly::plotly_data()].}
+#'     \item{`stats_data.csv`}{CSV of the statistics summary (only present when
+#'       `stats_reactive` is non-`NULL` and returns non-empty data).}
+#'   }
+#'
+#' @importFrom shiny downloadHandler
+#' @importFrom withr local_tempdir
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom shinyjqui jqui_resizable
+#' @importFrom plotly plotly_data
+#' @importFrom zip zip
+#'
+#' @author Jacob Martin
+#' @rdname INTERNAL_create_interactive_summary_download_handler
+#' @keywords internal
+
+.create_interactive_summary_download_handler <- function(plot_reactive,
+                                                          stats_reactive = NULL,
+                                                          filename_base = "interactive_summary") {
+    downloadHandler(
+        filename = function() {
+            paste0(filename_base, "_", Sys.Date(), ".zip")
+        },
+        content = function(file) {
+            tmp <- withr::local_tempdir()
+            plot <- plot_reactive()
+            plot_data <- as.data.frame(plotly_data(plot))
+            
+            stats <- NULL
+            if (!is.null(stats_reactive())){
+                stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
+                stats <- as.data.frame(stats_df)
+                write.csv(stats, paste0(tmp, "/stats_data.csv"), row.names = FALSE)
+            }
+            
+            write.csv(plot_data, paste0(tmp, "/plot_Data.csv"), row.names = FALSE)
+            
+
+            saveWidget(
+                        widget = jqui_resizable(plot),
+                        file = paste0(tmp, "/plot.html"),
+                        selfcontained = TRUE
+                    )
+            zip::zip(file,files = list.files(tmp, full.names = FALSE), root = tmp, mode = "cherry-pick")
+
+        }
+    )
+}
+
+        
+
+
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a

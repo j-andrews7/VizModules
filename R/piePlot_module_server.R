@@ -244,5 +244,11 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             plot_reactive = generate_piePlot,
             filename_base = "piePlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_piePlot,
+            filename_base = "piePlot_summary"
+        )
     })
 }

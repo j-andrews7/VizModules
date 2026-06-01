@@ -170,5 +170,11 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             plot_reactive = generate_parallelCoordinatesPlot,
             filename_base = "parallelCoordinatesPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_parallelCoordinatesPlot,
+            filename_base = "parallelCoordinatesPlot_summary"
+        )
     })
 }

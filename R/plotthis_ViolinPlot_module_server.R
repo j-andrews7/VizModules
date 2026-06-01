@@ -380,6 +380,13 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             filename_base = "ViolinPlot"
         )
 
+        # Download handler for interactive summary (plot + data + stats)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_ViolinPlot,
+            stats_reactive = last_stats_df,
+            filename_base = "ViolinPlot_summary"
+        )
+
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {

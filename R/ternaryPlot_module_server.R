@@ -297,5 +297,11 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             plot_reactive = generate_ternaryPlot,
             filename_base = "ternaryPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        output$download.interactive.summary <- .create_interactive_summary_download_handler(
+            plot_reactive = generate_ternaryPlot,
+            filename_base = "ternaryPlot_summary"
+        )
     })
 }
