@@ -1033,19 +1033,22 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
                 }
             }
 
-            if (!is.null(inputs_reactive)) {
-                ui_inputs <- tryCatch(inputs_reactive(), error = function(e) NULL)
-                if (!is.null(ui_inputs) && length(ui_inputs) > 0) {
-                    inp <- data.frame(
-                        names = names(ui_inputs),
-                        values = unlist(ui_inputs, use.names = FALSE)
-                    )
-                    write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
-                }
-            }
+            ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
+                message("ERROR: ", e$message)
+                NULL
+            })
+                
+            inp <- data.frame(
+                names  = names(ui_inputs),
+                values = unlist(lapply(ui_inputs, function(x) {
+                    if (is.null(x)) "NULL"
+                    else if (length(x) > 1) paste(x, collapse = ", ")
+                    else as.character(x)
+            })))
+            write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
+        
             write.csv(plot_data, paste0(tmp, "/plot_Data.csv"), row.names = FALSE)
-            
-
+        
             saveWidget(
                         widget = jqui_resizable(plot),
                         file = paste0(tmp, "/plot.html"),
@@ -1056,10 +1059,6 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
         }
     )
 }
-
-        
-
-
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a

@@ -264,7 +264,7 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 4,
                 downloadButton(
                     ns("download.interactive.summary"),
-                    "Interactive Summary",
+                    "Summary Download",
                     class = "btn-secondary",
                     icon = icon("file-code"),
                     width = "100%"

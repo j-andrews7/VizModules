@@ -386,16 +386,17 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             return(fig)
           
             # Returning all UI inputs: 
-            AllInputs <- reactive({
-                x <- reactiveValuesToList(input)
-                return(x)
-            })
+            
         })
-
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
         # Render the plot output
         output$BoxPlot <- renderPlotly({
             req(input$x.data, input$y.data)
             fig <- .apply_render_margins(generate_BoxPlot(), input)
+
 
             return(fig)
         })
@@ -409,9 +410,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_BoxPlot,
             stats_reactive = last_stats_df,
-            inputs_reactive = AllInputs,
+            inputs_reactive = AllInputs(),
             filename_base = "BoxPlot_summary"
         )
+        
+
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
