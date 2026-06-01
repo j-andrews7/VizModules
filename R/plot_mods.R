@@ -1025,18 +1025,24 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
             plot_data <- as.data.frame(plotly_data(plot))
             
             stats <- NULL
-            if (!is.null(stats_reactive())){
+            if (!is.null(stats_reactive)) {
                 stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
-                stats <- as.data.frame(stats_df)
-                write.csv(stats, paste0(tmp, "/stats_data.csv"), row.names = FALSE)
+                if (!is.null(stats_df)) {
+                    stats <- as.data.frame(stats_df)
+                    write.csv(stats, paste0(tmp, "/stats_data.csv"), row.names = FALSE)
+                }
             }
-            
-            ui_inputs <- inputs_reactive()
-            inp <-  data.frame(
-                names = names(ui_inputs),
-                values = unlist(ui_inputs, use.names = FALSE)
-            )
-            write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
+
+            if (!is.null(inputs_reactive)) {
+                ui_inputs <- tryCatch(inputs_reactive(), error = function(e) NULL)
+                if (!is.null(ui_inputs) && length(ui_inputs) > 0) {
+                    inp <- data.frame(
+                        names = names(ui_inputs),
+                        values = unlist(ui_inputs, use.names = FALSE)
+                    )
+                    write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
+                }
+            }
             write.csv(plot_data, paste0(tmp, "/plot_Data.csv"), row.names = FALSE)
             
 
