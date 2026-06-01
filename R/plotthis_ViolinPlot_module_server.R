@@ -381,9 +381,16 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         )
 
         # Download handler for interactive summary (plot + data + stats)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_ViolinPlot,
             stats_reactive = last_stats_df,
+            inputs_reactive = AllInputs(),
             filename_base = "ViolinPlot_summary"
         )
 

@@ -397,8 +397,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         )
 
         # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_linePlot,
+            inputs_reactive = AllInputs(),
             filename_base = "linePlot_summary"
         )
     })

@@ -172,8 +172,15 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         )
 
         # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_parallelCoordinatesPlot,
+            inputs_reactive = AllInputs(),
             filename_base = "parallelCoordinatesPlot_summary"
         )
     })

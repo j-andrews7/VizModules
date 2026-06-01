@@ -480,9 +480,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         )
 
         # Download handler for interactive summary (plot + data + stats)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_yPlot,
             stats_reactive = last_stats_df,
+            inputs_reactive = AllInputs(),
             filename_base = "yPlot_summary"
         )
 
