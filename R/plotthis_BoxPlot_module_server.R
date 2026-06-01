@@ -299,7 +299,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.nrow
                 )
             }
-          
+            
+            
+            
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Statistical annotations
@@ -382,6 +384,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
+          
+            # Returning all UI inputs: 
+            AllInputs <- reactive({
+                x <- reactiveValuesToList(input)
+                return(x)
+            })
         })
 
         # Render the plot output
@@ -401,6 +409,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$download.interactive.summary <- .create_interactive_summary_download_handler(
             plot_reactive = generate_BoxPlot,
             stats_reactive = last_stats_df,
+            inputs_reactive = AllInputs,
             filename_base = "BoxPlot_summary"
         )
         # Download handler for stats table
