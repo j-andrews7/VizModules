@@ -1586,7 +1586,7 @@ create_interactive_summary_download_handler <- function(plot_reactive,
     fig
 }
 
-
+#' Add fit line traces to all subplot panels
 #'
 #' Adds linear or LOESS fit line traces to a plotly figure, handling subplot panels
 #' when faceting is applied. Determines subplot axes from existing traces and adds
