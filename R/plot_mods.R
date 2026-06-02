@@ -1539,7 +1539,54 @@ create_interactive_summary_download_handler <- function(plot_reactive,
     fig
 }
 
-#' Add fit line traces to all subplot panels
+#' Normalize DotPlot markers for Plotly rendering
+#'
+#' `plotthis::DotPlot()` draws its dots with `shape = 21` (a filled circle with
+#' a separate outline) and maps `size_by` through `ggplot2::scale_size_area()`.
+#' When such a layer is converted with `ggplotly()`, the marker outline keeps a
+#' constant pixel width, so small dots can appear as hollow rings dominated by
+#' their border rather than filled circles. This helper forces every marker
+#' trace to render as a filled circle with a thin, uniform outline so that
+#' mapping `size_by` only changes the dot diameter while the fill continues to
+#' occupy the entire dot.
+#'
+#' @param fig A plotly figure object produced by `ggplotly()`.
+#'
+#' @return The modified plotly figure with normalized dot markers.
+#'
+#' @details This function iterates through all traces in the plotly figure and
+#'   identifies scatter traces drawn in "markers" mode. For each such trace it
+#'   forces the marker symbol to a filled "circle" and sets a thin, uniform
+#'   black outline, while leaving the marker fill colors and sizes untouched.
+#'   Non-marker traces are returned unchanged.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_normalize_dot_markers
+.normalize_dot_markers <- function(fig) {
+    stopifnot("plotly" %in% class(fig))
+    for (i in seq_along(fig$x$data)) {
+        trace <- fig$x$data[[i]]
+        is_marker <- (is.null(trace$type) || trace$type %in% c("scatter", "scattergl")) &&
+            !is.null(trace$mode) && grepl("markers", trace$mode)
+        if (!is_marker) {
+            next
+        }
+        if (is.null(trace$marker)) {
+            trace$marker <- list()
+        }
+        trace$marker$symbol <- "circle"
+        if (is.null(trace$marker$line)) {
+            trace$marker$line <- list()
+        }
+        trace$marker$line$width <- 0.5
+        trace$marker$line$color <- "black"
+        fig$x$data[[i]] <- trace
+    }
+    fig
+}
+
+
 #'
 #' Adds linear or LOESS fit line traces to a plotly figure, handling subplot panels
 #' when faceting is applied. Determines subplot axes from existing traces and adds

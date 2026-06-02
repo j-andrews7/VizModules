@@ -63,10 +63,6 @@
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 #'   \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 #'   \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
-#'   \item \code{add_bg} - Add a striped background (UI: "Add Background", default: FALSE)
-#'   \item \code{bg_palette} - Background palette (UI: "Background Palette", default: "stripe")
-#'   \item \code{bg_alpha} - Background transparency (UI: "Background Alpha", default: 0.2)
-#'   \item \code{bg_direction} - Background stripe direction (UI: "Background Direction", default: "vertical")
 #' }
 #'
 #' @param id The ID for the Shiny module.
@@ -103,8 +99,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "size_by", "fill_by", "fill_cutoff",
         "split_by", "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "palette", "alpha",
-        "add_bg", "bg_palette", "bg_alpha", "bg_direction"
+        "palette", "alpha"
     )
 
     documentParameters <- get_documentation(
@@ -173,23 +168,6 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(numericInput(ns("alpha"), "Alpha",
             value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
             documentParameters$alpha, placement = "top", options = list(container = "body"))
-    ),
-
-    "Background" = tagList(
-        tipify(materialSwitch(ns("add.bg"), "Add Background",
-        value = .get_default(defaults, "add.bg", FALSE, is.logical), status = "success"),
-            documentParameters$add_bg, placement = "top", options = list(container = "body")),
-        tipify(textInput(ns("bg.palette"), "Background Palette",
-        value = .get_default(defaults, "bg.palette", "stripe")),
-            documentParameters$bg_palette, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("bg.alpha"), "Background Alpha",
-        value = .get_default(defaults, "bg.alpha", 0.2, is.numeric), min = 0, max = 1),
-            documentParameters$bg_alpha, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("bg.direction"), "Background Direction",
-        selected = .get_default(defaults, "bg.direction", "vertical",
-            function(x) x %in% c("vertical", "horizontal")),
-        choices = c("vertical", "horizontal")
-        ), documentParameters$bg_direction, placement = "top", options = list(container = "body"))
     ),
 
     "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),

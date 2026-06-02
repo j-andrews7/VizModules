@@ -85,15 +85,6 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
-            # Background
-            updateMaterialSwitch(session, "add.bg", value = .get_default(defaults, "add.bg", FALSE, is.logical))
-            updateTextInput(session, "bg.palette", value = .get_default(defaults, "bg.palette", "stripe"))
-            updateNumericInput(session, "bg.alpha", value = .get_default(defaults, "bg.alpha", 0.2, is.numeric))
-            updateSelectInput(session, "bg.direction",
-                selected = .get_default(defaults, "bg.direction", "vertical",
-                    function(x) x %in% c("vertical", "horizontal"))
-            )
-
             # Axes
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "axis.title.font.size",
@@ -175,13 +166,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
-                add_bg = isolate_fn(input$add.bg),
-                bg_palette = isolate_fn(input$bg.palette),
-                bg_alpha = isolate_fn(input$bg.alpha),
-                bg_direction = isolate_fn(input$bg.direction),
                 split_by = split.by
             )
             fig <- ggplotly(p)
+            # Keep dots rendered as filled circles with a thin, uniform outline so
+            # that `size_by` only changes the dot diameter (not the outline/symbol).
+            fig <- .normalize_dot_markers(fig)
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
