@@ -114,28 +114,35 @@ parallelCoordinatesPlot <- function(
                     pal_colors <- unname(rep_len(pal_colors, n_lvls))
                 }
 
-                # Build a discrete plotly colorscale: stepwise stops at each level
+                # Build a discrete plotly colorscale with one solid band per level.
+                # plotly's parcoords renderer rejects colorscales that contain
+                # duplicate stop positions (it silently falls back to the default
+                # continuous scale), so each band boundary is split by a tiny
+                # epsilon to keep the stop positions strictly increasing while
+                # still producing hard, discrete colour steps.
                 if (n_lvls == 1) {
                     discrete_scale <- list(list(0, pal_colors[1]), list(1, pal_colors[1]))
                 } else {
-                    stops <- (seq_len(n_lvls) - 1) / (n_lvls - 1)
-                    discrete_scale <- list()
-                    for (i in seq_len(n_lvls)) {
-                        # Start of this color band
-                        start_pos <- if (i == 1) 0 else stops[i] - (1 / (2 * (n_lvls - 1)))
-                        end_pos <- if (i == n_lvls) 1 else stops[i] + (1 / (2 * (n_lvls - 1)))
-                        discrete_scale[[length(discrete_scale) + 1]] <- list(start_pos, pal_colors[i])
-                        discrete_scale[[length(discrete_scale) + 1]] <- list(end_pos, pal_colors[i])
+                    eps <- 1e-6
+                    discrete_scale <- list(list(0, pal_colors[1]))
+                    for (k in seq_len(n_lvls - 1)) {
+                        boundary <- k / n_lvls
+                        discrete_scale[[length(discrete_scale) + 1]] <- list(boundary - eps, pal_colors[k])
+                        discrete_scale[[length(discrete_scale) + 1]] <- list(boundary + eps, pal_colors[k + 1])
                     }
+                    discrete_scale[[length(discrete_scale) + 1]] <- list(1, pal_colors[n_lvls])
                 }
 
+                # Centre each integer category value within its colour band by
+                # padding the colour range half a step on either side.
                 line_spec <- list(
                     color = color_vals,
                     colorscale = discrete_scale,
+                    autocolorscale = FALSE,
                     showscale = show.colorbar,
                     opacity = line.opacity,
-                    cmin = 1,
-                    cmax = n_lvls,
+                    cmin = 0.5,
+                    cmax = n_lvls + 0.5,
                     colorbar = list(
                         title = list(text = color.by),
                         tickmode = "array",

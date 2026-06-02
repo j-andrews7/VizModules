@@ -16,7 +16,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show click
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotApp()]
@@ -81,6 +81,20 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 compact = TRUE
             )
         })
+
+        # The continuous color scale only applies to numeric color.by. For a
+        # categorical color.by the discrete palette picker is used instead, so
+        # hide the color scale selector to avoid an irrelevant, no-op control.
+        observeEvent(input$color.by, {
+            if (!is.null(hide.inputs) && "color.scale" %in% hide.inputs) {
+                return()
+            }
+            if (length(palette_groups()) > 0) {
+                hide("color.scale")
+            } else {
+                show("color.scale")
+            }
+        }, ignoreNULL = FALSE)
 
         # Reset functionality
         observeEvent(input$reset, {

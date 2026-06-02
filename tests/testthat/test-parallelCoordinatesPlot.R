@@ -51,14 +51,21 @@ test_that("parallelCoordinatesPlot uses palette.selection for categorical color.
 
     # Discrete colorscale should be a list of [position, color] stops, not a string
     expect_true(is.list(line$colorscale))
+    # plotly's parcoords renderer drops colorscales with duplicate stop
+    # positions, so the positions must be strictly increasing.
+    positions <- vapply(line$colorscale, function(stop) stop[[1]], numeric(1))
+    expect_false(is.unsorted(positions, strictly = TRUE))
+    # The custom scale must be respected rather than auto-generated.
+    expect_false(isTRUE(line$autocolorscale))
     # Colors used in the scale should match the palette
     scale_colors <- toupper(vapply(line$colorscale, function(stop) stop[[2]], character(1)))
     expect_true(all(toupper(unname(pal)) %in% scale_colors))
     # Colorbar should show categorical tick text
     expect_equal(as.character(line$colorbar$ticktext), c("A", "B", "C"))
     expect_equal(as.numeric(line$colorbar$tickvals), c(1, 2, 3))
-    expect_equal(line$cmin, 1)
-    expect_equal(line$cmax, 3)
+    # Range is padded half a step so each integer value centres in its band
+    expect_equal(line$cmin, 0.5)
+    expect_equal(line$cmax, 3.5)
 })
 
 test_that("parallelCoordinatesPlot falls back to color.scale when palette.selection is NULL", {
