@@ -9,6 +9,7 @@ parallelCoordinatesPlot(
   dimensions,
   color.by = NULL,
   color.scale = "Viridis",
+  palette.selection = NULL,
   line.opacity = 0.5,
   line.width = 1,
   show.colorbar = TRUE,
@@ -32,13 +33,19 @@ parallelCoordinatesPlot(
 Must contain at least two columns. Non-numeric columns are mapped to integers.}
 
 \item{color.by}{Optional character, column name to color lines by.
-Numeric columns use a continuous colorscale; categorical columns are mapped
-to integers and displayed with the same colorscale. Default: NULL.}
+Numeric columns use a continuous colorscale (\code{color.scale}); categorical
+columns use a discrete palette (\code{palette.selection}) and are displayed
+with category names on the colorbar. Default: NULL.}
 
-\item{color.scale}{Character, plotly colorscale name for line coloring.
-Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
-"Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral",
-"Jet", "Hot", "Cool", "Portland". Default: "Viridis".}
+\item{color.scale}{Character, plotly colorscale name for line coloring when
+\code{color.by} is numeric. Options include "Viridis", "Cividis", "Inferno",
+"Magma", "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu",
+"Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".}
+
+\item{palette.selection}{Character vector of hex colors used to color lines
+when \code{color.by} is categorical. May be unnamed (colors applied in
+order to the sorted unique levels) or named by level. If \code{NULL}, the
+plotly \code{color.scale} is used as a fallback. Default: NULL.}
 
 \item{line.opacity}{Numeric, opacity of lines between 0 and 1. Default: 0.5.}
 

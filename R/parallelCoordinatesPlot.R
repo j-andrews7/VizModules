@@ -7,12 +7,17 @@
 #' @param dimensions Character vector of column names to use as dimensions (axes).
 #'   Must contain at least two columns. Non-numeric columns are mapped to integers.
 #' @param color.by Optional character, column name to color lines by.
-#'   Numeric columns use a continuous colorscale; categorical columns are mapped
-#'   to integers and displayed with the same colorscale. Default: NULL.
-#' @param color.scale Character, plotly colorscale name for line coloring.
-#'   Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma",
-#'   "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral",
-#'   "Jet", "Hot", "Cool", "Portland". Default: "Viridis".
+#'   Numeric columns use a continuous colorscale (\code{color.scale}); categorical
+#'   columns use a discrete palette (\code{palette.selection}) and are displayed
+#'   with category names on the colorbar. Default: NULL.
+#' @param color.scale Character, plotly colorscale name for line coloring when
+#'   \code{color.by} is numeric. Options include "Viridis", "Cividis", "Inferno",
+#'   "Magma", "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu",
+#'   "Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".
+#' @param palette.selection Character vector of hex colors used to color lines
+#'   when \code{color.by} is categorical. May be unnamed (colors applied in
+#'   order to the sorted unique levels) or named by level. If \code{NULL}, the
+#'   plotly \code{color.scale} is used as a fallback. Default: NULL.
 #' @param line.opacity Numeric, opacity of lines between 0 and 1. Default: 0.5.
 #' @param line.width Numeric, width of lines in pixels. Default: 1.
 #' @param show.colorbar Logical, whether to show the colorbar. Default: TRUE.
@@ -48,6 +53,7 @@ parallelCoordinatesPlot <- function(
   dimensions,
   color.by = NULL,
   color.scale = "Viridis",
+  palette.selection = NULL,
   line.opacity = 0.5,
   line.width = 1,
   show.colorbar = TRUE,
@@ -86,25 +92,84 @@ parallelCoordinatesPlot <- function(
     # Build line spec
     if (!is.null(color.by) && nzchar(color.by) && color.by %in% names(df)) {
         color_vals <- df[[color.by]]
+        is_categorical <- !is.numeric(color_vals)
 
-        # Map categorical color column to integers
-        if (!is.numeric(color_vals)) {
+        if (is_categorical) {
+            # Map categorical color column to integers
             lvls <- sort(unique(as.character(color_vals)))
             color_vals <- match(as.character(color_vals), lvls)
-        }
+            n_lvls <- length(lvls)
 
-        line_spec <- list(
-            color = color_vals,
-            colorscale = color.scale,
-            showscale = show.colorbar,
-            opacity = line.opacity,
-            cmin = min(color_vals, na.rm = TRUE),
-            cmax = max(color_vals, na.rm = TRUE),
-            colorbar = list(
-                title = list(text = color.by)
+            # Resolve palette colors against levels
+            if (!is.null(palette.selection) && length(palette.selection) > 0) {
+                pal_colors <- palette.selection
+                if (!is.null(names(pal_colors)) && any(nzchar(names(pal_colors)))) {
+                    matched <- pal_colors[match(lvls, names(pal_colors))]
+                    if (any(is.na(matched))) {
+                        fill <- rep_len(unname(pal_colors), n_lvls)
+                        matched[is.na(matched)] <- fill[is.na(matched)]
+                    }
+                    pal_colors <- unname(matched)
+                } else {
+                    pal_colors <- unname(rep_len(pal_colors, n_lvls))
+                }
+
+                # Build a discrete plotly colorscale: stepwise stops at each level
+                if (n_lvls == 1) {
+                    discrete_scale <- list(list(0, pal_colors[1]), list(1, pal_colors[1]))
+                } else {
+                    stops <- (seq_len(n_lvls) - 1) / (n_lvls - 1)
+                    discrete_scale <- list()
+                    for (i in seq_len(n_lvls)) {
+                        # Start of this color band
+                        start_pos <- if (i == 1) 0 else stops[i] - (1 / (2 * (n_lvls - 1)))
+                        end_pos <- if (i == n_lvls) 1 else stops[i] + (1 / (2 * (n_lvls - 1)))
+                        discrete_scale[[length(discrete_scale) + 1]] <- list(start_pos, pal_colors[i])
+                        discrete_scale[[length(discrete_scale) + 1]] <- list(end_pos, pal_colors[i])
+                    }
+                }
+
+                line_spec <- list(
+                    color = color_vals,
+                    colorscale = discrete_scale,
+                    showscale = show.colorbar,
+                    opacity = line.opacity,
+                    cmin = 1,
+                    cmax = n_lvls,
+                    colorbar = list(
+                        title = list(text = color.by),
+                        tickmode = "array",
+                        tickvals = seq_len(n_lvls),
+                        ticktext = lvls
+                    )
+                )
+            } else {
+                # Fallback: use the plotly native colorscale on integer-mapped values
+                line_spec <- list(
+                    color = color_vals,
+                    colorscale = color.scale,
+                    showscale = show.colorbar,
+                    opacity = line.opacity,
+                    cmin = min(color_vals, na.rm = TRUE),
+                    cmax = max(color_vals, na.rm = TRUE),
+                    colorbar = list(
+                        title = list(text = color.by)
+                    )
+                )
+            }
+        } else {
+            line_spec <- list(
+                color = color_vals,
+                colorscale = color.scale,
+                showscale = show.colorbar,
+                opacity = line.opacity,
+                cmin = min(color_vals, na.rm = TRUE),
+                cmax = max(color_vals, na.rm = TRUE),
+                colorbar = list(
+                    title = list(text = color.by)
+                )
             )
-        )
-
+        }
 
         if (line.width != 1) {
             line_spec$width <- line.width

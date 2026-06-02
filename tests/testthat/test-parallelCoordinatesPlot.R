@@ -33,6 +33,52 @@ test_that("parallelCoordinatesPlot handles color.scale parameter", {
     expect_s3_class(fig, "plotly")
 })
 
+test_that("parallelCoordinatesPlot uses palette.selection for categorical color.by", {
+    df <- mtcars
+    df$grp <- rep(c("A", "B", "C"), length.out = nrow(df))
+    pal <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+
+    fig <- parallelCoordinatesPlot(
+        data = df,
+        dimensions = c("mpg", "cyl", "disp"),
+        color.by = "grp",
+        palette.selection = pal
+    )
+
+    expect_s3_class(fig, "plotly")
+    built <- plotly::plotly_build(fig)
+    line <- built$x$data[[1]]$line
+
+    # Discrete colorscale should be a list of [position, color] stops, not a string
+    expect_true(is.list(line$colorscale))
+    # Colors used in the scale should match the palette
+    scale_colors <- toupper(vapply(line$colorscale, function(stop) stop[[2]], character(1)))
+    expect_true(all(toupper(unname(pal)) %in% scale_colors))
+    # Colorbar should show categorical tick text
+    expect_equal(as.character(line$colorbar$ticktext), c("A", "B", "C"))
+    expect_equal(as.numeric(line$colorbar$tickvals), c(1, 2, 3))
+    expect_equal(line$cmin, 1)
+    expect_equal(line$cmax, 3)
+})
+
+test_that("parallelCoordinatesPlot falls back to color.scale when palette.selection is NULL", {
+    df <- mtcars
+    df$grp <- rep(c("A", "B"), length.out = nrow(df))
+
+    fig <- parallelCoordinatesPlot(
+        data = df,
+        dimensions = c("mpg", "cyl", "disp"),
+        color.by = "grp",
+        color.scale = "Viridis"
+    )
+
+    expect_s3_class(fig, "plotly")
+    built <- plotly::plotly_build(fig)
+    # When no palette.selection is given, the colorscale stays as a named plotly scale (string)
+    expect_true(is.character(built$x$data[[1]]$line$colorscale) ||
+        identical(built$x$data[[1]]$line$colorscale, "Viridis"))
+})
+
 test_that("parallelCoordinatesPlot handles line styling", {
     fig <- parallelCoordinatesPlot(
         data = mtcars,

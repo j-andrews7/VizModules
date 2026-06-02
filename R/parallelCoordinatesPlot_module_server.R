@@ -38,6 +38,50 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             for (tab.name in hide.tabs) hideTab(inputId = "parallelCoordinatesPlotTabsetPanel", target = tab.name)
         }
 
+        ns <- session$ns
+        default_palette_name <- "dittoColors"
+        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        default_palette_values <- palette_lookup[[default_palette_name]]
+        if (is.null(default_palette_values) || length(default_palette_values) == 0) {
+            default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
+        }
+
+        # Determine palette groups from a categorical color.by selection
+        palette_groups <- reactive({
+            df <- data_reactive()
+            if (is.null(df)) {
+                return(character(0))
+            }
+            color_by <- input$color.by
+            if (is.null(color_by) || !nzchar(color_by) || !(color_by %in% names(df))) {
+                return(character(0))
+            }
+            vals <- df[[color_by]]
+            if (is.numeric(vals)) {
+                return(character(0))
+            }
+            sort(unique(na.omit(as.character(vals))))
+        })
+
+        output$palette.selection <- renderUI({
+            groups <- palette_groups()
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            multiColorPicker(
+                ns("palette.colours"),
+                label = "Plot colors",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = default_palette_name,
+                colors = initial_colors,
+                compact = TRUE
+            )
+        })
+
         # Reset functionality
         observeEvent(input$reset, {
             d <- data_reactive()
@@ -91,6 +135,8 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             )
 
+            click("reset_palette")
+
             .reset_plotly_inputs(session, defaults)
         })
 
@@ -110,11 +156,24 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 color.by <- NULL
             }
 
+            # Resolve discrete palette colors for categorical color.by
+            palette_values <- resolve_palette(
+                isolate_fn(palette_groups()),
+                isolate_fn(input$palette.colours),
+                default_palette_values
+            )
+
+            palette_selection <- palette_values
+            if (!is.null(palette_selection) && length(palette_selection) == 0) {
+                palette_selection <- NULL
+            }
+
             fig <- parallelCoordinatesPlot(
                 data = d,
                 dimensions = dims,
                 color.by = color.by,
                 color.scale = isolate_fn(input$color.scale),
+                palette.selection = palette_selection,
                 line.opacity = isolate_fn(input$line.opacity),
                 line.width = isolate_fn(input$line.width),
                 show.colorbar = isTRUE(isolate_fn(input$show.colorbar)),
