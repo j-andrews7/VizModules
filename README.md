@@ -130,6 +130,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 * `plotthis_BarPlot` - Bar charts (wraps `plotthis::BarPlot`).
 * `plotthis_SplitBarPlot` - Split bar charts (wraps `plotthis::SplitBarPlot`).
 * `plotthis_DensityPlot` - Density plots (wraps `plotthis::DensityPlot`).
+* `plotthis_DotPlot` - Dot plots (wraps `plotthis::DotPlot`).
 * `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
 
 ### Plotting Functions Defined in VizModules
