@@ -74,9 +74,9 @@ test_that("parallelCoordinatesPlot falls back to color.scale when palette.select
 
     expect_s3_class(fig, "plotly")
     built <- plotly::plotly_build(fig)
-    # When no palette.selection is given, the colorscale stays as a named plotly scale (string)
-    expect_true(is.character(built$x$data[[1]]$line$colorscale) ||
-        identical(built$x$data[[1]]$line$colorscale, "Viridis"))
+    # When no palette.selection is given, the colorscale stays as the named plotly scale string
+    expect_true(is.character(built$x$data[[1]]$line$colorscale))
+    expect_equal(as.character(built$x$data[[1]]$line$colorscale), "Viridis")
 })
 
 test_that("parallelCoordinatesPlot handles line styling", {
