@@ -83,7 +83,6 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 selected = .get_default(defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names)
             )
-            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
             # Background
@@ -167,7 +166,6 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 size_by = size.by,
                 fill_by = fill.by,
                 fill_cutoff = fill.cutoff,
-                palreverse = isolate_fn(input$palreverse),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
