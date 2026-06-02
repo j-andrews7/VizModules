@@ -216,6 +216,82 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            
+
+
+            # --- Build swatch + label pairs ---
+            # paper coords: x/y in [0,1]; xref/yref = "paper"
+            if (!is.null(size.by)){
+                size_values <- c(10, 20, 30, 40, 50)
+                vals <- data()[[size.by]]
+
+                breaks <- seq(
+                from = min(vals, na.rm = TRUE),
+                to = max(vals, na.rm = TRUE),
+                length.out = 5
+                )
+                labels <- format(breaks, trim = TRUE, scientific = FALSE)
+                # max <- max(data()[[size.by]])
+                # min <- min(data()[[size.by]])
+                # range <- max(data()[[size.by]]) - min(data()[[size.by]]) / 2
+                # middle1 <- min + range 
+                # middle2 <- max - range 
+                # labels <- c(min, middle1, middle2, max)
+
+                start_y     <- 0.95
+                gap         <- 0.03
+                x_pos       <- 1.02
+                label_x     <- 1.06            
+                
+                #Legend Title
+                fig <- fig |> add_annotations(
+                        x         = x_pos + 0.05,
+                        y         = 0.99,
+                        xref      = "paper",
+                        yref      = "paper",
+                        text      = size.by,
+                        showarrow = FALSE,
+                        xanchor   = "center",
+                        yanchor   = "middle"
+                    )
+                for (i in seq_along(size_values)) {
+                    yc <- start_y - (i - 1) * gap
+
+                    # Circle annotation
+                    fig <- fig |> add_annotations(
+                        x         = x_pos,
+                        y         = yc,
+                        xref      = "paper",
+                        yref      = "paper",
+                        text      = paste0("<span style='font-size:", size_values[i], "px; color:#000000;'>&#9679;</span>"),
+                        showarrow = FALSE,
+                        xanchor   = "center",
+                        yanchor   = "middle"
+                    )
+
+                    # Label annotation
+                    fig <- fig |> add_annotations(
+                        x         = label_x,
+                        y         = yc,
+                        xref      = "paper",
+                        yref      = "paper",
+                        text      = labels[i],
+                        showarrow = FALSE,
+                        xanchor   = "left",
+                        yanchor   = "middle",
+                        font      = list(size = 12, color = "#000000")
+                    )
+                }
+            }
+            # Then append outside lapply
+            # existing_shapes <- fig$x$layout$shapes
+            # if (is.null(existing_shapes)) existing_shapes <- list()
+            # fig$x$layout$shapes <- c(existing_shapes, shapes_legend)
+
+            # fig <- fig %>% layout(
+            # shapes      = c(shapes_legend),
+            # margin      = list(r = 150)   # make room on right
+            # )
 
             return(fig)
         })
