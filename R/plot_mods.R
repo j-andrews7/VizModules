@@ -2252,3 +2252,92 @@ is_pure_type <- function(inputs, d) {
     }
     val
 }
+#' Add a custom bubble-size legend to a plotly figure
+#'
+#' Renders a manual size legend as a vertical column of HTML circle
+#' annotations alongside matching numeric labels. The legend is placed
+#' outside the right edge of the plot area using paper-referenced
+#' coordinates so it does not overlap data.
+#'
+#' @param fig A plotly figure object.
+#' @param data A data frame containing the variable mapped to point size.
+#' @param size_by Character string, or \code{NULL}. Name of the column in
+#'   \code{data} whose range determines the legend break labels. When \code{NULL}
+#'   or empty (no size mapping is in effect), the figure is returned unchanged.
+#' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
+#'   consecutive legend entries. Defaults to \code{0.03}.
+#' @param size_values Numeric vector of font sizes (px) used to render the
+#'   circle glyphs, one per legend entry. Defaults to
+#'   \code{c(10, 20, 30, 40, 50)}.
+#'
+#' @return The plotly figure with size-legend annotations appended, or the
+#'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
+#'   in \code{data}.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_custom_legend
+.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = c(10, 20, 30, 40, 50)) {
+    # No size mapping -> nothing to draw, return the figure untouched.
+    if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
+        !nzchar(size_by) || !size_by %in% names(data)) {
+        return(fig)
+    }
+
+    vals <- data[[size_by]]
+    if (!is.numeric(vals) || all(is.na(vals))) {
+        return(fig)
+    }
+
+    breaks <- seq(
+        from = min(vals, na.rm = TRUE),
+        to = max(vals, na.rm = TRUE),
+        length.out = length(size_values)
+    )
+    labels <- format(breaks, trim = TRUE, scientific = FALSE)
+
+    start_y <- 0.95
+    x_pos <- 1.02
+    label_x <- 1.06
+
+    fig <- fig |> add_annotations(
+        x         = x_pos + 0.1,
+        y         = 0.99,
+        xref      = "paper",
+        yref      = "paper",
+        text      = size_by,
+        showarrow = FALSE,
+        xanchor   = "center",
+        yanchor   = "middle"
+    )
+    for (i in seq_along(size_values)) {
+        yc <- start_y - (i - 1) * gap
+
+        # Circle annotation
+        fig <- fig |> add_annotations(
+            x         = x_pos,
+            y         = yc,
+            xref      = "paper",
+            yref      = "paper",
+            text      = paste0("<span style='font-size:", size_values[i], "px; color:#000000;'>&#9679;</span>"),
+            showarrow = FALSE,
+            xanchor   = "center",
+            yanchor   = "middle"
+        )
+
+        # Label annotation
+        fig <- fig |> add_annotations(
+            x         = label_x,
+            y         = yc,
+            xref      = "paper",
+            yref      = "paper",
+            text      = labels[i],
+            showarrow = FALSE,
+            xanchor   = "left",
+            yanchor   = "middle",
+            font      = list(size = 12, color = "#000000")
+        )
+    }
+  
+    return(fig)
+}

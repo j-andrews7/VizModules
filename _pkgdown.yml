@@ -122,6 +122,14 @@ reference:
       - plotthis_DensityPlotOutputUI
       - plotthis_DensityPlotApp
 
+  - title: "DotPlot Module"
+    desc: "plotthis-based interactive dot plot module."
+    contents:
+      - plotthis_DotPlotServer
+      - plotthis_DotPlotInputsUI
+      - plotthis_DotPlotOutputUI
+      - plotthis_DotPlotApp
+
   - title: "Histogram Module"
     desc: "plotthis-based interactive histogram module."
     contents:
@@ -184,3 +192,4 @@ reference:
       - example_iris
       - example_mtcars
       - example_population
+      - example_markers
