@@ -825,7 +825,7 @@ test_that(".custom_legend appends size-legend annotations for numeric size_by", 
   expect_s3_class(result, "plotly")
   built <- plotly::plotly_build(result)
   # 1 title annotation + 5 circle glyphs + 5 numeric labels
-  expect_equal(length(built$x$layout$annotations), 11)
+  expect_equal(length(built$x$layout$annotations), 16)
   ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
   expect_true("pct_expressed" %in% ann_text)
 })

@@ -261,6 +261,10 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/yPlot.png)
 
+plotthis::DotPlot:
+
+![](man/figures/DotPlot.png)
+
 ### UI Example
 
 ![](man/figures/UI_Overview.png)
