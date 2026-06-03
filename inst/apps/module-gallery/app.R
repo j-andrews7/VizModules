@@ -59,6 +59,7 @@ module_data <- list(
     bar      = example_bar,
     box      = example_demographics,
     density  = example_demographics,
+    dotplot  = example_markers,
     dumbbell = example_school_earnings,
     histogram = example_demographics,
     line     = example_sales,
@@ -115,6 +116,15 @@ module_registry <- list(
         output_ui = dumbbellPlotOutputUI,
         server_fn = dumbbellPlotServer,
         defaults  = list()
+    ),
+    list(
+        label     = "Dot Plot",
+        id        = "dotplot",
+        inputs_ui = plotthis_DotPlotInputsUI,
+        output_ui = plotthis_DotPlotOutputUI,
+        server_fn = plotthis_DotPlotServer,
+        defaults  = list("x.data" = "gene", "y.data" = "cell_type",
+                         "size.by" = "pct_expressed", "fill.by" = "avg_expression")
     ),
     list(
         label     = "Histogram",

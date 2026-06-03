@@ -764,3 +764,68 @@ test_that(".create_ggplot_axis_style returns no borders when showline is FALSE",
   expect_true(inherits(result$panel.border, "element_blank"))
   expect_true(inherits(result$axis.line, "element_blank"))
 })
+
+# ─── .normalize_dot_markers ───────────────────────────────────────────────────
+
+test_that(".normalize_dot_markers forces filled circles with thin outline", {
+  fig <- make_plotly(data = list(
+    list(type = "scatter", mode = "markers", marker = list(symbol = "circle-open")),
+    list(type = "scatter", mode = "lines"),
+    list(type = "bar")
+  ))
+
+  result <- VizModules:::.normalize_dot_markers(fig)
+
+  expect_s3_class(result, "plotly")
+  expect_equal(result$x$data[[1]]$marker$symbol, "circle")
+  expect_equal(result$x$data[[1]]$marker$line$width, 0.5)
+  expect_equal(result$x$data[[1]]$marker$line$color, "black")
+  # Non-marker traces are left untouched
+  expect_null(result$x$data[[2]]$marker)
+  expect_null(result$x$data[[3]]$marker)
+})
+
+test_that(".normalize_dot_markers rejects non-plotly objects", {
+  expect_error(
+    VizModules:::.normalize_dot_markers(list(x = list(data = list()))),
+    "plotly"
+  )
+})
+
+# ─── .custom_legend ───────────────────────────────────────────────────────────
+
+test_that(".custom_legend returns the figure unchanged when size_by is missing", {
+  fig <- make_plotly()
+  data <- data.frame(cell_type = c("A", "B"), pct_expressed = c(10, 20))
+
+  expect_identical(VizModules:::.custom_legend(fig, data, size_by = NULL), fig)
+  expect_identical(VizModules:::.custom_legend(fig, data, size_by = ""), fig)
+  expect_identical(VizModules:::.custom_legend(fig, data, size_by = "absent"), fig)
+})
+
+test_that(".custom_legend returns the figure unchanged for non-numeric size_by", {
+  fig <- make_plotly()
+  data <- data.frame(cell_type = c("A", "B"), pct_expressed = c(10, 20))
+
+  expect_identical(VizModules:::.custom_legend(fig, data, size_by = "cell_type"), fig)
+})
+
+test_that(".custom_legend appends size-legend annotations for numeric size_by", {
+  data <- data.frame(
+    cell_type = rep(c("A", "B"), each = 3),
+    pct_expressed = c(5, 25, 50, 10, 40, 90)
+  )
+  fig <- plotly::plot_ly(
+    data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+  )
+
+  result <- VizModules:::.custom_legend(fig, data, size_by = "pct_expressed",
+    size_values = c(10, 20, 30, 40, 50))
+
+  expect_s3_class(result, "plotly")
+  built <- plotly::plotly_build(result)
+  # 1 title annotation + 5 circle glyphs + 5 numeric labels
+  expect_equal(length(built$x$layout$annotations), 16)
+  ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+  expect_true("pct_expressed" %in% ann_text)
+})
