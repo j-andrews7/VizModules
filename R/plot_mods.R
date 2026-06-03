@@ -2326,7 +2326,8 @@ is_pure_type <- function(inputs, d) {
 #' @rdname INTERNAL_custom_legend
 .custom_legend <- function(fig, data, size_by, gap = 0.03, size_values = c(10, 20, 30, 40, 50)) {
     # No size mapping -> nothing to draw, return the figure untouched.
-    if (is.null(size_by) || !nzchar(size_by) || !size_by %in% names(data)) {
+    if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
+        !nzchar(size_by) || !size_by %in% names(data)) {
         return(fig)
     }
 
