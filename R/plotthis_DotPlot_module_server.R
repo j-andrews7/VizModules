@@ -170,9 +170,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 split_by = split.by
             )
             fig <- ggplotly(p)
-            # Keep dots rendered as filled circles with a thin, uniform outline so
-            # that `size_by` only changes the dot diameter (not the outline/symbol).
-            fig <- .normalize_dot_markers(fig)
+
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
