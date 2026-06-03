@@ -95,11 +95,53 @@ example_demographics <- data.frame(
     weekly_hours = round(rnorm(500, mean = 40, sd = 5), 1)
 )
 
+# Single-cell marker-gene expression data for dot plot examples.
+# Mirrors a canonical single-cell "marker dot plot": each cell type expresses
+# its own marker genes strongly (high average expression, high percent
+# expressed) and the remaining genes weakly.
+cell_types <- c("CD4 T", "CD8 T", "B", "NK", "Monocyte", "Dendritic", "Plasma", "Platelet")
+marker_genes <- c(
+    "CD3D", "IL7R", "CD8A", "GZMK", "MS4A1", "CD79A",
+    "NKG7", "GNLY", "LYZ", "CD14", "FCER1A", "MZB1", "PPBP"
+)
+cell_type_markers <- list(
+    "CD4 T"     = c("CD3D", "IL7R"),
+    "CD8 T"     = c("CD3D", "CD8A", "GZMK"),
+    "B"         = c("MS4A1", "CD79A"),
+    "NK"        = c("NKG7", "GNLY"),
+    "Monocyte"  = c("LYZ", "CD14"),
+    "Dendritic" = c("LYZ", "FCER1A"),
+    "Plasma"    = c("MZB1", "CD79A"),
+    "Platelet"  = c("PPBP")
+)
+marker_grid <- expand.grid(
+    cell_type = cell_types, gene = marker_genes,
+    KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE
+)
+is_marker <- mapply(
+    function(ct, g) g %in% cell_type_markers[[ct]],
+    marker_grid$cell_type, marker_grid$gene
+)
+avg_expression <- numeric(nrow(marker_grid))
+pct_expressed <- numeric(nrow(marker_grid))
+avg_expression[is_marker]  <- round(runif(sum(is_marker), 1.8, 4.0), 2)
+avg_expression[!is_marker] <- round(runif(sum(!is_marker), 0.0, 0.8), 2)
+pct_expressed[is_marker]   <- round(runif(sum(is_marker), 55, 98), 1)
+pct_expressed[!is_marker]  <- round(runif(sum(!is_marker), 0, 25), 1)
+
+example_markers <- data.frame(
+    cell_type = factor(marker_grid$cell_type, levels = cell_types),
+    gene = factor(marker_grid$gene, levels = marker_genes),
+    avg_expression = avg_expression,
+    pct_expressed = pct_expressed
+)
+
 usethis::use_data(
     example_iris, example_mtcars,
     example_bar, example_school_earnings,
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
+    example_markers,
     overwrite = TRUE
 )
 
@@ -108,5 +150,6 @@ usethis::use_data(
     example_bar, example_school_earnings,
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
+    example_markers,
     internal = TRUE, overwrite = TRUE
 )

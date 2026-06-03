@@ -59,7 +59,7 @@ module_data <- list(
     bar      = example_bar,
     box      = example_demographics,
     density  = example_demographics,
-    dotplot  = example_demographics,
+    dotplot  = example_markers,
     dumbbell = example_school_earnings,
     histogram = example_demographics,
     line     = example_sales,
@@ -123,8 +123,8 @@ module_registry <- list(
         inputs_ui = plotthis_DotPlotInputsUI,
         output_ui = plotthis_DotPlotOutputUI,
         server_fn = plotthis_DotPlotServer,
-        defaults  = list("x.data" = "department", "y.data" = "job_level",
-                         "fill.by" = "salary")
+        defaults  = list("x.data" = "gene", "y.data" = "cell_type",
+                         "size.by" = "pct_expressed", "fill.by" = "avg_expression")
     ),
     list(
         label     = "Histogram",

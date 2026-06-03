@@ -192,3 +192,4 @@ reference:
       - example_iris
       - example_mtcars
       - example_population
+      - example_markers

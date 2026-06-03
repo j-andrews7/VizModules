@@ -6,7 +6,7 @@
 #' for configuring and displaying an interactive dot plot.
 #'
 #' When `data_list` is not provided (or `NULL`), the app launches with
-#' `example_demographics` as an example dataset. Uploaded data files are added
+#' `example_markers` as an example dataset. Uploaded data files are added
 #' to the available datasets and can be selected for plotting. If an uploaded
 #' file shares a name with an existing dataset, the existing one is overwritten
 #' with a warning.
@@ -14,7 +14,7 @@
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("demographics" = example_demographics)` is used as example data.
+#'   `list("markers" = example_markers)` is used as example data.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -26,11 +26,11 @@
 #' if (interactive()) runApp(app)
 #'
 #' # Launch with custom data:
-#' app2 <- plotthis_DotPlotApp(list("demographics" = example_demographics))
+#' app2 <- plotthis_DotPlotApp(list("markers" = example_markers))
 #' if (interactive()) runApp(app2)
 plotthis_DotPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("demographics" = example_demographics)
+        data_list <- list("markers" = example_markers)
     }
     createModuleApp(
         inputs_ui_fn = plotthis_DotPlotInputsUI,

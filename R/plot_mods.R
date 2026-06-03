@@ -2308,42 +2308,50 @@ is_pure_type <- function(inputs, d) {
 #'
 #' @param fig A plotly figure object.
 #' @param data A data frame containing the variable mapped to point size.
-#' @param size_by Character string. Name of the column in \code{data} whose
-#'   range determines the legend break labels.
+#' @param size_by Character string, or \code{NULL}. Name of the column in
+#'   \code{data} whose range determines the legend break labels. When \code{NULL}
+#'   or empty (no size mapping is in effect), the figure is returned unchanged.
 #' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
 #'   consecutive legend entries. Defaults to \code{0.03}.
 #' @param size_values Numeric vector of font sizes (px) used to render the
 #'   circle glyphs, one per legend entry. Defaults to
 #'   \code{c(10, 20, 30, 40, 50)}.
 #'
-#' @return The plotly figure with size-legend annotations appended.
+#' @return The plotly figure with size-legend annotations appended, or the
+#'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
+#'   in \code{data}.
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
 .custom_legend <- function(fig, data, size_by, gap = 0.03, size_values = c(10, 20, 30, 40, 50)) {
+    # No size mapping -> nothing to draw, return the figure untouched.
+    if (is.null(size_by) || !nzchar(size_by) || !size_by %in% names(data)) {
+        return(fig)
+    }
 
     vals <- data[[size_by]]
+    if (!is.numeric(vals) || all(is.na(vals))) {
+        return(fig)
+    }
 
     breaks <- seq(
         from = min(vals, na.rm = TRUE),
         to = max(vals, na.rm = TRUE),
-        length.out = 5
+        length.out = length(size_values)
     )
     labels <- format(breaks, trim = TRUE, scientific = FALSE)
 
     start_y <- 0.95
-    gap <- gap
     x_pos <- 1.02
-    label_x <- 1.06 
-
+    label_x <- 1.06
 
     fig <- fig |> add_annotations(
         x         = x_pos + 0.05,
         y         = 0.99,
         xref      = "paper",
         yref      = "paper",
-        text      = size.by,
+        text      = size_by,
         showarrow = FALSE,
         xanchor   = "center",
         yanchor   = "middle"

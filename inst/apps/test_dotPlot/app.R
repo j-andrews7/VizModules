@@ -2,7 +2,7 @@ library(VizModules)
 
 app <- plotthis_DotPlotApp(
     list(
-        demographics = example_demographics,
+        markers = example_markers,
         mtcars = example_mtcars
     )
 )
