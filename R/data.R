@@ -209,3 +209,39 @@
 #' @author Jacob Martin
 #' @keywords datasets
 "example_markers"
+
+#' Example RNA-seq dataset for the RNA-seq showcase app
+#'
+#' A simulated pseudo-bulk RNA-seq dataset with 288 rows covering six immune
+#' cell types, eight canonical marker genes, two conditions (Healthy / Disease),
+#' and three biological replicates per condition. Marker genes are strongly
+#' expressed in their canonical cell type; Disease replicates include a
+#' simulated ~1.2 log2FC upregulation for marker genes, making biological
+#' comparisons visually informative.
+#'
+#' The dataset is designed to simultaneously support three VizModules plot types:
+#' \itemize{
+#'   \item **DotPlot** – summarised \code{avg_expression} and \code{pct_expressed}
+#'     columns per cell type × gene × condition combination.
+#'   \item **yPlot** – per-replicate \code{log2_cpm} values grouped by
+#'     \code{cell_type} and coloured by \code{condition}.
+#'   \item **DensityPlot** – per-replicate \code{log2_cpm} values grouped by
+#'     \code{condition} and faceted by \code{cell_type}.
+#' }
+#'
+#' @format A data frame with 288 rows and 7 columns:
+#' \describe{
+#'   \item{cell_type}{Immune cell type (factor: CD4 T, CD8 T, B Cell, NK Cell, Monocyte, pDC)}
+#'   \item{gene}{Gene symbol (factor: CD3D, CD8A, MS4A1, NKG7, LYZ, LILRA4, CD14, GNLY)}
+#'   \item{condition}{Experimental condition (factor: Healthy, Disease)}
+#'   \item{replicate}{Biological replicate (factor: Rep1, Rep2, Rep3)}
+#'   \item{log2_cpm}{Simulated log2 counts-per-million expression value}
+#'   \item{avg_expression}{Mean log2_cpm across replicates for this cell_type × gene × condition}
+#'   \item{pct_expressed}{Percent of replicates with log2_cpm > 0.5 for this combination}
+#' }
+#'
+#' @source Simulated in data-raw/generate_example_data.R.
+#'
+#' @author Jacob Martin
+#' @keywords datasets
+"example_rnaseq"

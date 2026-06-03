@@ -129,6 +129,86 @@ avg_expression[!is_marker] <- round(runif(sum(!is_marker), 0.0, 0.8), 2)
 pct_expressed[is_marker]   <- round(runif(sum(is_marker), 55, 98), 1)
 pct_expressed[!is_marker]  <- round(runif(sum(!is_marker), 0, 25), 1)
 
+# RNA-seq long-format dataset for the RNA-seq showcase app.
+# Mimics pseudo-bulk RNA-seq: 6 immune cell types x 8 canonical marker genes
+# x 2 conditions x 3 replicates = 288 rows.
+# Includes per-sample log2 CPM values (for yPlot/DensityPlot) and
+# pre-summarised avg_expression + pct_expressed (for DotPlot).
+rnaseq_cell_types <- factor(
+    c("CD4 T", "CD8 T", "B Cell", "NK Cell", "Monocyte", "pDC"),
+    levels = c("CD4 T", "CD8 T", "B Cell", "NK Cell", "Monocyte", "pDC")
+)
+rnaseq_genes <- factor(
+    c("CD3D", "CD8A", "MS4A1", "NKG7", "LYZ", "LILRA4", "CD14", "GNLY"),
+    levels = c("CD3D", "CD8A", "MS4A1", "NKG7", "LYZ", "LILRA4", "CD14", "GNLY")
+)
+rnaseq_conditions <- factor(c("Healthy", "Disease"), levels = c("Healthy", "Disease"))
+rnaseq_replicates <- factor(paste0("Rep", 1:3))
+
+# Define which genes are canonical markers for each cell type
+rnaseq_cell_markers <- list(
+    "CD4 T"    = c("CD3D"),
+    "CD8 T"    = c("CD3D", "CD8A"),
+    "B Cell"   = c("MS4A1"),
+    "NK Cell"  = c("NKG7", "GNLY"),
+    "Monocyte" = c("LYZ", "CD14"),
+    "pDC"      = c("LILRA4")
+)
+
+rnaseq_grid <- expand.grid(
+    cell_type = rnaseq_cell_types,
+    gene      = rnaseq_genes,
+    condition = rnaseq_conditions,
+    replicate = rnaseq_replicates,
+    KEEP.OUT.ATTRS = FALSE,
+    stringsAsFactors = FALSE
+)
+
+is_rnaseq_marker <- mapply(
+    function(ct, g) g %in% rnaseq_cell_markers[[ct]],
+    rnaseq_grid$cell_type, rnaseq_grid$gene
+)
+
+# Simulate log2 CPM: markers are high; Disease adds a ~1.2 log2FC boost
+base_expr <- numeric(nrow(rnaseq_grid))
+base_expr[is_rnaseq_marker]  <- round(runif(sum(is_rnaseq_marker), 4.0, 7.5), 2)
+base_expr[!is_rnaseq_marker] <- round(runif(sum(!is_rnaseq_marker), 0.0, 1.5), 2)
+
+disease_boost <- ifelse(rnaseq_grid$condition == "Disease" & is_rnaseq_marker,
+    round(rnorm(nrow(rnaseq_grid), mean = 1.2, sd = 0.3), 2), 0)
+rep_noise <- round(rnorm(nrow(rnaseq_grid), mean = 0, sd = 0.25), 2)
+
+log2_cpm <- pmax(base_expr + disease_boost + rep_noise, 0)
+
+# Summary columns: average expression and simulated -log10(p-value) per cell_type x gene x condition
+# (used by DotPlot tab — size encodes significance, fill encodes expression level)
+rnaseq_grid$log2_cpm <- log2_cpm
+
+summary_key <- paste(rnaseq_grid$cell_type, rnaseq_grid$gene, rnaseq_grid$condition)
+avg_expr_map <- tapply(rnaseq_grid$log2_cpm, summary_key, mean)
+
+# Simulate -log10(p-value): canonical markers get small p (high -log10), non-markers get large p (low -log10)
+neg_log10_p_map <- tapply(
+    seq_along(summary_key), summary_key,
+    function(idx) {
+        is_mk <- is_rnaseq_marker[idx[1]]
+        if (is_mk) round(runif(1, 2.5, 5.0), 2) else round(runif(1, 0.1, 1.2), 2)
+    }
+)
+
+rnaseq_grid$avg_expression <- round(as.numeric(avg_expr_map[summary_key]), 2)
+rnaseq_grid$neg_log10_pval <- as.numeric(neg_log10_p_map[summary_key])
+
+example_rnaseq <- data.frame(
+    cell_type = factor(rnaseq_grid$cell_type, levels = levels(rnaseq_cell_types)),
+    gene = factor(rnaseq_grid$gene, levels = levels(rnaseq_genes)),
+    condition = factor(rnaseq_grid$condition, levels = levels(rnaseq_conditions)),
+    replicate = factor(rnaseq_grid$replicate),
+    log2_cpm = rnaseq_grid$log2_cpm,
+    avg_expression = rnaseq_grid$avg_expression,
+    neg_log10_pval = rnaseq_grid$neg_log10_pval
+)
+
 example_markers <- data.frame(
     cell_type = factor(marker_grid$cell_type, levels = cell_types),
     gene = factor(marker_grid$gene, levels = marker_genes),
@@ -141,7 +221,7 @@ usethis::use_data(
     example_bar, example_school_earnings,
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
-    example_markers,
+    example_markers, example_rnaseq,
     overwrite = TRUE
 )
 
@@ -150,6 +230,6 @@ usethis::use_data(
     example_bar, example_school_earnings,
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
-    example_markers,
+    example_markers, example_rnaseq,
     internal = TRUE, overwrite = TRUE
 )

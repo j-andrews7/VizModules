@@ -44,7 +44,7 @@ non-empty list).}
 }
 }
 \description{
-Generates a Shiny \code{\link[=downloadHandler]{downloadHandler()}} that bundles the interactive plot
+Generates a Shiny \code{\link[shiny:downloadHandler]{downloadHandler()}} that bundles the interactive plot
 and its supporting data into a single \code{.zip} archive. The archive contains
 a self-contained interactive HTML of the plotly plot (rendered via
 \code{\link[htmlwidgets:saveWidget]{htmlwidgets::saveWidget()}}), a CSV of the plot's underlying data

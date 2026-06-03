@@ -97,8 +97,8 @@ data(mtcars)
 plotthis_DotPlotInputsUI("DotPlot", mtcars)
 }
 \seealso{
-\code{\link[plotthis:DotPlot]{plotthis::DotPlot()}}, \code{\link[VizModules:organize_inputs]{VizModules::organize_inputs()}},
-\code{\link[VizModules:plotthis_DotPlotOutputUI]{VizModules::plotthis_DotPlotOutputUI()}}, \code{\link[VizModules:plotthis_DotPlotServer]{VizModules::plotthis_DotPlotServer()}}, \code{\link[VizModules:plotthis_DotPlotApp]{VizModules::plotthis_DotPlotApp()}}
+\code{\link[plotthis:DotPlot]{plotthis::DotPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
+\code{\link[=plotthis_DotPlotOutputUI]{plotthis_DotPlotOutputUI()}}, \code{\link[=plotthis_DotPlotServer]{plotthis_DotPlotServer()}}, \code{\link[=plotthis_DotPlotApp]{plotthis_DotPlotApp()}}
 }
 \author{
 Jacob Martin, Jared Andrews

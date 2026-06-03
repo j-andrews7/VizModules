@@ -218,7 +218,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             
             #Custom Legend: 
             #Generates a custom dot plot circle legend based on the number of values in size_values. 
-            fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.05, size_values = c(10, 20, 30, 40, 50))
+            fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.03, size_values = c(10, 20, 30, 40, 50))
 
             return(fig)
         })

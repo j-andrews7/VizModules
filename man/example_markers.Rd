@@ -8,7 +8,8 @@
 A data frame with 104 rows and 4 columns:
 \describe{
 \item{cell_type}{Immune cell type (factor: CD4 T, CD8 T, B, NK, Monocyte, Dendritic, Plasma, Platelet)}
-\item{gene}{Marker gene symbol (factor with 13 levels, e.g. CD3D, MS4A1, NKG7, LYZ, MZB1, PPBP)}
+\item{gene}{Marker gene symbol (factor with 13 levels, e.g. CD3D, MS4A1, NKG7,
+LYZ, MZB1, PPBP)}
 \item{avg_expression}{Average expression of the gene in the cell type}
 \item{pct_expressed}{Percent of cells in the cell type expressing the gene}
 }
