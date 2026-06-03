@@ -17,7 +17,7 @@
 `apply_stat_annotations()`, `generate_pair_strings()`,
 `parse_pair_strings()`, and `write_stats_csv()`.
 * Faceting improvements - New internal helpers that control subplot spacing, subplot size, and facet_scale handling.
-* Condensed package wide workflows with simple helpers.
+* Condensed package wide workflows with simple helpers e.g. `.apply_title_layout()`
 
 # VizModules 0.1.1
 
