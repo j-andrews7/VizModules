@@ -2324,7 +2324,7 @@ is_pure_type <- function(inputs, d) {
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
-.custom_legend <- function(fig, data, size_by, gap = 0.03, size_values = c(10, 20, 30, 40, 50)) {
+.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = c(10, 20, 30, 40, 50)) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -2348,7 +2348,7 @@ is_pure_type <- function(inputs, d) {
     label_x <- 1.06
 
     fig <- fig |> add_annotations(
-        x         = x_pos + 0.05,
+        x         = x_pos + 0.1,
         y         = 0.99,
         xref      = "paper",
         yref      = "paper",

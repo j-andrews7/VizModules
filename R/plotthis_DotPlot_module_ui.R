@@ -88,7 +88,8 @@
 #' plotthis_DotPlotInputsUI("DotPlot", mtcars)
 plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
-
+    if (is.null(defaults)) defaults <- list()
+    if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
     # Get variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
