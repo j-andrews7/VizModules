@@ -222,14 +222,5 @@ usethis::use_data(
     example_skills, example_roles,
     example_sales, example_population, example_demographics,
     example_markers, example_rnaseq,
-    overwrite = TRUE
-)
-
-usethis::use_data(
-    example_iris, example_mtcars,
-    example_bar, example_school_earnings,
-    example_skills, example_roles,
-    example_sales, example_population, example_demographics,
-    example_markers, example_rnaseq,
     internal = TRUE, overwrite = TRUE
 )
