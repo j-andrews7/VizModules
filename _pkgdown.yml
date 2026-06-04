@@ -151,6 +151,7 @@ reference:
       - organize_inputs
       - module_tack_ui
       - setup_auto_update_logic
+      - create_interactive_summary_download_handler
 
   - title: "Palette & Color Utilities"
     desc: "Functions/inputs for managing color palettes."
@@ -193,3 +194,4 @@ reference:
       - example_mtcars
       - example_population
       - example_markers
+      - example_rnaseq
