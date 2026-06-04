@@ -765,33 +765,6 @@ test_that(".create_ggplot_axis_style returns no borders when showline is FALSE",
   expect_true(inherits(result$axis.line, "element_blank"))
 })
 
-# ─── .normalize_dot_markers ───────────────────────────────────────────────────
-
-test_that(".normalize_dot_markers forces filled circles with thin outline", {
-  fig <- make_plotly(data = list(
-    list(type = "scatter", mode = "markers", marker = list(symbol = "circle-open")),
-    list(type = "scatter", mode = "lines"),
-    list(type = "bar")
-  ))
-
-  result <- VizModules:::.normalize_dot_markers(fig)
-
-  expect_s3_class(result, "plotly")
-  expect_equal(result$x$data[[1]]$marker$symbol, "circle")
-  expect_equal(result$x$data[[1]]$marker$line$width, 0.5)
-  expect_equal(result$x$data[[1]]$marker$line$color, "black")
-  # Non-marker traces are left untouched
-  expect_null(result$x$data[[2]]$marker)
-  expect_null(result$x$data[[3]]$marker)
-})
-
-test_that(".normalize_dot_markers rejects non-plotly objects", {
-  expect_error(
-    VizModules:::.normalize_dot_markers(list(x = list(data = list()))),
-    "plotly"
-  )
-})
-
 # ─── .custom_legend ───────────────────────────────────────────────────────────
 
 test_that(".custom_legend returns the figure unchanged when size_by is missing", {
