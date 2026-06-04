@@ -269,17 +269,40 @@ plotthis::DotPlot:
 
 ![](man/figures/UI_Overview.png)
 
-## AI Usage
-Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps on top of these modules in addition to creating new modules. 
-
-### LLM Prompt 
-
-All VizModule modules are comprised of three key components: InputUI, OutputUI and Server. Information on how to use these functions can be found in the VizModules/vignettes/adding-a-new-module.Rmd. Other key but optional modules includes a data table module: R/dataFilter_module_server.R, statistic helper functions: R/stat_helper.R, and a module-factory: R/createModuleApp.R. Instructions on how to create custom VizModule modules can found in the vignettes: vignettes/custom-modules.Rmd. All other details can be found in the README file and the other vignette files. Updates on new features can be found in NEWS and information on helper and app function can be found within the R directory, including full documentation on all functions. 
-
+## AI Usage Statement
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
 AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs to ensure accuracy and quality.
 Our own hands are all over this project, and we are invested in it. 
 Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
+
+Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend prefixing prompts with the below to aid LLM usage (or adding it to a file and attaching it directly).
+
+### LLM Instructions
+
+Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) before asking it to build a Shiny app with **VizModules**. It points the model to the authoritative, locally-installed sources of truth so it can use the package correctly.
+
+> You are helping me build a Shiny application using the installed R package **VizModules**, which provides interactivity-first, plotly-based Shiny modules for common plot types. Before writing code, ground yourself in the package's own documentation rather than guessing at the API.
+>
+> **Core concept.** Every module is a trio of functions that share an `id`: `*InputsUI(id, ...)` renders the controls, `*OutputUI(id)` renders the plotly output, and `*Server(id, data, ...)` holds the logic. `InputsUI` and `OutputUI` are separate so controls and plot can be placed anywhere in the layout. `data` is passed to the server as a `reactive()`. Use the `defaults` argument to pre-fill inputs and `hide.inputs`/`hide.tabs` to lock values while hiding their controls.
+>
+> **Where to look (all available after `install.packages`/`remotes::install_github`):**
+> - `vignette("quick-start", package = "VizModules")` — start here: end-to-end walkthrough of wiring `*InputsUI()`, `*OutputUI()`, and `*Server()` into an app, using `defaults`, and the example `*App()` functions.
+> - `vignette("custom-modules", package = "VizModules")` — how to **extend existing modules** by building wrapper modules (adding custom logic/inputs while reusing a base module). Follow the namespace pattern: process namespaced inputs *inside* `moduleServer()`, then call the base `*Server()` *outside* it with the bare `id` to avoid double-namespacing.
+> - `vignette("adding-a-new-module", package = "VizModules")` — how to **author a brand-new module** from scratch (the InputsUI/OutputUI/Server contract, conventions, and helpers).
+> - The README — overview, install, the full list of available modules, the App Factory (`createModuleApp()`), statistical-testing features, and summary-data export.
+> - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
+> - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
+>
+> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, `ternaryPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
+>
+> **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
+> - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
+> - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, and yPlot modules.
+> - Summary-data export — `?create_interactive_summary_download_handler`.
+> - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
+>
+> **Rules:** All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
+
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
 [2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
