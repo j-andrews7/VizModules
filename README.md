@@ -260,6 +260,9 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/UI_Overview.png)
 
+## AI Use
+
+Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps on top of these modules. See [`AI-USE.md`](AI-USE.md) for the full statement and a context block you can paste into an LLM prompt to get correct code on the first try.
 
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
