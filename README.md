@@ -270,6 +270,11 @@ plotthis::DotPlot:
 ![](man/figures/UI_Overview.png)
 
 ## AI Usage
+Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps on top of these modules in addition to creating new modules. 
+
+### LLM Prompt 
+
+All VizModule modules are comprised of three key components: InputUI, OutputUI and Server. Information on how to use these functions can be found in the VizModules/vignettes/adding-a-new-module.Rmd. Other key but optional modules includes a data table module: R/dataFilter_module_server.R, statistic helper functions: R/stat_helper.R, and a module-factory: R/createModuleApp.R. Instructions on how to create custom VizModule modules can found in the vignettes: vignettes/custom-modules.Rmd. All other details can be found in the README file and the other vignette files. Updates on new features can be found in NEWS and information on helper and app function can be found within the R directory, including full documentation on all functions. 
 
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
 AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs to ensure accuracy and quality.
