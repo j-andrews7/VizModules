@@ -1,23 +1,23 @@
-# VizModules 0.1.2
+# VizModules 0.2.0
 
 * Added a new `plotthis_DotPlot` module (`plotthis_DotPlotInputsUI()`,
   `plotthis_DotPlotOutputUI()`, `plotthis_DotPlotServer()`, and the
   `plotthis_DotPlotApp()` convenience wrapper) that wraps `plotthis::DotPlot()`
-  for interactive dot plots, including a custom dot-size legend.
+  for interactive dot plots, including a custom dot-size legend since plotly still lacks that capability.
 * Added the `example_markers` dataset, a simulated single-cell marker-gene
   expression table (immune cell types × marker genes) used as the default
   example data for the DotPlot module.
 * Added an "Interactive Summary" download button at the bottom of every module's
   control panel. The button produces a self-contained interactive HTML report
-  containing the plotly plot, a searchable table of the plot data (retrieved
+  containing the plotly plot, a full table of the plot data (retrieved
   via `plotly::plotly_data()`), and for modules with statistics enabled
-  (Box / Violin / yPlot) a table of the statistics summary.
+  (Box / Violin / yPlot), a table of the statistics summary.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
 `parse_pair_strings()`, and `write_stats_csv()`.
-* Faceting improvements - New internal helpers that control subplot spacing, subplot size, and facet_scale handling.
-* Condensed package wide workflows with simple helpers e.g. `.apply_title_layout()`
+* Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels.
+* Condensed package wide workflows with simple helpers e.g. `.apply_title_layout()`.
 
 # VizModules 0.1.1
 
