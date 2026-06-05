@@ -1,5 +1,10 @@
 # VizModules 0.2.0
 
+* All `*OutputUI()` functions gained a `resizable` argument (default `TRUE`).
+  When `FALSE`, the plot output is no longer wrapped in
+  `shinyjqui::jqui_resizable()`, which avoids a redundant resize handle when the
+  output is embedded in a container that already provides resizing (such as the
+  Panel Builder app cards).
 * Added a new `plotthis_DotPlot` module (`plotthis_DotPlotInputsUI()`,
   `plotthis_DotPlotOutputUI()`, `plotthis_DotPlotServer()`, and the
   `plotthis_DotPlotApp()` convenience wrapper) that wraps `plotthis::DotPlot()`

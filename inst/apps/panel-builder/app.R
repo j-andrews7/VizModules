@@ -409,7 +409,7 @@ server <- function(input, output, session) {
     # us null it out on removal so any lingering reactive reads short-circuit
     # via req() instead of erroring.
     panel_data <- reactiveValues()
-    panel_observers <- list()
+    panel_observers <- new.env(parent = emptyenv())
 
     # Stagger new cards so they do not stack exactly on top of each other.
     next_offset <- function(n) {
@@ -429,7 +429,8 @@ server <- function(input, output, session) {
             switch(ext,
                 csv = utils::read.csv(file$datapath,
                     stringsAsFactors = FALSE, check.names = FALSE),
-                tsv = ,
+                tsv = utils::read.delim(file$datapath,
+                    stringsAsFactors = FALSE, check.names = FALSE),
                 txt = utils::read.delim(file$datapath,
                     stringsAsFactors = FALSE, check.names = FALSE),
                 rds = readRDS(file$datapath),
@@ -554,7 +555,7 @@ server <- function(input, output, session) {
                     icon("times")
                 )
             ),
-            div(class = "viz-panel-body", mod$output_ui(pid))
+            div(class = "viz-panel-body", mod$output_ui(pid, resizable = FALSE))
         )
         insertUI(
             selector = "#pb_canvas", where = "beforeEnd",
