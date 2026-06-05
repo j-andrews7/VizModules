@@ -120,9 +120,13 @@ shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))
 It demonstrates how to compose multiple modules into a single page at runtime:
 
 - **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
+- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or `RDS` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples.
 - **Drag and resize.** Each plot lives on its own card that can be dragged by its title bar and resized from its corner (via `shinyjqui`) to arrange a panel of plots.
+- **A4 canvas.** The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a poster or composite figure.
 - **Swappable controls.** A single dropdown swaps the visible plot's input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.
 - **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
+- **Removable plots.** Each card's × button removes that plot along with its controls and data table.
+- **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
 
 It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
 

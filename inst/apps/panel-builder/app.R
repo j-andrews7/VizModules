@@ -21,7 +21,10 @@ library(VizModules)
 # A derived summary dataset that suits the pie plot.
 sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
 
-datasets <- list(
+# The bundled datasets that seed the dataset registry. Users can add their own
+# datasets at runtime via the "Load Data" section (see the server below), which
+# are appended to this catalogue.
+initial_datasets <- list(
     "example_sales"           = example_sales,
     "example_bar"             = example_bar,
     "example_demographics"    = example_demographics,
@@ -168,16 +171,26 @@ module_choices <- stats::setNames(
 
 # --- Styling ---------------------------------------------------------------
 app_css <- HTML("
+#pb_canvas_scroll {
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    background: #ececec;
+    padding: 16px;
+    border-radius: 6px;
+}
 #pb_canvas {
     position: relative;
-    min-height: 80vh;
-    border: 1px dashed #bbb;
-    border-radius: 6px;
+    margin: 0 auto;
     background:
-        linear-gradient(90deg, #f7f7f7 1px, transparent 1px) 0 0 / 24px 24px,
-        linear-gradient(0deg, #f7f7f7 1px, transparent 1px) 0 0 / 24px 24px;
-    overflow: auto;
+        #fff
+        linear-gradient(90deg, #f3f3f3 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(0deg, #f3f3f3 1px, transparent 1px) 0 0 / 24px 24px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.2);
+    overflow: hidden;
 }
+/* A4 page sizes at 96dpi (210 x 297 mm). */
+#pb_canvas.a4-portrait  { width: 794px;  height: 1123px; }
+#pb_canvas.a4-landscape { width: 1123px; height: 794px; }
 .viz-panel-card {
     position: absolute;
     width: 480px;
@@ -212,11 +225,96 @@ app_css <- HTML("
 .pb-empty-hint { color: #999; text-align: center; padding-top: 30vh; }
 ")
 
+# Client-side export of the whole canvas to a single SVG file. Each plot is a
+# Plotly chart, so we ask Plotly for an SVG of every plot and stitch them into
+# one SVG document positioned to match the cards on the A4 canvas. This keeps
+# the output vector-based, suitable for a poster or composite figure.
+app_js <- HTML("
+function pbDownloadSVG() {
+    var canvas = document.getElementById('pb_canvas');
+    if (!canvas) { return; }
+    var cards = canvas.querySelectorAll('.viz-panel-card');
+    if (!cards.length) {
+        alert('Add at least one plot before downloading.');
+        return;
+    }
+    var W = canvas.clientWidth, H = canvas.clientHeight;
+    var canvasRect = canvas.getBoundingClientRect();
+    var tasks = [];
+    cards.forEach(function(card) {
+        var cardRect = card.getBoundingClientRect();
+        var x = cardRect.left - canvasRect.left + canvas.scrollLeft;
+        var y = cardRect.top - canvasRect.top + canvas.scrollTop;
+        var w = cardRect.width, h = cardRect.height;
+        var titleEl = card.querySelector('.viz-panel-title');
+        var title = titleEl ? titleEl.textContent : '';
+        var headerEl = card.querySelector('.viz-panel-header');
+        var headerH = headerEl ? headerEl.offsetHeight : 0;
+        var body = card.querySelector('.viz-panel-body');
+        var gd = card.querySelector('.js-plotly-plot');
+        var pw = body ? body.clientWidth : w;
+        var ph = body ? body.clientHeight : (h - headerH);
+        var meta = { x: x, y: y, w: w, h: h, headerH: headerH,
+            title: title, pw: pw, ph: ph, url: null };
+        if (gd && window.Plotly) {
+            tasks.push(
+                Plotly.toImage(gd, { format: 'svg', width: pw, height: ph })
+                    .then(function(url) { meta.url = url; return meta; })
+                    .catch(function() { return meta; })
+            );
+        } else {
+            tasks.push(Promise.resolve(meta));
+        }
+    });
+    Promise.all(tasks).then(function(items) {
+        var esc = function(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        };
+        var parts = [];
+        parts.push('<?xml version=\"1.0\" encoding=\"UTF-8\"?>');
+        parts.push('<svg xmlns=\"http://www.w3.org/2000/svg\" ' +
+            'xmlns:xlink=\"http://www.w3.org/1999/xlink\" ' +
+            'width=\"' + W + '\" height=\"' + H + '\" ' +
+            'viewBox=\"0 0 ' + W + ' ' + H + '\">');
+        parts.push('<rect x=\"0\" y=\"0\" width=\"' + W + '\" height=\"' + H +
+            '\" fill=\"#ffffff\"/>');
+        items.forEach(function(it) {
+            parts.push('<g>');
+            parts.push('<rect x=\"' + it.x + '\" y=\"' + it.y + '\" width=\"' +
+                it.w + '\" height=\"' + it.h +
+                '\" fill=\"#ffffff\" stroke=\"#cccccc\"/>');
+            parts.push('<rect x=\"' + it.x + '\" y=\"' + it.y + '\" width=\"' +
+                it.w + '\" height=\"' + it.headerH + '\" fill=\"#2c3e50\"/>');
+            parts.push('<text x=\"' + (it.x + 8) + '\" y=\"' +
+                (it.y + it.headerH - 6) + '\" fill=\"#ffffff\" ' +
+                'font-family=\"sans-serif\" font-size=\"12\">' +
+                esc(it.title) + '</text>');
+            if (it.url) {
+                parts.push('<image x=\"' + (it.x + 6) + '\" y=\"' +
+                    (it.y + it.headerH + 6) + '\" width=\"' + it.pw +
+                    '\" height=\"' + it.ph + '\" xlink:href=\"' + it.url + '\"/>');
+            }
+            parts.push('</g>');
+        });
+        parts.push('</svg>');
+        var blob = new Blob([parts.join('\\n')], { type: 'image/svg+xml' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'vizmodules-panel.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    });
+}
+")
+
 # --- UI --------------------------------------------------------------------
 ui <- fluidPage(
     title = "VizModules Panel Builder",
     shinyjs::useShinyjs(),
-    tags$head(tags$style(app_css)),
+    tags$head(tags$style(app_css), tags$script(app_js)),
     titlePanel("VizModules Panel Builder"),
     sidebarLayout(
         sidebarPanel(
@@ -227,6 +325,29 @@ ui <- fluidPage(
             helpText(
                 "Add VizModules plots to the canvas, then drag them by their",
                 "title bar and resize from the bottom-right corner."
+            ),
+            hr(),
+            h4("Load Data"),
+            helpText(
+                "Upload a CSV, TSV or RDS file to make it available as a",
+                "dataset when adding plots."
+            ),
+            textInput("pb_data_name", "Dataset name (optional):",
+                placeholder = "Defaults to the file name"
+            ),
+            fileInput("pb_data_file", "Data file:",
+                accept = c(".csv", ".tsv", ".txt", ".rds", ".RDS")
+            ),
+            actionButton("pb_data_add", "Add dataset", icon = icon("upload")),
+            hr(),
+            h4("Canvas"),
+            selectInput("pb_orientation", "Page size:",
+                choices = c("A4 portrait" = "portrait",
+                            "A4 landscape" = "landscape")
+            ),
+            tags$button("Download Panel (SVG)",
+                id = "pb_download", type = "button",
+                class = "btn btn-success", onclick = "pbDownloadSVG()"
             ),
             hr(),
             h4("Plot Controls"),
@@ -244,9 +365,12 @@ ui <- fluidPage(
         mainPanel(
             width = 8,
             div(
-                id = "pb_canvas",
-                div(class = "pb-empty-hint", id = "pb_canvas_empty",
-                    "No plots yet. Click \"Add Plot\" to begin.")
+                id = "pb_canvas_scroll",
+                div(
+                    id = "pb_canvas", class = "a4-portrait",
+                    div(class = "pb-empty-hint", id = "pb_canvas_empty",
+                        "No plots yet. Click \"Add Plot\" to begin.")
+                )
             ),
             hr(),
             h4("Data Table"),
@@ -269,6 +393,10 @@ ui <- fluidPage(
 
 # --- Server ----------------------------------------------------------------
 server <- function(input, output, session) {
+    # Registry of datasets available to the "Add Plot" dialog. Seeded with the
+    # bundled examples and extended at runtime via the "Load Data" section.
+    dataset_store <- reactiveVal(initial_datasets)
+
     # Reactive bookkeeping for the panels currently on the canvas.
     rv <- reactiveValues(
         panel_ids = character(0), # ordered vector of active panel ids
@@ -276,15 +404,86 @@ server <- function(input, output, session) {
         counter   = 0L            # monotonic id source
     )
 
-    # Snapshot of the data each panel was created with (kept out of reactivity
-    # since a panel's dataset is fixed at creation time).
-    panel_data <- new.env(parent = emptyenv())
+    # Per-panel data snapshots (fixed at creation time) and the observers that
+    # power each card's remove button. Storing the data in reactiveValues lets
+    # us null it out on removal so any lingering reactive reads short-circuit
+    # via req() instead of erroring.
+    panel_data <- reactiveValues()
+    panel_observers <- list()
 
     # Stagger new cards so they do not stack exactly on top of each other.
     next_offset <- function(n) {
         step <- (n %% 6L) * 30L
         list(top = 20L + step, left = 20L + step)
     }
+
+    # --- Load custom data --------------------------------------------------
+    observeEvent(input$pb_data_add, {
+        file <- input$pb_data_file
+        if (is.null(file)) {
+            showNotification("Choose a file to load first.", type = "warning")
+            return(invisible(NULL))
+        }
+        ext <- tolower(tools::file_ext(file$name))
+        df <- tryCatch({
+            switch(ext,
+                csv = utils::read.csv(file$datapath,
+                    stringsAsFactors = FALSE, check.names = FALSE),
+                tsv = ,
+                txt = utils::read.delim(file$datapath,
+                    stringsAsFactors = FALSE, check.names = FALSE),
+                rds = readRDS(file$datapath),
+                stop("Unsupported file type '.", ext, "'.")
+            )
+        }, error = function(e) e)
+
+        if (inherits(df, "error")) {
+            showNotification(paste("Could not read file:", conditionMessage(df)),
+                type = "error", duration = 8)
+            return(invisible(NULL))
+        }
+        if (!is.data.frame(df)) {
+            df <- tryCatch(as.data.frame(df, check.names = FALSE),
+                error = function(e) NULL)
+        }
+        if (!is.data.frame(df) || nrow(df) == 0L || ncol(df) == 0L) {
+            showNotification("File must contain a non-empty data frame.",
+                type = "error", duration = 8)
+            return(invisible(NULL))
+        }
+
+        nm <- trimws(input$pb_data_name)
+        if (!nzchar(nm)) {
+            nm <- tools::file_path_sans_ext(basename(file$name))
+        }
+        store <- dataset_store()
+        # Ensure a unique name so existing datasets are never overwritten.
+        base <- nm
+        i <- 1L
+        while (nm %in% names(store)) {
+            i <- i + 1L
+            nm <- paste0(base, " (", i, ")")
+        }
+        store[[nm]] <- df
+        dataset_store(store)
+        updateTextInput(session, "pb_data_name", value = "")
+        showNotification(
+            sprintf("Added dataset '%s' (%d rows x %d cols).",
+                nm, nrow(df), ncol(df)),
+            type = "message"
+        )
+    })
+
+    # --- Canvas page size --------------------------------------------------
+    observeEvent(input$pb_orientation, {
+        if (identical(input$pb_orientation, "landscape")) {
+            shinyjs::removeClass("pb_canvas", "a4-portrait")
+            shinyjs::addClass("pb_canvas", "a4-landscape")
+        } else {
+            shinyjs::removeClass("pb_canvas", "a4-landscape")
+            shinyjs::addClass("pb_canvas", "a4-portrait")
+        }
+    })
 
     # --- Add Plot dialog ---------------------------------------------------
     observeEvent(input$pb_add, {
@@ -294,7 +493,7 @@ server <- function(input, output, session) {
                 choices = module_choices
             ),
             selectInput("pb_new_dataset", "Dataset:",
-                choices = names(datasets)
+                choices = names(dataset_store())
             ),
             footer = tagList(
                 modalButton("Cancel"),
@@ -309,7 +508,7 @@ server <- function(input, output, session) {
     # Suggest the module's preferred dataset when the plot type changes.
     observeEvent(input$pb_new_module, {
         mod <- module_registry[[input$pb_new_module]]
-        if (!is.null(mod) && mod$dataset %in% names(datasets)) {
+        if (!is.null(mod) && mod$dataset %in% names(dataset_store())) {
             updateSelectInput(session, "pb_new_dataset",
                 selected = mod$dataset
             )
@@ -318,6 +517,7 @@ server <- function(input, output, session) {
 
     # --- Create a panel ----------------------------------------------------
     observeEvent(input$pb_add_confirm, {
+        datasets <- dataset_store()
         mod_key <- input$pb_new_module
         ds_name <- input$pb_new_dataset
         mod <- module_registry[[mod_key]]
@@ -327,7 +527,7 @@ server <- function(input, output, session) {
         rv$counter <- rv$counter + 1L
         pid <- paste0("panel", rv$counter)
         data_snapshot <- datasets[[ds_name]]
-        assign(pid, data_snapshot, envir = panel_data)
+        panel_data[[pid]] <- data_snapshot
 
         label <- sprintf("%s #%d (%s)", mod$label, rv$counter, ds_name)
         # Only apply built-in defaults when the dataset they target is chosen.
@@ -389,17 +589,24 @@ server <- function(input, output, session) {
             immediate = TRUE
         )
 
-        # 4) Wire up the servers. The dataset is fixed; the filter feeds the plot.
-        filtered <- dataFilterServer(
-            paste0(pid, "_filter"),
-            reactive(get(pid, envir = panel_data))
-        )
+        # 4) Wire up the servers. The dataset is fixed; the filter feeds the
+        #    plot. Reads short-circuit once the panel's data is removed.
+        panel_reactive <- reactive({
+            d <- panel_data[[pid]]
+            req(d)
+            d
+        })
+        filtered <- dataFilterServer(paste0(pid, "_filter"), panel_reactive)
         mod$server_fn(pid, data = filtered)
 
-        # 5) Per-panel remove handler.
-        observeEvent(input[[paste0(pid, "_remove")]], {
-            remove_panel(pid)
-        }, ignoreInit = TRUE)
+        # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
+        panel_observers[[pid]] <<- observeEvent(
+            input[[paste0(pid, "_remove")]],
+            {
+                remove_panel(pid)
+            },
+            ignoreInit = TRUE
+        )
 
         # 6) Register the panel and focus it in both dropdowns.
         rv$labels[[pid]] <- label
@@ -412,12 +619,22 @@ server <- function(input, output, session) {
         if (!pid %in% rv$panel_ids) {
             return(invisible(NULL))
         }
+        # Destroy the jQuery UI interactions before pulling the DOM nodes so the
+        # remaining cards are never disturbed by orphaned handlers.
+        shinyjqui::jqui_draggable(paste0("#", pid, "_card"),
+            operation = "destroy")
+        shinyjqui::jqui_resizable(paste0("#", pid, "_card"),
+            operation = "destroy")
         removeUI(selector = paste0("#", pid, "_card"), immediate = TRUE)
         removeUI(selector = paste0("#", pid, "_controls"), immediate = TRUE)
         removeUI(selector = paste0("#", pid, "_table"), immediate = TRUE)
-        if (exists(pid, envir = panel_data, inherits = FALSE)) {
-            rm(list = pid, envir = panel_data)
+
+        # Tear down the panel's bookkeeping so its controls/table cannot linger.
+        if (!is.null(panel_observers[[pid]])) {
+            panel_observers[[pid]]$destroy()
+            panel_observers[[pid]] <<- NULL
         }
+        panel_data[[pid]] <- NULL
         rv$labels[[pid]] <- NULL
         rv$panel_ids <- setdiff(rv$panel_ids, pid)
 
