@@ -27,6 +27,7 @@ remotes::install_github("j-andrews7/VizModules")
 
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
+- Build a free-form dashboard of draggable, resizable plots with the **Panel Builder** app: `shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))`
 - See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -105,6 +106,25 @@ app <- createModuleApp(
 
 runApp(app)
 ```
+
+
+## Panel Builder App
+
+The bundled **Panel Builder** app (`inst/apps/panel-builder`) turns the modules into a free-form dashboard builder. Run it with:
+
+```r
+library(VizModules)
+shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))
+```
+
+It demonstrates how to compose multiple modules into a single page at runtime:
+
+- **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
+- **Drag and resize.** Each plot lives on its own card that can be dragged by its title bar and resized from its corner (via `shinyjqui`) to arrange a panel of plots.
+- **Swappable controls.** A single dropdown swaps the visible plot's input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.
+- **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
+
+It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
 
 
 ## Building Custom Wrapper Modules
