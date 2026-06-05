@@ -505,9 +505,13 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_yPlotOutputUI <- function(id) {
+dittoViz_yPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
+    if (resizable){
+        jqui_resizable(
+            plotlyOutput(ns("yPlot"))
+        )
+    } else {
         plotlyOutput(ns("yPlot"))
-    )
-}
+    }
+    }
