@@ -321,29 +321,43 @@ function pbDownloadSVG() {
 // Keep each plot sized to its card so dragging the resize handle changes the
 // plot's height as well as its width. jQuery UI resizable only resizes the
 // card div, so we watch each card body and ask Plotly to relayout to fit.
+var pbCardObservers = new WeakMap();
 function pbResizePlot(card) {
     var gd = card.querySelector('.js-plotly-plot');
     if (gd && window.Plotly) { Plotly.Plots.resize(gd); }
 }
 function pbObserveCard(card) {
-    if (card.__pbObserved || !window.ResizeObserver) { return; }
-    card.__pbObserved = true;
+    if (pbCardObservers.has(card) || !window.ResizeObserver) { return; }
     var body = card.querySelector('.viz-panel-body');
     if (!body) { return; }
     var ro = new ResizeObserver(function() { pbResizePlot(card); });
     ro.observe(body);
+    pbCardObservers.set(card, ro);
+}
+function pbUnobserveCard(card) {
+    var ro = pbCardObservers.get(card);
+    if (ro) { ro.disconnect(); pbCardObservers.delete(card); }
+}
+function pbFindCard(node) {
+    if (node.nodeType !== 1) { return null; }
+    if (node.classList && node.classList.contains('viz-panel-card')) { return node; }
+    if (node.querySelector) { return node.querySelector('.viz-panel-card'); }
+    return null;
 }
 $(function() {
     var canvas = document.getElementById('pb_canvas');
     if (!canvas) { return; }
-    // Attach observers to any cards added to the canvas at runtime.
+    // Attach observers to cards added at runtime and tear them down on removal
+    // so detached cards do not leak their ResizeObserver.
     var mo = new MutationObserver(function(mutations) {
         mutations.forEach(function(m) {
             m.addedNodes.forEach(function(node) {
-                if (node.nodeType !== 1) { return; }
-                var card = node.classList && node.classList.contains('viz-panel-card') ?
-                    node : node.querySelector ? node.querySelector('.viz-panel-card') : null;
+                var card = pbFindCard(node);
                 if (card) { pbObserveCard(card); }
+            });
+            m.removedNodes.forEach(function(node) {
+                var card = pbFindCard(node);
+                if (card) { pbUnobserveCard(card); }
             });
         });
     });
