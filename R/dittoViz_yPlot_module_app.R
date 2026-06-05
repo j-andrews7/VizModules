@@ -40,6 +40,7 @@ dittoViz_yPlotApp <- function(data_list = NULL) {
         output_ui_fn = dittoViz_yPlotOutputUI,
         server_fn    = dittoViz_yPlotServer,
         data_list    = data_list,
-        title        = "Modular yPlots"
+        title        = "Modular yPlots",
+        defaults = NULL
     )
 }

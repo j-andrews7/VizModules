@@ -66,6 +66,7 @@ createModuleApp <- function(inputs_ui_fn,
                             output_ui_fn,
                             server_fn,
                             data_list,
+                            defaults = NULL,
                             title = "VizModules App") {
     # Validate inputs
     stopifnot(is.function(inputs_ui_fn))
@@ -185,7 +186,7 @@ createModuleApp <- function(inputs_ui_fn,
             req(rv$datasets[[input$plot_select]])
             inputs_ui_fn("active_plot",
                 rv$datasets[[input$plot_select]],
-                title = h3(paste(input$plot_select, "Settings"))
+                title = h3(paste(input$plot_select, "Settings")), defaults = defaults
             )
         })
 
