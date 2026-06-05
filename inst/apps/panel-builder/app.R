@@ -203,25 +203,49 @@ app_css <- HTML("
     flex-direction: column;
     overflow: hidden;
 }
-.viz-panel-header {
-    cursor: move;
-    background: #2c3e50;
-    color: #fff;
-    padding: 4px 8px;
+/* A small floating toolbar that only appears while hovering a card. It holds
+   the drag handle and remove button so the static card (and the SVG export)
+   stays free of any chrome. */
+.viz-panel-toolbar {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    z-index: 10;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 2px;
+    padding: 2px 4px;
+    background: rgba(44, 62, 80, 0.85);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    pointer-events: none;
+}
+.viz-panel-card:hover .viz-panel-toolbar { opacity: 1; pointer-events: auto; }
+.viz-panel-drag {
+    cursor: move;
+    color: #fff;
+    padding: 0 4px;
     font-size: 13px;
+    line-height: 1;
     user-select: none;
 }
-.viz-panel-title { font-weight: 600; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis; }
 .viz-panel-remove {
     background: transparent; border: none; color: #fff;
-    padding: 0 4px; line-height: 1; cursor: pointer;
+    padding: 0 4px; line-height: 1; cursor: pointer; font-size: 13px;
 }
 .viz-panel-remove:hover { color: #ff7675; }
-.viz-panel-body { flex: 1 1 auto; padding: 6px; overflow: auto; }
+.viz-panel-body { flex: 1 1 auto; padding: 6px; overflow: hidden; }
+/* Let the plot fill the card so vertical resizing changes the plot height,
+   not just the width. */
+.viz-panel-body > .html-widget,
+.viz-panel-body > .shiny-plot-output,
+.viz-panel-body .js-plotly-plot,
+.viz-panel-body .plotly,
+.viz-panel-body .plot-container {
+    width: 100% !important;
+    height: 100% !important;
+}
 .pb-empty-hint { color: #999; text-align: center; padding-top: 30vh; }
 ")
 
@@ -246,16 +270,11 @@ function pbDownloadSVG() {
         var x = cardRect.left - canvasRect.left + canvas.scrollLeft;
         var y = cardRect.top - canvasRect.top + canvas.scrollTop;
         var w = cardRect.width, h = cardRect.height;
-        var titleEl = card.querySelector('.viz-panel-title');
-        var title = titleEl ? titleEl.textContent : '';
-        var headerEl = card.querySelector('.viz-panel-header');
-        var headerH = headerEl ? headerEl.offsetHeight : 0;
         var body = card.querySelector('.viz-panel-body');
         var gd = card.querySelector('.js-plotly-plot');
         var pw = body ? body.clientWidth : w;
-        var ph = body ? body.clientHeight : (h - headerH);
-        var meta = { x: x, y: y, w: w, h: h, headerH: headerH,
-            title: title, pw: pw, ph: ph, url: null };
+        var ph = body ? body.clientHeight : h;
+        var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, url: null };
         if (gd && window.Plotly) {
             tasks.push(
                 Plotly.toImage(gd, { format: 'svg', width: pw, height: ph })
@@ -267,10 +286,6 @@ function pbDownloadSVG() {
         }
     });
     Promise.all(tasks).then(function(items) {
-        var esc = function(s) {
-            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-        };
         var parts = [];
         parts.push('<?xml version=\"1.0\" encoding=\"UTF-8\"?>');
         parts.push('<svg xmlns=\"http://www.w3.org/2000/svg\" ' +
@@ -284,15 +299,9 @@ function pbDownloadSVG() {
             parts.push('<rect x=\"' + it.x + '\" y=\"' + it.y + '\" width=\"' +
                 it.w + '\" height=\"' + it.h +
                 '\" fill=\"#ffffff\" stroke=\"#cccccc\"/>');
-            parts.push('<rect x=\"' + it.x + '\" y=\"' + it.y + '\" width=\"' +
-                it.w + '\" height=\"' + it.headerH + '\" fill=\"#2c3e50\"/>');
-            parts.push('<text x=\"' + (it.x + 8) + '\" y=\"' +
-                (it.y + it.headerH - 6) + '\" fill=\"#ffffff\" ' +
-                'font-family=\"sans-serif\" font-size=\"12\">' +
-                esc(it.title) + '</text>');
             if (it.url) {
                 parts.push('<image x=\"' + (it.x + 6) + '\" y=\"' +
-                    (it.y + it.headerH + 6) + '\" width=\"' + it.pw +
+                    (it.y + 6) + '\" width=\"' + it.pw +
                     '\" height=\"' + it.ph + '\" xlink:href=\"' + it.url + '\"/>');
             }
             parts.push('</g>');
@@ -308,6 +317,38 @@ function pbDownloadSVG() {
         URL.revokeObjectURL(a.href);
     });
 }
+
+// Keep each plot sized to its card so dragging the resize handle changes the
+// plot's height as well as its width. jQuery UI resizable only resizes the
+// card div, so we watch each card body and ask Plotly to relayout to fit.
+function pbResizePlot(card) {
+    var gd = card.querySelector('.js-plotly-plot');
+    if (gd && window.Plotly) { Plotly.Plots.resize(gd); }
+}
+function pbObserveCard(card) {
+    if (card.__pbObserved || !window.ResizeObserver) { return; }
+    card.__pbObserved = true;
+    var body = card.querySelector('.viz-panel-body');
+    if (!body) { return; }
+    var ro = new ResizeObserver(function() { pbResizePlot(card); });
+    ro.observe(body);
+}
+$(function() {
+    var canvas = document.getElementById('pb_canvas');
+    if (!canvas) { return; }
+    // Attach observers to any cards added to the canvas at runtime.
+    var mo = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            m.addedNodes.forEach(function(node) {
+                if (node.nodeType !== 1) { return; }
+                var card = node.classList && node.classList.contains('viz-panel-card') ?
+                    node : node.querySelector ? node.querySelector('.viz-panel-card') : null;
+                if (card) { pbObserveCard(card); }
+            });
+        });
+    });
+    mo.observe(canvas, { childList: true, subtree: true });
+});
 ")
 
 # --- UI --------------------------------------------------------------------
@@ -539,19 +580,24 @@ server <- function(input, output, session) {
         shinyjs::hide("pb_controls_empty")
         shinyjs::hide("pb_table_empty")
 
-        # 1) Plot card on the canvas (draggable via header, resizable).
+        # 1) Plot card on the canvas (draggable via the hover toolbar's grip,
+        #    resizable from the corner). The toolbar only appears on hover and
+        #    is excluded from the SVG export, so the card stays free of chrome.
         pos <- next_offset(rv$counter - 1L)
         card <- div(
             id = paste0(pid, "_card"),
             class = "viz-panel-card",
             style = sprintf("top:%dpx; left:%dpx;", pos$top, pos$left),
             div(
-                class = "viz-panel-header",
-                span(class = "viz-panel-title", label),
+                class = "viz-panel-toolbar",
+                span(
+                    class = "viz-panel-drag", title = label,
+                    icon("grip-vertical")
+                ),
                 tags$button(
                     id = paste0(pid, "_remove"),
                     class = "viz-panel-remove action-button",
-                    type = "button",
+                    type = "button", title = "Remove plot",
                     icon("times")
                 )
             ),
@@ -561,7 +607,7 @@ server <- function(input, output, session) {
             selector = "#pb_canvas", where = "beforeEnd",
             ui = shinyjqui::jqui_draggable(
                 shinyjqui::jqui_resizable(card),
-                options = list(handle = ".viz-panel-header", containment = "parent")
+                options = list(handle = ".viz-panel-drag", containment = "parent")
             ),
             immediate = TRUE
         )
