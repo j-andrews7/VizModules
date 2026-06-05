@@ -296,9 +296,6 @@ function pbDownloadSVG() {
             '\" fill=\"#ffffff\"/>');
         items.forEach(function(it) {
             parts.push('<g>');
-            parts.push('<rect x=\"' + it.x + '\" y=\"' + it.y + '\" width=\"' +
-                it.w + '\" height=\"' + it.h +
-                '\" fill=\"#ffffff\" stroke=\"#cccccc\"/>');
             if (it.url) {
                 parts.push('<image x=\"' + (it.x + 6) + '\" y=\"' +
                     (it.y + 6) + '\" width=\"' + it.pw +
