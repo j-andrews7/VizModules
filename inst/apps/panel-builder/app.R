@@ -601,7 +601,7 @@ server <- function(input, output, session) {
         mod$server_fn(pid, data = filtered)
 
         # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
-        panel_observers[[pid]] <<- observeEvent(
+        panel_observers[[pid]] <- observeEvent(
             input[[paste0(pid, "_remove")]],
             {
                 remove_panel(pid)
@@ -633,7 +633,7 @@ server <- function(input, output, session) {
         # Tear down the panel's bookkeeping so its controls/table cannot linger.
         if (!is.null(panel_observers[[pid]])) {
             panel_observers[[pid]]$destroy()
-            panel_observers[[pid]] <<- NULL
+            rm(list = pid, envir = panel_observers)
         }
         panel_data[[pid]] <- NULL
         rv$labels[[pid]] <- NULL
