@@ -163,20 +163,6 @@ module_registry <- list(
     )
 )
 
-# Each module's plot output id (the ns()-wrapped plotlyOutput name). Used to
-# force `suspendWhenHidden = FALSE` on every panel's plot so it still renders
-# even when its card is momentarily hidden while shinyjqui sets up the drag and
-# resize wrappers -- otherwise later panels can be suspended and stay blank even
-# though their controls and data table are available.
-plot_output_ids <- list(
-    area = "AreaPlot", bar = "BarPlot", box = "BoxPlot",
-    density = "DensityPlot", dotplot = "DotPlot", dumbbell = "dumbbellPlot",
-    histogram = "histogramPlot", line = "linePlot",
-    parallel = "parallelCoordinatesPlot", pie = "piePlot",
-    radar = "radarPlot", scatter = "scatterPlot", splitbar = "SplitBarPlot",
-    ternary = "ternaryPlot", violin = "ViolinPlot", yplot = "yPlot"
-)
-
 # Choices for the "add plot" module picker (label shown, key returned).
 module_choices <- stats::setNames(
     names(module_registry),
@@ -509,13 +495,10 @@ server <- function(input, output, session) {
     panel_summaries <- reactiveValues()
     panel_observers <- new.env(parent = emptyenv())
 
-    # Always place new cards at the top-left of the canvas. A small per-add
-    # nudge (capped) keeps successive cards from landing exactly on top of one
-    # another without ever pushing them off the page; they can then be dragged
-    # into position.
+    # Always render new cards at the top-left of the canvas; they can then be
+    # dragged into position.
     next_offset <- function(n) {
-        step <- (n %% 4L) * 12L
-        list(top = 12L + step, left = 12L + step)
+        list(top = 20L, left = 20L)
     }
 
     # --- Load custom data --------------------------------------------------
@@ -707,15 +690,6 @@ server <- function(input, output, session) {
         # The module server returns a reactive yielding its interactive summary
         # (plot + data + inputs); keep it so we can bundle every panel together.
         panel_summaries[[pid]] <- mod$server_fn(pid, data = filtered)
-
-        # Force the plot to render even if its card is momentarily hidden while
-        # shinyjqui wraps it for dragging/resizing. Without this, later panels
-        # can stay suspended (blank) while their controls and table still work.
-        plot_out_id <- plot_output_ids[[mod_key]]
-        if (!is.null(plot_out_id)) {
-            outputOptions(output, paste0(pid, "-", plot_out_id),
-                suspendWhenHidden = FALSE)
-        }
 
         # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
         panel_observers[[pid]] <- observeEvent(
