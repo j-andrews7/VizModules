@@ -127,6 +127,7 @@ It demonstrates how to compose multiple modules into a single page at runtime:
 - **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
 - **Removable plots.** Hover a card and click the × in its toolbar to remove that plot along with its controls and data table.
 - **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
+- **Download summaries.** Click *Download Summary* to download an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas.
 
 It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
 

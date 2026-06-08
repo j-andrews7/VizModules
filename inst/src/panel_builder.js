@@ -48,7 +48,7 @@ function pbDownloadSVG() {
             parts.push('</g>');
         });
         parts.push('</svg>');
-        var blob = new Blob([parts.join('\\n')], { type: 'image/svg+xml' });
+        var blob = new Blob([parts.join('\n')], { type: 'image/svg+xml' });
         var a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'vizmodules-panel.svg';
@@ -56,6 +56,22 @@ function pbDownloadSVG() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
+    });
+}
+
+// Trigger the "Summary Download" of every plot currently on the canvas. Each
+// VizModules module renders its own hidden download link with an id ending in
+// "-download.interactive.summary"; clicking each one downloads that plot's
+// interactive summary (plot + data + inputs). Downloads fired in the same tick
+// can be dropped by the browser, so they are staggered slightly.
+function pbDownloadSummaries() {
+    var links = document.querySelectorAll('[id$="-download.interactive.summary"]');
+    if (!links.length) {
+        alert('Add at least one plot before downloading.');
+        return;
+    }
+    links.forEach(function(el, i) {
+        setTimeout(function() { el.click(); }, i * 500);
     });
 }
 
