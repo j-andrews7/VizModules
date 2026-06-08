@@ -23,10 +23,6 @@
 * The Panel Builder app's *Download Summary* button now bundles every plot on
   the canvas into a single `.zip` (one set of files per panel), built entirely
   in R via `.create_download_file()`.
-* Fixed a Panel Builder bug where plots added after the first few rendered blank.
-  Newly inserted plots are now nudged to resize once Plotly finishes its
-  asynchronous render, so every plot on the canvas draws regardless of how many
-  are added.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
