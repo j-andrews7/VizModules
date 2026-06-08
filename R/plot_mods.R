@@ -983,124 +983,191 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
-#' Create download handler for an interactive plot summary
+# #' Create download handler for an interactive plot summary
+# #'
+# #' Generates a Shiny [downloadHandler()] that bundles the interactive plot
+# #' and its supporting data into a single `.zip` archive. The archive contains
+# #' a self-contained interactive HTML of the plotly plot (rendered via
+# #' [htmlwidgets::saveWidget()]), a CSV of the plot's underlying data
+# #' (obtained via [plotly::plotly_data()]), and, when supplied, a CSV of the
+# #' statistics summary and a CSV snapshot of the current UI input values.
+# #' Used by all VizModules to provide the "Interactive Summary" download
+# #' button beside the standard control panel buttons (Auto Update / Update /
+# #' Reset).
+# #'
+# #' @param plot_reactive A reactive expression returning a `plotly` plot object.
+# #' @param stats_reactive Optional. A reactive expression (e.g. a
+# #'   [shiny::reactiveVal()]) returning a `data.frame` of summary statistics
+# #'   to include in the archive. When `NULL` or when the reactive returns
+# #'   `NULL`, `stats_data.csv` is omitted from the zip.
+# #' @param inputs_reactive Optional. A reactive expression returning a named
+# #'   list of UI input values (typically built with
+# #'   [shiny::reactiveValuesToList()] on the module's `input`). When `NULL`
+# #'   or empty, `ui_inputs.csv` is omitted from the zip.
+# #' @param filename_base `character(1)`. Base name for the downloaded `.zip`
+# #'   file (without extension). The final filename takes the form
+# #'   `<filename_base>_<Sys.Date()>.zip`. Defaults to `"interactive_summary"`.
+# #'
+# #' @return A `downloadHandler` object suitable for direct assignment to a
+# #'   Shiny output (e.g. `output$download.interactive.summary`). The resulting
+# #'   `.zip` archive contains:
+# #'   \describe{
+# #'     \item{`plot.html`}{Self-contained interactive plotly HTML widget.}
+# #'     \item{`plot_Data.csv`}{CSV of the data underlying the plot, as
+# #'       returned by [plotly::plotly_data()].}
+# #'     \item{`stats_data.csv`}{CSV of the statistics summary (only present
+# #'       when `stats_reactive` is non-`NULL` and returns non-empty data).}
+# #'     \item{`ui_inputs.csv`}{CSV of the current UI input names and values
+# #'       (only present when `inputs_reactive` is non-`NULL` and returns a
+# #'       non-empty list).}
+# #'   }
+# #'
+# #' @examples
+# #' if (interactive()) {
+# #'     library(shiny)
+# #'     library(plotly)
+# #'
+# #'     ui <- fluidPage(
+# #'         plotlyOutput("plot"),
+# #'         downloadButton("download_summary", "Download Summary")
+# #'     )
+# #'
+# #'     server <- function(input, output, session) {
+# #'         # A reactive plotly plot
+# #'         plot_reactive <- reactive({
+# #'             plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+# #'         })
+# #'
+# #'         # Optional: a reactive returning a stats data.frame
+# #'         stats_reactive <- reactive({
+# #'             data.frame(
+# #'                 metric = c("mean_mpg", "sd_mpg"),
+# #'                 value  = c(mean(mtcars$mpg), sd(mtcars$mpg))
+# #'             )
+# #'         })
+# #'
+# #'         # Optional: capture all UI inputs as a named list
+# #'         AllInputs <- reactive({
+# #'             reactiveValuesToList(input)
+# #'         })
+# #'
+# #'         output$plot <- renderPlotly(plot_reactive())
+# #'
+# #'         output$download_summary <- create_interactive_summary_download_handler(
+# #'             plot_reactive   = plot_reactive,
+# #'             stats_reactive  = stats_reactive,
+# #'             inputs_reactive = AllInputs(),
+# #'             filename_base   = "my_plot_summary"
+# #'         )
+# #'     }
+# #'
+# #'     shinyApp(ui, server)
+# #' }
+# #'
+# #' @importFrom shiny downloadHandler isolate
+# #' @importFrom withr local_tempdir
+# #' @importFrom htmlwidgets saveWidget
+# #' @importFrom shinyjqui jqui_resizable
+# #' @importFrom plotly plotly_data
+# #' @importFrom zip zip
+# #' @importFrom utils write.csv
+# #'
+# #' @author Jacob Martin
+# #' @export
+# create_interactive_summary_download_handler <- function(plot_reactive,
+#                                                         stats_reactive = NULL,
+#                                                         inputs_reactive = NULL,
+#                                                         filename_base = "interactive_summary") {
+#     downloadHandler(
+#         filename = function() {
+#             paste0(filename_base, "_", Sys.Date(), ".zip")
+#         },
+#         content = function(file) {
+#             tmp <- withr::local_tempdir()
+#             plot <- plot_reactive()
+#             plot_data <- as.data.frame(plotly_data(plot))
+            
+#             stats <- NULL
+#             if (!is.null(stats_reactive)) {
+#                 stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
+#                 if (!is.null(stats_df)) {
+#                     stats <- as.data.frame(stats_df)
+#                     write.csv(stats, paste0(tmp, "/stats_data.csv"), row.names = FALSE)
+#                 }
+#             }
+
+#             ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
+#                 message("ERROR: ", e$message)
+#                 NULL
+#             })
+                
+#             inp <- data.frame(
+#                 names  = names(ui_inputs),
+#                 values = unlist(lapply(ui_inputs, function(x) {
+#                     if (is.null(x)) "NULL"
+#                     else if (length(x) > 1) paste(x, collapse = ", ")
+#                     else as.character(x)
+#             })))
+#             write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
+        
+#             write.csv(plot_data, paste0(tmp, "/plot_Data.csv"), row.names = FALSE)
+        
+#             saveWidget(
+#                         widget = jqui_resizable(plot),
+#                         file = paste0(tmp, "/plot.html"),
+#                         selfcontained = TRUE
+#                     )
+#             zip::zip(file,files = list.files(tmp, full.names = FALSE), root = tmp, mode = "cherry-pick")
+
+#         }
+#     )
+# }
+
+#' Prepare interactive summary data for download
 #'
-#' Generates a Shiny [downloadHandler()] that bundles the interactive plot
-#' and its supporting data into a single `.zip` archive. The archive contains
-#' a self-contained interactive HTML of the plotly plot (rendered via
-#' [htmlwidgets::saveWidget()]), a CSV of the plot's underlying data
-#' (obtained via [plotly::plotly_data()]), and, when supplied, a CSV of the
-#' statistics summary and a CSV snapshot of the current UI input values.
-#' Used by all VizModules to provide the "Interactive Summary" download
-#' button beside the standard control panel buttons (Auto Update / Update /
-#' Reset).
+#' Collects the plot object, its underlying data, optional statistics summary,
+#' and optional UI input values into a single list for downstream download
+#' generation.
 #'
 #' @param plot_reactive A reactive expression returning a `plotly` plot object.
 #' @param stats_reactive Optional. A reactive expression (e.g. a
-#'   [shiny::reactiveVal()]) returning a `data.frame` of summary statistics
-#'   to include in the archive. When `NULL` or when the reactive returns
-#'   `NULL`, `stats_data.csv` is omitted from the zip.
+#'   [shiny::reactiveVal()]) returning a `data.frame` of summary statistics.
+#'   When `NULL` or when the reactive returns `NULL`, no statistics data is
+#'   included.
 #' @param inputs_reactive Optional. A reactive expression returning a named
-#'   list of UI input values (typically built with
-#'   [shiny::reactiveValuesToList()] on the module's `input`). When `NULL`
-#'   or empty, `ui_inputs.csv` is omitted from the zip.
-#' @param filename_base `character(1)`. Base name for the downloaded `.zip`
-#'   file (without extension). The final filename takes the form
-#'   `<filename_base>_<Sys.Date()>.zip`. Defaults to `"interactive_summary"`.
+#'   list of UI input values. When `NULL` or when it returns `NULL`, no UI
+#'   input data is included.
 #'
-#' @return A `downloadHandler` object suitable for direct assignment to a
-#'   Shiny output (e.g. `output$download.interactive.summary`). The resulting
-#'   `.zip` archive contains:
-#'   \describe{
-#'     \item{`plot.html`}{Self-contained interactive plotly HTML widget.}
-#'     \item{`plot_Data.csv`}{CSV of the data underlying the plot, as
-#'       returned by [plotly::plotly_data()].}
-#'     \item{`stats_data.csv`}{CSV of the statistics summary (only present
-#'       when `stats_reactive` is non-`NULL` and returns non-empty data).}
-#'     \item{`ui_inputs.csv`}{CSV of the current UI input names and values
-#'       (only present when `inputs_reactive` is non-`NULL` and returns a
-#'       non-empty list).}
-#'   }
-#'
-#' @examples
-#' if (interactive()) {
-#'     library(shiny)
-#'     library(plotly)
-#'
-#'     ui <- fluidPage(
-#'         plotlyOutput("plot"),
-#'         downloadButton("download_summary", "Download Summary")
-#'     )
-#'
-#'     server <- function(input, output, session) {
-#'         # A reactive plotly plot
-#'         plot_reactive <- reactive({
-#'             plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
-#'         })
-#'
-#'         # Optional: a reactive returning a stats data.frame
-#'         stats_reactive <- reactive({
-#'             data.frame(
-#'                 metric = c("mean_mpg", "sd_mpg"),
-#'                 value  = c(mean(mtcars$mpg), sd(mtcars$mpg))
-#'             )
-#'         })
-#'
-#'         # Optional: capture all UI inputs as a named list
-#'         AllInputs <- reactive({
-#'             reactiveValuesToList(input)
-#'         })
-#'
-#'         output$plot <- renderPlotly(plot_reactive())
-#'
-#'         output$download_summary <- create_interactive_summary_download_handler(
-#'             plot_reactive   = plot_reactive,
-#'             stats_reactive  = stats_reactive,
-#'             inputs_reactive = AllInputs(),
-#'             filename_base   = "my_plot_summary"
-#'         )
-#'     }
-#'
-#'     shinyApp(ui, server)
+#' @return A named list with elements:
+#' \describe{
+#'   \item{plot}{The `plotly` plot object.}
+#'   \item{plot_data}{A `data.frame` of the plot's underlying data.}
+#'   \item{stats}{A `data.frame` of statistics data, or `NULL`.}
+#'   \item{inputs}{A `data.frame` of UI input names and values, or `NULL`.}
 #' }
-#'
-#' @importFrom shiny downloadHandler isolate
-#' @importFrom withr local_tempdir
-#' @importFrom htmlwidgets saveWidget
-#' @importFrom shinyjqui jqui_resizable
-#' @importFrom plotly plotly_data
-#' @importFrom zip zip
-#' @importFrom utils write.csv
 #'
 #' @author Jacob Martin
 #' @export
-create_interactive_summary_download_handler <- function(plot_reactive,
+create_interactive_summary_data <- function(plot_reactive,
                                                         stats_reactive = NULL,
-                                                        inputs_reactive = NULL,
-                                                        filename_base = "interactive_summary") {
-    downloadHandler(
-        filename = function() {
-            paste0(filename_base, "_", Sys.Date(), ".zip")
-        },
-        content = function(file) {
-            tmp <- withr::local_tempdir()
+                                                        inputs_reactive = NULL) {
+    
             plot <- plot_reactive()
             plot_data <- as.data.frame(plotly_data(plot))
-            
             stats <- NULL
+    
             if (!is.null(stats_reactive)) {
                 stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
                 if (!is.null(stats_df)) {
-                    stats <- as.data.frame(stats_df)
-                    write.csv(stats, paste0(tmp, "/stats_data.csv"), row.names = FALSE)
+                    stats <- as.data.frame(stats_df) 
                 }
             }
-
+    
             ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
                 message("ERROR: ", e$message)
                 NULL
-            })
-                
+            })    
+    
             inp <- data.frame(
                 names  = names(ui_inputs),
                 values = unlist(lapply(ui_inputs, function(x) {
@@ -1108,20 +1175,79 @@ create_interactive_summary_download_handler <- function(plot_reactive,
                     else if (length(x) > 1) paste(x, collapse = ", ")
                     else as.character(x)
             })))
-            write.csv(inp, paste0(tmp, "/ui_inputs.csv"))
-        
-            write.csv(plot_data, paste0(tmp, "/plot_Data.csv"), row.names = FALSE)
-        
-            saveWidget(
-                        widget = jqui_resizable(plot),
-                        file = paste0(tmp, "/plot.html"),
+            data_list <- list("plot" = plot, "plot_data" = plot_data, "stats" = stats, "inputs" = inp)
+            return(data_list)
+
+}
+#' Create download handler for an interactive plot summary
+#'
+#' Generates a Shiny [downloadHandler()] that bundles the interactive plot and
+#' its supporting data into a single `.zip` archive.
+#'
+#' @param data_list A named list produced by
+#'   [create_interactive_summary_data()]. Expected elements include `plot`,
+#'   `plot_data`, `stats`, and `inputs`.
+#' @param filename_base `character(1)`. Base name for the downloaded `.zip`
+#'   file without extension. The final filename takes the form
+#'   `<filename_base>_<Sys.Date()>.zip`.
+#'
+#' @return A `downloadHandler` object suitable for assignment to a Shiny
+#' output.
+#'
+#' @author Jacob Martin
+#' @export
+.create_download_file <- function(data_list, filename_base = "interactive_summary"){
+    tmp <- withr::local_tempdir()
+       
+    downloadHandler(
+        filename = function() {
+            paste0(filename_base, "_", Sys.Date(), ".zip")
+        },
+        content = function(file) {
+            data_list_value <- data_list()
+            
+            # If the lis isnt a nested list then create one - this allows for multiple summary objects to be saved in the panel module
+            if (!any(vapply(data_list_value, is.list, logical(1)))) {
+                data_list_value <- list("Data" = data_list_value)
+            }  
+            
+            for (x in names(data_list_value)){
+                object <- data_list_value[[x]]
+                
+                if (!is.null(object$stats)) {
+                    write.csv(object$stats, paste0(tmp, "/", x, "_stats_data.csv"), row.names = FALSE)
+                }
+                
+                if (!is.null(object$plot)) {
+                    saveWidget(
+                        widget = jqui_resizable(object$plot),
+                        file = paste0(tmp, "/", x, "_plot.html"),
                         selfcontained = TRUE
                     )
-            zip::zip(file,files = list.files(tmp, full.names = FALSE), root = tmp, mode = "cherry-pick")
-
+                }
+                
+                if (!is.null(object$plot_data)) {
+                    write.csv(object$plot_data, paste0(tmp, "/", x, "_plot_data.csv"), row.names = FALSE)
+                }
+                
+                if (!is.null(object$inputs)) {
+                    write.csv(object$inputs, paste0(tmp, "/", x, "_ui_inputs.csv"), row.names = FALSE)
+                }
+            }
+            
+            files_to_zip <- list.files(tmp, full.names = FALSE)
+            
+            if (length(files_to_zip) == 0) {
+                stop("No files were created to zip.")
+            }
+            
+            zip::zip(zipfile = file, files = files_to_zip, root = tmp, mode = "cherry-pick")
         }
     )
 }
+
+
+
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a

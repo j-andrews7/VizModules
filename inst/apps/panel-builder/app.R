@@ -169,27 +169,204 @@ module_choices <- stats::setNames(
     vapply(module_registry, function(m) m$label, character(1))
 )
 
-# --- Styling and client-side behaviour ------------------------------------
-# The panel builder's CSS and JavaScript live in their own files under
-# `inst/src/` (`panel_builder.css` / `panel_builder.js`) and are attached to the
-# UI as an htmlDependency rather than being defined inline here. This mirrors how
-# the multiColorPicker assets are bundled (see R/multiColorPicker.R).
-panel_builder_assets <- function() {
-    htmltools::htmlDependency(
-        name = "panel-builder",
-        version = as.character(utils::packageVersion("VizModules")),
-        src = "src",
-        package = "VizModules",
-        script = "panel_builder.js",
-        stylesheet = "panel_builder.css"
-    )
+# --- Styling ---------------------------------------------------------------
+app_css <- HTML("
+#pb_canvas_scroll {
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    background: #ececec;
+    padding: 16px;
+    border-radius: 6px;
 }
+#pb_canvas {
+    position: relative;
+    margin: 0 auto;
+    background:
+        #fff
+        linear-gradient(90deg, #f3f3f3 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(0deg, #f3f3f3 1px, transparent 1px) 0 0 / 24px 24px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+/* A4 page sizes at 96dpi (210 x 297 mm). */
+#pb_canvas.a4-portrait  { width: 794px;  height: 1123px; }
+#pb_canvas.a4-landscape { width: 1123px; height: 794px; }
+.viz-panel-card {
+    position: absolute;
+    width: 480px;
+    height: 380px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+/* A small floating toolbar that only appears while hovering a card. It holds
+   the drag handle and remove button so the static card (and the SVG export)
+   stays free of any chrome. */
+.viz-panel-toolbar {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 4px;
+    background: rgba(44, 62, 80, 0.85);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    pointer-events: none;
+}
+.viz-panel-card:hover .viz-panel-toolbar { opacity: 1; pointer-events: auto; }
+.viz-panel-drag {
+    cursor: move;
+    color: #fff;
+    padding: 0 4px;
+    font-size: 13px;
+    line-height: 1;
+    user-select: none;
+}
+.viz-panel-remove {
+    background: transparent; border: none; color: #fff;
+    padding: 0 4px; line-height: 1; cursor: pointer; font-size: 13px;
+}
+.viz-panel-remove:hover { color: #ff7675; }
+.viz-panel-body { flex: 1 1 auto; padding: 6px; overflow: hidden; }
+/* Let the plot fill the card so vertical resizing changes the plot height,
+   not just the width. */
+.viz-panel-body > .html-widget,
+.viz-panel-body > .shiny-plot-output,
+.viz-panel-body .js-plotly-plot,
+.viz-panel-body .plotly,
+.viz-panel-body .plot-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+.pb-empty-hint { color: #999; text-align: center; padding-top: 30vh; }
+")
+
+# Client-side export of the whole canvas to a single SVG file. Each plot is a
+# Plotly chart, so we ask Plotly for an SVG of every plot and stitch them into
+# one SVG document positioned to match the cards on the A4 canvas. This keeps
+# the output vector-based, suitable for a poster or composite figure.
+app_js <- HTML("
+function pbDownloadSVG() {
+    var canvas = document.getElementById('pb_canvas');
+    if (!canvas) { return; }
+    var cards = canvas.querySelectorAll('.viz-panel-card');
+    if (!cards.length) {
+        alert('Add at least one plot before downloading.');
+        return;
+    }
+    var W = canvas.clientWidth, H = canvas.clientHeight;
+    var canvasRect = canvas.getBoundingClientRect();
+    var tasks = [];
+    cards.forEach(function(card) {
+        var cardRect = card.getBoundingClientRect();
+        var x = cardRect.left - canvasRect.left + canvas.scrollLeft;
+        var y = cardRect.top - canvasRect.top + canvas.scrollTop;
+        var w = cardRect.width, h = cardRect.height;
+        var body = card.querySelector('.viz-panel-body');
+        var gd = card.querySelector('.js-plotly-plot');
+        var pw = body ? body.clientWidth : w;
+        var ph = body ? body.clientHeight : h;
+        var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, url: null };
+        if (gd && window.Plotly) {
+            tasks.push(
+                Plotly.toImage(gd, { format: 'svg', width: pw, height: ph })
+                    .then(function(url) { meta.url = url; return meta; })
+                    .catch(function() { return meta; })
+            );
+        } else {
+            tasks.push(Promise.resolve(meta));
+        }
+    });
+    Promise.all(tasks).then(function(items) {
+        var parts = [];
+        parts.push('<?xml version=\"1.0\" encoding=\"UTF-8\"?>');
+        parts.push('<svg xmlns=\"http://www.w3.org/2000/svg\" ' +
+            'xmlns:xlink=\"http://www.w3.org/1999/xlink\" ' +
+            'width=\"' + W + '\" height=\"' + H + '\" ' +
+            'viewBox=\"0 0 ' + W + ' ' + H + '\">');
+        parts.push('<rect x=\"0\" y=\"0\" width=\"' + W + '\" height=\"' + H +
+            '\" fill=\"#ffffff\"/>');
+        items.forEach(function(it) {
+            parts.push('<g>');
+            if (it.url) {
+                parts.push('<image x=\"' + (it.x + 6) + '\" y=\"' +
+                    (it.y + 6) + '\" width=\"' + it.pw +
+                    '\" height=\"' + it.ph + '\" xlink:href=\"' + it.url + '\"/>');
+            }
+            parts.push('</g>');
+        });
+        parts.push('</svg>');
+        var blob = new Blob([parts.join('\\n')], { type: 'image/svg+xml' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'vizmodules-panel.svg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    });
+}
+
+// Keep each plot sized to its card so dragging the resize handle changes the
+// plot's height as well as its width. jQuery UI resizable only resizes the
+// card div, so we watch each card body and ask Plotly to relayout to fit.
+var pbCardObservers = new WeakMap();
+function pbResizePlot(card) {
+    var gd = card.querySelector('.js-plotly-plot');
+    if (gd && window.Plotly) { Plotly.Plots.resize(gd); }
+}
+function pbObserveCard(card) {
+    if (pbCardObservers.has(card) || !window.ResizeObserver) { return; }
+    var body = card.querySelector('.viz-panel-body');
+    if (!body) { return; }
+    var ro = new ResizeObserver(function() { pbResizePlot(card); });
+    ro.observe(body);
+    pbCardObservers.set(card, ro);
+}
+function pbUnobserveCard(card) {
+    var ro = pbCardObservers.get(card);
+    if (ro) { ro.disconnect(); pbCardObservers.delete(card); }
+}
+function pbFindCard(node) {
+    if (node.nodeType !== 1) { return null; }
+    if (node.classList && node.classList.contains('viz-panel-card')) { return node; }
+    if (node.querySelector) { return node.querySelector('.viz-panel-card'); }
+    return null;
+}
+$(function() {
+    var canvas = document.getElementById('pb_canvas');
+    if (!canvas) { return; }
+    // Attach observers to cards added at runtime and tear them down on removal
+    // so detached cards do not leak their ResizeObserver.
+    var mo = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            m.addedNodes.forEach(function(node) {
+                var card = pbFindCard(node);
+                if (card) { pbObserveCard(card); }
+            });
+            m.removedNodes.forEach(function(node) {
+                var card = pbFindCard(node);
+                if (card) { pbUnobserveCard(card); }
+            });
+        });
+    });
+    mo.observe(canvas, { childList: true, subtree: true });
+});
+")
 
 # --- UI --------------------------------------------------------------------
 ui <- fluidPage(
     title = "VizModules Panel Builder",
     shinyjs::useShinyjs(),
-    tags$head(panel_builder_assets()),
+    tags$head(tags$style(app_css), tags$script(app_js)),
     titlePanel("VizModules Panel Builder"),
     sidebarLayout(
         sidebarPanel(
@@ -201,10 +378,7 @@ ui <- fluidPage(
                 "Add VizModules plots to the canvas, then drag them by their",
                 "title bar and resize from the bottom-right corner."
             ),
-            tags$button("Download Summary",
-                id = "pb_download_summary", type = "button",
-                class = "btn btn-primary", onclick = "pbDownloadSummaries()"
-            ),
+            actionButton("download.summary", "Download Summary", class = "btn-primary"),
             hr(),
             h4("Load Data"),
             helpText(
@@ -577,19 +751,20 @@ server <- function(input, output, session) {
             }
         }
     }, ignoreNULL = FALSE)
-
-    # --- Summary download --------------------------------------------------
-    # The "Download Summary" button is handled entirely on the client (see
-    # pbDownloadSummaries() in inst/src/panel_builder.js): it clicks every
-    # plot's "Summary Download" link so each plot's interactive summary
-    # (plot + data + inputs) is downloaded in turn.
+  
+    #Summary Download: 
+    observeEvent(input$download.summary, {
+        plots <- rv()
+        if (length(plots$panel_ids) > 0){
+            for (x in seq_along(plots$panel_ids)){
+                id_button <- plots$panel_ids[x]
+                click(paste0(id_button, "-download.interactive.summary"))
+            }
+        }
+        
+    })
 }
 
 shinyApp(ui, server)
 
 
-    # rv <- reactiveValues(
-    #     panel_ids = character(0), # ordered vector of active panel ids
-    #     labels    = list(),       # pid -> display label
-    #     counter   = 0L            # monotonic id source
-    # )
