@@ -341,16 +341,43 @@ function pbFindCard(node) {
     if (node.querySelector) { return node.querySelector('.viz-panel-card'); }
     return null;
 }
+function pbContainsPlot(node) {
+    if (node.nodeType !== 1) { return false; }
+    if (node.classList && node.classList.contains('js-plotly-plot')) { return true; }
+    return node.querySelector ? !!node.querySelector('.js-plotly-plot') : false;
+}
+// Ask every plot on the canvas to relayout to its container. A card body is a
+// fixed-size flex box, so its ResizeObserver never fires after Plotly finishes
+// its (asynchronous) initial render. Without this nudge a freshly added plot can
+// stay blank, which is why plots stopped appearing after the first few. We also
+// dispatch a window resize so any plot that measured a zero-size container
+// re-measures and draws.
+function pbResizeAllPlots() {
+    if (!window.Plotly) { return; }
+    document.querySelectorAll('#pb_canvas .js-plotly-plot').forEach(function(gd) {
+        try { Plotly.Plots.resize(gd); } catch (e) {}
+    });
+}
+function pbScheduleResize() {
+    [50, 200, 500].forEach(function(t) {
+        setTimeout(function() {
+            pbResizeAllPlots();
+            if (window.dispatchEvent) { window.dispatchEvent(new Event('resize')); }
+        }, t);
+    });
+}
 $(function() {
     var canvas = document.getElementById('pb_canvas');
     if (!canvas) { return; }
     // Attach observers to cards added at runtime and tear them down on removal
-    // so detached cards do not leak their ResizeObserver.
+    // so detached cards do not leak their ResizeObserver. Nudge plots to resize
+    // whenever a card or a plot is inserted so none are left blank.
     var mo = new MutationObserver(function(mutations) {
         mutations.forEach(function(m) {
             m.addedNodes.forEach(function(node) {
                 var card = pbFindCard(node);
-                if (card) { pbObserveCard(card); }
+                if (card) { pbObserveCard(card); pbScheduleResize(); }
+                if (pbContainsPlot(node)) { pbScheduleResize(); }
             });
             m.removedNodes.forEach(function(node) {
                 var card = pbFindCard(node);
