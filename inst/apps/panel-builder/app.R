@@ -495,12 +495,6 @@ server <- function(input, output, session) {
     panel_summaries <- reactiveValues()
     panel_observers <- new.env(parent = emptyenv())
 
-    # Always render new cards at the top-left of the canvas; they can then be
-    # dragged into position.
-    next_offset <- function(n) {
-        list(top = 20L, left = 20L)
-    }
-
     # --- Load custom data --------------------------------------------------
     observeEvent(input$pb_data_add, {
         file <- input$pb_data_file
@@ -626,11 +620,14 @@ server <- function(input, output, session) {
         # 1) Plot card on the canvas (draggable via the hover toolbar's grip,
         #    resizable from the corner). The toolbar only appears on hover and
         #    is excluded from the SVG export, so the card stays free of chrome.
-        pos <- next_offset(rv$counter - 1L)
         card <- div(
             id = paste0(pid, "_card"),
             class = "viz-panel-card",
-            style = sprintf("top:%dpx; left:%dpx;", pos$top, pos$left),
+            # Pin every new card to the top-left of the canvas. `position` is
+            # forced inline (with !important) so nothing in the cascade or any
+            # jQuery UI wrapper can drop the card back into normal document flow
+            # where the cards would stack vertically down the page.
+            style = "position:absolute !important; top:20px; left:20px;",
             div(
                 class = "viz-panel-toolbar",
                 span(
