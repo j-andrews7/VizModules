@@ -101,9 +101,13 @@ custom wrapper module functions to `createModuleApp()` for rapid prototyping.
 
 ## Export Summary Data: 
 
-We created `create_interactive_summary_download_handler()` to create a compact record of the plotted data, stats, UI inputs, and the rendered plot. 
-The function requires a reactive plotly plot and a filename base; however the outputed summary can be optionally enriched by both a stats reactive and a 
-UI inputs reactive. 
+We provide `create_interactive_summary_data()` to assemble a compact record of the
+plotted data, stats, UI inputs, and the rendered plot, and `.create_download_file()`
+to turn that record into a downloadable `.zip`. `create_interactive_summary_data()`
+requires a reactive plotly plot; the output summary can be optionally enriched by
+both a stats reactive and a UI inputs reactive. `.create_download_file()` also accepts
+a named list of summaries (one per plot), which is how the Panel Builder bundles
+every plot on its canvas into a single download.
 
 ```{r data-summary}
 
@@ -137,11 +141,18 @@ if (interactive()) {
 
         output$plot <- renderPlotly(plot_reactive())
 
-        output$download_summary <- create_interactive_summary_download_handler(
-            plot_reactive   = plot_reactive,
-            stats_reactive  = stats_reactive,
-            inputs_reactive = AllInputs(),
-            filename_base   = "my_plot_summary"
+        # Assemble the summary, then wire up the download handler.
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive   = plot_reactive,
+                stats_reactive  = stats_reactive,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download_summary <- .create_download_file(
+            data_list     = plot_summary_reactive,
+            filename_base = "my_plot_summary"
         )
     }
 
