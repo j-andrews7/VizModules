@@ -270,10 +270,18 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             return(x)
         })
 
-        output$download.interactive.summary <- create_interactive_summary_download_handler(
-            plot_reactive = generate_DensityPlot,
-            inputs_reactive = AllInputs(),
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_DensityPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
             filename_base = "DensityPlot_summary"
         )
+
+        return(plot_summary_reactive)
     })
 }

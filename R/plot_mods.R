@@ -1184,9 +1184,12 @@ create_interactive_summary_data <- function(plot_reactive,
 #' Generates a Shiny [downloadHandler()] that bundles the interactive plot and
 #' its supporting data into a single `.zip` archive.
 #'
-#' @param data_list A named list produced by
-#'   [create_interactive_summary_data()]. Expected elements include `plot`,
-#'   `plot_data`, `stats`, and `inputs`.
+#' @param data_list A reactive returning either a single summary list produced
+#'   by [create_interactive_summary_data()] (with elements `plot`, `plot_data`,
+#'   `stats`, and `inputs`), or a named list of such summaries (one per plot).
+#'   When a named list of summaries is supplied, each summary is written to its
+#'   own set of files (prefixed with the list name) so several plots can be
+#'   bundled into a single archive.
 #' @param filename_base `character(1)`. Base name for the downloaded `.zip`
 #'   file without extension. The final filename takes the form
 #'   `<filename_base>_<Sys.Date()>.zip`.
@@ -1197,50 +1200,65 @@ create_interactive_summary_data <- function(plot_reactive,
 #' @author Jacob Martin
 #' @export
 .create_download_file <- function(data_list, filename_base = "interactive_summary"){
-    tmp <- withr::local_tempdir()
-       
     downloadHandler(
         filename = function() {
             paste0(filename_base, "_", Sys.Date(), ".zip")
         },
         content = function(file) {
+            # Use a fresh temporary directory that lives for the duration of the
+            # download. Creating it inside `content` (rather than when the
+            # handler is built) ensures the directory still exists when the
+            # files are written.
+            tmp <- tempfile("vizmodules_summary_")
+            dir.create(tmp)
+            on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
             data_list_value <- data_list()
-            
-            # If the lis isnt a nested list then create one - this allows for multiple summary objects to be saved in the panel module
-            if (!any(vapply(data_list_value, is.list, logical(1)))) {
+
+            # A single summary (e.g. from one plot) is a flat named list with a
+            # top-level "plot" element. Wrap it so a single summary and a list
+            # of summaries (one per panel) can be written by the same loop.
+            if ("plot" %in% names(data_list_value)) {
                 data_list_value <- list("Data" = data_list_value)
-            }  
-            
-            for (x in names(data_list_value)){
+            }
+
+            for (x in names(data_list_value)) {
                 object <- data_list_value[[x]]
-                
-                if (!is.null(object$stats)) {
-                    write.csv(object$stats, paste0(tmp, "/", x, "_stats_data.csv"), row.names = FALSE)
+                if (is.null(object)) {
+                    next
                 }
-                
+
+                # Sanitise the (possibly user-facing) name so it is safe to use
+                # as part of a file path.
+                safe <- gsub("[^A-Za-z0-9._-]+", "_", x)
+
+                if (!is.null(object$stats)) {
+                    write.csv(object$stats, file.path(tmp, paste0(safe, "_stats_data.csv")), row.names = FALSE)
+                }
+
                 if (!is.null(object$plot)) {
                     saveWidget(
                         widget = jqui_resizable(object$plot),
-                        file = paste0(tmp, "/", x, "_plot.html"),
+                        file = file.path(tmp, paste0(safe, "_plot.html")),
                         selfcontained = TRUE
                     )
                 }
-                
+
                 if (!is.null(object$plot_data)) {
-                    write.csv(object$plot_data, paste0(tmp, "/", x, "_plot_data.csv"), row.names = FALSE)
+                    write.csv(object$plot_data, file.path(tmp, paste0(safe, "_plot_data.csv")), row.names = FALSE)
                 }
-                
+
                 if (!is.null(object$inputs)) {
-                    write.csv(object$inputs, paste0(tmp, "/", x, "_ui_inputs.csv"), row.names = FALSE)
+                    write.csv(object$inputs, file.path(tmp, paste0(safe, "_ui_inputs.csv")), row.names = FALSE)
                 }
             }
-            
+
             files_to_zip <- list.files(tmp, full.names = FALSE)
-            
+
             if (length(files_to_zip) == 0) {
                 stop("No files were created to zip.")
             }
-            
+
             zip::zip(zipfile = file, files = files_to_zip, root = tmp, mode = "cherry-pick")
         }
     )

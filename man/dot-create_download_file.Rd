@@ -7,9 +7,12 @@
 .create_download_file(data_list, filename_base = "interactive_summary")
 }
 \arguments{
-\item{data_list}{A named list produced by
-\code{\link[=create_interactive_summary_data]{create_interactive_summary_data()}}. Expected elements include \code{plot},
-\code{plot_data}, \code{stats}, and \code{inputs}.}
+\item{data_list}{A reactive returning either a single summary list produced
+by \code{\link[=create_interactive_summary_data]{create_interactive_summary_data()}} (with elements \code{plot}, \code{plot_data},
+\code{stats}, and \code{inputs}), or a named list of such summaries (one per plot).
+When a named list of summaries is supplied, each summary is written to its
+own set of files (prefixed with the list name) so several plots can be
+bundled into a single archive.}
 
 \item{filename_base}{\code{character(1)}. Base name for the downloaded \code{.zip}
 file without extension. The final filename takes the form

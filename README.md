@@ -127,7 +127,7 @@ It demonstrates how to compose multiple modules into a single page at runtime:
 - **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
 - **Removable plots.** Hover a card and click the × in its toolbar to remove that plot along with its controls and data table.
 - **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
-- **Download summaries.** Click *Download Summary* to download an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas.
+- **Download summaries.** Click *Download Summary* to download a single `.zip` containing an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas, with one set of files per panel. This is handled entirely in R: each panel's summary is collected and bundled together via `.create_download_file()`.
 
 It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
 
@@ -175,7 +175,7 @@ The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab t
 
 ## Export Summary Data:
 
-`create_interactive_summary_download_handler()' function to generate a compact zip folder of summary data for the outputed plot. Including summary statistics, plot data, UI input values, and the rendered plot. 
+`create_interactive_summary_data()` collects the rendered plot, its plot data, summary statistics, and UI input values into a single list, and `.create_download_file()` turns that into a compact zip folder of summary data for the output plot. `.create_download_file()` also accepts a named list of summaries (one per plot), which is how the Panel Builder bundles every plot on the canvas into one download.
 
 ### Supported Tests
 
@@ -323,7 +323,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
 > - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, and yPlot modules.
-> - Summary-data export — `?create_interactive_summary_download_handler`.
+> - Summary-data export — `?create_interactive_summary_data` and `?.create_download_file`.
 > - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
 >
 > **Rules:** All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.

@@ -388,17 +388,17 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         })
 
         plot_summary_reactive <- reactive({
-            data <- create_interactive_summary_data(
+            create_interactive_summary_data(
                 plot_reactive = generate_ViolinPlot,
                 stats_reactive = last_stats_df,
                 inputs_reactive = AllInputs()
             )
-
         })
+
         output$download.interactive.summary <- .create_download_file(
-                data_list = plot_summary_reactive,
-                filename_base = "ViolinPlot_summary"
-            )
+            data_list = plot_summary_reactive,
+            filename_base = "ViolinPlot_summary"
+        )
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
@@ -412,5 +412,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 )
             }
         )
+
+        return(plot_summary_reactive)
         })
 }

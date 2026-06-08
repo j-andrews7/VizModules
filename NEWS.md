@@ -16,7 +16,13 @@
   control panel. The button produces a self-contained interactive HTML report
   containing the plotly plot, a full table of the plot data (retrieved
   via `plotly::plotly_data()`), and for modules with statistics enabled
-  (Box / Violin / yPlot), a table of the statistics summary.
+  (Box / Violin / yPlot), a table of the statistics summary. Summary downloads
+  are now built from the exported `create_interactive_summary_data()` and
+  `.create_download_file()` helpers, and each module server returns its summary
+  reactive so it can be reused (e.g. by the Panel Builder).
+* The Panel Builder app's *Download Summary* button now bundles every plot on
+  the canvas into a single `.zip` (one set of files per panel), built entirely
+  in R via `.create_download_file()`.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
