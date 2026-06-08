@@ -378,6 +378,7 @@ ui <- fluidPage(
                 "Add VizModules plots to the canvas, then drag them by their",
                 "title bar and resize from the bottom-right corner."
             ),
+            actionButton("download.summary", "Download Summary", class = "btn-primary"),
             hr(),
             h4("Load Data"),
             helpText(
@@ -750,6 +751,25 @@ server <- function(input, output, session) {
             }
         }
     }, ignoreNULL = FALSE)
+  
+    #Summary Download: 
+    observeEvent(input$download.summary, {
+        plots <- rv
+        if (length(plots$panel_ids) > 0){
+            for (x in seq_along(plots$panel_ids)){
+                id_button <- plots$panel_ids[x]
+                click(paste0(id_button, "-download.interactive.summary"))
+            }
+        }
+        
+    })
 }
 
 shinyApp(ui, server)
+
+
+    # rv <- reactiveValues(
+    #     panel_ids = character(0), # ordered vector of active panel ids
+    #     labels    = list(),       # pid -> display label
+    #     counter   = 0L            # monotonic id source
+    # )
