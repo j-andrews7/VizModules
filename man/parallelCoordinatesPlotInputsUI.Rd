@@ -53,7 +53,6 @@ and/or the \code{defaults} argument:
 \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
 \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
 \item \code{color.scale} - Colorscale for lines when \code{color.by} is numeric (UI: "Color Scale", default: "Viridis")
-
 \item \code{palette.selection} - Discrete color palette used when \code{color.by} is categorical (UI: palette picker)
 \item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
 \item \code{line.width} - Line width (UI: "Line width", default: 1)

@@ -9,6 +9,7 @@ createModuleApp(
   output_ui_fn,
   server_fn,
   data_list,
+  defaults = NULL,
   title = "VizModules App"
 )
 }
