@@ -23,7 +23,8 @@
 #'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 #'   \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
 #'   \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
-#'   \item \code{color.scale} - Colorscale for lines (UI: "Color scale", default: "Viridis")
+#'   \item \code{color.scale} - Colorscale for lines when \code{color.by} is numeric (UI: "Color Scale", default: "Viridis")
+#'   \item \code{palette.selection} - Discrete color palette used when \code{color.by} is categorical (UI: palette picker)
 #'   \item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
 #'   \item \code{line.width} - Line width (UI: "Line width", default: 1)
 #'   \item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
@@ -83,7 +84,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
     }
 
     selected <- list(
-        "dimensions", "color.by", "color.scale",
+        "dimensions", "color.by", "color.scale", "palette.selection",
         "line.opacity", "line.width", "show.colorbar",
         "label.font.size", "label.font.color", "label.font.family",
         "tick.font.size", "tick.font.color", "tick.font.family",
@@ -115,6 +116,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                     function(x) x %in% colorscale.choices
                 ), selectize = FALSE
             ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
+            uiOutput(ns("palette.selection")),
             tipify(sliderInput(ns("line.opacity"), "Line Opacity",
                 min = 0, max = 1,
                 value = .get_default(defaults, "line.opacity", 0.5, is.numeric),
