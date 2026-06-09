@@ -492,7 +492,7 @@
         ),
         tipify(
             selectInput(ns("stat.pairs"), "Comparisons",
-                choices = c(), multiple = TRUE, selectize = FALSE
+                choices = c(), multiple = TRUE, selectize = TRUE
             ),
             "Select specific pairwise comparisons to display. If empty, all possible pairs are tested.",
             placement = "top", options = tip_opts
