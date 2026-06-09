@@ -278,7 +278,7 @@
             selected = .get_default(
                 defaults, "title.font.family", "Arial",
                 function(x) x %in% font_choices
-            )
+            ), selectize = FALSE
         ),
         colourInput(ns("title.font.color"), "Title Color",
             value = .get_default(defaults, "title.font.color", "#000000")
@@ -302,7 +302,7 @@
             selected = .get_default(
                 defaults, "axis.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            )
+            ), selectize = FALSE
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
             value = .get_default(defaults, "axis.showline", TRUE, is.logical)
@@ -340,7 +340,7 @@
             selected = .get_default(
                 defaults, "axis.tickfont.family", "Arial",
                 function(x) x %in% font_choices
-            )
+            ), selectize = FALSE
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
             value = .get_default(defaults, "axis.tickangle.x", 0, is.numeric),
@@ -359,7 +359,7 @@
             selected = .get_default(
                 defaults, "axis.ticks", "outside",
                 function(x) x %in% c("outside", "inside", "")
-            )
+            ), selectize = FALSE
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = .get_default(defaults, "axis.tickcolor", "black")
@@ -387,7 +387,7 @@
             selected = .get_default(
                 defaults, "facet.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            )
+            ), selectize = FALSE
         )
     )
 }
@@ -430,7 +430,7 @@
                     "Kruskal-Wallis" = "kruskal.test",
                     "ANOVA" = "anova"
                 ),
-                selected = .get_default(defaults, "stat.test", "wilcox.test")
+                selected = .get_default(defaults, "stat.test", "wilcox.test"), selectize = FALSE
             ),
             paste(
                 "Statistical test for comparisons.",
@@ -445,7 +445,7 @@
                     "holm", "hochberg", "hommel", "bonferroni",
                     "BH", "BY", "fdr", "none"
                 ),
-                selected = .get_default(defaults, "stat.p.adjust", "holm")
+                selected = .get_default(defaults, "stat.p.adjust", "holm"), selectize = FALSE
             ),
             "Method for multiple testing correction applied to all p-values",
             placement = "top", options = tip_opts
@@ -457,7 +457,7 @@
                     "P-value" = "p.value",
                     "Symbols" = "symbol"
                 ),
-                selected = .get_default(defaults, "stat.display", "p.adj")
+                selected = .get_default(defaults, "stat.display", "p.adj"), selectize = FALSE
             ),
             "What to display on brackets: adjusted p-values, raw p-values, or significance symbols (*, **, ***, ****)",
             placement = "top", options = tip_opts
@@ -492,7 +492,7 @@
         ),
         tipify(
             selectInput(ns("stat.pairs"), "Comparisons",
-                choices = c(), multiple = TRUE
+                choices = c(), multiple = TRUE, selectize = FALSE
             ),
             "Select specific pairwise comparisons to display. If empty, all possible pairs are tested.",
             placement = "top", options = tip_opts
@@ -515,7 +515,7 @@
         tipify(
             selectInput(ns("stat.bracket.style"), "Bracket Style",
                 choices = c("Capped" = "capped", "Flat" = "flat"),
-                selected = .get_default(defaults, "stat.bracket.style", "capped")
+                selected = .get_default(defaults, "stat.bracket.style", "capped"), selectize = FALSE
             ),
             "Capped brackets have vertical ticks at each end; flat brackets are a single horizontal line",
             placement = "top", options = tip_opts
@@ -592,7 +592,7 @@
                 function(x) x %in% c("svg", "png", "jpeg", "webp")
             ),
             choices = c("svg", "png", "jpeg", "webp"),
-            width = "100%"
+            width = "100%", selectize = FALSE
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
@@ -667,7 +667,7 @@
                 selected = .get_default(
                     defaults, "shape.linetype", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
-                )
+                ), selectize = FALSE
             ),
             "Line dash style for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts

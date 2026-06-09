@@ -101,7 +101,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     ns("palette.name"),
                     "Color Palette",
                     choices = palette_names,
-                    selected = "viridis"
+                    selected = "viridis", selectize = FALSE
                 )
             } else {
                 groups <- palette_groups()

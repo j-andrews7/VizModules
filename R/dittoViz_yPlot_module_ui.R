@@ -178,7 +178,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     selected = .get_default(
                         defaults, "var", num.choices[2],
                         function(x) x %in% num.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$var,
                 placement = "top", options = list(container = "body")
@@ -189,7 +189,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     selected = .get_default(
                         defaults, "group.by", cat.choices[2],
                         function(x) x %in% cat.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$group.by,
                 placement = "top", options = list(container = "body")
@@ -200,7 +200,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     selected = .get_default(
                         defaults, "color.by", "",
                         function(x) x %in% cat.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$color.by,
                 placement = "top", options = list(container = "body")
@@ -211,7 +211,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     selected = .get_default(
                         defaults, "shape.by", "",
                         function(x) x %in% cat.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$shape.by,
                 placement = "top", options = list(container = "body")
@@ -227,7 +227,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     defaults, "plots", c("boxplot", "jitter"),
                     function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))
                 ),
-                multiple = TRUE
+                multiple = TRUE, selectize = FALSE
             ), documentParameters$plots, placement = "top", options = list(container = "body")),
             helpText("Order not currently respected")
         ),
@@ -370,7 +370,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                         defaults, "vlnplot.scaling", "area",
                         function(x) x %in% c("area", "count", "width")
                     ),
-                    choices = c("area", "count", "width")
+                    choices = c("area", "count", "width"), selectize = FALSE
                 ),
                 documentParameters$vlnplot.scaling,
                 placement = "top", options = list(container = "body")
@@ -418,7 +418,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                         defaults, "ridgeplot.shape", "smooth",
                         function(x) x %in% c("smooth", "hist")
                     ),
-                    choices = c("smooth", "hist")
+                    choices = c("smooth", "hist"), selectize = FALSE
                 ),
                 documentParameters$ridgeplot.shape,
                 placement = "top", options = list(container = "body")
@@ -451,7 +451,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     selected = .get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$split.by,
                 placement = "top", options = list(container = "body")
@@ -462,7 +462,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                         defaults, "split.adjust", "free",
                         function(x) x %in% c("fixed", "free", "free_y", "free_x")
                     ),
-                    choices = c("fixed", "free", "free_y", "free_x")
+                    choices = c("fixed", "free", "free_y", "free_x"), selectize = FALSE
                 ),
                 documentParameters$split.adjust,
                 placement = "top", options = list(container = "body")

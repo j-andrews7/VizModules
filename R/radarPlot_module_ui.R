@@ -110,18 +110,18 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     defaults, "theta", cat.choices[2],
                     function(x) x %in% all.choices
                 ),
-                choices = all.choices
+                choices = all.choices, selectize = FALSE
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("r"), "Values (r)",
                 selected = .get_default(
                     defaults, "r", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$r, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group"), "Group",
                 selected = .get_default(defaults, "group", ""),
-                choices = all.choices
+                choices = all.choices, selectize = FALSE
             ), documentParameters$group, placement = "top", options = list(container = "body"))
         ),
         "Trace Style" = tagList(
@@ -130,7 +130,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     "Fill" = "toself",
                     "No fill" = "none"
                 ),
-                selected = .get_default(defaults, "fill", "toself")
+                selected = .get_default(defaults, "fill", "toself"), selectize = FALSE
             ), documentParameters$fill, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line Width",
                 value = .get_default(defaults, "line.width", 2, is.numeric),
@@ -146,7 +146,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     "Dash-dot" = "dashdot",
                     "Long dash-dot" = "longdashdot"
                 ),
-                selected = .get_default(defaults, "line.dash", "solid")
+                selected = .get_default(defaults, "line.dash", "solid"), selectize = FALSE
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.size"), "Marker Size",
                 value = .get_default(defaults, "marker.size", 5, is.numeric),
@@ -163,7 +163,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     "Triangle up" = "triangle-up",
                     "Triangle down" = "triangle-down"
                 ),
-                selected = .get_default(defaults, "marker.symbol", "circle")
+                selected = .get_default(defaults, "marker.symbol", "circle"), selectize = FALSE
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
@@ -199,7 +199,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
         "Angular Axis" = tagList(
             tipify(selectInput(ns("angular.direction"), "Angular Direction",
                 choices = c("Clockwise" = "clockwise", "Counterclockwise" = "counterclockwise"),
-                selected = .get_default(defaults, "angular.direction", "clockwise")
+                selected = .get_default(defaults, "angular.direction", "clockwise"), selectize = FALSE
             ), documentParameters$angular.direction, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("angular.rotation"), "Angular Rotation (degrees)",
                 min = 0, max = 360,
@@ -226,7 +226,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 selected = .get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "#000000")
@@ -236,14 +236,14 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = .get_default(defaults, "legend.orientation", "h")
+                selected = .get_default(defaults, "legend.orientation", "h"), selectize = FALSE
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),

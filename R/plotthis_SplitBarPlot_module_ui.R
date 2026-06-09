@@ -163,33 +163,33 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
       tipify(selectInput(ns("x.data"), "X Values",
         selected = .get_default(defaults, "x.data", num.choices[2],
             function(x) x %in% num.choices),
-        choices = num.choices
+        choices = num.choices, selectize = FALSE
       ), documentParameters$x, placement = "top", options = list(container = "body")),
       tipify(selectInput(ns("y.data"), "Y Values",
         selected = .get_default(defaults, "y.data", char.choices[2],
             function(x) x %in% char.choices),
-        choices = char.choices
+        choices = char.choices, selectize = FALSE
       ), "Select the categorical column to use for the Y axis groupings",
         placement = "top", options = list(container = "body")),
       # Changed from group.by to fill.by
       tipify(selectInput(ns("fill.by"), "Fill By",
         selected = .get_default(defaults, "fill.by", choices[2],
             function(x) x %in% choices),
-        choices = choices
+        choices = choices, selectize = FALSE
       ), documentParameters$fill_by, placement = "top", options = list(container = "body"))),
 
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet By",
         selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet Scale",
         selected = .get_default(
             defaults, "facet.scale", "free_y",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
-        choices = c("fixed", "free", "free_x", "free_y")
+        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Columns",
         value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -202,7 +202,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
     ),
 
@@ -210,7 +210,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         uiOutput(ns("palette.selection")),
         tipify(selectInput(ns("alpha.by"), "Alpha By",
             selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
-            choices = c("", num.choices)),
+            choices = c("", num.choices), selectize = FALSE),
             documentParameters$alpha_by, placement = "top", options = list(container = "body")),
         tipify(materialSwitch(ns("alpha.reverse"), "Alpha Reverse",
             value = .get_default(defaults, "alpha.reverse", FALSE, is.logical), status = "success"),

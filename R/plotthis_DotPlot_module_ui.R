@@ -113,20 +113,20 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(selectInput(ns("x.data"), "X Values",
         selected = .get_default(defaults, "x.data", char.choices[2],
             function(x) x %in% char.choices),
-        choices = char.choices
+        choices = char.choices, selectize = FALSE
         ), documentParameters$x, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("y.data"), "Y Values",
         selected = .get_default(defaults, "y.data", char.choices[min(3, length(char.choices))],
             function(x) x %in% char.choices),
-        choices = char.choices
+        choices = char.choices, selectize = FALSE
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("size.by"), "Size By",
         selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices),
-        choices = num.choices
+        choices = num.choices, selectize = FALSE
         ), documentParameters$size_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill By",
         selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices),
-        choices = num.choices
+        choices = num.choices, selectize = FALSE
         ), documentParameters$fill_by, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("fill.cutoff"), "Fill Cutoff",
         value = .get_default(defaults, "fill.cutoff", NA, is.numeric)
@@ -136,14 +136,14 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet By",
         selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet Scale",
         selected = .get_default(
             defaults, "facet.scale", "fixed",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
-        choices = c("fixed", "free", "free_x", "free_y")
+        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Columns",
         value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -156,7 +156,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
     ),
 
@@ -164,7 +164,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(selectInput(ns("palette.name"), "Color Palette",
         choices = palette_names,
         selected = .get_default(defaults, "palette.name", "Spectral",
-            function(x) x %in% palette_names)
+            function(x) x %in% palette_names), selectize = FALSE
         ), documentParameters$palette, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("alpha"), "Alpha",
             value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
