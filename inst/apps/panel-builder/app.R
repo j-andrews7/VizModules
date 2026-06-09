@@ -1,23 +1,5 @@
 library(VizModules)
-
-# ---------------------------------------------------------------------------
-# Panel Builder
-#
-# A free-form dashboard builder for VizModules. Users can:
-#   * Add any VizModules plot at runtime, choosing both the plot type and the
-#     dataset it should use.
-#   * Drag and resize each plot to arrange a panel of plots on the page.
-#   * Swap the visible plot's *controls* in and out with a single dropdown that
-#     switches between the control sets of every plot that has been added.
-#   * Swap the visible plot's *data-filter table* in and out with a second
-#     dropdown, mirroring the controls behaviour.
-#
-# Every plot lives on its own draggable + resizable card on the canvas, while a
-# single shared controls pane and a single shared table pane keep the interface
-# uncluttered no matter how many plots are added.
-# ---------------------------------------------------------------------------
-
-# --- Available datasets ----------------------------------------------------
+# --- Available datasets
 # A derived summary dataset that suits the pie plot.
 sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
 
@@ -39,7 +21,7 @@ initial_datasets <- list(
     "sales_by_product"        = sales_by_product
 )
 
-# --- Module registry -------------------------------------------------------
+# --- Module registry
 # Each entry wires up one VizModules module. `dataset` is the dataset that the
 # supplied `defaults` were written for; it is used as the initial selection and
 # the defaults are only applied when that dataset is chosen.
@@ -169,7 +151,7 @@ module_choices <- stats::setNames(
     vapply(module_registry, function(m) m$label, character(1))
 )
 
-# --- Styling ---------------------------------------------------------------
+# --- Styling
 app_css <- HTML("
 #pb_canvas_scroll {
     overflow: auto;
@@ -400,7 +382,7 @@ $(function() {
 });
 ")
 
-# --- UI --------------------------------------------------------------------
+# --- UI 
 ui <- fluidPage(
     title = "VizModules Panel Builder",
     shinyjs::useShinyjs(),
@@ -483,7 +465,7 @@ ui <- fluidPage(
     )
 )
 
-# --- Server ----------------------------------------------------------------
+# --- Server
 server <- function(input, output, session) {
     # Registry of datasets available to the "Add Plot" dialog. Seeded with the
     # bundled examples and extended at runtime via the "Load Data" section.
@@ -506,7 +488,7 @@ server <- function(input, output, session) {
     panel_summaries <- reactiveValues()
     panel_observers <- new.env(parent = emptyenv())
 
-    # --- Load custom data --------------------------------------------------
+    # --- Load custom data
     observeEvent(input$pb_data_add, {
         file <- input$pb_data_file
         if (is.null(file)) {
@@ -564,7 +546,7 @@ server <- function(input, output, session) {
         )
     })
 
-    # --- Canvas page size --------------------------------------------------
+    # --- Canvas page size
     observeEvent(input$pb_orientation, {
         if (identical(input$pb_orientation, "landscape")) {
             shinyjs::removeClass("pb_canvas", "a4-portrait")
@@ -575,7 +557,7 @@ server <- function(input, output, session) {
         }
     })
 
-    # --- Add Plot dialog ---------------------------------------------------
+    # --- Add Plot dialog 
     observeEvent(input$pb_add, {
         showModal(modalDialog(
             title = "Add a Plot",
@@ -605,7 +587,7 @@ server <- function(input, output, session) {
         }
     })
 
-    # --- Create a panel ----------------------------------------------------
+    # --- Create a panel 
     observeEvent(input$pb_add_confirm, {
         datasets <- dataset_store()
         mod_key <- input$pb_new_module
@@ -714,7 +696,7 @@ server <- function(input, output, session) {
         refresh_selectors(selected = pid)
     })
 
-    # --- Remove a panel ----------------------------------------------------
+    # --- Remove a panel 
     remove_panel <- function(pid) {
         if (!pid %in% rv$panel_ids) {
             return(invisible(NULL))
@@ -747,7 +729,7 @@ server <- function(input, output, session) {
         refresh_selectors()
     }
 
-    # --- Keep both selectors in sync with the active panels ----------------
+    # --- Keep both selectors in sync with the active panels 
     refresh_selectors <- function(selected = NULL) {
         choices <- stats::setNames(
             rv$panel_ids,
@@ -770,7 +752,7 @@ server <- function(input, output, session) {
         )
     }
 
-    # --- Swap visible controls in/out --------------------------------------
+    # --- Swap visible controls in/out 
     observeEvent(input$pb_controls_select, {
         sel <- input$pb_controls_select
         for (p in rv$panel_ids) {

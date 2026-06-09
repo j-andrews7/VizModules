@@ -1,5 +1,7 @@
 # VizModules 0.2.0
 
+* Created the Panel Builder app so that users can dynamically construct panels figures of plots using different data sets and plot types 
+  on a single page. The app is equipt with a overall summary download button and svg export. 
 * All `*OutputUI()` functions gained a `resizable` argument (default `TRUE`).
   When `FALSE`, the plot output is no longer wrapped in
   `shinyjqui::jqui_resizable()`, which avoids a redundant resize handle when the
@@ -20,9 +22,6 @@
   are now built from the exported `create_interactive_summary_data()` and
   `.create_download_file()` helpers, and each module server returns its summary
   reactive so it can be reused (e.g. by the Panel Builder).
-* The Panel Builder app's *Download Summary* button now bundles every plot on
-  the canvas into a single `.zip` (one set of files per panel), built entirely
-  in R via `.create_download_file()`.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
