@@ -227,7 +227,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     defaults, "plots", c("boxplot", "jitter"),
                     function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))
                 ),
-                multiple = TRUE, selectize = FALSE
+                multiple = TRUE, selectize = TRUE
             ), documentParameters$plots, placement = "top", options = list(container = "body")),
             helpText("Order not currently respected")
         ),

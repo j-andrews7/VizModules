@@ -130,7 +130,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
                 ),
-                choices = num.choices, multiple = TRUE, selectize = FALSE
+                choices = num.choices, multiple = TRUE, selectize = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Y Value",
                 selected = .get_default(

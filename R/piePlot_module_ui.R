@@ -148,7 +148,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             tipify(selectInput(ns("textinfo"), "Slice Label",
                 selected = .get_default(defaults, "textinfo", c("label", "value", "percent")),
                 choices = c("label", "value", "percent", "none"),
-                multiple = TRUE, selectize = FALSE
+                multiple = TRUE, selectize = TRUE
             ), documentParameters$textinfo, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("textposition"), "Text Position",
                 choices = c("Auto" = "auto", "Inside" = "inside", "Outside" = "outside", "Hide text" = "none"),

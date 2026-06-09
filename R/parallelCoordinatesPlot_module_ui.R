@@ -101,7 +101,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             tipify(selectInput(ns("dimensions"), "Dimensions",
                 choices = all.choices,
                 selected = default_dims,
-                multiple = TRUE, selectize = FALSE
+                multiple = TRUE, selectize = TRUE
             ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.by"), "Color By",
                 choices = all.with.empty,

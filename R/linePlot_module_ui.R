@@ -137,14 +137,14 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     defaults, "x.value", names(data)[1],
                     function(x) all(x %in% names(data))
                 ),
-                choices = names(data), multiple = TRUE, selectize = FALSE
+                choices = names(data), multiple = TRUE, selectize = TRUE
             ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Y Values",
                 selected = .get_default(
                     defaults, "y.value", names(data)[2],
                     function(x) all(x %in% names(data))
                 ),
-                choices = names(data), multiple = TRUE, selectize = FALSE
+                choices = names(data), multiple = TRUE, selectize = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By",
                 selected = .get_default(
