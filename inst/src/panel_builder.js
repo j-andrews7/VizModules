@@ -1,3 +1,12 @@
+function pbDecodeSvgDataUrl(url) {
+    if (!url) { return null; }
+    var comma = url.indexOf(',');
+    if (comma === -1) { return null; }
+    var head = url.slice(0, comma);
+    var data = url.slice(comma + 1);
+    var svg = head.indexOf('base64') !== -1 ? atob(data) : decodeURIComponent(data);
+    return svg.replace(/<\?xml[^>]*\?>/i, '').replace(/<!DOCTYPE[^>]*>/i, '').trim();
+}
 function pbDownloadSVG() {
     var canvas = document.getElementById('pb_canvas');
     if (!canvas) { return; }
@@ -18,11 +27,11 @@ function pbDownloadSVG() {
         var gd = card.querySelector('.js-plotly-plot');
         var pw = body ? body.clientWidth : w;
         var ph = body ? body.clientHeight : h;
-        var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, url: null };
+        var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, svg: null };
         if (gd && window.Plotly) {
             tasks.push(
                 Plotly.toImage(gd, { format: 'svg', width: pw, height: ph })
-                    .then(function(url) { meta.url = url; return meta; })
+                    .then(function(url) { meta.svg = pbDecodeSvgDataUrl(url); return meta; })
                     .catch(function() { return meta; })
             );
         } else {
@@ -39,13 +48,12 @@ function pbDownloadSVG() {
         parts.push('<rect x=\"0\" y=\"0\" width=\"' + W + '\" height=\"' + H +
             '\" fill=\"#ffffff\"/>');
         items.forEach(function(it) {
-            parts.push('<g>');
-            if (it.url) {
-                parts.push('<image x=\"' + (it.x + 6) + '\" y=\"' +
-                    (it.y + 6) + '\" width=\"' + it.pw +
-                    '\" height=\"' + it.ph + '\" xlink:href=\"' + it.url + '\"/>');
+            if (it.svg) {
+                parts.push('<g transform=\"translate(' + (it.x + 6) + ',' +
+                    (it.y + 6) + ')\">');
+                parts.push(it.svg);
+                parts.push('</g>');
             }
-            parts.push('</g>');
         });
         parts.push('</svg>');
         var blob = new Blob([parts.join('\n')], { type: 'image/svg+xml' });
