@@ -2316,7 +2316,7 @@ is_pure_type <- function(inputs, d) {
 #' positioned using the supplied \code{title_y} value in the plotly
 #' layout.
 #'
-#' @param fig A plotly figure object.
+#' @param plot A plotly figure object.
 #' @param input Shiny input object containing title font fields.
 #' @param isolate_fn Function to isolate reactive values.
 #' @param title_y Numeric y position for the plot title in the plotly

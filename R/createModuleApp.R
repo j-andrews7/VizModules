@@ -30,6 +30,8 @@
 #'   At least one element is required.
 #' @param title A character string used as the page title
 #'   (default: `"VizModules App"`).
+#' @param defaults A named list of ui ids and their default values that can change the ui default 
+#'    settings on startup. 
 #' @return A [shiny::shinyApp()] object.
 #'
 #' @import shiny
@@ -49,7 +51,8 @@
 #'     output_ui_fn = plotthis_BarPlotOutputUI,
 #'     server_fn    = plotthis_BarPlotServer,
 #'     data_list    = list("iris" = iris),
-#'     title        = "My Bar Plot"
+#'     title        = "My Bar Plot",
+#'     defaults     = NULL
 #' )
 #' if (interactive()) runApp(app)
 #'
@@ -59,7 +62,8 @@
 #'     output_ui_fn = dittoViz_scatterPlotOutputUI,
 #'     server_fn    = dittoViz_scatterPlotServer,
 #'     data_list    = list("iris" = iris),
-#'     title        = "Scatter"
+#'     title        = "Scatter",
+#'     defaults    = NULL
 #' )
 #' if (interactive()) runApp(app2)
 createModuleApp <- function(inputs_ui_fn,

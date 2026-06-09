@@ -40,12 +40,12 @@ Imports:
     methods,
     shinyWidgets,
     htmlwidgets,
-    withr,
     zip
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 Suggests:
+    withr,
     knitr,
     rmarkdown,
     shinytest2,

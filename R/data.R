@@ -221,11 +221,11 @@
 #'
 #' The dataset is designed to simultaneously support three VizModules plot types:
 #' \itemize{
-#'   \item **DotPlot** – summarised \code{avg_expression} and \code{pct_expressed}
-#'     columns per cell type × gene × condition combination.
-#'   \item **yPlot** – per-replicate \code{log2_cpm} values grouped by
+#'   \item DotPlot — summarised \code{avg_expression} and \code{pct_expressed}
+#'     columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
+#'   \item yPlot — per-replicate \code{log2_cpm} values grouped by
 #'     \code{cell_type} and coloured by \code{condition}.
-#'   \item **DensityPlot** – per-replicate \code{log2_cpm} values grouped by
+#'   \item DensityPlot — per-replicate \code{log2_cpm} values grouped by
 #'     \code{condition} and faceted by \code{cell_type}.
 #' }
 #'
@@ -236,12 +236,11 @@
 #'   \item{condition}{Experimental condition (factor: Healthy, Disease)}
 #'   \item{replicate}{Biological replicate (factor: Rep1, Rep2, Rep3)}
 #'   \item{log2_cpm}{Simulated log2 counts-per-million expression value}
-#'   \item{avg_expression}{Mean log2_cpm across replicates for this cell_type × gene × condition}
-#'   \item{pct_expressed}{Percent of replicates with log2_cpm > 0.5 for this combination}
+#'   \item{avg_expression}{Mean log2_cpm across replicates for this cell_type \eqn{\times} gene \eqn{\times} condition}
+#'   \item{neg_log10_pval}{Simulated \eqn{-\log_{10}(p)} value for differential expression summaries}
 #' }
 #'
 #' @source Simulated in data-raw/generate_example_data.R.
 #'
 #' @author Jacob Martin
-#' @keywords datasets
 "example_rnaseq"
