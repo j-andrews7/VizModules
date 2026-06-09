@@ -304,6 +304,10 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the ternaryPlot
 #'
@@ -313,9 +317,11 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #'
 #' @export
 #' @author Jacob Martin
-ternaryPlotOutputUI <- function(id) {
+ternaryPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("ternaryPlot"), height = "100%", width = "100%")
-    )
+    plot_output <- plotlyOutput(ns("ternaryPlot"), height = "100%", width = "100%")
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

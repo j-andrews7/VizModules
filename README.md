@@ -27,6 +27,7 @@ remotes::install_github("j-andrews7/VizModules")
 
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
+- Build a free-form dashboard of draggable, resizable plots with the **Panel Builder** app: `shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))`
 - See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -107,6 +108,30 @@ runApp(app)
 ```
 
 
+## Panel Builder App
+
+The bundled **Panel Builder** app (`inst/apps/panel-builder`) turns the modules into a free-form dashboard builder. Run it with:
+
+```r
+library(VizModules)
+shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))
+```
+
+It demonstrates how to compose multiple modules into a single page at runtime:
+
+- **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
+- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or `RDS` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples.
+- **Drag and resize.** Each plot lives on its own card. Hover a card to reveal a small toolbar with a drag handle (to reposition it) and a remove button, and resize it from its corner (via `shinyjqui`) — resizing adjusts the plot in both directions. The toolbar stays out of the way otherwise, so cards remain clean and chrome-free in the SVG export.
+- **A4 canvas.** The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a poster or composite figure.
+- **Swappable controls.** A single dropdown swaps the visible plot's input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.
+- **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
+- **Removable plots.** Hover a card and click the × in its toolbar to remove that plot along with its controls and data table.
+- **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
+- **Download summaries.** Click *Download Summary* to download a single `.zip` containing an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas, with one set of files per panel. This is handled entirely in R: each panel's summary is collected and bundled together via `.create_download_file()`.
+
+It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
+
+
 ## Building Custom Wrapper Modules
 
 The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.
@@ -150,7 +175,7 @@ The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab t
 
 ## Export Summary Data:
 
-`create_interactive_summary_download_handler()' function to generate a compact zip folder of summary data for the outputed plot. Including summary statistics, plot data, UI input values, and the rendered plot. 
+`create_interactive_summary_data()` collects the rendered plot, its plot data, summary statistics, and UI input values into a single list, and `.create_download_file()` turns that into a compact zip folder of summary data for the output plot. `.create_download_file()` also accepts a named list of summaries (one per plot), which is how the Panel Builder bundles every plot on the canvas into one download.
 
 ### Supported Tests
 
@@ -298,7 +323,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
 > - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, and yPlot modules.
-> - Summary-data export — `?create_interactive_summary_download_handler`.
+> - Summary-data export — `?create_interactive_summary_data` and `?.create_download_file`.
 > - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
 >
 > **Rules:** All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.

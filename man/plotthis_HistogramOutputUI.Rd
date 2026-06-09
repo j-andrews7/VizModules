@@ -4,10 +4,15 @@
 \alias{plotthis_HistogramOutputUI}
 \title{Output UI components for the histogramPlot module}
 \usage{
-plotthis_HistogramOutputUI(id)
+plotthis_HistogramOutputUI(id, resizable = TRUE)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
+
+\item{resizable}{Logical; when \code{TRUE} (the default) the plot output
+is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+by dragging. Set to \code{FALSE} when embedding the output in a container
+that already provides resizing.}
 }
 \value{
 A Shiny plotlyOutput for the histogramPlot

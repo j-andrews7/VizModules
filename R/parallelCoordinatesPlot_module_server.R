@@ -178,10 +178,18 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             return(x)
         })
 
-        output$download.interactive.summary <- create_interactive_summary_download_handler(
-            plot_reactive = generate_parallelCoordinatesPlot,
-            inputs_reactive = AllInputs(),
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_parallelCoordinatesPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
             filename_base = "parallelCoordinatesPlot_summary"
         )
+
+        return(plot_summary_reactive)
     })
 }
