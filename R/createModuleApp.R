@@ -92,7 +92,7 @@ createModuleApp <- function(inputs_ui_fn,
                 hr(),
                 h4("Plot Settings"),
                 selectInput("plot_select", "Select Dataset:",
-                    choices = names(data_list)
+                    choices = names(data_list), selectize = FALSE
                 ),
                 helpText("Plot settings reset when switching datasets."),
                 uiOutput("plot_inputs_ui")

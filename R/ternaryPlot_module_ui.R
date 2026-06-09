@@ -136,19 +136,19 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
         "Data" = tagList(
             tipify(selectInput(ns("a"), "A-axis Column",
                 selected = .get_default(defaults, "a", default_a),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$a, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("b"), "B-axis Column",
                 selected = .get_default(defaults, "b", default_b),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$b, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("c"), "C-axis Column",
                 selected = .get_default(defaults, "c", default_c),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$c, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group"), "Colour By",
                 selected = .get_default(defaults, "group", ""),
-                choices = all.choices
+                choices = all.choices, selectize = FALSE
             ), documentParameters$group, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("sum"), "Sum",
                 value = .get_default(defaults, "sum", 100, is.numeric),
@@ -161,7 +161,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Markers" = "markers",
                     "Lines + Markers" = "lines+markers"
                 ),
-                selected = .get_default(defaults, "mode", "markers")
+                selected = .get_default(defaults, "mode", "markers"), selectize = FALSE
             ), documentParameters$mode, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.size"), "Marker Size",
                 value = .get_default(defaults, "marker.size", 8, is.numeric),
@@ -178,7 +178,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Triangle up" = "triangle-up",
                     "Triangle down" = "triangle-down"
                 ),
-                selected = .get_default(defaults, "marker.symbol", "circle")
+                selected = .get_default(defaults, "marker.symbol", "circle"), selectize = FALSE
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.line.width"), "Marker Border Width",
                 value = .get_default(defaults, "marker.line.width", 0, is.numeric),
@@ -202,7 +202,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Dash-dot" = "dashdot",
                     "Long dash-dot" = "longdashdot"
                 ),
-                selected = .get_default(defaults, "line.dash", "solid")
+                selected = .get_default(defaults, "line.dash", "solid"), selectize = FALSE
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
@@ -253,7 +253,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 selected = .get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "#000000")
@@ -263,14 +263,14 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = .get_default(defaults, "legend.orientation", "h")
+                selected = .get_default(defaults, "legend.orientation", "h"), selectize = FALSE
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = .get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = .get_default(defaults, "legend.font.size", 12, is.numeric),

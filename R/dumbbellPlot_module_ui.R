@@ -130,7 +130,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
                 ),
-                choices = num.choices, multiple = TRUE
+                choices = num.choices, multiple = TRUE, selectize = FALSE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Y Value",
                 selected = .get_default(
@@ -138,21 +138,21 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(cat.choices) > 1) cat.choices[2] else "",
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices, multiple = FALSE
+                choices = cat.choices, multiple = FALSE, selectize = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = .get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("colour.by"), "Colour By",
                 choices = c("X variables", "Y variables"),
                 selected = .get_default(
                     defaults, "colour.by", "X variables",
                     function(x) x %in% c("X variables", "Y variables")
-                )
+                ), selectize = FALSE
             ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
@@ -161,14 +161,14 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = cat.choices
+                choices = cat.choices, selectize = FALSE
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = .get_default(
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
-                )
+                ), selectize = FALSE
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(

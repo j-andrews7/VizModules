@@ -214,7 +214,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     selected = .get_default(
                         defaults, "x.data", cat.choices[2],
                         function(x) x %in% cat.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$x,
                 placement = "top", options = list(container = "body")
@@ -225,7 +225,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     selected = .get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$y,
                 placement = "top", options = list(container = "body")
@@ -236,7 +236,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                         defaults, "group.by", "",
                         function(x) x %in% c("", cat.choices)
                     ),
-                    choices = c("", cat.choices)
+                    choices = c("", cat.choices), selectize = FALSE
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")
@@ -318,7 +318,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
-                choices = c(cat.choices, "")),
+                choices = c(cat.choices, ""), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
@@ -327,7 +327,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y")),
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),

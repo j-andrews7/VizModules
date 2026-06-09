@@ -100,11 +100,11 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             tipify(selectInput(ns("dimensions"), "Dimensions",
                 choices = all.choices,
                 selected = default_dims,
-                multiple = TRUE
+                multiple = TRUE, selectize = FALSE
             ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.by"), "Color By",
                 choices = all.with.empty,
-                selected = .get_default(defaults, "color.by", "")
+                selected = .get_default(defaults, "color.by", ""), selectize = FALSE
             ), documentParameters$color.by, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
@@ -113,7 +113,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 selected = .get_default(
                     defaults, "color.scale", "Viridis",
                     function(x) x %in% colorscale.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("line.opacity"), "Line Opacity",
                 min = 0, max = 1,
@@ -142,7 +142,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 selected = .get_default(
                     defaults, "label.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("tick.font.size"), "Tick Font Size",
                 value = .get_default(defaults, "tick.font.size", 10, is.numeric),
@@ -156,7 +156,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 selected = .get_default(
                     defaults, "tick.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$tick.font.family, placement = "top", options = list(container = "body"))
         ),
         "Title & Background" = tagList(
@@ -169,7 +169,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 selected = .get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "black")

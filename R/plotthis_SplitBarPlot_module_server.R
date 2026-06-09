@@ -121,7 +121,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = default_gradient_palette
+                    selected = default_gradient_palette, selectize = FALSE
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
