@@ -123,7 +123,11 @@ parallelCoordinatesPlot <- function(
                 if (n_lvls == 1) {
                     discrete_scale <- list(list(0, pal_colors[1]), list(1, pal_colors[1]))
                 } else {
-                    eps <- 1e-6
+                    # Keep boundary splits large enough to survive JSON/JS
+                    # floating-point rounding in plotly, while still tiny
+                    # relative to each category band so transitions remain
+                    # visually discrete.
+                    eps <- min(1e-3, 0.25 / n_lvls)
                     discrete_scale <- list(list(0, pal_colors[1]))
                     for (k in seq_len(n_lvls - 1)) {
                         boundary <- k / n_lvls

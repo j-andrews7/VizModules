@@ -85,7 +85,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         # The continuous color scale only applies to numeric color.by. For a
         # categorical color.by the discrete palette picker is used instead, so
         # hide the color scale selector to avoid an irrelevant, no-op control.
-        observeEvent(input$color.by, {
+        observeEvent(palette_groups(), {
             if (!is.null(hide.inputs) && "color.scale" %in% hide.inputs) {
                 return()
             }
