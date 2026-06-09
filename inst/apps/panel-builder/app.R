@@ -1,4 +1,5 @@
 library(VizModules)
+
 # --- Available datasets
 # A derived summary dataset that suits the pie plot.
 sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
@@ -562,7 +563,7 @@ server <- function(input, output, session) {
         showModal(modalDialog(
             title = "Add a Plot",
             selectInput("pb_new_module", "Plot type:",
-                choices = module_choices
+                choices = module_choices, selectize = FALSE
             ),
             selectInput("pb_new_dataset", "Dataset:",
                 choices = names(dataset_store())
