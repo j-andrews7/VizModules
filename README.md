@@ -27,7 +27,7 @@ remotes::install_github("j-andrews7/VizModules")
 
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Build a free-form dashboard of draggable, resizable plots with the **Panel Builder** app: `shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))`
+- Build a free-form dashboard of draggable, resizable plots with the **Panel Builder** app: `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
 - See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -110,11 +110,11 @@ runApp(app)
 
 ## Panel Builder App
 
-The bundled **Panel Builder** app (`inst/apps/panel-builder`) turns the modules into a free-form dashboard builder. Run it with:
+The bundled **Panel Builder** app (`inst/apps/figure-builder`) turns the modules into a free-form dashboard builder. Run it with:
 
 ```r
 library(VizModules)
-shiny::runApp(system.file("apps/panel-builder", package = "VizModules"))
+shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))
 ```
 
 It demonstrates how to compose multiple modules into a single page at runtime:
@@ -128,8 +128,6 @@ It demonstrates how to compose multiple modules into a single page at runtime:
 - **Removable plots.** Hover a card and click the × in its toolbar to remove that plot along with its controls and data table.
 - **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
 - **Download summaries.** Click *Download Summary* to download a single `.zip` containing an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas, with one set of files per panel. This is handled entirely in R: each panel's summary is collected and bundled together via `.create_download_file()`.
-
-It has access to every module in the package, making it a useful starting point for building richer multi-plot applications.
 
 
 ## Building Custom Wrapper Modules
@@ -175,7 +173,7 @@ The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab t
 
 ## Export Summary Data:
 
-`create_interactive_summary_data()` collects the rendered plot, its plot data, summary statistics, and UI input values into a single list, and `.create_download_file()` turns that into a compact zip folder of summary data for the output plot. `.create_download_file()` also accepts a named list of summaries (one per plot), which is how the Panel Builder bundles every plot on the canvas into one download.
+`create_interactive_summary_data()` collects the interactive plot as HTML, its plot data, pairwise testing statistics (if applied), and UI input values into a single list, and `.create_download_file()` turns that into a compact zip folder of summary data for the output plot. `.create_download_file()` also accepts a named list of summaries (one per plot), which is how the Panel Builder bundles every plot on the canvas into one download.
 
 ### Supported Tests
 

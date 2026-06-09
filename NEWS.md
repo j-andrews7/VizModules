@@ -1,12 +1,12 @@
 # VizModules 0.2.0
 
-* Created the Panel Builder app so that users can dynamically construct panels figures of plots using different data sets and plot types 
+* Created the Figure Builder app so that users can dynamically construct panels figures of plots using different data sets and plot types 
   on a single page. The app is equipt with a overall summary download button and svg export. 
 * All `*OutputUI()` functions gained a `resizable` argument (default `TRUE`).
   When `FALSE`, the plot output is no longer wrapped in
   `shinyjqui::jqui_resizable()`, which avoids a redundant resize handle when the
   output is embedded in a container that already provides resizing (such as the
-  Panel Builder app cards).
+  Figure Builder app cards).
 * Added a new `plotthis_DotPlot` module (`plotthis_DotPlotInputsUI()`,
   `plotthis_DotPlotOutputUI()`, `plotthis_DotPlotServer()`, and the
   `plotthis_DotPlotApp()` convenience wrapper) that wraps `plotthis::DotPlot()`
@@ -21,7 +21,7 @@
   (Box / Violin / yPlot), a table of the statistics summary. Summary downloads
   are now built from the exported `create_interactive_summary_data()` and
   `.create_download_file()` helpers, and each module server returns its summary
-  reactive so it can be reused (e.g. by the Panel Builder).
+  reactive so it can be reused (e.g. by the Figure Builder).
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,

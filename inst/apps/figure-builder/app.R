@@ -385,10 +385,10 @@ $(function() {
 
 # --- UI 
 ui <- fluidPage(
-    title = "VizModules Panel Builder",
+    title = "VizModules Figure Builder",
     shinyjs::useShinyjs(),
     tags$head(tags$style(app_css), tags$script(app_js)),
-    titlePanel("VizModules Panel Builder"),
+    titlePanel("VizModules Figure Builder"),
     sidebarLayout(
         sidebarPanel(
             width = 4,
