@@ -108,26 +108,27 @@ runApp(app)
 ```
 
 
-## Panel Builder App
+## Figure Builder App
 
-The bundled **Panel Builder** app (`inst/apps/figure-builder`) turns the modules into a free-form dashboard builder. Run it with:
+The bundled **Figure Builder** app (`inst/apps/figure-builder`) turns the modules into a free-form figure builder. Run it with:
 
 ```r
 library(VizModules)
 shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))
 ```
 
-It demonstrates how to compose multiple modules into a single page at runtime:
+Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
+
+It allows you to interactively compose complicated figures using the modules in a single page:
 
 - **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
-- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or `RDS` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples.
+- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or `RDS` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples. Each plot can use a different dataset if desired.
 - **Drag and resize.** Each plot lives on its own card. Hover a card to reveal a small toolbar with a drag handle (to reposition it) and a remove button, and resize it from its corner (via `shinyjqui`) — resizing adjusts the plot in both directions. The toolbar stays out of the way otherwise, so cards remain clean and chrome-free in the SVG export.
-- **A4 canvas.** The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a poster or composite figure.
+- **A4 canvas.** The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a composite figure.
 - **Swappable controls.** A single dropdown swaps the visible plot's input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.
-- **Swappable table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
-- **Removable plots.** Hover a card and click the × in its toolbar to remove that plot along with its controls and data table.
-- **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page.
-- **Download summaries.** Click *Download Summary* to download a single `.zip` containing an interactive summary (plot + data + the inputs used to build it) for every plot on the canvas, with one set of files per panel. This is handled entirely in R: each panel's summary is collected and bundled together via `.create_download_file()`.
+- **Swappable filtering table.** A matching dropdown swaps the visible plot's filterable data table, mirroring the controls behaviour. Filtering a plot's table subsets only that plot's data.
+- **Download as SVG.** Click *Download Panel (SVG)* to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page. This allows downstream editing as necessary, though the hope is that you'll be 95% of the way there with the formatting and syling options available in each module.
+- **Download source data.** Click *Download Summary* to download a single `.zip` containing all plot data (plot + data + the inputs used to build it + statistical testing information (if applied)) for every plot on the canvas, with one set of files per panel.
 
 
 ## Building Custom Wrapper Modules
@@ -294,7 +295,7 @@ plotthis::DotPlot:
 
 ## AI Usage Statement
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
-AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs to ensure accuracy and quality.
+AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs/hands to ensure accuracy and quality.
 Our own hands are all over this project, and we are invested in it. 
 Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
 
