@@ -1040,6 +1040,11 @@ collect_source_data <- function(plot_reactive,
 #' @return A `downloadHandler` object suitable for assignment to a Shiny
 #' output.
 #'
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom shiny downloadHandler
+#' @importFrom shinyjqui jqui_resizable
+#' @importFrom zip zip
+#' 
 #' @author Jacob Martin
 #' @export
 #' @examples
@@ -1125,7 +1130,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
                 stop("No files were created to zip.")
             }
 
-            zip::zip(zipfile = file, files = files_to_zip, root = tmp, mode = "cherry-pick")
+            zip(zipfile = file, files = files_to_zip, root = tmp, mode = "cherry-pick")
         }
     )
 }
