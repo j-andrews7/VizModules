@@ -1044,6 +1044,7 @@ collect_source_data <- function(plot_reactive,
 #' @importFrom shiny downloadHandler
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom zip zip
+#' @importFrom utils write.csv
 #' 
 #' @author Jacob Martin
 #' @export
