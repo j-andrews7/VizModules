@@ -503,12 +503,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_SplitBarPlot,
-            filename_base = "SplitBarPlot"
-        )
-
         # Download handler for source (plot + data)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({

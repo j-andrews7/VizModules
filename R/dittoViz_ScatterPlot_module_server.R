@@ -835,12 +835,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_scatterPlot,
-            filename_base = "scatterPlot"
-        )
-
         # Download handler for source (plot + data)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({

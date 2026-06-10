@@ -255,12 +255,6 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_AreaPlot,
-            filename_base = "AreaPlot"
-        )
-
         # Download handler for source (plot + data)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({

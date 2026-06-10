@@ -257,12 +257,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_DensityPlot,
-            filename_base = "DensityPlot"
-        )
-
         # Download handler for source (plot + data)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({

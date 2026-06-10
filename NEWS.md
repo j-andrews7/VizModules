@@ -21,12 +21,14 @@
   are now built from the exported `collect_source_data()` and
   `create_source_download_handler()` helpers, and each module server returns its source
   reactive so it can be reused (e.g. by the Figure Builder). Given source data is now required by many journals, this is important.
+* Removed old interactive plot download button and associated helper function.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
 `parse_pair_strings()`, and `write_stats_csv()`.
-* Exposed `empty_plot()` for use as a placeholder in new modules.
-* Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels.
+* Exposed `empty_plot()` for use as a placeholder, e.g. if parameters aren't valid for a given plot type, to pass that info to user without ugly error messages.
+* Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling.
+  This fixes much of the wonkiness for plots with many panels. Still imperfect, but much improved.
 * Condensed package wide workflows with simple helpers, e.g. `.apply_title_layout()`, resulting in significantly less jank.
 
 # VizModules 0.1.1

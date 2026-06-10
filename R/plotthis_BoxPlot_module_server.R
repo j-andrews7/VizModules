@@ -399,11 +399,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_BoxPlot,
-            filename_base = "BoxPlot"
-        )
         # Download handler for source (plot + data + stats)
         plot_source_reactive <- reactive({
             collect_source_data(

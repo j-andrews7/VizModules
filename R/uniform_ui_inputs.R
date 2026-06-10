@@ -577,13 +577,6 @@
 .uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
-        downloadButton(
-            ns("download.interactive"),
-            "Save Interactive",
-            class = "btn-secondary",
-            icon = icon("download"),
-            width = "100%"
-        ),
         selectInput(
             ns("download.format"),
             "Download Format",

@@ -294,12 +294,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_Histogram,
-            filename_base = "Histogram"
-        )
-
         # Download handler for source (plot + data)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({

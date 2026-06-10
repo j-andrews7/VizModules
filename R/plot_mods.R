@@ -941,48 +941,6 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
-#' Create download handler for interactive plotly plots
-#'
-#' Generates a Shiny downloadHandler that saves a plotly widget as an
-#' interactive HTML file with resizable functionality. This is used by all
-#' VizModules to provide a "Save Interactive" button.
-#'
-#' @param plot_reactive A reactive expression returning a plotly plot object.
-#' @param filename_base Character. Base name for the downloaded file (without extension).
-#'   Defaults to "interactive_plot".
-#'
-#' @return A downloadHandler function that can be assigned to output$download.interactive.
-#'
-#' @importFrom htmlwidgets saveWidget
-#' @importFrom htmltools tagList tags browsable
-#' @importFrom shinyjqui jqui_resizable
-#'
-#' @author Jared Andrews
-#' @rdname INTERNAL_create_download_handler
-#' @keywords internal
-.create_plot_download_handler <- function(plot_reactive, filename_base = "interactive_plot") {
-    downloadHandler(
-        filename = function() {
-            paste0(filename_base, "_", Sys.Date(), ".html")
-        },
-        content = function(file) {
-            plot <- plot_reactive()
-            # Ensure it's a plotly widget
-            if (!inherits(plot, "plotly")) {
-                stop("Plot must be a plotly object")
-            }
-
-            # Save as HTML widget
-            saveWidget(
-                widget = jqui_resizable(plot),
-                file = file,
-                selfcontained = TRUE
-            )
-        }
-    )
-}
-
-
 #' Collect plot and source data for download
 #'
 #' Collects the plot object, its underlying data, statistical testing details (if applied),

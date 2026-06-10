@@ -374,12 +374,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             return(fig)
         })
 
-        # Download handler for interactive plot
-        output$download.interactive <- .create_plot_download_handler(
-            plot_reactive = generate_ViolinPlot,
-            filename_base = "ViolinPlot"
-        )
-
         # Download handler for source (plot + data + stats)
         # Capture all UI inputs for the source download
         AllInputs <- reactive({
