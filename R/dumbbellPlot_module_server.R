@@ -283,16 +283,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         output$dumbbellPlot <- renderPlotly({
             req(input$x.value, input$y.value)
 
-            fig <- generate_dumbbellPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_dumbbellPlot(), input)
 
             return(fig)
         })
@@ -302,5 +293,26 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             plot_reactive = generate_dumbbellPlot,
             filename_base = "dumbbellPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_dumbbellPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "dumbbellPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

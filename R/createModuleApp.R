@@ -30,6 +30,8 @@
 #'   At least one element is required.
 #' @param title A character string used as the page title
 #'   (default: `"VizModules App"`).
+#' @param defaults A named list of ui ids and their default values that can change the ui default 
+#'    settings on startup. 
 #' @return A [shiny::shinyApp()] object.
 #'
 #' @import shiny
@@ -49,7 +51,8 @@
 #'     output_ui_fn = plotthis_BarPlotOutputUI,
 #'     server_fn    = plotthis_BarPlotServer,
 #'     data_list    = list("iris" = iris),
-#'     title        = "My Bar Plot"
+#'     title        = "My Bar Plot",
+#'     defaults     = NULL
 #' )
 #' if (interactive()) runApp(app)
 #'
@@ -59,13 +62,15 @@
 #'     output_ui_fn = dittoViz_scatterPlotOutputUI,
 #'     server_fn    = dittoViz_scatterPlotServer,
 #'     data_list    = list("iris" = iris),
-#'     title        = "Scatter"
+#'     title        = "Scatter",
+#'     defaults    = NULL
 #' )
 #' if (interactive()) runApp(app2)
 createModuleApp <- function(inputs_ui_fn,
                             output_ui_fn,
                             server_fn,
                             data_list,
+                            defaults = NULL,
                             title = "VizModules App") {
     # Validate inputs
     stopifnot(is.function(inputs_ui_fn))
@@ -91,7 +96,7 @@ createModuleApp <- function(inputs_ui_fn,
                 hr(),
                 h4("Plot Settings"),
                 selectInput("plot_select", "Select Dataset:",
-                    choices = names(data_list)
+                    choices = names(data_list), selectize = FALSE
                 ),
                 helpText("Plot settings reset when switching datasets."),
                 uiOutput("plot_inputs_ui")
@@ -185,7 +190,7 @@ createModuleApp <- function(inputs_ui_fn,
             req(rv$datasets[[input$plot_select]])
             inputs_ui_fn("active_plot",
                 rv$datasets[[input$plot_select]],
-                title = h3(paste(input$plot_select, "Settings"))
+                title = h3(paste(input$plot_select, "Settings")), defaults = defaults
             )
         })
 

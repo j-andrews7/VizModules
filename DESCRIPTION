@@ -1,6 +1,6 @@
 Package: VizModules
 Title: Flexible, Interactive 'shiny' Modules for Almost Any Plot
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Jared", family = "Andrews", email = "jared.andrews07@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0780-6248")),
@@ -39,12 +39,13 @@ Imports:
     jsonlite,
     methods,
     shinyWidgets,
-    htmlwidgets
+    htmlwidgets,
+    zip
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Suggests:
+    withr,
     knitr,
     rmarkdown,
     shinytest2,
@@ -52,3 +53,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://j-andrews7.github.io/VizModules/, https://github.com/j-andrews7/VizModules
+Config/roxygen2/version: 8.0.0

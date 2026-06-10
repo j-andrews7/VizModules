@@ -121,7 +121,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = default_gradient_palette
+                    selected = default_gradient_palette, selectize = FALSE
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
@@ -352,7 +352,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             # bar Plot
             p <- SplitBarPlot(
@@ -387,7 +387,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
 
-
+            
             if (!isolate_fn(input$rotate)) {
                 p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
@@ -446,17 +446,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                         theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                 }
             }
-            fig <- ggplotly(p) |>
-                layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    )
+            fig <- ggplotly(p)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.nrow
                 )
+            }
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
@@ -492,7 +491,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
-
             return(fig)
         })
 
@@ -500,16 +498,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         output$SplitBarPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_SplitBarPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_SplitBarPlot(), input)
 
             return(fig)
         })
@@ -519,5 +508,26 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             plot_reactive = generate_SplitBarPlot,
             filename_base = "SplitBarPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_SplitBarPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "SplitBarPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

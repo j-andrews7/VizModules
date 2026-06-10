@@ -101,7 +101,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     ns("palette.name"),
                     "Color Palette",
                     choices = palette_names,
-                    selected = "viridis"
+                    selected = "viridis", selectize = FALSE
                 )
             } else {
                 groups <- palette_groups()
@@ -296,7 +296,6 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
 
             p <- BarPlot(
                 data(),
@@ -321,18 +320,16 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 split_by = split.by,
                 fill_by = fill.by
             )
-
-            fig <- ggplotly(p) |>
-                layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.95, yanchor = "top"
-                    )
+            fig <- ggplotly(p)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.nrow
                 )
+            }
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             # Disable plotly borders since we're handling them through ggplot theme_args
@@ -388,16 +385,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_BarPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
-                    )
+                fig <- .apply_render_margins(generate_BarPlot(), input)
             }
 
             return(fig)
@@ -408,5 +396,26 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             plot_reactive = generate_BarPlot,
             filename_base = "BarPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_BarPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "BarPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

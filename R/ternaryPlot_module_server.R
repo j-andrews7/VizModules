@@ -286,16 +286,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_ternaryPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
-                    )
+                fig <- .apply_render_margins(generate_ternaryPlot(), input)
             }
 
             return(fig)
@@ -306,5 +297,26 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             plot_reactive = generate_ternaryPlot,
             filename_base = "ternaryPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_ternaryPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "ternaryPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

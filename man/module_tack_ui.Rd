@@ -20,7 +20,9 @@ A Shiny tagList containing the standard control buttons and inputs.
 \description{
 Generates a consistent set of control buttons for VizModules that includes
 Auto Update toggle, Update and Reset buttons, an optional Stats download button,
-and the "Plotly" tab containing plot margin and shape annotation controls.
+an Interactive Summary download button (renders an HTML report with the plot,
+plot data, and optional stats), and the "Plotly" tab containing plot margin
+and shape annotation controls.
 }
 \examples{
 library(VizModules)

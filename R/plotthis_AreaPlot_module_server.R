@@ -175,7 +175,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             p <- AreaPlot(
                 data(),
@@ -197,17 +197,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             # Remove ggplot panel borders to prevent double borders with plotly
 
-            fig <- ggplotly(p) |>
-                layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    )
+            fig <- ggplotly(p)
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.nrow
                 )
+            }
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
@@ -251,16 +250,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         output$AreaPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_AreaPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_AreaPlot(), input)
 
             return(fig)
         })
@@ -270,5 +260,26 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             plot_reactive = generate_AreaPlot,
             filename_base = "AreaPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_AreaPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "AreaPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

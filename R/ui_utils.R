@@ -192,7 +192,9 @@ default_palettes <- function() {
 #'
 #' Generates a consistent set of control buttons for VizModules that includes
 #' Auto Update toggle, Update and Reset buttons, an optional Stats download button,
-#' and the "Plotly" tab containing plot margin and shape annotation controls.
+#' an Interactive Summary download button (renders an HTML report with the plot,
+#' plot data, and optional stats), and the "Plotly" tab containing plot margin
+#' and shape annotation controls.
 #'
 #' @param ns Namespace function from the module (e.g., `ns <- NS(id)`).
 #' @param defaults Optional named list of default values. Reserved for future use.
@@ -256,6 +258,19 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
                 id = ns("download.stats.col"),
                 style = "margin-top: 25px;"
             ))
+        ),
+        fluidRow(
+            column(
+                4,
+                downloadButton(
+                    ns("download.interactive.summary"),
+                    "Summary Download",
+                    class = "btn-secondary",
+                    icon = icon("file-code"),
+                    width = "100%"
+                ),
+                style = "margin-top: 10px;"
+            )
         )
       )
 }

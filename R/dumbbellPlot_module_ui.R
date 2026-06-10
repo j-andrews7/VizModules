@@ -68,7 +68,7 @@
 #'   \item \code{margin.b} - Bottom margin in pixels (UI: "Margin Bottom", default: 70)
 #'   \item \code{margin.l} - Left margin in pixels (UI: "Margin Left", default: 70)
 #'   \item \code{margin.r} - Right margin in pixels (UI: "Margin Right", default: 70)
-#'   \item \code{subplot.margin} - Spacing between facet panels as fraction of plot area (UI: "Subplot Spacing", default: 0.04)
+#'   \item \code{subplot.margin} - Spacing between facet panels in points (UI: "Subplot Spacing", default: 5)
 #'   \item \code{shape.fill} - Fill color for drawn shapes (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
 #'   \item \code{shape.line.color} - Outline color for drawn shapes (UI: "Shape Line Color", default: "black")
 #'   \item \code{shape.line.width} - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)
@@ -130,7 +130,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
                 ),
-                choices = num.choices, multiple = TRUE
+                choices = num.choices, multiple = TRUE, selectize = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Y Value",
                 selected = .get_default(
@@ -138,21 +138,21 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(cat.choices) > 1) cat.choices[2] else "",
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices, multiple = FALSE
+                choices = cat.choices, multiple = FALSE, selectize = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = .get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
-                )
+                ), selectize = FALSE
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("colour.by"), "Colour By",
                 choices = c("X variables", "Y variables"),
                 selected = .get_default(
                     defaults, "colour.by", "X variables",
                     function(x) x %in% c("X variables", "Y variables")
-                )
+                ), selectize = FALSE
             ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
@@ -161,14 +161,14 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = cat.choices
+                choices = cat.choices, selectize = FALSE
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = .get_default(
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
-                )
+                ), selectize = FALSE
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
@@ -201,6 +201,10 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the dumbbellPlot
 #'
@@ -210,9 +214,11 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-dumbbellPlotOutputUI <- function(id) {
+dumbbellPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("dumbbellPlot"))
-    )
+    plot_output <- plotlyOutput(ns("dumbbellPlot"))
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

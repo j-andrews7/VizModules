@@ -122,6 +122,14 @@ reference:
       - plotthis_DensityPlotOutputUI
       - plotthis_DensityPlotApp
 
+  - title: "DotPlot Module"
+    desc: "plotthis-based interactive dot plot module."
+    contents:
+      - plotthis_DotPlotServer
+      - plotthis_DotPlotInputsUI
+      - plotthis_DotPlotOutputUI
+      - plotthis_DotPlotApp
+
   - title: "Histogram Module"
     desc: "plotthis-based interactive histogram module."
     contents:
@@ -143,6 +151,7 @@ reference:
       - organize_inputs
       - module_tack_ui
       - setup_auto_update_logic
+      - create_interactive_summary_data
 
   - title: "Palette & Color Utilities"
     desc: "Functions/inputs for managing color palettes."
@@ -151,6 +160,16 @@ reference:
       - resolve_palette
       - multiColorPicker
       - updateMultiColorPicker
+
+  - title: "Statistical Helpers"
+    desc: "Functions for computing and displaying pairwise statistical test annotations on plots."
+    contents:
+      - compute_pairwise_stats
+      - create_stat_annotations
+      - apply_stat_annotations
+      - generate_pair_strings
+      - parse_pair_strings
+      - write_stats_csv
 
   - title: "Utility Functions"
     desc: "General-purpose helper functions for data handling and validation."
@@ -174,3 +193,5 @@ reference:
       - example_iris
       - example_mtcars
       - example_population
+      - example_markers
+      - example_rnaseq

@@ -217,7 +217,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                     selected = .get_default(
                         defaults, "x.data", char.choices[2],
                         function(x) x %in% char.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$x,
                 placement = "top", options = list(container = "body")
@@ -228,7 +228,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                     selected = .get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices
-                    )
+                    ), selectize = FALSE
                 ),
                 documentParameters$y,
                 placement = "top", options = list(container = "body")
@@ -239,7 +239,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                         defaults, "group.by", "",
                         function(x) x %in% c("", char.choices)
                     ),
-                    choices = c("", char.choices)
+                    choices = c("", char.choices), selectize = FALSE
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")
@@ -335,7 +335,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c(char.choices, "")),
+                choices = c(char.choices, ""), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
@@ -344,7 +344,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y")),
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
@@ -385,6 +385,10 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the ViolinPlot
 #'
@@ -394,9 +398,11 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 #'
 #' @export
 #' @author Jacob Martin
-plotthis_ViolinPlotOutputUI <- function(id) {
+plotthis_ViolinPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("ViolinPlot"))
-    )
+    plot_output <- plotlyOutput(ns("ViolinPlot"))
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

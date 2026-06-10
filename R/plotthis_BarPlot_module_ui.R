@@ -184,35 +184,35 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(selectInput(ns("x.data"), "X Values",
         selected = .get_default(defaults, "x.data", char.choices[2],
             function(x) x %in% char.choices),
-        choices = char.choices
+        choices = char.choices, selectize = FALSE
         ), documentParameters$x, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("y.data"), "Y Values",
         selected = .get_default(defaults, "y.data", num.choices[2],
             function(x) x %in% num.choices),
-        choices = num.choices
+        choices = num.choices, selectize = FALSE
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("group.by"), "Group By",
         selected = .get_default(defaults, "group.by", char.choices[2],
             function(x) x %in% c("", names(data))),
-        choices = c("", names(data))
+        choices = c("", names(data)), selectize = FALSE
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill By",
         selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
-            choices = c("", names(data))),
+            choices = c("", names(data)), selectize = FALSE),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet By",
         selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet Scale",
         selected = .get_default(
             defaults, "facet.scale", "fixed",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
-        choices = c("fixed", "free", "free_x", "free_y")
+        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Columns",
         value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -225,7 +225,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
+        choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$split_by, placement = "top", options = list(container = "body"))
     ),
 
@@ -273,6 +273,10 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the BarPlot
 #'
@@ -282,9 +286,11 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
-plotthis_BarPlotOutputUI <- function(id) {
+plotthis_BarPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("BarPlot"))
-    )
+    plot_output <- plotlyOutput(ns("BarPlot"))
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

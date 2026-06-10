@@ -161,7 +161,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         # Update stat comparison pairs when x or group.by changes
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
-            pair_strings <- .generate_pair_strings(data(), input$x.data, input$group.by)
+            pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -234,7 +234,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 sort.x <- isolate_fn(input$sort_x)
             }
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "npc")
+            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
 
             p <- ViolinPlot(
                 data = data(),
@@ -274,16 +274,18 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             )
 
 
-            fig <- ggplotly(p) |>
-                layout(
-                    title = list(
-                        font = list(size = isolate_fn(input$title.font.size), 
-                        family = isolate_fn(input$title.font.family),
-                        color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    )
+            fig <- ggplotly(p)
+
+            if (!is.null(facet.by) && nzchar(facet.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = facet.ncol,
+                    nrow = facet.nrow
                 )
+            }
+            
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
             # Axis Styling:
@@ -325,8 +327,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
-                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
-                stats_df <- .compute_pairwise_stats(
+                stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- compute_pairwise_stats(
                     df = data(), x = isolate_fn(input$x.data),
                     y = isolate_fn(input$y.data), pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
@@ -337,7 +339,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
                 last_stats_df(stats_df)
-                stat_result <- .create_stat_annotations(
+                stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
                     display = isolate_fn(input$stat.display),
@@ -351,7 +353,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
-                fig <- .apply_stat_annotations(fig, stat_result,
+                fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
             }
@@ -367,16 +369,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         output$ViolinPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- generate_ViolinPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_ViolinPlot(), input)
 
             return(fig)
         })
@@ -387,18 +380,39 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             filename_base = "ViolinPlot"
         )
 
+        # Download handler for interactive summary (plot + data + stats)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_ViolinPlot,
+                stats_reactive = last_stats_df,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "ViolinPlot_summary"
+        )
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
                 paste0("stats_table_", Sys.Date(), ".csv")
             },
             content = function(file) {
-                .write_stats_csv(
+                write_stats_csv(
                     stats_df = last_stats_df(), file = file,
                     p.adjust.method = input$stat.p.adjust,
                     sig.threshold = input$stat.sig.threshold
                 )
             }
         )
-    })
+
+        return(plot_summary_reactive)
+        })
 }

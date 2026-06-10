@@ -146,21 +146,21 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                     defaults, "x.data", cat.choices[2],
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices
+                choices = cat.choices, selectize = FALSE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.data"), "Y Values",
                 selected = .get_default(
                     defaults, "y.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group.by"), "Group By",
                 selected = .get_default(
                     defaults, "group.by", cat.choices[3],
                     function(x) x %in% c("", group_facet_choices)
                 ),
-                choices = c("", group_facet_choices)
+                choices = c("", group_facet_choices), selectize = FALSE
             ), documentParameters$group_by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("scale.y"), "Scale Y-Axis by Total",
                 value = .get_default(defaults, "scale.y", FALSE, is.logical),
@@ -173,14 +173,14 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                     defaults, "facet.by", "",
                     function(x) x %in% c(group_facet_choices, "")
                 ),
-                choices = c(group_facet_choices, "")
+                choices = c(group_facet_choices, ""), selectize = FALSE
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet Scale",
                 selected = .get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y")
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
             ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Number of Columns",
                 value = .get_default(defaults, "facet.ncol", NA, is.numeric),
@@ -221,6 +221,10 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the AreaPlot
 #'
@@ -230,9 +234,11 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
 #'
 #' @export
 #' @author Jacob Martin
-plotthis_AreaPlotOutputUI <- function(id) {
+plotthis_AreaPlotOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("AreaPlot"))
-    )
+    plot_output <- plotlyOutput(ns("AreaPlot"))
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

@@ -16,7 +16,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide show click
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotApp()]
@@ -37,6 +37,64 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         if (!is.null(hide.tabs)) {
             for (tab.name in hide.tabs) hideTab(inputId = "parallelCoordinatesPlotTabsetPanel", target = tab.name)
         }
+
+        ns <- session$ns
+        default_palette_name <- "dittoColors"
+        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        default_palette_values <- palette_lookup[[default_palette_name]]
+        if (is.null(default_palette_values) || length(default_palette_values) == 0) {
+            default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
+        }
+
+        # Determine palette groups from a categorical color.by selection
+        palette_groups <- reactive({
+            df <- data_reactive()
+            if (is.null(df)) {
+                return(character(0))
+            }
+            color_by <- input$color.by
+            if (is.null(color_by) || !nzchar(color_by) || !(color_by %in% names(df))) {
+                return(character(0))
+            }
+            vals <- df[[color_by]]
+            if (is.numeric(vals)) {
+                return(character(0))
+            }
+            sort(unique(na.omit(as.character(vals))))
+        })
+
+        output$palette.selection <- renderUI({
+            groups <- palette_groups()
+            if (length(groups) == 0) {
+                return(NULL)
+            }
+
+            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            multiColorPicker(
+                ns("palette.colours"),
+                label = "Plot colors",
+                groups = groups,
+                palette_options = default_palettes()[["choices"]],
+                selected_palette = default_palette_name,
+                colors = initial_colors,
+                compact = TRUE
+            )
+        })
+
+        # The continuous color scale only applies to numeric color.by. For a
+        # categorical color.by the discrete palette picker is used instead, so
+        # hide the color scale selector to avoid an irrelevant, no-op control.
+        observeEvent(input$color.by, {
+            if (!is.null(hide.inputs) && "color.scale" %in% hide.inputs) {
+                return()
+            }
+            if (length(palette_groups()) > 0) {
+                hide("color.scale")
+            } else {
+                show("color.scale")
+            }
+        }, ignoreNULL = FALSE)
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -91,6 +149,8 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 value = .get_default(defaults, "bgcolor", "#FFFFFF")
             )
 
+            click("reset_palette")
+
             .reset_plotly_inputs(session, defaults)
         })
 
@@ -110,11 +170,24 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 color.by <- NULL
             }
 
+            # Resolve discrete palette colors for categorical color.by
+            palette_values <- resolve_palette(
+                isolate_fn(palette_groups()),
+                isolate_fn(input$palette.colours),
+                default_palette_values
+            )
+
+            palette_selection <- palette_values
+            if (!is.null(palette_selection) && length(palette_selection) == 0) {
+                palette_selection <- NULL
+            }
+
             fig <- parallelCoordinatesPlot(
                 data = d,
                 dimensions = dims,
                 color.by = color.by,
                 color.scale = isolate_fn(input$color.scale),
+                palette.selection = palette_selection,
                 line.opacity = isolate_fn(input$line.opacity),
                 line.width = isolate_fn(input$line.width),
                 show.colorbar = isTRUE(isolate_fn(input$show.colorbar)),
@@ -159,16 +232,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             if (return_empty) {
                 fig <- .empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- generate_parallelCoordinatesPlot() |>
-                    layout(
-                        margin = list(
-                            t = input$margin.t,
-                            b = input$margin.b,
-                            l = input$margin.l,
-                            r = input$margin.r,
-                            autoexpand = TRUE
-                        )
-                    )
+                fig <- .apply_render_margins(generate_parallelCoordinatesPlot(), input)
             }
 
             return(fig)
@@ -179,5 +243,26 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             plot_reactive = generate_parallelCoordinatesPlot,
             filename_base = "parallelCoordinatesPlot"
         )
+
+        # Download handler for interactive summary (plot + data)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_parallelCoordinatesPlot,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "parallelCoordinatesPlot_summary"
+        )
+
+        return(plot_summary_reactive)
     })
 }

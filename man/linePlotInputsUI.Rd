@@ -53,6 +53,8 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 \item \code{y.adjustment} - Y-axis adjustment function (UI: "Y Adjustment", default: "")
 \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
 \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
+\item \code{facet.nrow} - Number of rows in the facet grid (UI: "Facet Rows", default: NULL; blank = auto)
+\item \code{facet.ncol} - Number of columns in the facet grid (UI: "Facet Columns", default: NULL; blank = auto)
 \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
 \item \code{line.type} - Line type (UI: "Line type", default: "solid")
 \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)

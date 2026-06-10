@@ -164,7 +164,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                     defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices, selectize = FALSE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(
                 selectInput(ns("group.by"), "Group By",
@@ -172,7 +172,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                         defaults, "group.by", "",
                         function(x) x %in% c("", cat.choices)
                     ),
-                    choices = c("", cat.choices)
+                    choices = c("", cat.choices), selectize = FALSE
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")
@@ -181,7 +181,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
-                choices = c("", cat.choices)),
+                choices = c("", cat.choices), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
@@ -190,7 +190,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y")),
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
@@ -262,7 +262,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                     defaults, "position", "identity",
                     function(x) x %in% c("identity", "stack", "dodge", "fill")
                 ),
-                choices = c("identity", "stack", "dodge", "fill")
+                choices = c("identity", "stack", "dodge", "fill"), selectize = FALSE
             ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(
@@ -307,6 +307,10 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
+#' @param resizable Logical; when \code{TRUE} (the default) the plot output
+#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the histogramPlot
 #'
@@ -316,9 +320,11 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
 #'
 #' @export
 #' @author Jacob Martin
-plotthis_HistogramOutputUI <- function(id) {
+plotthis_HistogramOutputUI <- function(id, resizable = TRUE) {
     ns <- NS(id)
-    jqui_resizable(
-        plotlyOutput(ns("histogramPlot"))
-    )
+    plot_output <- plotlyOutput(ns("histogramPlot"))
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }

@@ -54,7 +54,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         observeEvent(c(input$group.by, input$color.by), {
             req(input$group.by)
             color_by <- if (!is.null(input$color.by) && nzchar(input$color.by)) input$color.by else NULL
-            pair_strings <- .generate_pair_strings(data(), input$group.by, color_by)
+            pair_strings <- generate_pair_strings(data(), input$group.by, color_by)
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -349,24 +349,33 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_bw() + theme(
-                    panel.spacing = unit(isolate_fn(input$subplot.margin), "npc")
+                    panel.border = element_blank(),
+                    axis.line = element_line(colour = "black"),  # draws only bottom + left
+                    axis.ticks.top = element_blank(),
+                    axis.ticks.right = element_blank(),
+                    strip.background = element_blank()
                 )
             )
 
             fig <- p |>
                 layout(
-                    title = list(
-                        font = list(
-                            size = isolate_fn(input$title.font.size),
-                            family = isolate_fn(input$title.font.family),
-                            color = isolate_fn(input$title.font.color)
-                        ),
-                        x = 0.5, xanchor = "center", y = 0.98, yanchor = "top"
-                    ),
                     boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
                     boxgap = isolate_fn(input$boxgap),
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
+            if (!is.null(split.by) && nzchar(split.by)) {
+                fig <- .apply_facet_subplot_spacing(
+                    fig,
+                    spacing = isolate_fn(input$subplot.margin),
+                    ncol = split.ncol,
+                    nrow = split.nrow
+                )
+
+            }
+            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            
+            
+
 
             # Fix boxplot positioning across faceted subplots
             if (!is.null(split.by) && nzchar(split.by)) {
@@ -378,6 +387,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(split.by) && nzchar(split.by)) {
@@ -414,8 +424,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 # yPlot uses group.by as the x-axis, color.by for nested grouping
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
-                stat_pairs <- .parse_pair_strings(isolate_fn(input$stat.pairs))
-                stats_df <- .compute_pairwise_stats(
+                stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+                stats_df <- compute_pairwise_stats(
                     df = data(), x = xvar,
                     y = isolate_fn(input$var), pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
@@ -426,7 +436,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
                 last_stats_df(stats_df)
-                stat_result <- .create_stat_annotations(
+                stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = xvar, y = isolate_fn(input$var),
                     display = isolate_fn(input$stat.display),
@@ -440,7 +450,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
-                fig <- .apply_stat_annotations(fig, stat_result,
+                fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
             }
@@ -457,16 +467,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         output$yPlot <- renderPlotly({
             req(input$var)
 
-            fig <- generate_yPlot() |>
-                layout(
-                    margin = list(
-                        t = input$margin.t,
-                        b = input$margin.b,
-                        l = input$margin.l,
-                        r = input$margin.r,
-                        autoexpand = TRUE
-                    )
-                )
+            fig <- .apply_render_margins(generate_yPlot(), input)
+
 
             return(fig)
         })
@@ -477,18 +479,40 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             filename_base = "yPlot"
         )
 
+        # Download handler for interactive summary (plot + data + stats)
+        # Capture all UI inputs for the interactive summary download
+        AllInputs <- reactive({
+            x <- reactiveValuesToList(input)
+            return(x)
+        })
+
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive = generate_yPlot,
+                stats_reactive = last_stats_df,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download.interactive.summary <- .create_download_file(
+            data_list = plot_summary_reactive,
+            filename_base = "yPlot_summary"
+        )
+
         # Download handler for stats table
         output$download.stats <- downloadHandler(
             filename = function() {
                 paste0("stats_table_", Sys.Date(), ".csv")
             },
             content = function(file) {
-                .write_stats_csv(
+                write_stats_csv(
                     stats_df = last_stats_df(), file = file,
                     p.adjust.method = input$stat.p.adjust,
                     sig.threshold = input$stat.sig.threshold
                 )
             }
         )
+
+        return(plot_summary_reactive)
     })
 }

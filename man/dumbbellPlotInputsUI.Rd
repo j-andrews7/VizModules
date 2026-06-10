@@ -93,7 +93,7 @@ The following parameters controlling plotly-specific features and styling are al
 \item \code{margin.b} - Bottom margin in pixels (UI: "Margin Bottom", default: 70)
 \item \code{margin.l} - Left margin in pixels (UI: "Margin Left", default: 70)
 \item \code{margin.r} - Right margin in pixels (UI: "Margin Right", default: 70)
-\item \code{subplot.margin} - Spacing between facet panels as fraction of plot area (UI: "Subplot Spacing", default: 0.04)
+\item \code{subplot.margin} - Spacing between facet panels in points (UI: "Subplot Spacing", default: 5)
 \item \code{shape.fill} - Fill color for drawn shapes (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
 \item \code{shape.line.color} - Outline color for drawn shapes (UI: "Shape Line Color", default: "black")
 \item \code{shape.line.width} - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)

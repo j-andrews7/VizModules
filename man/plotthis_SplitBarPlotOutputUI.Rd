@@ -4,10 +4,15 @@
 \alias{plotthis_SplitBarPlotOutputUI}
 \title{Output UI components for the SplitBarPlot module}
 \usage{
-plotthis_SplitBarPlotOutputUI(id)
+plotthis_SplitBarPlotOutputUI(id, resizable = TRUE)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
+
+\item{resizable}{Logical; when \code{TRUE} (the default) the plot output
+is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
+by dragging. Set to \code{FALSE} when embedding the output in a container
+that already provides resizing.}
 }
 \value{
 A Shiny plotlyOutput for the SplitBarPlot
