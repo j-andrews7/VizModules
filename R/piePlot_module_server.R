@@ -231,7 +231,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             }
 
             if (return_empty) {
-                fig <- .empty_plot(text = txt, plotly = TRUE)
+                fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
                 fig <- .apply_render_margins(generate_piePlot(), input)
             }
@@ -245,25 +245,25 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             filename_base = "piePlot"
         )
 
-        # Download handler for interactive summary (plot + data)
-        # Capture all UI inputs for the interactive summary download
+        # Download handler for source (plot + data)
+        # Capture all UI inputs for the source download
         AllInputs <- reactive({
             x <- reactiveValuesToList(input)
             return(x)
         })
 
-        plot_summary_reactive <- reactive({
-            create_interactive_summary_data(
+        plot_source_reactive <- reactive({
+            collect_source_data(
                 plot_reactive = generate_piePlot,
                 inputs_reactive = AllInputs()
             )
         })
 
-        output$download.interactive.summary <- .create_download_file(
-            data_list = plot_summary_reactive,
-            filename_base = "piePlot_summary"
+        output$download.source <- create_source_download_handler(
+            data_list = plot_source_reactive,
+            filename_base = "piePlot_source"
         )
 
-        return(plot_summary_reactive)
+        return(plot_source_reactive)
     })
 }

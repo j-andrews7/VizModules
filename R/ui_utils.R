@@ -263,13 +263,13 @@ module_tack_ui <- function(ns, defaults = NULL, has.stats = FALSE) {
             column(
                 4,
                 downloadButton(
-                    ns("download.interactive.summary"),
-                    "Summary Download",
+                    ns("download.source"),
+                    "Source Download",
                     class = "btn-secondary",
                     icon = icon("file-code"),
                     width = "100%"
                 ),
-                style = "margin-top: 10px;"
+                style = "margin-top: 25px;"
             )
         )
       )

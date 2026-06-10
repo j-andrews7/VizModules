@@ -404,18 +404,18 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             plot_reactive = generate_BoxPlot,
             filename_base = "BoxPlot"
         )
-        # Download handler for interactive summary (plot + data + stats)
-        plot_summary_reactive <- reactive({
-            create_interactive_summary_data(
+        # Download handler for source (plot + data + stats)
+        plot_source_reactive <- reactive({
+            collect_source_data(
                 plot_reactive = generate_BoxPlot,
                 stats_reactive = last_stats_df,
                 inputs_reactive = AllInputs()
             )
         })
 
-        output$download.interactive.summary <- .create_download_file(
-            data_list = plot_summary_reactive,
-            filename_base = "BoxPlot_summary"
+        output$download.source <- create_source_download_handler(
+            data_list = plot_source_reactive,
+            filename_base = "BoxPlot_source"
         )
 
         # Download handler for stats table
@@ -432,6 +432,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         )
 
-        return(plot_summary_reactive)
+        return(plot_source_reactive)
     })
 }

@@ -151,7 +151,13 @@ reference:
       - organize_inputs
       - module_tack_ui
       - setup_auto_update_logic
-      - create_interactive_summary_data
+      - empty_plot
+
+  - title: "Data Downloading Utilities"
+    desc: "Functions for preparing plot and source data for download."
+    contents:
+      - collect_source_data
+      - create_source_download_handler
 
   - title: "Palette & Color Utilities"
     desc: "Functions/inputs for managing color palettes."

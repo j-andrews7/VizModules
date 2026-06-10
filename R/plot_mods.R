@@ -981,15 +981,17 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
         }
     )
 }
-#' Prepare interactive summary data for download
+
+
+#' Collect plot and source data for download
 #'
-#' Collects the plot object, its underlying data, optional statistics summary,
+#' Collects the plot object, its underlying data, statistical testing details (if applied),
 #' and optional UI input values into a single list for downstream download
 #' generation.
 #'
 #' @param plot_reactive A reactive expression returning a `plotly` plot object.
 #' @param stats_reactive Optional. A reactive expression (e.g. a
-#'   [shiny::reactiveVal()]) returning a `data.frame` of summary statistics.
+#'   [shiny::reactiveVal()]) returning a `data.frame` of statistical test results.
 #'   When `NULL` or when the reactive returns `NULL`, no statistics data is
 #'   included.
 #' @param inputs_reactive Optional. A reactive expression returning a named
@@ -1000,15 +1002,39 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' \describe{
 #'   \item{plot}{The `plotly` plot object.}
 #'   \item{plot_data}{A `data.frame` of the plot's underlying data.}
-#'   \item{stats}{A `data.frame` of statistics data, or `NULL`.}
+#'   \item{stats}{A `data.frame` of statistical test results, or `NULL`.}
 #'   \item{inputs}{A `data.frame` of UI input names and values, or `NULL`.}
 #' }
 #'
 #' @author Jacob Martin
 #' @export
-create_interactive_summary_data <- function(plot_reactive,
-                                                        stats_reactive = NULL,
-                                                        inputs_reactive = NULL) {
+#' @examples
+#' \dontrun{
+#' # Example usage in a Shiny app
+#' library(shiny)
+#' library(plotly)
+#' library(VizModules)
+#'
+#' ui <- fluidPage(
+#'     plotlyOutput("my_plot"),
+#'     downloadButton("download_data", "Download Plot and Data")
+#' )
+#'
+#' server <- function(input, output) {
+#'     plot_reactive <- reactive({
+#'        plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
+#'     })
+#'
+#'     data_list <- collect_source_data(plot_reactive)
+#'     output$my_plot <- renderPlotly(plot_reactive())
+#'     output$download_data <- create_source_download_handler(reactive(data_list))
+#' }
+#'
+#' shinyApp(ui, server)
+#' }
+collect_source_data <- function(plot_reactive,
+                                stats_reactive = NULL,
+                                inputs_reactive = NULL) {
     
             plot <- plot_reactive()
             plot_data <- as.data.frame(plotly_data(plot))
@@ -1035,15 +1061,16 @@ create_interactive_summary_data <- function(plot_reactive,
             })))
             data_list <- list("plot" = plot, "plot_data" = plot_data, "stats" = stats, "inputs" = inp)
             return(data_list)
-
 }
-#' Create download handler for an interactive plot summary
+
+
+#' Create download handler for plot with source data
 #'
 #' Generates a Shiny [downloadHandler()] that bundles the interactive plot and
 #' its supporting data into a single `.zip` archive.
 #'
 #' @param data_list A reactive returning either a single summary list produced
-#'   by [create_interactive_summary_data()] (with elements `plot`, `plot_data`,
+#'   by [collect_source_data()] (with elements `plot`, `plot_data`,
 #'   `stats`, and `inputs`), or a named list of such summaries (one per plot).
 #'   When a named list of summaries is supplied, each summary is written to its
 #'   own set of files (prefixed with the list name) so several plots can be
@@ -1057,7 +1084,30 @@ create_interactive_summary_data <- function(plot_reactive,
 #'
 #' @author Jacob Martin
 #' @export
-.create_download_file <- function(data_list, filename_base = "interactive_summary"){
+#' @examples
+#' \dontrun{
+#' # Example usage in a Shiny app
+#' library(shiny)
+#' library(plotly)
+#' library(VizModules)
+#' ui <- fluidPage(
+#'     plotlyOutput("my_plot"),
+#'     downloadButton("download_data", "Download Plot and Data")
+#' )
+#'
+#' server <- function(input, output) {
+#'     plot_reactive <- reactive({
+#'         plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
+#'     })
+#'
+#'     data_list <- collect_source_data(plot_reactive)
+#'     output$my_plot <- renderPlotly(plot_reactive())
+#'     output$download_data <- create_source_download_handler(reactive(data_list))
+#' }
+#'
+#' shinyApp(ui, server)
+#' }
+create_source_download_handler <- function(data_list, filename_base = "source_data"){
     downloadHandler(
         filename = function() {
             paste0(filename_base, "_", Sys.Date(), ".zip")
@@ -1067,15 +1117,15 @@ create_interactive_summary_data <- function(plot_reactive,
             # download. Creating it inside `content` (rather than when the
             # handler is built) ensures the directory still exists when the
             # files are written.
-            tmp <- tempfile("vizmodules_summary_")
+            tmp <- tempfile("vizmodules_source_")
             dir.create(tmp)
             on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
 
             data_list_value <- data_list()
 
-            # A single summary (e.g. from one plot) is a flat named list with a
-            # top-level "plot" element. Wrap it so a single summary and a list
-            # of summaries (one per panel) can be written by the same loop.
+            # A single source (e.g. from one plot) is a flat named list with a
+            # top-level "plot" element. Wrap it so a single source and a list
+            # of sources (one per panel) can be written by the same loop.
             if ("plot" %in% names(data_list_value)) {
                 data_list_value <- list("Data" = data_list_value)
             }
@@ -1121,7 +1171,6 @@ create_interactive_summary_data <- function(plot_reactive,
         }
     )
 }
-
 
 
 #' Calculate axis range from data
@@ -1297,6 +1346,7 @@ create_interactive_summary_data <- function(plot_reactive,
     )
     fig
 }
+
 
 #' Apply custom subplot spacing to a faceted ggplotly figure
 #'
@@ -1510,6 +1560,7 @@ create_interactive_summary_data <- function(plot_reactive,
     fig
 }
 
+
 #' Hide jitter points from plotly legend
 #'
 #' Hides jitter point traces from the legend by setting showlegend to FALSE.
@@ -1540,6 +1591,7 @@ create_interactive_summary_data <- function(plot_reactive,
     }
     fig
 }
+
 
 #' Add fit line traces to all subplot panels
 #'
@@ -1737,16 +1789,21 @@ create_interactive_summary_data <- function(plot_reactive,
 #' @param plotly Boolean indicating whether to return a plotly object.
 #' @return Either a ggplot object or a plotly object if \code{plotly = TRUE}.
 #'
-#' @author Jared Andrews
-#'
-#' @rdname INTERNAL_empty_plot
-#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
 #' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
 #' @importFrom plotly ggplotly layout
-.empty_plot <- function(text = NULL, plotly = FALSE) {
+#'
+#' @author Jared Andrews
+#'
+#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
+#' @export
+#' @examples
+#' library(VizModules)
+#' empty_plot("No data to display")
+empty_plot <- function(text = NULL, plotly = FALSE) {
     if (length(text) > 1) {
         text <- paste(text, collapse = "\n")
     }
+
     plot <- ggplot() +
         theme_void() +
         theme(plot.margin = margin(1, 1, 1, 1, "cm")) +
@@ -1766,7 +1823,7 @@ create_interactive_summary_data <- function(plot_reactive,
         )
     }
 
-    return(plot)
+    plot
 }
 
 #' Check if column inputs contain mixed data types

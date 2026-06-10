@@ -14,17 +14,18 @@
 * Added the `example_markers` dataset, a simulated single-cell marker-gene
   expression table (immune cell types × marker genes) used as the default
   example data for the DotPlot module.
-* Added an "Interactive Summary" download button at the bottom of every module's
+* Added "Source Data" download button at the bottom of every module's
   control panel. The button creates and downloads a ZIP file containing a self-contained HTML of the plotly plot, a CSV of the plot data (retrieved
   via `plotly::plotly_data()`), and for modules with statistics enabled
-  (Box / Violin / yPlot), a table of the statistics info. Summary downloads
-  are now built from the exported `create_interactive_summary_data()` and
-  `.create_download_file()` helpers, and each module server returns its summary
+  (Box / Violin / yPlot), a table of the statistics info. Source downloads
+  are now built from the exported `collect_source_data()` and
+  `create_source_download_handler()` helpers, and each module server returns its source
   reactive so it can be reused (e.g. by the Figure Builder). Given source data is now required by many journals, this is important.
 * Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
 `apply_stat_annotations()`, `generate_pair_strings()`,
 `parse_pair_strings()`, and `write_stats_csv()`.
+* Exposed `empty_plot()` for use as a placeholder in new modules.
 * Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels.
 * Condensed package wide workflows with simple helpers, e.g. `.apply_title_layout()`, resulting in significantly less jank.
 
