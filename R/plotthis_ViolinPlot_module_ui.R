@@ -374,7 +374,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         inputs,
         id = ns("ViolinPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
+        tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
     )
 }

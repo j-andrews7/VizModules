@@ -165,15 +165,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
-        # Show/hide Save Stats button based on stats.enabled
-        observeEvent(input$stats.enabled, {
-            if (isTRUE(input$stats.enabled)) {
-                show("download.stats.col")
-            } else {
-                hide("download.stats.col")
-            }
-        })
-
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
@@ -392,19 +383,6 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         output$download.source <- create_source_download_handler(
             data_list = plot_source_reactive,
             filename_base = "ViolinPlot_source"
-        )
-        # Download handler for stats table
-        output$download.stats <- downloadHandler(
-            filename = function() {
-                paste0("stats_table_", Sys.Date(), ".csv")
-            },
-            content = function(file) {
-                write_stats_csv(
-                    stats_df = last_stats_df(), file = file,
-                    p.adjust.method = input$stat.p.adjust,
-                    sig.threshold = input$stat.sig.threshold
-                )
-            }
         )
 
         return(plot_source_reactive)

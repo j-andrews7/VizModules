@@ -357,7 +357,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         inputs,
         id = ns("BoxPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
+        tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
     )
 }

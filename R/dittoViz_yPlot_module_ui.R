@@ -485,7 +485,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         inputs,
         id = ns("yPlotTabsetPanel"),
         title = title,
-        tack = module_tack_ui(ns, defaults = defaults, has.stats = TRUE),
+        tack = module_tack_ui(ns, defaults = defaults),
         columns = columns
     )
 }

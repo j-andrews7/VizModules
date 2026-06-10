@@ -97,6 +97,7 @@ compute_pairwise_stats <- function(df, x, y,
     # Adjust p-values across all tests
     stats_df$p.adj <- p.adjust(stats_df$p.value, method = p.adjust.method)
     stats_df$p.signif <- .p_to_signif(stats_df$p.adj, sig.threshold, sig.levels)
+    stats_df$p.adjust.method <- p.adjust.method
     stats_df
 }
 
@@ -843,82 +844,4 @@ parse_pair_strings <- function(pair_strings) {
     }
     pair_strings <- pair_strings[nzchar(pair_strings)]
     lapply(strsplit(pair_strings, " vs "), trimws)
-}
-
-
-#' Write stats table CSV with metadata header
-#'
-#' Writes the stats data frame to a CSV file with a metadata header block
-#' containing the p-value correction method, significance threshold, and
-#' symbol legend.
-#'
-#' @param stats_df Data frame from [compute_pairwise_stats()], or NULL.
-#' @param file Character; path to the output file.
-#' @param p.adjust.method Character; p-value correction method used.
-#' @param sig.threshold Numeric; significance threshold used for `*` vs `ns`.
-#' @param sig.levels Named numeric vector; the multi-star thresholds passed to
-#'   [compute_pairwise_stats()]. Used to generate the symbol legend in the
-#'   header. Default `c("****" = 0.0001, "***" = 0.001, "**" = 0.01)`.
-#'
-#' @return Called for side effects; writes to `file`.
-#'
-#' @importFrom utils write.csv
-#'
-#' @examples
-#' stats_df <- compute_pairwise_stats(
-#'     df = example_iris,
-#'     x = "Species",
-#'     y = "Sepal.Length",
-#'     test = "wilcox.test"
-#' )
-#' tmp <- tempfile(fileext = ".csv")
-#' write_stats_csv(stats_df, tmp)
-#' file.remove(tmp)
-#'
-#' @author Jared Andrews
-#' @export
-write_stats_csv <- function(stats_df, file, p.adjust.method = "holm",
-                            sig.threshold = 0.05,
-                            sig.levels = c("****" = 0.0001, "***" = 0.001, "**" = 0.01)) {
-    if (is.null(stats_df) || nrow(stats_df) == 0) {
-        writeLines("No stats computed. Enable stats and update the plot first.", file)
-        return(invisible(NULL))
-    }
-
-    # Build symbol legend lines from sig.levels (sorted most to least significant)
-    sig_lines <- vapply(
-        names(sort(sig.levels)),
-        function(nm) sprintf("#   %-4s : p <= %s", nm, sig.levels[[nm]]),
-        character(1)
-    )
-
-    # Build metadata header lines
-    header <- c(
-        paste0("# P-value adjustment method: ", p.adjust.method),
-        paste0("# Significance threshold: ", sig.threshold),
-        "#",
-        "# Significance symbols:",
-        sig_lines,
-        paste0("#   *    : p <= ", sig.threshold),
-        paste0("#   ns   : p > ", sig.threshold),
-        "#"
-    )
-
-    # Add correction method column to the data
-    stats_df$p.adjust.method <- p.adjust.method
-
-    # Reorder columns for clarity
-    col_order <- c(
-        "group1", "group2", "test", "p.value", "p.adjust.method",
-        "p.adj", "p.signif"
-    )
-    extra_cols <- setdiff(names(stats_df), col_order)
-    stats_df <- stats_df[, c(col_order, extra_cols), drop = FALSE]
-
-    # Write header + CSV
-    con <- file(file, open = "wt")
-    on.exit(close(con))
-    writeLines(header, con)
-    write.csv(stats_df, con, row.names = FALSE)
-    invisible(NULL)
 }

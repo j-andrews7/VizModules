@@ -39,22 +39,22 @@ Organize arbitrary Shiny inputs into a grid layout
 library(VizModules)
 # Example 1: Basic usage with a simple grid
 ui.inputs <- tagList(
-  textInput("name", "Name"),
-  numericInput("age", "Age", value = 30),
-  selectInput("gender", "Gender", choices = c("Male", "Female", "Other"))
+    textInput("name", "Name"),
+    numericInput("age", "Age", value = 30),
+    selectInput("gender", "Gender", choices = c("Male", "Female", "Other"))
 )
 organize_inputs(ui.inputs, columns = 2, rows = 2)
 
 # Example 2: Using a named list to create tabs
 ui.inputs.tabs <- list(
-  Personal = tagList(
-    textInput("firstname", "First Name"),
-    textInput("lastname", "Last Name")
-  ),
-  Settings = tagList(
-    checkboxInput("newsletter", "Subscribe to newsletter", value = TRUE),
-    sliderInput("volume", "Volume", min = 0, max = 100, value = 50)
-  )
+    Personal = tagList(
+        textInput("firstname", "First Name"),
+        textInput("lastname", "Last Name")
+    ),
+    Settings = tagList(
+        checkboxInput("newsletter", "Subscribe to newsletter", value = TRUE),
+        sliderInput("volume", "Volume", min = 0, max = 100, value = 50)
+    )
 )
 organize_inputs(ui.inputs.tabs, columns = 1)
 

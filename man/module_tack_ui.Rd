@@ -4,25 +4,20 @@
 \alias{module_tack_ui}
 \title{Create standard tack UI for module inputs}
 \usage{
-module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
+module_tack_ui(ns, defaults = NULL)
 }
 \arguments{
 \item{ns}{Namespace function from the module (e.g., \code{ns <- NS(id)}).}
 
 \item{defaults}{Optional named list of default values. Reserved for future use.}
-
-\item{has.stats}{Logical; if TRUE, include a "Save Stats" download button.
-Default FALSE.}
 }
 \value{
 A Shiny tagList containing the standard control buttons and inputs.
 }
 \description{
 Generates a consistent set of control buttons for VizModules that includes
-Auto Update toggle, Update and Reset buttons, an optional Stats download button,
-an Interactive Summary download button (renders an HTML report with the plot,
-plot data, and optional stats), and the "Plotly" tab containing plot margin
-and shape annotation controls.
+Auto Update toggle, Update and Reset buttons, and
+a full source download button (self-contained HTML of the plot, source data, and statistics).
 }
 \examples{
 library(VizModules)
