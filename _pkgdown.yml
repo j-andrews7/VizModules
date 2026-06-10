@@ -175,7 +175,6 @@ reference:
       - apply_stat_annotations
       - generate_pair_strings
       - parse_pair_strings
-      - write_stats_csv
 
   - title: "Utility Functions"
     desc: "General-purpose helper functions for data handling and validation."
