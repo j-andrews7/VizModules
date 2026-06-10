@@ -1,15 +1,14 @@
 # Create standard tack UI for module inputs
 
 Generates a consistent set of control buttons for VizModules that
-includes Auto Update toggle, Update and Reset buttons, an optional Stats
-download button, an Interactive Summary download button (renders an HTML
-report with the plot, plot data, and optional stats), and the "Plotly"
-tab containing plot margin and shape annotation controls.
+includes Auto Update toggle, Update and Reset buttons, and a full source
+download button (self-contained HTML of the plot, source data, and
+statistics).
 
 ## Usage
 
 ``` r
-module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
+module_tack_ui(ns, defaults = NULL)
 ```
 
 ## Arguments
@@ -21,11 +20,6 @@ module_tack_ui(ns, defaults = NULL, has.stats = FALSE)
 - defaults:
 
   Optional named list of default values. Reserved for future use.
-
-- has.stats:
-
-  Logical; if TRUE, include a "Save Stats" download button. Default
-  FALSE.
 
 ## Value
 
@@ -58,13 +52,12 @@ module_tack_ui(ns)
 #>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
 #>   </div>
-#> </div>
-#> <div class="row">
-#>   <div class="col-sm-4" style="margin-top: 25px;">
+#>   <div class="col-sm-5" style="margin-top: 25px;">
 #>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.source" tabindex="-1" target="_blank" width="100%">
 #>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
 #>       Source Download
 #>     </a>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('myModule-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});</script>
 #>   </div>
 #> </div>
 ```

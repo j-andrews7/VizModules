@@ -5,7 +5,7 @@
 - Created the Figure Builder app so that users can dynamically construct
   multi-panel figures using different data sets and plot types on a
   single page. Allows for full page SVG export, source data dump
-  organized per panel, and full customization.
+  organized per panel, and full customization of plot position and size.
 - All `*OutputUI()` functions gained a `resizable` argument (default
   `TRUE`). When `FALSE`, the plot output is no longer wrapped in
   [`shinyjqui::jqui_resizable()`](https://yang-tang.github.io/shinyjqui/reference/Interactions.html),
@@ -41,15 +41,17 @@
   required by many journals, this is important.
 - Removed old interactive plot download button and associated helper
   function.
-- Statistic helper functions are now public function allowing users to
-  annotate plotly graphs with custom statistics:
+- Removed old dynamically hidden stats download button and associated
+  logic, since stats are now included in the source download when
+  applicable.
+- Statistic helper functions are now exported allowing users to annotate
+  plotly graphs with custom statistics:
   [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md),
   [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md),
   [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md),
   [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md),
-  [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md),
   and
-  [`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md).
+  [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md).
 - Exposed
   [`empty_plot()`](https://j-andrews7.github.io/VizModules/reference/empty_plot.md)
   for use as a placeholder, e.g. if parameters aren’t valid for a given

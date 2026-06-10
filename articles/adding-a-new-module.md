@@ -261,7 +261,7 @@ button via `shinyjs::show("download.stats.col")` /
 `shinyjs::hide("download.stats.col")`.
 
 Add a `downloadHandler` for `output$download.stats` that calls
-[`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md).
+`write_stats_csv()`.
 
 Call `.reset_stats_inputs(session)` in the reset observer.
 
@@ -274,7 +274,7 @@ Call `.reset_stats_inputs(session)` in the reset observer.
 | [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md) | Append shapes/annotations to the plotly figure and adjust y-axes |
 | [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md) | Build `"A vs B"` strings for the comparison selector |
 | [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md) | Convert selected pair strings back to list of length-2 vectors |
-| [`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md) | Write stats CSV with metadata comment header |
+| `write_stats_csv()` | Write stats CSV with metadata comment header |
 
 See the `plotthis_BoxPlotServer`, `plotthis_ViolinPlotServer`, or
 `dittoViz_yPlotServer` implementations for complete integration

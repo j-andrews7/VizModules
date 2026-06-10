@@ -796,8 +796,6 @@ annotations on plots.
   : Generate comparison pair strings from data columns
 - [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md)
   : Parse pair strings from UI into list of length-2 vectors
-- [`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md)
-  : Write stats table CSV with metadata header
 
 ## Utility Functions
 

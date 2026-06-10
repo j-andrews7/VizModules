@@ -110,10 +110,10 @@ compute_pairwise_stats(
 #> 1     setosa versicolor 8.345827e-14 wilcox.test        <NA>    <NA>
 #> 2     setosa  virginica 6.396699e-17 wilcox.test        <NA>    <NA>
 #> 3 versicolor  virginica 5.869006e-07 wilcox.test        <NA>    <NA>
-#>          p.adj p.signif
-#> 1 1.669165e-13     ****
-#> 2 1.919010e-16     ****
-#> 3 5.869006e-07     ****
+#>          p.adj p.signif p.adjust.method
+#> 1 1.669165e-13     ****            holm
+#> 2 1.919010e-16     ****            holm
+#> 3 5.869006e-07     ****            holm
 
 # Custom significance levels: only two-star tiers, lower threshold for *
 compute_pairwise_stats(
@@ -128,8 +128,8 @@ compute_pairwise_stats(
 #> 1     setosa versicolor 8.345827e-14 wilcox.test        <NA>    <NA>
 #> 2     setosa  virginica 6.396699e-17 wilcox.test        <NA>    <NA>
 #> 3 versicolor  virginica 5.869006e-07 wilcox.test        <NA>    <NA>
-#>          p.adj p.signif
-#> 1 1.669165e-13      ***
-#> 2 1.919010e-16      ***
-#> 3 5.869006e-07      ***
+#>          p.adj p.signif p.adjust.method
+#> 1 1.669165e-13      ***            holm
+#> 2 1.919010e-16      ***            holm
+#> 3 5.869006e-07      ***            holm
 ```

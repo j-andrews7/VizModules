@@ -163,10 +163,10 @@ threshold so the most significant symbol always wins.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa versicolor 8.345827e-14 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     setosa  virginica 6.396699e-17 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 versicolor  virginica 5.869006e-07 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          p.adj p.signif</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.669165e-13     ****</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.919010e-16     ****</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 5.869006e-07     ****</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          p.adj p.signif p.adjust.method</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.669165e-13     ****            holm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.919010e-16     ****            holm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 5.869006e-07     ****            holm</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Custom significance levels: only two-star tiers, lower threshold for *</span></span></span>
 <span class="r-in"><span><span class="fu">compute_pairwise_stats</span><span class="op">(</span></span></span>
@@ -181,10 +181,10 @@ threshold so the most significant symbol always wins.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa versicolor 8.345827e-14 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     setosa  virginica 6.396699e-17 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 versicolor  virginica 5.869006e-07 wilcox.test        &lt;NA&gt;    &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          p.adj p.signif</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.669165e-13      ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.919010e-16      ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 5.869006e-07      ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          p.adj p.signif p.adjust.method</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.669165e-13      ***            holm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.919010e-16      ***            holm</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 5.869006e-07      ***            holm</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
