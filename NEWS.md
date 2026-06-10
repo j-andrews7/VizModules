@@ -1,7 +1,8 @@
 # VizModules 0.2.0
 
-* Created the Figure Builder app so that users can dynamically construct multi-panel figures using different data sets and plot types 
-  on a single page. Allows for full page SVG export, source data dump organized per panel, and full customization. 
+* Created the Figure Builder app so that users can dynamically construct multi-panel figures 
+  using different data sets and plot types on a single page.
+  Allows for full page SVG export, source data dump organized per panel, and full customization of plot position and size. 
 * All `*OutputUI()` functions gained a `resizable` argument (default `TRUE`).
   When `FALSE`, the plot output is no longer wrapped in
   `shinyjqui::jqui_resizable()`, which avoids a redundant resize handle when the
@@ -22,10 +23,11 @@
   `create_source_download_handler()` helpers, and each module server returns its source
   reactive so it can be reused (e.g. by the Figure Builder). Given source data is now required by many journals, this is important.
 * Removed old interactive plot download button and associated helper function.
-* Statistic helper functions are now public function allowing users to annotate plotly graphs with custom statistics: 
+* Removed old dynamically hidden stats download button and associated logic, since stats are now included in the source download when applicable.
+* Statistic helper functions are now exported allowing users to annotate plotly graphs with custom statistics: 
 `compute_pairwise_stats()`, `create_stat_annotations()`,
-`apply_stat_annotations()`, `generate_pair_strings()`,
-`parse_pair_strings()`, and `write_stats_csv()`.
+`apply_stat_annotations()`, `generate_pair_strings()`, and
+`parse_pair_strings()`.
 * Exposed `empty_plot()` for use as a placeholder, e.g. if parameters aren't valid for a given plot type, to pass that info to user without ugly error messages.
 * Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling.
   This fixes much of the wonkiness for plots with many panels. Still imperfect, but much improved.
