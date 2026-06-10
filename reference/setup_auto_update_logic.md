@@ -29,6 +29,7 @@ auto-update is disabled (expressions will not trigger reactivity).
 
 This function consolidates the following common pattern:
 
+
     auto_update <- input$auto.update
     if (!auto_update) {
         input$update
@@ -36,6 +37,7 @@ This function consolidates the following common pattern:
     isolate_fn <- if (auto_update) identity else isolate
 
 Usage in a reactive context:
+
 
     output$plot <- renderPlotly({
         isolate_fn <- setup_auto_update_logic(input)

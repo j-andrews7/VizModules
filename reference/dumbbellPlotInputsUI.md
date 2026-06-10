@@ -202,8 +202,8 @@ styling are also available:
 
 - `margin.r` - Right margin in pixels (UI: "Margin Right", default: 70)
 
-- `subplot.margin` - Spacing between facet panels as fraction of plot
-  area (UI: "Subplot Spacing", default: 0.04)
+- `subplot.margin` - Spacing between facet panels in points (UI:
+  "Subplot Spacing", default: 5)
 
 - `shape.fill` - Fill color for drawn shapes (UI: "Shape Fill", default:
   "rgba(0, 0, 0, 0)")
@@ -243,28 +243,28 @@ data <- data.frame(
 )
 dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="5972">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="7383">
 #>     <li class="active">
-#>       <a href="#tab-5972-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7383-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5972-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-7383-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5972-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7383-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5972-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-7383-4" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5972-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-7383-5" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5972-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-7383-6" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5972">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5972-1">
+#>   <div class="tab-content" data-tabsetid="7383">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7383-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9176605">
@@ -282,9 +282,8 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           <div class="form-group shiny-input-container" id="tipify9728442">
 #>             <label class="control-label" id="dumbbellPlot-y.value-label" for="dumbbellPlot-y.value">Y Value</label>
 #>             <div>
-#>               <select id="dumbbellPlot-y.value" class="shiny-input-select"><option value=""></option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-y.value"><option value=""></option>
 #> <option value="School" selected>School</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-y.value">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9728442', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, column name for the y-axis (categorical variable recommended).'})}, 500)});</script>
@@ -295,7 +294,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           <div class="form-group shiny-input-container" id="tipify8190824">
 #>             <label class="control-label" id="dumbbellPlot-x.adjustment-label" for="dumbbellPlot-x.adjustment">X Adjustment</label>
 #>             <div>
-#>               <select id="dumbbellPlot-x.adjustment" class="shiny-input-select"><option value="" selected></option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-x.adjustment"><option value="" selected></option>
 #> <option value="log2">log2</option>
 #> <option value="log">log</option>
 #> <option value="log10">log10</option>
@@ -304,7 +303,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <option value="as.factor">as.factor</option>
 #> <option value="abs">abs</option>
 #> <option value="sqrt">sqrt</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-x.adjustment">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8190824', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character or function, transformation to apply to x values. Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.'})}, 500)});</script>
@@ -313,24 +311,22 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           <div class="form-group shiny-input-container" id="tipify9029238">
 #>             <label class="control-label" id="dumbbellPlot-colour.by-label" for="dumbbellPlot-colour.by">Colour By</label>
 #>             <div>
-#>               <select id="dumbbellPlot-colour.by" class="shiny-input-select"><option value="X variables" selected>X variables</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-colour.by"><option value="X variables" selected>X variables</option>
 #> <option value="Y variables">Y variables</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-colour.by" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9029238', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, how to color the markers. Options: "X variables" (different colors for each x variable) or "Y variables" (different colors for each y category). Default: "X variables".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5972-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-7383-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5813660">
 #>             <label class="control-label" id="dumbbellPlot-facet.by-label" for="dumbbellPlot-facet.by">Facet By</label>
 #>             <div>
-#>               <select id="dumbbellPlot-facet.by" class="shiny-input-select"><option value="" selected></option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-facet.by"><option value="" selected></option>
 #> <option value="School">School</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-facet.by">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5813660', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.'})}, 500)});</script>
@@ -339,18 +335,17 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           <div class="form-group shiny-input-container" id="tipify7730085">
 #>             <label class="control-label" id="dumbbellPlot-facet.scales-label" for="dumbbellPlot-facet.scales">Facet Scales</label>
 #>             <div>
-#>               <select id="dumbbellPlot-facet.scales" class="shiny-input-select"><option value="fixed" selected>fixed</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-facet.scales"><option value="fixed" selected>fixed</option>
 #> <option value="free">free</option>
 #> <option value="free_x">free_x</option>
 #> <option value="free_y">free_y</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-facet.scales" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7730085', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent), "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5972-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7383-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="dumbbellPlot-palette.selection" class="shiny-html-output"></div>
@@ -364,35 +359,28 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5972-4">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-7383-4">
 #>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="dumbbellPlot-download.interactive" tabindex="-1" target="_blank" width="100%">
-#>             <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
-#>             Save Interactive
-#>           </a>
-#>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="dumbbellPlot-download.format-label" for="dumbbellPlot-download.format">Download Format</label>
 #>             <div>
-#>               <select id="dumbbellPlot-download.format" class="shiny-input-select"><option value="svg" selected>svg</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-download.format"><option value="svg" selected>svg</option>
 #> <option value="png">png</option>
 #> <option value="jpeg">jpeg</option>
 #> <option value="webp">webp</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-download.format" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7109712">
 #>             <label class="control-label" id="dumbbellPlot-margin.t-label" for="dumbbellPlot-margin.t">Margin Top</label>
-#>             <input id="dumbbellPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>             <input id="dumbbellPlot-margin.t" type="number" class="shiny-input-number form-control" value="100" data-update-on="change" min="0" step="5"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7109712', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2149426">
 #>             <label class="control-label" id="dumbbellPlot-margin.b-label" for="dumbbellPlot-margin.b">Margin Bottom</label>
@@ -400,8 +388,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2149426', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2917577">
 #>             <label class="control-label" id="dumbbellPlot-margin.l-label" for="dumbbellPlot-margin.l">Margin Left</label>
@@ -409,6 +395,8 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2917577', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7217597">
 #>             <label class="control-label" id="dumbbellPlot-margin.r-label" for="dumbbellPlot-margin.r">Margin Right</label>
@@ -416,15 +404,15 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7217597', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8666157">
 #>             <label class="control-label" id="dumbbellPlot-subplot.margin-label" for="dumbbellPlot-subplot.margin">Subplot Spacing</label>
-#>             <input id="dumbbellPlot-subplot.margin" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change" min="0" max="1" step="0.01"/>
+#>             <input id="dumbbellPlot-subplot.margin" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8666157', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area. Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8666157', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Spacing between facet panels as a fraction of the plot area (e.g. 0.04). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2384531">
 #>             <label class="control-label" for="dumbbellPlot-shape.fill">Shape Fill</label>
@@ -432,8 +420,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2384531', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify44964">
 #>             <label class="control-label" for="dumbbellPlot-shape.line.color">Shape Line Color</label>
@@ -441,6 +427,8 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify44964', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9435164">
 #>             <label class="control-label" id="dumbbellPlot-shape.line.width-label" for="dumbbellPlot-shape.line.width">Shape Line Width</label>
@@ -448,23 +436,22 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9435164', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4381372">
 #>             <label class="control-label" id="dumbbellPlot-shape.linetype-label" for="dumbbellPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
-#>               <select id="dumbbellPlot-shape.linetype" class="shiny-input-select"><option value="solid" selected>solid</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-shape.linetype"><option value="solid" selected>solid</option>
 #> <option value="dot">dot</option>
 #> <option value="dash">dash</option>
 #> <option value="longdash">longdash</option>
 #> <option value="dashdot">dashdot</option>
 #> <option value="longdashdot">longdashdot</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-shape.linetype" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4381372', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7506033">
 #>             <label class="control-label" id="dumbbellPlot-shape.opacity-label" for="dumbbellPlot-shape.opacity">Shape Opacity</label>
@@ -474,7 +461,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5972-5">
+#>     <div class="tab-pane" data-value="Axes" id="tab-7383-5">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6">
@@ -501,7 +488,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-title.font.family-label" for="dumbbellPlot-title.font.family">Title Font</label>
 #>             <div>
-#>               <select id="dumbbellPlot-title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-title.font.family"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -518,7 +505,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -540,23 +526,29 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
+#>             <label class="control-label" id="dumbbellPlot-axis.title.horizontal.position-label" for="dumbbellPlot-axis.title.horizontal.position">Title position</label>
+#>             <input id="dumbbellPlot-axis.title.horizontal.position" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1" step="0.1"/>
+#>           </div>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.title.font.size-label" for="dumbbellPlot-axis.title.font.size">Axis Title Size</label>
 #>             <input id="dumbbellPlot-axis.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-axis.title.font.color">Axis Title Color</label>
 #>             <input id="dumbbellPlot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.title.font.family-label" for="dumbbellPlot-axis.title.font.family">Axis Title Font</label>
 #>             <div>
-#>               <select id="dumbbellPlot-axis.title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-axis.title.font.family"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -573,10 +565,11 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-axis.title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
@@ -587,8 +580,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
@@ -599,6 +590,8 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
@@ -609,8 +602,6 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
@@ -621,47 +612,47 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-grid.color">Gridline Color</label>
 #>             <input id="dumbbellPlot-grid.color" type="text" class="form-control shiny-colour-input" data-init-value="#CCCCCC" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-axis.linecolor">Axis Line Color</label>
 #>             <input id="dumbbellPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.linewidth-label" for="dumbbellPlot-axis.linewidth">Axis Line Width</label>
 #>             <input id="dumbbellPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.tickfont.size-label" for="dumbbellPlot-axis.tickfont.size">Tick Label Size</label>
 #>             <input id="dumbbellPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-axis.tickfont.color">Tick Label Color</label>
 #>             <input id="dumbbellPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.tickfont.family-label" for="dumbbellPlot-axis.tickfont.family">Tick Label Font</label>
 #>             <div>
-#>               <select id="dumbbellPlot-axis.tickfont.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-axis.tickfont.family"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -678,76 +669,76 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-axis.tickfont.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.tickangle.x-label" for="dumbbellPlot-axis.tickangle.x">X Tick Label Angle</label>
 #>             <input id="dumbbellPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.tickangle.y-label" for="dumbbellPlot-axis.tickangle.y">Y Tick Label Angle</label>
 #>             <input id="dumbbellPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.ticks-label" for="dumbbellPlot-axis.ticks">Tick Position</label>
 #>             <div>
-#>               <select id="dumbbellPlot-axis.ticks" class="shiny-input-select"><option value="outside" selected>Outside</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-axis.ticks"><option value="outside" selected>Outside</option>
 #> <option value="inside">Inside</option>
 #> <option value="">None</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-axis.ticks">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-axis.tickcolor">Tick Mark Color</label>
 #>             <input id="dumbbellPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.ticklen-label" for="dumbbellPlot-axis.ticklen">Tick Mark Length</label>
 #>             <input id="dumbbellPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-axis.tickwidth-label" for="dumbbellPlot-axis.tickwidth">Tick Mark Width</label>
 #>             <input id="dumbbellPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-facet.title.font.size-label" for="dumbbellPlot-facet.title.font.size">Facet Subplot Title Size</label>
 #>             <input id="dumbbellPlot-facet.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
 #>           </div>
 #>         </div>
-#>       </div>
-#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour">
 #>             <label class="control-label" for="dumbbellPlot-facet.title.font.color">Facet Title Color</label>
 #>             <input id="dumbbellPlot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="dumbbellPlot-facet.title.font.family-label" for="dumbbellPlot-facet.title.font.family">Facet Title Font</label>
 #>             <div>
-#>               <select id="dumbbellPlot-facet.title.font.family" class="shiny-input-select"><option value="Arial" selected>Arial</option>
+#>               <select class="shiny-input-select form-control" id="dumbbellPlot-facet.title.font.family"><option value="Arial" selected>Arial</option>
 #> <option value="Balto">Balto</option>
 #> <option value="Courier New">Courier New</option>
 #> <option value="Droid Sans">Droid Sans</option>
@@ -764,13 +755,12 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <option value="sans-serif">sans-serif</option>
 #> <option value="serif">serif</option>
 #> <option value="monospace">monospace</option></select>
-#>               <script type="application/json" data-for="dumbbellPlot-facet.title.font.family" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5972-6">
+#>     <div class="tab-pane" data-value="Lines" id="tab-7383-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6678157">
@@ -917,6 +907,14 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="dumbbellPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-4" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="dumbbellPlot-download.source" tabindex="-1" target="_blank" width="100%">
+#>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
+#>       Source Download
+#>     </a>
 #>   </div>
 #> </div>
 ```

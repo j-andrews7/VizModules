@@ -2,8 +2,9 @@
 
 Generates a consistent set of control buttons for VizModules that
 includes Auto Update toggle, Update and Reset buttons, an optional Stats
-download button, and the "Plotly" tab containing plot margin and shape
-annotation controls.
+download button, an Interactive Summary download button (renders an HTML
+report with the plot, plot data, and optional stats), and the "Plotly"
+tab containing plot margin and shape annotation controls.
 
 ## Usage
 
@@ -56,6 +57,14 @@ module_tack_ui(ns)
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">
 #>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
+#>   </div>
+#> </div>
+#> <div class="row">
+#>   <div class="col-sm-4" style="margin-top: 25px;">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.source" tabindex="-1" target="_blank" width="100%">
+#>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
+#>       Source Download
+#>     </a>
 #>   </div>
 #> </div>
 ```

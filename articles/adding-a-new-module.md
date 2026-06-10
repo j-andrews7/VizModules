@@ -90,6 +90,7 @@ List all parameters from the base plot function that are **not** exposed
 via UI inputs, with explanations:
 
 ``` r
+
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::AreaPlot()] parameters are not available via UI inputs:
 #' \itemize{
@@ -109,6 +110,7 @@ Document all parameters that **are** exposed, listing their UI label and
 default value:
 
 ``` r
+
 #' @section Plot parameters and defaults:
 #' The following [plotthis::AreaPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 #' \itemize{
@@ -127,6 +129,7 @@ Document all module-specific parameters (plotly controls, reference
 lines, etc.):
 
 ``` r
+
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #' \itemize{
 #'   \item \code{axis.font.size} - Axis title font size (UI: "Axis font size", default: 18)
@@ -161,6 +164,7 @@ Provide an app in `<plot>_module_app.R` as a thin wrapper around
 \[createModuleApp()\]:
 
 ``` r
+
 myPlotApp <- function(data_list = NULL) {
     if (is.null(data_list)) {
         data_list <- list("example" = my_default_data)
@@ -239,34 +243,38 @@ Create a `reactiveVal` to store the last computed stats table:
 `last_stats_df <- reactiveVal(NULL)`.
 
 When `input$stats.enabled` is TRUE in the plot rendering block, call
-`.compute_pairwise_stats()` to run tests, then
-`.create_stat_annotations()` to build bracket shapes/annotations, then
-`.apply_stat_annotations()` to append them to the plotly figure.
+[`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md)
+to run tests, then
+[`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
+to build bracket shapes/annotations, then
+[`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md)
+to append them to the plotly figure.
 
 Store the result: `last_stats_df(stats_df)`.
 
 Add an `observeEvent` to update `stat.pairs` choices when the x or
-grouping column changes, using `.generate_pair_strings()`.
+grouping column changes, using
+[`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md).
 
 Add an `observeEvent(input$stats.enabled)` to show/hide the “Save Stats”
 button via `shinyjs::show("download.stats.col")` /
 `shinyjs::hide("download.stats.col")`.
 
 Add a `downloadHandler` for `output$download.stats` that calls
-`.write_stats_csv()`.
+[`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md).
 
 Call `.reset_stats_inputs(session)` in the reset observer.
 
 ### Key helpers (all in `R/stat_helper.R`)
 
-| Function                     | Purpose                                                          |
-|------------------------------|------------------------------------------------------------------|
-| `.compute_pairwise_stats()`  | Run pairwise or omnibus tests with p-value adjustment            |
-| `.create_stat_annotations()` | Convert stats to plotly shapes/annotations with bracket packing  |
-| `.apply_stat_annotations()`  | Append shapes/annotations to the plotly figure and adjust y-axes |
-| `.generate_pair_strings()`   | Build `"A vs B"` strings for the comparison selector             |
-| `.parse_pair_strings()`      | Convert selected pair strings back to list of length-2 vectors   |
-| `.write_stats_csv()`         | Write stats CSV with metadata comment header                     |
+| Function | Purpose |
+|----|----|
+| [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md) | Run pairwise or omnibus tests with p-value adjustment |
+| [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md) | Convert stats to plotly shapes/annotations with bracket packing |
+| [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md) | Append shapes/annotations to the plotly figure and adjust y-axes |
+| [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md) | Build `"A vs B"` strings for the comparison selector |
+| [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md) | Convert selected pair strings back to list of length-2 vectors |
+| [`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md) | Write stats CSV with metadata comment header |
 
 See the `plotthis_BoxPlotServer`, `plotthis_ViolinPlotServer`, or
 `dittoViz_yPlotServer` implementations for complete integration
@@ -333,6 +341,7 @@ Standard pattern — always use `placement = "top"` and
 sidebar panels:
 
 ``` r
+
 tipify(
     textInput(ns("hline.intercepts"), "Y-intercepts",
         placeholder = "e.g. 2, -2",
@@ -357,11 +366,11 @@ can be used with the `VizModules:::` prefix in the meantime.
 Before writing custom inputs, check whether a uniform helper already
 covers your needs:
 
-| Helper                        | Provides                                                           |
-|-------------------------------|--------------------------------------------------------------------|
-| `.uniform_lines_inputs_ui()`  | Horizontal, vertical, and diagonal reference line controls         |
-| `.uniform_axes_inputs_ui()`   | Font, axis border, gridline, tick, and facet styling               |
-| `.uniform_stats_inputs_ui()`  | Pairwise statistical testing and bracket annotation controls       |
+| Helper | Provides |
+|----|----|
+| `.uniform_lines_inputs_ui()` | Horizontal, vertical, and diagonal reference line controls |
+| `.uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
+| `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
 | `.uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*`
@@ -412,6 +421,7 @@ then it is evaluated in a restricted environment containing only the
 data frame’s columns.
 
 ``` r
+
 # In a module server — filtering rows by a textInput:
 rows.use = safe_eval_filter(isolate_fn(input$rows.use), data())
 ```
@@ -427,6 +437,7 @@ downstream plotting function that will evaluate it internally (e.g.,
 executed.
 
 ``` r
+
 # In a module server — passing a highlight expression to plotthis:
 highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 ```
@@ -442,6 +453,7 @@ Only function names in the allowed list (`"log2"`, `"log"`, `"log10"`,
 accepted.
 
 ``` r
+
 # In a module server — resolving an adjustment function:
 x.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$x.adj.fxn))
 ```

@@ -11,6 +11,7 @@ parallelCoordinatesPlot(
   dimensions,
   color.by = NULL,
   color.scale = "Viridis",
+  palette.selection = NULL,
   line.opacity = 0.5,
   line.width = 1,
   show.colorbar = TRUE,
@@ -43,15 +44,23 @@ parallelCoordinatesPlot(
 - color.by:
 
   Optional character, column name to color lines by. Numeric columns use
-  a continuous colorscale; categorical columns are mapped to integers
-  and displayed with the same colorscale. Default: NULL.
+  a continuous colorscale (`color.scale`); categorical columns use a
+  discrete palette (`palette.selection`) and are displayed with category
+  names on the colorbar. Default: NULL.
 
 - color.scale:
 
-  Character, plotly colorscale name for line coloring. Options include
-  "Viridis", "Cividis", "Inferno", "Magma", "Plasma", "Blues", "Greens",
-  "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral", "Jet", "Hot", "Cool",
-  "Portland". Default: "Viridis".
+  Character, plotly colorscale name for line coloring when `color.by` is
+  numeric. Options include "Viridis", "Cividis", "Inferno", "Magma",
+  "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu",
+  "Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".
+
+- palette.selection:
+
+  Character vector of hex colors used to color lines when `color.by` is
+  categorical. May be unnamed (colors applied in order to the sorted
+  unique levels) or named by level. If `NULL`, the plotly `color.scale`
+  is used as a fallback. Default: NULL.
 
 - line.opacity:
 

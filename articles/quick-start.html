@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Quick Start with VizModules • VizModules</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Quick Start with VizModules">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -168,6 +168,69 @@ filterable data table, and dataset switching for any module -
 are thin wrappers around <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> with sensible
 default data. You can also pass custom wrapper module functions to
 <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> for rapid prototyping.</p>
+</div>
+<div class="section level2">
+<h2 id="export-summary-data">Export Summary Data:<a class="anchor" aria-label="anchor" href="#export-summary-data"></a>
+</h2>
+<p>We provide <code>create_interactive_summary_data()</code> to assemble
+a compact record of the plotted data, stats, UI inputs, and the rendered
+plot, and <code>.create_download_file()</code> to turn that record into
+a downloadable <code>.zip</code>.
+<code>create_interactive_summary_data()</code> requires a reactive
+plotly plot; the output summary can be optionally enriched by both a
+stats reactive and a UI inputs reactive.
+<code>.create_download_file()</code> also accepts a named list of
+summaries (one per plot), which is how the Panel Builder bundles every
+plot on its canvas into a single download.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com" class="external-link">plotly</a></span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">plotlyOutput</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/downloadButton.html" class="external-link">downloadButton</a></span><span class="op">(</span><span class="st">"download_summary"</span>, <span class="st">"Download Summary"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="co"># A reactive plotly plot</span></span>
+<span>        <span class="va">plot_reactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html" class="external-link">plot_ly</a></span><span class="op">(</span><span class="va">mtcars</span>, x <span class="op">=</span> <span class="op">~</span><span class="va">wt</span>, y <span class="op">=</span> <span class="op">~</span><span class="va">mpg</span>, type <span class="op">=</span> <span class="st">"scatter"</span>, mode <span class="op">=</span> <span class="st">"markers"</span><span class="op">)</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="co"># Optional: a reactive returning a stats data.frame</span></span>
+<span>        <span class="va">stats_reactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>                metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean_mpg"</span>, <span class="st">"sd_mpg"</span><span class="op">)</span>,</span>
+<span>                value  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="op">)</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="co"># Optional: capture all UI inputs as a named list</span></span>
+<span>        <span class="va">AllInputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValuesToList.html" class="external-link">reactiveValuesToList</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly</a></span><span class="op">(</span><span class="fu">plot_reactive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="co"># Assemble the summary, then wire up the download handler.</span></span>
+<span>        <span class="va">plot_summary_reactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="fu">create_interactive_summary_data</span><span class="op">(</span></span>
+<span>                plot_reactive   <span class="op">=</span> <span class="va">plot_reactive</span>,</span>
+<span>                stats_reactive  <span class="op">=</span> <span class="va">stats_reactive</span>,</span>
+<span>                inputs_reactive <span class="op">=</span> <span class="fu">AllInputs</span><span class="op">(</span><span class="op">)</span></span>
+<span>            <span class="op">)</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="va">output</span><span class="op">$</span><span class="va">download_summary</span> <span class="op">&lt;-</span> <span class="fu">.create_download_file</span><span class="op">(</span></span>
+<span>            data_list     <span class="op">=</span> <span class="va">plot_summary_reactive</span>,</span>
+<span>            filename_base <span class="op">=</span> <span class="st">"my_plot_summary"</span></span>
+<span>        <span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="which-plot-parameters-are-exposed">Which plot parameters are exposed?<a class="anchor" aria-label="anchor" href="#which-plot-parameters-are-exposed"></a>

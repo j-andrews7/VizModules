@@ -6,16 +6,17 @@ Interactive data visualization is essential for modern day analytical
 workflows, enabling analysts to explore complex datasets in a
 personalized fashion. VizModules is an R package developed to provide
 ready made, reusable building blocks for interactive applications that
-assist analysts in visualizing their data. Modules facilitate data input
-and customization while delivering interactive features such as tooltips
-and hover effects for an engaging user experience. Modules include, but
-are not limited to, scatter, density, bar, line, and box plots,
-providing a flexible set of options for diverse data visualization
-needs. VizModules building blocks enable downstream development of
-specialized analysis applications, such as bulk RNA sequencing analysis
-explorers. VizModules supports multiple table formats beyond R data
-frames such as Excel or CSV inputs, ensuring full accessibility for
-users regardless of coding experience. By standardizing visual
+assist analysts in visualizing their data. Modules facilitate stats
+tests and customization while delivering interactive features such as
+tooltips and hover effects for an engaging user experience. Modules
+include, but are not limited to, scatter, density, bar, line, and box
+plots, providing a flexible set of options for diverse data
+visualization needs. VizModules building blocks enable downstream
+development of specialized analysis applications, such as bulk RNA
+sequencing analysis explorers. VizModules is designed to work with
+standard R data frames, while a separate data import module enables
+support for formats such as Excel and CSV, ensuring accessibility for
+users with varying levels of coding experience. By standardizing visual
 components of analysis tools, it eliminates repetitive coding that
 wastes the time of many researchers.
 
@@ -29,15 +30,15 @@ independently exploring their datasets, placing heavy demands on
 computational staff and wasting time on repetitive visualization tasks.
 Furthermore, the lack of unified visualization approaches within
 specific analysis workflows leads to inconsistent and non-reproducible
-outputs.
+outputs. VizModules bridges this gap by providing standardized building
+blocks for visual analysis pipelines.
 
-VizModules bridges this gap by providing standardized building blocks
-for visual analysis pipelines. It accelerates creation of meaningful
-data observations while maintaining flexibility for field-specific
-visual components. Additionally, these modules are easily editable to
-suit specialized analysis tasks such as bulk RNA sequencing analysis or
-genomic annotations. They provide testable, production-ready components
-that reduce time spent debugging and coding.
+VizModules accelerates creation of meaningful data observations while
+maintaining flexibility for field-specific visual components.
+Additionally, these modules are easily editable to suit specialized
+analysis tasks such as bulk RNA sequencing analysis or genomic
+annotations. They provide testable, production-ready components that
+reduce time spent debugging and coding.
 
 The target audience includes analysts with varying coding expertise, non
 technical data explorers, and software development teams building
@@ -76,10 +77,18 @@ at drawing plots and defining their layouts. By shifting to this focus,
 VizModules enables rapid app development by providing key plotting code
 to create multi plot analysis tools for integrated data insight.
 Consitent visual language across modules eliminates visualization
-plumbing and improves reproduciblilty. VizModules’ ability to accept
-diverse table formats (Excel, CSV, data frames) eliminates data
-preprocessing barriers, enabling analysts and non-coders to directly
-visualize their data without R expertise.
+plumbing and improves reproduciblilty. VizModules’ dataFilter module
+ability to accept diverse table formats (Excel, CSV, data frames)
+eliminates data preprocessing barriers, enabling analysts and non-coders
+to directly visualize their data without R expertise.
+
+VizModules advances the field with its stats UI component in select
+modules, offering extensive customization of test types, significance
+thresholds, aesthetics like line colors and annotation offsets, p-value
+adjustments, and pairwise comparisons. By providing stats customization
+to target modules, this delivers efficient first insights into data
+statistical significance without manual test execution or post plot
+annotation.
 
 ## Software design
 
@@ -89,11 +98,11 @@ modules into distinct UI, server, and configuration components. This
 design enables seamless customization while ensuring consistent
 behaviour and reproducibility across all visualization functions.
 VizModules implements standardized Shiny modules featuring DT table
-interfaces for data input and configuration alongside plotly outputs for
-interactive visualization. The package is primarily implemented in R,
-with select JavaScript components for enhanced interactivity, such as a
-novel multiColorPicker input for granular color mapping of variables
-with discrete levels.
+interface modules for data input and configuration alongside plotly
+outputs for interactive visualization. The package is primarily
+implemented in R, with select JavaScript components for enhanced
+interactivity, such as a novel multiColorPicker input for granular color
+mapping of variables with discrete levels.
 
 This package fully embraces plotly for interactive visualization,
 utilizing either `ggplotly()` to convert ggplot2 objects or constructing
@@ -132,9 +141,10 @@ environment.
 The package contains clear vignettes, providing users and developers
 with clear guidance for creating new VizModules, to benefit their
 research. Additionally, the package equips modules with the ability to
-import external data frames outside of R, such as xcel or csv tables.
-CRAN ready and actively maintained, with submission coinciding with
-publication.
+import external data formats (Excel, CSV) via the dataFilter module,
+while select modules feature integrated stats customization for rapid
+statistical insights without manual testing or annotation. CRAN ready
+and actively maintained, with submission coinciding with publication.
 
 ## AI usage disclosure
 

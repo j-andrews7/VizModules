@@ -17,6 +17,8 @@ linePlot(
   show.legend = TRUE,
   facet.by = NULL,
   facet.scales = "fixed",
+  facet.nrow = NULL,
+  facet.ncol = NULL,
   subplot.margin = 0.05,
   axis.showline = TRUE,
   axis.mirror = TRUE,
@@ -102,6 +104,20 @@ linePlot(
   Character, controls axis scaling across facets. Options: "fixed" (same
   for all), "free" (independent), "free_x" (independent x-axis),
   "free_y" (independent y-axis). Default: "fixed".
+
+- facet.nrow:
+
+  Optional integer, number of rows in the faceted subplot grid. If
+  `NULL` (default), a single row is used unless `facet.ncol` is
+  supplied, in which case the number of rows is derived from the number
+  of facet levels.
+
+- facet.ncol:
+
+  Optional integer, number of columns in the faceted subplot grid. If
+  `NULL` (default), columns are derived from `facet.nrow` and the number
+  of facet levels. Only one of `facet.nrow` / `facet.ncol` needs to be
+  set; if both are provided, `facet.nrow` takes precedence.
 
 - subplot.margin:
 

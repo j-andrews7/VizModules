@@ -8,6 +8,7 @@ Start with the hosted gallery to explore what each module can do:
 You can also run the same gallery locally from this package:
 
 ``` r
+
 library(shiny)
 shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
 ```
@@ -19,6 +20,7 @@ All modules follow the same pattern: `*InputsUI()` for controls,
 minimal `scatterPlot` example:
 
 ``` r
+
 library(VizModules)
 
 ui <- fluidPage(
@@ -57,6 +59,7 @@ shinyApp(ui, server)
   (e.g., `"Plotly"` or `"Legend/Scale"` in `scatterPlot`).
 
 ``` r
+
 dittoViz_scatterPlotServer(
     "cars",
     data = reactive(mtcars),
@@ -76,6 +79,7 @@ filterable data table, and dataset switching for any module -
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md):
 
 ``` r
+
 library(VizModules)
 
 app <- createModuleApp(
@@ -97,6 +101,69 @@ with sensible default data. You can also pass custom wrapper module
 functions to
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
 for rapid prototyping.
+
+## Export Summary Data:
+
+We provide `create_interactive_summary_data()` to assemble a compact
+record of the plotted data, stats, UI inputs, and the rendered plot, and
+`.create_download_file()` to turn that record into a downloadable
+`.zip`. `create_interactive_summary_data()` requires a reactive plotly
+plot; the output summary can be optionally enriched by both a stats
+reactive and a UI inputs reactive. `.create_download_file()` also
+accepts a named list of summaries (one per plot), which is how the Panel
+Builder bundles every plot on its canvas into a single download.
+
+``` r
+
+
+if (interactive()) {
+    library(shiny)
+    library(plotly)
+
+    ui <- fluidPage(
+        plotlyOutput("plot"),
+        downloadButton("download_summary", "Download Summary")
+    )
+
+    server <- function(input, output, session) {
+        # A reactive plotly plot
+        plot_reactive <- reactive({
+            plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+        })
+
+        # Optional: a reactive returning a stats data.frame
+        stats_reactive <- reactive({
+            data.frame(
+                metric = c("mean_mpg", "sd_mpg"),
+                value  = c(mean(mtcars$mpg), sd(mtcars$mpg))
+            )
+        })
+
+        # Optional: capture all UI inputs as a named list
+        AllInputs <- reactive({
+            reactiveValuesToList(input)
+        })
+
+        output$plot <- renderPlotly(plot_reactive())
+
+        # Assemble the summary, then wire up the download handler.
+        plot_summary_reactive <- reactive({
+            create_interactive_summary_data(
+                plot_reactive   = plot_reactive,
+                stats_reactive  = stats_reactive,
+                inputs_reactive = AllInputs()
+            )
+        })
+
+        output$download_summary <- .create_download_file(
+            data_list     = plot_summary_reactive,
+            filename_base = "my_plot_summary"
+        )
+    }
+
+    shinyApp(ui, server)
+}
+```
 
 ## Which plot parameters are exposed?
 

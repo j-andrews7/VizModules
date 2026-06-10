@@ -14,6 +14,7 @@ createModuleApp(
   output_ui_fn,
   server_fn,
   data_list,
+  defaults = NULL,
   title = "VizModules App"
 )
 ```
@@ -41,6 +42,11 @@ createModuleApp(
 - data_list:
 
   A named list of data frames. At least one element is required.
+
+- defaults:
+
+  A named list of ui ids and their default values that can change the ui
+  default settings on startup.
 
 - title:
 
@@ -81,7 +87,8 @@ app <- createModuleApp(
     output_ui_fn = plotthis_BarPlotOutputUI,
     server_fn    = plotthis_BarPlotServer,
     data_list    = list("iris" = iris),
-    title        = "My Bar Plot"
+    title        = "My Bar Plot",
+    defaults     = NULL
 )
 if (interactive()) runApp(app)
 
@@ -91,7 +98,8 @@ app2 <- createModuleApp(
     output_ui_fn = dittoViz_scatterPlotOutputUI,
     server_fn    = dittoViz_scatterPlotServer,
     data_list    = list("iris" = iris),
-    title        = "Scatter"
+    title        = "Scatter",
+    defaults    = NULL
 )
 if (interactive()) runApp(app2)
 ```

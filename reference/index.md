@@ -194,6 +194,19 @@ plotthis-based interactive density plot module.
 - [`plotthis_DensityPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotApp.md)
   : Create an example Modular DensityPlot Shiny Application
 
+## DotPlot Module
+
+plotthis-based interactive dot plot module.
+
+- [`plotthis_DotPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotServer.md)
+  : Server logic for DotPlot module
+- [`plotthis_DotPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotInputsUI.md)
+  : Input UI components for the DotPlot module
+- [`plotthis_DotPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotOutputUI.md)
+  : Output UI components for the DotPlot module
+- [`plotthis_DotPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotApp.md)
+  : Create an example Modular DotPlot Shiny Application
+
 ## Histogram Module
 
 plotthis-based interactive histogram module.
@@ -228,6 +241,17 @@ Utility functions for building module UIs.
   : Create standard tack UI for module inputs
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
+- [`empty_plot()`](https://j-andrews7.github.io/VizModules/reference/empty_plot.md)
+  : Create an empty ggplot2 plot or plotly plot with input text
+
+## Data Downloading Utilities
+
+Functions for preparing plot and source data for download.
+
+- [`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+  : Collect plot and source data for download
+- [`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
+  : Create download handler for plot with source data
 
 ## Palette & Color Utilities
 
@@ -241,6 +265,25 @@ Functions/inputs for managing color palettes.
   : Compact multi-group color picker input
 - [`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md)
   : Update a multiColorPicker input on the client
+
+## Statistical Helpers
+
+Functions for computing and displaying pairwise statistical test
+annotations on plots.
+
+- [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md)
+  : Compute pairwise statistical tests between groups
+- [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
+  : Create plotly shapes and annotations for statistical test results
+- [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md)
+  : Apply statistical annotation shapes and annotations to a plotly
+  figure
+- [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md)
+  : Generate comparison pair strings from data columns
+- [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md)
+  : Parse pair strings from UI into list of length-2 vectors
+- [`write_stats_csv()`](https://j-andrews7.github.io/VizModules/reference/write_stats_csv.md)
+  : Write stats table CSV with metadata header
 
 ## Utility Functions
 
@@ -285,3 +328,7 @@ Built-in datasets for demos and testing.
   : Example population dataset A simulated population dataset with 400
   rows covering 50 years and 8 age groups. Designed for line, area, and
   stacked bar plot examples.
+- [`example_markers`](https://j-andrews7.github.io/VizModules/reference/example_markers.md)
+  : Example single-cell marker gene dataset for dot plots
+- [`example_rnaseq`](https://j-andrews7.github.io/VizModules/reference/example_rnaseq.md)
+  : Example RNA-seq dataset for the RNA-seq showcase app

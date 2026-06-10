@@ -5,7 +5,7 @@ This should be placed in the UI where the plot should be shown.
 ## Usage
 
 ``` r
-plotthis_AreaPlotOutputUI(id)
+plotthis_AreaPlotOutputUI(id, resizable = TRUE)
 ```
 
 ## Arguments
@@ -13,6 +13,13 @@ plotthis_AreaPlotOutputUI(id)
 - id:
 
   The ID for the Shiny module.
+
+- resizable:
+
+  Logical; when `TRUE` (the default) the plot output is wrapped in
+  [`jqui_resizable`](https://yang-tang.github.io/shinyjqui/reference/Interactions.html)
+  so it can be resized by dragging. Set to `FALSE` when embedding the
+  output in a container that already provides resizing.
 
 ## Value
 

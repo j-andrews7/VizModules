@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Adding a New Module • VizModules</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Adding a New Module">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -361,22 +361,22 @@ store the last computed stats table:
 <code>last_stats_df &lt;- reactiveVal(NULL)</code>.</label></li>
 <li><label><input type="checkbox">When
 <code>input$stats.enabled</code> is TRUE in the plot rendering block,
-call <code>.compute_pairwise_stats()</code> to run tests, then
-<code>.create_stat_annotations()</code> to build bracket
-shapes/annotations, then <code>.apply_stat_annotations()</code> to
-append them to the plotly figure.</label></li>
+call <code><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats()</a></code> to run tests, then
+<code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code> to build bracket
+shapes/annotations, then <code><a href="../reference/apply_stat_annotations.html">apply_stat_annotations()</a></code> to append
+them to the plotly figure.</label></li>
 <li><label><input type="checkbox">Store the result:
 <code>last_stats_df(stats_df)</code>.</label></li>
 <li><label><input type="checkbox">Add an <code>observeEvent</code> to
 update <code>stat.pairs</code> choices when the x or grouping column
-changes, using <code>.generate_pair_strings()</code>.</label></li>
+changes, using <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code>.</label></li>
 <li><label><input type="checkbox">Add an
 <code>observeEvent(input$stats.enabled)</code> to show/hide the “Save
 Stats” button via <code>shinyjs::show("download.stats.col")</code> /
 <code>shinyjs::hide("download.stats.col")</code>.</label></li>
 <li><label><input type="checkbox">Add a <code>downloadHandler</code>
 for <code>output$download.stats</code> that calls
-<code>.write_stats_csv()</code>.</label></li>
+<code><a href="../reference/write_stats_csv.html">write_stats_csv()</a></code>.</label></li>
 <li><label><input type="checkbox">Call
 <code>.reset_stats_inputs(session)</code> in the reset
 observer.</label></li>
@@ -396,28 +396,28 @@ observer.</label></li>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>.compute_pairwise_stats()</code></td>
+<td><code><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats()</a></code></td>
 <td>Run pairwise or omnibus tests with p-value adjustment</td>
 </tr>
 <tr class="even">
-<td><code>.create_stat_annotations()</code></td>
+<td><code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code></td>
 <td>Convert stats to plotly shapes/annotations with bracket packing</td>
 </tr>
 <tr class="odd">
-<td><code>.apply_stat_annotations()</code></td>
+<td><code><a href="../reference/apply_stat_annotations.html">apply_stat_annotations()</a></code></td>
 <td>Append shapes/annotations to the plotly figure and adjust
 y-axes</td>
 </tr>
 <tr class="even">
-<td><code>.generate_pair_strings()</code></td>
+<td><code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code></td>
 <td>Build <code>"A vs B"</code> strings for the comparison selector</td>
 </tr>
 <tr class="odd">
-<td><code>.parse_pair_strings()</code></td>
+<td><code><a href="../reference/parse_pair_strings.html">parse_pair_strings()</a></code></td>
 <td>Convert selected pair strings back to list of length-2 vectors</td>
 </tr>
 <tr class="even">
-<td><code>.write_stats_csv()</code></td>
+<td><code><a href="../reference/write_stats_csv.html">write_stats_csv()</a></code></td>
 <td>Write stats CSV with metadata comment header</td>
 </tr>
 </tbody>

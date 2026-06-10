@@ -39,6 +39,7 @@ R 4.5+, available at: C:Files.3.exe
 ### Key R Commands
 
 ``` r
+
 # ALWAYS run after changing roxygen2 comments or function signatures
 devtools::document()          # Updates NAMESPACE and .Rd files
 
@@ -115,13 +116,13 @@ testthat
 
 ## Common Issues
 
-| Issue                                  | Solution                                             |
-|----------------------------------------|------------------------------------------------------|
-| “object not exported by namespace”     | Run `devtools::document()` to regenerate NAMESPACE   |
-| Linting failures                       | Check .lintr: 120 char lines, 4-space indents        |
-| “Non-standard file/directory” in check | Add to .Rbuildignore with regex pattern              |
-| Module inputs not responding           | Namespace issue - verify NS(id) pattern (see above)  |
-| Vignette build errors                  | Install: `install.packages(c("knitr", "rmarkdown"))` |
+| Issue | Solution |
+|----|----|
+| “object not exported by namespace” | Run `devtools::document()` to regenerate NAMESPACE |
+| Linting failures | Check .lintr: 120 char lines, 4-space indents |
+| “Non-standard file/directory” in check | Add to .Rbuildignore with regex pattern |
+| Module inputs not responding | Namespace issue - verify NS(id) pattern (see above) |
+| Vignette build errors | Install: `install.packages(c("knitr", "rmarkdown"))` |
 
 ## Critical Rules
 

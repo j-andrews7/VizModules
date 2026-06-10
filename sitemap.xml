@@ -10,9 +10,14 @@
 <url><loc>https://j-andrews7.github.io/VizModules/copilot-instructions.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/news/index.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/paper2.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/paper.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/adjust_column_values.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/collect_source_data.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/createModuleApp.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dataFilterUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/default_palettes.html</loc></url>
@@ -24,20 +29,25 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/dot-clean_facet_dim.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/empty_plot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_bar.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_demographics.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_iris.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/example_markers.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_mtcars.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_population.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/example_rnaseq.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_roles.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_sales.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_school_earnings.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/example_skills.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/get_documentation.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/is_pure_type.html</loc></url>
@@ -54,6 +64,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/parallelCoordinatesPlotServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/piePlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/piePlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/piePlotInputsUI.html</loc></url>
@@ -75,6 +86,10 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DensityPlotServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotApp.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotInputsUI.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotOutputUI.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_HistogramOutputUI.html</loc></url>
@@ -103,5 +118,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/ternaryPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/validate_expression.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/write_stats_csv.html</loc></url>
 </urlset>
 

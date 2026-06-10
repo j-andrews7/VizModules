@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Flexible, Interactive shiny Modules for Almost Any Plot • VizModules</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Flexible, Interactive shiny Modules for Almost Any Plot">
 <meta name="description" content="Offers a core selection of interactivity-first shiny modules for many plot types meant to serve as flexible building blocks for applications and as the base for more complex modules. These modules allow for the rapid and convenient construction of shiny apps with very few lines of code and decouple plotting from the underlying data. These modules allow for full plot aesthetic customization by the end user through UI inputs. Utility functions for simple UI organization, automated UI tooltips, and additional plot enhancements are also provided.">
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +87,8 @@
 <li>Explore the hosted example gallery: <a href="https://j-andrews7-vizmodules.share.connect.posit.cloud/" class="external-link uri">https://j-andrews7-vizmodules.share.connect.posit.cloud/</a>
 </li>
 <li>Run the same gallery locally after installation: <code>shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))</code>
+</li>
+<li>Build a free-form dashboard of draggable, resizable plots with the <strong>Panel Builder</strong> app: <code>shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))</code>
 </li>
 <li>See the vignette for a full walkthrough: <a href="https://j-andrews7.github.io/VizModules/articles/quick-start.html"><code>vignette("quick-start", package = "VizModules")</code></a>
 </li>
@@ -164,6 +166,34 @@
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="figure-builder-app">Figure Builder App<a class="anchor" aria-label="anchor" href="#figure-builder-app"></a>
+</h2>
+<p>The bundled <strong>Figure Builder</strong> app (<code>inst/apps/figure-builder</code>) turns the modules into a free-form figure builder. Run it with:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"apps/figure-builder"</span>, package <span class="op">=</span> <span class="st">"VizModules"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Or try the <a href="https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/" class="external-link">hosted example</a>.</p>
+<p>It allows you to interactively compose complicated figures using the modules in a single page:</p>
+<ul>
+<li>
+<strong>Add plots on demand.</strong> Click <em>Add Plot</em> to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.</li>
+<li>
+<strong>Load your own data.</strong> Use the <em>Load Data</em> section to upload a <code>CSV</code>, <code>TSV</code> or <code>RDS</code> file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples. Each plot can use a different dataset if desired.</li>
+<li>
+<strong>Drag and resize.</strong> Each plot lives on its own card. Hover a card to reveal a small toolbar with a drag handle (to reposition it) and a remove button, and resize it from its corner (via <code>shinyjqui</code>) — resizing adjusts the plot in both directions. The toolbar stays out of the way otherwise, so cards remain clean and chrome-free in the SVG export.</li>
+<li>
+<strong>A4 canvas.</strong> The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a composite figure.</li>
+<li>
+<strong>Swappable controls.</strong> A single dropdown swaps the visible plot’s input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.</li>
+<li>
+<strong>Swappable filtering table.</strong> A matching dropdown swaps the visible plot’s filterable data table, mirroring the controls behaviour. Filtering a plot’s table subsets only that plot’s data.</li>
+<li>
+<strong>Download as SVG.</strong> Click <em>Download Panel (SVG)</em> to export the whole canvas as a single vector SVG, with every plot positioned as it appears on the page. This allows downstream editing as necessary, though the hope is that you’ll be 95% of the way there with the formatting and syling options available in each module.</li>
+<li>
+<strong>Download source data.</strong> Click <em>Download Summary</em> to download a single <code>.zip</code> containing all plot data (plot + data + the inputs used to build it + statistical testing information (if applied)) for every plot on the canvas, with one set of files per panel.</li>
+</ul>
+</div>
+<div class="section level2">
 <h2 id="building-custom-wrapper-modules">Building Custom Wrapper Modules<a class="anchor" aria-label="anchor" href="#building-custom-wrapper-modules"></a>
 </h2>
 <p>The modules in <strong>VizModules</strong> are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules.</p>
@@ -202,6 +232,8 @@
 <li>
 <code>plotthis_DensityPlot</code> - Density plots (wraps <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::DensityPlot</a></code>).</li>
 <li>
+<code>plotthis_DotPlot</code> - Dot plots (wraps <code><a href="https://pwwang.github.io/plotthis/reference/dotplot.html" class="external-link">plotthis::DotPlot</a></code>).</li>
+<li>
 <code>plotthis_Histogram</code> - Histograms (wraps <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::Histogram</a></code>).</li>
 </ul>
 </div>
@@ -229,6 +261,11 @@
 <h2 id="statistical-testing">Statistical Testing<a class="anchor" aria-label="anchor" href="#statistical-testing"></a>
 </h2>
 <p>The <strong>BoxPlot</strong>, <strong>ViolinPlot</strong>, and <strong>yPlot</strong> modules include a <strong>Stats</strong> tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure.</p>
+</div>
+<div class="section level2">
+<h2 id="export-summary-data">Export Summary Data:<a class="anchor" aria-label="anchor" href="#export-summary-data"></a>
+</h2>
+<p><code>create_interactive_summary_data()</code> collects the interactive plot as HTML, its plot data, pairwise testing statistics (if applied), and UI input values into a single list, and <code>.create_download_file()</code> turns that into a compact zip folder of summary data for the output plot. <code>.create_download_file()</code> also accepts a named list of summaries (one per plot), which is how the Panel Builder bundles every plot on the canvas into one download.</p>
 <div class="section level3">
 <h3 id="supported-tests">Supported Tests<a class="anchor" aria-label="anchor" href="#supported-tests"></a>
 </h3>
@@ -321,10 +358,31 @@
 <p><a href="https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html">dittoViz_yPlot:</a></p>
 <p><a href="https://cran.r-project.org/package=dittoViz" class="external-link">(Source Plotting Function)</a></p>
 <p><img src="reference/figures/yPlot.png"></p>
+<p>plotthis::DotPlot:</p>
+<p><img src="reference/figures/DotPlot.png"></p>
 <div class="section level3">
 <h3 id="ui-example">UI Example<a class="anchor" aria-label="anchor" href="#ui-example"></a>
 </h3>
 <p><img src="reference/figures/UI_Overview.png"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="ai-usage-statement">AI Usage Statement<a class="anchor" aria-label="anchor" href="#ai-usage-statement"></a>
+</h2>
+<p>The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation. AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs/hands to ensure accuracy and quality. Our own hands are all over this project, and we are invested in it. Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.</p>
+<p>Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are <strong>explicitly welcome</strong> for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend prefixing prompts with the below to aid LLM usage (or adding it to a file and attaching it directly).</p>
+<div class="section level3">
+<h3 id="llm-instructions">LLM Instructions<a class="anchor" aria-label="anchor" href="#llm-instructions"></a>
+</h3>
+<p>Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) before asking it to build a Shiny app with <strong>VizModules</strong>. It points the model to the authoritative, locally-installed sources of truth so it can use the package correctly.</p>
+<blockquote>
+<p>You are helping me build a Shiny application using the installed R package <strong>VizModules</strong>, which provides interactivity-first, plotly-based Shiny modules for common plot types. Before writing code, ground yourself in the package’s own documentation rather than guessing at the API.</p>
+<p><strong>Core concept.</strong> Every module is a trio of functions that share an <code>id</code>: <code>*InputsUI(id, ...)</code> renders the controls, <code>*OutputUI(id)</code> renders the plotly output, and <code>*Server(id, data, ...)</code> holds the logic. <code>InputsUI</code> and <code>OutputUI</code> are separate so controls and plot can be placed anywhere in the layout. <code>data</code> is passed to the server as a <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code>. Use the <code>defaults</code> argument to pre-fill inputs and <code>hide.inputs</code>/<code>hide.tabs</code> to lock values while hiding their controls.</p>
+<p><strong>Where to look (all available after <code>install.packages</code>/<code>remotes::install_github</code>):</strong> - <code><a href="articles/quick-start.html">vignette("quick-start", package = "VizModules")</a></code> — start here: end-to-end walkthrough of wiring <code>*InputsUI()</code>, <code>*OutputUI()</code>, and <code>*Server()</code> into an app, using <code>defaults</code>, and the example <code>*App()</code> functions. - <code><a href="articles/custom-modules.html">vignette("custom-modules", package = "VizModules")</a></code> — how to <strong>extend existing modules</strong> by building wrapper modules (adding custom logic/inputs while reusing a base module). Follow the namespace pattern: process namespaced inputs <em>inside</em> <code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code>, then call the base <code>*Server()</code> <em>outside</em> it with the bare <code>id</code> to avoid double-namespacing. - <code><a href="articles/adding-a-new-module.html">vignette("adding-a-new-module", package = "VizModules")</a></code> — how to <strong>author a brand-new module</strong> from scratch (the InputsUI/OutputUI/Server contract, conventions, and helpers). - The README — overview, install, the full list of available modules, the App Factory (<code><a href="reference/createModuleApp.html">createModuleApp()</a></code>), statistical-testing features, and summary-data export. - Per-function help pages via <code>?</code> — e.g. <code><a href="reference/dittoViz_scatterPlotInputsUI.html">?dittoViz_scatterPlotInputsUI</a></code>, <code><a href="reference/plotthis_BarPlotServer.html">?plotthis_BarPlotServer</a></code>, <code><a href="reference/createModuleApp.html">?createModuleApp</a></code>. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (<code><a href="https://rdrr.io/pkg/dittoViz/man/scatterPlot.html" class="external-link">?dittoViz::scatterPlot</a></code>, <code><a href="https://pwwang.github.io/plotthis/reference/AreaPlot.html" class="external-link">?plotthis::AreaPlot</a></code>, etc.) for the complete parameter set. Browse all docs with <code><a href="https://j-andrews7.github.io/VizModules/reference">help(package = "VizModules")</a></code> or the pkgdown site: <a href="https://j-andrews7.github.io/VizModules/reference/" class="uri">https://j-andrews7.github.io/VizModules/reference/</a>. - <code>NEWS.md</code> (<code>news(package = "VizModules")</code>) — newest features and changes.</p>
+<p><strong>Available modules:</strong> <code>dittoViz_scatterPlot</code>, <code>dittoViz_yPlot</code>, <code>plotthis_AreaPlot</code>, <code>plotthis_ViolinPlot</code>, <code>plotthis_BoxPlot</code>, <code>plotthis_BarPlot</code>, <code>plotthis_SplitBarPlot</code>, <code>plotthis_DensityPlot</code>, <code>plotthis_DotPlot</code>, <code>plotthis_Histogram</code>, plus the natively-implemented <code>linePlot</code>, <code>piePlot</code>, <code>radarPlot</code>, <code>parallelCoordinatesPlot</code>, <code>ternaryPlot</code>, and <code>dumbbellPlot</code>. Each has a matching <code>*App()</code> function (e.g. <code><a href="reference/plotthis_BarPlotApp.html">plotthis_BarPlotApp()</a></code>) you can run to see it in action.</p>
+<p><strong>Optional building blocks</strong> (inspect their source/help in the installed package’s <code>R/</code> directory or via <code>?</code>): - Data table / filtering module — <code><a href="reference/dataFilterUI.html">?dataFilterUI</a></code>, <code><a href="reference/dataFilterServer.html">?dataFilterServer</a></code>. - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see <code><a href="reference/compute_pairwise_stats.html">?compute_pairwise_stats</a></code>, <code><a href="reference/apply_stat_annotations.html">?apply_stat_annotations</a></code>, and the README “Statistical Testing” section; supported by the BoxPlot, ViolinPlot, and yPlot modules. - Summary-data export — <code>?create_interactive_summary_data</code> and <code>?.create_download_file</code>. - App factory — <code><a href="reference/createModuleApp.html">?createModuleApp</a></code> (every <code>*App()</code> is a thin wrapper around it).</p>
+<p><strong>Rules:</strong> All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -363,9 +421,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg?branch=devel" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg?branch=devel" alt="Tests"></a></li>
-<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg?branch=devel" alt="pkgdown"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/check-app.yaml/badge.svg" alt="Tests"></a></li>
+<li><a href="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
 </ul>
 </div>
 

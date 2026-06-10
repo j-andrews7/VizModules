@@ -34,6 +34,7 @@ Let’s build a custom module that adds a simple filtering checkbox to the
 ### The UI
 
 ``` r
+
 library(VizModules)
 
 minimalModuleUI <- function(id) {
@@ -64,6 +65,7 @@ in the correct namespace.
 ### The Server
 
 ``` r
+
 minimalModuleServer <- function(id, data_reactive) {
     # Step 1: Process data inside a moduleServer block
     # This gives us access to inputs namespaced to 'id' (our module's inputs)
@@ -108,6 +110,7 @@ minimalModuleServer <- function(id, data_reactive) {
 ### Putting It Together
 
 ``` r
+
 ui <- fluidPage(
     titlePanel("Minimal Module Example"),
     sidebarLayout(
@@ -136,6 +139,7 @@ If your module pre-sets certain parameters, you can hide those inputs
 from the user to keep them from being changed:
 
 ``` r
+
 focusedModuleUI <- function(id) {
     ns <- NS(id)
     tagList(
