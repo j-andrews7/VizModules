@@ -1,0 +1,12 @@
+utils::globalVariables(c(
+    "example_sales",
+    "example_demographics",
+    "example_school_earnings",
+    "example_bar",
+    "example_markers",
+    "example_skills",
+    "example_roles",
+    "example_iris",
+    "example_mtcars",
+    "example_rnaseq"
+))
