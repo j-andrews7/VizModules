@@ -92,6 +92,115 @@
     fig
 }
 
+#' Convert native cartesian axis titles to draggable annotations
+#'
+#' Plotly's native axis titles can have their text edited interactively but
+#' cannot be dragged to a new position. Faceted figures already render their
+#' shared x/y axis titles as paper-anchored annotations (via
+#' \code{\link{.build_facet_annotations}}), which the plot configuration makes
+#' both editable and draggable. This helper brings the same behaviour to
+#' single-panel (non-faceted) figures by replacing the native x/y axis titles
+#' with equivalent paper-anchored annotations.
+#'
+#' The figure is first built with \code{plotly::plotly_build()} so that titles
+#' assigned via \code{layout()} (which are otherwise held in
+#' \code{layoutAttrs} until build time) are consolidated into the layout. Any
+#' pre-existing annotations (for example statistical brackets or facet labels)
+#' are preserved, and the font already applied to each native axis title is
+#' carried over to the corresponding annotation.
+#'
+#' Multi-panel figures (faceting or \code{split.by}, detected by the presence
+#' of secondary axes such as \code{xaxis2}/\code{yaxis2}) are returned
+#' unchanged, since their shared titles are already draggable annotations.
+#'
+#' @param fig A plotly figure object.
+#'
+#' @return The plotly figure with single-panel axis titles converted to
+#'   paper-anchored, draggable annotations. Returns the figure unchanged when
+#'   it is faceted/split or has no axis titles.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_axis_titles_as_annotations
+#' @keywords internal
+.axis_titles_as_annotations <- function(fig) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    # Build so that titles set via layout() (held in layoutAttrs) are
+    # consolidated into fig$x$layout. Idempotent for already-built figures.
+    fig <- plotly::plotly_build(fig)
+
+    if (is.null(fig$x) || is.null(fig$x$layout)) {
+        return(fig)
+    }
+
+    layout_names <- names(fig$x$layout)
+
+    # Multi-panel (faceted / split) figures already render their shared axis
+    # titles as draggable annotations, so leave them untouched.
+    has_secondary_axes <- any(grepl("^xaxis[2-9][0-9]*$", layout_names)) ||
+        any(grepl("^yaxis[2-9][0-9]*$", layout_names))
+    if (has_secondary_axes) {
+        return(fig)
+    }
+
+    extract <- function(title) {
+        if (is.null(title)) {
+            return(list(text = NULL, font = NULL))
+        }
+        if (is.character(title)) {
+            return(list(text = title, font = NULL))
+        }
+        if (is.list(title)) {
+            return(list(text = title$text, font = title$font))
+        }
+        list(text = NULL, font = NULL)
+    }
+
+    x_axis <- extract(fig$x$layout$xaxis$title)
+    y_axis <- extract(fig$x$layout$yaxis$title)
+
+    has_x <- !is.null(x_axis$text) && nzchar(x_axis$text)
+    has_y <- !is.null(y_axis$text) && nzchar(y_axis$text)
+    if (!has_x && !has_y) {
+        return(fig)
+    }
+
+    # Clear native titles so they do not render alongside the annotations.
+    if (!is.null(fig$x$layout$xaxis)) {
+        fig$x$layout$xaxis$title <- list(text = "")
+    }
+    if (!is.null(fig$x$layout$yaxis)) {
+        fig$x$layout$yaxis$title <- list(text = "")
+    }
+
+    new_anns <- list()
+    if (has_x) {
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = 0.5, y = -0.1, xref = "paper", yref = "paper",
+            text = x_axis$text, showarrow = FALSE, xanchor = "center",
+            yanchor = "top", annotationType = "axis", font = x_axis$font
+        )
+    }
+    if (has_y) {
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = -0.05, y = 0.5, xref = "paper", yref = "paper",
+            text = y_axis$text, showarrow = FALSE, xanchor = "center",
+            yanchor = "middle", textangle = -90, annotationType = "axis",
+            font = y_axis$font
+        )
+    }
+
+    existing <- fig$x$layout$annotations
+    if (is.null(existing)) {
+        existing <- list()
+    }
+    fig$x$layout$annotations <- c(existing, new_anns)
+
+    fig
+}
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.

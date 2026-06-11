@@ -282,6 +282,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
 
+            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
+            fig <- .axis_titles_as_annotations(fig)
+
             return(fig)
         })
 

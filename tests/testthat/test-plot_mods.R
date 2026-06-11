@@ -291,6 +291,80 @@ test_that(".apply_subplot_axis_styling handles empty layout names", {
     expect_s3_class(result, "plotly")
 })
 
+# ─── .axis_titles_as_annotations ─────────────────────────────────────────────
+
+test_that(".axis_titles_as_annotations converts single-panel titles to annotations", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines") |>
+        plotly::layout(xaxis = list(title = "Weight"), yaxis = list(title = "MPG"))
+
+    result <- VizModules:::.axis_titles_as_annotations(fig)
+    built <- plotly::plotly_build(result)
+
+    ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    expect_true("Weight" %in% ann_text)
+    expect_true("MPG" %in% ann_text)
+
+    # Native axis titles cleared so they do not render twice
+    expect_identical(built$x$layout$xaxis$title$text, "")
+    expect_identical(built$x$layout$yaxis$title$text, "")
+
+    # Annotations are paper-anchored and the y title is rotated
+    x_ann <- Filter(function(a) identical(a$text, "Weight"), built$x$layout$annotations)[[1]]
+    y_ann <- Filter(function(a) identical(a$text, "MPG"), built$x$layout$annotations)[[1]]
+    expect_identical(x_ann$xref, "paper")
+    expect_identical(x_ann$yref, "paper")
+    expect_equal(y_ann$textangle, -90)
+})
+
+test_that(".axis_titles_as_annotations preserves the native axis title font", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(
+            xaxis = list(title = list(text = "Cyl", font = list(size = 18, color = "red"))),
+            yaxis = list(title = list(text = "MPG", font = list(size = 18)))
+        )
+
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    x_ann <- Filter(function(a) identical(a$text, "Cyl"), built$x$layout$annotations)[[1]]
+    expect_equal(x_ann$font$size, 18)
+    expect_equal(x_ann$font$color, "red")
+})
+
+test_that(".axis_titles_as_annotations preserves pre-existing annotations", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(
+            xaxis = list(title = "X"), yaxis = list(title = "Y"),
+            annotations = list(list(x = 1, y = 1, text = "stat", showarrow = FALSE))
+        )
+
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    expect_true(all(c("stat", "X", "Y") %in% ann_text))
+})
+
+test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
+    # A subplot figure has secondary axes (xaxis2/yaxis2); its shared titles
+    # are already draggable annotations, so the helper must not alter it.
+    fig <- plotly::plotly_build(plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        nrows = 1
+    ))
+    n_before <- length(fig$x$layout$annotations)
+    result <- VizModules:::.axis_titles_as_annotations(fig)
+    expect_equal(length(result$x$layout$annotations), n_before)
+})
+
+test_that(".axis_titles_as_annotations is a no-op without axis titles", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    expect_null(built$x$layout$annotations)
+})
+
+test_that(".axis_titles_as_annotations returns NULL input unchanged", {
+    expect_null(VizModules:::.axis_titles_as_annotations(NULL))
+})
+
+
 # ─── .compute_linear_fit ─────────────────────────────────────────────────────
 
 test_that(".compute_linear_fit returns data frame for global fit", {

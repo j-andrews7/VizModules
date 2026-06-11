@@ -215,10 +215,13 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
-            
+
             #Custom Legend: 
             #Generates a custom dot plot circle legend based on the number of values in size_values. 
             fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.04, size_values = c(10, 20, 30, 40, 50))
+
+            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
+            fig <- .axis_titles_as_annotations(fig)
 
             return(fig)
         })
