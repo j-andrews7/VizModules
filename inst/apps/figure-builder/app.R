@@ -399,7 +399,7 @@ ui <- fluidPage(
                 "Add VizModules plots to the canvas, then drag them by their",
                 "title bar and resize from the bottom-right corner."
             ),
-            downloadButton("download.summary", "Download Summary",
+            downloadButton("download.source", "Source Download",
                 class = "btn-primary"),
             hr(),
             h4("Load Data"),
@@ -420,7 +420,7 @@ ui <- fluidPage(
                 choices = c("A4 portrait" = "portrait",
                             "A4 landscape" = "landscape")
             ),
-            tags$button("Download Panel (SVG)",
+            tags$button("Download Figure (SVG)",
                 id = "pb_download", type = "button",
                 class = "btn btn-success", onclick = "pbDownloadSVG()"
             ),
@@ -484,9 +484,9 @@ server <- function(input, output, session) {
     # us null it out on removal so any lingering reactive reads short-circuit
     # via req() instead of erroring.
     panel_data <- reactiveValues()
-    # Per-panel summary reactives returned by each module server. Used to bundle
-    # every plot's interactive summary (plot + data + inputs) into one download.
-    panel_summaries <- reactiveValues()
+    # Per-panel source reactives returned by each module server. Used to bundle
+    # every plot's interactive source (plot + data + inputs) into one download.
+    panel_sources <- reactiveValues()
     panel_observers <- new.env(parent = emptyenv())
 
     # --- Load custom data
@@ -678,9 +678,9 @@ server <- function(input, output, session) {
             d
         })
         filtered <- dataFilterServer(paste0(pid, "_filter"), panel_reactive)
-        # The module server returns a reactive yielding its interactive summary
+        # The module server returns a reactive yielding its interactive source
         # (plot + data + inputs); keep it so we can bundle every panel together.
-        panel_summaries[[pid]] <- mod$server_fn(pid, data = filtered)
+        panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
 
         # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
         panel_observers[[pid]] <- observeEvent(
@@ -718,7 +718,7 @@ server <- function(input, output, session) {
             rm(list = pid, envir = panel_observers)
         }
         panel_data[[pid]] <- NULL
-        panel_summaries[[pid]] <- NULL
+        panel_sources[[pid]] <- NULL
         rv$labels[[pid]] <- NULL
         rv$panel_ids <- setdiff(rv$panel_ids, pid)
 
@@ -780,34 +780,32 @@ server <- function(input, output, session) {
     # --- Summary download --------------------------------------------------
     # Bundle every panel's interactive summary (plot + data + inputs) into a
     # single .zip. We collect each panel's summary reactive (returned by its
-    # module server) and hand a named list of summaries to .create_download_file,
+    # module server) and hand a named list of summaries to create_source_download_handler,
     # which writes one set of files per panel. Handled entirely in R.
-    output$download.summary <- .create_download_file(
+    output$download.source <- create_source_download_handler(
         data_list = reactive({
             ids <- rv$panel_ids
             validate(need(length(ids) > 0,
                 "Add at least one plot before downloading."))
-            summaries <- lapply(ids, function(p) {
-                sr <- panel_summaries[[p]]
+            sources <- lapply(ids, function(p) {
+                sr <- panel_sources[[p]]
                 if (is.null(sr)) {
                     return(NULL)
                 }
                 # Skip (rather than abort the whole download) if a single
-                # panel's summary cannot be built.
+                # panel's source cannot be built.
                 tryCatch(sr(), error = function(e) {
-                    warning("Could not build summary for panel '", p, "': ",
+                    warning("Could not build source for panel '", p, "': ",
                         conditionMessage(e))
                     NULL
                 })
             })
-            names(summaries) <- vapply(ids,
+            names(sources) <- vapply(ids,
                 function(p) rv$labels[[p]], character(1))
-            summaries[!vapply(summaries, is.null, logical(1))]
+            sources[!vapply(sources, is.null, logical(1))]
         }),
-        filename_base = "panel_summary"
+        filename_base = "panel_source"
     )
 }
 
 shinyApp(ui, server)
-
-
