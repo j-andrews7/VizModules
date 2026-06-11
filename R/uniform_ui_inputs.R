@@ -579,6 +579,10 @@
 #' @keywords internal
 .uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
+    # Shared fallback for the horizontal/vertical subplot spacing inputs: use a
+    # direction-specific default if supplied, otherwise the legacy single
+    # `subplot.margin` default, otherwise 0.1.
+    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
     tagList(
         selectInput(
             ns("download.format"),
@@ -624,11 +628,7 @@
         ),
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = .get_default(
-                    defaults, "subplot.margin.x",
-                    .get_default(defaults, "subplot.margin", 0.1, is.numeric),
-                    is.numeric
-                ),
+                value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -639,11 +639,7 @@
         ),
         tipify(
             numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = .get_default(
-                    defaults, "subplot.margin.y",
-                    .get_default(defaults, "subplot.margin", 0.1, is.numeric),
-                    is.numeric
-                ),
+                value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(

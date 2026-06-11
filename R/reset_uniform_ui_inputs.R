@@ -163,14 +163,11 @@
     updateNumericInput(session, "margin.b", value = .get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = .get_default(defaults, "margin.l", 70, is.numeric))
     updateNumericInput(session, "margin.r", value = .get_default(defaults, "margin.r", 70, is.numeric))
-    updateNumericInput(session, "subplot.margin.x", value = .get_default(
-        defaults, "subplot.margin.x",
-        .get_default(defaults, "subplot.margin", 0.1, is.numeric), is.numeric
-    ))
-    updateNumericInput(session, "subplot.margin.y", value = .get_default(
-        defaults, "subplot.margin.y",
-        .get_default(defaults, "subplot.margin", 0.1, is.numeric), is.numeric
-    ))
+    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
+    updateNumericInput(session, "subplot.margin.x",
+        value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric))
+    updateNumericInput(session, "subplot.margin.y",
+        value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric))
     updateColourInput(session, "shape.fill", value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))
     updateColourInput(session, "shape.line.color", value = .get_default(defaults, "shape.line.color", "black"))
     updateNumericInput(session, "shape.line.width", value = .get_default(defaults, "shape.line.width", 4, is.numeric))
