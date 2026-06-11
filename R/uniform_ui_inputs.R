@@ -563,7 +563,9 @@
 #'
 #' Creates a standardized tagList of Plotly-specific inputs used across all plot
 #' modules. Includes interactive download controls, plot margin adjustments,
-#' subplot spacing, and user-drawn shape styling for Plotly's drawing tools.
+#' and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
+#' controls live in each module's "Facet" tab via
+#' [.uniform_subplot_spacing_inputs_ui()].)
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -579,10 +581,6 @@
 #' @keywords internal
 .uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
-    # Shared fallback for the horizontal/vertical subplot spacing inputs: use a
-    # direction-specific default if supplied, otherwise the legacy single
-    # `subplot.margin` default, otherwise 0.1.
-    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
     tagList(
         selectInput(
             ns("download.format"),
@@ -627,28 +625,6 @@
             placement = "top", options = tip_opts
         ),
         tipify(
-            numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric),
-                min = 0, max = 1, step = 0.01
-            ),
-            paste(
-                "Horizontal spacing between facet panel columns as a fraction of the plot area",
-                "(e.g. 0.04). Only applies when faceting is active."
-            ),
-            placement = "top", options = tip_opts
-        ),
-        tipify(
-            numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric),
-                min = 0, max = 1, step = 0.01
-            ),
-            paste(
-                "Vertical spacing between facet panel rows as a fraction of the plot area",
-                "(e.g. 0.04). Only applies when faceting is active."
-            ),
-            placement = "top", options = tip_opts
-        ),
-        tipify(
             colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
                 value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
@@ -689,6 +665,56 @@
                 min = 0, max = 1, step = 0.01
             ),
             "Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque",
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
+#' Generate uniform subplot spacing input UI
+#'
+#' Creates a standardized tagList of the horizontal/vertical subplot spacing
+#' inputs. These controls only have an effect when faceting is active, so they
+#' are rendered within each module's "Facet" tab.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the subplot spacing input UI elements.
+#'
+#' @importFrom shiny numericInput tagList
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_uniform_subplot_spacing_inputs_ui
+#' @keywords internal
+.uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
+    # Shared fallback for the horizontal/vertical subplot spacing inputs: use a
+    # direction-specific default if supplied, otherwise the legacy single
+    # `subplot.margin` default, otherwise 0.1.
+    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
+    tagList(
+        tipify(
+            numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
+                value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            paste(
+                "Horizontal spacing between facet panel columns as a fraction of the plot area",
+                "(e.g. 0.04). Only applies when faceting is active."
+            ),
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
+                value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            paste(
+                "Vertical spacing between facet panel rows as a fraction of the plot area",
+                "(e.g. 0.04). Only applies when faceting is active."
+            ),
             placement = "top", options = tip_opts
         )
     )

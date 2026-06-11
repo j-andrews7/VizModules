@@ -43,8 +43,8 @@
 #'   \item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: 3rd categorical variable or "")
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
-#'   \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
-#'   \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
+#'   \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
+#'   \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
 #'   \item \code{alpha} - Area fill transparency (UI: "Alpha", default: 1)
@@ -182,18 +182,19 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 ),
                 choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
             ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.ncol"), "Number of Columns",
+            tipify(numericInput(ns("facet.ncol"), "Columns",
                 value = .get_default(defaults, "facet.ncol", NA, is.numeric),
                 min = 0, max = 20
             ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.nrow"), "Number of Rows",
+            tipify(numericInput(ns("facet.nrow"), "Rows",
                 value = .get_default(defaults, "facet.nrow", NA, is.numeric),
                 min = 0, max = 20
             ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("facet.by.row"), "Facet By Row",
                 value = .get_default(defaults, "facet.by.row", TRUE, is.logical),
                 status = "success"
-            ), documentParameters$facet_byrow, placement = "top", options = list(container = "body"))
+            ), documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),

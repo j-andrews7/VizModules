@@ -316,7 +316,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
             )
 
-            # Legend/Scale
+            # Legend
             updateCheckboxInput(session, "legend.show",
                 value = .get_default(defaults, "legend.show", TRUE, is.logical)
             )

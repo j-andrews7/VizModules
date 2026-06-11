@@ -170,7 +170,8 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ), selectize = FALSE
-            ), documentParameters$facet.scales, placement = "top", options = list(container = "body"))
+            ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),

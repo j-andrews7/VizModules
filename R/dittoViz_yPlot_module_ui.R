@@ -39,8 +39,8 @@
 #'   \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
 #'   \item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
 #'   \item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
-#'   \item \code{split.nrow} - Number of facet rows (UI: "Number of Rows", default: 4)
-#'   \item \code{split.ncol} - Number of facet columns (UI: "Number of Columns", default: 4)
+#'   \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
+#'   \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
 #'   \item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "free")
 #'   \item \code{do.raster} - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 #'   \item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
@@ -467,14 +467,15 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$split.adjust,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("split.ncol"), "Split Columns",
+            tipify(numericInput(ns("split.ncol"), "Columns",
                 step = 1, min = 0,
                 value = .get_default(defaults, "split.ncol", NA, is.numeric)
             ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("split.nrow"), "Split Rows",
+            tipify(numericInput(ns("split.nrow"), "Rows",
                 step = 1, min = 0,
                 value = .get_default(defaults, "split.nrow", NA, is.numeric)
-            ), documentParameters$split.nrow, placement = "top", options = list(container = "body"))
+            ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Legend" = .uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
