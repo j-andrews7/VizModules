@@ -68,7 +68,8 @@
 #'   \item \code{margin.b} - Bottom margin in pixels (UI: "Margin Bottom", default: 70)
 #'   \item \code{margin.l} - Left margin in pixels (UI: "Margin Left", default: 70)
 #'   \item \code{margin.r} - Right margin in pixels (UI: "Margin Right", default: 70)
-#'   \item \code{subplot.margin} - Spacing between facet panels in points (UI: "Subplot Spacing", default: 5)
+#'   \item \code{subplot.margin.x} - Horizontal spacing between facet panel columns (UI: "Subplot Spacing (Horizontal)")
+#'   \item \code{subplot.margin.y} - Vertical spacing between facet panel rows (UI: "Subplot Spacing (Vertical)")
 #'   \item \code{shape.fill} - Fill color for drawn shapes (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
 #'   \item \code{shape.line.color} - Outline color for drawn shapes (UI: "Shape Line Color", default: "black")
 #'   \item \code{shape.line.width} - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)
@@ -179,6 +180,8 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                 placement = "top", options = list(container = "body")
             )
         ),
+
+        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
 
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),

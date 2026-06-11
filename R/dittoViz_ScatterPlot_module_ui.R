@@ -531,6 +531,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 step = 0.05
             ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
         ),
+        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Extras" = tagList(
             tipify(checkboxInput(ns("webgl"), "Plot with webGL",

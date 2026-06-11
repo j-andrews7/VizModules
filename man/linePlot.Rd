@@ -90,7 +90,9 @@ If \code{NULL} (default), columns are derived from \code{facet.nrow} and the num
 of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
 if both are provided, \code{facet.nrow} takes precedence.}
 
-\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.}
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area.
+May be a single value (applied to both directions) or a length-2 vector
+\code{c(horizontal, vertical)} to control the gap between columns and rows separately. Default: 0.05.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 

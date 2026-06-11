@@ -211,7 +211,9 @@ test_that("adjust_column_values handles invalid expression gracefully", {
 
 test_that(".add_plot_config returns default config without facet", {
     config <- VizModules:::.add_plot_config()
-    expect_true(config$edits$axisTitleText)
+    # Axis titles are rendered as draggable annotations, so native axis-title
+    # text editing is disabled even in the non-faceted configuration.
+    expect_false(config$edits$axisTitleText)
     expect_true(config$edits$titleText)
     expect_false(config$displaylogo)
     expect_equal(config$toImageButtonOptions$format, "png")
@@ -365,7 +367,109 @@ test_that(".axis_titles_as_annotations returns NULL input unchanged", {
 })
 
 
-# ─── .compute_linear_fit ─────────────────────────────────────────────────────
+# ─── .apply_legend_styling ───────────────────────────────────────────────────
+
+test_that(".apply_legend_styling sets legend title and text font sizes", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, title.size = 20, text.size = 9)
+    )
+    expect_equal(built$x$layout$legend$font$size, 9)
+    expect_equal(built$x$layout$legend$title$font$size, 20)
+})
+
+test_that(".apply_legend_styling ignores NULL/NA sizes", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
+    # Both NULL -> figure returned unchanged (no legend args added).
+    expect_identical(
+        VizModules:::.apply_legend_styling(fig, title.size = NULL, text.size = NULL),
+        fig
+    )
+    # Only text.size supplied -> title font untouched.
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, text.size = 11)
+    )
+    expect_equal(built$x$layout$legend$font$size, 11)
+    expect_null(built$x$layout$legend$title$font$size)
+})
+
+test_that(".apply_legend_styling returns NULL input unchanged", {
+    expect_null(VizModules:::.apply_legend_styling(NULL, title.size = 12))
+})
+
+test_that(".apply_legend_styling preserves existing legend position", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(legend = list(x = 0.8, y = 0.2, orientation = "h"))
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, text.size = 14)
+    )
+    expect_equal(built$x$layout$legend$x, 0.8)
+    expect_equal(built$x$layout$legend$y, 0.2)
+    expect_equal(built$x$layout$legend$orientation, "h")
+    expect_equal(built$x$layout$legend$font$size, 14)
+})
+
+
+# ─── .apply_facet_subplot_spacing ────────────────────────────────────────────
+
+test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
+    grid <- plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 2:4, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 4:2, type = "scatter"),
+        nrows = 2
+    )
+
+    result <- VizModules:::.apply_facet_subplot_spacing(
+        grid, spacing = c(0.2, 0.05), ncol = 2, nrow = 2
+    )
+
+    layout_names <- names(result$x$layout)
+    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
+    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
+
+    x_starts <- sort(unique(round(vapply(
+        x_axes, function(a) result$x$layout[[a]]$domain[1], numeric(1)
+    ), 6)))
+    x_ends <- sort(unique(round(vapply(
+        x_axes, function(a) result$x$layout[[a]]$domain[2], numeric(1)
+    ), 6)))
+    # Horizontal gap between the two columns equals spacing[1] = 0.2.
+    expect_equal(x_starts[2] - x_ends[1], 0.2, tolerance = 1e-6)
+
+    y_starts <- sort(unique(round(vapply(
+        y_axes, function(a) result$x$layout[[a]]$domain[1], numeric(1)
+    ), 6)))
+    y_ends <- sort(unique(round(vapply(
+        y_axes, function(a) result$x$layout[[a]]$domain[2], numeric(1)
+    ), 6)))
+    # Vertical gap between the two rows equals spacing[2] = 0.05.
+    expect_equal(y_starts[2] - y_ends[1], 0.05, tolerance = 1e-6)
+})
+
+test_that(".apply_facet_subplot_spacing treats a single value as both directions", {
+    grid <- plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 2:4, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 4:2, type = "scatter"),
+        nrows = 2
+    )
+
+    single <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
+    vec <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
+
+    get_domains <- function(fig, prefix) {
+        nms <- names(fig$x$layout)
+        axes <- nms[grepl(paste0("^", prefix, "[0-9]*$"), nms)]
+        lapply(axes, function(a) fig$x$layout[[a]]$domain)
+    }
+    expect_equal(get_domains(single, "xaxis"), get_domains(vec, "xaxis"))
+    expect_equal(get_domains(single, "yaxis"), get_domains(vec, "yaxis"))
+})
+
+
 
 test_that(".compute_linear_fit returns data frame for global fit", {
     df <- data.frame(x = 1:10, y = 2 * (1:10) + 1)

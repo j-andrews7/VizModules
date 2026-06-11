@@ -63,7 +63,9 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
 
-\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.}
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area.
+May be a single value (applied to both directions) or a length-2 vector
+\code{c(horizontal, vertical)} to control the gap between columns and rows separately. Default: 0.06.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 

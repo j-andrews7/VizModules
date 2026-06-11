@@ -98,6 +98,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Plotly
             .reset_plotly_inputs(session, defaults)
+            .reset_legend_inputs(session, defaults)
 
             # Lines
             .reset_lines_inputs(session, defaults = defaults)
@@ -174,7 +175,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
+                    spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
@@ -219,6 +220,13 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             #Custom Legend: 
             #Generates a custom dot plot circle legend based on the number of values in size_values. 
             fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.04, size_values = c(10, 20, 30, 40, 50))
+
+            # Apply uniform legend title/label font sizes
+            fig <- .apply_legend_styling(
+                fig,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- .axis_titles_as_annotations(fig)

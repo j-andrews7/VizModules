@@ -201,6 +201,60 @@
     fig
 }
 
+
+#' Apply uniform legend font styling to a plotly figure
+#'
+#' Sets the legend title and entry-label font sizes on a plotly figure so the
+#' "Legend" UI inputs behave consistently across plot types. Existing legend
+#' settings (orientation, position, font family/colour) are preserved because
+#' \code{plotly::layout()} merges the supplied attributes into the current
+#' layout. \code{NULL} or \code{NA} sizes are ignored, leaving the
+#' corresponding font size untouched.
+#'
+#' @param fig A plotly figure object.
+#' @param title.size Numeric font size for the legend title, or \code{NULL} to
+#'   leave unchanged.
+#' @param text.size Numeric font size for the legend entry labels, or
+#'   \code{NULL} to leave unchanged.
+#'
+#' @return The plotly figure with the requested legend font sizes applied.
+#'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
+#'   sizes are supplied.
+#'
+#' @author Jared Andrews
+#' @importFrom plotly layout
+#' @rdname INTERNAL_apply_legend_styling
+#' @keywords internal
+.apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+
+    legend_font <- list()
+    if (valid_size(text.size)) {
+        legend_font$size <- text.size
+    }
+    title_font <- list()
+    if (valid_size(title.size)) {
+        title_font$size <- title.size
+    }
+
+    legend_args <- list()
+    if (length(legend_font) > 0L) {
+        legend_args$font <- legend_font
+    }
+    if (length(title_font) > 0L) {
+        legend_args$title <- list(font = title_font)
+    }
+    if (length(legend_args) == 0L) {
+        return(fig)
+    }
+
+    plotly::layout(fig, legend = legend_args)
+}
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.
@@ -389,10 +443,13 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   calls, containing edit options, image download settings, extra modebar
 #'   buttons, and logo display preferences.
 #'
-#' @details The configuration enables interactive editing of axis titles,
+#' @details The configuration enables interactive editing of the
 #'   plot title, legend text and position, colorbar position and title, and
 #'   annotation tails. It also adds drawing tools (lines, paths, circles,
-#'   rectangles, and an eraser) to the modebar.
+#'   rectangles, and an eraser) to the modebar. Native cartesian axis-title
+#'   text editing is disabled because axis titles are rendered as draggable,
+#'   editable annotations (see \code{\link{.axis_titles_as_annotations}} and
+#'   \code{\link{.build_facet_annotations}}).
 #'
 #' @author Jacob Martin
 #' @keywords internal
@@ -402,7 +459,10 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     if (is.null(facet.by)) {
         config <- list(
             edits = list(
-                axisTitleText = TRUE,
+                # Native axis titles are replaced with draggable annotations via
+                # .axis_titles_as_annotations(), so disable native axis-title text
+                # editing to avoid misclicks competing with the annotation titles.
+                axisTitleText = FALSE,
                 titleText = TRUE,
                 annotationText = TRUE,
                 legendText = TRUE,
@@ -1443,8 +1503,11 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
 #'
 #' @param fig A plotly figure object (typically the result of `ggplotly()`).
 #' @param spacing Numeric fraction of the plot area to leave between panels
-#'   (default `0.04`). Must satisfy `spacing * (ncol - 1) < 1` and
-#'   `spacing * (nrow - 1) < 1`; otherwise the figure is returned unchanged.
+#'   (default `0.04`). May be a single value applied to both directions, or a
+#'   length-2 numeric vector `c(horizontal, vertical)` to control the gap
+#'   between columns and rows independently. Must satisfy
+#'   `horizontal * (ncol - 1) < 1` and `vertical * (nrow - 1) < 1`; otherwise
+#'   the figure is returned unchanged.
 #' @param ncol Optional integer. Number of facet columns. If `NULL` or `NA`,
 #'   detected from the number of distinct x-axis domain starts.
 #' @param nrow Optional integer. Number of facet rows. If `NULL` or `NA`,
@@ -1514,11 +1577,15 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     }
 
     # Guard against invalid spacing that would leave no room for panels.
-    if (!is.numeric(spacing) || length(spacing) != 1L || is.na(spacing) || spacing < 0) {
+    # `spacing` may be a single value (applied to both directions) or a
+    # length-2 vector c(horizontal, vertical).
+    if (!is.numeric(spacing) || length(spacing) < 1L || any(is.na(spacing)) || any(spacing < 0)) {
         return(fig)
     }
-    cell_w <- (1 - spacing * (ncol - 1)) / ncol
-    cell_h <- (1 - spacing * (nrow - 1)) / nrow
+    spacing_x <- spacing[1]
+    spacing_y <- if (length(spacing) >= 2L) spacing[2] else spacing[1]
+    cell_w <- (1 - spacing_x * (ncol - 1)) / ncol
+    cell_h <- (1 - spacing_y * (nrow - 1)) / nrow
     if (cell_w <= 0 || cell_h <= 0) {
         return(fig)
     }
@@ -1535,7 +1602,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     for (i in seq_along(x_axes)) {
         c <- col_idx[i]
         if (is.na(c) || c < 1L || c > ncol) next
-        x0 <- (c - 1) * (cell_w + spacing)
+        x0 <- (c - 1) * (cell_w + spacing_x)
         new_d <- c(x0, x0 + cell_w)
         fig$x$layout[[x_axes[i]]]$domain <- new_d
         x_new[[i]] <- new_d
@@ -1543,7 +1610,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     for (i in seq_along(y_axes)) {
         r <- row_idx[i]
         if (is.na(r) || r < 1L || r > nrow) next
-        y1 <- 1 - (r - 1) * (cell_h + spacing)
+        y1 <- 1 - (r - 1) * (cell_h + spacing_y)
         new_d <- c(y1 - cell_h, y1)
         fig$x$layout[[y_axes[i]]]$domain <- new_d
         y_new[[i]] <- new_d

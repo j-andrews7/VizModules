@@ -28,7 +28,9 @@
 #'   If \code{NULL} (default), columns are derived from \code{facet.nrow} and the number
 #'   of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
 #'   if both are provided, \code{facet.nrow} takes precedence.
-#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
+#'   May be a single value (applied to both directions) or a length-2 vector
+#'   `c(horizontal, vertical)` to control the gap between columns and rows separately. Default: 0.05.
 #' @param order.by Optional character vector, column name(s) to order data by before plotting. Default: NULL.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
@@ -106,6 +108,15 @@ linePlot <- function(data, x, y, palette.selection,
     )
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
+
+    # subplot.margin may be a single value (applied to all sides) or a length-2
+    # vector c(horizontal, vertical). plotly::subplot() expects a single value or
+    # c(left, right, top, bottom), so expand a length-2 vector accordingly.
+    subplot_margin_sides <- if (length(subplot.margin) >= 2L) {
+        c(subplot.margin[1], subplot.margin[1], subplot.margin[2], subplot.margin[2])
+    } else {
+        subplot.margin
+    }
 
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
@@ -239,7 +250,7 @@ linePlot <- function(data, x, y, palette.selection,
         nrows <- .resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
             plots, nrows = nrows, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))

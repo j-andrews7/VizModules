@@ -15,7 +15,9 @@
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
-#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
+#'   May be a single value (applied to both directions) or a length-2 vector
+#'   `c(horizontal, vertical)` to control the gap between columns and rows separately. Default: 0.06.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
 #' @param axis.linecolor Character, hex color for axis lines. Default: "black".
@@ -94,6 +96,15 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         x <- x[1:2]
     }
 
+    # subplot.margin may be a single value (applied to all sides) or a length-2
+    # vector c(horizontal, vertical). plotly::subplot() expects a single value or
+    # c(left, right, top, bottom), so expand a length-2 vector accordingly.
+    subplot_margin_sides <- if (length(subplot.margin) >= 2L) {
+        c(subplot.margin[1], subplot.margin[1], subplot.margin[2], subplot.margin[2])
+    } else {
+        subplot.margin
+    }
+
     # Unique x axis styling for dumbbellPlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -167,7 +178,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 
         fig <- subplot(
             plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
         annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)

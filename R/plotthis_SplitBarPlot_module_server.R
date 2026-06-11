@@ -269,6 +269,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             .reset_axes_inputs(session, defaults)
             .reset_plotly_inputs(session, defaults)
+            .reset_legend_inputs(session, defaults)
             .reset_lines_inputs(session, defaults = defaults)
         })
 
@@ -352,7 +353,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
             theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
-            theme_args$panel.spacing <- unit(isolate_fn(input$subplot.margin), "pt")
+            theme_args$panel.spacing.x <- unit(isolate_fn(input$subplot.margin.x), "pt")
+            theme_args$panel.spacing.y <- unit(isolate_fn(input$subplot.margin.y), "pt")
 
             # bar Plot
             p <- SplitBarPlot(
@@ -450,7 +452,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
+                    spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
@@ -491,6 +493,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+
+            # Apply uniform legend title/label font sizes
+            fig <- .apply_legend_styling(
+                fig,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- .axis_titles_as_annotations(fig)
