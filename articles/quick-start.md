@@ -104,14 +104,18 @@ for rapid prototyping.
 
 ## Export Summary Data:
 
-We provide `create_interactive_summary_data()` to assemble a compact
-record of the plotted data, stats, UI inputs, and the rendered plot, and
-`.create_download_file()` to turn that record into a downloadable
-`.zip`. `create_interactive_summary_data()` requires a reactive plotly
-plot; the output summary can be optionally enriched by both a stats
-reactive and a UI inputs reactive. `.create_download_file()` also
-accepts a named list of summaries (one per plot), which is how the Panel
-Builder bundles every plot on its canvas into a single download.
+We provide
+[`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+to assemble a compact record of the plotted data, stats, UI inputs, and
+the rendered plot, and
+[`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
+to turn that record into a downloadable `.zip`.
+[`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+requires a reactive plotly plot; the output summary can be optionally
+enriched by both a stats reactive and a UI inputs reactive.
+[`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
+also accepts a named list of summaries (one per plot), which is how the
+Panel Builder bundles every plot on its canvas into a single download.
 
 ``` r
 
@@ -148,14 +152,14 @@ if (interactive()) {
 
         # Assemble the summary, then wire up the download handler.
         plot_summary_reactive <- reactive({
-            create_interactive_summary_data(
+            collect_source_data(
                 plot_reactive   = plot_reactive,
                 stats_reactive  = stats_reactive,
                 inputs_reactive = AllInputs()
             )
         })
 
-        output$download_summary <- .create_download_file(
+        output$download_summary <- create_source_download_handler(
             data_list     = plot_summary_reactive,
             filename_base = "my_plot_summary"
         )

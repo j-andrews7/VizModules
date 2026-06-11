@@ -35,10 +35,13 @@ remotes::install_github("j-andrews7/VizModules")
   <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation:
   `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Build a free-form dashboard of draggable, resizable plots with the
-  **Panel Builder** app:
+- Check out the included Figure Builder app for a demo of how the
+  modules can be used together to build a free-form, multi-pane figure:
+  <https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/>
+- Run the Figure Builder app locally:
   `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
-- See the vignette for a full walkthrough:
+- See the vignette for a full walkthrough of using the modules in your
+  own apps:
   [`vignette("quick-start", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/quick-start.html)
 
 ### Using Modules in Your Own App
@@ -399,7 +402,10 @@ Function)](https://cran.r-project.org/package=dittoViz)
 
 ![](reference/figures/yPlot.png)
 
-plotthis::DotPlot:
+[plotthis_DotPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotApp.html)
+
+[(Source Plotting
+Function)](https://pwwang.github.io/plotthis/reference/dotplot.html)
 
 ![](reference/figures/DotPlot.png)
 
@@ -502,8 +508,10 @@ locally-installed sources of truth so it can use the package correctly.
 > [`?apply_stat_annotations`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md),
 > and the README “Statistical Testing” section; supported by the
 > BoxPlot, ViolinPlot, and yPlot modules. - Summary-data export —
-> `?create_interactive_summary_data` and `?.create_download_file`. - App
-> factory —
+> [`?collect_source_data`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+> and
+> [`?create_source_download_handler`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md). -
+> App factory —
 > [`?createModuleApp`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
 > (every `*App()` is a thin wrapper around it).
 >

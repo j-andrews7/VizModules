@@ -172,16 +172,15 @@ default data. You can also pass custom wrapper module functions to
 <div class="section level2">
 <h2 id="export-summary-data">Export Summary Data:<a class="anchor" aria-label="anchor" href="#export-summary-data"></a>
 </h2>
-<p>We provide <code>create_interactive_summary_data()</code> to assemble
-a compact record of the plotted data, stats, UI inputs, and the rendered
-plot, and <code>.create_download_file()</code> to turn that record into
-a downloadable <code>.zip</code>.
-<code>create_interactive_summary_data()</code> requires a reactive
-plotly plot; the output summary can be optionally enriched by both a
-stats reactive and a UI inputs reactive.
-<code>.create_download_file()</code> also accepts a named list of
-summaries (one per plot), which is how the Panel Builder bundles every
-plot on its canvas into a single download.</p>
+<p>We provide <code><a href="../reference/collect_source_data.html">collect_source_data()</a></code> to assemble a compact
+record of the plotted data, stats, UI inputs, and the rendered plot, and
+<code><a href="../reference/create_source_download_handler.html">create_source_download_handler()</a></code> to turn that record into a
+downloadable <code>.zip</code>. <code><a href="../reference/collect_source_data.html">collect_source_data()</a></code>
+requires a reactive plotly plot; the output summary can be optionally
+enriched by both a stats reactive and a UI inputs reactive.
+<code><a href="../reference/create_source_download_handler.html">create_source_download_handler()</a></code> also accepts a named list
+of summaries (one per plot), which is how the Panel Builder bundles
+every plot on its canvas into a single download.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -216,14 +215,14 @@ plot on its canvas into a single download.</p>
 <span></span>
 <span>        <span class="co"># Assemble the summary, then wire up the download handler.</span></span>
 <span>        <span class="va">plot_summary_reactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>            <span class="fu">create_interactive_summary_data</span><span class="op">(</span></span>
+<span>            <span class="fu"><a href="../reference/collect_source_data.html">collect_source_data</a></span><span class="op">(</span></span>
 <span>                plot_reactive   <span class="op">=</span> <span class="va">plot_reactive</span>,</span>
 <span>                stats_reactive  <span class="op">=</span> <span class="va">stats_reactive</span>,</span>
 <span>                inputs_reactive <span class="op">=</span> <span class="fu">AllInputs</span><span class="op">(</span><span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span>        <span class="va">output</span><span class="op">$</span><span class="va">download_summary</span> <span class="op">&lt;-</span> <span class="fu">.create_download_file</span><span class="op">(</span></span>
+<span>        <span class="va">output</span><span class="op">$</span><span class="va">download_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_source_download_handler.html">create_source_download_handler</a></span><span class="op">(</span></span>
 <span>            data_list     <span class="op">=</span> <span class="va">plot_summary_reactive</span>,</span>
 <span>            filename_base <span class="op">=</span> <span class="st">"my_plot_summary"</span></span>
 <span>        <span class="op">)</span></span>

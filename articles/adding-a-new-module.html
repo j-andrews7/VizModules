@@ -347,9 +347,6 @@ pattern:</p>
 <li><label><input type="checkbox">Add a <code>"Stats"</code> tab to
 the module’s <code>tabsetPanel</code> containing
 <code>.uniform_stats_inputs_ui(ns, defaults)</code>.</label></li>
-<li><label><input type="checkbox">Pass <code>has.stats = TRUE</code>
-to <code><a href="../reference/module_tack_ui.html">module_tack_ui()</a></code> so the conditionally visible “Save
-Stats” button is included.</label></li>
 </ul>
 </div>
 <div class="section level3">
@@ -370,13 +367,6 @@ them to the plotly figure.</label></li>
 <li><label><input type="checkbox">Add an <code>observeEvent</code> to
 update <code>stat.pairs</code> choices when the x or grouping column
 changes, using <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code>.</label></li>
-<li><label><input type="checkbox">Add an
-<code>observeEvent(input$stats.enabled)</code> to show/hide the “Save
-Stats” button via <code>shinyjs::show("download.stats.col")</code> /
-<code>shinyjs::hide("download.stats.col")</code>.</label></li>
-<li><label><input type="checkbox">Add a <code>downloadHandler</code>
-for <code>output$download.stats</code> that calls
-<code>write_stats_csv()</code>.</label></li>
 <li><label><input type="checkbox">Call
 <code>.reset_stats_inputs(session)</code> in the reset
 observer.</label></li>
@@ -415,10 +405,6 @@ y-axes</td>
 <tr class="odd">
 <td><code><a href="../reference/parse_pair_strings.html">parse_pair_strings()</a></code></td>
 <td>Convert selected pair strings back to list of length-2 vectors</td>
-</tr>
-<tr class="even">
-<td><code>write_stats_csv()</code></td>
-<td>Write stats CSV with metadata comment header</td>
 </tr>
 </tbody>
 </table>
