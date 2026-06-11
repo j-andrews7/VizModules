@@ -27,8 +27,9 @@ remotes::install_github("j-andrews7/VizModules")
 
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Build a free-form dashboard of draggable, resizable plots with the **Panel Builder** app: `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
-- See the vignette for a full walkthrough: [`vignette("quick-start", package = "VizModules")`][18]
+- Check out the included Figure Builder app for a demo of how the modules can be used together to build a free-form, multi-pane figure: https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/
+- Run the Figure Builder app locally: `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
+- See the vignette for a full walkthrough of using the modules in your own apps: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
 
@@ -285,7 +286,9 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/yPlot.png)
 
-plotthis::DotPlot:
+[plotthis_DotPlot:][24]
+
+[(Source Plotting Function)][25]
 
 ![](man/figures/DotPlot.png)
 
@@ -322,7 +325,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
 > - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, and yPlot modules.
-> - Summary-data export — `?create_interactive_summary_data` and `?.create_download_file`.
+> - Summary-data export — `?collect_source_data` and `?create_source_download_handler`.
 > - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
 >
 > **Rules:** All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
@@ -351,3 +354,6 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [21]: https://pwwang.github.io/plotthis/reference/densityhistoplot.html
 [22]: https://cran.r-project.org/package=dittoViz
 [23]: https://pwwang.github.io/plotthis/reference/barplot.html
+[24]: https://j-andrews7.github.io/VizModules/reference/plotthis_DotPlotApp.html
+[25]: https://pwwang.github.io/plotthis/reference/dotplot.html
+
