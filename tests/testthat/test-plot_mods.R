@@ -409,6 +409,32 @@ test_that(".apply_legend_styling preserves existing legend position", {
     expect_equal(built$x$layout$legend$font$size, 14)
 })
 
+test_that(".apply_legend_styling styles continuous colorbar legends", {
+    # Numeric colour mappings render a colorbar rather than a categorical
+    # legend, so the title/tick fonts live on the trace's marker$colorbar.
+    fig <- plotly::plot_ly(
+        x = 1:3, y = 1:3, type = "scatter", mode = "markers",
+        marker = list(
+            color = c(1, 2, 3),
+            colorbar = list(title = "value")
+        )
+    )
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, title.size = 18, text.size = 8)
+    )
+    cb <- NULL
+    for (tr in built$x$data) {
+        if (!is.null(tr$marker$colorbar)) {
+            cb <- tr$marker$colorbar
+            break
+        }
+    }
+    expect_false(is.null(cb))
+    title_size <- if (is.list(cb$title)) cb$title$font$size else cb$titlefont$size
+    expect_equal(title_size, 18)
+    expect_equal(cb$tickfont$size, 8)
+})
+
 
 # ─── .apply_facet_subplot_spacing ────────────────────────────────────────────
 

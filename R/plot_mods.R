@@ -211,18 +211,25 @@
 #' layout. \code{NULL} or \code{NA} sizes are ignored, leaving the
 #' corresponding font size untouched.
 #'
+#' Numeric colour mappings (for example \code{fill.by}/\code{color.by} on a
+#' continuous variable) are rendered as a \emph{colorbar} rather than a
+#' categorical legend. The layout-level legend font does not affect a colorbar,
+#' so the colorbar title and tick fonts are updated directly on each trace (and
+#' on any shared \code{coloraxis}) using the same sizes. This keeps the "Legend"
+#' controls functional for both categorical and continuous legends.
+#'
 #' @param fig A plotly figure object.
-#' @param title.size Numeric font size for the legend title, or \code{NULL} to
-#'   leave unchanged.
-#' @param text.size Numeric font size for the legend entry labels, or
+#' @param title.size Numeric font size for the legend (or colorbar) title, or
 #'   \code{NULL} to leave unchanged.
+#' @param text.size Numeric font size for the legend entry labels (or colorbar
+#'   tick labels), or \code{NULL} to leave unchanged.
 #'
 #' @return The plotly figure with the requested legend font sizes applied.
 #'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
 #'   sizes are supplied.
 #'
 #' @author Jared Andrews
-#' @importFrom plotly layout
+#' @importFrom plotly layout plotly_build
 #' @rdname INTERNAL_apply_legend_styling
 #' @keywords internal
 .apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
@@ -232,6 +239,13 @@
 
     valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
 
+    if (!valid_size(title.size) && !valid_size(text.size)) {
+        return(fig)
+    }
+
+    # Categorical legend: title/entry fonts are layout attributes that
+    # plotly::layout() merges into the current legend, preserving position,
+    # orientation, and font family/colour.
     legend_font <- list()
     if (valid_size(text.size)) {
         legend_font$size <- text.size
@@ -248,11 +262,52 @@
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
     }
-    if (length(legend_args) == 0L) {
-        return(fig)
+    if (length(legend_args) > 0L) {
+        fig <- plotly::layout(fig, legend = legend_args)
     }
 
-    plotly::layout(fig, legend = legend_args)
+    # Continuous legend (colorbar): styled per trace/coloraxis because the
+    # layout-level legend font has no effect on a colorbar.
+    style_colorbar <- function(cb) {
+        if (is.null(cb)) {
+            return(NULL)
+        }
+        if (valid_size(title.size)) {
+            # Newer plotly nests the title font under title$font; older
+            # versions (and ggplotly output) use the titlefont attribute.
+            if (is.list(cb$title)) {
+                cb$title$font$size <- title.size
+            } else {
+                cb$titlefont$size <- title.size
+            }
+        }
+        if (valid_size(text.size)) {
+            cb$tickfont$size <- text.size
+        }
+        cb
+    }
+
+    fig <- plotly::plotly_build(fig)
+
+    traces <- fig$x$data
+    if (!is.null(traces) && length(traces) > 0L) {
+        for (i in seq_along(traces)) {
+            for (key in c("marker", "line")) {
+                if (!is.null(traces[[i]][[key]]) &&
+                    !is.null(traces[[i]][[key]]$colorbar)) {
+                    fig$x$data[[i]][[key]]$colorbar <-
+                        style_colorbar(traces[[i]][[key]]$colorbar)
+                }
+            }
+        }
+    }
+
+    if (!is.null(fig$x$layout$coloraxis$colorbar)) {
+        fig$x$layout$coloraxis$colorbar <-
+            style_colorbar(fig$x$layout$coloraxis$colorbar)
+    }
+
+    fig
 }
 
 #' Compute linear regression fit line data
