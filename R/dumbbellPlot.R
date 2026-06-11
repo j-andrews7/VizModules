@@ -33,6 +33,7 @@
 #' @param title.font.size Numeric, font size for plot title. Default: 26.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
 #' @param title.font.color Character, hex color for plot title text. Default: "black".
+#' @param title.x.position Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.
 #' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
@@ -84,7 +85,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                         axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, 
                         title.text = "", title.font.size = 26, title.font.family = "Arial",
-                        title.font.color = "black", y.title = NULL, x.title = NULL, 
+                        title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, 
                         flip.x = FALSE, flip.y = FALSE,
                         x.adjustment = NULL, order.by = NULL) {
     
@@ -180,7 +181,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         title = list(
             text = title.text,
             font = list(size = title.font.size, family = title.font.family, color = title.font.color),
-            x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
+            x = title.x.position, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
         margin = list(t = 70),
         showlegend = show.legend,

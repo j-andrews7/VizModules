@@ -37,6 +37,7 @@ linePlot(
   title.font.size = 14,
   title.font.family = "Arial",
   title.font.color = "black",
+  title.x.position = 0.47,
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -128,6 +129,8 @@ if both are provided, \code{facet.nrow} takes precedence.}
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
 \item{title.font.color}{Character, hex color for plot title text. Default: "black".}
+
+\item{title.x.position}{Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.}
 
 \item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 
