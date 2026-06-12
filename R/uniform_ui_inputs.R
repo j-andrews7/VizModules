@@ -690,14 +690,11 @@
 #' @keywords internal
 .uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
-    # Shared fallback for the horizontal/vertical subplot spacing inputs: use a
-    # direction-specific default if supplied, otherwise the legacy single
-    # `subplot.margin` default, otherwise 0.1.
-    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
+
     tagList(
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric),
+                value = .get_default(defaults, "subplot.margin.x", 0.04, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -708,12 +705,12 @@
         ),
         tipify(
             numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric),
+                value = .get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
                 "Vertical spacing between facet panel rows as a fraction of the plot area",
-                "(e.g. 0.04). Only applies when faceting is active."
+                "(e.g. 0.1). Only applies when faceting is active."
             ),
             placement = "top", options = tip_opts
         )
