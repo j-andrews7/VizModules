@@ -594,7 +594,7 @@
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
-                value = .get_default(defaults, "margin.t", 100, is.numeric),
+                value = .get_default(defaults, "margin.t", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Top margin of the plot in pixels",
@@ -694,12 +694,12 @@
     tagList(
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = .get_default(defaults, "subplot.margin.x", 0.04, is.numeric),
+                value = .get_default(defaults, "subplot.margin.x", 0.03, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
                 "Horizontal spacing between facet panel columns as a fraction of the plot area",
-                "(e.g. 0.04). Only applies when faceting is active."
+                "(e.g. 0.03). Only applies when faceting is active."
             ),
             placement = "top", options = tip_opts
         ),
