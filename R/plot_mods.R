@@ -2510,10 +2510,12 @@ is_pure_type <- function(inputs, d) {
 #'
 #' The HTML "black circle" glyph (\code{&#9679;}, U+25CF) used by the custom
 #' size legend inks at roughly 0.44x its font-size across the sans-serif fonts
-#' in plotly's default font stack. A plotly marker's \code{size} attribute, by
-#' contrast, is its diameter in px. Dividing a target marker diameter by this
-#' ratio yields the glyph font-size that renders at that diameter, so the legend
-#' circles match the plotted dots.
+#' in plotly's default font stack (measured via the rendered ink bounding box;
+#' the ratio is a property of the glyph design and is stable across those
+#' fonts). A plotly marker's \code{size} attribute, by contrast, is its
+#' diameter in px. Dividing a target marker diameter by this ratio yields the
+#' glyph font-size that renders at that diameter, so the legend circles match
+#' the plotted dots.
 #'
 #' @keywords internal
 #' @noRd
@@ -2607,7 +2609,9 @@ is_pure_type <- function(inputs, d) {
     # glyph's rendered radius plus the requested gap so larger circles claim
     # proportionally more room and do not overlap once their font-sizes are
     # scaled up to match the plotted marker diameters. A nominal figure height
-    # converts the px diameters to paper-space radii.
+    # converts the px diameters to paper-space radii. The exact value only
+    # affects absolute spacing; if the real figure height differs the entries
+    # simply sit a little closer/further apart while staying proportional.
     nominal_height_px <- 500
     rendered_radii <- (size_values * .CIRCLE_GLYPH_DIAMETER_RATIO) / 2 / nominal_height_px
     centers <- numeric(length(size_values))
