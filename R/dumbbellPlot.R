@@ -15,7 +15,9 @@
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
-#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.
+#' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
+#'   May be a single value (applied to both directions) or a length-2 vector
+#'   `c(horizontal, vertical)` to control the gap between columns and rows separately. Default: 0.06.
 #' @param axis.showline Logical, whether to show axis border lines. Default: TRUE.
 #' @param axis.mirror Logical, whether to mirror axis lines on opposite side of plot. Default: TRUE.
 #' @param axis.linecolor Character, hex color for axis lines. Default: "black".
@@ -33,6 +35,7 @@
 #' @param title.font.size Numeric, font size for plot title. Default: 26.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
 #' @param title.font.color Character, hex color for plot title text. Default: "black".
+#' @param title.x.position Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.
 #' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
@@ -84,13 +87,22 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                         axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, 
                         title.text = "", title.font.size = 26, title.font.family = "Arial",
-                        title.font.color = "black", y.title = NULL, x.title = NULL, 
+                        title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, 
                         flip.x = FALSE, flip.y = FALSE,
                         x.adjustment = NULL, order.by = NULL) {
     
     # Ensure max 2 x values
     if (!is.null(x) && length(x) > 2) {
         x <- x[1:2]
+    }
+
+    # subplot.margin may be a single value (applied to all sides) or a length-2
+    # vector c(horizontal, vertical). plotly::subplot() expects a single value or
+    # c(left, right, top, bottom), so expand a length-2 vector accordingly.
+    subplot_margin_sides <- if (length(subplot.margin) >= 2L) {
+        c(subplot.margin[1], subplot.margin[1], subplot.margin[2], subplot.margin[2])
+    } else {
+        subplot.margin
     }
 
     # Unique x axis styling for dumbbellPlot:
@@ -166,7 +178,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 
         fig <- subplot(
             plots, nrows = 1, shareX = sharing$shareX, shareY = sharing$shareY,
-            titleX = FALSE, titleY = FALSE, margin = subplot.margin
+            titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
         annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
@@ -180,7 +192,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         title = list(
             text = title.text,
             font = list(size = title.font.size, family = title.font.family, color = title.font.color),
-            x = 0.47, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
+            x = title.x.position, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
         margin = list(t = 70),
         showlegend = show.legend,

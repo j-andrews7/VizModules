@@ -24,7 +24,7 @@ Depends:
     plotly,
     R (>= 4.5),
     shinyBS,
-    plotthis (>= 0.11.0)
+    plotthis (>= 0.12.1)
 Imports:
     roclang,
     colourpicker,

@@ -28,6 +28,7 @@
     updateSelectInput(session, "title.font.family", selected = .get_default(defaults, "title.font.family", "Arial"))
     updateColourInput(session, "title.font.color", value = .get_default(defaults, "title.font.color", "#000000"))
     updateNumericInput(session, "title.font.size", value = .get_default(defaults, "title.font.size", 26, is.numeric))
+    updateNumericInput(session, "axis.title.horizontal.position", value = .get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric))
     updateColourInput(session, "axis.title.font.color", value = .get_default(defaults, "axis.title.font.color", "#000000"))
     updateSelectInput(session, "axis.title.font.family", selected = .get_default(defaults, "axis.title.font.family", "Arial"))
     updateCheckboxInput(session, "axis.showline", value = .get_default(defaults, "axis.showline", TRUE, is.logical))
@@ -162,11 +163,41 @@
     updateNumericInput(session, "margin.b", value = .get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = .get_default(defaults, "margin.l", 70, is.numeric))
     updateNumericInput(session, "margin.r", value = .get_default(defaults, "margin.r", 70, is.numeric))
-    updateNumericInput(session, "subplot.margin", value = .get_default(defaults, "subplot.margin", 0.1, is.numeric))
+    subplot_margin_default <- .get_default(defaults, "subplot.margin", 0.1, is.numeric)
+    updateNumericInput(session, "subplot.margin.x",
+        value = .get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric))
+    updateNumericInput(session, "subplot.margin.y",
+        value = .get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric))
     updateColourInput(session, "shape.fill", value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))
     updateColourInput(session, "shape.line.color", value = .get_default(defaults, "shape.line.color", "black"))
     updateNumericInput(session, "shape.line.width", value = .get_default(defaults, "shape.line.width", 4, is.numeric))
     updateSelectInput(session, "shape.linetype", selected = .get_default(defaults, "shape.linetype", "solid"))
     updateNumericInput(session, "shape.opacity", value = .get_default(defaults, "shape.opacity", 1, is.numeric))
+    invisible(NULL)
+}
+
+
+#' Reset uniform Legend inputs to defaults
+#'
+#' Resets the legend styling inputs (legend title and entry label font sizes)
+#' created by [.uniform_legend_inputs_ui()] back to their default values.
+#'
+#' @param session The Shiny session object.
+#' @param defaults A named list of default values. When provided, inputs reset
+#'   to these values rather than hardcoded fallbacks. Typically the same list
+#'   passed to the UI function.
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateNumericInput
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_legend_inputs
+#' @keywords internal
+.reset_legend_inputs <- function(session, defaults = NULL) {
+    updateNumericInput(session, "legend.title.size",
+        value = .get_default(defaults, "legend.title.size", 14, is.numeric))
+    updateNumericInput(session, "legend.text.size",
+        value = .get_default(defaults, "legend.text.size", 12, is.numeric))
     invisible(NULL)
 }

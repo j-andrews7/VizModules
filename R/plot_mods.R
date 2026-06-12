@@ -92,6 +92,224 @@
     fig
 }
 
+#' Convert native cartesian axis titles to draggable annotations
+#'
+#' Plotly's native axis titles can have their text edited interactively but
+#' cannot be dragged to a new position. Faceted figures already render their
+#' shared x/y axis titles as paper-anchored annotations (via
+#' \code{\link{.build_facet_annotations}}), which the plot configuration makes
+#' both editable and draggable. This helper brings the same behaviour to
+#' single-panel (non-faceted) figures by replacing the native x/y axis titles
+#' with equivalent paper-anchored annotations.
+#'
+#' The figure is first built with \code{plotly::plotly_build()} so that titles
+#' assigned via \code{layout()} (which are otherwise held in
+#' \code{layoutAttrs} until build time) are consolidated into the layout. Any
+#' pre-existing annotations (for example statistical brackets or facet labels)
+#' are preserved, and the font already applied to each native axis title is
+#' carried over to the corresponding annotation.
+#'
+#' Multi-panel figures (faceting or \code{split.by}, detected by the presence
+#' of secondary axes such as \code{xaxis2}/\code{yaxis2}) are returned
+#' unchanged, since their shared titles are already draggable annotations.
+#'
+#' @param fig A plotly figure object.
+#'
+#' @return The plotly figure with single-panel axis titles converted to
+#'   paper-anchored, draggable annotations. Returns the figure unchanged when
+#'   it is faceted/split or has no axis titles.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_axis_titles_as_annotations
+#' @keywords internal
+.axis_titles_as_annotations <- function(fig) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    # Build so that titles set via layout() (held in layoutAttrs) are
+    # consolidated into fig$x$layout. Idempotent for already-built figures.
+    fig <- plotly::plotly_build(fig)
+
+    if (is.null(fig$x) || is.null(fig$x$layout)) {
+        return(fig)
+    }
+
+    layout_names <- names(fig$x$layout)
+
+    # Multi-panel (faceted / split) figures already render their shared axis
+    # titles as draggable annotations, so leave them untouched.
+    has_secondary_axes <- any(grepl("^xaxis[2-9][0-9]*$", layout_names)) ||
+        any(grepl("^yaxis[2-9][0-9]*$", layout_names))
+    if (has_secondary_axes) {
+        return(fig)
+    }
+
+    extract <- function(title) {
+        if (is.null(title)) {
+            return(list(text = NULL, font = NULL))
+        }
+        if (is.character(title)) {
+            return(list(text = title, font = NULL))
+        }
+        if (is.list(title)) {
+            return(list(text = title$text, font = title$font))
+        }
+        list(text = NULL, font = NULL)
+    }
+
+    x_axis <- extract(fig$x$layout$xaxis$title)
+    y_axis <- extract(fig$x$layout$yaxis$title)
+
+    has_x <- !is.null(x_axis$text) && nzchar(x_axis$text)
+    has_y <- !is.null(y_axis$text) && nzchar(y_axis$text)
+    if (!has_x && !has_y) {
+        return(fig)
+    }
+
+    # Clear native titles so they do not render alongside the annotations.
+    if (!is.null(fig$x$layout$xaxis)) {
+        fig$x$layout$xaxis$title <- list(text = "")
+    }
+    if (!is.null(fig$x$layout$yaxis)) {
+        fig$x$layout$yaxis$title <- list(text = "")
+    }
+
+    new_anns <- list()
+    if (has_x) {
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = 0.5, y = -0.1, xref = "paper", yref = "paper",
+            text = x_axis$text, showarrow = FALSE, xanchor = "center",
+            yanchor = "top", annotationType = "axis", font = x_axis$font
+        )
+    }
+    if (has_y) {
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = -0.05, y = 0.5, xref = "paper", yref = "paper",
+            text = y_axis$text, showarrow = FALSE, xanchor = "center",
+            yanchor = "middle", textangle = -90, annotationType = "axis",
+            font = y_axis$font
+        )
+    }
+
+    existing <- fig$x$layout$annotations
+    if (is.null(existing)) {
+        existing <- list()
+    }
+    fig$x$layout$annotations <- c(existing, new_anns)
+
+    fig
+}
+
+
+#' Apply uniform legend font styling to a plotly figure
+#'
+#' Sets the legend title and entry-label font sizes on a plotly figure so the
+#' "Legend" UI inputs behave consistently across plot types. Existing legend
+#' settings (orientation, position, font family/colour) are preserved because
+#' \code{plotly::layout()} merges the supplied attributes into the current
+#' layout. \code{NULL} or \code{NA} sizes are ignored, leaving the
+#' corresponding font size untouched.
+#'
+#' Numeric colour mappings (for example \code{fill.by}/\code{color.by} on a
+#' continuous variable) are rendered as a \emph{colorbar} rather than a
+#' categorical legend. The layout-level legend font does not affect a colorbar,
+#' so the colorbar title and tick fonts are updated directly on each trace (and
+#' on any shared \code{coloraxis}) using the same sizes. This keeps the "Legend"
+#' controls functional for both categorical and continuous legends.
+#'
+#' @param fig A plotly figure object.
+#' @param title.size Numeric font size for the legend (or colorbar) title, or
+#'   \code{NULL} to leave unchanged.
+#' @param text.size Numeric font size for the legend entry labels (or colorbar
+#'   tick labels), or \code{NULL} to leave unchanged.
+#'
+#' @return The plotly figure with the requested legend font sizes applied.
+#'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
+#'   sizes are supplied.
+#'
+#' @author Jared Andrews
+#' @importFrom plotly layout plotly_build
+#' @rdname INTERNAL_apply_legend_styling
+#' @keywords internal
+.apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+
+    if (!valid_size(title.size) && !valid_size(text.size)) {
+        return(fig)
+    }
+
+    # Categorical legend: title/entry fonts are layout attributes that
+    # plotly::layout() merges into the current legend, preserving position,
+    # orientation, and font family/colour.
+    legend_font <- list()
+    if (valid_size(text.size)) {
+        legend_font$size <- text.size
+    }
+    title_font <- list()
+    if (valid_size(title.size)) {
+        title_font$size <- title.size
+    }
+
+    legend_args <- list()
+    if (length(legend_font) > 0L) {
+        legend_args$font <- legend_font
+    }
+    if (length(title_font) > 0L) {
+        legend_args$title <- list(font = title_font)
+    }
+    if (length(legend_args) > 0L) {
+        fig <- plotly::layout(fig, legend = legend_args)
+    }
+
+    # Continuous legend (colorbar): styled per trace/coloraxis because the
+    # layout-level legend font has no effect on a colorbar.
+    style_colorbar <- function(cb) {
+        if (is.null(cb)) {
+            return(NULL)
+        }
+        if (valid_size(title.size)) {
+            # Newer plotly nests the title font under title$font; older
+            # versions (and ggplotly output) use the titlefont attribute.
+            if (is.list(cb$title)) {
+                cb$title$font$size <- title.size
+            } else {
+                cb$titlefont$size <- title.size
+            }
+        }
+        if (valid_size(text.size)) {
+            cb$tickfont$size <- text.size
+        }
+        cb
+    }
+
+    fig <- plotly::plotly_build(fig)
+
+    traces <- fig$x$data
+    if (!is.null(traces) && length(traces) > 0L) {
+        for (i in seq_along(traces)) {
+            for (key in c("marker", "line")) {
+                if (!is.null(traces[[i]][[key]]) &&
+                    !is.null(traces[[i]][[key]]$colorbar)) {
+                    fig$x$data[[i]][[key]]$colorbar <-
+                        style_colorbar(traces[[i]][[key]]$colorbar)
+                }
+            }
+        }
+    }
+
+    if (!is.null(fig$x$layout$coloraxis$colorbar)) {
+        fig$x$layout$coloraxis$colorbar <-
+            style_colorbar(fig$x$layout$coloraxis$colorbar)
+    }
+
+    fig
+}
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.
@@ -280,10 +498,13 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   calls, containing edit options, image download settings, extra modebar
 #'   buttons, and logo display preferences.
 #'
-#' @details The configuration enables interactive editing of axis titles,
+#' @details The configuration enables interactive editing of the
 #'   plot title, legend text and position, colorbar position and title, and
 #'   annotation tails. It also adds drawing tools (lines, paths, circles,
-#'   rectangles, and an eraser) to the modebar.
+#'   rectangles, and an eraser) to the modebar. Native cartesian axis-title
+#'   text editing is disabled because axis titles are rendered as draggable,
+#'   editable annotations (see \code{\link{.axis_titles_as_annotations}} and
+#'   \code{\link{.build_facet_annotations}}).
 #'
 #' @author Jacob Martin
 #' @keywords internal
@@ -293,7 +514,10 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     if (is.null(facet.by)) {
         config <- list(
             edits = list(
-                axisTitleText = TRUE,
+                # Native axis titles are replaced with draggable annotations via
+                # .axis_titles_as_annotations(), so disable native axis-title text
+                # editing to avoid misclicks competing with the annotation titles.
+                axisTitleText = FALSE,
                 titleText = TRUE,
                 annotationText = TRUE,
                 legendText = TRUE,
@@ -1334,8 +1558,11 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
 #'
 #' @param fig A plotly figure object (typically the result of `ggplotly()`).
 #' @param spacing Numeric fraction of the plot area to leave between panels
-#'   (default `0.04`). Must satisfy `spacing * (ncol - 1) < 1` and
-#'   `spacing * (nrow - 1) < 1`; otherwise the figure is returned unchanged.
+#'   (default `0.04`). May be a single value applied to both directions, or a
+#'   length-2 numeric vector `c(horizontal, vertical)` to control the gap
+#'   between columns and rows independently. Must satisfy
+#'   `horizontal * (ncol - 1) < 1` and `vertical * (nrow - 1) < 1`; otherwise
+#'   the figure is returned unchanged.
 #' @param ncol Optional integer. Number of facet columns. If `NULL` or `NA`,
 #'   detected from the number of distinct x-axis domain starts.
 #' @param nrow Optional integer. Number of facet rows. If `NULL` or `NA`,
@@ -1405,11 +1632,15 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     }
 
     # Guard against invalid spacing that would leave no room for panels.
-    if (!is.numeric(spacing) || length(spacing) != 1L || is.na(spacing) || spacing < 0) {
+    # `spacing` may be a single value (applied to both directions) or a
+    # length-2 vector c(horizontal, vertical).
+    if (!is.numeric(spacing) || length(spacing) < 1L || any(is.na(spacing)) || any(spacing < 0)) {
         return(fig)
     }
-    cell_w <- (1 - spacing * (ncol - 1)) / ncol
-    cell_h <- (1 - spacing * (nrow - 1)) / nrow
+    spacing_x <- spacing[1]
+    spacing_y <- if (length(spacing) >= 2L) spacing[2] else spacing[1]
+    cell_w <- (1 - spacing_x * (ncol - 1)) / ncol
+    cell_h <- (1 - spacing_y * (nrow - 1)) / nrow
     if (cell_w <= 0 || cell_h <= 0) {
         return(fig)
     }
@@ -1426,7 +1657,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     for (i in seq_along(x_axes)) {
         c <- col_idx[i]
         if (is.na(c) || c < 1L || c > ncol) next
-        x0 <- (c - 1) * (cell_w + spacing)
+        x0 <- (c - 1) * (cell_w + spacing_x)
         new_d <- c(x0, x0 + cell_w)
         fig$x$layout[[x_axes[i]]]$domain <- new_d
         x_new[[i]] <- new_d
@@ -1434,7 +1665,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     for (i in seq_along(y_axes)) {
         r <- row_idx[i]
         if (is.na(r) || r < 1L || r > nrow) next
-        y1 <- 1 - (r - 1) * (cell_h + spacing)
+        y1 <- 1 - (r - 1) * (cell_h + spacing_y)
         new_d <- c(y1 - cell_h, y1)
         fig$x$layout[[y_axes[i]]]$domain <- new_d
         y_new[[i]] <- new_d
@@ -2275,6 +2506,20 @@ is_pure_type <- function(inputs, d) {
     }
     val
 }
+#' Rendered diameter of the U+25CF circle glyph relative to its font-size
+#'
+#' The HTML "black circle" glyph (\code{&#9679;}, U+25CF) used by the custom
+#' size legend inks at roughly 0.44x its font-size across the sans-serif fonts
+#' in plotly's default font stack (measured via the rendered ink bounding box;
+#' the ratio is a property of the glyph design and is stable across those
+#' fonts). A plotly marker's \code{size} attribute, by contrast, is its
+#' diameter in px. Dividing a target marker diameter by this ratio yields the
+#' glyph font-size that renders at that diameter, so the legend circles match
+#' the plotted dots.
+#'
+#' @keywords internal
+#' @noRd
+.CIRCLE_GLYPH_DIAMETER_RATIO <- 0.44
 #' Add a custom bubble-size legend to a plotly figure
 #'
 #' Renders a manual size legend as a vertical column of HTML circle
@@ -2290,8 +2535,18 @@ is_pure_type <- function(inputs, d) {
 #' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
 #'   consecutive legend entries. Defaults to \code{0.03}.
 #' @param size_values Numeric vector of font sizes (px) used to render the
-#'   circle glyphs, one per legend entry. Defaults to
-#'   \code{c(10, 20, 30, 40, 50)}.
+#'   circle glyphs, one per legend entry. When \code{NULL} (the default), the
+#'   glyph sizes are derived from the actual marker sizes in \code{fig} so the
+#'   legend reflects the plot's size scaling (i.e. the \code{size_min}/
+#'   \code{size_max} passed to the plot function); the marker pixel diameters
+#'   are converted to glyph font-sizes via \code{.CIRCLE_GLYPH_DIAMETER_RATIO}
+#'   so the rendered circles match the plotted dots. When supplied, the vector
+#'   is used verbatim as font sizes and its length determines the number of
+#'   legend entries.
+#' @param title.size Numeric, or \code{NULL}. Font size (px) of the legend
+#'   title annotation. When \code{NULL}, plotly's default is used.
+#' @param text.size Numeric, or \code{NULL}. Font size (px) of the numeric
+#'   label annotations. Defaults to \code{12} when \code{NULL}.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
 #'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
@@ -2300,7 +2555,8 @@ is_pure_type <- function(inputs, d) {
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
-.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = c(10, 20, 30, 40, 50)) {
+.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
+                           title.size = NULL, text.size = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -2312,16 +2568,66 @@ is_pure_type <- function(inputs, d) {
         return(fig)
     }
 
+    valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+
+    n_breaks <- if (!is.null(size_values)) length(size_values) else 5L
     breaks <- seq(
         from = min(vals, na.rm = TRUE),
         to = max(vals, na.rm = TRUE),
-        length.out = length(size_values)
+        length.out = n_breaks
     )
     labels <- format(breaks, trim = TRUE, scientific = FALSE)
+
+    # Derive the circle glyph sizes from the plot's actual marker sizes so the
+    # legend matches the size scaling produced by size_min/size_max. The marker
+    # sizes already encode the area-based scale, so the smallest/largest markers
+    # anchor the smallest/largest legend entries and the intermediate breaks
+    # follow ggplot2's sqrt (area) interpolation (plotthis uses
+    # scale_size(range = c(size_min, size_max)), i.e. area scaling).
+    if (is.null(size_values)) {
+        marker_sizes <- .extract_marker_sizes(fig)
+        if (length(marker_sizes) > 0) {
+            d_min <- min(marker_sizes)
+            d_max <- max(marker_sizes)
+            frac <- if (n_breaks > 1L) seq(0, 1, length.out = n_breaks) else 0
+            # Break diameters (px) along ggplot2's area (sqrt) size scale.
+            break_diameters <- d_min + (d_max - d_min) * sqrt(frac)
+            # A plotly marker's `size` is its diameter in px, but the HTML circle
+            # glyph (U+25CF) only inks ~0.44x its font-size. Scale the font-size
+            # up so the legend glyphs render at the plotted marker diameters.
+            size_values <- break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
+        } else {
+            size_values <- c(10, 20, 30, 40, 50)
+        }
+    }
 
     start_y <- 0.95
     x_pos <- 1.02
     label_x <- 1.06
+
+    # Vertical centres (paper units) for each legend entry. Advance by each
+    # glyph's rendered radius plus the requested gap so larger circles claim
+    # proportionally more room and do not overlap once their font-sizes are
+    # scaled up to match the plotted marker diameters. A nominal figure height
+    # converts the px diameters to paper-space radii. The exact value only
+    # affects absolute spacing; if the real figure height differs the entries
+    # simply sit a little closer/further apart while staying proportional.
+    nominal_height_px <- 500
+    rendered_radii <- (size_values * .CIRCLE_GLYPH_DIAMETER_RATIO) / 2 / nominal_height_px
+    centers <- numeric(length(size_values))
+    for (i in seq_along(size_values)) {
+        centers[i] <- if (i == 1L) {
+            start_y - rendered_radii[i]
+        } else {
+            centers[i - 1L] - rendered_radii[i - 1L] - gap - rendered_radii[i]
+        }
+    }
+
+    title_font <- list(color = "#000000")
+    if (valid_size(title.size)) {
+        title_font$size <- title.size
+    }
+    label_font_size <- if (valid_size(text.size)) text.size else 12
 
     fig <- fig |> add_annotations(
         x         = x_pos + 0.1,
@@ -2331,10 +2637,11 @@ is_pure_type <- function(inputs, d) {
         text      = size_by,
         showarrow = FALSE,
         xanchor   = "center",
-        yanchor   = "middle"
+        yanchor   = "middle",
+        font      = title_font
     )
     for (i in seq_along(size_values)) {
-        yc <- start_y - (i - 1) * gap
+        yc <- centers[i]
 
         # Circle annotation
         fig <- fig |> add_annotations(
@@ -2358,9 +2665,39 @@ is_pure_type <- function(inputs, d) {
             showarrow = FALSE,
             xanchor   = "left",
             yanchor   = "middle",
-            font      = list(size = 12, color = "#000000")
+            font      = list(size = label_font_size, color = "#000000")
         )
     }
-  
+
     return(fig)
+}
+
+#' Extract marker sizes from a plotly figure
+#'
+#' Builds the figure (to consolidate any deferred trace attributes) and
+#' collects the numeric marker sizes across all traces. Used to derive a
+#' custom size legend that matches the plot's actual point sizes.
+#'
+#' @param fig A plotly figure object.
+#'
+#' @return A numeric vector of finite marker sizes, possibly empty.
+#'
+#' @importFrom plotly plotly_build
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_extract_marker_sizes
+.extract_marker_sizes <- function(fig) {
+    built <- tryCatch(plotly::plotly_build(fig), error = function(e) NULL)
+    if (is.null(built) || is.null(built$x$data)) {
+        return(numeric(0))
+    }
+    sizes <- numeric(0)
+    for (tr in built$x$data) {
+        s <- tr$marker$size
+        if (!is.null(s) && is.numeric(s)) {
+            sizes <- c(sizes, s)
+        }
+    }
+    sizes[is.finite(sizes)]
 }

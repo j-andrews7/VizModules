@@ -211,7 +211,9 @@ test_that("adjust_column_values handles invalid expression gracefully", {
 
 test_that(".add_plot_config returns default config without facet", {
     config <- VizModules:::.add_plot_config()
-    expect_true(config$edits$axisTitleText)
+    # Axis titles are rendered as draggable annotations, so native axis-title
+    # text editing is disabled even in the non-faceted configuration.
+    expect_false(config$edits$axisTitleText)
     expect_true(config$edits$titleText)
     expect_false(config$displaylogo)
     expect_equal(config$toImageButtonOptions$format, "png")
@@ -291,7 +293,209 @@ test_that(".apply_subplot_axis_styling handles empty layout names", {
     expect_s3_class(result, "plotly")
 })
 
-# ─── .compute_linear_fit ─────────────────────────────────────────────────────
+# ─── .axis_titles_as_annotations ─────────────────────────────────────────────
+
+test_that(".axis_titles_as_annotations converts single-panel titles to annotations", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines") |>
+        plotly::layout(xaxis = list(title = "Weight"), yaxis = list(title = "MPG"))
+
+    result <- VizModules:::.axis_titles_as_annotations(fig)
+    built <- plotly::plotly_build(result)
+
+    ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    expect_true("Weight" %in% ann_text)
+    expect_true("MPG" %in% ann_text)
+
+    # Native axis titles cleared so they do not render twice
+    expect_identical(built$x$layout$xaxis$title$text, "")
+    expect_identical(built$x$layout$yaxis$title$text, "")
+
+    # Annotations are paper-anchored and the y title is rotated
+    x_ann <- Filter(function(a) identical(a$text, "Weight"), built$x$layout$annotations)[[1]]
+    y_ann <- Filter(function(a) identical(a$text, "MPG"), built$x$layout$annotations)[[1]]
+    expect_identical(x_ann$xref, "paper")
+    expect_identical(x_ann$yref, "paper")
+    expect_equal(y_ann$textangle, -90)
+})
+
+test_that(".axis_titles_as_annotations preserves the native axis title font", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(
+            xaxis = list(title = list(text = "Cyl", font = list(size = 18, color = "red"))),
+            yaxis = list(title = list(text = "MPG", font = list(size = 18)))
+        )
+
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    x_ann <- Filter(function(a) identical(a$text, "Cyl"), built$x$layout$annotations)[[1]]
+    expect_equal(x_ann$font$size, 18)
+    expect_equal(x_ann$font$color, "red")
+})
+
+test_that(".axis_titles_as_annotations preserves pre-existing annotations", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(
+            xaxis = list(title = "X"), yaxis = list(title = "Y"),
+            annotations = list(list(x = 1, y = 1, text = "stat", showarrow = FALSE))
+        )
+
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    expect_true(all(c("stat", "X", "Y") %in% ann_text))
+})
+
+test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
+    # A subplot figure has secondary axes (xaxis2/yaxis2); its shared titles
+    # are already draggable annotations, so the helper must not alter it.
+    fig <- plotly::plotly_build(plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        nrows = 1
+    ))
+    n_before <- length(fig$x$layout$annotations)
+    result <- VizModules:::.axis_titles_as_annotations(fig)
+    expect_equal(length(result$x$layout$annotations), n_before)
+})
+
+test_that(".axis_titles_as_annotations is a no-op without axis titles", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
+    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    expect_null(built$x$layout$annotations)
+})
+
+test_that(".axis_titles_as_annotations returns NULL input unchanged", {
+    expect_null(VizModules:::.axis_titles_as_annotations(NULL))
+})
+
+
+# ─── .apply_legend_styling ───────────────────────────────────────────────────
+
+test_that(".apply_legend_styling sets legend title and text font sizes", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, title.size = 20, text.size = 9)
+    )
+    expect_equal(built$x$layout$legend$font$size, 9)
+    expect_equal(built$x$layout$legend$title$font$size, 20)
+})
+
+test_that(".apply_legend_styling ignores NULL/NA sizes", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
+    # Both NULL -> figure returned unchanged (no legend args added).
+    expect_identical(
+        VizModules:::.apply_legend_styling(fig, title.size = NULL, text.size = NULL),
+        fig
+    )
+    # Only text.size supplied -> title font untouched.
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, text.size = 11)
+    )
+    expect_equal(built$x$layout$legend$font$size, 11)
+    expect_null(built$x$layout$legend$title$font$size)
+})
+
+test_that(".apply_legend_styling returns NULL input unchanged", {
+    expect_null(VizModules:::.apply_legend_styling(NULL, title.size = 12))
+})
+
+test_that(".apply_legend_styling preserves existing legend position", {
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
+        plotly::layout(legend = list(x = 0.8, y = 0.2, orientation = "h"))
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, text.size = 14)
+    )
+    expect_equal(built$x$layout$legend$x, 0.8)
+    expect_equal(built$x$layout$legend$y, 0.2)
+    expect_equal(built$x$layout$legend$orientation, "h")
+    expect_equal(built$x$layout$legend$font$size, 14)
+})
+
+test_that(".apply_legend_styling styles continuous colorbar legends", {
+    # Numeric colour mappings render a colorbar rather than a categorical
+    # legend, so the title/tick fonts live on the trace's marker$colorbar.
+    fig <- plotly::plot_ly(
+        x = 1:3, y = 1:3, type = "scatter", mode = "markers",
+        marker = list(
+            color = c(1, 2, 3),
+            colorbar = list(title = "value")
+        )
+    )
+    built <- plotly::plotly_build(
+        VizModules:::.apply_legend_styling(fig, title.size = 18, text.size = 8)
+    )
+    cb <- NULL
+    for (tr in built$x$data) {
+        if (!is.null(tr$marker$colorbar)) {
+            cb <- tr$marker$colorbar
+            break
+        }
+    }
+    expect_false(is.null(cb))
+    title_size <- if (is.list(cb$title)) cb$title$font$size else cb$titlefont$size
+    expect_equal(title_size, 18)
+    expect_equal(cb$tickfont$size, 8)
+})
+
+
+# ─── .apply_facet_subplot_spacing ────────────────────────────────────────────
+
+test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
+    grid <- plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 2:4, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 4:2, type = "scatter"),
+        nrows = 2
+    )
+
+    result <- VizModules:::.apply_facet_subplot_spacing(
+        grid, spacing = c(0.2, 0.05), ncol = 2, nrow = 2
+    )
+
+    layout_names <- names(result$x$layout)
+    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
+    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
+
+    x_starts <- sort(unique(round(vapply(
+        x_axes, function(a) result$x$layout[[a]]$domain[1], numeric(1)
+    ), 6)))
+    x_ends <- sort(unique(round(vapply(
+        x_axes, function(a) result$x$layout[[a]]$domain[2], numeric(1)
+    ), 6)))
+    # Horizontal gap between the two columns equals spacing[1] = 0.2.
+    expect_equal(x_starts[2] - x_ends[1], 0.2, tolerance = 1e-6)
+
+    y_starts <- sort(unique(round(vapply(
+        y_axes, function(a) result$x$layout[[a]]$domain[1], numeric(1)
+    ), 6)))
+    y_ends <- sort(unique(round(vapply(
+        y_axes, function(a) result$x$layout[[a]]$domain[2], numeric(1)
+    ), 6)))
+    # Vertical gap between the two rows equals spacing[2] = 0.05.
+    expect_equal(y_starts[2] - y_ends[1], 0.05, tolerance = 1e-6)
+})
+
+test_that(".apply_facet_subplot_spacing treats a single value as both directions", {
+    grid <- plotly::subplot(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 2:4, type = "scatter"),
+        plotly::plot_ly(x = 1:3, y = 4:2, type = "scatter"),
+        nrows = 2
+    )
+
+    single <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
+    vec <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
+
+    get_domains <- function(fig, prefix) {
+        nms <- names(fig$x$layout)
+        axes <- nms[grepl(paste0("^", prefix, "[0-9]*$"), nms)]
+        lapply(axes, function(a) fig$x$layout[[a]]$domain)
+    }
+    expect_equal(get_domains(single, "xaxis"), get_domains(vec, "xaxis"))
+    expect_equal(get_domains(single, "yaxis"), get_domains(vec, "yaxis"))
+})
+
+
 
 test_that(".compute_linear_fit returns data frame for global fit", {
     df <- data.frame(x = 1:10, y = 2 * (1:10) + 1)
@@ -814,4 +1018,73 @@ test_that(".custom_legend appends size-legend annotations for numeric size_by", 
     expect_equal(length(built$x$layout$annotations), 16)
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
     expect_true("pct_expressed" %in% ann_text)
+})
+
+test_that(".custom_legend applies legend title and label font sizes to annotations", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    result <- VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed",
+        size_values = c(10, 20, 30, 40, 50),
+        title.size = 22, text.size = 9
+    )
+    built <- plotly::plotly_build(result)
+    anns <- built$x$layout$annotations
+
+    title_ann <- Filter(function(a) identical(a$text, "pct_expressed"), anns)
+    expect_equal(title_ann[[1]]$font$size, 22)
+
+    # Numeric label annotations carry the requested text size.
+    label_anns <- Filter(
+        function(a) !is.null(a$font$size) && grepl("^[0-9.]+$", a$text), anns
+    )
+    expect_true(length(label_anns) >= 5)
+    expect_true(all(vapply(label_anns, function(a) a$font$size, numeric(1)) == 9))
+})
+
+test_that(".custom_legend derives circle sizes from marker sizes when size_values is NULL", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers",
+        marker = list(size = ~pct_expressed)
+    )
+
+    result <- VizModules:::.custom_legend(fig, data, size_by = "pct_expressed")
+    built <- plotly::plotly_build(result)
+    anns <- built$x$layout$annotations
+    circle_text <- Filter(function(a) grepl("font-size", a$text), anns)
+    expect_equal(length(circle_text), 5)
+
+    sizes <- as.numeric(sub(".*font-size:([0-9.]+)px.*", "\\1", vapply(
+        circle_text, function(a) a$text, character(1)
+    )))
+    # The glyph font-sizes are the marker pixel diameters scaled up by the
+    # circle-glyph ink ratio so the rendered circles match the plotted dots.
+    msizes <- VizModules:::.extract_marker_sizes(fig)
+    ratio <- VizModules:::.CIRCLE_GLYPH_DIAMETER_RATIO
+    expect_equal(min(sizes), min(msizes) / ratio)
+    expect_equal(max(sizes), max(msizes) / ratio)
+    # Sizes increase monotonically.
+    expect_false(is.unsorted(sizes))
+})
+
+test_that(".extract_marker_sizes collects numeric marker sizes", {
+    fig <- plotly::plot_ly(
+        x = 1:3, y = 1:3, type = "scatter", mode = "markers",
+        marker = list(size = c(4, 8, 12))
+    )
+    expect_equal(sort(VizModules:::.extract_marker_sizes(fig)), c(4, 8, 12))
+
+    # No marker sizes -> empty numeric vector.
+    fig2 <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
+    expect_equal(VizModules:::.extract_marker_sizes(fig2), numeric(0))
 })
