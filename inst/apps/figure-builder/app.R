@@ -32,16 +32,20 @@ module_registry <- list(
         inputs_ui = plotthis_AreaPlotInputsUI,
         output_ui = plotthis_AreaPlotOutputUI,
         server_fn = plotthis_AreaPlotServer,
-        defaults = list("x.data" = "year", "y.data" = "revenue",
-                        "group.by" = "product_line")
+        defaults = list(
+            "x.data" = "year", "y.data" = "revenue",
+            "group.by" = "product_line"
+        )
     ),
     bar = list(
         label = "Bar Plot", dataset = "example_bar",
         inputs_ui = plotthis_BarPlotInputsUI,
         output_ui = plotthis_BarPlotOutputUI,
         server_fn = plotthis_BarPlotServer,
-        defaults = list("x.data" = "Group", "y.data" = "Values",
-                        "group.by" = "Type")
+        defaults = list(
+            "x.data" = "Group", "y.data" = "Values",
+            "group.by" = "Type"
+        )
     ),
     box = list(
         label = "Box Plot", dataset = "example_demographics",
@@ -62,8 +66,10 @@ module_registry <- list(
         inputs_ui = plotthis_DotPlotInputsUI,
         output_ui = plotthis_DotPlotOutputUI,
         server_fn = plotthis_DotPlotServer,
-        defaults = list("x.data" = "gene", "y.data" = "cell_type",
-                        "size.by" = "pct_expressed", "fill.by" = "avg_expression")
+        defaults = list(
+            "x.data" = "gene", "y.data" = "cell_type",
+            "size.by" = "pct_expressed", "fill.by" = "avg_expression"
+        )
     ),
     dumbbell = list(
         label = "Dumbbell Plot", dataset = "example_school_earnings",
@@ -112,8 +118,10 @@ module_registry <- list(
         inputs_ui = dittoViz_scatterPlotInputsUI,
         output_ui = dittoViz_scatterPlotOutputUI,
         server_fn = dittoViz_scatterPlotServer,
-        defaults = list("x.by" = "revenue", "y.by" = "units",
-                        "color.by" = "product_line")
+        defaults = list(
+            "x.by" = "revenue", "y.by" = "units",
+            "color.by" = "product_line"
+        )
     ),
     splitbar = list(
         label = "Split Bar Plot", dataset = "example_bar",
@@ -127,8 +135,10 @@ module_registry <- list(
         inputs_ui = ternaryPlotInputsUI,
         output_ui = ternaryPlotOutputUI,
         server_fn = ternaryPlotServer,
-        defaults = list("a" = "journalist", "b" = "developer",
-                        "c" = "designer", "group" = "team")
+        defaults = list(
+            "a" = "journalist", "b" = "developer",
+            "c" = "designer", "group" = "team"
+        )
     ),
     violin = list(
         label = "Violin Plot", dataset = "example_demographics",
@@ -230,6 +240,67 @@ app_css <- HTML("
     height: 100% !important;
 }
 .pb-empty-hint { color: #999; text-align: center; padding-top: 30vh; }
+
+/* --- Compact sidebar -------------------------------------------------------
+   Tighten vertical rhythm so more controls fit without scrolling. Scoped to
+   the sidebar well so the canvas and data-filter area keep their spacing. */
+.well {
+    padding: 10px 12px;
+}
+.well h4 {
+    margin-top: 8px;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+.well hr {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-top: 1px solid #ccc;
+}
+.well .help-block {
+    margin-top: 2px;
+    margin-bottom: 4px;
+    font-size: 11px;
+    line-height: 1.3;
+}
+.well .form-group {
+    margin-bottom: 8px;
+}
+.well .control-label {
+    margin-bottom: 2px;
+}
+.well .btn {
+    padding: 4px 10px;
+}
+/* Trim the gap shiny adds around fileInput's progress bar. */
+.well .form-group .progress {
+    margin-bottom: 4px;
+}
+/* Make the two primary action buttons fill their half-row columns. */
+.well .btn-block {
+    width: 100%;
+}
+/* Collapsible 'Load Data' disclosure: a clickable heading that hides its
+   contents until opened, reclaiming vertical space in the sidebar. */
+.pb-details {
+    margin: 8px 0;
+}
+.pb-details > summary {
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    list-style: none;
+    padding: 2px 0;
+    color: #2c3e50;
+}
+.pb-details > summary::-webkit-details-marker { display: none; }
+.pb-details > summary::before {
+    content: '\\25B8';
+    display: inline-block;
+    margin-right: 6px;
+    transition: transform 0.15s ease-in-out;
+}
+.pb-details[open] > summary::before { transform: rotate(90deg); }
 ")
 
 # Client-side export of the whole canvas to a single SVG file. Each plot is a
@@ -383,7 +454,7 @@ $(function() {
 });
 ")
 
-# --- UI 
+# --- UI
 ui <- fluidPage(
     title = "VizModules Figure Builder",
     shinyjs::useShinyjs(),
@@ -392,40 +463,69 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             width = 4,
-            actionButton("pb_add", "Add Plot",
-                icon = icon("plus"), class = "btn-primary"
+            # Primary actions sit side by side to save a row of height.
+            fluidRow(
+                column(
+                    6,
+                    actionButton("pb_add", "Add Plot",
+                        icon = icon("plus"), class = "btn-primary btn-block"
+                    )
+                ),
+                column(
+                    6,
+                    tipify(
+                        downloadButton("download.source", "Source Data & Plots",
+                            class = "btn-primary btn-block"
+                        ),
+                        paste(
+                            "Download a ZIP of the source data, HTML plots, and",
+                            "statistics (if applied) for all plots on the canvas."
+                        ),
+                        options = list(container = "body")
+                    )
+                )
             ),
             helpText(
-                "Add VizModules plots to the canvas, then drag them by their",
-                "title bar and resize from the bottom-right corner."
+                "Add plots, then drag them by their title bar and resize",
+                "from the bottom-right corner."
             ),
-            downloadButton("download.source", "Source Download",
-                class = "btn-primary"),
-            hr(),
-            h4("Load Data"),
-            helpText(
-                "Upload a CSV, TSV or RDS file to make it available as a",
-                "dataset when adding plots."
-            ),
-            textInput("pb_data_name", "Dataset name (optional):",
-                placeholder = "Defaults to the file name"
-            ),
-            fileInput("pb_data_file", "Data file:",
-                accept = c(".csv", ".tsv", ".txt", ".rds", ".RDS")
-            ),
-            actionButton("pb_data_add", "Add dataset", icon = icon("upload")),
-            hr(),
-            h4("Canvas"),
-            selectInput("pb_orientation", "Page size:",
-                choices = c("A4 portrait" = "portrait",
-                            "A4 landscape" = "landscape")
-            ),
-            tags$button("Download Figure (SVG)",
-                id = "pb_download", type = "button",
-                class = "btn btn-success", onclick = "pbDownloadSVG()"
+            # 'Load Data' is collapsed by default so it only occupies space
+            # when the user actually wants to upload a dataset.
+            tags$details(
+                class = "pb-details",
+                tags$summary("Load Data"),
+                helpText(
+                    "Upload a CSV, TSV, TXT, or RDS file to make it available",
+                    "as a dataset when adding plots."
+                ),
+                splitLayout(
+                    textInput("pb_data_name", "Dataset name (optional):",
+                        placeholder = "Defaults to the file name"
+                    ),
+                    fileInput("pb_data_file", "File:",
+                        accept = c(".csv", ".tsv", ".txt", ".rds", ".RDS")
+                    )
+                ),
+                actionButton("pb_data_add", "Add dataset",
+                    icon = icon("upload")
+                )
             ),
             hr(),
-            h4("Plot Controls"),
+            h3("Canvas"),
+            splitLayout(
+                selectInput("pb_orientation", "Page size:",
+                    choices = c(
+                        "A4 portrait" = "portrait",
+                        "A4 landscape" = "landscape"
+                    )
+                ),
+                tags$button("Download Full Figure (SVG)",
+                    id = "pb_download", type = "button",
+                    class = "btn btn-success", onclick = "pbDownloadSVG()"
+                )
+            ),
+            hr(),
+            h3("Plot Controls"),
             selectInput("pb_controls_select", "Show controls for:",
                 choices = character(0)
             ),
@@ -443,13 +543,16 @@ ui <- fluidPage(
                 id = "pb_canvas_scroll",
                 div(
                     id = "pb_canvas", class = "a4-portrait",
-                    div(class = "pb-empty-hint", id = "pb_canvas_empty",
-                        "No plots yet. Click \"Add Plot\" to begin.")
+                    div(
+                        class = "pb-empty-hint", id = "pb_canvas_empty",
+                        "No plots yet. Click \"Add Plot\" to begin."
+                    )
                 )
             ),
             hr(),
-            h4("Data Table"),
-            p("Filtering a plot's table subsets only that plot's data.",
+            h4("Data Filtering"),
+            p("Filtering a plot's table subsets only that plot's data. ",
+            "Specific numeric filters can be applied by entering a range like '1 ... 10'.",
                 style = "color: grey; font-size: 12px;"
             ),
             selectInput("pb_table_select", "Show table for:",
@@ -475,8 +578,8 @@ server <- function(input, output, session) {
     # Reactive bookkeeping for the panels currently on the canvas.
     rv <- reactiveValues(
         panel_ids = character(0), # ordered vector of active panel ids
-        labels    = list(),       # pid -> display label
-        counter   = 0L            # monotonic id source
+        labels    = list(), # pid -> display label
+        counter   = 0L # monotonic id source
     )
 
     # Per-panel data snapshots (fixed at creation time) and the observers that
@@ -497,31 +600,40 @@ server <- function(input, output, session) {
             return(invisible(NULL))
         }
         ext <- tolower(tools::file_ext(file$name))
-        df <- tryCatch({
-            switch(ext,
-                csv = utils::read.csv(file$datapath,
-                    stringsAsFactors = FALSE, check.names = FALSE),
-                tsv = utils::read.delim(file$datapath,
-                    stringsAsFactors = FALSE, check.names = FALSE),
-                txt = utils::read.delim(file$datapath,
-                    stringsAsFactors = FALSE, check.names = FALSE),
-                rds = readRDS(file$datapath),
-                stop("Unsupported file type '.", ext, "'.")
-            )
-        }, error = function(e) e)
+        df <- tryCatch(
+            {
+                switch(ext,
+                    csv = utils::read.csv(file$datapath,
+                        stringsAsFactors = FALSE, check.names = FALSE
+                    ),
+                    tsv = utils::read.delim(file$datapath,
+                        stringsAsFactors = FALSE, check.names = FALSE
+                    ),
+                    txt = utils::read.delim(file$datapath,
+                        stringsAsFactors = FALSE, check.names = FALSE
+                    ),
+                    rds = readRDS(file$datapath),
+                    stop("Unsupported file type '.", ext, "'.")
+                )
+            },
+            error = function(e) e
+        )
 
         if (inherits(df, "error")) {
             showNotification(paste("Could not read file:", conditionMessage(df)),
-                type = "error", duration = 8)
+                type = "error", duration = 8
+            )
             return(invisible(NULL))
         }
         if (!is.data.frame(df)) {
             df <- tryCatch(as.data.frame(df, check.names = FALSE),
-                error = function(e) NULL)
+                error = function(e) NULL
+            )
         }
         if (!is.data.frame(df) || nrow(df) == 0L || ncol(df) == 0L) {
             showNotification("File must contain a non-empty data frame.",
-                type = "error", duration = 8)
+                type = "error", duration = 8
+            )
             return(invisible(NULL))
         }
 
@@ -541,8 +653,10 @@ server <- function(input, output, session) {
         dataset_store(store)
         updateTextInput(session, "pb_data_name", value = "")
         showNotification(
-            sprintf("Added dataset '%s' (%d rows x %d cols).",
-                nm, nrow(df), ncol(df)),
+            sprintf(
+                "Added dataset '%s' (%d rows x %d cols).",
+                nm, nrow(df), ncol(df)
+            ),
             type = "message"
         )
     })
@@ -558,7 +672,7 @@ server <- function(input, output, session) {
         }
     })
 
-    # --- Add Plot dialog 
+    # --- Add Plot dialog
     observeEvent(input$pb_add, {
         showModal(modalDialog(
             title = "Add a Plot",
@@ -566,7 +680,7 @@ server <- function(input, output, session) {
                 choices = module_choices, selectize = FALSE
             ),
             selectInput("pb_new_dataset", "Dataset:",
-                choices = names(dataset_store())
+                choices = names(dataset_store()), selectize = FALSE
             ),
             footer = tagList(
                 modalButton("Cancel"),
@@ -588,7 +702,7 @@ server <- function(input, output, session) {
         }
     })
 
-    # --- Create a panel 
+    # --- Create a panel
     observeEvent(input$pb_add_confirm, {
         datasets <- dataset_store()
         mod_key <- input$pb_new_module
@@ -697,7 +811,7 @@ server <- function(input, output, session) {
         refresh_selectors(selected = pid)
     })
 
-    # --- Remove a panel 
+    # --- Remove a panel
     remove_panel <- function(pid) {
         if (!pid %in% rv$panel_ids) {
             return(invisible(NULL))
@@ -705,9 +819,11 @@ server <- function(input, output, session) {
         # Destroy the jQuery UI interactions before pulling the DOM nodes so the
         # remaining cards are never disturbed by orphaned handlers.
         shinyjqui::jqui_draggable(paste0("#", pid, "_card"),
-            operation = "destroy")
+            operation = "destroy"
+        )
         shinyjqui::jqui_resizable(paste0("#", pid, "_card"),
-            operation = "destroy")
+            operation = "destroy"
+        )
         removeUI(selector = paste0("#", pid, "_card"), immediate = TRUE)
         removeUI(selector = paste0("#", pid, "_controls"), immediate = TRUE)
         removeUI(selector = paste0("#", pid, "_table"), immediate = TRUE)
@@ -730,7 +846,7 @@ server <- function(input, output, session) {
         refresh_selectors()
     }
 
-    # --- Keep both selectors in sync with the active panels 
+    # --- Keep both selectors in sync with the active panels
     refresh_selectors <- function(selected = NULL) {
         choices <- stats::setNames(
             rv$panel_ids,
@@ -753,30 +869,36 @@ server <- function(input, output, session) {
         )
     }
 
-    # --- Swap visible controls in/out 
-    observeEvent(input$pb_controls_select, {
-        sel <- input$pb_controls_select
-        for (p in rv$panel_ids) {
-            if (identical(p, sel)) {
-                shinyjs::show(paste0(p, "_controls"))
-            } else {
-                shinyjs::hide(paste0(p, "_controls"))
+    # --- Swap visible controls in/out
+    observeEvent(input$pb_controls_select,
+        {
+            sel <- input$pb_controls_select
+            for (p in rv$panel_ids) {
+                if (identical(p, sel)) {
+                    shinyjs::show(paste0(p, "_controls"))
+                } else {
+                    shinyjs::hide(paste0(p, "_controls"))
+                }
             }
-        }
-    }, ignoreNULL = FALSE)
+        },
+        ignoreNULL = FALSE
+    )
 
     # --- Swap visible table in/out -----------------------------------------
-    observeEvent(input$pb_table_select, {
-        sel <- input$pb_table_select
-        for (p in rv$panel_ids) {
-            if (identical(p, sel)) {
-                shinyjs::show(paste0(p, "_table"))
-            } else {
-                shinyjs::hide(paste0(p, "_table"))
+    observeEvent(input$pb_table_select,
+        {
+            sel <- input$pb_table_select
+            for (p in rv$panel_ids) {
+                if (identical(p, sel)) {
+                    shinyjs::show(paste0(p, "_table"))
+                } else {
+                    shinyjs::hide(paste0(p, "_table"))
+                }
             }
-        }
-    }, ignoreNULL = FALSE)
-  
+        },
+        ignoreNULL = FALSE
+    )
+
     # --- Summary download --------------------------------------------------
     # Bundle every panel's interactive summary (plot + data + inputs) into a
     # single .zip. We collect each panel's summary reactive (returned by its
@@ -785,8 +907,10 @@ server <- function(input, output, session) {
     output$download.source <- create_source_download_handler(
         data_list = reactive({
             ids <- rv$panel_ids
-            validate(need(length(ids) > 0,
-                "Add at least one plot before downloading."))
+            validate(need(
+                length(ids) > 0,
+                "Add at least one plot before downloading."
+            ))
             sources <- lapply(ids, function(p) {
                 sr <- panel_sources[[p]]
                 if (is.null(sr)) {
@@ -795,13 +919,17 @@ server <- function(input, output, session) {
                 # Skip (rather than abort the whole download) if a single
                 # panel's source cannot be built.
                 tryCatch(sr(), error = function(e) {
-                    warning("Could not build source for panel '", p, "': ",
-                        conditionMessage(e))
+                    warning(
+                        "Could not build source for panel '", p, "': ",
+                        conditionMessage(e)
+                    )
                     NULL
                 })
             })
-            names(sources) <- vapply(ids,
-                function(p) rv$labels[[p]], character(1))
+            names(sources) <- vapply(
+                ids,
+                function(p) rv$labels[[p]], character(1)
+            )
             sources[!vapply(sources, is.null, logical(1))]
         }),
         filename_base = "panel_source"
