@@ -84,6 +84,7 @@
 <span>  title.font.size <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>  title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  title.font.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  title.x.position <span class="op">=</span> <span class="fl">0.47</span>,</span>
 <span>  y.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x.title <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  flip.x <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -165,7 +166,9 @@ if both are provided, <code>facet.nrow</code> takes precedence.</p></dd>
 
 
 <dt id="arg-subplot-margin">subplot.margin<a class="anchor" aria-label="anchor" href="#arg-subplot-margin"></a></dt>
-<dd><p>Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.</p></dd>
+<dd><p>Numeric, spacing between facet panels as a fraction of the plot area.
+May be a single value (applied to both directions) or a length-2 vector
+<code>c(horizontal, vertical)</code> to control the gap between columns and rows separately. Default: 0.05.</p></dd>
 
 
 <dt id="arg-axis-showline">axis.showline<a class="anchor" aria-label="anchor" href="#arg-axis-showline"></a></dt>
@@ -242,6 +245,10 @@ if both are provided, <code>facet.nrow</code> takes precedence.</p></dd>
 
 <dt id="arg-title-font-color">title.font.color<a class="anchor" aria-label="anchor" href="#arg-title-font-color"></a></dt>
 <dd><p>Character, hex color for plot title text. Default: "black".</p></dd>
+
+
+<dt id="arg-title-x-position">title.x.position<a class="anchor" aria-label="anchor" href="#arg-title-x-position"></a></dt>
+<dd><p>Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.</p></dd>
 
 
 <dt id="arg-y-title">y.title<a class="anchor" aria-label="anchor" href="#arg-y-title"></a></dt>

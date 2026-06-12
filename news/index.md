@@ -58,8 +58,10 @@
   plot type, to pass that info to user without ugly error messages.
 - Faceting improvements - new internal helpers that control subplot
   spacing, subplot size, and facet_scale handling. This fixes much of
-  the wonkiness for plots with many panels. Still imperfect, but much
-  improved.
+  the wonkiness for plots with many panels. Uniform inputs added for
+  panel spacing across all modules.
+- Axis titles now uniformly added as annotations to allow interactive
+  repositioning.
 - Condensed package wide workflows with simple helpers,
   e.g. `.apply_title_layout()`, resulting in significantly less jank.
 

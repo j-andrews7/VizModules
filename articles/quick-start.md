@@ -56,7 +56,7 @@ shinyApp(ui, server)
   controls while still initializing their values. This is useful when
   your app sets certain parameters itself.
 - **Hide tabs**: Use `hide.tabs` to remove whole groups of controls
-  (e.g., `"Plotly"` or `"Legend/Scale"` in `scatterPlot`).
+  (e.g., `"Plotly"` or `"Legend"` in `scatterPlot`).
 
 ``` r
 

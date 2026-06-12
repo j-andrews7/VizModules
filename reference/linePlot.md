@@ -39,6 +39,7 @@ linePlot(
   title.font.size = 14,
   title.font.family = "Arial",
   title.font.color = "black",
+  title.x.position = 0.47,
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -122,7 +123,9 @@ linePlot(
 - subplot.margin:
 
   Numeric, spacing between facet panels as a fraction of the plot area.
-  Default: 0.05.
+  May be a single value (applied to both directions) or a length-2
+  vector `c(horizontal, vertical)` to control the gap between columns
+  and rows separately. Default: 0.05.
 
 - axis.showline:
 
@@ -201,6 +204,11 @@ linePlot(
 - title.font.color:
 
   Character, hex color for plot title text. Default: "black".
+
+- title.x.position:
+
+  Numeric, horizontal position of the plot title in paper coordinates (0
+  = left, 1 = right). Default: 0.47.
 
 - y.title:
 

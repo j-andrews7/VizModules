@@ -55,7 +55,8 @@
 <li>Removed old dynamically hidden stats download button and associated logic, since stats are now included in the source download when applicable.</li>
 <li>Statistic helper functions are now exported allowing users to annotate plotly graphs with custom statistics: <code><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats()</a></code>, <code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code>, <code><a href="../reference/apply_stat_annotations.html">apply_stat_annotations()</a></code>, <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code>, and <code><a href="../reference/parse_pair_strings.html">parse_pair_strings()</a></code>.</li>
 <li>Exposed <code><a href="../reference/empty_plot.html">empty_plot()</a></code> for use as a placeholder, e.g. if parameters aren’t valid for a given plot type, to pass that info to user without ugly error messages.</li>
-<li>Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels. Still imperfect, but much improved.</li>
+<li>Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels. Uniform inputs added for panel spacing across all modules.</li>
+<li>Axis titles now uniformly added as annotations to allow interactive repositioning.</li>
 <li>Condensed package wide workflows with simple helpers, e.g. <code>.apply_title_layout()</code>, resulting in significantly less jank.</li>
 </ul></div>
     <div class="section level2">
