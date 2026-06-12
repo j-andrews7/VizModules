@@ -16,7 +16,8 @@ Description: Offers a core selection of interactivity-first 'shiny' modules for 
     of code and decouple plotting from the underlying data. These modules allow 
     for full plot aesthetic customization by the end user through UI inputs. Utility
     functions for simple UI organization, automated UI tooltips, and additional
-    plot enhancements are also provided.
+    plot enhancements are also provided. Includes a multi-panel figure builder app
+    for arranging multiple modules together in a free-form layout.
 License: MIT + file LICENSE
 Depends:
     shiny,
