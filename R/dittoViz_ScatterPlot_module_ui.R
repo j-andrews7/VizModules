@@ -175,9 +175,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     ns <- NS(id)
 
     if (is.null(defaults)) defaults <- list()
-    # Widen the right margin so the custom size legend (shown when `size.by` is
-    # set) has room to render alongside the standard color/shape legends.
-    if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
 
     # Get variables of data.
     choices <- c("", names(data))

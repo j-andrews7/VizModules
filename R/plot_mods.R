@@ -2547,6 +2547,10 @@ is_pure_type <- function(inputs, d) {
 #'   title annotation. When \code{NULL}, plotly's default is used.
 #' @param text.size Numeric, or \code{NULL}. Font size (px) of the numeric
 #'   label annotations. Defaults to \code{12} when \code{NULL}.
+#' @param start_y Numeric. Paper-space y coordinate (0–1) at which the legend
+#'   column begins; the title sits just above it and subsequent entries stack
+#'   downward. Lower it to vertically offset the size legend from an overlapping
+#'   color/shape legend. Defaults to \code{0.95}.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
 #'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
@@ -2556,7 +2560,7 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
 .custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
-                           title.size = NULL, text.size = NULL) {
+                           title.size = NULL, text.size = NULL, start_y = 0.95) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -2577,6 +2581,14 @@ is_pure_type <- function(inputs, d) {
         length.out = n_breaks
     )
     labels <- format(breaks, trim = TRUE, scientific = FALSE)
+
+    # Build the figure once up front. This consolidates marker attributes (so
+    # marker sizes can be read back) and, crucially, lets us append the legend
+    # annotations directly to the built layout below. Using add_annotations()
+    # instead would defer the annotations into layoutAttrs, which any later
+    # plotly_build() call (e.g. .apply_legend_styling(),
+    # .axis_titles_as_annotations()) re-merges, duplicating every annotation.
+    fig <- plotly::plotly_build(fig)
 
     # Derive the circle glyph sizes from the plot's actual marker sizes so the
     # legend matches the size scaling produced by size_min/size_max. The marker
@@ -2601,7 +2613,6 @@ is_pure_type <- function(inputs, d) {
         }
     }
 
-    start_y <- 0.95
     x_pos <- 1.02
     label_x <- 1.06
 
@@ -2629,45 +2640,63 @@ is_pure_type <- function(inputs, d) {
     }
     label_font_size <- if (valid_size(text.size)) text.size else 12
 
-    fig <- fig |> add_annotations(
-        x         = x_pos + 0.1,
-        y         = 0.99,
-        xref      = "paper",
-        yref      = "paper",
-        text      = size_by,
-        showarrow = FALSE,
-        xanchor   = "center",
-        yanchor   = "middle",
-        font      = title_font
+    # Strip the size variable from the (categorical) color/shape legend title.
+    # When point size maps to a column, ggplotly joins each aesthetic's guide
+    # title with "<br />", so the color legend ends up titled e.g.
+    # "color<br />size". This manual legend already conveys size, so drop the
+    # size line -- but only when the title actually combines multiple guides, so
+    # a standalone (already-merged) title is left untouched.
+    legend_title <- fig$x$layout$legend$title$text
+    if (!is.null(legend_title) && is.character(legend_title) &&
+        length(legend_title) == 1L) {
+        parts <- unlist(strsplit(legend_title, "<br ?/?>|\n"))
+        if (length(parts) > 1L) {
+            kept <- parts[parts != size_by]
+            if (length(kept) == 0L) {
+                kept <- parts[1]
+            }
+            fig$x$layout$legend$title$text <- paste(kept, collapse = "<br />")
+        }
+    }
+
+    # Assemble the legend annotations and append them directly to the built
+    # layout (see plotly_build() note above) so they are not duplicated by
+    # subsequent builds.
+    new_anns <- list(
+        list(
+            x = x_pos + 0.1, y = min(start_y + 0.04, 1),
+            xref = "paper", yref = "paper",
+            text = size_by, showarrow = FALSE,
+            xanchor = "center", yanchor = "middle", font = title_font
+        )
     )
     for (i in seq_along(size_values)) {
         yc <- centers[i]
 
         # Circle annotation
-        fig <- fig |> add_annotations(
-            x         = x_pos,
-            y         = yc,
-            xref      = "paper",
-            yref      = "paper",
-            text      = paste0("<span style='font-size:", size_values[i], "px; color:#000000;'>&#9679;</span>"),
-            showarrow = FALSE,
-            xanchor   = "center",
-            yanchor   = "middle"
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = x_pos, y = yc, xref = "paper", yref = "paper",
+            text = paste0(
+                "<span style='font-size:", size_values[i],
+                "px; color:#000000;'>&#9679;</span>"
+            ),
+            showarrow = FALSE, xanchor = "center", yanchor = "middle"
         )
 
         # Label annotation
-        fig <- fig |> add_annotations(
-            x         = label_x,
-            y         = yc,
-            xref      = "paper",
-            yref      = "paper",
-            text      = labels[i],
-            showarrow = FALSE,
-            xanchor   = "left",
-            yanchor   = "middle",
-            font      = list(size = label_font_size, color = "#000000")
+        new_anns[[length(new_anns) + 1L]] <- list(
+            x = label_x, y = yc, xref = "paper", yref = "paper",
+            text = labels[i], showarrow = FALSE,
+            xanchor = "left", yanchor = "middle",
+            font = list(size = label_font_size, color = "#000000")
         )
     }
+
+    existing <- fig$x$layout$annotations
+    if (is.null(existing)) {
+        existing <- list()
+    }
+    fig$x$layout$annotations <- c(existing, new_anns)
 
     return(fig)
 }
