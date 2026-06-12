@@ -25,8 +25,9 @@
 #'   \item \code{legend.direction} - Legend orientation (plotly allows interactive adjustment)
 #'   \item \code{x_sep} - Separator for multiple x columns (not yet implemented)
 #'   \item \code{y_sep} - Separator for multiple y columns (not yet implemented)
-#'   \item \code{split_by_sep} - Separator for multiple split_by columns (not yet implemented)
-#'   \item \code{size_name} - Size legend name (not yet implemented)
+#'   \item \code{split_by} - Split variable for separate plots (doesn't work with plotly; `facet_by` available instead)
+#'   \item \code{split_by_sep} - Separator for multiple `split_by` columns (`split_by` not used in module)
+#'   \item \code{size_name} - Size legend name (plotly allows interactive editing)
 #'   \item \code{fill_name} - Fill legend name (not yet implemented)
 #'   \item \code{fill_cutoff_name} - Fill cutoff legend name (not yet implemented)
 #'   \item \code{theme} - ggplot2 theme (managed internally)
@@ -35,15 +36,15 @@
 #'   \item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
 #'   \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
 #'   \item \code{keep_na} - Keep NA values (not yet implemented)
-#'   \item \code{combine} - Combine multiple plots (not applicable for plotly)
+#'   \item \code{combine} - Combine multiple plots (not applicable as `split_by` is not implemented)
 #'   \item \code{seed} - Random seed (not applicable)
-#'   \item \code{nrow} - Only applies if \code{split_by} is used with combine
-#'   \item \code{ncol} - Only applies if \code{split_by} is used with combine
-#'   \item \code{byrow} - Only applies if \code{split_by} is used with combine
-#'   \item \code{axes} - Only applies if \code{split_by} is used with combine
-#'   \item \code{axis_titles} - Only applies if \code{split_by} is used with combine
-#'   \item \code{guides} - Only applies if \code{split_by} is used with combine
-#'   \item \code{design} - Only applies if \code{split_by} is used with combine
+#'   \item \code{nrow} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{ncol} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{byrow} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{axes} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{axis_titles} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{guides} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
+#'   \item \code{design} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
 #' }
 #'
 #' @section Plot parameters and defaults:
@@ -52,10 +53,11 @@
 #'   \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
 #'   \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 #'   \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
+#'   \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
+#'   \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
 #'   \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 #'   \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 #'   \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-#'   \item \code{split_by} - Split variable for separate plots (UI: "Split By", default: "")
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
 #'   \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
@@ -98,8 +100,8 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
 
     selected <- list(
-        "x", "y", "size_by", "fill_by", "fill_cutoff",
-        "split_by", "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
+        "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
+        "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
         "palette", "alpha"
     )
 
@@ -109,71 +111,88 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     )
 
     inputs <- list(
-    "Data" = tagList(
-        tipify(selectInput(ns("x.data"), "X Values",
-        selected = .get_default(defaults, "x.data", char.choices[2],
-            function(x) x %in% char.choices),
-        choices = char.choices, selectize = FALSE
-        ), documentParameters$x, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("y.data"), "Y Values",
-        selected = .get_default(defaults, "y.data", char.choices[min(3, length(char.choices))],
-            function(x) x %in% char.choices),
-        choices = char.choices, selectize = FALSE
-        ), documentParameters$y, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("size.by"), "Size By",
-        selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices),
-        choices = num.choices, selectize = FALSE
-        ), documentParameters$size_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("fill.by"), "Fill By",
-        selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices),
-        choices = num.choices, selectize = FALSE
-        ), documentParameters$fill_by, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("fill.cutoff"), "Fill Cutoff",
-        value = .get_default(defaults, "fill.cutoff", NA, is.numeric)
-        ), documentParameters$fill_cutoff, placement = "top", options = list(container = "body"))
-    ),
-
-    "Facet" = tagList(
-        tipify(selectInput(ns("facet.by"), "Facet By",
-        selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, ""), selectize = FALSE
-        ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("facet.scale"), "Facet Scale",
-        selected = .get_default(
-            defaults, "facet.scale", "fixed",
-            function(x) x %in% c("fixed", "free", "free_x", "free_y")
+        "Data" = tagList(
+            tipify(selectInput(ns("x.data"), "X Values",
+                selected = .get_default(
+                    defaults, "x.data", char.choices[2],
+                    function(x) x %in% char.choices
+                ),
+                choices = char.choices, selectize = FALSE
+            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("y.data"), "Y Values",
+                selected = .get_default(
+                    defaults, "y.data", char.choices[min(3, length(char.choices))],
+                    function(x) x %in% char.choices
+                ),
+                choices = char.choices, selectize = FALSE
+            ), documentParameters$y, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("size.by"), "Size By",
+                selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices),
+                choices = num.choices, selectize = FALSE
+            ), documentParameters$size_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("fill.by"), "Fill By",
+                selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices),
+                choices = num.choices, selectize = FALSE
+            ), documentParameters$fill_by, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("fill.cutoff"), "Fill Cutoff",
+                value = .get_default(defaults, "fill.cutoff", NA, is.numeric)
+            ), documentParameters$fill_cutoff, placement = "top", options = list(container = "body"))
         ),
-        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
-        ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.ncol"), "Columns",
-        value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
-        ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.nrow"), "Rows",
-        value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
-        ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
-        value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
-            documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("split.by"), "Split By",
-        selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, ""), selectize = FALSE
-        ), documentParameters$split_by, placement = "top", options = list(container = "body"))
-    ),
-
-    "Aesthetics" = tagList(
-        tipify(selectInput(ns("palette.name"), "Color Palette",
-        choices = palette_names,
-        selected = .get_default(defaults, "palette.name", "Spectral",
-            function(x) x %in% palette_names), selectize = FALSE
-        ), documentParameters$palette, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("alpha"), "Alpha",
-            value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
-            documentParameters$alpha, placement = "top", options = list(container = "body"))
-    ),
-
-    "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-    "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Facet" = tagList(
+            tipify(selectInput(ns("facet.by"), "Facet By",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+                choices = c(char.choices, ""), selectize = FALSE
+            ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+                selected = .get_default(
+                    defaults, "facet.scale", "fixed",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                ),
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
+            ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.ncol"), "Columns",
+                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
+            ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.nrow"), "Rows",
+                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
+            ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+            tipify(
+                materialSwitch(ns("facet.by.row"), "Facet by Row",
+                    value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"
+                ),
+                documentParameters$facet_byrow,
+                placement = "top", options = list(container = "body")
+            ),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+        ),
+        "Aesthetics" = tagList(
+            tipify(selectInput(ns("palette.name"), "Color Palette",
+                choices = palette_names,
+                selected = .get_default(
+                    defaults, "palette.name", "Spectral",
+                    function(x) x %in% palette_names
+                ), selectize = FALSE
+            ), documentParameters$palette, placement = "top", options = list(container = "body")),
+            tipify(
+                numericInput(ns("alpha"), "Alpha",
+                    value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1
+                ),
+                documentParameters$alpha,
+                placement = "top", options = list(container = "body")
+            )
+        ),
+        "Legend" = tagList(
+            tipify(numericInput(ns("size.min"), "Min Dot Size",
+                value = .get_default(defaults, "size.min", 1, is.numeric), min = 0, step = 1
+            ), documentParameters$size_min, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.max"), "Max Dot Size",
+                value = .get_default(defaults, "size.max", 6, is.numeric), min = 0, step = 1
+            ), documentParameters$size_max, placement = "top", options = list(container = "body")),
+            .uniform_legend_inputs_ui(ns, defaults)
+        ),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
 
 

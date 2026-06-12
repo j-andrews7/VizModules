@@ -65,8 +65,8 @@
 #'   \item \code{bar_width} - Rug bar width (UI: "Rug Bar Width", default: 1)
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
-#'   \item \code{facet_ncol} - Number of facet columns (UI: "Number of Columns", default: NULL)
-#'   \item \code{facet_nrow} - Number of facet rows (UI: "Number of Rows", default: NULL)
+#'   \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
+#'   \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
 #' }
@@ -208,7 +208,8 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                 value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
-            )
+            ),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             tipify(numericInput(ns("bins"), "Number of Bins",
@@ -287,6 +288,7 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                 placement = "top", options = list(container = "body")
             )
         ),
+        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
         "Lines" = .uniform_lines_inputs_ui(ns, defaults)

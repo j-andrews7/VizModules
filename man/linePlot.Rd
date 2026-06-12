@@ -37,6 +37,7 @@ linePlot(
   title.font.size = 14,
   title.font.family = "Arial",
   title.font.color = "black",
+  title.x.position = 0.47,
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -89,7 +90,9 @@ If \code{NULL} (default), columns are derived from \code{facet.nrow} and the num
 of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
 if both are provided, \code{facet.nrow} takes precedence.}
 
-\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.05.}
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area.
+May be a single value (applied to both directions) or a length-2 vector
+\code{c(horizontal, vertical)} to control the gap between columns and rows separately. Default: 0.05.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 
@@ -128,6 +131,8 @@ if both are provided, \code{facet.nrow} takes precedence.}
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
 \item{title.font.color}{Character, hex color for plot title text. Default: "black".}
+
+\item{title.x.position}{Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.}
 
 \item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 

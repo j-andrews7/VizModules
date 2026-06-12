@@ -288,7 +288,10 @@
             min = 1,
             step = 1
         ),
-        numericInput(ns("axis.title.horizontal.position"), "Title position", value = 0.5, max = 1, min = 0, step = 0.1),
+        numericInput(ns("axis.title.horizontal.position"), "Title position",
+            value = .get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric),
+            max = 1, min = 0, step = 0.1
+        ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
             value = .get_default(defaults, "axis.title.font.size", 18, is.numeric),
             min = 1,
@@ -560,7 +563,9 @@
 #'
 #' Creates a standardized tagList of Plotly-specific inputs used across all plot
 #' modules. Includes interactive download controls, plot margin adjustments,
-#' subplot spacing, and user-drawn shape styling for Plotly's drawing tools.
+#' and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
+#' controls live in each module's "Facet" tab via
+#' [.uniform_subplot_spacing_inputs_ui()].)
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -620,17 +625,6 @@
             placement = "top", options = tip_opts
         ),
         tipify(
-            numericInput(ns("subplot.margin"), "Subplot Spacing",
-                value = .get_default(defaults, "subplot.margin", 0.1, is.numeric),
-                min = 0, max = 1, step = 0.01
-            ),
-            paste(
-                "Spacing between facet panels as a fraction of the plot area (e.g. 0.04).",
-                "Only applies when faceting is active."
-            ),
-            placement = "top", options = tip_opts
-        ),
-        tipify(
             colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
                 value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
@@ -671,6 +665,93 @@
                 min = 0, max = 1, step = 0.01
             ),
             "Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque",
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
+#' Generate uniform subplot spacing input UI
+#'
+#' Creates a standardized tagList of the horizontal/vertical subplot spacing
+#' inputs. These controls only have an effect when faceting is active, so they
+#' are rendered within each module's "Facet" tab.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the subplot spacing input UI elements.
+#'
+#' @importFrom shiny numericInput tagList
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_uniform_subplot_spacing_inputs_ui
+#' @keywords internal
+.uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
+
+    tagList(
+        tipify(
+            numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
+                value = .get_default(defaults, "subplot.margin.x", 0.04, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            paste(
+                "Horizontal spacing between facet panel columns as a fraction of the plot area",
+                "(e.g. 0.04). Only applies when faceting is active."
+            ),
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
+                value = .get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
+                min = 0, max = 1, step = 0.01
+            ),
+            paste(
+                "Vertical spacing between facet panel rows as a fraction of the plot area",
+                "(e.g. 0.1). Only applies when faceting is active."
+            ),
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
+#' Generate uniform Legend input UI
+#'
+#' Creates a standardized tagList of legend styling inputs used across plot
+#' modules. Currently exposes the legend title and entry label font sizes so
+#' they can be adjusted consistently regardless of plot type.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the legend input UI elements.
+#'
+#' @importFrom shiny numericInput tagList
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_uniform_legend_inputs_ui
+#' @keywords internal
+.uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
+    tagList(
+        tipify(
+            numericInput(ns("legend.title.size"), "Legend Title Size",
+                value = .get_default(defaults, "legend.title.size", 14, is.numeric),
+                min = 0, step = 1
+            ),
+            "Font size of the legend title.",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("legend.text.size"), "Legend Text Size",
+                value = .get_default(defaults, "legend.text.size", 12, is.numeric),
+                min = 0, step = 1
+            ),
+            "Font size of the legend entry labels.",
             placement = "top", options = tip_opts
         )
     )

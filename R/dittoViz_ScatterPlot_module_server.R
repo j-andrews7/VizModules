@@ -316,7 +316,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = .get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
             )
 
-            # Legend/Scale
+            # Legend
             updateCheckboxInput(session, "legend.show",
                 value = .get_default(defaults, "legend.show", TRUE, is.logical)
             )
@@ -349,6 +349,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = .get_default(defaults, "webgl", TRUE, is.logical))
             .reset_plotly_inputs(session, defaults)
+            .reset_legend_inputs(session, defaults)
             updateCheckboxInput(session, "do.ellipse",
                 value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
             )
@@ -516,7 +517,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
+                    spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = null.na.inputs$split.ncol,
                     nrow = null.na.inputs$split.nrow
                 )
@@ -822,6 +823,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     line_width = 3
                 )
             }
+
+            # Apply uniform legend title/label font sizes
+            fig <- .apply_legend_styling(
+                fig,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
+
+            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
+            fig <- .axis_titles_as_annotations(fig)
 
             fig
         })
