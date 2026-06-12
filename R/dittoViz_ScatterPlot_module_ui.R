@@ -54,6 +54,8 @@
 #'   \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
 #'   \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
 #'   \item \code{size} - Point size (UI: "Point Size", default: 1)
+#'   \item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
+#'     a custom circle size legend is drawn since plotly cannot render a native size legend
 #'   \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
 #'   \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
 #'   \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
@@ -171,6 +173,11 @@
 #' dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
+
+    if (is.null(defaults)) defaults <- list()
+    # Widen the right margin so the custom size legend (shown when `size.by` is
+    # set) has room to render alongside the standard color/shape legends.
+    if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
 
     # Get variables of data.
     choices <- c("", names(data))
@@ -295,6 +302,13 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$color.adj.fxn, placement = "top", options = list(container = "body"))
         ),
         "Points" = tagList(
+            tipify(selectInput(ns("size.by"), "Size By",
+                choices = num.choices,
+                selected = .get_default(
+                    defaults, "size.by", "",
+                    function(x) x == "" || x %in% num.choices
+                ), selectize = FALSE
+            ), documentParameters$size, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("size"), "Point Size",
                 value = .get_default(defaults, "size", 1, is.numeric),
                 min = 0.1

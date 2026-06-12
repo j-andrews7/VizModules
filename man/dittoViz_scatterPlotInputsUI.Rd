@@ -85,6 +85,8 @@ The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parame
 \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
 \item \code{size} - Point size (UI: "Point Size", default: 1)
+\item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
+a custom circle size legend is drawn since plotly cannot render a native size legend
 \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
 \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
 \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)

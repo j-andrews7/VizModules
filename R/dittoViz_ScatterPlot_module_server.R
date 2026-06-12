@@ -226,6 +226,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSelectInput(session, "color.adj.fxn", selected = .get_default(defaults, "color.adj.fxn", ""))
 
             # Points
+            updateSelectInput(session, "size.by", selected = .get_default(defaults, "size.by", ""))
             updateNumericInput(session, "size", value = .get_default(defaults, "size", 1, is.numeric))
             updateNumericInput(session, "opacity", value = .get_default(defaults, "opacity", 1, is.numeric))
             updateCheckboxInput(session, "show.others",
@@ -390,6 +391,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 "add.trajectory.by.groups" = .na_to_null(isolate_fn(input$add.trajectory.by.groups)),
                 "color.by" = .na_to_null(isolate_fn(input$color.by)),
                 "shape.by" = .na_to_null(isolate_fn(input$shape.by)),
+                "size.by" = .na_to_null(isolate_fn(input$size.by)),
                 "split.by" = .na_to_null(isolate_fn(input$split.by)),
                 "annotate.by" = .na_to_null(isolate_fn(input$annotate.by)),
                 "x.adjustment" = .na_to_null(isolate_fn(input$x.adjustment)),
@@ -429,7 +431,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     isolate_fn(input$y.by),
                     paste0(isolate_fn(input$y.by), ".y.adj"),
                     null.na.inputs$shape.by,
-                    null.na.inputs$split.by
+                    null.na.inputs$split.by,
+                    null.na.inputs$size.by
                 ))
             } else {
                 hover.data <- unique(c(null.na.inputs$hover.data, null.na.inputs$annotate.by))
@@ -453,7 +456,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 color.by = null.na.inputs$color.by,
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,
-                size = isolate_fn(input$size),
+                size = if (!is.null(null.na.inputs$size.by)) {
+                    null.na.inputs$size.by
+                } else {
+                    isolate_fn(input$size)
+                },
                 show.others = isolate_fn(input$show.others),
                 x.adjustment = null.na.inputs$x.adjustment,
                 y.adjustment = null.na.inputs$y.adjustment,
@@ -823,6 +830,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     line_width = 3
                 )
             }
+
+            # Custom size legend:
+            # plotly drops the size legend when point size encodes a numeric
+            # column (see plotly.R#705), so draw a manual circle legend that
+            # mirrors the plotted marker sizes when `size.by` is set.
+            fig <- .custom_legend(
+                fig,
+                data = data(),
+                size_by = null.na.inputs$size.by,
+                gap = 0.04,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(
