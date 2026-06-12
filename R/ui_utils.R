@@ -73,6 +73,21 @@ organize_inputs <- function(
 
         out <- do.call(tabsetPanel, tabs)
     } else {
+        # Flatten nested input groups (e.g. the tagLists returned by the
+        # .uniform_*_inputs_ui() helpers) so each of their inputs occupies its
+        # own grid cell instead of being stacked together in a single cell.
+        # A tipify()/bsTooltip() wrapper is also a tagList, but its children are
+        # individual tags rather than tagLists, so it is left intact as one cell.
+        is_input_group <- function(el) {
+            is(el, "shiny.tag.list") && length(el) > 0 &&
+                all(vapply(el, function(child) is(child, "shiny.tag.list"), logical(1)))
+        }
+        tag.list <- do.call(tagList, unlist(
+            lapply(tag.list, function(el) {
+                if (is_input_group(el)) el else list(el)
+            }),
+            recursive = FALSE
+        ))
         n.tags <- length(tag.list)
 
         # Calculate missing dimension based on the provided one and total tags
