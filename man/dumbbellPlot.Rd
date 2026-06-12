@@ -32,6 +32,7 @@ dumbbellPlot(
   title.font.size = 26,
   title.font.family = "Arial",
   title.font.color = "black",
+  title.x.position = 0.47,
   y.title = NULL,
   x.title = NULL,
   flip.x = FALSE,
@@ -62,7 +63,9 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
 
-\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area. Default: 0.06.}
+\item{subplot.margin}{Numeric, spacing between facet panels as a fraction of the plot area.
+May be a single value (applied to both directions) or a length-2 vector
+\code{c(horizontal, vertical)} to control the gap between columns and rows separately. Default: 0.06.}
 
 \item{axis.showline}{Logical, whether to show axis border lines. Default: TRUE.}
 
@@ -97,6 +100,8 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 \item{title.font.family}{Character, font family for plot title. Default: "Arial".}
 
 \item{title.font.color}{Character, hex color for plot title text. Default: "black".}
+
+\item{title.x.position}{Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.}
 
 \item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
 

@@ -52,8 +52,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", char.choices[min(3, length(char.choices))],
-                    function(x) x %in% char.choices)
+                selected = .get_default(
+                    defaults, "y.data", char.choices[min(3, length(char.choices))],
+                    function(x) x %in% char.choices
+                )
             )
             updateSelectInput(session, "size.by",
                 selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
@@ -81,8 +83,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Aesthetics
             updateSelectInput(session, "palette.name",
-                selected = .get_default(defaults, "palette.name", "Spectral",
-                    function(x) x %in% palette_names)
+                selected = .get_default(
+                    defaults, "palette.name", "Spectral",
+                    function(x) x %in% palette_names
+                )
             )
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
@@ -98,6 +102,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Plotly
             .reset_plotly_inputs(session, defaults)
+            .reset_legend_inputs(session, defaults)
+            updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
+            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 10, is.numeric))
 
             # Lines
             .reset_lines_inputs(session, defaults = defaults)
@@ -123,18 +130,17 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            split.by <- NULL
-            if (!isolate_fn(input$split.by) == "") {
-                split.by <- isolate_fn(input$split.by)
-            }
+
             size.by <- NULL
             if (nzchar(isolate_fn(input$size.by))) {
                 size.by <- isolate_fn(input$size.by)
             }
+
             fill.by <- NULL
             if (nzchar(isolate_fn(input$fill.by))) {
                 fill.by <- isolate_fn(input$fill.by)
             }
+
             # fill_cutoff is only valid when fill_by is provided
             fill.cutoff <- NULL
             if (!is.null(fill.by) && !is.na(isolate_fn(input$fill.cutoff))) {
@@ -158,6 +164,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 size_by = size.by,
                 fill_by = fill.by,
                 fill_cutoff = fill.cutoff,
+                size_min = isolate_fn(input$size.min),
+                size_max = isolate_fn(input$size.max),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
@@ -166,22 +174,21 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palette = palette_arg,
                 theme = "theme_this",
                 theme_args = theme_args,
-                alpha = isolate_fn(input$alpha),
-                split_by = split.by
+                alpha = isolate_fn(input$alpha)
             )
             fig <- ggplotly(p)
 
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
-                    spacing = isolate_fn(input$subplot.margin),
+                    spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
             }
             fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
-            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Apply axis styling to all subplot axes (handles faceting)
             xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
@@ -215,10 +222,27 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- .apply_plotly_newshape(fig, input, isolate_fn)
-            
-            #Custom Legend: 
-            #Generates a custom dot plot circle legend based on the number of values in size_values. 
-            fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.04, size_values = c(10, 20, 30, 40, 50))
+
+            # Custom Legend:
+            # Generates a custom dot plot circle legend based on the number of values in size_values.
+            fig <- .custom_legend(
+                fig,
+                data = data(),
+                size_by = size.by,
+                gap = 0.04,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
+
+            # Apply uniform legend title/label font sizes
+            fig <- .apply_legend_styling(
+                fig,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
+
+            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
+            fig <- .axis_titles_as_annotations(fig)
 
             return(fig)
         })

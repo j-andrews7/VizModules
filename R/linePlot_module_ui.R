@@ -30,8 +30,8 @@
 #'   \item \code{y.adjustment} - Y-axis adjustment function (UI: "Y Adjustment", default: "")
 #'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-#'   \item \code{facet.nrow} - Number of rows in the facet grid (UI: "Facet Rows", default: NULL; blank = auto)
-#'   \item \code{facet.ncol} - Number of columns in the facet grid (UI: "Facet Columns", default: NULL; blank = auto)
+#'   \item \code{facet.nrow} - Number of rows in the facet grid (UI: "Rows", default: NULL; blank = auto)
+#'   \item \code{facet.ncol} - Number of columns in the facet grid (UI: "Columns", default: NULL; blank = auto)
 #'   \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
 #'   \item \code{line.type} - Line type (UI: "Line type", default: "solid")
 #'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
@@ -192,18 +192,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ), selectize = FALSE
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("facet.nrow"), "Facet Rows",
+            tipify(numericInput(ns("facet.nrow"), "Rows",
                 value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 1),
                 paste("Number of rows in the facet grid.",
                     "Leave blank to auto-compute; only one of rows/columns needs to be set."),
                 placement = "top", options = list(container = "body")
             ),
-            tipify(numericInput(ns("facet.ncol"), "Facet Columns",
+            tipify(numericInput(ns("facet.ncol"), "Columns",
                 value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 1),
                 paste("Number of columns in the facet grid.",
                     "Leave blank to auto-compute; only one of rows/columns needs to be set."),
                 placement = "top", options = list(container = "body")
-            )
+            ),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("plot.mode"), "Plot Type",
@@ -232,6 +233,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                 placement = "top", options = list(container = "body")
             )
         ),
+
+        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
 
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),

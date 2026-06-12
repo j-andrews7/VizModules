@@ -63,7 +63,7 @@ shinyApp(ui, server)
 
 - **Defaults**: Pass a named list to the `defaults` argument of `*InputsUI()` to pre-fill inputs. Names match the underlying plot function arguments (e.g., `defaults = list(fill.color = "steelblue")`).
 - **Hide inputs**: Use `hide.inputs` in the server call to remove controls while still initializing their values. This is useful when your app sets certain parameters itself.
-- **Hide tabs**: Use `hide.tabs` to remove whole groups of controls (e.g., `"Plotly"` or `"Legend/Scale"` in `scatterPlot`).
+- **Hide tabs**: Use `hide.tabs` to remove whole groups of controls (e.g., `"Plotly"` or `"Legend"` in `scatterPlot`).
 
 ```{r hide-controls}
 dittoViz_scatterPlotServer(

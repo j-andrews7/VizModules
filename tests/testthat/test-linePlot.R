@@ -218,3 +218,21 @@ test_that("linePlot handles different datasets", {
 
     expect_s3_class(fig, "plotly")
 })
+
+test_that("linePlot honors title.x.position for repositioning the title", {
+    fig <- linePlot(
+        data = mtcars,
+        x = "wt",
+        y = "mpg",
+        plot.mode = "lines",
+        line.type = "solid",
+        colour.group.by = NULL,
+        palette.selection = "Set2",
+        show.legend = TRUE,
+        title.text = "Custom title",
+        title.x.position = 0.2
+    )
+
+    built <- plotly::plotly_build(fig)
+    expect_equal(built$x$layout$title$x, 0.2)
+})

@@ -163,3 +163,20 @@ test_that("dumbbellPlot handles title font styling", {
     expect_equal(built$x$layout$title$font$size, 30)
     expect_equal(built$x$layout$title$font$family, "Courier")
 })
+
+test_that("dumbbellPlot honors title.x.position for repositioning the title", {
+    df <- data.frame(
+        School = c("MIT", "Stanford", "Harvard"),
+        Women = c(94, 96, 112),
+        Men = c(152, 151, 165)
+    )
+    fig <- dumbbellPlot(
+        data = df, x = c("Women", "Men"), y = "School",
+        palette.selection = c("pink", "blue"),
+        title.text = "Custom title",
+        title.x.position = 0.2
+    )
+
+    built <- plotly::plotly_build(fig)
+    expect_equal(built$x$layout$title$x, 0.2)
+})

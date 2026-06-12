@@ -203,7 +203,8 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         tipify(selectInput(ns("split.by"), "Split By",
         selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, ""), selectize = FALSE
-        ), documentParameters$split_by, placement = "top", options = list(container = "body"))
+        ), documentParameters$split_by, placement = "top", options = list(container = "body")),
+        .uniform_subplot_spacing_inputs_ui(ns, defaults)
     ),
 
     "Aesthetics" = tagList(
@@ -244,6 +245,9 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             value = .get_default(defaults, "x.max", max.x, is.numeric)
         ), documentParameters$x_max, placement = "top", options = list(container = "body"))
     ),
+
+
+    "Legend" = .uniform_legend_inputs_ui(ns, defaults),
 
 
     "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),

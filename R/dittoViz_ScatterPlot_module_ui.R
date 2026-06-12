@@ -64,8 +64,8 @@
 #'   \item \code{contour.color} - Contour color (UI: "Contour Color", default: "black")
 #'   \item \code{contour.linetype} - Contour linetype (UI: "Contour Linetype", default: "solid")
 #'   \item \code{color.panel} - Custom color values (UI: color.panel.ui, derived from palette)
-#'   \item \code{split.nrow} - Number of split rows (UI: "Split Rows", default: NA)
-#'   \item \code{split.ncol} - Number of split columns (UI: "Split Columns", default: NA)
+#'   \item \code{split.nrow} - Number of split rows (UI: "Rows", default: NA)
+#'   \item \code{split.ncol} - Number of split columns (UI: "Columns", default: NA)
 #'   \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")
 #'   \item \code{split.adjust.scales} - Facet scales (UI: "Facet Scales", default: "fixed")
 #'   \item \code{annotate.by} - Annotate by column (UI: "Annotate By", default: "")
@@ -351,11 +351,11 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             uiOutput(ns("color.panel.ui"))
         ),
         "Facet" = tagList(
-            tipify(numericInput(ns("split.nrow"), "Split Rows",
+            tipify(numericInput(ns("split.nrow"), "Rows",
                 step = 1, min = 0,
                 value = .get_default(defaults, "split.nrow", NA, is.numeric)
             ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("split.ncol"), "Split Columns",
+            tipify(numericInput(ns("split.ncol"), "Columns",
                 step = 1, min = 0,
                 value = .get_default(defaults, "split.ncol", NA, is.numeric)
             ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
@@ -375,7 +375,8 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     ), selectize = FALSE
                 ), "Control whether facet panels share the same axis scales or allow them to vary independently",
                 placement = "top", options = list(container = "body")
-            )
+            ),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = tagList(
             tipify(
@@ -487,13 +488,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 placement = "top", options = list(container = "body")
             )
         ),
-        "Legend/Scale" = tagList(
+        "Legend" = tagList(
             tipify(checkboxInput(ns("legend.show"), "Show Legend",
                 value = .get_default(defaults, "legend.show", TRUE, is.logical)
             ), documentParameters$legend.show, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("legend.color.title"), "Legend Title",
                 value = .get_default(defaults, "legend.color.title", "make")
             ), documentParameters$legend.color.title, placement = "top", options = list(container = "body")),
+            .uniform_legend_inputs_ui(ns, defaults),
             tipify(numericInput(ns("legend.color.size"), "Legend Color Size",
                 min = 1,
                 value = .get_default(defaults, "legend.color.size", 5, is.numeric)
