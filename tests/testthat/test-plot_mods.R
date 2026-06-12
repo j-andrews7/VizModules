@@ -1067,10 +1067,12 @@ test_that(".custom_legend derives circle sizes from marker sizes when size_value
     sizes <- as.numeric(sub(".*font-size:([0-9.]+)px.*", "\\1", vapply(
         circle_text, function(a) a$text, character(1)
     )))
-    # Smallest/largest legend circles match the smallest/largest marker sizes.
+    # The glyph font-sizes are the marker pixel diameters scaled up by the
+    # circle-glyph ink ratio so the rendered circles match the plotted dots.
     msizes <- VizModules:::.extract_marker_sizes(fig)
-    expect_equal(min(sizes), min(msizes))
-    expect_equal(max(sizes), max(msizes))
+    ratio <- VizModules:::.CIRCLE_GLYPH_DIAMETER_RATIO
+    expect_equal(min(sizes), min(msizes) / ratio)
+    expect_equal(max(sizes), max(msizes) / ratio)
     # Sizes increase monotonically.
     expect_false(is.unsorted(sizes))
 })

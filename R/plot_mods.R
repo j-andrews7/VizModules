@@ -2506,6 +2506,18 @@ is_pure_type <- function(inputs, d) {
     }
     val
 }
+#' Rendered diameter of the U+25CF circle glyph relative to its font-size
+#'
+#' The HTML "black circle" glyph (\code{&#9679;}, U+25CF) used by the custom
+#' size legend inks at roughly 0.44x its font-size across the sans-serif fonts
+#' in plotly's default font stack. A plotly marker's \code{size} attribute, by
+#' contrast, is its diameter in px. Dividing a target marker diameter by this
+#' ratio yields the glyph font-size that renders at that diameter, so the legend
+#' circles match the plotted dots.
+#'
+#' @keywords internal
+#' @noRd
+.CIRCLE_GLYPH_DIAMETER_RATIO <- 0.44
 #' Add a custom bubble-size legend to a plotly figure
 #'
 #' Renders a manual size legend as a vertical column of HTML circle
@@ -2524,8 +2536,11 @@ is_pure_type <- function(inputs, d) {
 #'   circle glyphs, one per legend entry. When \code{NULL} (the default), the
 #'   glyph sizes are derived from the actual marker sizes in \code{fig} so the
 #'   legend reflects the plot's size scaling (i.e. the \code{size_min}/
-#'   \code{size_max} passed to the plot function). When supplied, the vector is
-#'   used verbatim and its length determines the number of legend entries.
+#'   \code{size_max} passed to the plot function); the marker pixel diameters
+#'   are converted to glyph font-sizes via \code{.CIRCLE_GLYPH_DIAMETER_RATIO}
+#'   so the rendered circles match the plotted dots. When supplied, the vector
+#'   is used verbatim as font sizes and its length determines the number of
+#'   legend entries.
 #' @param title.size Numeric, or \code{NULL}. Font size (px) of the legend
 #'   title annotation. When \code{NULL}, plotly's default is used.
 #' @param text.size Numeric, or \code{NULL}. Font size (px) of the numeric
@@ -2565,14 +2580,20 @@ is_pure_type <- function(inputs, d) {
     # legend matches the size scaling produced by size_min/size_max. The marker
     # sizes already encode the area-based scale, so the smallest/largest markers
     # anchor the smallest/largest legend entries and the intermediate breaks
-    # follow ggplot2's sqrt (area) interpolation.
+    # follow ggplot2's sqrt (area) interpolation (plotthis uses
+    # scale_size(range = c(size_min, size_max)), i.e. area scaling).
     if (is.null(size_values)) {
         marker_sizes <- .extract_marker_sizes(fig)
         if (length(marker_sizes) > 0) {
             d_min <- min(marker_sizes)
             d_max <- max(marker_sizes)
             frac <- if (n_breaks > 1L) seq(0, 1, length.out = n_breaks) else 0
-            size_values <- d_min + (d_max - d_min) * sqrt(frac)
+            # Break diameters (px) along ggplot2's area (sqrt) size scale.
+            break_diameters <- d_min + (d_max - d_min) * sqrt(frac)
+            # A plotly marker's `size` is its diameter in px, but the HTML circle
+            # glyph (U+25CF) only inks ~0.44x its font-size. Scale the font-size
+            # up so the legend glyphs render at the plotted marker diameters.
+            size_values <- break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
         } else {
             size_values <- c(10, 20, 30, 40, 50)
         }
@@ -2581,6 +2602,22 @@ is_pure_type <- function(inputs, d) {
     start_y <- 0.95
     x_pos <- 1.02
     label_x <- 1.06
+
+    # Vertical centres (paper units) for each legend entry. Advance by each
+    # glyph's rendered radius plus the requested gap so larger circles claim
+    # proportionally more room and do not overlap once their font-sizes are
+    # scaled up to match the plotted marker diameters. A nominal figure height
+    # converts the px diameters to paper-space radii.
+    nominal_height_px <- 500
+    rendered_radii <- (size_values * .CIRCLE_GLYPH_DIAMETER_RATIO) / 2 / nominal_height_px
+    centers <- numeric(length(size_values))
+    for (i in seq_along(size_values)) {
+        centers[i] <- if (i == 1L) {
+            start_y - rendered_radii[i]
+        } else {
+            centers[i - 1L] - rendered_radii[i - 1L] - gap - rendered_radii[i]
+        }
+    }
 
     title_font <- list(color = "#000000")
     if (valid_size(title.size)) {
@@ -2600,7 +2637,7 @@ is_pure_type <- function(inputs, d) {
         font      = title_font
     )
     for (i in seq_along(size_values)) {
-        yc <- start_y - (i - 1) * gap
+        yc <- centers[i]
 
         # Circle annotation
         fig <- fig |> add_annotations(
