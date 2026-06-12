@@ -196,9 +196,9 @@
         "Title": "Flexible, Interactive 'shiny' Modules for Almost Any Plot",
         "Version": "0.2.0",
         "Authors@R": "\n    c(person(given = \"Jared\", family = \"Andrews\", email = \"jared.andrews07@gmail.com\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-0780-6248\")),\n        person(given = \"Jacob\",\n                family = \"Martin\",\n                role = c(\"aut\"),\n                comment = c(ORCID = \"0009-0007-6896-4796\"),\n                email = \"jacob@martin-email.com\"))",
-        "Description": "Offers a core selection of interactivity-first 'shiny' modules for many \n    plot types meant to serve as flexible building blocks for applications and \n    as the base for more complex modules. These modules\n    allow for the rapid and convenient construction of 'shiny' apps with very few lines\n    of code and decouple plotting from the underlying data. These modules allow \n    for full plot aesthetic customization by the end user through UI inputs. Utility\n    functions for simple UI organization, automated UI tooltips, and additional\n    plot enhancements are also provided.",
+        "Description": "Offers a core selection of interactivity-first 'shiny' modules for many \n    plot types meant to serve as flexible building blocks for applications and \n    as the base for more complex modules. These modules\n    allow for the rapid and convenient construction of 'shiny' apps with very few lines\n    of code and decouple plotting from the underlying data. These modules allow \n    for full plot aesthetic customization by the end user through UI inputs. Utility\n    functions for simple UI organization, automated UI tooltips, and additional\n    plot enhancements are also provided. Includes a multi-panel figure builder app\n    for arranging multiple modules together in a free-form layout.",
         "License": "MIT + file LICENSE",
-        "Depends": "shiny, dittoViz, plotly, R (>= 4.5), shinyBS, plotthis (>=\n0.11.0)",
+        "Depends": "shiny, dittoViz, plotly, R (>= 4.5), shinyBS, plotthis (>=\n0.12.1)",
         "Imports": "roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales,\nshinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets,\nhtmlwidgets, zip",
         "Encoding": "UTF-8",
         "LazyData": "true",
@@ -213,16 +213,16 @@
         "RemoteRepo": "VizModules",
         "RemoteUsername": "j-andrews7",
         "RemoteRef": "HEAD",
-        "RemoteSha": "98f634f1fe6b028834f7994e206c569e48f4337b",
+        "RemoteSha": "bf2b154abdb5834d5c85bff60a4f98d4b2455065",
         "GithubRepo": "VizModules",
         "GithubUsername": "j-andrews7",
         "GithubRef": "HEAD",
-        "GithubSHA1": "98f634f1fe6b028834f7994e206c569e48f4337b",
+        "GithubSHA1": "bf2b154abdb5834d5c85bff60a4f98d4b2455065",
         "NeedsCompilation": "no",
-        "Packaged": "2026-06-10 17:30:38 UTC; jandrews",
+        "Packaged": "2026-06-12 20:08:48 UTC; jandrews",
         "Author": "Jared Andrews [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-0780-6248>),\n  Jacob Martin [aut] (ORCID: <https://orcid.org/0009-0007-6896-4796>)",
         "Maintainer": "Jared Andrews <jared.andrews07@gmail.com>",
-        "Built": "R 4.6.0; ; 2026-06-10 17:30:41 UTC; windows"
+        "Built": "R 4.6.0; ; 2026-06-12 20:08:51 UTC; windows"
       }
     },
     "askpass": {
