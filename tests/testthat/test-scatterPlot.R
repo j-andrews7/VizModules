@@ -1,11 +1,25 @@
 test_that("scatterPlot UI exposes a numeric 'Size By' selector", {
-    data(example_mtcars)
-    ui <- dittoViz_scatterPlotInputsUI("scatter", example_mtcars)
+    df <- data.frame(
+        num1 = c(1, 2, 3),
+        num2 = c(4.5, 5.5, 6.5),
+        cat1 = c("a", "b", "c"),
+        stringsAsFactors = FALSE
+    )
+    ui <- dittoViz_scatterPlotInputsUI("scatter", df)
     html <- as.character(ui)
 
     # The new size.by input is namespaced and labelled "Size By".
     expect_true(grepl("scatter-size.by", html, fixed = TRUE))
     expect_true(grepl("Size By", html, fixed = TRUE))
+
+    # The size.by selector must only offer numeric columns, never categorical
+    # ones, since point size mapping requires a numeric variable.
+    size_by_block <- regmatches(
+        html, regexpr("id=\"scatter-size.by\".*?</select>", html)
+    )
+    expect_true(grepl(">num1</option>", size_by_block, fixed = TRUE))
+    expect_true(grepl(">num2</option>", size_by_block, fixed = TRUE))
+    expect_false(grepl(">cat1</option>", size_by_block, fixed = TRUE))
 })
 
 test_that("scatterPlot size column yields variable marker sizes for the legend", {
