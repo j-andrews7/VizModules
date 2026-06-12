@@ -2649,7 +2649,7 @@ is_pure_type <- function(inputs, d) {
     legend_title <- fig$x$layout$legend$title$text
     if (!is.null(legend_title) && is.character(legend_title) &&
         length(legend_title) == 1L) {
-        parts <- unlist(strsplit(legend_title, "<br ?/?>|\n"))
+        parts <- unlist(strsplit(legend_title, "<br\\s*/?>|\n"))
         if (length(parts) > 1L) {
             kept <- parts[parts != size_by]
             if (length(kept) == 0L) {
@@ -2664,7 +2664,7 @@ is_pure_type <- function(inputs, d) {
     # subsequent builds.
     new_anns <- list(
         list(
-            x = x_pos + 0.1, y = min(start_y + 0.04, 1),
+            x = x_pos + 0.1, y = min(start_y + gap, 1),
             xref = "paper", yref = "paper",
             text = size_by, showarrow = FALSE,
             xanchor = "center", yanchor = "middle", font = title_font
