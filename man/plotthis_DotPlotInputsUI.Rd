@@ -48,8 +48,9 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters are
 \item \code{legend.direction} - Legend orientation (plotly allows interactive adjustment)
 \item \code{x_sep} - Separator for multiple x columns (not yet implemented)
 \item \code{y_sep} - Separator for multiple y columns (not yet implemented)
-\item \code{split_by_sep} - Separator for multiple split_by columns (not yet implemented)
-\item \code{size_name} - Size legend name (not yet implemented)
+\item \code{split_by} - Split variable for separate plots (doesn't work with plotly; \code{facet_by} available instead)
+\item \code{split_by_sep} - Separator for multiple \code{split_by} columns (\code{split_by} not used in module)
+\item \code{size_name} - Size legend name (plotly allows interactive editing)
 \item \code{fill_name} - Fill legend name (not yet implemented)
 \item \code{fill_cutoff_name} - Fill cutoff legend name (not yet implemented)
 \item \code{theme} - ggplot2 theme (managed internally)
@@ -58,15 +59,15 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters are
 \item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
 \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
 \item \code{keep_na} - Keep NA values (not yet implemented)
-\item \code{combine} - Combine multiple plots (not applicable for plotly)
+\item \code{combine} - Combine multiple plots (not applicable as \code{split_by} is not implemented)
 \item \code{seed} - Random seed (not applicable)
-\item \code{nrow} - Only applies if \code{split_by} is used with combine
-\item \code{ncol} - Only applies if \code{split_by} is used with combine
-\item \code{byrow} - Only applies if \code{split_by} is used with combine
-\item \code{axes} - Only applies if \code{split_by} is used with combine
-\item \code{axis_titles} - Only applies if \code{split_by} is used with combine
-\item \code{guides} - Only applies if \code{split_by} is used with combine
-\item \code{design} - Only applies if \code{split_by} is used with combine
+\item \code{nrow} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{ncol} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{byrow} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{axes} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{axis_titles} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{guides} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
+\item \code{design} - Only applies if \code{split_by} is used with combine (\code{split_by} not used in module)
 }
 }
 
@@ -82,7 +83,6 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can
 \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-\item \code{split_by} - Split variable for separate plots (UI: "Split By", default: "")
 \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
 \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
