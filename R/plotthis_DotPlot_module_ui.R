@@ -52,6 +52,8 @@
 #'   \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
 #'   \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 #'   \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
+#'   \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
+#'   \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
 #'   \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 #'   \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 #'   \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
@@ -98,7 +100,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
 
     selected <- list(
-        "x", "y", "size_by", "fill_by", "fill_cutoff",
+        "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
         "split_by", "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
         "palette", "alpha"
     )
@@ -172,7 +174,15 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             documentParameters$alpha, placement = "top", options = list(container = "body"))
     ),
 
-    "Legend" = .uniform_legend_inputs_ui(ns, defaults),
+    "Legend" = tagList(
+        .uniform_legend_inputs_ui(ns, defaults),
+        tipify(numericInput(ns("size.min"), "Min Dot Size",
+            value = .get_default(defaults, "size.min", 1, is.numeric), min = 0, step = 1
+            ), documentParameters$size_min, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("size.max"), "Max Dot Size",
+            value = .get_default(defaults, "size.max", 10, is.numeric), min = 0, step = 1
+            ), documentParameters$size_max, placement = "top", options = list(container = "body"))
+    ),
 
     "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
     "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),

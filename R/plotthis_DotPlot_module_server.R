@@ -99,6 +99,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Plotly
             .reset_plotly_inputs(session, defaults)
             .reset_legend_inputs(session, defaults)
+            updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
+            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 10, is.numeric))
 
             # Lines
             .reset_lines_inputs(session, defaults = defaults)
@@ -159,6 +161,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 size_by = size.by,
                 fill_by = fill.by,
                 fill_cutoff = fill.cutoff,
+                size_min = isolate_fn(input$size.min),
+                size_max = isolate_fn(input$size.max),
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
@@ -219,7 +223,14 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             #Custom Legend: 
             #Generates a custom dot plot circle legend based on the number of values in size_values. 
-            fig <- .custom_legend(fig, data = data(), size_by = size.by, gap = 0.04, size_values = c(10, 20, 30, 40, 50))
+            fig <- .custom_legend(
+                fig,
+                data = data(),
+                size_by = size.by,
+                gap = 0.04,
+                title.size = isolate_fn(input$legend.title.size),
+                text.size = isolate_fn(input$legend.text.size)
+            )
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

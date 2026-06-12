@@ -2521,8 +2521,15 @@ is_pure_type <- function(inputs, d) {
 #' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
 #'   consecutive legend entries. Defaults to \code{0.03}.
 #' @param size_values Numeric vector of font sizes (px) used to render the
-#'   circle glyphs, one per legend entry. Defaults to
-#'   \code{c(10, 20, 30, 40, 50)}.
+#'   circle glyphs, one per legend entry. When \code{NULL} (the default), the
+#'   glyph sizes are derived from the actual marker sizes in \code{fig} so the
+#'   legend reflects the plot's size scaling (i.e. the \code{size_min}/
+#'   \code{size_max} passed to the plot function). When supplied, the vector is
+#'   used verbatim and its length determines the number of legend entries.
+#' @param title.size Numeric, or \code{NULL}. Font size (px) of the legend
+#'   title annotation. When \code{NULL}, plotly's default is used.
+#' @param text.size Numeric, or \code{NULL}. Font size (px) of the numeric
+#'   label annotations. Defaults to \code{12} when \code{NULL}.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
 #'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
@@ -2531,7 +2538,8 @@ is_pure_type <- function(inputs, d) {
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
-.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = c(10, 20, 30, 40, 50)) {
+.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
+                           title.size = NULL, text.size = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -2543,16 +2551,42 @@ is_pure_type <- function(inputs, d) {
         return(fig)
     }
 
+    valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+
+    n_breaks <- if (!is.null(size_values)) length(size_values) else 5L
     breaks <- seq(
         from = min(vals, na.rm = TRUE),
         to = max(vals, na.rm = TRUE),
-        length.out = length(size_values)
+        length.out = n_breaks
     )
     labels <- format(breaks, trim = TRUE, scientific = FALSE)
+
+    # Derive the circle glyph sizes from the plot's actual marker sizes so the
+    # legend matches the size scaling produced by size_min/size_max. The marker
+    # sizes already encode the area-based scale, so the smallest/largest markers
+    # anchor the smallest/largest legend entries and the intermediate breaks
+    # follow ggplot2's sqrt (area) interpolation.
+    if (is.null(size_values)) {
+        marker_sizes <- .extract_marker_sizes(fig)
+        if (length(marker_sizes) > 0) {
+            d_min <- min(marker_sizes)
+            d_max <- max(marker_sizes)
+            frac <- if (n_breaks > 1L) seq(0, 1, length.out = n_breaks) else 0
+            size_values <- d_min + (d_max - d_min) * sqrt(frac)
+        } else {
+            size_values <- c(10, 20, 30, 40, 50)
+        }
+    }
 
     start_y <- 0.95
     x_pos <- 1.02
     label_x <- 1.06
+
+    title_font <- list(color = "#000000")
+    if (valid_size(title.size)) {
+        title_font$size <- title.size
+    }
+    label_font_size <- if (valid_size(text.size)) text.size else 12
 
     fig <- fig |> add_annotations(
         x         = x_pos + 0.1,
@@ -2562,7 +2596,8 @@ is_pure_type <- function(inputs, d) {
         text      = size_by,
         showarrow = FALSE,
         xanchor   = "center",
-        yanchor   = "middle"
+        yanchor   = "middle",
+        font      = title_font
     )
     for (i in seq_along(size_values)) {
         yc <- start_y - (i - 1) * gap
@@ -2589,9 +2624,39 @@ is_pure_type <- function(inputs, d) {
             showarrow = FALSE,
             xanchor   = "left",
             yanchor   = "middle",
-            font      = list(size = 12, color = "#000000")
+            font      = list(size = label_font_size, color = "#000000")
         )
     }
-  
+
     return(fig)
+}
+
+#' Extract marker sizes from a plotly figure
+#'
+#' Builds the figure (to consolidate any deferred trace attributes) and
+#' collects the numeric marker sizes across all traces. Used to derive a
+#' custom size legend that matches the plot's actual point sizes.
+#'
+#' @param fig A plotly figure object.
+#'
+#' @return A numeric vector of finite marker sizes, possibly empty.
+#'
+#' @importFrom plotly plotly_build
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_extract_marker_sizes
+.extract_marker_sizes <- function(fig) {
+    built <- tryCatch(plotly::plotly_build(fig), error = function(e) NULL)
+    if (is.null(built) || is.null(built$x$data)) {
+        return(numeric(0))
+    }
+    sizes <- numeric(0)
+    for (tr in built$x$data) {
+        s <- tr$marker$size
+        if (!is.null(s) && is.numeric(s)) {
+            sizes <- c(sizes, s)
+        }
+    }
+    sizes[is.finite(sizes)]
 }

@@ -77,6 +77,8 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can
 \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
+\item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
+\item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
 \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)

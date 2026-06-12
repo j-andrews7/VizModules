@@ -1019,3 +1019,70 @@ test_that(".custom_legend appends size-legend annotations for numeric size_by", 
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
     expect_true("pct_expressed" %in% ann_text)
 })
+
+test_that(".custom_legend applies legend title and label font sizes to annotations", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    result <- VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed",
+        size_values = c(10, 20, 30, 40, 50),
+        title.size = 22, text.size = 9
+    )
+    built <- plotly::plotly_build(result)
+    anns <- built$x$layout$annotations
+
+    title_ann <- Filter(function(a) identical(a$text, "pct_expressed"), anns)
+    expect_equal(title_ann[[1]]$font$size, 22)
+
+    # Numeric label annotations carry the requested text size.
+    label_anns <- Filter(
+        function(a) !is.null(a$font$size) && grepl("^[0-9.]+$", a$text), anns
+    )
+    expect_true(length(label_anns) >= 5)
+    expect_true(all(vapply(label_anns, function(a) a$font$size, numeric(1)) == 9))
+})
+
+test_that(".custom_legend derives circle sizes from marker sizes when size_values is NULL", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers",
+        marker = list(size = ~pct_expressed)
+    )
+
+    result <- VizModules:::.custom_legend(fig, data, size_by = "pct_expressed")
+    built <- plotly::plotly_build(result)
+    anns <- built$x$layout$annotations
+    circle_text <- Filter(function(a) grepl("font-size", a$text), anns)
+    expect_equal(length(circle_text), 5)
+
+    sizes <- as.numeric(sub(".*font-size:([0-9.]+)px.*", "\\1", vapply(
+        circle_text, function(a) a$text, character(1)
+    )))
+    # Smallest/largest legend circles match the smallest/largest marker sizes.
+    msizes <- VizModules:::.extract_marker_sizes(fig)
+    expect_equal(min(sizes), min(msizes))
+    expect_equal(max(sizes), max(msizes))
+    # Sizes increase monotonically.
+    expect_false(is.unsorted(sizes))
+})
+
+test_that(".extract_marker_sizes collects numeric marker sizes", {
+    fig <- plotly::plot_ly(
+        x = 1:3, y = 1:3, type = "scatter", mode = "markers",
+        marker = list(size = c(4, 8, 12))
+    )
+    expect_equal(sort(VizModules:::.extract_marker_sizes(fig)), c(4, 8, 12))
+
+    # No marker sizes -> empty numeric vector.
+    fig2 <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
+    expect_equal(VizModules:::.extract_marker_sizes(fig2), numeric(0))
+})
