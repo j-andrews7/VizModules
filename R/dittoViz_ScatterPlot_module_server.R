@@ -458,6 +458,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 isolate_fn(input$y.by), null.na.inputs$y.adjustment, isolate_fn(input$y.adj.fxn)
             )
 
+            # Reflect any applied color data adjustments in the color.by legend title so it
+            # accurately describes the values displayed (e.g. "log2(z-score(units))"). Only
+            # the auto-generated title ("make") is rewritten so user-supplied titles are kept.
+            legend_color_title <- isolate_fn(input$legend.color.title)
+            color_adjustment_active <- !is.null(null.na.inputs$color.adjustment) ||
+                !is.null(null.na.inputs$color.adj.fxn)
+            if (identical(legend_color_title, "make") &&
+                !is.null(null.na.inputs$color.by) && color_adjustment_active) {
+                legend_color_title <- .adjusted_axis_label(
+                    null.na.inputs$color.by, null.na.inputs$color.adjustment, null.na.inputs$color.adj.fxn
+                )
+            }
+
             p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
@@ -507,7 +520,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 trajectory.arrow.size = isolate_fn(input$trajectory.arrow.size),
                 do.ellipse = isolate_fn(input$do.ellipse),
                 legend.show = isolate_fn(input$legend.show),
-                legend.color.title = isolate_fn(input$legend.color.title),
+                legend.color.title = legend_color_title,
                 legend.color.breaks = waiver.inputs$legend.color.breaks,
                 legend.color.breaks.labels = waiver(),
                 legend.shape.title = null.na.inputs$shape.by,
