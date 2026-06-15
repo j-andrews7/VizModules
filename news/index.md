@@ -64,6 +64,13 @@
   repositioning.
 - Condensed package wide workflows with simple helpers,
   e.g. `.apply_title_layout()`, resulting in significantly less jank.
+- Axis adjustments are now properly reflected in axis/legend titles for
+  appropriate modules, e.g. `yPlot`, `scatterPlot`, `linePlot`.
+- Removed a handful of spurious/non-functional inputs, particularly for
+  the `dittoViz_scatterPlot` module.
+- Custom `size.by` legends added for `plotthis_DotPlot` and
+  `dittoViz_scatterPlot` modules, since plotly does not yet support
+  these.
 
 ## VizModules 0.1.1
 
