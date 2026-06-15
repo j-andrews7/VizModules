@@ -2551,6 +2551,11 @@ is_pure_type <- function(inputs, d) {
 #'   column begins; the title sits just above it and subsequent entries stack
 #'   downward. Lower it to vertically offset the size legend from an overlapping
 #'   color/shape legend. Defaults to \code{0.95}.
+#' @param start_x Numeric. Paper-space x coordinate at which the legend column
+#'   (circles, labels and title) is anchored. Values just above \code{1} place
+#'   the legend to the right of the plot area; nudge it lower to pull the whole
+#'   set inward when it would otherwise overflow a narrow plot, or higher to push
+#'   it further out. Defaults to \code{1.02}.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
 #'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
@@ -2560,7 +2565,8 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 #' @rdname INTERNAL_custom_legend
 .custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
-                           title.size = NULL, text.size = NULL, start_y = 0.95) {
+                           title.size = NULL, text.size = NULL, start_y = 0.95,
+                           start_x = 1.02) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -2573,6 +2579,10 @@ is_pure_type <- function(inputs, d) {
     }
 
     valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+
+    if (!valid_size(start_x)) {
+        start_x <- 1.02
+    }
 
     n_breaks <- if (!is.null(size_values)) length(size_values) else 5L
     breaks <- seq(
@@ -2613,8 +2623,8 @@ is_pure_type <- function(inputs, d) {
         }
     }
 
-    x_pos <- 1.02
-    label_x <- 1.06
+    x_pos <- start_x
+    label_x <- start_x + 0.04
 
     # Vertical centres (paper units) for each legend entry. Advance by each
     # glyph's rendered radius plus the requested gap so larger circles claim
@@ -2664,7 +2674,7 @@ is_pure_type <- function(inputs, d) {
     # subsequent builds.
     new_anns <- list(
         list(
-            x = x_pos + 0.1, y = min(start_y + gap, 1),
+            x = x_pos + 0.02, y = min(start_y + gap, 1),
             xref = "paper", yref = "paper",
             text = size_by, showarrow = FALSE,
             xanchor = "center", yanchor = "middle", font = title_font

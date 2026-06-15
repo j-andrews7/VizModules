@@ -90,6 +90,8 @@
 #'   \item \code{legend.color.size} - Legend color size (UI: "Legend Color Size", default: 5)
 #'   \item \code{legend.shape.size} - Legend shape size (UI: "Legend Shape Size", default: 5)
 #'   \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
+#'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
+#'     default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 #'   \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 #'   \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
 #'   \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
@@ -519,6 +521,15 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 placeholder = "e.g. -3, 0, 3",
                 value = .get_default(defaults, "legend.color.breaks", "", is.character)
             ), documentParameters$legend.color.breaks, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.legend.x"), "Size Legend X Position",
+                value = .get_default(defaults, "size.legend.x", 1.02, is.numeric),
+                step = 0.02
+            ), paste(
+                "Horizontal position (paper coordinates) of the custom size",
+                "legend drawn when 'Size By' is set. Values just above 1 sit to",
+                "the right of the plot; lower it to pull the legend inward on",
+                "narrow plots or raise it to push it further out."
+            ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("min.value"), "Min Value",
                 value = .get_default(defaults, "min.value", NA, is.numeric)
             ), documentParameters$min.value, placement = "top", options = list(container = "body")),

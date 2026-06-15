@@ -1150,6 +1150,31 @@ test_that(".custom_legend start_y lowers the legend column", {
     expect_true(max_y(low) < max_y(high))
 })
 
+test_that(".custom_legend start_x shifts the legend column horizontally", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    default <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50)
+    ))
+    shifted <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_x = 1.2
+    ))
+    max_x <- function(b) max(vapply(b$x$layout$annotations, function(a) a$x, numeric(1)))
+    expect_true(max_x(shifted) > max_x(default))
+
+    # An invalid start_x falls back to the default placement.
+    fallback <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_x = NA
+    ))
+    expect_equal(max_x(fallback), max_x(default))
+})
+
 test_that(".extract_marker_sizes collects numeric marker sizes", {
     fig <- plotly::plot_ly(
         x = 1:3, y = 1:3, type = "scatter", mode = "markers",

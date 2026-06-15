@@ -351,6 +351,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "webgl", value = .get_default(defaults, "webgl", TRUE, is.logical))
             .reset_plotly_inputs(session, defaults)
             .reset_legend_inputs(session, defaults)
+            updateNumericInput(session, "size.legend.x",
+                value = .get_default(defaults, "size.legend.x", 1.02, is.numeric)
+            )
             updateCheckboxInput(session, "do.ellipse",
                 value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
             )
@@ -848,7 +851,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
-                start_y = if (has_cat_legend) 0.45 else 0.95
+                start_y = if (has_cat_legend) 0.45 else 0.95,
+                start_x = isolate_fn(input$size.legend.x)
             )
 
             # Apply uniform legend title/label font sizes
