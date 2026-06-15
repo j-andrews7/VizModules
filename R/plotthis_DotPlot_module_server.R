@@ -40,7 +40,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         ns <- session$ns
         if (is.null(defaults)) defaults <- list()
-        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
+        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 70
         # Reset functionality
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -100,11 +100,19 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
             .reset_axes_inputs(session, defaults)
 
-            # Plotly
-            .reset_plotly_inputs(session, defaults)
+            # Legend
+            updateNumericInput(session, "size.legend.x",
+                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric)
+            )
+            updateNumericInput(session, "size.legend.y",
+                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric)
+            )
             .reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
-            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 10, is.numeric))
+            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 6, is.numeric))
+
+            # Plotly
+            .reset_plotly_inputs(session, defaults)
 
             # Lines
             .reset_lines_inputs(session, defaults = defaults)
@@ -231,7 +239,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 size_by = size.by,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
+                text.size = isolate_fn(input$legend.text.size),
+                start_y = isolate_fn(input$size.legend.y),
+                start_x = isolate_fn(input$size.legend.x)
             )
 
             # Apply uniform legend title/label font sizes
