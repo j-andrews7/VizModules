@@ -213,7 +213,10 @@ linePlot(
 - y.title:
 
   Optional character, label for y-axis. If NULL, auto-generated from
-  column name. Default: NULL.
+  column name. When `x` is a single categorical column, the plotted
+  y-values are per-group means, so the title is wrapped as
+  `mean(<y.title>)` to accurately describe the summary displayed.
+  Default: NULL.
 
 - x.title:
 

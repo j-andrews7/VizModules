@@ -252,7 +252,9 @@ May be a single value (applied to both directions) or a length-2 vector
 
 
 <dt id="arg-y-title">y.title<a class="anchor" aria-label="anchor" href="#arg-y-title"></a></dt>
-<dd><p>Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.</p></dd>
+<dd><p>Optional character, label for y-axis. If NULL, auto-generated from column name.
+When <code>x</code> is a single categorical column, the plotted y-values are per-group means, so the
+title is wrapped as <code>mean(&lt;y.title&gt;)</code> to accurately describe the summary displayed. Default: NULL.</p></dd>
 
 
 <dt id="arg-x-title">x.title<a class="anchor" aria-label="anchor" href="#arg-x-title"></a></dt>
