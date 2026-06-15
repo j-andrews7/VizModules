@@ -134,7 +134,9 @@ May be a single value (applied to both directions) or a length-2 vector
 
 \item{title.x.position}{Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.}
 
-\item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.}
+\item{y.title}{Optional character, label for y-axis. If NULL, auto-generated from column name.
+When \code{x} is a single categorical column, the plotted y-values are per-group means, so the
+title is wrapped as \verb{mean(<y.title>)} to accurately describe the summary displayed. Default: NULL.}
 
 \item{x.title}{Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.}
 

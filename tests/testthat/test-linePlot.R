@@ -236,3 +236,46 @@ test_that("linePlot honors title.x.position for repositioning the title", {
     built <- plotly::plotly_build(fig)
     expect_equal(built$x$layout$title$x, 0.2)
 })
+
+test_that("linePlot wraps y-axis title with mean() for a categorical x-axis", {
+    df <- data.frame(
+        grp = factor(c("a", "a", "b", "b", "c", "c")),
+        val = c(1, 3, 5, 7, 9, 11)
+    )
+
+    fig <- linePlot(
+        data = df,
+        x = "grp",
+        y = "val",
+        plot.mode = "lines",
+        line.type = "solid",
+        colour.group.by = NULL,
+        palette.selection = "Set2",
+        show.legend = FALSE,
+        y.title = "val"
+    )
+
+    built <- plotly::plotly_build(fig)
+    y_title <- built$x$layout$yaxis$title
+    if (is.list(y_title)) y_title <- y_title$text
+    expect_equal(y_title, "mean(val)")
+})
+
+test_that("linePlot keeps a plain y-axis title for a numeric x-axis", {
+    fig <- linePlot(
+        data = mtcars,
+        x = "wt",
+        y = "mpg",
+        plot.mode = "lines",
+        line.type = "solid",
+        colour.group.by = NULL,
+        palette.selection = "Set2",
+        show.legend = FALSE,
+        y.title = "mpg"
+    )
+
+    built <- plotly::plotly_build(fig)
+    y_title <- built$x$layout$yaxis$title
+    if (is.list(y_title)) y_title <- y_title$text
+    expect_equal(y_title, "mpg")
+})

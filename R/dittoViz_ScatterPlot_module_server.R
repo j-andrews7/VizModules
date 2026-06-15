@@ -449,10 +449,21 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 strip.background = element_blank()
             )
               
+            # Reflect any applied data adjustments in the axis titles so they
+            # accurately describe the values displayed (e.g. "log2(z-score(units))").
+            x_axis_label <- .adjusted_axis_label(
+                isolate_fn(input$x.by), null.na.inputs$x.adjustment, isolate_fn(input$x.adj.fxn)
+            )
+            y_axis_label <- .adjusted_axis_label(
+                isolate_fn(input$y.by), null.na.inputs$y.adjustment, isolate_fn(input$y.adj.fxn)
+            )
+
             p <- scatterPlot(
                 data(),
                 x.by = isolate_fn(input$x.by),
                 y.by = isolate_fn(input$y.by),
+                xlab = x_axis_label,
+                ylab = y_axis_label,
                 color.by = null.na.inputs$color.by,
                 shape.by = null.na.inputs$shape.by,
                 split.by = null.na.inputs$split.by,

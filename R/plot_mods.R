@@ -486,6 +486,50 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
+#' Build an adjustment-aware axis label
+#'
+#' Wraps a base column name with the names of any data adjustments that are
+#' applied to it before plotting, so that an axis title accurately describes the
+#' values displayed. The wrapping order mirrors how the adjustments are applied
+#' in dittoViz (the recognized \code{adjustment} is applied first, then the
+#' \code{adj.fxn}), producing labels such as \code{"log2(z-score(units))"}.
+#'
+#' Empty strings, \code{NA}, and \code{NULL} adjustments are ignored, so when no
+#' adjustment is requested the base label is returned unchanged.
+#'
+#' @param base Character scalar. The base axis label (typically the column name).
+#' @param adjustment Character scalar. A recognized data adjustment such as
+#'   \code{"z-score"} or \code{"relative.to.max"}. Optional.
+#' @param adj.fxn Character scalar. The name of a transformation function such as
+#'   \code{"log2"} or \code{"sqrt"}. Optional.
+#'
+#' @return A character scalar containing the (possibly wrapped) axis label.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_adjusted_axis_label
+#' @keywords internal
+.adjusted_axis_label <- function(base, adjustment = NULL, adj.fxn = NULL) {
+    if (is.null(base) || length(base) == 0 || is.na(base[1]) || !nzchar(base[1])) {
+        return(base)
+    }
+
+    label <- base[1]
+
+    is_set <- function(x) {
+        !is.null(x) && length(x) > 0 && !is.na(x[1]) && nzchar(as.character(x[1]))
+    }
+
+    if (is_set(adjustment)) {
+        label <- paste0(adjustment[1], "(", label, ")")
+    }
+    if (is_set(adj.fxn)) {
+        label <- paste0(adj.fxn[1], "(", label, ")")
+    }
+
+    label
+}
+
+
 #' Create default Plotly configuration
 #'
 #' Constructs a configuration list for Plotly plots, enabling interactive

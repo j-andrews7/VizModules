@@ -153,6 +153,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 selected = .get_default(defaults, "plots", c("boxplot", "jitter")))
 
             # Adjustments
+            updateSelectInput(session, "var.adjustment",
+                selected = .get_default(defaults, "var.adjustment", ""))
+            updateSelectInput(session, "var.adj.fxn",
+                selected = .get_default(defaults, "var.adj.fxn", ""))
             updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
             updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
             updateMaterialSwitch(session, "do.raster", value = .get_default(defaults, "do.raster", FALSE, is.logical))
@@ -302,9 +306,25 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
 
+            # Reflect any applied Y-data adjustment in the continuous-axis title so it
+            # accurately describes the values displayed (e.g. "log2(z-score(units))").
+            var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
+            var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
+            y_axis_label <- .adjusted_axis_label(
+                isolate_fn(input$var), var.adjustment, var.adj.fxn.name
+            )
+
+            # The Y Axis Min/Max inputs are derived from the raw data range, so let the
+            # continuous axis auto-scale whenever an adjustment rescales the values.
+            adjustment.active <- !is.null(var.adjustment) ||
+                (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
+
             p <- dittoViz::yPlot(
                 data_frame = data(),
                 var = isolate_fn(input$var),
+                var.adjustment = var.adjustment,
+                var.adj.fxn = safe_resolve_adj_fxn(var.adj.fxn.name),
+                ylab = y_axis_label,
                 group.by = isolate_fn(input$group.by),
                 color.by = color.by,
                 shape.by = shape.by,
@@ -312,8 +332,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 plots = isolate_fn(input$plots),
                 do.hover = TRUE,
                 color.panel = if (!is.null(color.panel.arg)) color.panel.arg else dittoViz::dittoColors(),
-                min = isolate_fn(input$y.min),
-                max = isolate_fn(input$y.max),
+                min = if (adjustment.active) NA else isolate_fn(input$y.min),
+                max = if (adjustment.active) NA else isolate_fn(input$y.max),
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
