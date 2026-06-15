@@ -1,5 +1,5 @@
 ---
-title: "VizModules: Modular Shiny components for reusable data visualization workflows" 
+title: "VizModules: customizable, extendable R Shiny modules for rapid development of interactive applications" 
 tags:
     - R
 authors:
