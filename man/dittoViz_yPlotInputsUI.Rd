@@ -40,7 +40,8 @@ for that function for an exhaustive list.
 The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not available via UI inputs:
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
-\item \code{ylab} - Y-axis label (plotly allows interactive editing)
+\item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
+e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{main} - Plot title (plotly allows interactive editing)
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -64,6 +65,8 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be 
 \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
 \item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
 \item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+\item \code{var.adjustment} - Y-axis data adjustment (UI: "Y Adjustment", default: "")
+\item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
 \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
 \item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "free")

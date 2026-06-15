@@ -1219,3 +1219,30 @@ test_that(".extract_marker_sizes collects numeric marker sizes", {
     fig2 <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
     expect_equal(VizModules:::.extract_marker_sizes(fig2), numeric(0))
 })
+
+# ─── .adjusted_axis_label ────────────────────────────────────────────────────
+
+test_that(".adjusted_axis_label returns the base label when no adjustment is set", {
+    expect_equal(VizModules:::.adjusted_axis_label("units"), "units")
+    expect_equal(VizModules:::.adjusted_axis_label("units", "", ""), "units")
+    expect_equal(VizModules:::.adjusted_axis_label("units", NA, NULL), "units")
+})
+
+test_that(".adjusted_axis_label wraps with the data adjustment", {
+    expect_equal(VizModules:::.adjusted_axis_label("units", "z-score"), "z-score(units)")
+    expect_equal(
+        VizModules:::.adjusted_axis_label("units", "relative.to.max"),
+        "relative.to.max(units)"
+    )
+})
+
+test_that(".adjusted_axis_label wraps with the adjustment function", {
+    expect_equal(VizModules:::.adjusted_axis_label("units", NULL, "log2"), "log2(units)")
+})
+
+test_that(".adjusted_axis_label nests adjustment then function", {
+    expect_equal(
+        VizModules:::.adjusted_axis_label("units", "z-score", "log2"),
+        "log2(z-score(units))"
+    )
+})

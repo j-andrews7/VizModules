@@ -17,7 +17,8 @@
 #' The following [dittoViz::yPlot()] parameters are not available via UI inputs:
 #' \itemize{
 #'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
-#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
+#'     e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 #'   \item \code{main} - Plot title (plotly allows interactive editing)
 #'   \item \code{sub} - Plot subtitle (not supported in plotly)
 #'   \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -39,6 +40,8 @@
 #'   \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
 #'   \item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
 #'   \item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+#'   \item \code{var.adjustment} - Y-axis data adjustment (UI: "Y Adjustment", default: "")
+#'   \item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 #'   \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
 #'   \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
 #'   \item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "free")
@@ -143,6 +146,11 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+
+    # Recognized data adjustments for the (numeric) continuous variable.
+    adj.choices <- c("", "z-score", "relative.to.max")
+    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+
     if (length(num.choices) >= 2) {
         max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
         min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
@@ -153,7 +161,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
 
     selected <- list(
         "var", "group.by", "color.by", "shape.by",
-        "plots", c("min", "max"), "split.by", c("split.nrow", "split.ncol"),
+        "plots", c("min", "max"), "var.adjustment", "var.adj.fxn",
+        "split.by", c("split.nrow", "split.ncol"),
         "split.adjust", "do.raster", "raster.dpi",
         "jitter.size", "jitter.width", "jitter.color",
         "jitter.shape.legend.size", "jitter.shape.legend.show",
@@ -232,6 +241,28 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             helpText("Order not currently respected")
         ),
         "Adjustments" = tagList(
+            tipify(
+                selectInput(ns("var.adjustment"), "Y Adjustment",
+                    choices = adj.choices,
+                    selected = .get_default(
+                        defaults, "var.adjustment", "",
+                        function(x) x %in% adj.choices
+                    ), selectize = FALSE
+                ),
+                documentParameters$var.adjustment,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("var.adj.fxn"), "Y Adjustment Function",
+                    choices = adj.fxn.choices,
+                    selected = .get_default(
+                        defaults, "var.adj.fxn", "",
+                        function(x) x %in% adj.fxn.choices
+                    ), selectize = FALSE
+                ),
+                documentParameters$var.adj.fxn,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(
                 numericInput(ns("y.max"), "Y Axis Max",
                     value = .get_default(defaults, "max", max.y, is.numeric),

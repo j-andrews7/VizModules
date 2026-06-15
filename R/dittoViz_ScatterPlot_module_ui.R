@@ -20,8 +20,10 @@
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:
 #' \itemize{
-#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
-#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
+#'   \item \code{xlab} - X-axis label (auto-generated to reflect any applied X adjustment,
+#'     e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+#'   \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
+#'     e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 #'   \item \code{main} - Plot title (plotly allows interactive editing)
 #'   \item \code{sub} - Plot subtitle (not supported in plotly)
 #'   \item \code{theme} - ggplot2 theme (not applicable to plotly)

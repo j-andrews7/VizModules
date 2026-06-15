@@ -52,7 +52,9 @@
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
 #' @param title.font.color Character, hex color for plot title text. Default: "black".
 #' @param title.x.position Numeric, horizontal position of the plot title in paper coordinates (0 = left, 1 = right). Default: 0.47.
-#' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name. Default: NULL.
+#' @param y.title Optional character, label for y-axis. If NULL, auto-generated from column name.
+#'   When `x` is a single categorical column, the plotted y-values are per-group means, so the
+#'   title is wrapped as `mean(<y.title>)` to accurately describe the summary displayed. Default: NULL.
 #' @param x.title Optional character, label for x-axis. If NULL, auto-generated from column name. Default: NULL.
 #' @param flip.x Logical, whether to reverse the x-axis direction. Default: FALSE.
 #' @param flip.y Logical, whether to reverse the y-axis direction. Default: FALSE.
@@ -154,6 +156,14 @@ linePlot <- function(data, x, y, palette.selection,
     }
 
     if (length(x) == 1 && x %in% cat.choices) {
+        # A categorical x-axis means each x position can have multiple y-values, so the
+        # per-group mean is what actually gets plotted. Reflect that summary in the
+        # y-axis title (e.g. "units" -> "mean(units)") so the axis is not misleading.
+        if (length(y) == 1 && is.numeric(data[[y[1]]])) {
+            y_label <- if (is.null(y.title) || !nzchar(y.title)) y[1] else y.title
+            y.title <- paste0("mean(", y_label, ")")
+        }
+
         # Compute per-group mean and SD for error bars
         group_vars <- x
         if (!is.null(facet.by) && nzchar(facet.by)) {
