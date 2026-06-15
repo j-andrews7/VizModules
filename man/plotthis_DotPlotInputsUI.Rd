@@ -73,7 +73,7 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters are
 
 \section{Plot parameters and defaults}{
 
-The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
 \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
@@ -90,6 +90,8 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
+\item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
+default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 }
 }
 

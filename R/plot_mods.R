@@ -310,6 +310,7 @@
     fig
 }
 
+
 #' Compute linear regression fit line data
 #'
 #' Computes predicted values from a linear model for plotting a fit line.
@@ -324,7 +325,7 @@
 #'
 #' @return If `group.col` is NULL, a data frame with columns `x` and `y`.
 #'   If `group.col` is provided, a named list of data frames (one per group).
-#' 
+#'
 #' @importFrom stats lm loess coef predict
 #'
 #' @author Jared Andrews
@@ -426,6 +427,7 @@
     }
 }
 
+
 #' Adjust numeric column values in a data frame using mathematical transformations
 #'
 #' Applies a named mathematical transformation to a specified numeric column in a data frame,
@@ -482,6 +484,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 
   return(df)
 }
+
 
 #' Create default Plotly configuration
 #'
@@ -570,6 +573,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
     return(config)
 }
 
+
 #' Create Plotly axis style list
 #'
 #' Constructs a style list for a Plotly axis using values from a Shiny
@@ -648,6 +652,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 
     return(style)
 }
+
 
 #' Create ggplot axis styling theme arguments
 #'
@@ -849,6 +854,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 
     all_shapes
 }
+
 
 #' Build vertical line shapes for a plotly figure
 #'
@@ -1975,6 +1981,7 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
     fig
 }
 
+
 #' Create an empty ggplot2 plot or plotly plot with input text
 #'
 #' This function creates an empty ggplot2 or plotly plot and places a user-provided text
@@ -2020,6 +2027,7 @@ empty_plot <- function(text = NULL, plotly = FALSE) {
 
     plot
 }
+
 
 #' Check if column inputs contain mixed data types
 #'
@@ -2075,6 +2083,7 @@ is_pure_type <- function(inputs, d) {
     TRUE
 }
 
+
 #' Resolve facet axis sharing from facet.scales
 #'
 #' Converts a \code{facet.scales} string (one of \code{"fixed"}, \code{"free"},
@@ -2102,6 +2111,7 @@ is_pure_type <- function(inputs, d) {
     }
     list(shareX = shareX, shareY = shareY)
 }
+
 
 #' Resolve number of rows for a faceted subplot grid
 #'
@@ -2147,6 +2157,7 @@ is_pure_type <- function(inputs, d) {
     nrows <- max(1L, min(nrows, n_facets))
     nrows
 }
+
 
 #' Build facet subplot annotations
 #'
@@ -2276,6 +2287,7 @@ is_pure_type <- function(inputs, d) {
     annotations
 }
 
+
 #' Add multi-axis traces to a plotly figure
 #'
 #' Appends scatter traces for each element of a multi-valued \code{x} or
@@ -2359,6 +2371,7 @@ is_pure_type <- function(inputs, d) {
     fig
 }
 
+
 #' Apply axis title font styling to shared facet axis annotations
 #'
 #' When ggplotly converts a faceted ggplot, shared axis titles become
@@ -2419,6 +2432,8 @@ is_pure_type <- function(inputs, d) {
 
     fig
 }
+
+
 #' Apply plot title styling to a plotly figure
 #'
 #' Applies title font settings from the Shiny input object to an
@@ -2452,6 +2467,7 @@ is_pure_type <- function(inputs, d) {
     return(fig)
 }
 
+
 #' Apply standard render-time margin layout to a plotly figure
 #'
 #' The \code{renderPlotly} block in every plot module server applies the same
@@ -2478,6 +2494,8 @@ is_pure_type <- function(inputs, d) {
             )
         )
 }
+
+
 #' Clean and validate facet dimension value for lineplot module
 #'
 #' @description Internal helper function that validates and sanitizes a numeric 
@@ -2506,6 +2524,8 @@ is_pure_type <- function(inputs, d) {
     }
     val
 }
+
+
 #' Rendered diameter of the U+25CF circle glyph relative to its font-size
 #'
 #' The HTML "black circle" glyph (\code{&#9679;}, U+25CF) used by the custom
@@ -2520,6 +2540,8 @@ is_pure_type <- function(inputs, d) {
 #' @keywords internal
 #' @noRd
 .CIRCLE_GLYPH_DIAMETER_RATIO <- 0.44
+
+
 #' Add a custom bubble-size legend to a plotly figure
 #'
 #' Renders a manual size legend as a vertical column of HTML circle
@@ -2624,7 +2646,7 @@ is_pure_type <- function(inputs, d) {
     }
 
     x_pos <- start_x
-    label_x <- start_x + 0.04
+    label_x <- start_x + 0.05
 
     # Vertical centres (paper units) for each legend entry. Advance by each
     # glyph's rendered radius plus the requested gap so larger circles claim
@@ -2710,6 +2732,7 @@ is_pure_type <- function(inputs, d) {
 
     return(fig)
 }
+
 
 #' Extract marker sizes from a plotly figure
 #'

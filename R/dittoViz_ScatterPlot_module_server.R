@@ -844,6 +844,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             has_cat_legend <- (!is.null(null.na.inputs$color.by) &&
                 length(current_color_levels) > 0) ||
                 !is.null(null.na.inputs$shape.by)
+
             fig <- .custom_legend(
                 fig,
                 data = data(),
