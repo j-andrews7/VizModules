@@ -306,7 +306,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
 
-            # Reflect any applied Y-data adjustment in the continuous-axis title so it
+            # Reflect any applied Y-axis data adjustment in the continuous-axis title so it
             # accurately describes the values displayed (e.g. "log2(z-score(units))").
             var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
             var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
