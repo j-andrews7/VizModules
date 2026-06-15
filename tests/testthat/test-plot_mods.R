@@ -1015,7 +1015,7 @@ test_that(".custom_legend appends size-legend annotations for numeric size_by", 
     expect_s3_class(result, "plotly")
     built <- plotly::plotly_build(result)
     # 1 title annotation + 5 circle glyphs + 5 numeric labels
-    expect_equal(length(built$x$layout$annotations), 16)
+    expect_equal(length(built$x$layout$annotations), 11)
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
     expect_true("pct_expressed" %in% ann_text)
 })
@@ -1075,6 +1075,137 @@ test_that(".custom_legend derives circle sizes from marker sizes when size_value
     expect_equal(max(sizes), max(msizes) / ratio)
     # Sizes increase monotonically.
     expect_false(is.unsorted(sizes))
+})
+
+test_that(".custom_legend does not duplicate label annotations", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    result <- VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed",
+        size_values = c(10, 20, 30, 40, 50)
+    )
+    built <- plotly::plotly_build(result)
+    texts <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    # Each of the 5 numeric break labels appears exactly once (no duplicates).
+    labels <- texts[grepl("^[0-9.]+$", texts)]
+    expect_equal(length(labels), 5)
+    expect_equal(length(unique(labels)), 5)
+
+    # Annotations live in the built layout, so a second build does not double them.
+    rebuilt <- plotly::plotly_build(built)
+    expect_equal(
+        length(rebuilt$x$layout$annotations),
+        length(built$x$layout$annotations)
+    )
+})
+
+test_that(".custom_legend strips the size variable from a combined legend title", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+    fig$x$layout$legend$title$text <- "cell_type<br />pct_expressed"
+
+    result <- VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed",
+        size_values = c(10, 20, 30, 40, 50)
+    )
+    expect_equal(result$x$layout$legend$title$text, "cell_type")
+
+    # A standalone (already-merged) title is left untouched.
+    fig2 <- fig
+    fig2$x$layout$legend$title$text <- "pct_expressed"
+    result2 <- VizModules:::.custom_legend(fig2, data,
+        size_by = "pct_expressed",
+        size_values = c(10, 20, 30, 40, 50)
+    )
+    expect_equal(result2$x$layout$legend$title$text, "pct_expressed")
+})
+
+test_that(".custom_legend start_y lowers the legend column", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    high <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_y = 0.95
+    ))
+    low <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_y = 0.45
+    ))
+    max_y <- function(b) max(vapply(b$x$layout$annotations, function(a) a$y, numeric(1)))
+    expect_true(max_y(low) < max_y(high))
+
+    # An invalid start_y falls back to the default placement.
+    fallback <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_y = NA
+    ))
+    expect_equal(max_y(fallback), max_y(high))
+})
+
+test_that(".custom_legend start_x shifts the legend column horizontally", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+
+    default <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50)
+    ))
+    shifted <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_x = 1.2
+    ))
+    max_x <- function(b) max(vapply(b$x$layout$annotations, function(a) a$x, numeric(1)))
+    expect_true(max_x(shifted) > max_x(default))
+
+    # An invalid start_x falls back to the default placement.
+    fallback <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_x = NA
+    ))
+    expect_equal(max_x(fallback), max_x(default))
+})
+
+test_that(".custom_legend offsets numeric labels by a fixed pixel xshift", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+    size_values <- c(10, 20, 30, 40, 50)
+
+    built <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = size_values
+    ))
+    anns <- built$x$layout$annotations
+    label_anns <- Filter(function(a) grepl("^[0-9.]+$", a$text), anns)
+    expect_equal(length(label_anns), length(size_values))
+
+    # Labels are anchored at the circle x (paper) and offset purely in pixels,
+    # so the marker-to-label spacing is independent of plot width.
+    expect_true(all(vapply(label_anns, function(a) isTRUE(a$xanchor == "left"), logical(1))))
+    expect_true(all(vapply(label_anns, function(a) !is.null(a$xshift) && a$xshift > 0, logical(1))))
+
+    # The xshift grows with the glyph size (larger circles push labels further).
+    shifts <- vapply(label_anns, function(a) a$xshift, numeric(1))
+    expect_equal(shifts, sort(shifts))
 })
 
 test_that(".extract_marker_sizes collects numeric marker sizes", {

@@ -73,13 +73,13 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters are
 
 \section{Plot parameters and defaults}{
 
-The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
+The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
 \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
 \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
-\item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
+\item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 6)
 \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
@@ -90,6 +90,10 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters can
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
+\item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
+default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+\item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
+default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 }
 }
 

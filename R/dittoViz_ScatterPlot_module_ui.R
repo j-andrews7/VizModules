@@ -26,6 +26,8 @@
 #'   \item \code{sub} - Plot subtitle (not supported in plotly)
 #'   \item \code{theme} - ggplot2 theme (not applicable to plotly)
 #'   \item \code{legend.title} - Legend title (managed by plotly interactively)
+#'   \item \code{legend.color.size} - Legend color size (not supported in plotly)
+#'   \item \code{legend.shape.size} - Legend shape size (not supported in plotly)
 #'   \item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
 #'   \item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
 #'   \item \code{xline.linetype} - Use \code{vline.linetypes} instead
@@ -54,6 +56,8 @@
 #'   \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
 #'   \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
 #'   \item \code{size} - Point size (UI: "Point Size", default: 1)
+#'   \item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
+#'     a custom circle size legend is drawn since plotly cannot render a native size legend
 #'   \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
 #'   \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
 #'   \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
@@ -83,11 +87,11 @@
 #'   \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
 #'   \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
 #'   \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
-#'   \item \code{legend.show} - Show legend (UI: "Show Legend", default: TRUE)
-#'   \item \code{legend.color.title} - Legend title (UI: "Legend Title", default: "make")
-#'   \item \code{legend.color.size} - Legend color size (UI: "Legend Color Size", default: 5)
-#'   \item \code{legend.shape.size} - Legend shape size (UI: "Legend Shape Size", default: 5)
 #'   \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
+#'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
+#'     default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+#'   \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
+#'     default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 #'   \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 #'   \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
 #'   \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
@@ -172,6 +176,8 @@
 dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
     ns <- NS(id)
 
+    if (is.null(defaults)) defaults <- list()
+
     # Get variables of data.
     choices <- c("", names(data))
 
@@ -196,7 +202,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         "do.ellipse", "do.contour",
         "hover.data", "hover.round.digits",
         "legend.show", c("legend.color.title", "legend.shape.title"),
-        c("legend.color.size", "legend.shape.size"),
         "legend.color.breaks",
         c("min.value", "max.value"),
         "trajectory.group.by", "add.trajectory.by.groups",
@@ -233,6 +238,13 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     function(x) x %in% choices
                 ), selectize = FALSE
             ), documentParameters$color.by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("size.by"), "Size By",
+                choices = num.choices,
+                selected = .get_default(
+                    defaults, "size.by", "",
+                    function(x) x == "" || x %in% num.choices
+                ), selectize = FALSE
+            ), documentParameters$size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("shape.by"), "Shape By",
                 choices = cat.choices,
                 selected = .get_default(
@@ -496,22 +508,31 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 value = .get_default(defaults, "legend.color.title", "make")
             ), documentParameters$legend.color.title, placement = "top", options = list(container = "body")),
             .uniform_legend_inputs_ui(ns, defaults),
-            tipify(numericInput(ns("legend.color.size"), "Legend Color Size",
-                min = 1,
-                value = .get_default(defaults, "legend.color.size", 5, is.numeric)
-            ), documentParameters$legend.color.size, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("legend.shape.size"), "Legend Shape Size",
-                min = 1,
-                value = .get_default(defaults, "legend.shape.size", 5, is.numeric)
-            ), documentParameters$legend.shape.size, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("legend.color.breaks"), "Legend Tick Breaks",
+            tipify(textInput(ns("legend.color.breaks"), "Color Tick Breaks",
                 placeholder = "e.g. -3, 0, 3",
                 value = .get_default(defaults, "legend.color.breaks", "", is.character)
             ), documentParameters$legend.color.breaks, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("min.value"), "Min Value",
+            tipify(numericInput(ns("size.legend.x"), "Size Legend X Position",
+                value = .get_default(defaults, "size.legend.x", 1.03, is.numeric),
+                step = 0.02
+            ), paste(
+                "Horizontal position (paper coordinates) of the custom size",
+                "legend drawn when 'Size By' is set. Values just above 1 sit to",
+                "the right of the plot; lower it to pull the legend inward on",
+                "narrow plots or raise it to push it further out."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.legend.y"), "Size Legend Y Position",
+                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric),
+                step = 0.05
+            ), paste(
+                "Vertical position (paper coordinates) of the custom size",
+                "legend drawn when 'Size By' is set. Lower it to offset the",
+                "size legend from an overlapping color or shape legend."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("min.value"), "Color Min",
                 value = .get_default(defaults, "min.value", NA, is.numeric)
             ), documentParameters$min.value, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("max.value"), "Max Value",
+            tipify(numericInput(ns("max.value"), "Color Max",
                 value = .get_default(defaults, "max.value", NA, is.numeric)
             ), documentParameters$max.value, placement = "top", options = list(container = "body"))
         ),
