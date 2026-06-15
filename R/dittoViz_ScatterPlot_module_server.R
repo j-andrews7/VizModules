@@ -324,12 +324,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateTextInput(session, "legend.color.title",
                 value = .get_default(defaults, "legend.color.title", "make")
             )
-            updateNumericInput(session, "legend.color.size",
-                value = .get_default(defaults, "legend.color.size", 5, is.numeric)
-            )
-            updateNumericInput(session, "legend.shape.size",
-                value = .get_default(defaults, "legend.shape.size", 5, is.numeric)
-            )
             updateTextInput(session, "legend.color.breaks",
                 value = .get_default(defaults, "legend.color.breaks", "")
             )
@@ -352,10 +346,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             .reset_plotly_inputs(session, defaults)
             .reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.legend.x",
-                value = .get_default(defaults, "size.legend.x", 1.02, is.numeric)
+                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
-                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric)
+                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric)
             )
             updateCheckboxInput(session, "do.ellipse",
                 value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
@@ -503,11 +497,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 do.ellipse = isolate_fn(input$do.ellipse),
                 legend.show = isolate_fn(input$legend.show),
                 legend.color.title = isolate_fn(input$legend.color.title),
-                legend.color.size = isolate_fn(input$legend.color.size),
                 legend.color.breaks = waiver.inputs$legend.color.breaks,
                 legend.color.breaks.labels = waiver(),
                 legend.shape.title = null.na.inputs$shape.by,
-                legend.shape.size = isolate_fn(input$legend.shape.size),
                 data.out = TRUE
             )
             

@@ -55,6 +55,8 @@ The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parame
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
 \item \code{legend.title} - Legend title (managed by plotly interactively)
+\item \code{legend.color.size} - Legend color size (not supported in plotly)
+\item \code{legend.shape.size} - Legend shape size (not supported in plotly)
 \item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
 \item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
 \item \code{xline.linetype} - Use \code{vline.linetypes} instead
@@ -116,10 +118,6 @@ a custom circle size legend is drawn since plotly cannot render a native size le
 \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
 \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
 \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
-\item \code{legend.show} - Show legend (UI: "Show Legend", default: TRUE)
-\item \code{legend.color.title} - Legend title (UI: "Legend Title", default: "make")
-\item \code{legend.color.size} - Legend color size (UI: "Legend Color Size", default: 5)
-\item \code{legend.shape.size} - Legend shape size (UI: "Legend Shape Size", default: 5)
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.

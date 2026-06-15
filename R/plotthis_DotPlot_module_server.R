@@ -102,10 +102,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Legend
             updateNumericInput(session, "size.legend.x",
-                value = .get_default(defaults, "size.legend.x", 1.02, is.numeric)
+                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
-                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric)
+                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric)
             )
             .reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))

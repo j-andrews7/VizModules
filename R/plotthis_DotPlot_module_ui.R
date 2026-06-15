@@ -54,7 +54,7 @@
 #'   \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 #'   \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
 #'   \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
-#'   \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
+#'   \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 6)
 #'   \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 #'   \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 #'   \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
@@ -66,9 +66,9 @@
 #'   \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 #'   \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
 #'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-#'     default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+#'     default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 #'   \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-#'     default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
+#'     default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 #' }
 #'
 #' @param id The ID for the Shiny module.
@@ -193,7 +193,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 value = .get_default(defaults, "size.max", 6, is.numeric), min = 0, step = 1
             ), documentParameters$size_max, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("size.legend.x"), "Size Legend X Position",
-                value = .get_default(defaults, "size.legend.x", 1.02, is.numeric),
+                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric),
                 step = 0.02
             ), paste(
                 "Horizontal position (paper coordinates) of the custom size",
@@ -202,7 +202,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 "narrow plots or raise it to push it further out."
             ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("size.legend.y"), "Size Legend Y Position",
-                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric),
+                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric),
                 step = 0.05
             ), paste(
                 "Vertical position (paper coordinates) of the custom size",

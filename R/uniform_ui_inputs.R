@@ -618,7 +618,7 @@
         ),
         tipify(
             numericInput(ns("margin.r"), "Margin Right",
-                value = .get_default(defaults, "margin.r", 70, is.numeric),
+                value = .get_default(defaults, "margin.r", 90, is.numeric),
                 min = 0, step = 5
             ),
             "Right margin of the plot in pixels",

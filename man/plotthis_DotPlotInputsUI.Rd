@@ -79,7 +79,7 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom par
 \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
 \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
 \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
-\item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 10)
+\item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 6)
 \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
@@ -91,9 +91,9 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom par
 \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
+default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 }
 }
 
