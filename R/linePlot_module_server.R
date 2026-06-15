@@ -265,6 +265,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 y.adjustment <- NULL
             }
 
+            # Reflect any applied data adjustment in the axis titles so they accurately
+            # describe the values displayed (e.g. "log2(units)"), matching other modules.
+            x_title <- .adjusted_axis_label(x_title, NULL, x.adjustment)
+            y_title <- .adjusted_axis_label(y_title, NULL, y.adjustment)
+
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
