@@ -213,16 +213,16 @@
         "RemoteRepo": "VizModules",
         "RemoteUsername": "j-andrews7",
         "RemoteRef": "HEAD",
-        "RemoteSha": "7df6872cad5bfcd581520210b5eeda94cdf9d343",
+        "RemoteSha": "18de3e5256d2dc9e8dc93d23bfbd68e684e2ccb9",
         "GithubRepo": "VizModules",
         "GithubUsername": "j-andrews7",
         "GithubRef": "HEAD",
-        "GithubSHA1": "7df6872cad5bfcd581520210b5eeda94cdf9d343",
+        "GithubSHA1": "18de3e5256d2dc9e8dc93d23bfbd68e684e2ccb9",
         "NeedsCompilation": "no",
-        "Packaged": "2026-06-12 21:15:35 UTC; jandrews",
+        "Packaged": "2026-06-15 21:03:55 UTC; jandrews",
         "Author": "Jared Andrews [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-0780-6248>),\n  Jacob Martin [aut] (ORCID: <https://orcid.org/0009-0007-6896-4796>)",
         "Maintainer": "Jared Andrews <jared.andrews07@gmail.com>",
-        "Built": "R 4.6.0; ; 2026-06-12 21:15:38 UTC; windows"
+        "Built": "R 4.6.0; ; 2026-06-15 21:03:58 UTC; windows"
       }
     },
     "askpass": {
