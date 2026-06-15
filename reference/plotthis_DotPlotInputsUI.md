@@ -134,7 +134,8 @@ parameters are not available via UI inputs:
 
 The following
 [`plotthis::DotPlot()`](https://pwwang.github.io/plotthis/reference/dotplot.html)
-parameters can be accessed via UI inputs and/or the `defaults` argument:
+and custom parameters can be accessed via UI inputs and/or the
+`defaults` argument:
 
 - `x` - X-axis variable (UI: "X Values", default: 2nd categorical
   variable)
@@ -147,7 +148,7 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `size_min` - Minimum dot size (UI: "Min Dot Size", default: 1)
 
-- `size_max` - Maximum dot size (UI: "Max Dot Size", default: 10)
+- `size_max` - Maximum dot size (UI: "Max Dot Size", default: 6)
 
 - `fill_by` - Numeric column mapped to dot fill (UI: "Fill By", default:
   "")
@@ -175,6 +176,14 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `alpha` - Dot fill transparency (UI: "Alpha", default: 1)
 
+- `size.legend.x` - Custom size-legend x position (UI: "Size Legend X
+  Position", default: 1.04); nudges the manual size legend (drawn when
+  `size.by` is set) along the x-axis.
+
+- `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y
+  Position", default: 0.35); nudges the manual size legend (drawn when
+  `size.by` is set) along the y-axis.
+
 ## See also
 
 [`plotthis::DotPlot()`](https://pwwang.github.io/plotthis/reference/dotplot.html),
@@ -194,54 +203,54 @@ library(VizModules)
 data(mtcars)
 plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="DotPlot-DotPlotTabsetPanel" data-tabsetid="6243">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="DotPlot-DotPlotTabsetPanel" data-tabsetid="3003">
 #>     <li class="active">
-#>       <a href="#tab-6243-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3003-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3003-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3003-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-3003-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3003-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3003-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6243-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3003-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6243">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6243-1">
+#>   <div class="tab-content" data-tabsetid="3003">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3003-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6021448">
+#>           <div class="form-group shiny-input-container" id="tipify4689590">
 #>             <label class="control-label" id="DotPlot-x.data-label" for="DotPlot-x.data">X Values</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-x.data"><option value=""></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6021448', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character vector specifying the column to use for the x-axis. A numeric column is expected.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4689590', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character vector specifying the column to use for the x-axis. A numeric column is expected.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4689590">
+#>           <div class="form-group shiny-input-container" id="tipify8863742">
 #>             <label class="control-label" id="DotPlot-y.data-label" for="DotPlot-y.data">Y Values</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-y.data"><option value="" selected></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4689590', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character vector specifying the column to use for the y-axis. A factor/character column is expected.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8863742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character vector specifying the column to use for the y-axis. A factor/character column is expected.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8863742">
+#>           <div class="form-group shiny-input-container" id="tipify6705485">
 #>             <label class="control-label" id="DotPlot-size.by-label" for="DotPlot-size.by">Size By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-size.by"><option value="" selected></option>
@@ -258,10 +267,10 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <option value="carb">carb</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8863742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which column to use as the size of the dots. It must be a numeric column. If not provided, the size will be the count of the instances for each &#39;y&#39; in &#39;x&#39;. For &#39;ScatterPlot&#39;, it can be a single numeric value to specify the size of the dots.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6705485', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which column to use as the size of the dots. It must be a numeric column. If not provided, the size will be the count of the instances for each &#39;y&#39; in &#39;x&#39;. For &#39;ScatterPlot&#39;, it can be a single numeric value to specify the size of the dots.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6705485">
+#>           <div class="form-group shiny-input-container" id="tipify3937777">
 #>             <label class="control-label" id="DotPlot-fill.by-label" for="DotPlot-fill.by">Fill By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-fill.by"><option value="" selected></option>
@@ -278,33 +287,33 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <option value="carb">carb</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6705485', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which column to use as the fill the dots. It must be a numeric column. If not provided, all dots will be filled with the same color at the middle of the palette.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3937777', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which column to use as the fill the dots. It must be a numeric column. If not provided, all dots will be filled with the same color at the middle of the palette.'})}, 500)});</script>
 #>         </div>
 #>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3937777">
-#>             <label class="control-label" id="DotPlot-fill.cutoff-label" for="DotPlot-fill.cutoff">Fill Cutoff</label>
-#>             <input id="DotPlot-fill.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3937777', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the cutoff for the fill column. By default, the fill direction is "up". If TRUE, the fill direction is "down". When the direction is "up", the values less than the cutoff will be filled with grey. When the direction is "down", the values greater than the cutoff will be filled with grey.'})}, 500)});</script>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6243-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5512907">
+#>             <label class="control-label" id="DotPlot-fill.cutoff-label" for="DotPlot-fill.cutoff">Fill Cutoff</label>
+#>             <input id="DotPlot-fill.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5512907', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the cutoff for the fill column. By default, the fill direction is "up". If TRUE, the fill direction is "down". When the direction is "up", the values less than the cutoff will be filled with grey. When the direction is "down", the values greater than the cutoff will be filled with grey.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Facet" id="tab-3003-2">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2424927">
 #>             <label class="control-label" id="DotPlot-facet.by-label" for="DotPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-facet.by"><option value="" selected></option>
 #> <option value="" selected></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5512907', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2424927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2424927">
+#>           <div class="form-group shiny-input-container" id="tipify2032089">
 #>             <label class="control-label" id="DotPlot-facet.scale-label" for="DotPlot-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-facet.scale"><option value="fixed" selected>fixed</option>
@@ -313,58 +322,58 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <option value="free_y">free_y</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2424927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2032089', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2032089">
+#>           <div class="form-group shiny-input-container" id="tipify683417">
 #>             <label class="control-label" id="DotPlot-facet.ncol-label" for="DotPlot-facet.ncol">Columns</label>
 #>             <input id="DotPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2032089', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify683417', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify683417">
+#>           <div class="form-group shiny-input-container" id="tipify3072738">
 #>             <label class="control-label" id="DotPlot-facet.nrow-label" for="DotPlot-facet.nrow">Rows</label>
 #>             <input id="DotPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify683417', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3072738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3072738">
+#>           <div class="form-group shiny-input-container" id="tipify9931180">
 #>             <div class="material-switch">
 #>               <label for="DotPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="DotPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="DotPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3072738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9931180', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9931180">
+#>           <div class="form-group shiny-input-container" id="tipify1163092">
 #>             <label class="control-label" id="DotPlot-subplot.margin.x-label" for="DotPlot-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>             <input id="DotPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9931180', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1163092', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>       </div>
-#>       <div class="row">
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1163092">
-#>             <label class="control-label" id="DotPlot-subplot.margin.y-label" for="DotPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
-#>             <input id="DotPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1163092', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6243-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7154231">
+#>             <label class="control-label" id="DotPlot-subplot.margin.y-label" for="DotPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
+#>             <input id="DotPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7154231', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3003-3">
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2261088">
 #>             <label class="control-label" id="DotPlot-palette.name-label" for="DotPlot-palette.name">Color Palette</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-palette.name"><option value="dittoColors">dittoColors</option>
@@ -412,52 +421,68 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <option value="YlOrRd">YlOrRd</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7154231', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the palette to use. A named list or vector can be used to specify the palettes for different `split_by` values.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2261088', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the palette to use. A named list or vector can be used to specify the palettes for different `split_by` values.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2261088">
+#>           <div class="form-group shiny-input-container" id="tipify1333486">
 #>             <label class="control-label" id="DotPlot-alpha-label" for="DotPlot-alpha">Alpha</label>
 #>             <input id="DotPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2261088', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1333486', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-6243-4">
+#>     <div class="tab-pane" data-value="Legend" id="tab-3003-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1333486">
+#>           <div class="form-group shiny-input-container" id="tipify9272817">
 #>             <label class="control-label" id="DotPlot-size.min-label" for="DotPlot-size.min">Min Dot Size</label>
 #>             <input id="DotPlot-size.min" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1333486', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the minimum size of the dots. Default is 1.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the minimum size of the dots. Default is 1.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9272817">
+#>           <div class="form-group shiny-input-container" id="tipify8941226">
 #>             <label class="control-label" id="DotPlot-size.max-label" for="DotPlot-size.max">Max Dot Size</label>
 #>             <input id="DotPlot-size.max" type="number" class="shiny-input-number form-control" value="6" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the maximum size of the dots. Default is 10.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the maximum size of the dots. Default is 10.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8941226">
+#>           <div class="form-group shiny-input-container" id="tipify2036644">
+#>             <label class="control-label" id="DotPlot-size.legend.x-label" for="DotPlot-size.legend.x">Size Legend X Position</label>
+#>             <input id="DotPlot-size.legend.x" type="number" class="shiny-input-number form-control" value="1.04" data-update-on="change" step="0.02"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal position (paper coordinates) of the custom size legend drawn when &#39;Size By&#39; is set. Values just above 1 sit to the right of the plot; lower it to pull the legend inward on narrow plots or raise it to push it further out.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify2569829">
+#>             <label class="control-label" id="DotPlot-size.legend.y-label" for="DotPlot-size.legend.y">Size Legend Y Position</label>
+#>             <input id="DotPlot-size.legend.y" type="number" class="shiny-input-number form-control" value="0.35" data-update-on="change" step="0.05"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical position (paper coordinates) of the custom size legend drawn when &#39;Size By&#39; is set. Lower it to offset the size legend from an overlapping color or shape legend.'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify6140056">
 #>             <label class="control-label" id="DotPlot-legend.title.size-label" for="DotPlot-legend.title.size">Legend Title Size</label>
 #>             <input id="DotPlot-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2036644">
+#>           <div class="form-group shiny-input-container" id="tipify4414992">
 #>             <label class="control-label" id="DotPlot-legend.text.size-label" for="DotPlot-legend.text.size">Legend Text Size</label>
 #>             <input id="DotPlot-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-6243-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3003-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -471,64 +496,64 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2569829">
+#>           <div class="form-group shiny-input-container" id="tipify3155947">
 #>             <label class="control-label" id="DotPlot-margin.t-label" for="DotPlot-margin.t">Margin Top</label>
 #>             <input id="DotPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6140056">
+#>           <div class="form-group shiny-input-container" id="tipify1013138">
 #>             <label class="control-label" id="DotPlot-margin.b-label" for="DotPlot-margin.b">Margin Bottom</label>
 #>             <input id="DotPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4414992">
+#>           <div class="form-group shiny-input-container" id="tipify2726462">
 #>             <label class="control-label" id="DotPlot-margin.l-label" for="DotPlot-margin.l">Margin Left</label>
 #>             <input id="DotPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3155947">
+#>           <div class="form-group shiny-input-container" id="tipify6536994">
 #>             <label class="control-label" id="DotPlot-margin.r-label" for="DotPlot-margin.r">Margin Right</label>
 #>             <input id="DotPlot-margin.r" type="number" class="shiny-input-number form-control" value="140" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1013138">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9278701">
 #>             <label class="control-label" for="DotPlot-shape.fill">Shape Fill</label>
 #>             <input id="DotPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2726462">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify266247">
 #>             <label class="control-label" for="DotPlot-shape.line.color">Shape Line Color</label>
 #>             <input id="DotPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify6536994">
+#>           <div class="form-group shiny-input-container" id="tipify5594912">
 #>             <label class="control-label" id="DotPlot-shape.line.width-label" for="DotPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="DotPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9278701">
+#>           <div class="form-group shiny-input-container" id="tipify8541736">
 #>             <label class="control-label" id="DotPlot-shape.linetype-label" for="DotPlot-shape.linetype">Shape Linetype</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="DotPlot-shape.linetype"><option value="solid" selected>solid</option>
@@ -539,18 +564,18 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <option value="longdashdot">longdashdot</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify266247">
+#>           <div class="form-group shiny-input-container" id="tipify758831">
 #>             <label class="control-label" id="DotPlot-shape.opacity-label" for="DotPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="DotPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6243-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3003-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -841,133 +866,133 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-6243-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3003-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5594912">
+#>           <div class="form-group shiny-input-container" id="tipify2058289">
 #>             <label class="control-label" id="DotPlot-hline.intercepts-label" for="DotPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="DotPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8541736">
+#>           <div class="form-group shiny-input-container" id="tipify4958896">
 #>             <label class="control-label" id="DotPlot-hline.colors-label" for="DotPlot-hline.colors">Y Colors</label>
 #>             <input id="DotPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify758831">
+#>           <div class="form-group shiny-input-container" id="tipify2618570">
 #>             <label class="control-label" id="DotPlot-hline.widths-label" for="DotPlot-hline.widths">Y Widths</label>
 #>             <input id="DotPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2058289">
+#>           <div class="form-group shiny-input-container" id="tipify4159615">
 #>             <label class="control-label" id="DotPlot-hline.linetypes-label" for="DotPlot-hline.linetypes">Y Line Types</label>
 #>             <input id="DotPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4958896">
+#>           <div class="form-group shiny-input-container" id="tipify4391500">
 #>             <label class="control-label" id="DotPlot-hline.opacities-label" for="DotPlot-hline.opacities">Y Opacities (0-1)</label>
 #>             <input id="DotPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify2618570">
+#>           <div class="form-group shiny-input-container" id="tipify1823780">
 #>             <label class="control-label" id="DotPlot-vline.intercepts-label" for="DotPlot-vline.intercepts">X-intercepts</label>
 #>             <input id="DotPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4159615">
+#>           <div class="form-group shiny-input-container" id="tipify783283">
 #>             <label class="control-label" id="DotPlot-vline.colors-label" for="DotPlot-vline.colors">X Colors</label>
 #>             <input id="DotPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4391500">
+#>           <div class="form-group shiny-input-container" id="tipify177700">
 #>             <label class="control-label" id="DotPlot-vline.widths-label" for="DotPlot-vline.widths">X Widths</label>
 #>             <input id="DotPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1823780">
+#>           <div class="form-group shiny-input-container" id="tipify7281800">
 #>             <label class="control-label" id="DotPlot-vline.linetypes-label" for="DotPlot-vline.linetypes">X Line Types</label>
 #>             <input id="DotPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify783283">
+#>           <div class="form-group shiny-input-container" id="tipify9708450">
 #>             <label class="control-label" id="DotPlot-vline.opacities-label" for="DotPlot-vline.opacities">X Opacities (0-1)</label>
 #>             <input id="DotPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify177700">
+#>           <div class="form-group shiny-input-container" id="tipify5352176">
 #>             <label class="control-label" id="DotPlot-abline.slopes-label" for="DotPlot-abline.slopes">Ab Slopes</label>
 #>             <input id="DotPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7281800">
+#>           <div class="form-group shiny-input-container" id="tipify1664908">
 #>             <label class="control-label" id="DotPlot-abline.intercepts-label" for="DotPlot-abline.intercepts">Ab Y-intercepts</label>
 #>             <input id="DotPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify9708450">
+#>           <div class="form-group shiny-input-container" id="tipify581757">
 #>             <label class="control-label" id="DotPlot-abline.colors-label" for="DotPlot-abline.colors">Ab Colors</label>
 #>             <input id="DotPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5352176">
+#>           <div class="form-group shiny-input-container" id="tipify4591390">
 #>             <label class="control-label" id="DotPlot-abline.widths-label" for="DotPlot-abline.widths">Ab Widths</label>
 #>             <input id="DotPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4591390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1664908">
+#>           <div class="form-group shiny-input-container" id="tipify6227988">
 #>             <label class="control-label" id="DotPlot-abline.linetypes-label" for="DotPlot-abline.linetypes">Ab Line Types</label>
 #>             <input id="DotPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6227988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify581757">
+#>           <div class="form-group shiny-input-container" id="tipify5948192">
 #>             <label class="control-label" id="DotPlot-abline.opacities-label" for="DotPlot-abline.opacities">Ab Opacities (0-1)</label>
 #>             <input id="DotPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5948192', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
