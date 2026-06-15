@@ -320,6 +320,22 @@ function pbDecodeSvgDataUrl(url) {
     var svg = head.indexOf('base64') !== -1 ? atob(data) : decodeURIComponent(data);
     return svg.replace(/<\\?xml[^>]*\\?>/i, '').replace(/<!DOCTYPE[^>]*>/i, '').trim();
 }
+// Spreadsheet-style label for a 0-based index: 0->A, 25->Z, 26->AA, ...
+function pbPanelLabel(index, mode) {
+    if (mode !== 'upper' && mode !== 'lower') { return null; }
+    var base = mode === 'lower' ? 97 : 65;
+    var n = index, label = '';
+    do {
+        label = String.fromCharCode(base + (n % 26)) + label;
+        n = Math.floor(n / 26) - 1;
+    } while (n >= 0);
+    return label;
+}
+// Escape text destined for an SVG <text> element.
+function pbEscapeXml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
 function pbDownloadSVG() {
     var canvas = document.getElementById('pb_canvas');
     if (!canvas) { return; }
@@ -328,8 +344,11 @@ function pbDownloadSVG() {
         alert('Add at least one plot before downloading.');
         return;
     }
+    var labelSel = document.getElementById('pb_label_case');
+    var labelMode = labelSel ? labelSel.value : 'none';
     var W = canvas.clientWidth, H = canvas.clientHeight;
     var canvasRect = canvas.getBoundingClientRect();
+    var metas = [];
     var tasks = [];
     cards.forEach(function(card) {
         var cardRect = card.getBoundingClientRect();
@@ -341,6 +360,7 @@ function pbDownloadSVG() {
         var pw = body ? body.clientWidth : w;
         var ph = body ? body.clientHeight : h;
         var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, svg: null };
+        metas.push(meta);
         if (gd && window.Plotly) {
             tasks.push(
                 Plotly.toImage(gd, { format: 'svg', width: pw, height: ph })
@@ -351,7 +371,18 @@ function pbDownloadSVG() {
             tasks.push(Promise.resolve(meta));
         }
     });
-    Promise.all(tasks).then(function(items) {
+    Promise.all(tasks).then(function() {
+        // Order panels for labelling the way a reader scans a figure:
+        // top-to-bottom by row, then left-to-right within a row. A row
+        // tolerance groups panels whose tops are roughly aligned.
+        var ordered = metas.slice().sort(function(a, b) {
+            var tol = Math.max(a.h, b.h) * 0.5;
+            if (Math.abs(a.y - b.y) > tol) { return a.y - b.y; }
+            return a.x - b.x;
+        });
+        ordered.forEach(function(it, i) {
+            it.label = pbPanelLabel(i, labelMode);
+        });
         var parts = [];
         parts.push('<?xml version=\"1.0\" encoding=\"UTF-8\"?>');
         parts.push('<svg xmlns=\"http://www.w3.org/2000/svg\" ' +
@@ -360,12 +391,20 @@ function pbDownloadSVG() {
             'viewBox=\"0 0 ' + W + ' ' + H + '\">');
         parts.push('<rect x=\"0\" y=\"0\" width=\"' + W + '\" height=\"' + H +
             '\" fill=\"#ffffff\"/>');
-        items.forEach(function(it) {
+        metas.forEach(function(it) {
             if (it.svg) {
                 parts.push('<g transform=\"translate(' + (it.x + 6) + ',' +
                     (it.y + 6) + ')\">');
                 parts.push(it.svg);
                 parts.push('</g>');
+            }
+            // Panel label sits in the top-left corner of the card, where the
+            // hover toolbar lives in the live app.
+            if (it.label) {
+                parts.push('<text x=\"' + (it.x + 8) + '\" y=\"' + (it.y + 24) +
+                    '\" font-family=\"Helvetica, Arial, sans-serif\" ' +
+                    'font-size=\"20\" font-weight=\"bold\" fill=\"#000000\">' +
+                    pbEscapeXml(it.label) + '</text>');
             }
         });
         parts.push('</svg>');
@@ -519,10 +558,20 @@ ui <- fluidPage(
                         "A4 landscape" = "landscape"
                     )
                 ),
-                tags$button("Download Full Figure (SVG)",
-                    id = "pb_download", type = "button",
-                    class = "btn btn-success", onclick = "pbDownloadSVG()"
+                # selectize = FALSE keeps a plain <select> in the DOM so the
+                # client-side SVG export can read the chosen value directly.
+                selectInput("pb_label_case", "Panel labels:",
+                    choices = c(
+                        "None" = "none",
+                        "Uppercase (A, B, C)" = "upper",
+                        "Lowercase (a, b, c)" = "lower"
+                    ),
+                    selectize = FALSE
                 )
+            ),
+            tags$button("Download Full Figure (SVG)",
+                id = "pb_download", type = "button",
+                class = "btn btn-success btn-block", onclick = "pbDownloadSVG()"
             ),
             hr(),
             h3("Plot Controls"),
