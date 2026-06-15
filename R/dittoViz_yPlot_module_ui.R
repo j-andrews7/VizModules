@@ -161,7 +161,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
 
     selected <- list(
         "var", "group.by", "color.by", "shape.by",
-        "plots", c("min", "max"), c("var.adjustment", "var.adj.fxn"),
+        "plots", c("min", "max"), "var.adjustment", "var.adj.fxn",
         "split.by", c("split.nrow", "split.ncol"),
         "split.adjust", "do.raster", "raster.dpi",
         "jitter.size", "jitter.width", "jitter.color",
