@@ -2572,7 +2572,8 @@ is_pure_type <- function(inputs, d) {
 #' @param start_y Numeric. Paper-space y coordinate (0–1) at which the legend
 #'   column begins; the title sits just above it and subsequent entries stack
 #'   downward. Lower it to vertically offset the size legend from an overlapping
-#'   color/shape legend. Defaults to \code{0.95}.
+#'   color/shape legend. Invalid values fall back to the default. Defaults to
+#'   \code{0.95}.
 #' @param start_x Numeric. Paper-space x coordinate at which the legend column
 #'   (circles, labels and title) is anchored. Values just above \code{1} place
 #'   the legend to the right of the plot area; nudge it lower to pull the whole
@@ -2604,6 +2605,10 @@ is_pure_type <- function(inputs, d) {
 
     if (!valid_size(start_x)) {
         start_x <- 1.02
+    }
+
+    if (!valid_size(start_y)) {
+        start_y <- 0.95
     }
 
     n_breaks <- if (!is.null(size_values)) length(size_values) else 5L

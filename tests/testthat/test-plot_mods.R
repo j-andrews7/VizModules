@@ -1148,6 +1148,12 @@ test_that(".custom_legend start_y lowers the legend column", {
     ))
     max_y <- function(b) max(vapply(b$x$layout$annotations, function(a) a$y, numeric(1)))
     expect_true(max_y(low) < max_y(high))
+
+    # An invalid start_y falls back to the default placement.
+    fallback <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), start_y = NA
+    ))
+    expect_equal(max_y(fallback), max_y(high))
 })
 
 test_that(".custom_legend start_x shifts the legend column horizontally", {

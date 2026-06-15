@@ -92,6 +92,8 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom par
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+\item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
+default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 }
 }
 

@@ -123,6 +123,8 @@ a custom circle size legend is drawn since plotly cannot render a native size le
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+\item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
+default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
 \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")

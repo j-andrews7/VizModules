@@ -92,6 +92,8 @@
 #'   \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 #'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 #'     default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+#'   \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
+#'     default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 #'   \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 #'   \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
 #'   \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
@@ -529,6 +531,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 "legend drawn when 'Size By' is set. Values just above 1 sit to",
                 "the right of the plot; lower it to pull the legend inward on",
                 "narrow plots or raise it to push it further out."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.legend.y"), "Size Legend Y Position",
+                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric),
+                step = 0.05
+            ), paste(
+                "Vertical position (paper coordinates) of the custom size",
+                "legend drawn when 'Size By' is set. Lower it to offset the",
+                "size legend from an overlapping color or shape legend."
             ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("min.value"), "Min Value",
                 value = .get_default(defaults, "min.value", NA, is.numeric)

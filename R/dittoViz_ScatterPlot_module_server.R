@@ -354,6 +354,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "size.legend.x",
                 value = .get_default(defaults, "size.legend.x", 1.02, is.numeric)
             )
+            updateNumericInput(session, "size.legend.y",
+                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric)
+            )
             updateCheckboxInput(session, "do.ellipse",
                 value = .get_default(defaults, "do.ellipse", FALSE, is.logical)
             )
@@ -837,14 +840,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Custom size legend:
             # plotly drops the size legend when point size encodes a numeric
             # column (see plotly.R#705), so draw a manual circle legend that
-            # mirrors the plotted marker sizes when `size.by` is set. When a
-            # categorical color or shape legend is also present, plotly places it
-            # at the top-right, so start the size legend lower to offset the two
-            # vertically and avoid overlap.
-            has_cat_legend <- (!is.null(null.na.inputs$color.by) &&
-                length(current_color_levels) > 0) ||
-                !is.null(null.na.inputs$shape.by)
-
+            # mirrors the plotted marker sizes when `size.by` is set.
             fig <- .custom_legend(
                 fig,
                 data = data(),
@@ -852,7 +848,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
-                start_y = if (has_cat_legend) 0.45 else 0.95,
+                start_y = isolate_fn(input$size.legend.y),
                 start_x = isolate_fn(input$size.legend.x)
             )
 

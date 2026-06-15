@@ -104,6 +104,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "size.legend.x",
                 value = .get_default(defaults, "size.legend.x", 1.02, is.numeric)
             )
+            updateNumericInput(session, "size.legend.y",
+                value = .get_default(defaults, "size.legend.y", 0.95, is.numeric)
+            )
             .reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
             updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 6, is.numeric))
@@ -237,7 +240,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
-                start_y = 0.95,
+                start_y = isolate_fn(input$size.legend.y),
                 start_x = isolate_fn(input$size.legend.x)
             )
 
