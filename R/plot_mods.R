@@ -2651,7 +2651,14 @@ is_pure_type <- function(inputs, d) {
     }
 
     x_pos <- start_x
-    label_x <- start_x + 0.05
+    # Constant pixel gap inserted between a circle's right edge and its numeric
+    # label. The labels are anchored at the circle's x (paper space) but offset
+    # via the annotation `xshift`, which plotly measures in pixels. Pairing a
+    # paper-space anchor with a pixel-space shift keeps the marker-to-label
+    # spacing fixed regardless of plot width; a relative paper offset (as used
+    # previously) instead grew with the plot, drifting the labels away from the
+    # circles on wide plots and crowding them on narrow ones.
+    label_gap_px <- 6
 
     # Vertical centres (paper units) for each legend entry. Advance by each
     # glyph's rendered radius plus the requested gap so larger circles claim
@@ -2720,11 +2727,15 @@ is_pure_type <- function(inputs, d) {
             showarrow = FALSE, xanchor = "center", yanchor = "middle"
         )
 
-        # Label annotation
+        # Label annotation. Offset from the circle by a fixed pixel distance
+        # (the glyph's rendered radius plus a constant gap) so the spacing does
+        # not scale with plot width.
+        rendered_diameter_px <- size_values[i] * .CIRCLE_GLYPH_DIAMETER_RATIO
+        label_xshift <- rendered_diameter_px / 2 + label_gap_px
         new_anns[[length(new_anns) + 1L]] <- list(
-            x = label_x, y = yc, xref = "paper", yref = "paper",
+            x = x_pos, y = yc, xref = "paper", yref = "paper",
             text = labels[i], showarrow = FALSE,
-            xanchor = "left", yanchor = "middle",
+            xanchor = "left", yanchor = "middle", xshift = label_xshift,
             font = list(size = label_font_size, color = "#000000")
         )
     }

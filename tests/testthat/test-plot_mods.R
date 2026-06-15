@@ -1181,6 +1181,33 @@ test_that(".custom_legend start_x shifts the legend column horizontally", {
     expect_equal(max_x(fallback), max_x(default))
 })
 
+test_that(".custom_legend offsets numeric labels by a fixed pixel xshift", {
+    data <- data.frame(
+        cell_type = rep(c("A", "B"), each = 3),
+        pct_expressed = c(5, 25, 50, 10, 40, 90)
+    )
+    fig <- plotly::plot_ly(
+        data = data, x = ~cell_type, y = ~pct_expressed, type = "scatter", mode = "markers"
+    )
+    size_values <- c(10, 20, 30, 40, 50)
+
+    built <- plotly::plotly_build(VizModules:::.custom_legend(fig, data,
+        size_by = "pct_expressed", size_values = size_values
+    ))
+    anns <- built$x$layout$annotations
+    label_anns <- Filter(function(a) grepl("^[0-9.]+$", a$text), anns)
+    expect_equal(length(label_anns), length(size_values))
+
+    # Labels are anchored at the circle x (paper) and offset purely in pixels,
+    # so the marker-to-label spacing is independent of plot width.
+    expect_true(all(vapply(label_anns, function(a) isTRUE(a$xanchor == "left"), logical(1))))
+    expect_true(all(vapply(label_anns, function(a) !is.null(a$xshift) && a$xshift > 0, logical(1))))
+
+    # The xshift grows with the glyph size (larger circles push labels further).
+    shifts <- vapply(label_anns, function(a) a$xshift, numeric(1))
+    expect_equal(shifts, sort(shifts))
+})
+
 test_that(".extract_marker_sizes collects numeric marker sizes", {
     fig <- plotly::plot_ly(
         x = 1:3, y = 1:3, type = "scatter", mode = "markers",
