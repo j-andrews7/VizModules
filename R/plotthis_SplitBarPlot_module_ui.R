@@ -23,13 +23,13 @@
 #'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
 #'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
 #'   \item \code{y_sep} - Separator for y columns (not applicable in UI context)
-#'   \item \code{flip} - Flip axes (not implemented in current UI)
 #'   \item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
 #'   \item \code{order_y} - Y-axis ordering rules (handled by default logic)
 #'   \item \code{lineheight} - Text line height (not applicable in plotly)
 #'   \item \code{max_charwidth} - Maximum character width (not applicable in plotly)
 #'   \item \code{fill_by_sep} - Separator for fill columns (not applicable in UI context)
 #'   \item \code{fill_name} - Fill legend name (handled by plotly)
+#'   \item \code{direction_name} - Direction legend name (not implemented)
 #'   \item \code{direction_pos_name} - Positive direction name (not implemented)
 #'   \item \code{direction_neg_name} - Negative direction name (not implemented)
 #'   \item \code{theme} - ggplot2 theme (not applicable in plotly)
@@ -46,7 +46,7 @@
 #'   \item \code{axis_titles} - Only applies if `split_by` is used
 #'   \item \code{guides} - Only applies if `split_by` is used
 #'   \item \code{design} - Only applies if `split_by` is used
-#'   \item \code{legend_direction} - Managed position of legend however this can be handled via plotly
+#'   \item \code{legend.direction} - Managed position of legend however this can be handled via plotly
 #' }
 #'
 #' @section Plot parameters and defaults:
@@ -55,6 +55,7 @@
 #'   \item \code{x} - X-axis variable (UI: "X values", defaults key: \code{x.data}, default: 2nd numeric variable)
 #'   \item \code{y} - Y-axis grouping variable (UI: "Y values", defaults key: \code{y.data}, default: 2nd categorical variable)
 #'   \item \code{fill_by} - Fill color variable (UI: "Fill by", default: 2nd variable)
+#'   \item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
 #'   \item \code{alpha_by} - Variable for alpha transparency (UI: "Alpha by", default: "")
 #'   \item \code{alpha_reverse} - Reverse alpha order (UI: "Alpha reverse", default: FALSE)
 #'   \item \code{alpha_name} - Alpha legend name (UI: "Alpha name", default: "")
@@ -68,6 +69,7 @@
 #'   \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 #'   \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#'   \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 #' }
 #'
 #' @section Parameters controlling additional functionality:
@@ -150,7 +152,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     selected <- list(
         "x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
         "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
-        "facet_byrow", "split_by", "x_min", "x_max"
+        "facet_byrow", "split_by", "x_min", "x_max", "palreverse"
     )
 
     documentParameters <- get_documentation(
@@ -159,100 +161,136 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     )
 
     inputs <- list(
-      "Data" = tagList(
-      tipify(selectInput(ns("x.data"), "X Values",
-        selected = .get_default(defaults, "x.data", num.choices[2],
-            function(x) x %in% num.choices),
-        choices = num.choices, selectize = FALSE
-      ), documentParameters$x, placement = "top", options = list(container = "body")),
-      tipify(selectInput(ns("y.data"), "Y Values",
-        selected = .get_default(defaults, "y.data", char.choices[2],
-            function(x) x %in% char.choices),
-        choices = char.choices, selectize = FALSE
-      ), "Select the categorical column to use for the Y axis groupings",
-        placement = "top", options = list(container = "body")),
-      # Changed from group.by to fill.by
-      tipify(selectInput(ns("fill.by"), "Fill By",
-        selected = .get_default(defaults, "fill.by", choices[2],
-            function(x) x %in% choices),
-        choices = choices, selectize = FALSE
-      ), documentParameters$fill_by, placement = "top", options = list(container = "body"))),
-
-
-    "Facet" = tagList(
-        tipify(selectInput(ns("facet.by"), "Facet By",
-        selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, ""), selectize = FALSE
-        ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("facet.scale"), "Facet Scale",
-        selected = .get_default(
-            defaults, "facet.scale", "free_y",
-            function(x) x %in% c("fixed", "free", "free_x", "free_y")
+        "Data" = tagList(
+            tipify(selectInput(ns("x.data"), "X Values",
+                selected = .get_default(
+                    defaults, "x.data", num.choices[2],
+                    function(x) x %in% num.choices
+                ),
+                choices = num.choices, selectize = FALSE
+            ), documentParameters$x, placement = "top", options = list(container = "body")),
+            tipify(
+                selectInput(ns("y.data"), "Y Values",
+                    selected = .get_default(
+                        defaults, "y.data", char.choices[2],
+                        function(x) x %in% char.choices
+                    ),
+                    choices = char.choices, selectize = FALSE
+                ), "Select the categorical column to use for the Y axis groupings",
+                placement = "top", options = list(container = "body")
+            ),
+            # Changed from group.by to fill.by
+            tipify(selectInput(ns("fill.by"), "Fill By",
+                selected = .get_default(
+                    defaults, "fill.by", choices[2],
+                    function(x) x %in% choices
+                ),
+                choices = choices, selectize = FALSE
+            ), documentParameters$fill_by, placement = "top", options = list(container = "body"))
         ),
-        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
-        ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.ncol"), "Columns",
-        value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
-        ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("facet.nrow"), "Rows",
-        value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
-        ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
-        value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
-            documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("split.by"), "Split By",
-        selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, ""), selectize = FALSE
-        ), documentParameters$split_by, placement = "top", options = list(container = "body")),
-        .uniform_subplot_spacing_inputs_ui(ns, defaults)
-    ),
-
-    "Aesthetics" = tagList(
-        uiOutput(ns("palette.selection")),
-        tipify(selectInput(ns("alpha.by"), "Alpha By",
-            selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
-            choices = c("", num.choices), selectize = FALSE),
-            documentParameters$alpha_by, placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("alpha.reverse"), "Alpha Reverse",
-            value = .get_default(defaults, "alpha.reverse", FALSE, is.logical), status = "success"),
-            documentParameters$alpha_reverse, placement = "top", options = list(container = "body")),
-        tipify(textInput(ns("alpha.name"), "Alpha Name",
-            value = .get_default(defaults, "alpha.name", "")),
-            documentParameters$alpha_name, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("bar.height"), "Bar Height",
-            value = .get_default(defaults, "bar.height", 0.9, is.numeric), min = 0),
-            documentParameters$bar_height, placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("axis.scale.factor"), "Axis Scale Factor",
-            min = 0, max = 5, value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric), step = 0.2),
-            "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
-            placement = "top", options = list(container = "body")),
-        tipify(materialSwitch(ns("label.on.y.axis"), "Labels on Y Axis",
-            value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical), status = "success"),
-            "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
-            placement = "top", options = list(container = "body")),
-        tipify(sliderInput(ns("text.position"), "Category Label Position",
-            value = .get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100),
-            "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
-            placement = "top", options = list(container = "body"))
-
-    ),
-
-    "Adjustments" = tagList(
-        tipify(numericInput(ns("x.min"), "X-axis Min",
-            value = .get_default(defaults, "x.min", min.x, is.numeric)
-        ), documentParameters$x_min, placement = "top", options = list(container = "body")),
-        tipify(numericInput(ns("x.max"), "X-axis Max",
-            value = .get_default(defaults, "x.max", max.x, is.numeric)
-        ), documentParameters$x_max, placement = "top", options = list(container = "body"))
-    ),
-
-
-    "Legend" = .uniform_legend_inputs_ui(ns, defaults),
-
-
-    "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-    "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Facet" = tagList(
+            tipify(selectInput(ns("facet.by"), "Facet By",
+                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+                choices = c(char.choices, ""), selectize = FALSE
+            ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+                selected = .get_default(
+                    defaults, "facet.scale", "free_y",
+                    function(x) x %in% c("fixed", "free", "free_x", "free_y")
+                ),
+                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
+            ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.ncol"), "Columns",
+                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
+            ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("facet.nrow"), "Rows",
+                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
+            ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
+            tipify(
+                materialSwitch(ns("facet.by.row"), "Facet by Row",
+                    value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"
+                ),
+                documentParameters$facet_byrow,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(selectInput(ns("split.by"), "Split By",
+                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
+                choices = c(char.choices, ""), selectize = FALSE
+            ), documentParameters$split_by, placement = "top", options = list(container = "body")),
+            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+        ),
+        "Aesthetics" = tagList(
+            uiOutput(ns("palette.selection")),
+            tipify(
+                materialSwitch(ns("palreverse"), "Reverse Palette",
+                    value = .get_default(defaults, "palreverse", FALSE, is.logical), status = "success"
+                ),
+                documentParameters$palreverse,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                selectInput(ns("alpha.by"), "Alpha By",
+                    selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
+                    choices = c("", num.choices), selectize = FALSE
+                ),
+                documentParameters$alpha_by,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("alpha.reverse"), "Alpha Reverse",
+                    value = .get_default(defaults, "alpha.reverse", FALSE, is.logical), status = "success"
+                ),
+                documentParameters$alpha_reverse,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                textInput(ns("alpha.name"), "Alpha Name",
+                    value = .get_default(defaults, "alpha.name", "")
+                ),
+                documentParameters$alpha_name,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("bar.height"), "Bar Height",
+                    value = .get_default(defaults, "bar.height", 0.9, is.numeric), min = 0
+                ),
+                documentParameters$bar_height,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                sliderInput(ns("axis.scale.factor"), "Axis Scale Factor",
+                    min = 0, max = 5, value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric), step = 0.2
+                ),
+                "Scale factor controlling how much of the axis range the bars fill. Values above 1 extend beyond the data range",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("label.on.y.axis"), "Labels on Y Axis",
+                    value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical), status = "success"
+                ),
+                "When enabled, category labels are shown as Y-axis tick labels instead of being placed on the plot area",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                sliderInput(ns("text.position"), "Category Label Position",
+                    value = .get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100
+                ),
+                "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
+                placement = "top", options = list(container = "body")
+            )
+        ),
+        "Adjustments" = tagList(
+            tipify(numericInput(ns("x.min"), "X-axis Min",
+                value = .get_default(defaults, "x.min", min.x, is.numeric)
+            ), documentParameters$x_min, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("x.max"), "X-axis Max",
+                value = .get_default(defaults, "x.max", max.x, is.numeric)
+            ), documentParameters$x_max, placement = "top", options = list(container = "body"))
+        ),
+        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
+        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
     )
 
 
