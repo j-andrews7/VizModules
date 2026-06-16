@@ -42,6 +42,14 @@ Defaults can be set for each input by providing a named list of values to the \c
 Nearly all parameters for \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} can be set via these inputs,
 so see the help for that function for an exhaustive list.
 }
+\section{Plot parameters not implemented or with altered functionality}{
+
+The following \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} parameters are not exposed as UI inputs:
+\itemize{
+\item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
+}
+}
+
 \section{Plot parameters and defaults}{
 
 The following \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} parameters can be accessed via UI inputs

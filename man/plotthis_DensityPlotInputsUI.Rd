@@ -56,7 +56,6 @@ The following \code{\link[plotthis:DensityPlot]{plotthis::DensityPlot()}} parame
 \item \code{ytrans} - Y-axis transformation (not implemented in UI)
 \item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
 \item \code{split_by_sep} - Only applies if \code{split_by} is used
-\item \code{flip} - Flip axes (not implemented in current UI)
 \item \code{theme} - ggplot2 theme (not applicable in plotly)
 \item \code{theme_args} - Theme arguments (not applicable in plotly)
 \item \code{palette} - Managed internally via the palette selection UI
@@ -70,7 +69,11 @@ The following \code{\link[plotthis:DensityPlot]{plotthis::DensityPlot()}} parame
 \item \code{axis_titles} - Only applies if \code{split_by} is used
 \item \code{guides} - Only applies if \code{split_by} is used
 \item \code{design} - Only applies if \code{split_by} is used
-\item \code{legend_direction} - Managed position of legend however this can be handled via plotly
+\item \code{palreverse} - Reverse the color palette (not implemented)
+\item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
+\item \code{keep_empty} - Keep empty factor levels (not implemented)
+\item \code{keep_na} - Keep NA values (not implemented)
+\item \code{legend.direction} - Managed position of legend however this can be handled via plotly
 }
 }
 
@@ -80,6 +83,7 @@ The following \code{\link[plotthis:DensityPlot]{plotthis::DensityPlot()}} parame
 \itemize{
 \item \code{x} - X-axis variable (UI: "X Data", default: 2nd numeric variable)
 \item \code{group_by} - Grouping variable (UI: "Group By", default: "")
+\item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
 \item \code{position} - Position adjustment (UI: "Position", default: "identity")
 \item \code{alpha} - Density fill transparency (UI: "Plot Alpha", default: 0.5)
 \item \code{add_bars} - Add rug plot (UI: "Add Rug Plot", default: FALSE)

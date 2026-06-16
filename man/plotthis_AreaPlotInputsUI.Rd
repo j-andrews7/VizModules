@@ -54,8 +54,17 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters a
 \item \code{byrow} - Only applies if \code{split_by} is used
 \item \code{nrow} - Only applies if \code{split_by} is used
 \item \code{ncol} - Only applies if \code{split_by} is used
+\item \code{x_sep} - Separator for multiple x columns (not yet implemented)
+\item \code{group_by_sep} - Separator for multiple group_by columns (not yet implemented)
+\item \code{group_name} - Group/fill legend name (not yet implemented)
 \item \code{palette} - Managed internally via the palette selection UI
-\item \code{legend_direction} - Managed position of legend however this can be handled via plotly
+\item \code{palreverse} - Reverse the color palette (not yet implemented)
+\item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
+\item \code{keep_empty} - Keep empty factor levels (not yet implemented)
+\item \code{keep_na} - Keep NA values (not yet implemented)
+\item \code{seed} - Random seed (not applicable)
+\item \code{combine} - Combine multiple plots (not applicable for plotly)
+\item \code{legend.direction} - Managed position of legend however this can be handled via plotly
 }
 }
 

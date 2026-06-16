@@ -33,6 +33,11 @@
 #'   \item \code{theme} - ggplot2 theme (managed internally)
 #'   \item \code{theme_args} - Theme arguments (not yet implemented)
 #'   \item \code{palcolor} - Managed internally via the palette selection UI
+#'   \item \code{add_bg} - Add background stripes/shading (not yet implemented)
+#'   \item \code{bg_palette} - Background palette (not yet implemented)
+#'   \item \code{bg_palcolor} - Background palette colors (not yet implemented)
+#'   \item \code{bg_alpha} - Background alpha (not yet implemented)
+#'   \item \code{bg_direction} - Background stripe direction (not yet implemented)
 #'   \item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
 #'   \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
 #'   \item \code{keep_na} - Keep NA values (not yet implemented)
@@ -64,6 +69,7 @@
 #'   \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
 #'   \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
+#'   \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 #'   \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
 #'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 #'     default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
@@ -106,7 +112,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
         "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "palette", "alpha"
+        "palette", "palreverse", "alpha"
     )
 
     documentParameters <- get_documentation(
@@ -177,6 +183,13 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     function(x) x %in% palette_names
                 ), selectize = FALSE
             ), documentParameters$palette, placement = "top", options = list(container = "body")),
+            tipify(
+                materialSwitch(ns("palreverse"), "Reverse Palette",
+                    value = .get_default(defaults, "palreverse", FALSE, is.logical), status = "success"
+                ),
+                documentParameters$palreverse,
+                placement = "top", options = list(container = "body")
+            ),
             tipify(
                 numericInput(ns("alpha"), "Alpha",
                     value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1

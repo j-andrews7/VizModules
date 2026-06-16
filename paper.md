@@ -13,12 +13,12 @@ date: 10 March 2026
 affiliations:
     - name: Department of Developmental Neurobiology, St. Jude Children's Research Hospital
       index: 1
-      ror: 
+      ror: 02r3e0967
 ---
 
 ## Summary
 
-Interactive data visualization is essential for modern day analytical workflows, enabling analysts to explore complex datasets in a personalized fashion. VizModules is an R package developed to provide ready made, reusable building blocks for interactive applications that assist analysts in visualizing their data. Modules facilitate stats tests and customization while delivering interactive features such as tooltips and hover effects for an engaging user experience. Modules include, but are not limited to, scatter, density, bar, line, and box plots, providing a flexible set of options for diverse data visualization needs. VizModules building blocks enable downstream development of specialized analysis applications, such as bulk RNA sequencing analysis explorers. VizModules is designed to work with standard R data frames, while a separate data import module enables support for formats such as Excel and CSV, ensuring accessibility for users with varying levels of coding experience. By standardizing visual components of analysis tools, it eliminates repetitive coding that wastes the time of many researchers.
+Interactive data visualization is essential for modern day analytical workflows, enabling analysts to explore complex datasets in a personalized fashion. VizModules is an R package developed to provide ready made, reusable building blocks for interactive applications that accelerate application development, data exploration, and high-quality figure generation. Modules facilitate stats tests and customization while delivering interactive features such as tooltips and hover effects for an engaging user experience. Modules include, but are not limited to, scatter, density, bar, line, and box plots, providing a flexible set of options for diverse data visualization needs. VizModules building blocks enable downstream development of specialized analysis applications, such as bulk RNA sequencing analysis explorers. VizModules is designed to work with standard R data frames, while a separate data import module enables support for formats such as Excel and CSV, ensuring accessibility for users with varying levels of coding experience. By standardizing visual components of analysis tools, it eliminates repetitive coding that wastes the time of many researchers.
 
 ## Statement of need
 
@@ -34,7 +34,7 @@ R's foundational plotting packages, such as ggplot2 provide programmers with ext
 
 Several packages try and lower this barrier for development by providing users with custom plaftforms to perform specific analysis work or to create custom plots. Packages like **esquisse** enable interactive ggplot2 chart creation through drag and drop interfaces, but lack the ability to generate reusable, standardized Shiny modules. While useful for rapidly creating single static plots, esquisse does not support quick data switching or the composition of multiple visualization types within cohesive analysis applications.
 
-VizModules is designed to fill this gap rather than duplicate existing functionality. Instead of introducing yet another static plotting engine, it contributes a curated set of dynamic pre-built modules that wrap existing static plotting code bases. Furthermore, this package adopts a distinct focus, complementing existing tools that already excel at drawing plots and defining their layouts. By shifting to this focus, VizModules enables rapid app development by providing key plotting code to create multi plot analysis tools for integrated data insight. Consitent visual language across modules eliminates visualization plumbing and improves reproduciblilty. VizModules' dataFilter module ability to accept diverse table formats (Excel, CSV, data frames) eliminates data preprocessing barriers, enabling analysts and non-coders to directly visualize their data without R expertise. 
+VizModules is designed to fill this gap rather than duplicate existing functionality. Instead of introducing yet another static plotting engine, it contributes a curated set of dynamic pre-built modules that wrap existing static plotting code bases. Furthermore, this package adopts a distinct focus, complementing existing tools that already excel at drawing plots and defining their layouts. By shifting to this focus, VizModules enables rapid app development by providing key plotting code to create multi plot analysis tools for integrated data insight. Consistent visual language across modules eliminates visualization plumbing and improves reproduciblilty. VizModules' dataFilter module ability to accept diverse table formats (Excel, CSV, data frames) eliminates data preprocessing barriers, enabling analysts and non-coders to directly visualize their data without R expertise. 
 
 VizModules advances the field with its stats UI component in select modules, offering extensive customization of test types, significance thresholds, aesthetics like line colors and annotation offsets, p-value adjustments, and pairwise comparisons. By providing stats customization to target modules, this delivers efficient first insights into data statistical significance without manual test execution or post plot annotation. 
 
@@ -54,6 +54,6 @@ The package contains clear vignettes, providing users and developers with clear 
 
 ## AI usage disclosure
 
-VizModules was developed with assistance of generative AI tools such as GitHub copilot. AI usuage was limited to code optimization, debugging and documentation formatting. Core architecture, module logic, testing strategy were authored by the developers. All contributions were manually reviewed and rigorously tested before integration into the main branch. 
+VizModules was developed with assistance of generative AI tools such as GitHub copilot. AI usuage was limited to code optimization, debugging, and documentation formatting. Core architecture, module logic, testing strategy were authored by the developers. All contributions were manually reviewed and rigorously tested before integration into the main branch. 
 
 

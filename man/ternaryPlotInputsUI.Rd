@@ -53,6 +53,7 @@ Axis tick colors (use \code{defaults} to set)
 Axis tick length (use \code{defaults} to set)
 \item \code{legend.x}, \code{legend.y} - Legend position offsets (use \code{defaults} to set)
 \item \code{title.x} - Title horizontal position (use \code{defaults} to set)
+\item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
 \item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
 }
 }

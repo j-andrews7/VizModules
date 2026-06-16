@@ -236,6 +236,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateSelectInput(session, "split.by",
                 selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
+
             # Aesthetics
             updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
             updateSelectInput(session, "alpha.by",
@@ -245,6 +246,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 value = .get_default(defaults, "alpha.reverse", FALSE, is.logical)
             )
             updateTextInput(session, "alpha.name", value = .get_default(defaults, "alpha.name", ""))
+            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
             updateNumericInput(session, "bar.height", value = .get_default(defaults, "bar.height", 0.9, is.numeric))
             updateNumericInput(session, "line.height", value = .get_default(defaults, "line.height", 0.5, is.numeric))
             updateMaterialSwitch(session, "label.on.y.axis",
@@ -256,6 +258,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateSliderInput(session, "text.position",
                 value = .get_default(defaults, "text.position", 0, is.numeric)
             )
+
             # Axes
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
@@ -370,6 +373,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet_byrow = isolate_fn(input$facet.by.row),
                 palcolor = palcolor_arg,
                 palette = palette_arg,
+                palreverse = isolate_fn(input$palreverse),
                 x_min = isolate_fn(input$x.min),
                 x_max = isolate_fn(input$x.max),
                 theme = "theme_this",

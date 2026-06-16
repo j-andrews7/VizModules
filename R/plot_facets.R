@@ -422,6 +422,144 @@
 }
 
 
+#' Build paper-anchored panel border shapes for a faceted plotly figure
+#'
+#' Native plotly `subplot()` figures with shared (`shareX`/`shareY`) axes do not
+#' render axis border lines on the matched/inner panels, so faceted plots end up
+#' with a box around only the first panel. This helper reconstructs each panel's
+#' rectangle from the grid of x/y axis domains in the figure layout and returns
+#' paper-anchored shapes that draw a uniform border around every panel.
+#'
+#' Panel rectangles are derived from the geometry of the subplot grid rather than
+#' from a per-panel axis index. With shared axes plotly only keeps one axis per
+#' column (x) and one per row (y), so an `xaxis{i}`/`yaxis{i}` lookup keyed on the
+#' facet index breaks down for grids with more than one row or column. Instead the
+#' distinct x-axis domain starts define the columns (left to right) and the
+#' distinct y-axis domain starts define the rows (top to bottom), and each facet
+#' panel is mapped to a (row, column) cell in row-major fill order — matching how
+#' `subplot()` lays panels out.
+#'
+#' The borders honour the same axis styling semantics used for single-panel
+#' figures:
+#' \itemize{
+#'   \item \code{showline} and \code{mirror} both \code{TRUE}: full rectangle
+#'     border around each panel.
+#'   \item only \code{showline} \code{TRUE}: left and bottom edges only.
+#'   \item \code{showline} \code{FALSE}: no borders (empty list).
+#' }
+#'
+#' @param fig A plotly figure object whose `x$layout` contains the per-panel
+#'   `xaxis*`/`yaxis*` domains (typically after `subplot()` and
+#'   `.apply_facet_subplot_spacing()`).
+#' @param n_facets Integer, number of facet panels.
+#' @param showline Logical, whether to draw border lines. Default `TRUE`.
+#' @param mirror Logical, whether to mirror the lines to form a full box.
+#'   Default `TRUE`.
+#' @param linecolor Character, colour of the border lines. Default `"black"`.
+#' @param linewidth Numeric, width of the border lines in pixels. Default `0.5`.
+#' @param ncol Optional integer. Number of facet columns. If `NULL` or `NA`,
+#'   detected from the distinct x-axis domain starts.
+#' @param nrow Optional integer. Number of facet rows. If `NULL` or `NA`,
+#'   detected from the distinct y-axis domain starts.
+#'
+#' @return A list of plotly shape definitions (each paper-anchored). Returns an
+#'   empty list when borders should not be drawn or panel domains cannot be
+#'   resolved.
+#'
+#' @author Jacob Martin
+#' @rdname INTERNAL_build_facet_panel_borders
+#' @keywords internal
+.build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
+                                       linecolor = "black", linewidth = 0.5,
+                                       ncol = NULL, nrow = NULL) {
+    if (!isTRUE(showline) || n_facets < 1L) {
+        return(list())
+    }
+    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
+        return(list())
+    }
+
+    line_style <- list(color = linecolor, width = linewidth)
+
+    # Collect the per-axis domains. Each distinct x-domain start is a column
+    # (ordered left to right) and each distinct y-domain start is a row (ordered
+    # top to bottom). This holds for both shared (shareX/shareY) and free axes,
+    # because subplot lays panels on a grid regardless of which axes are matched.
+    layout_names <- names(fig$x$layout)
+    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
+    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
+
+    domain_of <- function(a) {
+        d <- fig$x$layout[[a]]$domain
+        if (is.numeric(d) && length(d) == 2L) d else NULL
+    }
+    x_domains <- Filter(Negate(is.null), lapply(x_axes, domain_of))
+    y_domains <- Filter(Negate(is.null), lapply(y_axes, domain_of))
+    if (length(x_domains) == 0L || length(y_domains) == 0L) {
+        return(list())
+    }
+
+    # One representative domain per distinct start, ordered into columns/rows.
+    dedupe_domains <- function(domains, decreasing = FALSE) {
+        starts <- vapply(domains, `[`, numeric(1), 1)
+        ord <- order(starts, decreasing = decreasing)
+        domains <- domains[ord]
+        starts <- starts[ord]
+        keep <- !duplicated(round(starts, 6))
+        domains[keep]
+    }
+    # Columns left to right (ascending x start); rows top to bottom (descending y start).
+    col_domains <- dedupe_domains(x_domains, decreasing = FALSE)
+    row_domains <- dedupe_domains(y_domains, decreasing = TRUE)
+
+    detected_ncol <- length(col_domains)
+    detected_nrow <- length(row_domains)
+    if (is.null(ncol) || is.na(ncol)) ncol <- detected_ncol
+    if (is.null(nrow) || is.na(nrow)) nrow <- detected_nrow
+    ncol <- as.integer(ncol)
+    nrow <- as.integer(nrow)
+    if (!is.finite(ncol) || ncol < 1L) ncol <- detected_ncol
+
+    shapes <- list()
+    for (i in seq_len(n_facets)) {
+        # Panels are filled row-major (left to right, top to bottom).
+        col <- ((i - 1L) %% ncol) + 1L
+        row <- ((i - 1L) %/% ncol) + 1L
+        if (col > length(col_domains) || row > length(row_domains)) {
+            next
+        }
+        xd <- col_domains[[col]]
+        yd <- row_domains[[row]]
+        if (!is.numeric(xd) || length(xd) != 2L || !is.numeric(yd) || length(yd) != 2L) {
+            next
+        }
+
+        if (isTRUE(mirror)) {
+            # Full rectangle border around the panel.
+            shapes[[length(shapes) + 1]] <- list(
+                type = "rect", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[2], y0 = yd[1], y1 = yd[2],
+                line = line_style, fillcolor = "rgba(0,0,0,0)", layer = "above"
+            )
+        } else {
+            # Left and bottom edges only.
+            shapes[[length(shapes) + 1]] <- list(
+                type = "line", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[1], y0 = yd[1], y1 = yd[2],
+                line = line_style, layer = "above"
+            )
+            shapes[[length(shapes) + 1]] <- list(
+                type = "line", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[2], y0 = yd[1], y1 = yd[1],
+                line = line_style, layer = "above"
+            )
+        }
+    }
+
+    shapes
+}
+
+
 #' Clean and validate facet dimension value for lineplot module
 #'
 #' @description Internal helper function that validates and sanitizes a numeric 
