@@ -27,8 +27,7 @@
 #'   \item \code{x_sep} - Separator for multiple x columns (not yet implemented)
 #'   \item \code{group_by_sep} - Separator for multiple group_by columns (not yet implemented)
 #'   \item \code{split_by_sep} - Separator for multiple split_by columns (not yet implemented)
-#'   \item \code{flip} - Flip axes (not yet implemented)
-#'   \item \code{fill_by_x_if_no_group} - Fill bars by x values (not yet implemented)
+#'   \item \code{fill_name} - Name of the fill legend (not yet implemented)
 #'   \item \code{line_name} - Name of line (not yet implemented)
 #'   \item \code{label} - Bar labels on top (not yet implemented)
 #'   \item \code{label_nudge} - Label nudge distance (not yet implemented)
@@ -74,6 +73,8 @@
 #'   \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 #'   \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
 #'   \item \code{group_by} - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)
+#'   \item \code{fill_by} - Variable used to fill the bars (UI: "Fill by", default: "")
+#'   \item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
 #'   \item \code{split_by} - Split variable for separate plots (UI: "Split by", default: "")
 #'   \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 #'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
@@ -81,6 +82,7 @@
 #'   \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 #'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
 #'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
+#'   \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 #'   \item \code{alpha} - Bar fill transparency (UI: "Alpha", default: 1)
 #'   \item \code{width} - Bar width (UI: "Width", default: NA)
 #'   \item \code{expand} - Axis expansion values (UI: "Expand", default: "")
@@ -171,7 +173,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "group_by", "fill_by",
         "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "split_by", "alpha", "width", "expand", "y_min", "y_max"
+        "split_by", "alpha", "width", "expand", "y_min", "y_max", "palreverse"
     )
 
     documentParameters <- get_documentation(
@@ -235,6 +237,9 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(numericInput(ns("alpha"), "Alpha",
             value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
             documentParameters$alpha, placement = "top", options = list(container = "body")),
+        tipify(materialSwitch(ns("palreverse"), "Reverse Palette",
+        value = .get_default(defaults, "palreverse", FALSE, is.logical), status = "success"),
+            documentParameters$palreverse, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("width"), "Width",
             value = .get_default(defaults, "width", NA, is.numeric)),
             documentParameters$width, placement = "top", options = list(container = "body")),

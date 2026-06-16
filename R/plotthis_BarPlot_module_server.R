@@ -174,6 +174,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
             updateNumericInput(session, "width", value = .get_default(defaults, "width", NA, is.numeric))
             updateTextInput(session, "expand", value = .get_default(defaults, "expand", ""))
+            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
@@ -311,6 +312,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_byrow = isolate_fn(input$facet.by.row),
                 palette = palette_arg,
                 palcolor = palcolor_arg,
+                palreverse = isolate_fn(input$palreverse),
                 y_min = isolate_fn(input$y.min),
                 y_max = isolate_fn(input$y.max),
                 theme = "theme_this",
