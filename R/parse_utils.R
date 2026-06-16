@@ -506,7 +506,14 @@ validate_expression <- function(expr_text, col_names) {
 #' @export
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
     docs <- lapply(selected, function(s) {
-        doc <- extract_roc_text(package_name, type = type, select = s, capitalize = cap)
+        doc <- tryCatch(
+            extract_roc_text(package_name, type = type, select = s, capitalize = cap),
+            error = function(e) NA_character_
+        )
+
+        if (length(doc) == 0 || all(is.na(doc))) {
+            return("")
+        }
 
         doc |>
             gsub("\\\\n", " ", x = _) |>
