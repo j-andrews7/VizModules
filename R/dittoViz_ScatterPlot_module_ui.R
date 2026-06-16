@@ -38,6 +38,17 @@
 #'   \item \code{yline.color} - Use \code{hline.colors} instead
 #'   \item \code{do.letter} - Lettering subplots (not implemented for plotly)
 #'   \item \code{do.label} - Labeling points interactively (not compatible with plotly hover)
+#'   \item \code{labels.size}, \code{labels.highlight}, \code{labels.use.numbers},
+#'     \code{labels.numbers.spacer}, \code{labels.repel}, \code{labels.repel.adjust},
+#'     \code{labels.split.by} - Point-label styling (tied to \code{do.label}, not implemented)
+#'   \item \code{rename.color.groups} - Rename color groups (not implemented)
+#'   \item \code{rename.shape.groups} - Rename shape groups (not implemented)
+#'   \item \code{add.trajectory.curves} - Add trajectory curves from coordinate matrices
+#'     (not implemented; use \code{add.trajectory.by.groups} instead)
+#'   \item \code{do.raster} - Rasterize the point layer (not implemented; use \code{webgl} for performance instead)
+#'   \item \code{raster.dpi} - Rasterization DPI (not applicable without \code{do.raster})
+#'   \item \code{show.grid.lines} - Toggle grid lines (managed via the Axes tab gridline controls)
+#'   \item \code{legend.color.breaks.labels} - Labels for color-scale breaks (not implemented)
 #' }
 #' The new Lines tab provides enhanced functionality including multiple lines per type,
 #' individual line widths, opacities, and diagonal/ablines with slope control.

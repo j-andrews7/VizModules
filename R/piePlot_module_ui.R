@@ -14,6 +14,15 @@
 #' Nearly all parameters for [VizModules::piePlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [VizModules::piePlot()] parameters are not exposed as UI inputs:
+#' \itemize{
+#'   \item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
+#'   \item \code{legend.x} - Legend horizontal position offset (use \code{defaults} to set)
+#'   \item \code{legend.y} - Legend vertical position offset (use \code{defaults} to set)
+#'   \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
+#' }
+#'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::piePlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 #' \itemize{

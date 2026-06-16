@@ -42,7 +42,7 @@
 #'   \item \code{boxplot.position.dodge} - Boxplot dodge (controlled via \code{boxgap})
 #'   \item \code{hover.data} - Columns shown on hover (not implemented; a default set is used)
 #'   \item \code{hover.round.digits} - Hover value rounding (not implemented)
-#'   \item \code{vlnplot.quantiles} - Violin quantiles (not supported in plotly)
+#'   \item \code{vlnplot.quantiles} - Violin quantiles (doesn't translate to plotly)
 #' }
 #'
 #' @section Plot parameters and defaults:

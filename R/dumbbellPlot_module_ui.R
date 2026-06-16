@@ -11,6 +11,12 @@
 #'
 #' Defaults can be set for each input by providing a named list of values to the `defaults` argument.
 #'
+#' @section Plot parameters not implemented or with altered functionality:
+#' The following [VizModules::dumbbellPlot()] parameters are not exposed as UI inputs:
+#' \itemize{
+#'   \item \code{order.by} - Order rows by a Y value; not currently wired to a UI input (use \code{defaults} to set)
+#' }
+#'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::dumbbellPlot()] parameters can be accessed via UI inputs:
 #' \itemize{
@@ -64,6 +70,12 @@
 #'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
 #'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line Types", default: "dashed")
 #'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#'   \item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+#'   \item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
+#'   \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
+#'   \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line Types", default: "dashed")
+#'   \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
 #'   \item \code{margin.t} - Top margin in pixels (UI: "Margin Top", default: 70)
 #'   \item \code{margin.b} - Bottom margin in pixels (UI: "Margin Bottom", default: 70)
 #'   \item \code{margin.l} - Left margin in pixels (UI: "Margin Left", default: 70)
