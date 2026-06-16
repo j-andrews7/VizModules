@@ -189,8 +189,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
             updateSelectInput(session, "vlnplot.scaling",
                 selected = .get_default(defaults, "vlnplot.scaling", "area"))
-            updateTextInput(session, "vlnplot.quantiles",
-                value = .get_default(defaults, "vlnplot.quantiles", ""))
 
             # Ridge
             updateNumericInput(session, "ridgeplot.lineweight",
@@ -256,17 +254,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             split.by <- .na_to_null(isolate_fn(input$split.by))
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
-
-            # Parse vlnplot.quantiles (comma-separated numeric values)
-            vlnplot.quantiles <- isolate_fn(input$vlnplot.quantiles)
-            if (!is.null(vlnplot.quantiles) && nzchar(vlnplot.quantiles)) {
-                vlnplot.quantiles <- as.numeric(trimws(strsplit(vlnplot.quantiles, ",")[[1]]))
-                if (any(is.na(vlnplot.quantiles))) {
-                    vlnplot.quantiles <- NULL
-                }
-            } else {
-                vlnplot.quantiles <- NULL
-            }
 
             # Parse split dimensions
             split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
@@ -351,7 +338,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
                 vlnplot.scaling = isolate_fn(input$vlnplot.scaling),
-                vlnplot.quantiles = vlnplot.quantiles,
                 vlnplot.width = 1 - isolate_fn(input$boxgap),
                 ridgeplot.lineweight = isolate_fn(input$ridgeplot.lineweight),
                 ridgeplot.scale = isolate_fn(input$ridgeplot.scale),

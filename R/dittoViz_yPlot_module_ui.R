@@ -26,6 +26,23 @@
 #'   \item \code{add.line} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
 #'   \item \code{line.linetype} - Use \code{hline.linetypes} instead
 #'   \item \code{line.color} - Use \code{hline.colors} instead
+#'   \item \code{line.linewidth} - Use \code{hline.widths} instead
+#'   \item \code{line.opacity} - Use \code{hline.opacities} instead
+#'   \item \code{multivar.aes} - Aesthetic used for multiple \code{var} columns (not implemented; one var at a time)
+#'   \item \code{multivar.split.dir} - Facet direction for multiple \code{var} columns (not implemented)
+#'   \item \code{rows.use} - Row subset to plot (not implemented)
+#'   \item \code{colors} - Integer index/order into \code{color.panel} (managed via the palette UI)
+#'   \item \code{shape.panel} - Shapes used with \code{shape.by} (not implemented)
+#'   \item \code{y.breaks} - Custom continuous-axis breaks (not implemented)
+#'   \item \code{x.labels} - Override group labels (not implemented)
+#'   \item \code{x.labels.rotate} - Rotate group labels (handled by the Axes tab tick-angle controls)
+#'   \item \code{x.reorder} - Reorder x-axis groups (not implemented)
+#'   \item \code{boxplot.width} - Boxplot width (controlled via \code{boxgap} and \code{boxgroupgap})
+#'   \item \code{boxplot.outlier.size} - Outlier point size (not implemented)
+#'   \item \code{boxplot.position.dodge} - Boxplot dodge (controlled via \code{boxgap})
+#'   \item \code{hover.data} - Columns shown on hover (not implemented; a default set is used)
+#'   \item \code{hover.round.digits} - Hover value rounding (not implemented)
+#'   \item \code{vlnplot.quantiles} - Violin quantiles (not supported in plotly)
 #' }
 #'
 #' @section Plot parameters and defaults:
@@ -59,7 +76,6 @@
 #'   \item \code{boxplot.lineweight} - Boxplot line weight (UI: "Boxplot Line Weight", default: 0.5)
 #'   \item \code{vlnplot.lineweight} - Violin line weight (UI: "Violin Line Weight", default: 0.5)
 #'   \item \code{vlnplot.scaling} - Violin scaling method (UI: "Violin Scaling", default: "area")
-#'   \item \code{vlnplot.quantiles} - Violin quantiles (UI: "Violin Quantiles (0-1)", default: "")
 #'   \item \code{vlnplot.width} - Violin width (derived from \code{boxgap}; not directly settable)
 #'   \item \code{ridgeplot.lineweight} - Ridge line weight (UI: "Ridge Line Weight", default: 0.5)
 #'   \item \code{ridgeplot.scale} - Ridge overlap scale (UI: "Ridge Scale (overlap)", default: 1.25)
@@ -76,7 +92,7 @@
 #'   \item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
 #'   \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 #'   \item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
-#'  \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
+#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 #'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 #'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
 #'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
@@ -168,7 +184,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "jitter.shape.legend.size", "jitter.shape.legend.show",
         "boxplot.show.outliers", "boxplot.color", "boxplot.fill",
         "boxplot.lineweight",
-        "vlnplot.lineweight", "vlnplot.scaling", "vlnplot.quantiles",
+        "vlnplot.lineweight", "vlnplot.scaling",
         "ridgeplot.lineweight", "ridgeplot.scale",
         "ridgeplot.ymax.expansion", "ridgeplot.shape",
         "ridgeplot.bins", "ridgeplot.binwidth"
@@ -404,14 +420,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     choices = c("area", "count", "width"), selectize = FALSE
                 ),
                 documentParameters$vlnplot.scaling,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                textInput(ns("vlnplot.quantiles"), "Violin Quantiles (0-1)",
-                    value = .get_default(defaults, "vlnplot.quantiles", ""),
-                    placeholder = "e.g., 0.25, 0.5, 0.75"
-                ),
-                documentParameters$vlnplot.quantiles,
                 placement = "top", options = list(container = "body")
             )
         ),
