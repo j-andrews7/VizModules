@@ -88,6 +88,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     function(x) x %in% palette_names
                 )
             )
+            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
             updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
 
             # Axes
@@ -180,6 +181,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 facet_nrow = facet.nrow,
                 facet_byrow = isolate_fn(input$facet.by.row),
                 palette = palette_arg,
+                palreverse = isolate_fn(input$palreverse),
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha)
