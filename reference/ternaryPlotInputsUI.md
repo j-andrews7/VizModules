@@ -199,25 +199,25 @@ df <- data.frame(
 )
 ternaryPlotInputsUI("ternaryPlot", df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="7723">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ternaryPlot-ternaryPlotTabsetPanel" data-tabsetid="6287">
 #>     <li class="active">
-#>       <a href="#tab-7723-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6287-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7723-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-6287-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7723-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6287-3" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7723-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-6287-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7723-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6287-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7723">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7723-1">
+#>   <div class="tab-content" data-tabsetid="6287">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6287-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1182768">
@@ -280,7 +280,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7723-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6287-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6572984">
@@ -376,7 +376,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7723-3">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6287-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8415589">
@@ -451,7 +451,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-7723-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-6287-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5083099">
@@ -560,7 +560,7 @@ ternaryPlotInputsUI("ternaryPlot", df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7723-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6287-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">

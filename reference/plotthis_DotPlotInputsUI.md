@@ -216,31 +216,31 @@ library(VizModules)
 data(mtcars)
 plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="DotPlot-DotPlotTabsetPanel" data-tabsetid="1674">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="DotPlot-DotPlotTabsetPanel" data-tabsetid="3965">
 #>     <li class="active">
-#>       <a href="#tab-1674-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3965-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3965-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3965-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-3965-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3965-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3965-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1674-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3965-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1674">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1674-1">
+#>   <div class="tab-content" data-tabsetid="3965">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3965-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6705485">
@@ -313,7 +313,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1674-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3965-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify683417">
@@ -383,7 +383,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1674-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3965-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9272817">
@@ -457,7 +457,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-1674-4">
+#>     <div class="tab-pane" data-value="Legend" id="tab-3965-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2569829">
@@ -507,7 +507,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-1674-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3965-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -600,7 +600,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1674-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3965-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -891,7 +891,7 @@ plotthis_DotPlotInputsUI("DotPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-1674-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3965-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4159615">

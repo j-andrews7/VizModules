@@ -71,6 +71,9 @@
 - Custom `size.by` legends added for `plotthis_DotPlot` and
   `dittoViz_scatterPlot` modules, since plotly does not yet support
   these.
+- Update docstrings to reflect new inputs and features and clarify which
+  parameters of underlying plotting functions may not be implemented.
+- Various border fixes for faceted plots.
 
 ## VizModules 0.1.1
 
