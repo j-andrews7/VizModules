@@ -407,37 +407,37 @@ library(VizModules)
 data(mtcars)
 plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="7083">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="ViolinPlot-ViolinPlotTabsetPanel" data-tabsetid="9750">
 #>     <li class="active">
-#>       <a href="#tab-7083-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9750-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-9750-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-9750-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9750-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-9750-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-9750-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-9750-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9750-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7083-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9750-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7083">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7083-1">
+#>   <div class="tab-content" data-tabsetid="9750">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9750-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5787815">
@@ -485,7 +485,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7083-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-9750-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5492207">
@@ -598,7 +598,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-7083-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-9750-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9183378">
@@ -632,7 +632,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7083-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9750-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7436213">
@@ -702,7 +702,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-7083-5">
+#>     <div class="tab-pane" data-value="Stats" id="tab-9750-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6000373">
@@ -861,7 +861,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-7083-6">
+#>     <div class="tab-pane" data-value="Legend" id="tab-9750-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4073614">
@@ -879,7 +879,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7083-7">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-9750-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -972,7 +972,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7083-8">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9750-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1263,7 +1263,7 @@ plotthis_ViolinPlotInputsUI("ViolinPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7083-9">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9750-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6686745">
