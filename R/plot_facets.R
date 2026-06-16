@@ -422,6 +422,100 @@
 }
 
 
+#' Build paper-anchored panel border shapes for a faceted plotly figure
+#'
+#' Native plotly `subplot()` figures with shared (`shareX`/`shareY`) axes do not
+#' render axis border lines on the matched/inner panels, so faceted plots end up
+#' with a box around only the first panel. This helper reads each panel's
+#' x/y axis domain from the figure layout and returns paper-anchored shapes that
+#' draw a uniform border around every panel.
+#'
+#' The borders honour the same axis styling semantics used for single-panel
+#' figures:
+#' \itemize{
+#'   \item \code{showline} and \code{mirror} both \code{TRUE}: full rectangle
+#'     border around each panel.
+#'   \item only \code{showline} \code{TRUE}: left and bottom edges only.
+#'   \item \code{showline} \code{FALSE}: no borders (empty list).
+#' }
+#'
+#' @param fig A plotly figure object whose `x$layout` contains the per-panel
+#'   `xaxis*`/`yaxis*` domains (typically after `subplot()` and
+#'   `.apply_facet_subplot_spacing()`).
+#' @param n_facets Integer, number of facet panels.
+#' @param showline Logical, whether to draw border lines. Default `TRUE`.
+#' @param mirror Logical, whether to mirror the lines to form a full box.
+#'   Default `TRUE`.
+#' @param linecolor Character, colour of the border lines. Default `"black"`.
+#' @param linewidth Numeric, width of the border lines in pixels. Default `0.5`.
+#'
+#' @return A list of plotly shape definitions (each paper-anchored). Returns an
+#'   empty list when borders should not be drawn or panel domains cannot be
+#'   resolved.
+#'
+#' @author Jacob Martin
+#' @rdname INTERNAL_build_facet_panel_borders
+#' @keywords internal
+.build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
+                                       linecolor = "black", linewidth = 0.5) {
+    if (!isTRUE(showline) || n_facets < 1L) {
+        return(list())
+    }
+    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
+        return(list())
+    }
+
+    axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
+    line_style <- list(color = linecolor, width = linewidth)
+
+    shapes <- list()
+    for (i in seq_len(n_facets)) {
+        xa <- fig$x$layout[[axis_name("xaxis", i)]]
+        ya <- fig$x$layout[[axis_name("yaxis", i)]]
+        # With shared axes (shareX/shareY), plotly keeps a single base axis for the
+        # shared direction, so the per-panel indexed axis may not exist. Fall back to
+        # the shared base axis in that case.
+        if (is.null(xa)) {
+            xa <- fig$x$layout[["xaxis"]]
+        }
+        if (is.null(ya)) {
+            ya <- fig$x$layout[["yaxis"]]
+        }
+        if (is.null(xa) || is.null(ya)) {
+            next
+        }
+        xd <- xa$domain
+        yd <- ya$domain
+        if (!is.numeric(xd) || length(xd) != 2L || !is.numeric(yd) || length(yd) != 2L) {
+            next
+        }
+
+        if (isTRUE(mirror)) {
+            # Full rectangle border around the panel.
+            shapes[[length(shapes) + 1]] <- list(
+                type = "rect", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[2], y0 = yd[1], y1 = yd[2],
+                line = line_style, fillcolor = "rgba(0,0,0,0)", layer = "above"
+            )
+        } else {
+            # Left and bottom edges only.
+            shapes[[length(shapes) + 1]] <- list(
+                type = "line", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[1], y0 = yd[1], y1 = yd[2],
+                line = line_style, layer = "above"
+            )
+            shapes[[length(shapes) + 1]] <- list(
+                type = "line", xref = "paper", yref = "paper",
+                x0 = xd[1], x1 = xd[2], y0 = yd[1], y1 = yd[1],
+                line = line_style, layer = "above"
+            )
+        }
+    }
+
+    shapes
+}
+
+
 #' Clean and validate facet dimension value for lineplot module
 #'
 #' @description Internal helper function that validates and sanitizes a numeric 

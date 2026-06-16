@@ -279,3 +279,76 @@ test_that("linePlot keeps a plain y-axis title for a numeric x-axis", {
     if (is.list(y_title)) y_title <- y_title$text
     expect_equal(y_title, "mpg")
 })
+
+test_that("linePlot adds panel border shapes to every facet", {
+    fig <- linePlot(
+        data = mtcars,
+        x = "wt",
+        y = "mpg",
+        plot.mode = "lines",
+        line.type = "solid",
+        colour.group.by = NULL,
+        palette.selection = "Set2",
+        show.legend = FALSE,
+        facet.by = "cyl",
+        axis.showline = TRUE,
+        axis.mirror = TRUE
+    )
+
+    n_facets <- length(unique(mtcars$cyl))
+    shapes <- fig$x$layout$shapes
+    rect_shapes <- Filter(function(s) identical(s$type, "rect"), shapes)
+
+    # One rectangular border (full box) per facet panel.
+    expect_equal(length(rect_shapes), n_facets)
+    for (s in rect_shapes) {
+        expect_identical(s$xref, "paper")
+        expect_identical(s$yref, "paper")
+    }
+})
+
+test_that("linePlot omits panel borders when axis lines are disabled", {
+    fig <- linePlot(
+        data = mtcars,
+        x = "wt",
+        y = "mpg",
+        plot.mode = "lines",
+        line.type = "solid",
+        colour.group.by = NULL,
+        palette.selection = "Set2",
+        show.legend = FALSE,
+        facet.by = "cyl",
+        axis.showline = FALSE,
+        axis.mirror = FALSE
+    )
+
+    shapes <- fig$x$layout$shapes
+    rect_shapes <- Filter(function(s) identical(s$type, "rect"), shapes)
+    expect_equal(length(rect_shapes), 0)
+})
+
+test_that(".build_facet_panel_borders honours showline and mirror", {
+    fig <- structure(
+        list(x = list(layout = list(
+            xaxis = list(domain = c(0, 0.45)),
+            yaxis = list(domain = c(0, 1)),
+            xaxis2 = list(domain = c(0.55, 1)),
+            yaxis2 = list(domain = c(0, 1))
+        ))),
+        class = "plotly"
+    )
+
+    # Full box per panel when showline and mirror are TRUE.
+    full <- .build_facet_panel_borders(fig, 2, showline = TRUE, mirror = TRUE)
+    expect_equal(length(full), 2)
+    expect_true(all(vapply(full, function(s) identical(s$type, "rect"), logical(1))))
+
+    # Left + bottom edges per panel when mirror is FALSE.
+    edges <- .build_facet_panel_borders(fig, 2, showline = TRUE, mirror = FALSE)
+    expect_equal(length(edges), 4)
+    expect_true(all(vapply(edges, function(s) identical(s$type, "line"), logical(1))))
+
+    # No shapes when showline is FALSE.
+    none <- .build_facet_panel_borders(fig, 2, showline = FALSE, mirror = TRUE)
+    expect_equal(length(none), 0)
+})
