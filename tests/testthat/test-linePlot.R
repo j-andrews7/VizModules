@@ -352,3 +352,53 @@ test_that(".build_facet_panel_borders honours showline and mirror", {
     none <- .build_facet_panel_borders(fig, 2, showline = FALSE, mirror = TRUE)
     expect_equal(length(none), 0)
 })
+
+test_that(".build_facet_panel_borders draws a distinct box per panel across rows", {
+    # Emulate a 3-column x 2-row shared-axis subplot: plotly only keeps one axis
+    # per column (x) and one per row (y), so the per-panel index lookup breaks.
+    fig <- structure(
+        list(x = list(layout = list(
+            xaxis = list(domain = c(0.00, 0.30)),
+            xaxis2 = list(domain = c(0.35, 0.65)),
+            xaxis3 = list(domain = c(0.70, 1.00)),
+            yaxis = list(domain = c(0.52, 1.00)),
+            yaxis2 = list(domain = c(0.00, 0.48))
+        ))),
+        class = "plotly"
+    )
+
+    borders <- .build_facet_panel_borders(
+        fig, 6, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2
+    )
+    expect_equal(length(borders), 6)
+    expect_true(all(vapply(borders, function(s) identical(s$type, "rect"), logical(1))))
+
+    # Every panel must have a unique rectangle (no collapsing onto the base axis).
+    keys <- vapply(borders, function(s) paste(s$x0, s$x1, s$y0, s$y1), character(1))
+    expect_equal(length(unique(keys)), 6)
+
+    # Panels are filled row-major: first three on the top row, next three below.
+    top_y <- vapply(borders[1:3], function(s) s$y0, numeric(1))
+    bottom_y <- vapply(borders[4:6], function(s) s$y0, numeric(1))
+    expect_true(all(top_y == 0.52))
+    expect_true(all(bottom_y == 0.00))
+})
+
+test_that(".build_facet_panel_borders skips empty cells in a partial grid", {
+    # 5 panels in a 3x2 grid leaves the bottom-right cell empty.
+    fig <- structure(
+        list(x = list(layout = list(
+            xaxis = list(domain = c(0.00, 0.30)),
+            xaxis2 = list(domain = c(0.35, 0.65)),
+            xaxis3 = list(domain = c(0.70, 1.00)),
+            yaxis = list(domain = c(0.52, 1.00)),
+            yaxis2 = list(domain = c(0.00, 0.48))
+        ))),
+        class = "plotly"
+    )
+
+    borders <- .build_facet_panel_borders(
+        fig, 5, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2
+    )
+    expect_equal(length(borders), 5)
+})

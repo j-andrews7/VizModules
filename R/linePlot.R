@@ -279,7 +279,8 @@ linePlot <- function(data, x, y, palette.selection,
         borders <- .build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
-            linecolor = axis.linecolor, linewidth = axis.linewidth
+            linecolor = axis.linecolor, linewidth = axis.linewidth,
+            ncol = ncols, nrow = nrows
         )
 
         fig <- fig |> layout(annotations = annotations)
@@ -330,7 +331,8 @@ linePlot <- function(data, x, y, palette.selection,
         borders <- .build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
-            linecolor = axis.linecolor, linewidth = axis.linewidth
+            linecolor = axis.linecolor, linewidth = axis.linewidth,
+            ncol = ncols, nrow = nrows
         )
 
         fig <- fig |> layout(annotations = annotations)
