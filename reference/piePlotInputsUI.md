@@ -151,25 +151,25 @@ pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="3396">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="piePlot-piePlotTabsetPanel" data-tabsetid="1754">
 #>     <li class="active">
-#>       <a href="#tab-3396-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1754-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3396-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-1754-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3396-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels &amp; Text">Labels &amp; Text</a>
+#>       <a href="#tab-1754-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3396-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
+#>       <a href="#tab-1754-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title &amp; Legend">Title &amp; Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3396-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-1754-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3396">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3396-1">
+#>   <div class="tab-content" data-tabsetid="1754">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1754-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9686375">
@@ -223,39 +223,39 @@ piePlotInputsUI("piePlot", pie_df)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify709648', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, starting angle of the first slice in degrees (0-360). Default: 0.'})}, 500)});</script>
 #>         </div>
-#>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5268303">
-#>             <label class="control-label" id="piePlot-hole-label" for="piePlot-hole">Center Hole Size</label>
-#>             <input class="js-range-slider" id="piePlot-hole" data-skin="shiny" data-min="0" data-max="0.9" data-from="0" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5268303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric value between 0 and 1 for the hole size (0 for pie chart, >0 for donut chart). Default: 0.'})}, 500)});</script>
-#>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-3396-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1754-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="piePlot-color.picker" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7634748">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5268303">
 #>             <label class="control-label" for="piePlot-slice.line.color">Slice Border Color</label>
 #>             <input id="piePlot-slice.line.color" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7634748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for slice borders. Default: "#FFFFFF" (white).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5268303', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for slice borders. Default: "#FFFFFF" (white).'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify4353866">
+#>           <div class="form-group shiny-input-container" id="tipify7634748">
 #>             <label class="control-label" id="piePlot-slice.line.width-label" for="piePlot-slice.line.width">Slice Border Width</label>
 #>             <input id="piePlot-slice.line.width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4353866', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of slice borders in pixels. Set to 0 for no borders. Default: 0.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7634748', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of slice borders in pixels. Set to 0 for no borders. Default: 0.'})}, 500)});</script>
+#>         </div>
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify4353866">
+#>             <label class="control-label" id="piePlot-hole-label" for="piePlot-hole">Center Hole Size</label>
+#>             <input class="js-range-slider" id="piePlot-hole" data-skin="shiny" data-min="0" data-max="0.9" data-from="0" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4353866', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric value between 0 and 1 for the hole size (0 for pie chart, >0 for donut chart). Default: 0.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels &amp; Text" id="tab-3396-3">
+#>     <div class="tab-pane" data-value="Labels" id="tab-1754-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5524723">
@@ -339,7 +339,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-3396-4">
+#>     <div class="tab-pane" data-value="Title &amp; Legend" id="tab-1754-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8857108">
@@ -457,7 +457,7 @@ piePlotInputsUI("piePlot", pie_df)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-3396-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-1754-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
