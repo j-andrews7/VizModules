@@ -126,14 +126,9 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 min = 0, max = 360,
                 value = .get_default(defaults, "rotation", 0),
                 step = 5
-            ), documentParameters$rotation, placement = "top", options = list(container = "body")),
-            tipify(sliderInput(ns("hole"), "Center Hole Size",
-                min = 0, max = 0.9,
-                value = .get_default(defaults, "hole", 0),
-                step = 0.01
-            ), documentParameters$hole, placement = "top", options = list(container = "body"))
+            ), documentParameters$rotation, placement = "top", options = list(container = "body"))
         ),
-        "Colors" = tagList(
+        "Aesthetics" = tagList(
             uiOutput(ns("color.picker")),
             tipify(colourInput(ns("slice.line.color"), "Slice Border Color",
                 value = .get_default(defaults, "slice.line.color", "#FFFFFF")
@@ -142,9 +137,14 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 value = .get_default(defaults, "slice.line.width", 0, is.numeric),
                 min = 0,
                 step = 0.5
-            ), documentParameters$slice.line.width, placement = "top", options = list(container = "body"))
+            ), documentParameters$slice.line.width, placement = "top", options = list(container = "body")),
+            tipify(sliderInput(ns("hole"), "Center Hole Size",
+                min = 0, max = 0.9,
+                value = .get_default(defaults, "hole", 0),
+                step = 0.01
+            ), documentParameters$hole, placement = "top", options = list(container = "body"))
         ),
-        "Labels & Text" = tagList(
+        "Labels" = tagList(
             tipify(selectInput(ns("textinfo"), "Slice Label",
                 selected = .get_default(defaults, "textinfo", c("label", "value", "percent")),
                 choices = c("label", "value", "percent", "none"),

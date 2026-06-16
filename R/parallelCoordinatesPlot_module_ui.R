@@ -129,7 +129,10 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.colorbar"), "Show Colorbar",
                 value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
-            ), documentParameters$show.colorbar, placement = "top", options = list(container = "body"))
+            ), documentParameters$show.colorbar, placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("bgcolor"), "Background Color",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
             tipify(numericInput(ns("label.font.size"), "Label Size",
@@ -161,7 +164,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 ), selectize = FALSE
             ), documentParameters$tick.font.family, placement = "top", options = list(container = "body"))
         ),
-        "Title & Background" = tagList(
+        "Title" = tagList(
             tipify(numericInput(ns("title.font.size"), "Title Size",
                 value = .get_default(defaults, "title.font.size", 26, is.numeric),
                 min = 1, step = 1
@@ -175,10 +178,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = .get_default(defaults, "title.font.color", "black")
-            ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("bgcolor"), "Background Color",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
-            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
+            ), documentParameters$title.font.color, placement = "top", options = list(container = "body"))
         ),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )

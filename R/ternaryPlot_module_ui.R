@@ -155,7 +155,7 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 min = 0
             ), documentParameters$sum, placement = "top", options = list(container = "body"))
         ),
-        "Trace Style" = tagList(
+        "Aesthetics" = tagList(
             tipify(selectInput(ns("mode"), "Mode",
                 choices = c(
                     "Markers" = "markers",
@@ -209,7 +209,10 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                 value = .get_default(defaults, "opacity", 1),
                 step = 0.05
             ), documentParameters$opacity, placement = "top", options = list(container = "body")),
-            uiOutput(ns("color.picker"))
+            uiOutput(ns("color.picker")),
+            tipify(colourInput(ns("bgcolor"), "Background Color",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Axes" = tagList(
             tipify(textInput(ns("a.title"), "A-axis Title",
@@ -280,11 +283,6 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
             tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
-        ),
-        "Background" = tagList(
-            tipify(colourInput(ns("bgcolor"), "Background Color",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
-            ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )

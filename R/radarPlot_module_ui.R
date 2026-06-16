@@ -124,7 +124,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 choices = all.choices, selectize = FALSE
             ), documentParameters$group, placement = "top", options = list(container = "body"))
         ),
-        "Trace Style" = tagList(
+        "Aesthetics" = tagList(
             tipify(selectInput(ns("fill"), "Fill Area",
                 choices = c(
                     "Fill" = "toself",
@@ -170,9 +170,15 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 value = .get_default(defaults, "opacity", 0.6),
                 step = 0.05
             ), documentParameters$opacity, placement = "top", options = list(container = "body")),
-            uiOutput(ns("color.picker"))
+            uiOutput(ns("color.picker")),
+            tipify(colourInput(ns("bgcolor"), "Plot Background Color",
+                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+            ), documentParameters$bgcolor, placement = "top", options = list(container = "body")),
+            tipify(colourInput(ns("polar.bgcolor"), "Polar Area Background Color",
+                value = .get_default(defaults, "polar.bgcolor", "#FFFFFF")
+            ), documentParameters$polar.bgcolor, placement = "top", options = list(container = "body"))
         ),
-        "Radial Axis" = tagList(
+        "Axes" = tagList(
             tipify(checkboxInput(ns("radial.visible"), "Show Radial Axis",
                 value = .get_default(defaults, "radial.visible", TRUE, is.logical)
             ), documentParameters$radial.visible, placement = "top", options = list(container = "body")),
@@ -194,9 +200,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             ), documentParameters$radial.linecolor, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("radial.gridcolor"), "Radial Grid Color",
                 value = .get_default(defaults, "radial.gridcolor", "#EEEEEE")
-            ), documentParameters$radial.gridcolor, placement = "top", options = list(container = "body"))
-        ),
-        "Angular Axis" = tagList(
+            ), documentParameters$radial.gridcolor, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("angular.direction"), "Angular Direction",
                 choices = c("Clockwise" = "clockwise", "Counterclockwise" = "counterclockwise"),
                 selected = .get_default(defaults, "angular.direction", "clockwise"), selectize = FALSE
@@ -207,7 +211,6 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 step = 5
             ), documentParameters$angular.rotation, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("angular.gridcolor"), "Angular Grid Color",
-
                 value = .get_default(defaults, "angular.gridcolor", "#EEEEEE")
             ), documentParameters$angular.gridcolor, placement = "top", options = list(container = "body"))
         ),
@@ -253,15 +256,6 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
                 value = .get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
-        ),
-        "Background" = tagList(
-            tipify(colourInput(ns("bgcolor"), "Plot Background Color",
-
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
-            ), documentParameters$bgcolor, placement = "top", options = list(container = "body")),
-            tipify(colourInput(ns("polar.bgcolor"), "Polar Area Background Color",
-                value = .get_default(defaults, "polar.bgcolor", "#FFFFFF")
-            ), documentParameters$polar.bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
     )
