@@ -76,7 +76,7 @@ module_data <- list(
 # Module registry – each entry defines one plot module for the gallery.
 module_registry <- list(
     list(
-        label     = "Area Plot",
+        label     = "Area",
         id        = "area",
         inputs_ui = plotthis_AreaPlotInputsUI,
         output_ui = plotthis_AreaPlotOutputUI,
@@ -85,7 +85,7 @@ module_registry <- list(
                          "group.by" = "product_line")
     ),
     list(
-        label     = "Bar Plot",
+        label     = "Bar",
         id        = "bar",
         inputs_ui = plotthis_BarPlotInputsUI,
         output_ui = plotthis_BarPlotOutputUI,
@@ -94,7 +94,7 @@ module_registry <- list(
                          "group.by" = "Type")
     ),
     list(
-        label     = "Box Plot",
+        label     = "Box",
         id        = "box",
         inputs_ui = plotthis_BoxPlotInputsUI,
         output_ui = plotthis_BoxPlotOutputUI,
@@ -102,7 +102,7 @@ module_registry <- list(
         defaults  = list("x.data" = "department", "y.data" = "salary")
     ),
     list(
-        label     = "Density Plot",
+        label     = "Density",
         id        = "density",
         inputs_ui = plotthis_DensityPlotInputsUI,
         output_ui = plotthis_DensityPlotOutputUI,
@@ -110,7 +110,7 @@ module_registry <- list(
         defaults  = list("x.data" = "salary", "group.by" = "department")
     ),
     list(
-        label     = "Dumbbell Plot",
+        label     = "Dumbbell",
         id        = "dumbbell",
         inputs_ui = dumbbellPlotInputsUI,
         output_ui = dumbbellPlotOutputUI,
@@ -118,7 +118,7 @@ module_registry <- list(
         defaults  = list()
     ),
     list(
-        label     = "Dot Plot",
+        label     = "Dot",
         id        = "dotplot",
         inputs_ui = plotthis_DotPlotInputsUI,
         output_ui = plotthis_DotPlotOutputUI,
@@ -135,7 +135,7 @@ module_registry <- list(
         defaults  = list("x.data" = "salary")
     ),
     list(
-        label     = "Line Plot",
+        label     = "Line",
         id        = "line",
         inputs_ui = linePlotInputsUI,
         output_ui = linePlotOutputUI,
@@ -151,7 +151,7 @@ module_registry <- list(
         defaults  = list("color.by" = "product_line")
     ),
     list(
-        label     = "Pie Plot",
+        label     = "Pie",
         id        = "pie",
         inputs_ui = piePlotInputsUI,
         output_ui = piePlotOutputUI,
@@ -159,7 +159,7 @@ module_registry <- list(
         defaults  = list("labels" = "product_line", "values" = "revenue")
     ),
     list(
-        label     = "Radar Plot",
+        label     = "Radar",
         id        = "radar",
         inputs_ui = radarPlotInputsUI,
         output_ui = radarPlotOutputUI,
@@ -168,7 +168,7 @@ module_registry <- list(
                          "group" = "player")
     ),
     list(
-        label     = "Scatter Plot",
+        label     = "Scatter",
         id        = "scatter",
         inputs_ui = dittoViz_scatterPlotInputsUI,
         output_ui = dittoViz_scatterPlotOutputUI,
@@ -177,7 +177,7 @@ module_registry <- list(
                          "color.by" = "product_line")
     ),
     list(
-        label     = "Split Bar Plot",
+        label     = "Split Bar",
         id        = "splitbar",
         inputs_ui = plotthis_SplitBarPlotInputsUI,
         output_ui = plotthis_SplitBarPlotOutputUI,
@@ -185,7 +185,7 @@ module_registry <- list(
         defaults  = list("x.data" = "Score", "y.data" = "Group")
     ),
     list(
-        label     = "Ternary Plot",
+        label     = "Ternary",
         id        = "ternary",
         inputs_ui = ternaryPlotInputsUI,
         output_ui = ternaryPlotOutputUI,
@@ -194,7 +194,7 @@ module_registry <- list(
                          "c" = "designer", "group" = "team")
     ),
     list(
-        label     = "Violin Plot",
+        label     = "Violin",
         id        = "violin",
         inputs_ui = plotthis_ViolinPlotInputsUI,
         output_ui = plotthis_ViolinPlotOutputUI,
@@ -298,15 +298,25 @@ ui <- do.call(navbarPage, c(
                 tags$style(HTML(
                     paste(
                         ".navbar { margin-bottom: 0; }",
+                        # Keep all tabs on a single row by tightening link padding.
+                        ".navbar-nav > li > a {",
+                        "  padding-left: 9px;",
+                        "  padding-right: 9px;",
+                        "  font-size: 13px;",
+                        "}",
+                        ".navbar .navbar-collapse { flex-wrap: nowrap; }",
+                        ".navbar-nav { white-space: nowrap; }",
                         ".navbar .navbar-right .navbar-version-label {",
                         "  color: #9d9d9d;",
                         "  display: block;",
-                        "  padding: 15px;",
+                        "  padding: 15px 9px;",
                         "}",
                         ".navbar .navbar-right a.repo-link {",
                         "  display: flex;",
                         "  align-items: center;",
-                        "  gap: 6px;",
+                        "  gap: 5px;",
+                        "  padding-left: 9px;",
+                        "  padding-right: 9px;",
                         "}",
                         sep = "\n"
                     )
