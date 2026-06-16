@@ -6,19 +6,19 @@ Interactive data visualization is essential for modern day analytical
 workflows, enabling analysts to explore complex datasets in a
 personalized fashion. VizModules is an R package developed to provide
 ready made, reusable building blocks for interactive applications that
-assist analysts in visualizing their data. Modules facilitate stats
-tests and customization while delivering interactive features such as
-tooltips and hover effects for an engaging user experience. Modules
-include, but are not limited to, scatter, density, bar, line, and box
-plots, providing a flexible set of options for diverse data
-visualization needs. VizModules building blocks enable downstream
-development of specialized analysis applications, such as bulk RNA
-sequencing analysis explorers. VizModules is designed to work with
-standard R data frames, while a separate data import module enables
-support for formats such as Excel and CSV, ensuring accessibility for
-users with varying levels of coding experience. By standardizing visual
-components of analysis tools, it eliminates repetitive coding that
-wastes the time of many researchers.
+accelerate application development, data exploration, and high-quality
+figure generation. Modules facilitate stats tests and customization
+while delivering interactive features such as tooltips and hover effects
+for an engaging user experience. Modules include, but are not limited
+to, scatter, density, bar, line, and box plots, providing a flexible set
+of options for diverse data visualization needs. VizModules building
+blocks enable downstream development of specialized analysis
+applications, such as bulk RNA sequencing analysis explorers. VizModules
+is designed to work with standard R data frames, while a separate data
+import module enables support for formats such as Excel and CSV,
+ensuring accessibility for users with varying levels of coding
+experience. By standardizing visual components of analysis tools, it
+eliminates repetitive coding that wastes the time of many researchers.
 
 ## Statement of need
 
@@ -76,7 +76,7 @@ adopts a distinct focus, complementing existing tools that already excel
 at drawing plots and defining their layouts. By shifting to this focus,
 VizModules enables rapid app development by providing key plotting code
 to create multi plot analysis tools for integrated data insight.
-Consitent visual language across modules eliminates visualization
+Consistent visual language across modules eliminates visualization
 plumbing and improves reproduciblilty. VizModules’ dataFilter module
 ability to accept diverse table formats (Excel, CSV, data frames)
 eliminates data preprocessing barriers, enabling analysts and non-coders
@@ -149,7 +149,7 @@ and actively maintained, with submission coinciding with publication.
 ## AI usage disclosure
 
 VizModules was developed with assistance of generative AI tools such as
-GitHub copilot. AI usuage was limited to code optimization, debugging
+GitHub copilot. AI usuage was limited to code optimization, debugging,
 and documentation formatting. Core architecture, module logic, testing
 strategy were authored by the developers. All contributions were
 manually reviewed and rigorously tested before integration into the main

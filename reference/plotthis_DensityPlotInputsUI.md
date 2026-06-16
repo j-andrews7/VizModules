@@ -91,8 +91,6 @@ parameters are not available via UI inputs:
 
 - `split_by_sep` - Only applies if `split_by` is used
 
-- `flip` - Flip axes (not implemented in current UI)
-
 - `theme` - ggplot2 theme (not applicable in plotly)
 
 - `theme_args` - Theme arguments (not applicable in plotly)
@@ -119,7 +117,15 @@ parameters are not available via UI inputs:
 
 - `design` - Only applies if `split_by` is used
 
-- `legend_direction` - Managed position of legend however this can be
+- `palreverse` - Reverse the color palette (not implemented)
+
+- `aspect.ratio` - Aspect ratio control (handled by plotly layout)
+
+- `keep_empty` - Keep empty factor levels (not implemented)
+
+- `keep_na` - Keep NA values (not implemented)
+
+- `legend.direction` - Managed position of legend however this can be
   handled via plotly
 
 ## Plot parameters and defaults
@@ -131,6 +137,9 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `x` - X-axis variable (UI: "X Data", default: 2nd numeric variable)
 
 - `group_by` - Grouping variable (UI: "Group By", default: "")
+
+- `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default:
+  FALSE)
 
 - `position` - Position adjustment (UI: "Position", default: "identity")
 
@@ -294,34 +303,34 @@ library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="1678">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="2053">
 #>     <li class="active">
-#>       <a href="#tab-1678-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-2053-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-2053-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-2053-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-2053-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-2053-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-2053-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-2053-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1678-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-2053-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1678">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1678-1">
+#>   <div class="tab-content" data-tabsetid="2053">
+#>     <div class="tab-pane active" data-value="Data" id="tab-2053-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3182127">
@@ -355,7 +364,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1678-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-2053-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7607611">
@@ -425,7 +434,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-1678-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2053-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7612553">
@@ -453,7 +462,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-1678-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-2053-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4019904">
@@ -490,7 +499,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-1678-5">
+#>     <div class="tab-pane" data-value="Legend" id="tab-2053-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2758051">
@@ -508,7 +517,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-1678-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-2053-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -601,7 +610,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1678-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-2053-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -892,7 +901,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-1678-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-2053-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1833121">

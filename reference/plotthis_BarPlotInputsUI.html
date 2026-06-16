@@ -110,8 +110,7 @@ for that function for an exhaustive list.</p>
 <li><p><code>x_sep</code> - Separator for multiple x columns (not yet implemented)</p></li>
 <li><p><code>group_by_sep</code> - Separator for multiple group_by columns (not yet implemented)</p></li>
 <li><p><code>split_by_sep</code> - Separator for multiple split_by columns (not yet implemented)</p></li>
-<li><p><code>flip</code> - Flip axes (not yet implemented)</p></li>
-<li><p><code>fill_by_x_if_no_group</code> - Fill bars by x values (not yet implemented)</p></li>
+<li><p><code>fill_name</code> - Name of the fill legend (not yet implemented)</p></li>
 <li><p><code>line_name</code> - Name of line (not yet implemented)</p></li>
 <li><p><code>label</code> - Bar labels on top (not yet implemented)</p></li>
 <li><p><code>label_nudge</code> - Label nudge distance (not yet implemented)</p></li>
@@ -157,6 +156,8 @@ for that function for an exhaustive list.</p>
 <p>The following <code><a href="https://pwwang.github.io/plotthis/reference/barplot.html" class="external-link">plotthis::BarPlot()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>x</code> - X-axis variable (UI: "X values", default: 2nd categorical variable)</p></li>
 <li><p><code>y</code> - Y-axis variable (UI: "Y values", default: 2nd numeric variable)</p></li>
 <li><p><code>group_by</code> - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)</p></li>
+<li><p><code>fill_by</code> - Variable used to fill the bars (UI: "Fill by", default: "")</p></li>
+<li><p><code>flip</code> - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)</p></li>
 <li><p><code>split_by</code> - Split variable for separate plots (UI: "Split by", default: "")</p></li>
 <li><p><code>facet_by</code> - Faceting variable (UI: "Facet by", default: "")</p></li>
 <li><p><code>facet_scales</code> - Facet scale behavior (UI: "Facet scale", default: "fixed")</p></li>
@@ -164,6 +165,7 @@ for that function for an exhaustive list.</p>
 <li><p><code>facet_nrow</code> - Number of facet rows (UI: "Facet number of rows", default: NULL)</p></li>
 <li><p><code>facet_byrow</code> - Facet ordering direction (UI: "Facet by row", default: TRUE)</p></li>
 <li><p><code>palcolor</code> - Custom color values (UI: palette picker, derived from palette)</p></li>
+<li><p><code>palreverse</code> - Reverse the color palette (UI: "Reverse palette", default: FALSE)</p></li>
 <li><p><code>alpha</code> - Bar fill transparency (UI: "Alpha", default: 1)</p></li>
 <li><p><code>width</code> - Bar width (UI: "Width", default: NA)</p></li>
 <li><p><code>expand</code> - Axis expansion values (UI: "Expand", default: "")</p></li>
@@ -228,46 +230,46 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_BarPlotInputsUI</span><span class="op">(</span><span class="st">"BarPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="3796"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="5951"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-3796-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-5951-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="3796"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-3796-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="5951"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-5951-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8980773"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5669098"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-x.data-label" for="BarPlot-x.data"&gt;X Values&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-x.data"&gt;&lt;option value=""&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8980773', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5669098', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5944723"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8980773"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-y.data-label" for="BarPlot-y.data"&gt;Y Values&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-y.data"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
@@ -284,12 +286,12 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="carb"&gt;carb&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5944723', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8980773', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8316899"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5944723"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-group.by-label" for="BarPlot-group.by"&gt;Group By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-group.by"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
@@ -306,10 +308,10 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="carb"&gt;carb&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8316899', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5944723', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5934084"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8316899"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-fill.by-label" for="BarPlot-fill.by"&gt;Fill By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-fill.by"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
@@ -326,24 +328,24 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="carb"&gt;carb&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5934084', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8316899', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-3796-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-5951-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7789706"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5934084"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.by-label" for="BarPlot-facet.by"&gt;Facet By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-facet.by"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7789706', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5934084', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3977717"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7789706"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.scale-label" for="BarPlot-facet.scale"&gt;Facet Scale&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-facet.scale"&gt;&lt;option value="fixed" selected&gt;fixed&lt;/option&gt;</span>
@@ -352,78 +354,88 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="free_y"&gt;free_y&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3977717', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7789706', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8498827"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3977717"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.ncol-label" for="BarPlot-facet.ncol"&gt;Columns&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8498827', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3977717', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7418456"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8498827"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.nrow-label" for="BarPlot-facet.nrow"&gt;Rows&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7418456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8498827', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3177902"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7418456"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-facet.by.row" style="padding-right: 10px;"&gt;Facet by Row&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BarPlot-facet.by.row" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BarPlot-facet.by.row"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3177902', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7418456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1116803"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3177902"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-split.by-label" for="BarPlot-split.by"&gt;Split By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="BarPlot-split.by"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1116803', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3177902', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1010954"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1116803"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-subplot.margin.x-label" for="BarPlot-subplot.margin.x"&gt;Subplot Spacing (Horizontal)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1010954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1116803', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8000977"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1010954"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-subplot.margin.y-label" for="BarPlot-subplot.margin.y"&gt;Subplot Spacing (Vertical)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8000977', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1010954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-3796-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-5951-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="BarPlot-palette.selection" class="shiny-html-output"&gt;&lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3799468"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8000977"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-alpha-label" for="BarPlot-alpha"&gt;Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3799468', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8000977', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3799468"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-palreverse" style="padding-right: 10px;"&gt;Reverse Palette&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BarPlot-palreverse" type="checkbox"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BarPlot-palreverse"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3799468', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify527010"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-width-label" for="BarPlot-width"&gt;Width&lt;/label&gt;</span>
@@ -431,6 +443,8 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify527010', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9865086"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-expand-label" for="BarPlot-expand"&gt;Expand&lt;/label&gt;</span>
@@ -440,7 +454,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-3796-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-5951-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6041740"&gt;</span>
@@ -458,7 +472,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-3796-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-5951-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5387602"&gt;</span>
@@ -476,7 +490,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-3796-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-5951-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
@@ -569,7 +583,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-3796-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-5951-7"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -860,7 +874,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-3796-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-5951-8"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4387573"&gt;</span>

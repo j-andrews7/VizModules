@@ -116,7 +116,6 @@ for that function for an exhaustive list.</p>
 <li><p><code>ytrans</code> - Y-axis transformation (not implemented in UI)</p></li>
 <li><p><code>split_by</code> - Split variable (returns a patchwork object, not supported in plotly), use <code>facet_by</code> instead</p></li>
 <li><p><code>split_by_sep</code> - Only applies if <code>split_by</code> is used</p></li>
-<li><p><code>flip</code> - Flip axes (not implemented in current UI)</p></li>
 <li><p><code>theme</code> - ggplot2 theme (not applicable in plotly)</p></li>
 <li><p><code>theme_args</code> - Theme arguments (not applicable in plotly)</p></li>
 <li><p><code>palette</code> - Managed internally via the palette selection UI</p></li>
@@ -130,7 +129,11 @@ for that function for an exhaustive list.</p>
 <li><p><code>axis_titles</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>guides</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>design</code> - Only applies if <code>split_by</code> is used</p></li>
-<li><p><code>legend_direction</code> - Managed position of legend however this can be handled via plotly</p></li>
+<li><p><code>palreverse</code> - Reverse the color palette (not implemented)</p></li>
+<li><p><code>aspect.ratio</code> - Aspect ratio control (handled by plotly layout)</p></li>
+<li><p><code>keep_empty</code> - Keep empty factor levels (not implemented)</p></li>
+<li><p><code>keep_na</code> - Keep NA values (not implemented)</p></li>
+<li><p><code>legend.direction</code> - Managed position of legend however this can be handled via plotly</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
@@ -138,6 +141,7 @@ for that function for an exhaustive list.</p>
 
 <p>The following <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::Histogram()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>x</code> - X-axis variable (UI: "X Data", default: 2nd numeric variable)</p></li>
 <li><p><code>group_by</code> - Grouping variable (UI: "Group By", default: "")</p></li>
+<li><p><code>flip</code> - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)</p></li>
 <li><p><code>bins</code> - Number of bins (UI: "Number of Bins", default: NA)</p></li>
 <li><p><code>binwidth</code> - Width of bins (UI: "Bin Width", default: NA)</p></li>
 <li><p><code>use_trend</code> - Show only trend line (UI: "Trend Line Only", default: FALSE)</p></li>
@@ -217,37 +221,37 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_HistogramInputsUI</span><span class="op">(</span><span class="st">"histogram"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="4301"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="histogram-histogramPlotTabsetPanel" data-tabsetid="6290"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug"&gt;Rug&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug"&gt;Rug&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4301-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-6290-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="4301"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-4301-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="6290"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-6290-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4968253"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify147189"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-x.data-label" for="histogram-x.data"&gt;X Data&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-x.data"&gt;&lt;option value=""&gt;&lt;/option&gt;</span>
@@ -264,34 +268,34 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="carb"&gt;carb&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4968253', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify147189"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9579191"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-group.by-label" for="histogram-group.by"&gt;Group By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-group.by"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-4301-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-6290-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9579191"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4530892"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-facet.by-label" for="histogram-facet.by"&gt;Facet By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-facet.by"&gt;&lt;option value="" selected&gt;&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="" selected&gt;&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4530892"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9815318"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-facet.scale-label" for="histogram-facet.scale"&gt;Facet Scale&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-facet.scale"&gt;&lt;option value="fixed" selected&gt;fixed&lt;/option&gt;</span>
@@ -300,135 +304,135 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="free_y"&gt;free_y&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9815318"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5447052"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-facet.ncol-label" for="histogram-facet.ncol"&gt;Columns&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5447052"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3600424"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-facet.nrow-label" for="histogram-facet.nrow"&gt;Rows&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3600424"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5031461"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="histogram-facet.by.row" style="padding-right: 10px;"&gt;Facet by Row&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="histogram-facet.by.row" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="histogram-facet.by.row"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5031461', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5031461"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify746337"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-subplot.margin.x-label" for="histogram-subplot.margin.x"&gt;Subplot Spacing (Horizontal)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5031461', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify746337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify746337"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-subplot.margin.y-label" for="histogram-subplot.margin.y"&gt;Subplot Spacing (Vertical)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify746337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-4301-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9697918"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-subplot.margin.y-label" for="histogram-subplot.margin.y"&gt;Subplot Spacing (Vertical)&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9697918', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-6290-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6485013"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-bins-label" for="histogram-bins"&gt;Number of Bins&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-bins" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9697918', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of bins for the histogram.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6485013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of bins for the histogram.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6485013"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9845654"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-bin.width-label" for="histogram-bin.width"&gt;Bin Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-bin.width" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6485013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bins for the histogram.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9845654', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bins for the histogram.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9845654"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5361333"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="histogram-use.trend" style="padding-right: 10px;"&gt;Trend Line Only&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="histogram-use.trend" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="histogram-use.trend"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9845654', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, use trend line instead of histogram.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5361333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, use trend line instead of histogram.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5361333"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7610594"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="histogram-trend.skip.zero" style="padding-right: 10px;"&gt;Skip Zeros&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="histogram-trend.skip.zero" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="histogram-trend.skip.zero"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5361333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, skip the zero count when drawing the trend line.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7610594', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, skip the zero count when drawing the trend line.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7610594"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5643857"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="histogram-add.trend" style="padding-right: 10px;"&gt;Add Trend&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="histogram-add.trend" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="histogram-add.trend"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7610594', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add trend line to the histogram.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5643857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add trend line to the histogram.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5643857"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7784543"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-trend.alpha-label" for="histogram-trend.alpha"&gt;Trend Line Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="histogram-trend.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5643857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the trend line and points'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the trend line and points'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7784543"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6390610"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-trend.linewidth-label" for="histogram-trend.linewidth"&gt;Trend Line Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-trend.linewidth" type="number" class="shiny-input-number form-control" value="0.8" data-update-on="change" min="0"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the trend line'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the trend line'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6390610"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3789607"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-trend.pt.size-label" for="histogram-trend.pt.size"&gt;Trend Point Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-trend.pt.size" type="number" class="shiny-input-number form-control" value="1.5" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the size of the trend points'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the size of the trend points'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3789607"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3595307"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-plot.alpha-label" for="histogram-plot.alpha"&gt;Plot Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="histogram-plot.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="histogram-palette.selection" class="shiny-html-output"&gt;&lt;/div&gt;</span>
@@ -436,7 +440,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3595307"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8442314"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-position-label" for="histogram-position"&gt;Position&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-position"&gt;&lt;option value="identity" selected&gt;identity&lt;/option&gt;</span>
@@ -445,66 +449,66 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="fill"&gt;fill&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How should we position the values in each bin? Default is "identity". Unlike the default position = "stack" in link[ggplot2:geom_histogram]{ggplot2::geom_histogram} or link[ggplot2:geom_density]{ggplot2::geom_density}, the default position is "identity" to show the actual count or density for each group.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8442314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How should we position the values in each bin? Default is "identity". Unlike the default position = "stack" in link[ggplot2:geom_histogram]{ggplot2::geom_histogram} or link[ggplot2:geom_density]{ggplot2::geom_density}, the default position is "identity" to show the actual count or density for each group.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Rug" id="tab-4301-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Rug" id="tab-6290-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8442314"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4567492"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="histogram-add.bars" style="padding-right: 10px;"&gt;Add Rug Plot&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="histogram-add.bars" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="histogram-add.bars"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8442314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add lines to the plot to show the data distribution on the bottom.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4567492', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If TRUE, add lines to the plot to show the data distribution on the bottom.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4567492"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1790343"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-bar.height-label" for="histogram-bar.height"&gt;Rug Bar Height&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-bar.height" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4567492', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height of the bars. The actual height will be calculated based on the maximum density or count.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1790343', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height of the bars. The actual height will be calculated based on the maximum density or count.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1790343"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9662091"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-bar.alpha-label" for="histogram-bar.alpha"&gt;Rug Bar Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input class="js-range-slider" id="histogram-bar.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1790343', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the bars.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9662091', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the alpha of the bars.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9662091"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7134119"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-bar.width-label" for="histogram-bar.width"&gt;Rug Bar Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-bar.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.05"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9662091', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7134119', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-4301-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-6290-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7134119"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify248861"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-legend.title.size-label" for="histogram-legend.title.size"&gt;Legend Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7134119', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify248861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify248861"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6264565"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-legend.text.size-label" for="histogram-legend.text.size"&gt;Legend Text Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify248861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6264565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-4301-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-6290-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
@@ -518,64 +522,64 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6264565"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8279213"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-margin.t-label" for="histogram-margin.t"&gt;Margin Top&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6264565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8279213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8279213"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6430690"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-margin.b-label" for="histogram-margin.b"&gt;Margin Bottom&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8279213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6430690', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6430690"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7084842"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-margin.l-label" for="histogram-margin.l"&gt;Margin Left&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6430690', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7084842', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7084842"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8707271"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-margin.r-label" for="histogram-margin.r"&gt;Margin Right&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7084842', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8707271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8707271"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2818126"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="histogram-shape.fill"&gt;Shape Fill&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8707271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2818126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2818126"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1732249"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="histogram-shape.line.color"&gt;Shape Line Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2818126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1732249', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1732249"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1096701"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-shape.line.width-label" for="histogram-shape.line.width"&gt;Shape Line Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1732249', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1096701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1096701"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5862222"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-shape.linetype-label" for="histogram-shape.linetype"&gt;Shape Linetype&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="histogram-shape.linetype"&gt;&lt;option value="solid" selected&gt;solid&lt;/option&gt;</span>
@@ -586,18 +590,18 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="longdashdot"&gt;longdashdot&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1096701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5862222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5862222"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8507213"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-shape.opacity-label" for="histogram-shape.opacity"&gt;Shape Opacity&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5862222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8507213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-4301-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-6290-7"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -888,133 +892,133 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-4301-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-6290-8"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8507213"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9215261"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-hline.intercepts-label" for="histogram-hline.intercepts"&gt;Y-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8507213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9215261', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9215261"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6756619"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-hline.colors-label" for="histogram-hline.colors"&gt;Y Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9215261', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6756619', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6756619"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3505882"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-hline.widths-label" for="histogram-hline.widths"&gt;Y Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6756619', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3505882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3505882"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify86581"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-hline.linetypes-label" for="histogram-hline.linetypes"&gt;Y Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3505882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify86581', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify86581"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4308988"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-hline.opacities-label" for="histogram-hline.opacities"&gt;Y Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify86581', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4308988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4308988"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7249351"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-vline.intercepts-label" for="histogram-vline.intercepts"&gt;X-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4308988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7249351', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7249351"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4122564"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-vline.colors-label" for="histogram-vline.colors"&gt;X Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7249351', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4122564', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4122564"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5508624"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-vline.widths-label" for="histogram-vline.widths"&gt;X Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4122564', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5508624', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5508624"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1563606"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-vline.linetypes-label" for="histogram-vline.linetypes"&gt;X Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5508624', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1563606', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1563606"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify430013"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-vline.opacities-label" for="histogram-vline.opacities"&gt;X Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1563606', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify430013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify430013"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6846441"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.slopes-label" for="histogram-abline.slopes"&gt;Ab Slopes&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify430013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6846441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6846441"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5144025"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.intercepts-label" for="histogram-abline.intercepts"&gt;Ab Y-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6846441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5144025', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5144025"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9456878"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.colors-label" for="histogram-abline.colors"&gt;Ab Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5144025', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9456878', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9456878"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8430969"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.widths-label" for="histogram-abline.widths"&gt;Ab Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9456878', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8430969', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8430969"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify648831"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.linetypes-label" for="histogram-abline.linetypes"&gt;Ab Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8430969', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify648831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify648831"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7621109"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="histogram-abline.opacities-label" for="histogram-abline.opacities"&gt;Ab Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="histogram-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify648831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7621109', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>

@@ -87,9 +87,7 @@ parameters are not available via UI inputs:
 - `split_by_sep` - Separator for multiple split_by columns (not yet
   implemented)
 
-- `flip` - Flip axes (not yet implemented)
-
-- `fill_by_x_if_no_group` - Fill bars by x values (not yet implemented)
+- `fill_name` - Name of the fill legend (not yet implemented)
 
 - `line_name` - Name of line (not yet implemented)
 
@@ -180,6 +178,12 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `group_by` - Grouping variable for bar fill (UI: "Group by", default:
   2nd categorical variable)
 
+- `fill_by` - Variable used to fill the bars (UI: "Fill by", default:
+  "")
+
+- `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default:
+  FALSE)
+
 - `split_by` - Split variable for separate plots (UI: "Split by",
   default: "")
 
@@ -199,6 +203,9 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `palcolor` - Custom color values (UI: palette picker, derived from
   palette)
+
+- `palreverse` - Reverse the color palette (UI: "Reverse palette",
+  default: FALSE)
 
 - `alpha` - Bar fill transparency (UI: "Alpha", default: 1)
 
@@ -346,46 +353,46 @@ library(VizModules)
 data(mtcars)
 plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="3796">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="5951">
 #>     <li class="active">
-#>       <a href="#tab-3796-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5951-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-5951-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-5951-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-5951-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-5951-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-5951-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5951-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3796-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-5951-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3796">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3796-1">
+#>   <div class="tab-content" data-tabsetid="5951">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5951-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8980773">
+#>           <div class="form-group shiny-input-container" id="tipify5669098">
 #>             <label class="control-label" id="BarPlot-x.data-label" for="BarPlot-x.data">X Values</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-x.data"><option value=""></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8980773', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5669098', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5944723">
+#>           <div class="form-group shiny-input-container" id="tipify8980773">
 #>             <label class="control-label" id="BarPlot-y.data-label" for="BarPlot-y.data">Y Values</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-y.data"><option value=""></option>
@@ -402,12 +409,12 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="carb">carb</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5944723', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8980773', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8316899">
+#>           <div class="form-group shiny-input-container" id="tipify5944723">
 #>             <label class="control-label" id="BarPlot-group.by-label" for="BarPlot-group.by">Group By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-group.by"><option value=""></option>
@@ -424,10 +431,10 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="carb">carb</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8316899', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5944723', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify5934084">
+#>           <div class="form-group shiny-input-container" id="tipify8316899">
 #>             <label class="control-label" id="BarPlot-fill.by-label" for="BarPlot-fill.by">Fill By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-fill.by"><option value="" selected></option>
@@ -444,24 +451,24 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="carb">carb</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5934084', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8316899', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars. Both character/factor and numeric columns are accepted. If `TRUE` (default), the bars will be filled by the x-axis values, If `FALSE`, the bars will be filled a single color (the first color in the palette). ONLY works when `group_by` is NULL. When `group_by` is not NULL, the bars will be filled by the `group_by` variable.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-3796-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-5951-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7789706">
+#>           <div class="form-group shiny-input-container" id="tipify5934084">
 #>             <label class="control-label" id="BarPlot-facet.by-label" for="BarPlot-facet.by">Facet By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-facet.by"><option value="" selected></option>
 #> <option value="" selected></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7789706', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5934084', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3977717">
+#>           <div class="form-group shiny-input-container" id="tipify7789706">
 #>             <label class="control-label" id="BarPlot-facet.scale-label" for="BarPlot-facet.scale">Facet Scale</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-facet.scale"><option value="fixed" selected>fixed</option>
@@ -470,78 +477,88 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <option value="free_y">free_y</option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3977717', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7789706', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8498827">
+#>           <div class="form-group shiny-input-container" id="tipify3977717">
 #>             <label class="control-label" id="BarPlot-facet.ncol-label" for="BarPlot-facet.ncol">Columns</label>
 #>             <input id="BarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8498827', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3977717', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify7418456">
+#>           <div class="form-group shiny-input-container" id="tipify8498827">
 #>             <label class="control-label" id="BarPlot-facet.nrow-label" for="BarPlot-facet.nrow">Rows</label>
 #>             <input id="BarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7418456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8498827', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3177902">
+#>           <div class="form-group shiny-input-container" id="tipify7418456">
 #>             <div class="material-switch">
 #>               <label for="BarPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="BarPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="BarPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3177902', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7418456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1116803">
+#>           <div class="form-group shiny-input-container" id="tipify3177902">
 #>             <label class="control-label" id="BarPlot-split.by-label" for="BarPlot-split.by">Split By</label>
 #>             <div>
 #>               <select class="shiny-input-select form-control" id="BarPlot-split.by"><option value="" selected></option>
 #> <option value="" selected></option></select>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1116803', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3177902', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split data by and plot separately.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify1010954">
+#>           <div class="form-group shiny-input-container" id="tipify1116803">
 #>             <label class="control-label" id="BarPlot-subplot.margin.x-label" for="BarPlot-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>             <input id="BarPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1010954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1116803', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify8000977">
+#>           <div class="form-group shiny-input-container" id="tipify1010954">
 #>             <label class="control-label" id="BarPlot-subplot.margin.y-label" for="BarPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
 #>             <input id="BarPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8000977', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1010954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3796-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5951-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div id="BarPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <div class="form-group shiny-input-container" id="tipify3799468">
+#>           <div class="form-group shiny-input-container" id="tipify8000977">
 #>             <label class="control-label" id="BarPlot-alpha-label" for="BarPlot-alpha">Alpha</label>
 #>             <input id="BarPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3799468', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8000977', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <div class="row">
+#>         <div class="col-sm-6">
+#>           <div class="form-group shiny-input-container" id="tipify3799468">
+#>             <div class="material-switch">
+#>               <label for="BarPlot-palreverse" style="padding-right: 10px;">Reverse Palette</label>
+#>               <input id="BarPlot-palreverse" type="checkbox"/>
+#>               <label class="switch label-success bg-success" for="BarPlot-palreverse"></label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3799468', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});</script>
+#>         </div>
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify527010">
 #>             <label class="control-label" id="BarPlot-width-label" for="BarPlot-width">Width</label>
@@ -549,6 +566,8 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify527010', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the width of the bars.'})}, 500)});</script>
 #>         </div>
+#>       </div>
+#>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9865086">
 #>             <label class="control-label" id="BarPlot-expand-label" for="BarPlot-expand">Expand</label>
@@ -558,7 +577,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-3796-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-5951-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6041740">
@@ -576,7 +595,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-3796-5">
+#>     <div class="tab-pane" data-value="Legend" id="tab-5951-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5387602">
@@ -594,7 +613,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-3796-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-5951-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -687,7 +706,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3796-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5951-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -978,7 +997,7 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3796-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-5951-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify4387573">

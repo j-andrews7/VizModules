@@ -116,7 +116,6 @@ for that function for an exhaustive list.</p>
 <li><p><code>ytrans</code> - Y-axis transformation (not implemented in UI)</p></li>
 <li><p><code>split_by</code> - Split variable (returns a patchwork object, not supported in plotly), use <code>facet_by</code> instead</p></li>
 <li><p><code>split_by_sep</code> - Only applies if <code>split_by</code> is used</p></li>
-<li><p><code>flip</code> - Flip axes (not implemented in current UI)</p></li>
 <li><p><code>theme</code> - ggplot2 theme (not applicable in plotly)</p></li>
 <li><p><code>theme_args</code> - Theme arguments (not applicable in plotly)</p></li>
 <li><p><code>palette</code> - Managed internally via the palette selection UI</p></li>
@@ -130,7 +129,11 @@ for that function for an exhaustive list.</p>
 <li><p><code>axis_titles</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>guides</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>design</code> - Only applies if <code>split_by</code> is used</p></li>
-<li><p><code>legend_direction</code> - Managed position of legend however this can be handled via plotly</p></li>
+<li><p><code>palreverse</code> - Reverse the color palette (not implemented)</p></li>
+<li><p><code>aspect.ratio</code> - Aspect ratio control (handled by plotly layout)</p></li>
+<li><p><code>keep_empty</code> - Keep empty factor levels (not implemented)</p></li>
+<li><p><code>keep_na</code> - Keep NA values (not implemented)</p></li>
+<li><p><code>legend.direction</code> - Managed position of legend however this can be handled via plotly</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
@@ -138,6 +141,7 @@ for that function for an exhaustive list.</p>
 
 <p>The following <code><a href="https://pwwang.github.io/plotthis/reference/densityhistoplot.html" class="external-link">plotthis::DensityPlot()</a></code> parameters can be accessed via UI inputs and/or the <code>defaults</code> argument:</p><ul><li><p><code>x</code> - X-axis variable (UI: "X Data", default: 2nd numeric variable)</p></li>
 <li><p><code>group_by</code> - Grouping variable (UI: "Group By", default: "")</p></li>
+<li><p><code>flip</code> - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)</p></li>
 <li><p><code>position</code> - Position adjustment (UI: "Position", default: "identity")</p></li>
 <li><p><code>alpha</code> - Density fill transparency (UI: "Plot Alpha", default: 0.5)</p></li>
 <li><p><code>add_bars</code> - Add rug plot (UI: "Add Rug Plot", default: FALSE)</p></li>
@@ -209,34 +213,34 @@ for that function for an exhaustive list.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_DensityPlotInputsUI</span><span class="op">(</span><span class="st">"densityPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="1678"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="2053"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug"&gt;Rug&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug"&gt;Rug&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-1678-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-2053-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="1678"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-1678-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="2053"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-2053-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3182127"&gt;</span>
@@ -270,7 +274,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-1678-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-2053-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7607611"&gt;</span>
@@ -340,7 +344,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-1678-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-2053-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7612553"&gt;</span>
@@ -368,7 +372,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Rug" id="tab-1678-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Rug" id="tab-2053-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4019904"&gt;</span>
@@ -405,7 +409,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-1678-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-2053-5"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2758051"&gt;</span>
@@ -423,7 +427,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-1678-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-2053-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
@@ -516,7 +520,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-1678-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-2053-7"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -807,7 +811,7 @@ for that function for an exhaustive list.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-1678-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-2053-8"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1833121"&gt;</span>

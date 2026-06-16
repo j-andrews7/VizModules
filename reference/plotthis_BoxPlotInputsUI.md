@@ -82,9 +82,8 @@ parameters are not available via UI inputs:
 
 - `split_by_sep` - Only applies if `split_by` is used
 
-- `symnum_args` - Significance symbol arguments (not implemented)
-
-- `flip` - Flip axes (not implemented in current UI)
+- `symnum_args` - Significance symbol arguments (the Stats tab manages
+  symbol display)
 
 - `keep_empty` - Keep empty values (not implemented)
 
@@ -95,22 +94,36 @@ parameters are not available via UI inputs:
 
 - `group_name` - Group legend name (handled by plotly)
 
-- `paired_by` - Pairing variable for paired tests (not implemented)
+- `paired_by` - Pairing variable for paired tests (use the Stats tab
+  "Paired Test" input instead)
 
 - `x_text_angle` - X-axis text angle (handled by plotly axis settings)
 
-- `step_increase` - Step increase for significance brackets (not
-  implemented)
+- `step_increase` - Step increase for significance brackets (set via the
+  Stats tab "Bracket Spacing")
+
+- `base` - Base plot type box/violin/bar (fixed to "box" in this module)
 
 - `fill_mode` - Fill mode for grouped data (handled automatically)
 
-- `fill_reverse` - Reverse fill order (not implemented)
+- `position_dodge_preserve` - Preserve dodge width (not implemented)
+
+- `add_errorbar` - Add error bars (only for base = "bar"; not
+  implemented)
+
+- `errorbar_color` - Error bar color (not implemented)
+
+- `errorbar_width` - Error bar cap width (not implemented)
+
+- `errorbar_linewidth` - Error bar line width (not implemented)
 
 - `theme` - ggplot2 theme (not applicable in plotly)
 
 - `theme_args` - Theme arguments (not applicable in plotly)
 
 - `palette` - Managed internally via the palette selection UI
+
+- `palreverse` - Reverse the color palette (not implemented)
 
 - `alpha` - Alpha transparency (not implemented in UI)
 
@@ -163,23 +176,29 @@ parameters are not available via UI inputs:
 
 - `line_type` - Line type (not implemented)
 
-- `comparisons` - Group comparisons for significance tests (not
-  implemented)
+- `comparisons` - plotthis pairwise comparisons are not passed;
+  equivalent pairwise significance testing is provided via the module's
+  Stats tab (see "Statistical annotation parameters")
 
-- `ref_group` - Reference group for comparisons (not implemented)
+- `ref_group` - Reference group for comparisons (use the Stats tab
+  instead)
 
-- `pairwise_method` - Pairwise test method (not implemented)
+- `pairwise_method` - Pairwise test method (set via the Stats tab "Test"
+  input instead)
 
-- `multiplegroup_comparisons` - Multiple group comparison flag (not
-  implemented)
+- `multiplegroup_comparisons` - Multiple-group comparison flag (use the
+  Stats tab instead)
 
-- `multiple_method` - Multiple group test method (not implemented)
+- `multiple_method` - Multiple-group test method (set via the Stats tab
+  "Test" input instead)
 
-- `sig_label` - Significance label format (not implemented)
+- `sig_label` - Significance label format (set via the Stats tab
+  "Display" input instead)
 
-- `sig_labelsize` - Significance label size (not implemented)
+- `sig_labelsize` - Significance label size (handled by the Stats tab)
 
-- `hide_ns` - Hide non-significant comparisons (not implemented)
+- `hide_ns` - Hide non-significant comparisons (use the Stats tab "Hide
+  Non-Significant" input)
 
 - `seed` - Random seed (not applicable)
 
@@ -197,7 +216,7 @@ parameters are not available via UI inputs:
 
 - `guides` - Only applies if `split_by` is used
 
-- `legend_direction` - Managed position of legend however this can be
+- `legend.direction` - Managed position of legend however this can be
   handled via plotly
 
 ## Plot parameters and defaults
@@ -212,6 +231,9 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 - `y` - Y-axis variable (UI: "Y data", default: 2nd numeric variable)
 
 - `group_by` - Grouping variable (UI: "Group by", default: "")
+
+- `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default:
+  FALSE)
 
 - `sort_x` - Sort X-axis by statistic (UI: "Sort X by", default: "")
 
@@ -257,6 +279,55 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `palcolor` - Custom color values (UI: palette picker, derived from
   palette)
+
+## Statistical annotation parameters
+
+The module provides plotly-based significance testing via the Stats tab
+(a reimplementation of the plotthis significance-testing features). The
+following inputs are available:
+
+- `stats.enabled` - Enable statistical annotations (UI: "Enable Stats",
+  default: FALSE)
+
+- `stat.test` - Test to apply: Wilcoxon, t-test, Kruskal-Wallis, or
+  ANOVA (UI: "Test")
+
+- `stat.p.adjust` - P-value adjustment method (UI: "P-value Adjustment",
+  default: "holm")
+
+- `stat.display` - Value to display: adjusted p-value, p-value, or
+  symbols (UI: "Display")
+
+- `stat.sig.threshold` - Significance threshold for symbols/hiding (UI:
+  "Significance Threshold")
+
+- `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide
+  Non-Significant", default: FALSE)
+
+- `stat.paired` - Use a paired test (UI: "Paired Test", default: FALSE)
+
+- `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple
+  selection)
+
+- `stat.line.color` - Bracket line color (UI: "Line Color", default:
+  "#000000")
+
+- `stat.line.width` - Bracket line width (UI: "Line Width")
+
+- `stat.bracket.style` - Bracket style, capped or flat (UI: "Bracket
+  Style")
+
+- `stat.step.increase` - Vertical spacing between stacked brackets (UI:
+  "Bracket Spacing")
+
+- `stat.text.bump` - Offset of the significance text above the bracket
+  (UI: "Text Offset")
+
+- `stat.bracket.inset` - Horizontal inset of the brackets (UI: "Bracket
+  Inset")
+
+- `stat.per.facet` - Compute statistics independently per facet panel
+  (UI: "Per Facet Panel")
 
 ## Parameters controlling additional functionality
 
@@ -401,37 +472,37 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="4190">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="3092">
 #>     <li class="active">
-#>       <a href="#tab-4190-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3092-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-3092-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-3092-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3092-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-3092-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-3092-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3092-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3092-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4190-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3092-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="4190">
-#>     <div class="tab-pane active" data-value="Data" id="tab-4190-1">
+#>   <div class="tab-content" data-tabsetid="3092">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3092-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9611162">
@@ -491,7 +562,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-4190-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-3092-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6467271">
@@ -569,7 +640,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-4190-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-3092-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7492726">
@@ -603,7 +674,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-4190-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3092-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify3851831">
@@ -673,7 +744,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-4190-5">
+#>     <div class="tab-pane" data-value="Stats" id="tab-3092-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify1359912">
@@ -832,7 +903,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-4190-6">
+#>     <div class="tab-pane" data-value="Legend" id="tab-3092-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify9434597">
@@ -850,7 +921,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-4190-7">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3092-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -943,7 +1014,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-4190-8">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3092-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container">
@@ -1234,7 +1305,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-4190-9">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3092-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8267003">
