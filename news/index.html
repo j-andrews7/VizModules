@@ -41,11 +41,11 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="vizmodules-020">VizModules 0.2.0<a class="anchor" aria-label="anchor" href="#vizmodules-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="vizmodules-020">VizModules 0.2.0<a class="anchor" aria-label="anchor" href="#vizmodules-020"></a></h2><p class="text-muted">CRAN release: 2026-06-16</p>
 <ul><li>Created the Figure Builder app so that users can dynamically construct multi-panel figures using different data sets and plot types on a single page. Allows for full page SVG export, source data dump organized per panel, and full customization of plot position and size.</li>
 <li>All <code>*OutputUI()</code> functions gained a <code>resizable</code> argument (default <code>TRUE</code>). When <code>FALSE</code>, the plot output is no longer wrapped in <code><a href="https://yang-tang.github.io/shinyjqui/reference/Interactions.html" class="external-link">shinyjqui::jqui_resizable()</a></code>, which avoids a redundant resize handle when the output is embedded in a container that already provides resizing (such as the Figure Builder app cards).</li>
 <li>Added a new <code>plotthis_DotPlot</code> module (<code><a href="../reference/plotthis_DotPlotInputsUI.html">plotthis_DotPlotInputsUI()</a></code>, <code><a href="../reference/plotthis_DotPlotOutputUI.html">plotthis_DotPlotOutputUI()</a></code>, <code><a href="../reference/plotthis_DotPlotServer.html">plotthis_DotPlotServer()</a></code>, and the <code><a href="../reference/plotthis_DotPlotApp.html">plotthis_DotPlotApp()</a></code> convenience wrapper) that wraps <code><a href="https://pwwang.github.io/plotthis/reference/dotplot.html" class="external-link">plotthis::DotPlot()</a></code> for interactive dot plots, including a custom dot-size legend since plotly still lacks that capability.</li>

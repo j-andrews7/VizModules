@@ -2,6 +2,8 @@
 
 ## VizModules 0.2.0
 
+CRAN release: 2026-06-16
+
 - Created the Figure Builder app so that users can dynamically construct
   multi-panel figures using different data sets and plot types on a
   single page. Allows for full page SVG export, source data dump
