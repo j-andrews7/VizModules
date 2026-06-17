@@ -365,49 +365,49 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="7922">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="6395">
 #>     <li class="active">
-#>       <a href="#tab-7922-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6395-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
+#>       <a href="#tab-6395-2" data-toggle="tab" data-bs-toggle="tab" data-value="Plot Type">Plot Type</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6395-3" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-6395-4" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-6395-5" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-6395-6" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-6395-7" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-6395-8" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6395-9" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-6395-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6395-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6395-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7922-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6395-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7922">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7922-1">
+#>   <div class="tab-content" data-tabsetid="6395">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6395-1">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify586142">
@@ -465,7 +465,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plot Type" id="tab-7922-2">
+#>     <div class="tab-pane" data-value="Plot Type" id="tab-6395-2">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8461200">
@@ -485,7 +485,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-7922-3">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6395-3">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify7182697">
@@ -552,7 +552,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-7922-4">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-6395-4">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8056800">
@@ -598,7 +598,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-7922-5">
+#>     <div class="tab-pane" data-value="Box" id="tab-6395-5">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6688707">
@@ -654,7 +654,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-7922-6">
+#>     <div class="tab-pane" data-value="Violin" id="tab-6395-6">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8742059">
@@ -676,7 +676,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-7922-7">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-6395-7">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify8882495">
@@ -729,7 +729,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-7922-8">
+#>     <div class="tab-pane" data-value="Stats" id="tab-6395-8">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify6339764">
@@ -888,7 +888,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7922-9">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6395-9">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify5523776">
@@ -945,7 +945,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-7922-10">
+#>     <div class="tab-pane" data-value="Legend" id="tab-6395-10">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify706813">
@@ -963,7 +963,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7922-11">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6395-11">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1056,7 +1056,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7922-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6395-12">
 #>       <div class="row">
 #>         <div class="col-sm-6"></div>
 #>         <div class="col-sm-6"></div>
@@ -1339,7 +1339,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7922-13">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6395-13">
 #>       <div class="row">
 #>         <div class="col-sm-6">
 #>           <div class="form-group shiny-input-container" id="tipify2200004">
