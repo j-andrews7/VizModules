@@ -10,7 +10,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/j-andrews7/VizModules/blob/v0.2.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/j-andrews7/VizModules/blob/devel/DESCRIPTION)
 
 Andrews J, Martin J (2026). *VizModules: Flexible, Interactive 'shiny'
 Modules for Almost Any Plot*. R package version 0.2.0,
