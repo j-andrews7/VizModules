@@ -1,5 +1,12 @@
 ---
 title: "VizModules: interactivity-first Shiny modules for rapid, customizable data visualization applications in R"
+tags:
+    - R
+    - shiny
+    - data visualization
+    - plotly
+    - plotting modules
+    - interactivity
 authors:
     - name: Jacob Martin
       affiliation: 1
@@ -12,6 +19,7 @@ affiliations:
     - name: Department of Developmental Neurobiology, St. Jude Children's Research Hospital, United States
       index: 1
       ror: 02r3e0967
+bibliography: paper.bib
 ---
 
 ## Summary
