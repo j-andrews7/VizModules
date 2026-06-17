@@ -1,5 +1,5 @@
 ---
-title: "VizModules: interactivity-first Shiny modules for rapid, customizable data visualization applications in R"
+title: "VizModules: flexible, extendable shiny modules for rapid development of interactive applications in R"
 tags:
     - R
     - shiny
