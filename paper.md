@@ -2,25 +2,26 @@
 
 ## Summary
 
-Interactive data visualization is central to modern data analysis,
-enabling exploration of complex datasets, hypothesis generation, and
+Data visualization is central to modern data analysis, enabling
+exploration of complex datasets, hypothesis generation, and
 communication of results. `VizModules` is an R package that provides a
 curated library of interactivity-first `shiny` \[@shiny\] modules for
 common plot types, including scatter, bar, line, box, violin, density,
 area, dot, histogram, pie, radar, and more. Every module renders
-interactive `plotly` \[@plotly\] graphics with tooltips, hover
+interactive `plotly` \[@plotly\] graphics with input tooltips, hover
 highlighting, draggable text and shape annotations, and one-click export
 in multiple formats, while exposing the full aesthetic controls of the
-underlying plot to users through a point-and-click interface. This
-allows generation of publication-quality figures without writing code.
+underlying plot to users through a simple interface. This allows
+generation of true publication-quality figures without writing code.
 Each module has a consistent three-function interface, allowing
 developers to embed it in any `shiny` application in \<10 lines of code.
 Built on `dittoViz` \[@dittoViz\], `plotthis` \[@plotthis\], `ggplot2`
 \[@ggplot2\], and `plotly` \[@plotly\], `VizModules` decouples plotting
 logic from data, accepts inputs ranging from in-memory data frames to
-uploaded CSV, TSV, and Excel files, and contains a multi-panel “Figure
-Builder” application for free-form composition and vector (SVG) export
-of complete figures.
+uploaded CSV, TSV, and Excel files, and contains a multi-pane [“Figure
+Builder”
+application](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
+for free-form composition and vector (SVG) export of complete figures.
 
 ## Statement of need
 
@@ -90,8 +91,7 @@ modules can be embedded inside a `periscope2` shell, paired with
 ## Software design
 
 `VizModules` adopts a modular architecture layered on established
-plotting libraries, separating each module into UI, server, and
-configuration concerns. Every visualization exposes a trio of functions:
+plotting libraries. Every visualization exposes a trio of functions:
 `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()`
 for logic. This allows controls and outputs to be placed independently
 within a layout, and ensures that data are supplied reactively and kept
