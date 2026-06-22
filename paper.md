@@ -61,5 +61,5 @@ The package is designed as a foundational layer enabling development of more spe
 
 ## AI usage disclosure
 
-`VizModules` was developed with assistance from generative AI tools, including GitHub Copilot and Claude Code, for code optimization, debugging, and documentation formatting. The core architecture, module logic, and testing strategy were designed and authored by the developers, and all AI-assisted contributions were manually reviewed and tested.
+`VizModules` was developed with assistance from generative AI tools, including GitHub Copilot and Claude Code (Sonnet 4.6, Opus 4.6-4.8), for code optimization, debugging, and documentation formatting. The core architecture, module logic, and testing strategy were designed and authored by the developers, and all AI-assisted contributions were manually reviewed and tested.
 
