@@ -17,6 +17,11 @@
 #'   `list("skills" = example_skills)` is used. Each data frame should
 #'   contain columns for categories (theta) and values (r). For multiple traces, include a
 #'   grouping column.
+#' @param defaults A named list of input IDs and their default values to apply on startup.
+#' @param hide.inputs A character vector of input IDs to hide. Their values are still
+#'   initialized and used, but the controls are not shown in the UI.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and used, but the controls are not shown in the UI.
 #' @return A Shiny app object.
 #'
 #' @seealso [VizModules::radarPlot()], [VizModules::radarPlotInputsUI()],
@@ -48,7 +53,7 @@
 #' )
 #' app2 <- radarPlotApp(list("skills" = skills))
 #' if (interactive()) runApp(app2)
-radarPlotApp <- function(data_list = NULL) {
+radarPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
         data_list <- list("skills" = example_skills)
     }
@@ -57,6 +62,9 @@ radarPlotApp <- function(data_list = NULL) {
         output_ui_fn = radarPlotOutputUI,
         server_fn    = radarPlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular radarPlots"
     )
 }

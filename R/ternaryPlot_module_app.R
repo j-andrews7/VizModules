@@ -17,6 +17,11 @@
 #'   `list("roles" = example_roles)` is used. Each data frame should
 #'   contain numeric columns for the three ternary axes (a, b, c). For multiple traces,
 #'   include a grouping column.
+#' @param defaults A named list of input IDs and their default values to apply on startup.
+#' @param hide.inputs A character vector of input IDs to hide. Their values are still
+#'   initialized and used, but the controls are not shown in the UI.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and used, but the controls are not shown in the UI.
 #' @return A Shiny app object.
 #'
 #' @seealso [VizModules::ternaryPlot()], [VizModules::ternaryPlotInputsUI()],
@@ -38,7 +43,7 @@
 #' )
 #' app2 <- ternaryPlotApp(list("roles" = df))
 #' if (interactive()) runApp(app2)
-ternaryPlotApp <- function(data_list = NULL) {
+ternaryPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
         data_list <- list("roles" = example_roles)
     }
@@ -47,6 +52,9 @@ ternaryPlotApp <- function(data_list = NULL) {
         output_ui_fn = ternaryPlotOutputUI,
         server_fn    = ternaryPlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular ternaryPlots"
     )
 }

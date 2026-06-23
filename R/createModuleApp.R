@@ -32,6 +32,12 @@
 #'   (default: `"VizModules App"`).
 #' @param defaults A named list of ui ids and their default values that can change the ui default 
 #'    settings on startup. 
+#' @param hide.inputs A character vector of input IDs to hide. These inputs are still
+#'   initialized and their values passed to the plot, but are not shown in the UI.
+#'   Passed through to `server_fn` when it accepts a `hide.inputs` argument.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and their values passed to the plot, but are not shown in the UI.
+#'   Passed through to `server_fn` when it accepts a `hide.tabs` argument.
 #' @return A [shiny::shinyApp()] object.
 #'
 #' @import shiny
@@ -71,6 +77,8 @@ createModuleApp <- function(inputs_ui_fn,
                             server_fn,
                             data_list,
                             defaults = NULL,
+                            hide.inputs = NULL,
+                            hide.tabs = NULL,
                             title = "VizModules App") {
     # Validate inputs
     stopifnot(is.function(inputs_ui_fn))
@@ -194,7 +202,20 @@ createModuleApp <- function(inputs_ui_fn,
             )
         })
 
-        server_fn("active_plot", data = filtered_data)
+        # Pass hide.inputs/hide.tabs/defaults to the server only when it accepts
+        # them, so custom module servers without these arguments still work.
+        server_args <- list("active_plot", data = filtered_data)
+        server_formals <- names(formals(server_fn))
+        if ("defaults" %in% server_formals) {
+            server_args[["defaults"]] <- defaults
+        }
+        if ("hide.inputs" %in% server_formals) {
+            server_args[["hide.inputs"]] <- hide.inputs
+        }
+        if ("hide.tabs" %in% server_formals) {
+            server_args[["hide.tabs"]] <- hide.tabs
+        }
+        do.call(server_fn, server_args)
     }
 
     shinyApp(ui, server)

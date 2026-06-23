@@ -17,6 +17,11 @@
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
 #'   `list("school_earnings" = example_school_earnings)`
 #'   is used as example data.
+#' @param defaults A named list of input IDs and their default values to apply on startup.
+#' @param hide.inputs A character vector of input IDs to hide. Their values are still
+#'   initialized and used, but the controls are not shown in the UI.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and used, but the controls are not shown in the UI.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -39,7 +44,7 @@
 #' )
 #' app2 <- dumbbellPlotApp(list("School Earnings" = data))
 #' if (interactive()) runApp(app2)
-dumbbellPlotApp <- function(data_list = NULL) {
+dumbbellPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
         data_list <- list(
             "school_earnings" = example_school_earnings
@@ -50,6 +55,9 @@ dumbbellPlotApp <- function(data_list = NULL) {
         output_ui_fn = dumbbellPlotOutputUI,
         server_fn    = dumbbellPlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular dumbbellPlots"
     )
 }

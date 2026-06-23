@@ -4,13 +4,26 @@
 \alias{radarPlotApp}
 \title{Create an example Modular radarPlot Shiny Application}
 \usage{
-radarPlotApp(data_list = NULL)
+radarPlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
 \code{list("skills" = example_skills)} is used. Each data frame should
 contain columns for categories (theta) and values (r). For multiple traces, include a
 grouping column.}
+
+\item{defaults}{A named list of input IDs and their default values to apply on startup.}
+
+\item{hide.inputs}{A character vector of input IDs to hide. Their values are still
+initialized and used, but the controls are not shown in the UI.}
+
+\item{hide.tabs}{A character vector of tab names to hide. Inputs in these tabs are
+still initialized and used, but the controls are not shown in the UI.}
 }
 \value{
 A Shiny app object.

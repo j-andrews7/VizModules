@@ -16,7 +16,7 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom shinyjs hide show
+#' @importFrom shinyjs hide show delay
 #' @importFrom stats na.omit setNames
 #' @importFrom ggplot2 sym .data element_text element_line theme unit
 #' @importFrom plotthis SplitBarPlot
@@ -49,15 +49,17 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
 
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    for (input.name in hide.inputs) hide(input.name)
+                    for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         # Toggle text.position slider visibility based on label.on.y.axis switch

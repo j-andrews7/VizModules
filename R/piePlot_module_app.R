@@ -16,6 +16,11 @@
 #' @param data_list An optional named list of summary data frames (one row per slice).
 #'   If `NULL` (the default), aggregated example data is used. Each data frame should already
 #'   contain a label column and an aggregated numeric value column.
+#' @param defaults A named list of input IDs and their default values to apply on startup.
+#' @param hide.inputs A character vector of input IDs to hide. Their values are still
+#'   initialized and used, but the controls are not shown in the UI.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and used, but the controls are not shown in the UI.
 #' @return A Shiny app object.
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
@@ -34,7 +39,7 @@
 #' sales_summary <- aggregate(revenue ~ product_line, example_sales, sum)
 #' app2 <- piePlotApp(list("sales" = sales_summary))
 #' if (interactive()) runApp(app2)
-piePlotApp <- function(data_list = NULL) {
+piePlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
         data_list <- list(
             "sales_by_product" = aggregate(revenue ~ product_line, example_sales, sum)
@@ -45,6 +50,9 @@ piePlotApp <- function(data_list = NULL) {
         output_ui_fn = piePlotOutputUI,
         server_fn    = piePlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular piePlots"
     )
 }

@@ -18,7 +18,7 @@
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
 #' @importFrom stats na.omit
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide delay
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
@@ -30,14 +30,17 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    for (input.name in hide.inputs) hide(input.name)
+                    for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
+                })
+            })
         }
         ns <- session$ns
 

@@ -1,3 +1,8 @@
+# VizModules 0.2.1 (Development)
+
+* Pass `defaults`, `hide.inputs`, and `hide.tabs` arguments to the module app factory functions in all module app wrappers, so that users can pre-fill or hide controls when testing modules in isolation.
+* Fix broken input hiding when using `hide.inputs` and `hide.tabs` arguments in module app wrappers due to lazy UI injection via `renderUI`, which effectively overwrote the `hide` calls. `renderUI` also re-renders the input UIs every time a dataset changes - now if the dataset changes, the inputs are re-rendered but the `hide` calls are re-applied to maintain the hidden state.
+
 # VizModules 0.2.0
 
 * Created the Figure Builder app so that users can dynamically construct multi-panel figures 
