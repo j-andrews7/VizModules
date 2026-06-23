@@ -390,64 +390,84 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # to replace it with user-controlled positioning. This is necessary because
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
+            #
+            # plotthis keeps the same aesthetics for both orientations (x = value,
+            # y = category) and only swaps the visual axes via coord_flip() when the
+            # plot is rotated. Under coord_flip() the category axis becomes the X axis
+            # and the manual labels are rotated 90 degrees, so the custom positioning
+            # must run for both orientations or the slider has no effect when flipped.
+            rotated <- isTRUE(isolate_fn(input$rotate))
 
-            
-            if (!isolate_fn(input$rotate)) {
-                p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
+            p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
-                if (isTRUE(isolate_fn(input$label.on.y.axis))) {
-                    # Show category labels on the Y axis by re-enabling axis text
-                    # that plotthis::SplitBarPlot() hides internally
+            if (isTRUE(isolate_fn(input$label.on.y.axis))) {
+                # Show category labels on the category axis by re-enabling the axis text
+                # that plotthis::SplitBarPlot() hides internally. The category axis is
+                # the X axis when flipped (coord_flip) and the Y axis otherwise.
+                if (rotated) {
+                    p <- p + theme(
+                        axis.text.x = element_text(),
+                        axis.ticks.x = element_line()
+                    )
+                } else {
                     p <- p + theme(
                         axis.text.y = element_text(),
                         axis.ticks.y = element_line()
                     )
+                }
+            } else {
+                # Show category labels at the slider-controlled position along the
+                # value axis. plotthis rotates these labels 90 degrees when flipped.
+                position <- isolate_fn(input$text.position)
+                lineheight <- 0.5
+                label_angle <- if (rotated) 90 else 0
+
+                p <- p + geom_text(
+                    data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers
+                    aes(
+                        x = position, y = !!sym(y),
+                        label = ifelse(
+                            is.na(!!sym(y)), " NA ",
+                            ifelse(
+                                .data[[x]] >= 0,
+                                gsub("(\\n|$)", " \\1", !!sym(y)),
+                                gsub("(^|\\n)", "\\1 ", !!sym(y))
+                            )
+                        ),
+                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                    ),
+                    color = "black",
+                    lineheight = lineheight,
+                    angle = label_angle,
+                    inherit.aes = FALSE
+                )
+
+                p <- p + geom_text(
+                    data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
+                    aes(
+                        x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction
+                        label = ifelse(
+                            is.na(!!sym(y)), " NA ",
+                            ifelse(
+                                .data[[x]] >= 0,
+                                gsub("(\\n|$)", " \\1", !!sym(y)),
+                                gsub("(^|\\n)", "\\1 ", !!sym(y))
+                            )
+                        ),
+                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                    ),
+                    color = "black",
+                    lineheight = lineheight,
+                    angle = label_angle,
+                    inherit.aes = FALSE
+                )
+
+                # Hide the category axis labels/ticks drawn by plotthis (replaced by the
+                # manual labels above). The category axis is the X axis when flipped.
+                if (rotated) {
+                    p <- p + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
                 } else {
-                    # #Determining wether each y value is positive or negative
-                    # Show category labels at the slider-controlled position on the x axis
-                    position <- isolate_fn(input$text.position)
-                    lineheight <- 0.5
-
-
-                    p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers
-                        aes(
-                            x = position, y = !!sym(y),
-                            label = ifelse(
-                                is.na(!!sym(y)), " NA ",
-                                ifelse(
-                                    .data[[x]] >= 0,
-                                    gsub("(\\n|$)", " \\1", !!sym(y)),
-                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
-                                )
-                            ),
-                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
-                        ),
-                        color = "black",
-                        lineheight = lineheight,
-                        inherit.aes = FALSE
-                    ) +
-                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
-
-                    p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
-                        aes(
-                            x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction
-                            label = ifelse(
-                                is.na(!!sym(y)), " NA ",
-                                ifelse(
-                                    .data[[x]] >= 0,
-                                    gsub("(\\n|$)", " \\1", !!sym(y)),
-                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
-                                )
-                            ),
-                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
-                        ),
-                        color = "black",
-                        lineheight = lineheight,
-                        inherit.aes = FALSE
-                    ) +
-                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                    p <- p + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                 }
             }
             fig <- ggplotly(p)

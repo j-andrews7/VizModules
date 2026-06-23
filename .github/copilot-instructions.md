@@ -4,7 +4,7 @@
 
 **VizModules** is an R package (63 R files) providing interactivity-first Shiny modules for common plot types. Built on dittoViz and plotthis, all plots use plotly for interactive features.
 
-**Stack**: R 4.5+, Shiny, roxygen2 | **Version**: 0.1.0 | **License**: MIT
+**Stack**: R 4.5+, Shiny, roxygen2 | **Version**: 0.2.1 | **License**: MIT
 
 ## Repository Structure
 
@@ -22,7 +22,7 @@
 ## Build and Validation
 
 ### Prerequisites
-R 4.5+, available at: C:\Program Files\R\R-4.5.3\bin\x64\R.exe
+R 4.5+, available at: C:\Program Files\R\R-4.6.0\bin\x64\R.exe
 
 ### Key R Commands
 ```r

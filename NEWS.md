@@ -3,6 +3,7 @@
 * Pass `defaults`, `hide.inputs`, and `hide.tabs` arguments to the module app factory functions in all module app wrappers, so that users can pre-fill or hide controls when testing modules in isolation.
 * Fix broken input hiding when using `hide.inputs` and `hide.tabs` arguments in module app wrappers due to lazy UI injection via `renderUI`, which effectively overwrote the `hide` calls. `renderUI` also re-renders the input UIs every time a dataset changes - now if the dataset changes, the inputs are re-rendered but the `hide` calls are re-applied to maintain the hidden state.
 * More intelligent input hiding logic so that when individual inputs are hidden (via `hide.inputs` or dynamically in response to other inputs), the remaining controls reflow to fill the space and no empty gaps are left in the UI. Input grids are now laid out with a wrapping flexbox container via `organize_inputs()`.
+* Fix an error in `plotthis_SplitBarPlot` where the categorical text position input was not respected if the axes were flipped. Now the text position input is respected regardless of axis orientation.
 
 # VizModules 0.2.0
 
