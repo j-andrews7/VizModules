@@ -62,7 +62,7 @@ organize_inputs <- function(
             lapply(names(tag.list), function(tab.name) {
                 tabPanel(
                     tab.name,
-                    do.call(tagList, organize_inputs(tag.list[[tab.name]], columns = columns, rows = rows))
+                    organize_inputs(tag.list[[tab.name]], columns = columns, rows = rows)
                 )
             })
         )
@@ -90,23 +90,36 @@ organize_inputs <- function(
         ))
         n.tags <- length(tag.list)
 
-        # Calculate missing dimension based on the provided one and total tags
-        if (is.null(columns) & !is.null(rows)) {
+        # Determine the number of columns; derive it from `rows` if only `rows`
+        # was provided.
+        if (is.null(columns) && !is.null(rows)) {
             columns <- ceiling(n.tags / rows)
-        } else if (is.null(rows) & !is.null(columns)) {
-            rows <- ceiling(n.tags / columns)
-        } else if (is.null(rows) & is.null(columns)) {
+        } else if (is.null(columns) && is.null(rows)) {
             stop("Either rows or columns must be provided.")
         }
+        columns <- as.integer(columns)
 
-        out <- lapply(seq_len(rows), function(r) {
-            do.call(fluidRow, lapply(seq_len(columns), function(c) {
-                idx <- (r - 1) * columns + c
-                if (idx <= n.tags) {
-                    column(width = 12 / columns, tag.list[[idx]])
-                }
-            }))
-        })
+        # Lay the inputs out in a single wrapping flex container rather than a set
+        # of fixed Bootstrap rows. Each input lives in its own `.vizmodules-input-cell`
+        # so that hiding a cell (see `.hide_input()`) lets the remaining inputs
+        # reflow and pack together with no empty gaps.
+        cell.style <- sprintf(
+            paste0(
+                "flex: 0 0 calc(100%% / %1$d); max-width: calc(100%% / %1$d); ",
+                "padding-left: 15px; padding-right: 15px; box-sizing: border-box;"
+            ),
+            columns
+        )
+        out <- div(
+            class = "vizmodules-input-grid",
+            style = paste0(
+                "display: flex; flex-wrap: wrap; align-items: flex-start; ",
+                "margin-left: -15px; margin-right: -15px;"
+            ),
+            lapply(seq_len(n.tags), function(idx) {
+                div(class = "vizmodules-input-cell", style = cell.style, tag.list[[idx]])
+            })
+        )
     }
 
     if (!is.null(tack)) {
@@ -119,6 +132,62 @@ organize_inputs <- function(
 
     out
 }
+
+#' Hide or show the grid cell wrapping a module input
+#'
+#' Toggles the visibility of the `.vizmodules-input-cell` that wraps a given input
+#' (as laid out by [organize_inputs()]). Hiding the cell rather than just the input
+#' itself lets the surrounding inputs reflow so the panel stays compact instead of
+#' leaving an empty gap, as a plain `shinyjs::hide()` on the input would.
+#'
+#' @param session The module `session` object (provides `session$ns`).
+#' @param ids Character vector of un-namespaced input IDs to toggle.
+#' @param show Logical; `TRUE` to show the cell, `FALSE` to hide it.
+#'
+#' @return Invisibly `NULL`, called for the side effect of running client-side JS.
+#'
+#' @importFrom shinyjs runjs
+#' @keywords internal
+#' @noRd
+.toggle_input_cell <- function(session, ids, show) {
+    if (length(ids) == 0) {
+        return(invisible(NULL))
+    }
+    display <- if (isTRUE(show)) "" else "none"
+    for (id in ids) {
+        dom.id <- session$ns(id)
+        runjs(sprintf(
+            paste0(
+                "(function(){var el=document.getElementById('%s');",
+                "if(el){var cell=el.closest('.vizmodules-input-cell');",
+                "if(cell){cell.style.display='%s';}}})();"
+            ),
+            dom.id, display
+        ))
+    }
+    invisible(NULL)
+}
+
+#' Hide the grid cells wrapping module inputs
+#'
+#' @inheritParams .toggle_input_cell
+#' @return Invisibly `NULL`.
+#' @keywords internal
+#' @noRd
+.hide_input <- function(session, ids) {
+    .toggle_input_cell(session, ids, show = FALSE)
+}
+
+#' Show the grid cells wrapping module inputs
+#'
+#' @inheritParams .toggle_input_cell
+#' @return Invisibly `NULL`.
+#' @keywords internal
+#' @noRd
+.show_input <- function(session, ids) {
+    .toggle_input_cell(session, ids, show = TRUE)
+}
+
 
 #' Color palette options for palettePicker
 #'

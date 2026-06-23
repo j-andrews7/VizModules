@@ -35,7 +35,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    for (input.name in hide.inputs) hide(input.name)
+                    .hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "parallelCoordinatesPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -93,9 +93,9 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 return()
             }
             if (length(palette_groups()) > 0) {
-                hide("color.scale")
+                .hide_input(session, "color.scale")
             } else {
-                show("color.scale")
+                .show_input(session, "color.scale")
             }
         }, ignoreNULL = FALSE)
 
