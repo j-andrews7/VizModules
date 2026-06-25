@@ -27,7 +27,7 @@ remotes::install_github("j-andrews7/VizModules")
 - Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
 - Check out the included Figure Builder app for a demo of how the modules can be used together to build a free-form, multi-pane figure: https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/
-- Run the Figure Builder app locally: `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
+- Run the Figure Builder app locally: `VizModules::figureBuilderApp()`
 - See the vignette for a full walkthrough of using the modules in your own apps: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -110,11 +110,16 @@ runApp(app)
 
 ## Figure Builder App
 
-The bundled **Figure Builder** app (`inst/apps/figure-builder`) turns the modules into a free-form figure builder. Run it with:
+The **Figure Builder** app turns the modules into a free-form figure builder. Launch it with `figureBuilderApp()`:
 
 ```r
 library(VizModules)
-shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))
+
+# Launch with the bundled example datasets and all modules
+figureBuilderApp()
+
+# Or seed it with your own datasets
+figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 ```
 
 Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).

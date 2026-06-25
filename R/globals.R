@@ -8,5 +8,6 @@ utils::globalVariables(c(
     "example_roles",
     "example_iris",
     "example_mtcars",
+    "example_population",
     "example_rnaseq"
 ))

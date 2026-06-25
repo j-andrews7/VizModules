@@ -144,6 +144,11 @@ reference:
       - dataFilterServer
       - dataFilterUI
 
+  - title: "Figure Builder App"
+    desc: "Multi-panel figure builder application."
+    contents:
+      - figureBuilderApp
+
   - title: "UI Helpers & Widgets"
     desc: "Utility functions for building module UIs."
     contents:
