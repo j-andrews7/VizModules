@@ -1246,3 +1246,133 @@ test_that(".adjusted_axis_label nests adjustment then function", {
         "log2(z-score(units))"
     )
 })
+
+test_that(".annotation_edit_key keys axis titles by side and others by text", {
+    expect_equal(
+        VizModules:::.annotation_edit_key(list(annotationType = "axis", textangle = 0)),
+        "axis:x"
+    )
+    expect_equal(
+        VizModules:::.annotation_edit_key(list(annotationType = "axis", textangle = -90)),
+        "axis:y"
+    )
+    expect_equal(VizModules:::.annotation_edit_key(list(text = "p = 0.01")), "text:p = 0.01")
+    expect_null(VizModules:::.annotation_edit_key(list(text = "")))
+    expect_null(VizModules:::.annotation_edit_key(NULL))
+})
+
+test_that(".capture_manual_edits records legend and annotation moves", {
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "X", annotationType = "axis", textangle = 0)
+    ))))
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`legend.x` = 0.2, `legend.y` = 0.3, `annotations[0].x` = 0.8),
+        fig
+    )
+    expect_equal(edits$legend$x, 0.2)
+    expect_equal(edits$legend$y, 0.3)
+    expect_equal(edits$annotations[["axis:x#1"]]$x, 0.8)
+})
+
+test_that(".capture_manual_edits disambiguates repeated annotation text", {
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "P"), list(text = "P")
+    ))))
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`annotations[0].x` = 0.1, `annotations[1].x` = 0.9),
+        fig
+    )
+    expect_equal(edits$annotations[["text:P#1"]]$x, 0.1)
+    expect_equal(edits$annotations[["text:P#2"]]$x, 0.9)
+})
+
+test_that(".capture_manual_edits records colorbar drag", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`coloraxis.colorbar.x` = 1.2, `coloraxis.colorbar.y` = 0.4),
+        NULL
+    )
+    expect_equal(edits$colorbar$x, 1.2)
+    expect_equal(edits$colorbar$y, 0.4)
+})
+
+test_that(".capture_manual_edits records legend drag anchors", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`legend.x` = 0.2, `legend.y` = 0.3, `legend.xanchor` = "left", `legend.yanchor` = "top"),
+        NULL
+    )
+    expect_equal(edits$legend$xanchor, "left")
+    expect_equal(edits$legend$yanchor, "top")
+})
+
+test_that(".capture_manual_edits ignores range/zoom keys", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`xaxis.range[0]` = 1, `xaxis.range[1]` = 2),
+        NULL
+    )
+    expect_null(edits$legend)
+    expect_length(edits$annotations, 0)
+})
+
+test_that(".reapply_manual_edits restores positions across index shifts", {
+    edits <- list(
+        legend = list(x = 0.2, y = 0.3),
+        annotations = list("axis:x#1" = list(x = 0.8, y = 0.9))
+    )
+    fig <- list(x = list(layout = list(
+        legend = list(x = 1, y = 1),
+        annotations = list(
+            list(text = "stat"),
+            list(text = "X", annotationType = "axis", textangle = 0, x = 0.5, y = -0.1)
+        )
+    )))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$legend$x, 0.2)
+    expect_equal(out$x$layout$annotations[[2]]$x, 0.8)
+    expect_equal(out$x$layout$annotations[[2]]$y, 0.9)
+})
+
+test_that(".reapply_manual_edits restores dragged arrow offsets", {
+    edits <- list(
+        legend = NULL,
+        annotations = list("text:Pt#1" = list(x = 1, y = 2, ax = 30, ay = -40))
+    )
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "Pt", x = 0, y = 0, ax = 20, ay = -20)
+    ))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$annotations[[1]]$ax, 30)
+    expect_equal(out$x$layout$annotations[[1]]$ay, -40)
+})
+
+test_that(".reapply_manual_edits keeps repeated-text annotations independent", {
+    edits <- list(
+        legend = NULL,
+        annotations = list("text:P#1" = list(x = 0.1), "text:P#2" = list(x = 0.9))
+    )
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "P", x = 0), list(text = "P", x = 0)
+    ))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$annotations[[1]]$x, 0.1)
+    expect_equal(out$x$layout$annotations[[2]]$x, 0.9)
+})
+
+test_that(".reapply_manual_edits restores a dragged colorbar onto its trace", {
+    edits <- list(legend = NULL, annotations = list(), colorbar = list(x = 1.2, y = 0.4))
+    fig <- list(x = list(data = list(list(marker = list(colorbar = list(x = 1, y = 0.5))))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$data[[1]]$marker$colorbar$x, 1.2)
+    expect_equal(out$x$data[[1]]$marker$colorbar$y, 0.4)
+})
+
+test_that(".add_colorbar_listener attaches a render hook to the figure", {
+    p <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers")
+    out <- .add_colorbar_listener(p, "mod-colorbar.move")
+    expect_s3_class(out, "plotly")
+    expect_false(is.null(out$jsHooks$render))
+})

@@ -148,6 +148,272 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
+#' Derive a stable key for a manually-editable annotation
+#'
+#' Manual edits (drag/text changes) are captured against annotation indices,
+#' but those indices shift between rebuilds (e.g. when statistical brackets or
+#' reference labels are added/removed). To re-apply edits reliably, annotations
+#' are matched by a stable key derived from their content rather than position:
+#' draggable axis titles are keyed by axis side, all other annotations by their
+#' text. Returns \code{NULL} for annotations that cannot be keyed.
+#'
+#' @param ann A single annotation list from \code{fig$x$layout$annotations}.
+#'
+#' @return A character key (e.g. \code{"axis:x"}, \code{"axis:y"}, or
+#'   \code{"text:Sepal.Length"}), or \code{NULL} if no stable key applies.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_annotation_edit_key
+.annotation_edit_key <- function(ann) {
+    if (is.null(ann)) {
+        return(NULL)
+    }
+
+    if (!is.null(ann$annotationType) && identical(ann$annotationType, "axis")) {
+        return(if (!is.null(ann$textangle) && ann$textangle == -90) "axis:y" else "axis:x")
+    }
+
+    if (!is.null(ann$text) && nzchar(ann$text)) {
+        return(paste0("text:", ann$text))
+    }
+
+    NULL
+}
+
+
+#' Build occurrence-disambiguated keys for a list of annotations
+#'
+#' Several annotations can share the same text (e.g. point labels for repeated
+#' categories), which would otherwise collapse to one key and cause a single
+#' drag to move every match. This appends a per-key occurrence index so each
+#' annotation maps to a distinct, rebuild-stable slot. Order is preserved across
+#' rebuilds because annotations are regenerated deterministically.
+#'
+#' @param anns A list of annotations from \code{fig$x$layout$annotations}.
+#'
+#' @return A character vector the same length as \code{anns}; entries are
+#'   \code{NA} for annotations that cannot be keyed.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_annotation_edit_keys
+.annotation_edit_keys <- function(anns) {
+    bases <- vapply(anns, function(a) {
+        base <- .annotation_edit_key(a)
+        if (is.null(base)) NA_character_ else base
+    }, character(1))
+
+    keys <- rep(NA_character_, length(bases))
+    seen <- list()
+
+    for (i in seq_along(bases)) {
+        base <- bases[i]
+        if (is.na(base)) next
+        prev <- seen[[base]]
+        n <- if (is.null(prev)) 1L else prev + 1L
+        seen[[base]] <- n
+        keys[i] <- paste0(base, "#", n)
+    }
+
+    keys
+}
+
+
+#' Capture manual plot edits from a plotly relayout event
+#'
+#' Reads a \code{plotly_relayout} event payload and records user-driven
+#' repositioning/edits of the legend and annotations (including draggable axis
+#' titles) into a persistent list. Annotation entries are keyed via
+#' \code{\link{.annotation_edit_key}} so they survive index shifts on rebuild.
+#' Range/zoom and autosize keys are ignored so panning does not pin the axes.
+#'
+#' @param edits A list with components \code{legend} and \code{annotations}
+#'   (typically \code{reactiveValuesToList()} of the module's edit store).
+#' @param relayout The named list returned by \code{event_data("plotly_relayout")}.
+#' @param fig The most recently rendered plotly figure, used to map annotation
+#'   indices in the event to stable keys.
+#'
+#' @return The updated \code{edits} list.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_capture_manual_edits
+.capture_manual_edits <- function(edits, relayout, fig) {
+    if (is.null(relayout) || length(relayout) == 0) {
+        return(edits)
+    }
+
+    if (is.null(edits$annotations)) {
+        edits$annotations <- list()
+    }
+
+    keys <- names(relayout)
+
+    # Legend position/anchors, e.g. "legend.x", "legend.y", "legend.xanchor".
+    # Dragging an editable legend emits anchors alongside x/y, so capture them
+    # all to reproduce the dropped position faithfully on rebuild.
+    legend_keys <- grep("^legend\\.", keys, value = TRUE)
+    if (length(legend_keys) > 0) {
+        if (is.null(edits$legend)) {
+            edits$legend <- list()
+        }
+
+        for (k in legend_keys) {
+            edits$legend[[sub("^legend\\.", "", k)]] <- relayout[[k]]
+        }
+    }
+
+    # Continuous-colour legends are colorbars, whose drag emits keys containing
+    # ".colorbar.x"/".colorbar.y" (per-trace or via coloraxis). 
+    cb_keys <- grep("colorbar\\.(x|y)$", keys, value = TRUE)
+    if (length(cb_keys) > 0) {
+        if (is.null(edits$colorbar)) {
+            edits$colorbar <- list()
+        }
+
+        for (k in cb_keys) {
+            edits$colorbar[[sub(".*colorbar\\.", "", k)]] <- relayout[[k]]
+        }
+    }
+
+    # Annotation moves/edits, e.g. "annotations[0].x", "annotations[1].text"
+    ann_keys <- grep("^annotations\\[[0-9]+\\]\\.", keys, value = TRUE)
+    anns <- if (!is.null(fig)) fig$x$layout$annotations else NULL
+    edit_keys <- .annotation_edit_keys(anns)
+
+    for (k in ann_keys) {
+        m <- regmatches(k, regexec("^annotations\\[([0-9]+)\\]\\.([a-zA-Z]+)$", k))[[1]]
+
+        if (length(m) != 3) next
+
+        idx <- as.integer(m[2]) + 1L
+        prop <- m[3]
+
+        if (is.null(anns) || idx > length(anns)) next
+
+        ann_key <- edit_keys[idx]
+        if (is.na(ann_key)) next
+
+        if (is.null(edits$annotations[[ann_key]])) {
+            edits$annotations[[ann_key]] <- list()
+        }
+
+        edits$annotations[[ann_key]][[prop]] <- relayout[[k]]
+    }
+
+    edits
+}
+
+
+#' Re-apply captured manual edits onto a freshly built plotly figure
+#'
+#' Merges legend position and annotation position/text edits (captured by
+#' \code{\link{.capture_manual_edits}}) into a rebuilt figure so manual layout
+#' tweaks persist across re-renders. Annotations are matched by stable key, so
+#' edits are preserved even if their order changed.
+#'
+#' @param fig A plotly figure object.
+#' @param edits A list with components \code{legend} and \code{annotations}.
+#'
+#' @return The figure with manual edits re-applied.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_reapply_manual_edits
+.reapply_manual_edits <- function(fig, edits) {
+    if (is.null(fig) || is.null(edits)) {
+        return(fig)
+    }
+
+    if (!is.null(edits$legend)) {
+        if (is.null(fig$x$layout$legend)) fig$x$layout$legend <- list()
+        for (k in names(edits$legend)) {
+            fig$x$layout$legend[[k]] <- edits$legend[[k]]
+        }
+    }
+
+    # Restore a dragged colorbar onto whichever trace/coloraxis carries one.
+    if (!is.null(edits$colorbar)) {
+        if (!is.null(fig$x$layout$coloraxis$colorbar)) {
+            for (k in names(edits$colorbar)) {
+                fig$x$layout$coloraxis$colorbar[[k]] <- edits$colorbar[[k]]
+            }
+        }
+
+        if (!is.null(fig$x$data)) {
+            for (i in seq_along(fig$x$data)) {
+                if (!is.null(fig$x$data[[i]]$marker$colorbar)) {
+                    for (k in names(edits$colorbar)) {
+                        fig$x$data[[i]]$marker$colorbar[[k]] <- edits$colorbar[[k]]
+                    }
+                }
+            }
+        }
+    }
+
+    anns <- fig$x$layout$annotations
+    if (!is.null(anns) && length(edits$annotations) > 0) {
+        edit_keys <- .annotation_edit_keys(anns)
+
+        for (i in seq_along(anns)) {
+            ann_key <- edit_keys[i]
+            if (is.na(ann_key)) next
+            e <- edits$annotations[[ann_key]]
+            if (is.null(e)) next
+            for (prop in names(e)) {
+                anns[[i]][[prop]] <- e[[prop]]
+            }
+        }
+
+        fig$x$layout$annotations <- anns
+    }
+
+    fig
+}
+
+
+#' Forward colorbar drag events to a Shiny input
+#'
+#' Continuous-colour legends (colorbars) live on a trace's marker, so dragging
+#' one fires a \code{plotly_restyle} event, which \code{event_data()} does not
+#' expose. This attaches an \code{onRender} listener that reports the dropped
+#' colorbar x/y to a Shiny input so the position can be captured and re-applied
+#' across rebuilds.
+#'
+#' @param fig A plotly figure object.
+#' @param input_id Fully namespaced input id to receive the position (a list
+#'   with \code{x}/\code{y}).
+#'
+#' @return The figure with the listener attached.
+#'
+#' @importFrom htmlwidgets onRender JS
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_add_colorbar_listener
+.add_colorbar_listener <- function(fig, input_id) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    js <- sprintf(
+        "function(el){ el.on('plotly_restyle', function(d){ var u = d[0] || {};
+            var x, y;
+            for (var k in u) {
+                if (k.indexOf('colorbar.x') !== -1) x = u[k];
+                if (k.indexOf('colorbar.y') !== -1) y = u[k];
+            }
+            if (x !== undefined || y !== undefined) {
+                Shiny.setInputValue('%s', {x: x, y: y}, {priority: 'event'});
+            }
+        }); }",
+        input_id
+    )
+
+    htmlwidgets::onRender(fig, htmlwidgets::JS(js))
+}
+
+
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a
@@ -436,4 +702,4 @@ is_pure_type <- function(inputs, d) {
     fig
 }
 
-
+

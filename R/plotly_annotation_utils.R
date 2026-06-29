@@ -112,7 +112,8 @@
 #' @rdname INTERNAL_create_coord_id
 #' @keywords internal
 .create_coord_id <- function(x, y, precision = 10) {
-    paste0(round(x, precision), "_", round(y, precision))
+    fmt <- function(v) if (is.numeric(v)) round(v, precision) else as.character(v)
+    paste0(fmt(x), "_", fmt(y))
 }
 
 
@@ -138,9 +139,9 @@
         return(NULL)
     }
 
-    if (!is.numeric(trace$x) || !is.numeric(trace$y)) {
-        return(NULL)
-    }
+    # Coordinates may be categorical (e.g. a factor x-axis), in which case
+    # trace$x/$y are character/position values. .create_coord_id handles both
+    # numeric and non-numeric coordinates, so no numeric requirement is imposed.
 
     # Create coordinate IDs
     coord_ids <- .create_coord_id(trace$x, trace$y)
@@ -326,12 +327,6 @@
         return(NULL)
     }
 
-    # Determine which coordinate columns to use (may have .x.adj or .y.adj versions)
-    x_adj_col <- paste0(x_col, ".x.adj")
-    y_adj_col <- paste0(y_col, ".y.adj")
-    x_match_col <- if (x_adj_col %in% names(plot_data)) x_adj_col else x_col
-    y_match_col <- if (y_adj_col %in% names(plot_data)) y_adj_col else y_col
-
     # Build mapping of axis references for each trace
     trace_axis_map <- lapply(seq_along(fig$x$data), function(i) {
         trace <- fig$x$data[[i]]
@@ -340,63 +335,50 @@
         list(xaxis = xaxis, yaxis = yaxis)
     })
 
-    # Create coordinate IDs for highlighted points
-    highlight_coords <- .create_coord_id(
-        plot_data[[x_match_col]][highlight_idx],
-        plot_data[[y_match_col]][highlight_idx]
-    )
-
-    # Build annotations by matching highlight coordinates to traces
+    # Build annotations by matching highlight labels to trace points. Positions
+    # are taken from the trace itself (trace$x/$y), which works for numeric and
+    # categorical axes alike (ggplotly encodes factor axes as numeric positions
+    # that won't match raw data values).
+    highlight_vals_chr <- as.character(highlight_vals)
     annos <- list()
-    for (h_idx in seq_along(highlight_idx)) {
-        idx <- highlight_idx[h_idx]
-        h_coord <- highlight_coords[h_idx]
-        h_value <- as.character(plot_data[[annotate.by]][idx])
+    for (i in seq_along(fig$x$data)) {
+        trace <- fig$x$data[[i]]
 
-        # Find which trace(s) contain this point
-        for (i in seq_along(fig$x$data)) {
-            trace <- fig$x$data[[i]]
+        # Skip traces that should not be included
+        if (!.should_include_trace(trace, show.others)) {
+            next
+        }
 
-            # Skip traces that should not be included
-            if (!.should_include_trace(trace, show.others)) {
-                next
-            }
+        # Build trace annotation mapping
+        trace_map <- .build_trace_anno_map(trace, annotate.by)
 
-            # Build trace annotation mapping
-            trace_map <- .build_trace_anno_map(trace, annotate.by)
-            if (is.null(trace_map)) {
-                next
-            }
+        if (is.null(trace_map)) {
+            next
+        }
 
-            # Check if this trace contains the highlighted point
-            # Match both coordinate AND annotation value for robustness
-            matching_rows <- which(trace_map$coord_id == h_coord &
-                trace_map$anno_value == h_value)
+        matching_rows <- which(trace_map$anno_value %in% highlight_vals_chr)
 
-            if (length(matching_rows) > 0) {
-                # Found the point in this trace - create annotation
-                xref <- trace_axis_map[[i]]$xaxis
-                yref <- trace_axis_map[[i]]$yaxis
+        for (row in matching_rows) {
+            xref <- trace_axis_map[[i]]$xaxis
+            yref <- trace_axis_map[[i]]$yaxis
 
-                annos[[length(annos) + 1]] <- list(
-                    x = plot_data[[x_match_col]][idx],
-                    y = plot_data[[y_match_col]][idx],
-                    text = h_value,
-                    xref = xref,
-                    yref = yref,
-                    ax = annotation_params$ax,
-                    ay = annotation_params$ay,
-                    showarrow = annotation_params$showarrow,
-                    arrowcolor = annotation_params$arrowcolor,
-                    arrowhead = annotation_params$arrowhead,
-                    arrowwidth = annotation_params$arrowwidth,
-                    font = list(
-                        size = annotation_params$size,
-                        color = annotation_params$color
-                    )
+            annos[[length(annos) + 1]] <- list(
+                x = trace$x[row],
+                y = trace$y[row],
+                text = trace_map$anno_value[row],
+                xref = xref,
+                yref = yref,
+                ax = annotation_params$ax,
+                ay = annotation_params$ay,
+                showarrow = annotation_params$showarrow,
+                arrowcolor = annotation_params$arrowcolor,
+                arrowhead = annotation_params$arrowhead,
+                arrowwidth = annotation_params$arrowwidth,
+                font = list(
+                    size = annotation_params$size,
+                    color = annotation_params$color
                 )
-                # Don't break - the same point might appear in multiple panels (facets)
-            }
+            )
         }
     }
 

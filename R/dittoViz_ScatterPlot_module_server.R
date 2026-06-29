@@ -170,6 +170,29 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette
         })
 
+        # Store for manual layout edits (legend/annotation/axis-title moves) so
+        # they persist across re-renders, plus the last rendered figure used to
+        # map relayout annotation indices to stable keys.
+        manual_edits <- reactiveValues(legend = NULL, annotations = list(), colorbar = NULL)
+        rendered_fig <- reactiveVal(NULL)
+
+        observeEvent(event_data("plotly_relayout", source = plot_source), {
+            rl <- event_data("plotly_relayout", source = plot_source)
+            new <- .capture_manual_edits(reactiveValuesToList(manual_edits), rl, rendered_fig())
+            manual_edits$legend <- new$legend
+            manual_edits$annotations <- new$annotations
+        })
+
+        # Colorbars live on a trace marker, so their drag arrives via JS (see
+        # .add_colorbar_listener) rather than the relayout event.
+        observeEvent(input$colorbar.move, {
+            pos <- input$colorbar.move
+            cb <- manual_edits$colorbar %||% list()
+            if (!is.null(pos$x)) cb$x <- pos$x
+            if (!is.null(pos$y)) cb$y <- pos$y
+            manual_edits$colorbar <- cb
+        })
+
         # dataframe of selected data, which is added to with multiple selections
         selected.data <- reactiveVal()
 
@@ -370,6 +393,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Lines & Axes
             .reset_lines_inputs(session, include.fit.lines = TRUE, defaults = defaults)
             .reset_axes_inputs(session, defaults)
+
+            # Discard captured manual layout edits so positions revert to defaults
+            manual_edits$legend <- NULL
+            manual_edits$annotations <- list()
+            manual_edits$colorbar <- NULL
         })
 
         observeEvent(input$split.by, {
@@ -765,7 +793,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         } else {
                             # Helper to create unique key for an annotation
                             get_anno_key <- function(a) {
-                                paste0(round(a$x, 10), "_", round(a$y, 10), "_", a$text)
+                                paste0(.create_coord_id(a$x, a$y), "_", a$text)
                             }
 
                             existing_keys <- vapply(annos, get_anno_key, character(1))
@@ -886,6 +914,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- .apply_render_margins(generate_scatterPlot(), input)
             fig$x$source <- plot_source
+            # Restore any manually repositioned legend/annotations/axis titles so
+            # they survive rebuilds. Isolated so edits do not trigger a re-render.
+            fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(manual_edits)))
+            rendered_fig(fig)
+            fig <- .add_colorbar_listener(fig, session$ns("colorbar.move"))
             fig
         })
 
