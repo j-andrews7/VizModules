@@ -72,6 +72,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("splitbar")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         default_palette_name <- "dittoColors"
         default_gradient_palette <- "Spectral"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
@@ -533,6 +538,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             req(input$x.data, input$y.data)
 
             fig <- .apply_render_margins(generate_SplitBarPlot(), input)
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

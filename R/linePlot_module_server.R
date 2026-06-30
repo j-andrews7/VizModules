@@ -37,6 +37,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
 
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("line")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         observeEvent(input$x.value, {
             req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
@@ -401,6 +405,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             } else {
                 fig <- .apply_render_margins(generate_linePlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

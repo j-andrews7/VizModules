@@ -45,6 +45,10 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
         }
         ns <- session$ns
 
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("ternary")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         output$color.picker <- renderUI({
             d <- data_reactive()
             grp <- input$group
@@ -291,6 +295,8 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             } else {
                 fig <- .apply_render_margins(generate_ternaryPlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

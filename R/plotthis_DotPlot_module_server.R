@@ -42,6 +42,11 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         }
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("dot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         if (is.null(defaults)) defaults <- list()
         if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 70
         # Reset functionality
@@ -275,6 +280,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             } else {
                 fig <- .apply_render_margins(generate_DotPlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

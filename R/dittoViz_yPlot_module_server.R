@@ -63,6 +63,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         ns <- session$ns
 
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("yplot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         # Store last computed stats table for download
         last_stats_df <- reactiveVal(NULL)
         default_palette_name <- "dittoColors"
@@ -476,6 +480,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             fig <- .apply_render_margins(generate_yPlot(), input)
 
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

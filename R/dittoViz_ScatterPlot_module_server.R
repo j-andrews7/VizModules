@@ -170,28 +170,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette
         })
 
-        # Store for manual layout edits (legend/annotation/axis-title moves) so
-        # they persist across re-renders, plus the last rendered figure used to
-        # map relayout annotation indices to stable keys.
-        manual_edits <- reactiveValues(legend = NULL, annotations = list(), colorbar = NULL)
-        rendered_fig <- reactiveVal(NULL)
-
-        observeEvent(event_data("plotly_relayout", source = plot_source), {
-            rl <- event_data("plotly_relayout", source = plot_source)
-            new <- .capture_manual_edits(reactiveValuesToList(manual_edits), rl, rendered_fig())
-            manual_edits$legend <- new$legend
-            manual_edits$annotations <- new$annotations
-        })
-
-        # Colorbars live on a trace marker, so their drag arrives via JS (see
-        # .add_colorbar_listener) rather than the relayout event.
-        observeEvent(input$colorbar.move, {
-            pos <- input$colorbar.move
-            cb <- manual_edits$colorbar %||% list()
-            if (!is.null(pos$x)) cb$x <- pos$x
-            if (!is.null(pos$y)) cb$y <- pos$y
-            manual_edits$colorbar <- cb
-        })
+        # Store for manual layout edits (legend/annotation/axis-title/colorbar
+        # moves) so they persist across re-renders. See setup_manual_edits().
+        edit_store <- setup_manual_edits(input, session, plot_source)
 
         # dataframe of selected data, which is added to with multiple selections
         selected.data <- reactiveVal()
@@ -913,12 +894,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             req(input$x.by, input$y.by, data())
 
             fig <- .apply_render_margins(generate_scatterPlot(), input)
-            fig$x$source <- plot_source
-            # Restore any manually repositioned legend/annotations/axis titles so
-            # they survive rebuilds. Isolated so edits do not trigger a re-render.
-            fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(manual_edits)))
-            rendered_fig(fig)
-            fig <- .add_colorbar_listener(fig, session$ns("colorbar.move"))
+            # Restore manually repositioned legend/annotations/axis titles/colorbar
+            # so they survive rebuilds, and wire up edit capture for this figure.
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
             fig
         })
 

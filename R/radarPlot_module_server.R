@@ -45,6 +45,10 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
         }
         ns <- session$ns
 
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("radar")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         output$color.picker <- renderUI({
             d <- data_reactive()
             grp <- input$group
@@ -273,6 +277,8 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             } else {
                 fig <- .apply_render_margins(generate_radarPlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

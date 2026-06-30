@@ -414,6 +414,147 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
+#' Set up persistent manual plot layout edits across re-renders
+#'
+#' VizModules plots are fully rebuilt on every input change, which would normally
+#' discard any layout tweaks a user made by hand: dragging the legend, moving or
+#' editing annotations, repositioning the (draggable) axis titles, or sliding a
+#' continuous-colour legend (colorbar). \code{setup_manual_edits()} together with
+#' its companion \code{\link{finalize_manual_edits}()} add this persistence to a
+#' plotting module with two short lines of wiring, so manually repositioned
+#' elements survive subsequent rebuilds.
+#'
+#' Call \code{setup_manual_edits()} \strong{once}, near the top of your module's
+#' \code{\link[shiny]{moduleServer}()} body, so the observers it registers belong
+#' to the module's reactive domain. It creates a reactive store and registers the
+#' observers that capture \code{plotly_relayout} events (legend, annotation, and
+#' axis-title drags) plus the JavaScript-forwarded colorbar drag. Then, inside
+#' your \code{\link[plotly]{renderPlotly}()}, pass the freshly built figure through
+#' \code{\link{finalize_manual_edits}()} before returning it.
+#'
+#' @param input The module's \code{input} object.
+#' @param session The module's \code{session} object.
+#' @param plot_source Character scalar. A unique plotly event source id for this
+#'   module instance, typically \code{session$ns("<plot-type>")} (e.g.
+#'   \code{session$ns("scatter")}). It scopes the captured \code{plotly_relayout}
+#'   events to this plot and \strong{must match} the \code{plot_source} later
+#'   passed to \code{\link{finalize_manual_edits}()}.
+#'
+#' @return A list (the "edit store") to hand to \code{\link{finalize_manual_edits}()},
+#'   with components:
+#'   \describe{
+#'     \item{\code{edits}}{A \code{\link[shiny]{reactiveValues}} holding the
+#'       captured \code{legend}, \code{annotations}, and \code{colorbar} edits.}
+#'     \item{\code{rendered_fig}}{A \code{\link[shiny]{reactiveVal}} holding the
+#'       most recently rendered figure, used to map relayout annotation indices to
+#'       stable, rebuild-proof keys.}
+#'   }
+#'
+#' @section Module wiring (three steps):
+#' \preformatted{
+#' myPlotServer <- function(id, data) {
+#'     moduleServer(id, function(input, output, session) {
+#'         # 1. Unique event source + edit store (once, near the top).
+#'         plot_source <- session$ns("myplot")
+#'         edit_store <- setup_manual_edits(input, session, plot_source)
+#'
+#'         output$myPlot <- renderPlotly({
+#'             # 2. Create your plotly plot
+#'             fig <- build_my_plotly_figure(data(), input)
+#'             # 3. Finalize on the rebuilt figure, then return it.
+#'             finalize_manual_edits(fig, plot_source, edit_store, session)
+#'         })
+#'     })
+#' }
+#' }
+#'
+#' @seealso \code{\link{finalize_manual_edits}} for the render-step companion.
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call once inside a module server's moduleServer() body:
+#' plot_source <- session$ns("myplot")
+#' edit_store <- setup_manual_edits(input, session, plot_source)
+#' }
+setup_manual_edits <- function(input, session, plot_source) {
+    edits <- reactiveValues(legend = NULL, annotations = list(), colorbar = NULL)
+    rendered_fig <- reactiveVal(NULL)
+
+    observeEvent(event_data("plotly_relayout", source = plot_source), {
+        rl <- event_data("plotly_relayout", source = plot_source)
+        new <- .capture_manual_edits(reactiveValuesToList(edits), rl, rendered_fig())
+        edits$legend <- new$legend
+        edits$annotations <- new$annotations
+    })
+
+    # Colorbars live on a trace marker, so their drag arrives via JS (see
+    # .add_colorbar_listener) rather than the relayout event.
+    observeEvent(input$colorbar.move, {
+        pos <- input$colorbar.move
+        cb <- edits$colorbar %||% list()
+        if (!is.null(pos$x)) cb$x <- pos$x
+        if (!is.null(pos$y)) cb$y <- pos$y
+        edits$colorbar <- cb
+    })
+
+    list(edits = edits, rendered_fig = rendered_fig)
+}
+
+
+#' Render persistent manual plot layout edits across re-renders
+#'
+#' Render-step companion to \code{\link{setup_manual_edits}()}. Call this inside
+#' your module's \code{\link[plotly]{renderPlotly}()} on the freshly rebuilt
+#' figure, immediately before returning it.
+#' 
+#' It performs four jobs:
+#' \enumerate{
+#'   \item tags the figure with the module's plotly event \code{source} so its
+#'     \code{plotly_relayout} events are captured by \code{setup_manual_edits()};
+#'   \item restores any manually repositioned legend, annotations, axis titles,
+#'     and colorbar captured so far;
+#'   \item records the figure so future relayout events can be matched to stable
+#'     annotation keys (surviving re-ordering on rebuild); and
+#'   \item attaches the JavaScript listener that forwards colorbar drags.
+#' }
+#'
+#' Restored edits are applied under \code{\link[shiny]{isolate}()} so re-applying
+#' them never triggers an additional re-render.
+#'
+#' @param fig A plotly figure object, typically the result of your
+#'   plotting pipeline. If \code{NULL}, it is returned
+#'   unchanged.
+#' @param plot_source Character scalar. The \strong{same} plotly event source id
+#'   passed to \code{\link{setup_manual_edits}()}; assigned to \code{fig$x$source}.
+#' @param store The list returned by \code{\link{setup_manual_edits}()}.
+#' @param session The module's \code{session} object, used to namespace the
+#'   colorbar drag input.
+#'
+#' @return The finalized plotly figure, ready to be returned from
+#'   \code{\link[plotly]{renderPlotly}()}.
+#'
+#' @seealso \code{\link{setup_manual_edits}} for the setup-step companion.
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Inside renderPlotly(), after building `fig`:
+#' fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+#' fig
+#' }
+finalize_manual_edits <- function(fig, plot_source, store, session) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+
+    fig$x$source <- plot_source
+    fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)))
+    store$rendered_fig(fig)
+    .add_colorbar_listener(fig, session$ns("colorbar.move"))
+}
+
+
 #' Calculate axis range from data
 #'
 #' Computes a numeric range for the Y-axis based on specified columns in a
