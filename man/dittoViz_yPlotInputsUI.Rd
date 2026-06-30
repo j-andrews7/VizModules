@@ -86,7 +86,7 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be 
 \item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
 \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
-\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "free")
+\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "fixed")
 \item \code{do.raster} - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 \item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
 \item \code{jitter.size} - Jitter point size (UI: "Jitter Point Size", default: 1)

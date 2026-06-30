@@ -15,7 +15,7 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom ggplot2 theme_bw theme unit
+#' @importFrom ggplot2 theme_bw theme unit element_blank
 #' @importFrom stats na.omit
 #' @importFrom dittoViz yPlot
 #' @importFrom shinyjs hide show delay
@@ -214,7 +214,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Facet
             updateSelectInput(session, "split.by",
                 selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "split.adjust", selected = .get_default(defaults, "split.adjust", "free"))
+            updateSelectInput(session, "split.adjust", selected = .get_default(defaults, "split.adjust", "fixed"))
             updateNumericInput(session, "split.ncol", value = .get_default(defaults, "split.ncol", NA, is.numeric))
             updateNumericInput(session, "split.nrow", value = .get_default(defaults, "split.nrow", NA, is.numeric))
 
@@ -309,7 +309,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
-            p <- dittoViz::yPlot(
+            # Draw axis borders at the ggplot level 
+            additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_style <- theme_bw() + theme(
+                panel.border = additional_theme$panel.border,
+                axis.line = additional_theme$axis.line,
+                axis.ticks = additional_theme$axis.ticks,
+                strip.background = element_blank()
+            )
+
+            p <- yPlot(
                 data_frame = data(),
                 var = isolate_fn(input$var),
                 var.adjustment = var.adjustment,
@@ -349,13 +358,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
-                theme = theme_bw() + theme(
-                    panel.border = element_blank(),
-                    axis.line = element_line(colour = "black"),  # draws only bottom + left
-                    axis.ticks.top = element_blank(),
-                    axis.ticks.right = element_blank(),
-                    strip.background = element_blank()
-                )
+                theme = theme_style
             )
 
             fig <- p |>
@@ -383,9 +386,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig <- .fix_boxplot_facet_positions(fig)
             }
 
-            # Apply axis styling
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
+            # Apply axis styling (borders handled at the ggplot level via theme_style above)
+            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
             fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
@@ -426,6 +429,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+
                 stats_df <- compute_pairwise_stats(
                     df = data(), x = xvar,
                     y = isolate_fn(input$var), pairs = stat_pairs,
@@ -436,7 +440,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     per.facet = isolate_fn(input$stat.per.facet),
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
+
                 last_stats_df(stats_df)
+
                 stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = xvar, y = isolate_fn(input$var),
@@ -451,6 +457,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
+
                 fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
@@ -479,7 +486,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             req(input$var)
 
             fig <- .apply_render_margins(generate_yPlot(), input)
-
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
