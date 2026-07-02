@@ -464,7 +464,7 @@ create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isol
 #' @param input Shiny input object containing title font fields.
 #' @param isolate_fn Function to isolate reactive values.
 #' @param title_y Numeric y position for the plot title in the plotly
-#'   layout. Defaults to \code{0.05}. 
+#'   layout. Defaults to \code{0.95}. 
 #' @param title_x Numeric position for the title in the plotly layout.
 #' @return The modified plotly figure with updated title styling.
 #'

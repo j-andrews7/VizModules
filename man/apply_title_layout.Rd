@@ -14,7 +14,7 @@ apply_title_layout(plot, input, isolate_fn, title_y = 0.95, title_x = 0.5)
 \item{isolate_fn}{Function to isolate reactive values.}
 
 \item{title_y}{Numeric y position for the plot title in the plotly
-layout. Defaults to \code{0.05}.}
+layout. Defaults to \code{0.95}.}
 
 \item{title_x}{Numeric position for the title in the plotly layout.}
 }
