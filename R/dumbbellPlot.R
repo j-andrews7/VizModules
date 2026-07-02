@@ -201,7 +201,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     )
 
     # Apply axis styling to all subplot axes (handles faceting)
-    fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+    fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
 }

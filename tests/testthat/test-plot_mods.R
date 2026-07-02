@@ -237,22 +237,22 @@ test_that("add_plot_config excludes modebar buttons when requested", {
     expect_null(config$modeBarButtonsToAdd)
 })
 
-# ─── .apply_subplot_axis_styling ─────────────────────────────────────────────
+# ─── apply_subplot_axis_styling ─────────────────────────────────────────────
 
-test_that(".apply_subplot_axis_styling returns NULL/empty fig unchanged", {
-    expect_null(VizModules:::.apply_subplot_axis_styling(NULL, list(), list()))
+test_that("apply_subplot_axis_styling returns NULL/empty fig unchanged", {
+    expect_null(VizModules::apply_subplot_axis_styling(NULL, list(), list()))
 
     fig_no_x <- list(y = 1)
-    expect_identical(VizModules:::.apply_subplot_axis_styling(fig_no_x, list(), list()), fig_no_x)
+    expect_identical(VizModules::apply_subplot_axis_styling(fig_no_x, list(), list()), fig_no_x)
 })
 
-test_that(".apply_subplot_axis_styling applies style to single axes", {
+test_that("apply_subplot_axis_styling applies style to single axes", {
     fig <- make_plotly(layout = list(
         xaxis = list(title = "X"),
         yaxis = list(title = "Y")
     ))
 
-    result <- VizModules:::.apply_subplot_axis_styling(
+    result <- VizModules::apply_subplot_axis_styling(
         fig,
         xaxis_style = list(showgrid = FALSE),
         yaxis_style = list(showgrid = TRUE)
@@ -266,7 +266,7 @@ test_that(".apply_subplot_axis_styling applies style to single axes", {
     expect_equal(layout_update$xaxis$title, "X")
 })
 
-test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", {
+test_that("apply_subplot_axis_styling applies style to multiple subplot axes", {
     fig <- make_plotly(layout = list(
         xaxis = list(title = "X1"),
         xaxis2 = list(title = "X2"),
@@ -274,7 +274,7 @@ test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", 
         yaxis2 = list(title = "Y2")
     ))
 
-    result <- VizModules:::.apply_subplot_axis_styling(
+    result <- VizModules::apply_subplot_axis_styling(
         fig,
         xaxis_style = list(linecolor = "red"),
         yaxis_style = list(linecolor = "blue")
@@ -287,9 +287,9 @@ test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", 
     expect_equal(layout_update$yaxis2$linecolor, "blue")
 })
 
-test_that(".apply_subplot_axis_styling handles empty layout names", {
+test_that("apply_subplot_axis_styling handles empty layout names", {
     fig <- make_plotly(layout = list())
-    result <- VizModules:::.apply_subplot_axis_styling(fig, list(a = 1), list(b = 2))
+    result <- VizModules::apply_subplot_axis_styling(fig, list(a = 1), list(b = 2))
     expect_s3_class(result, "plotly")
 })
 
@@ -844,9 +844,9 @@ test_that("get_documentation capitalizes when cap = TRUE", {
     expect_equal(first_char, toupper(first_char))
 })
 
-# ─── .create_axis_styles ────────────────────────────────────────────────────
+# ─── create_axis_styles ────────────────────────────────────────────────────
 
-test_that(".create_axis_styles returns expected structure for x axis", {
+test_that("create_axis_styles returns expected structure for x axis", {
     mock_input <- list(
         axis.title.font.size = 14,
         axis.title.font.family = "Arial",
@@ -869,7 +869,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
         axis.linewidth = 1
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input, axis_side = "x", isolate_fn = identity)
+    result <- VizModules::create_axis_styles(mock_input, axis_side = "x", isolate_fn = identity)
 
     expect_equal(result$title$font$size, 14)
     expect_equal(result$title$font$family, "Arial")
@@ -878,7 +878,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
     expect_equal(result$gridcolor, "#CCCCCC")
 })
 
-test_that(".create_axis_styles returns expected structure for y axis", {
+test_that("create_axis_styles returns expected structure for y axis", {
     mock_input <- list(
         axis.title.font.size = 14,
         axis.title.font.family = "Arial",
@@ -901,14 +901,14 @@ test_that(".create_axis_styles returns expected structure for y axis", {
         axis.linewidth = 1
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input, axis_side = "y", isolate_fn = identity)
+    result <- VizModules::create_axis_styles(mock_input, axis_side = "y", isolate_fn = identity)
 
     expect_equal(result$tickangle, -90)
     expect_false(result$showgrid)
     expect_equal(result$gridcolor, "#CCCCCC")
 })
 
-test_that(".create_axis_styles excludes line props when ggplot.axis.styling is TRUE", {
+test_that("create_axis_styles excludes line props when ggplot.axis.styling is TRUE", {
     mock_input <- list(
         axis.title.font.size = 14, axis.title.font.family = "Arial",
         axis.title.font.color = "black", axis.tickfont.size = 12,
@@ -922,14 +922,14 @@ test_that(".create_axis_styles excludes line props when ggplot.axis.styling is T
         axis.linecolor = "red", axis.linewidth = 2
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input,
+    result <- VizModules::create_axis_styles(mock_input,
         axis_side = "x",
         isolate_fn = identity, ggplot.axis.styling = TRUE
     )
     expect_null(result$showline)
     expect_null(result$mirror)
 
-    result2 <- VizModules:::.create_axis_styles(mock_input,
+    result2 <- VizModules::create_axis_styles(mock_input,
         axis_side = "x",
         isolate_fn = identity, ggplot.axis.styling = FALSE
     )

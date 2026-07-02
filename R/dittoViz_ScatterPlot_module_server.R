@@ -794,13 +794,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
             fig <- fig |> layout(annotations = annos)
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split.by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = TRUE)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling =  TRUE)
+            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = TRUE)
+            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling =  TRUE)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {

@@ -14,9 +14,13 @@
 #' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_apply_subplot_axis_styling
-#' @keywords internal
-.apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' xaxis_style <- list(showline = TRUE, linecolor = "black", linewidth = 1)
+#' yaxis_style <- list(showline = TRUE, linecolor = "black", linewidth = 1)
+#' apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
     # Extract the layout to determine how many subplots exist
     if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
         return(fig)
@@ -276,9 +280,19 @@
 #'   input object, defaults to showing gridlines.
 #'
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_create_axis_styles
-.create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, ggplot.axis.styling = TRUE) {
+#' @export
+#' @examples
+#' # Build a fake input list and use identity as the isolate function
+#' input <- list(
+#'     axis.title.font.size = 14, axis.title.font.family = "Arial",
+#'     axis.title.font.color = "black", axis.tickfont.size = 10,
+#'     axis.tickfont.color = "black", axis.tickfont.family = "Arial",
+#'     axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
+#'     axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1,
+#'     show.grid.x = TRUE, show.grid.y = TRUE, grid.color = "grey90"
+#' )
+#' create_axis_styles(input, axis_side = "x", isolate_fn = identity)
+create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isolate, ggplot.axis.styling = TRUE) {
     axis_side <- match.arg(axis_side)
 
     # Determine gridline visibility based on axis side
@@ -455,9 +469,16 @@
 #' @return The modified plotly figure with updated title styling.
 #'
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_apply_title_layout
-.apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95, title_x = 0.5){
+#' @export
+#' @examples
+#' \dontrun{
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point()
+#' input <- list(
+#'     title.font.size = 16, title.font.family = "Arial", title.font.color = "black"
+#' )
+#' apply_title_layout(p, input, isolate_fn = identity)
+#' }
+apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95, title_x = 0.5){
     fig <- ggplotly(plot) |> 
         layout(
             title = list(

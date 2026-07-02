@@ -40,7 +40,7 @@
 * Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling.
   This fixes much of the wonkiness for plots with many panels. Uniform inputs added for panel spacing across all modules.
 * Axis titles now uniformly added as annotations to allow interactive repositioning.
-* Condensed package wide workflows with simple helpers, e.g. `.apply_title_layout()`, resulting in significantly less jank.
+* Condensed package wide workflows with simple helpers, e.g. `apply_title_layout()`, resulting in significantly less jank.
 * Axis adjustments are now properly reflected in axis/legend titles for appropriate modules, e.g. `yPlot`, `scatterPlot`, `linePlot`.
 * Removed a handful of spurious/non-functional inputs, particularly for the `dittoViz_scatterPlot` module.
 * Custom `size.by` legends added for `plotthis_DotPlot` and `dittoViz_scatterPlot` modules, since plotly does not yet support these. 
