@@ -135,14 +135,14 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
             # Action Button
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
 
             # Axes
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
         })
 
 

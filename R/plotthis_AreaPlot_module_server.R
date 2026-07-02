@@ -131,14 +131,14 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 value = get_default(defaults, "axis.title.font.size", 18, is.numeric))
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 26, is.numeric))
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {

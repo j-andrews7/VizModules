@@ -160,12 +160,12 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
 
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
 
 
-            .reset_legend_inputs(session, defaults)
-            .reset_lines_inputs(session, defaults = defaults)
-            .reset_axes_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
+            reset_lines_inputs(session, defaults = defaults)
+            reset_axes_inputs(session, defaults)
             .reset_stats_inputs(session, defaults)
         })
 

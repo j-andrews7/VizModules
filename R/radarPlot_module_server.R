@@ -151,7 +151,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             updateColourInput(session, "polar.bgcolor",
                 value = get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
         })
 
         # Reactive expression to generate the plot (used by both output and download)

@@ -107,7 +107,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Legend
             updateNumericInput(session, "size.legend.x",
@@ -116,15 +116,15 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "size.legend.y",
                 value = get_default(defaults, "size.legend.y", 0.35, is.numeric)
             )
-            .reset_legend_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.min", value = get_default(defaults, "size.min", 1, is.numeric))
             updateNumericInput(session, "size.max", value = get_default(defaults, "size.max", 6, is.numeric))
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {

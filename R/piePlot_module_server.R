@@ -130,7 +130,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             # Slice colors
             updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
         })
 
         build_textinfo <- function(selected) {

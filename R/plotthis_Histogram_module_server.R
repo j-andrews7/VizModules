@@ -156,12 +156,12 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
 
 
-            .reset_legend_inputs(session, defaults)
-            .reset_lines_inputs(session, defaults = defaults)
-            .reset_axes_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
+            reset_lines_inputs(session, defaults = defaults)
+            reset_axes_inputs(session, defaults)
         })
 
 

@@ -277,10 +277,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
 
-            .reset_axes_inputs(session, defaults)
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_axes_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         # Update x-axis range when data columns or fill.by change (when auto-update is off)

@@ -15,9 +15,13 @@
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_axes_inputs
-#' @keywords internal
-.reset_axes_inputs <- function(session, defaults = NULL) {
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_axes_inputs(session, defaults)
+#' }
+reset_axes_inputs <- function(session, defaults = NULL) {
     # Optional conditional inputs (harmless if absent)
     updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
     updateMaterialSwitch(session, "flip.x", value = get_default(defaults, "flip.x", FALSE, is.logical))
@@ -71,9 +75,13 @@
 #' @importFrom colourpicker updateColourInput
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_lines_inputs
-#' @keywords internal
-.reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NULL) {
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_lines_inputs(session, defaults = defaults)
+#' }
+reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NULL) {
     updateTextInput(session, "hline.intercepts", value = get_default(defaults, "hline.intercepts", ""))
     updateTextInput(session, "hline.colors", value = get_default(defaults, "hline.colors", "#000000"))
     updateTextInput(session, "hline.widths", value = get_default(defaults, "hline.widths", "1"))
@@ -155,9 +163,13 @@
 #' @importFrom colourpicker updateColourInput
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_plotly_inputs
-#' @keywords internal
-.reset_plotly_inputs <- function(session, defaults = NULL) {
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_plotly_inputs(session, defaults)
+#' }
+reset_plotly_inputs <- function(session, defaults = NULL) {
     updateSelectInput(session, "download.format", selected = get_default(defaults, "download.format", "svg"))
     updateNumericInput(session, "margin.t", value = get_default(defaults, "margin.t", 100, is.numeric))
     updateNumericInput(session, "margin.b", value = get_default(defaults, "margin.b", 70, is.numeric))
@@ -192,9 +204,13 @@
 #' @importFrom shiny updateNumericInput
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_legend_inputs
-#' @keywords internal
-.reset_legend_inputs <- function(session, defaults = NULL) {
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_legend_inputs(session, defaults)
+#' }
+reset_legend_inputs <- function(session, defaults = NULL) {
     updateNumericInput(session, "legend.title.size",
         value = get_default(defaults, "legend.title.size", 14, is.numeric))
     updateNumericInput(session, "legend.text.size",
