@@ -240,7 +240,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_piePlot(), input)
+                fig <- apply_render_margins(generate_piePlot(), input)
             }
 
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)

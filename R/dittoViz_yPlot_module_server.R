@@ -300,7 +300,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # accurately describes the values displayed (e.g. "log2(z-score(units))").
             var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
             var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
-            y_axis_label <- .adjusted_axis_label(
+            y_axis_label <- adjusted_axis_label(
                 isolate_fn(input$var), var.adjustment, var.adj.fxn.name
             )
 
@@ -310,7 +310,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
             # Draw axis borders at the ggplot level 
-            additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
@@ -395,7 +395,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(split.by) && nzchar(split.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
@@ -476,7 +476,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -485,7 +485,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         output$yPlot <- renderPlotly({
             req(input$var)
 
-            fig <- .apply_render_margins(generate_yPlot(), input)
+            fig <- apply_render_margins(generate_yPlot(), input)
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)

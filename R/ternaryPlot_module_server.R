@@ -293,7 +293,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_ternaryPlot(), input)
+                fig <- apply_render_margins(generate_ternaryPlot(), input)
             }
 
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)

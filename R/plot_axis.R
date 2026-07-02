@@ -120,9 +120,12 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
 #'   it is faceted/split or has no axis titles.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_axis_titles_as_annotations
-#' @keywords internal
-.axis_titles_as_annotations <- function(fig) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' fig <- plotly::layout(fig, xaxis = list(title = "Weight"), yaxis = list(title = "MPG"))
+#' axis_titles_as_annotations(fig)
+axis_titles_as_annotations <- function(fig) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -222,9 +225,12 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
 #' @return A character scalar containing the (possibly wrapped) axis label.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_adjusted_axis_label
-#' @keywords internal
-.adjusted_axis_label <- function(base, adjustment = NULL, adj.fxn = NULL) {
+#' @export
+#' @examples
+#' adjusted_axis_label("units")
+#' adjusted_axis_label("units", adjustment = "z-score")
+#' adjusted_axis_label("units", adjustment = "z-score", adj.fxn = "log2")
+adjusted_axis_label <- function(base, adjustment = NULL, adj.fxn = NULL) {
     if (is.null(base) || length(base) == 0 || is.na(base[1]) || !nzchar(base[1])) {
         return(base)
     }
@@ -356,9 +362,14 @@ create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isol
 #' @importFrom ggplot2 element_rect element_line element_blank
 #'
 #' @author Jacob Martin
-#' @rdname INTERNAL_create_ggplot_axis_style
-#' @keywords internal
-.create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
+#' @export
+#' @examples
+#' input <- list(
+#'     axis.showline = TRUE, axis.mirror = TRUE,
+#'     axis.linecolor = "black", axis.linewidth = 1
+#' )
+#' create_ggplot_axis_style(input, isolate_fn = identity)
+create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
     if (isolate_fn(input$axis.showline) && isolate_fn(input$axis.mirror)) {
         # Return full axis border when both show line and mirror are on
         theme_args <- list(
@@ -406,9 +417,21 @@ create_axis_styles <- function(input, axis_side = c("x", "y"), isolate_fn = isol
 #' @return The modified plotly figure with updated annotation fonts.
 #'
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_apply_axis_title_to_annotations
-.apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
+#' @export
+#' @examples
+#' \dontrun{
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::facet_wrap(~cyl)
+#' fig <- plotly::ggplotly(p)
+#' input <- list(
+#'     axis.title.font.size = 14, axis.title.font.family = "Arial",
+#'     axis.title.font.color = "black", facet.title.font.size = 12,
+#'     facet.title.font.family = "Arial", facet.title.font.color = "black"
+#' )
+#' apply_axis_title_to_annotations(fig, input, isolate_fn = identity)
+#' }
+apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
     annotations <- fig$x$layout$annotations
     if (is.null(annotations) || length(annotations) == 0) {
         return(fig)
@@ -506,9 +529,12 @@ apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95, title_x 
 #' @return The plotly figure with margins applied.
 #'
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_apply_render_margins
-.apply_render_margins <- function(fig, input) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' input <- list(margin.t = 40, margin.b = 40, margin.l = 40, margin.r = 40)
+#' apply_render_margins(fig, input)
+apply_render_margins <- function(fig, input) {
     fig |>
         layout(
             margin = list(

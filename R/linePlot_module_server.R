@@ -269,8 +269,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Reflect any applied data adjustment in the axis titles so they accurately
             # describe the values displayed (e.g. "log2(units)"), matching other modules.
-            x_title <- .adjusted_axis_label(x_title, NULL, x.adjustment)
-            y_title <- .adjusted_axis_label(y_title, NULL, y.adjustment)
+            x_title <- adjusted_axis_label(x_title, NULL, x.adjustment)
+            y_title <- adjusted_axis_label(y_title, NULL, y.adjustment)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
@@ -325,7 +325,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             )
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
             # Add reference lines
             fig <- add_reference_lines(fig,
@@ -359,7 +359,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -403,7 +403,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_linePlot(), input)
+                fig <- apply_render_margins(generate_linePlot(), input)
             }
 
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)

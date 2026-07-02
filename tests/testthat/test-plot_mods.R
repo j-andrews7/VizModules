@@ -293,13 +293,13 @@ test_that("apply_subplot_axis_styling handles empty layout names", {
     expect_s3_class(result, "plotly")
 })
 
-# ─── .axis_titles_as_annotations ─────────────────────────────────────────────
+# ─── axis_titles_as_annotations ─────────────────────────────────────────────
 
-test_that(".axis_titles_as_annotations converts single-panel titles to annotations", {
+test_that("axis_titles_as_annotations converts single-panel titles to annotations", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines") |>
         plotly::layout(xaxis = list(title = "Weight"), yaxis = list(title = "MPG"))
 
-    result <- VizModules:::.axis_titles_as_annotations(fig)
+    result <- VizModules::axis_titles_as_annotations(fig)
     built <- plotly::plotly_build(result)
 
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
@@ -318,32 +318,32 @@ test_that(".axis_titles_as_annotations converts single-panel titles to annotatio
     expect_equal(y_ann$textangle, -90)
 })
 
-test_that(".axis_titles_as_annotations preserves the native axis title font", {
+test_that("axis_titles_as_annotations preserves the native axis title font", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(
             xaxis = list(title = list(text = "Cyl", font = list(size = 18, color = "red"))),
             yaxis = list(title = list(text = "MPG", font = list(size = 18)))
         )
 
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     x_ann <- Filter(function(a) identical(a$text, "Cyl"), built$x$layout$annotations)[[1]]
     expect_equal(x_ann$font$size, 18)
     expect_equal(x_ann$font$color, "red")
 })
 
-test_that(".axis_titles_as_annotations preserves pre-existing annotations", {
+test_that("axis_titles_as_annotations preserves pre-existing annotations", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(
             xaxis = list(title = "X"), yaxis = list(title = "Y"),
             annotations = list(list(x = 1, y = 1, text = "stat", showarrow = FALSE))
         )
 
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
     expect_true(all(c("stat", "X", "Y") %in% ann_text))
 })
 
-test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
+test_that("axis_titles_as_annotations leaves multi-panel figures unchanged", {
     # A subplot figure has secondary axes (xaxis2/yaxis2); its shared titles
     # are already draggable annotations, so the helper must not alter it.
     fig <- plotly::plotly_build(plotly::subplot(
@@ -352,18 +352,18 @@ test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
         nrows = 1
     ))
     n_before <- length(fig$x$layout$annotations)
-    result <- VizModules:::.axis_titles_as_annotations(fig)
+    result <- VizModules::axis_titles_as_annotations(fig)
     expect_equal(length(result$x$layout$annotations), n_before)
 })
 
-test_that(".axis_titles_as_annotations is a no-op without axis titles", {
+test_that("axis_titles_as_annotations is a no-op without axis titles", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     expect_null(built$x$layout$annotations)
 })
 
-test_that(".axis_titles_as_annotations returns NULL input unchanged", {
-    expect_null(VizModules:::.axis_titles_as_annotations(NULL))
+test_that("axis_titles_as_annotations returns NULL input unchanged", {
+    expect_null(VizModules::axis_titles_as_annotations(NULL))
 })
 
 
@@ -938,42 +938,42 @@ test_that("create_axis_styles excludes line props when ggplot.axis.styling is TR
     expect_equal(result2$linecolor, "red")
 })
 
-# ─── .create_ggplot_axis_style ───────────────────────────────────────────────
+# ─── create_ggplot_axis_style ───────────────────────────────────────────────
 
-test_that(".create_ggplot_axis_style returns full border when showline + mirror", {
+test_that("create_ggplot_axis_style returns full border when showline + mirror", {
     mock_input <- list(
         axis.showline = TRUE,
         axis.mirror = TRUE,
         axis.linecolor = "red",
         axis.linewidth = 2
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$panel.border, "element_rect"))
     expect_true(inherits(result$axis.line, "element_blank"))
 })
 
-test_that(".create_ggplot_axis_style returns axis lines only when showline but no mirror", {
+test_that("create_ggplot_axis_style returns axis lines only when showline but no mirror", {
     mock_input <- list(
         axis.showline = TRUE,
         axis.mirror = FALSE,
         axis.linecolor = "blue",
         axis.linewidth = 1
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$axis.line, "element_line"))
     expect_true(inherits(result$panel.border, "element_blank"))
 })
 
-test_that(".create_ggplot_axis_style returns no borders when showline is FALSE", {
+test_that("create_ggplot_axis_style returns no borders when showline is FALSE", {
     mock_input <- list(
         axis.showline = FALSE,
         axis.mirror = FALSE,
         axis.linecolor = "black",
         axis.linewidth = 1
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$panel.border, "element_blank"))
     expect_true(inherits(result$axis.line, "element_blank"))
@@ -1220,29 +1220,29 @@ test_that(".extract_marker_sizes collects numeric marker sizes", {
     expect_equal(VizModules:::.extract_marker_sizes(fig2), numeric(0))
 })
 
-# ─── .adjusted_axis_label ────────────────────────────────────────────────────
+# ─── adjusted_axis_label ────────────────────────────────────────────────────
 
-test_that(".adjusted_axis_label returns the base label when no adjustment is set", {
-    expect_equal(VizModules:::.adjusted_axis_label("units"), "units")
-    expect_equal(VizModules:::.adjusted_axis_label("units", "", ""), "units")
-    expect_equal(VizModules:::.adjusted_axis_label("units", NA, NULL), "units")
+test_that("adjusted_axis_label returns the base label when no adjustment is set", {
+    expect_equal(VizModules::adjusted_axis_label("units"), "units")
+    expect_equal(VizModules::adjusted_axis_label("units", "", ""), "units")
+    expect_equal(VizModules::adjusted_axis_label("units", NA, NULL), "units")
 })
 
-test_that(".adjusted_axis_label wraps with the data adjustment", {
-    expect_equal(VizModules:::.adjusted_axis_label("units", "z-score"), "z-score(units)")
+test_that("adjusted_axis_label wraps with the data adjustment", {
+    expect_equal(VizModules::adjusted_axis_label("units", "z-score"), "z-score(units)")
     expect_equal(
-        VizModules:::.adjusted_axis_label("units", "relative.to.max"),
+        VizModules::adjusted_axis_label("units", "relative.to.max"),
         "relative.to.max(units)"
     )
 })
 
-test_that(".adjusted_axis_label wraps with the adjustment function", {
-    expect_equal(VizModules:::.adjusted_axis_label("units", NULL, "log2"), "log2(units)")
+test_that("adjusted_axis_label wraps with the adjustment function", {
+    expect_equal(VizModules::adjusted_axis_label("units", NULL, "log2"), "log2(units)")
 })
 
-test_that(".adjusted_axis_label nests adjustment then function", {
+test_that("adjusted_axis_label nests adjustment then function", {
     expect_equal(
-        VizModules:::.adjusted_axis_label("units", "z-score", "log2"),
+        VizModules::adjusted_axis_label("units", "z-score", "log2"),
         "log2(z-score(units))"
     )
 })

@@ -255,7 +255,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
@@ -290,7 +290,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -299,7 +299,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         output$dumbbellPlot <- renderPlotly({
             req(input$x.value, input$y.value)
 
-            fig <- .apply_render_margins(generate_dumbbellPlot(), input)
+            fig <- apply_render_margins(generate_dumbbellPlot(), input)
 
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 

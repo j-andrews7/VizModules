@@ -80,7 +80,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   annotation tails. It also adds drawing tools (lines, paths, circles,
 #'   rectangles, and an eraser) to the modebar. Native cartesian axis-title
 #'   text editing is disabled because axis titles are rendered as draggable,
-#'   editable annotations (see \code{\link{.axis_titles_as_annotations}} and
+#'   editable annotations (see \code{\link{axis_titles_as_annotations}} and
 #'   \code{\link{.build_facet_annotations}}).
 #'
 #' @author Jacob Martin
@@ -94,7 +94,7 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
         config <- list(
             edits = list(
                 # Native axis titles are replaced with draggable annotations via
-                # .axis_titles_as_annotations(), so disable native axis-title text
+                # axis_titles_as_annotations(), so disable native axis-title text
                 # editing to avoid misclicks competing with the annotation titles.
                 axisTitleText = FALSE,
                 titleText = TRUE,

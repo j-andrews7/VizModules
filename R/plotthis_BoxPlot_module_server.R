@@ -238,7 +238,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palcolor_arg <- as.list(palette_values)
             }
 
-            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             # Fill By colour grading
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -341,7 +341,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
@@ -386,7 +386,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -398,7 +398,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Render the plot output
         output$BoxPlot <- renderPlotly({
             req(input$x.data, input$y.data)
-            fig <- .apply_render_margins(generate_BoxPlot(), input)
+            fig <- apply_render_margins(generate_BoxPlot(), input)
 
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 

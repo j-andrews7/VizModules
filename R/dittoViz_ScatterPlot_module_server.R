@@ -449,7 +449,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette_values <- isolate_fn(color.panel())
             current_color_levels <- isolate_fn(color_levels())
 
-            additional_theme <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
                 axis.line = additional_theme$axis.line,
@@ -459,10 +459,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
               
             # Reflect any applied data adjustments in the axis titles so they
             # accurately describe the values displayed (e.g. "log2(z-score(units))").
-            x_axis_label <- .adjusted_axis_label(
+            x_axis_label <- adjusted_axis_label(
                 isolate_fn(input$x.by), null.na.inputs$x.adjustment, isolate_fn(input$x.adj.fxn)
             )
-            y_axis_label <- .adjusted_axis_label(
+            y_axis_label <- adjusted_axis_label(
                 isolate_fn(input$y.by), null.na.inputs$y.adjustment, isolate_fn(input$y.adj.fxn)
             )
 
@@ -474,7 +474,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 !is.null(null.na.inputs$color.adj.fxn)
             if (identical(legend_color_title, "make") &&
                 !is.null(null.na.inputs$color.by) && color_adjustment_active) {
-                legend_color_title <- .adjusted_axis_label(
+                legend_color_title <- adjusted_axis_label(
                     null.na.inputs$color.by, null.na.inputs$color.adjustment, null.na.inputs$color.adj.fxn
                 )
             }
@@ -804,7 +804,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             if (isolate_fn(input$webgl)) {
@@ -884,7 +884,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             fig
         })
@@ -893,7 +893,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         output$scatterPlot <- renderPlotly({
             req(input$x.by, input$y.by, data())
 
-            fig <- .apply_render_margins(generate_scatterPlot(), input)
+            fig <- apply_render_margins(generate_scatterPlot(), input)
             # Restore manually repositioned legend/annotations/axis titles/colorbar
             # so they survive rebuilds, and wire up edit capture for this figure.
             fig <- finalize_manual_edits(fig, plot_source, edit_store, session)

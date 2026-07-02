@@ -236,7 +236,7 @@
     # annotations directly to the built layout below. Using add_annotations()
     # instead would defer the annotations into layoutAttrs, which any later
     # plotly_build() call (e.g. .apply_legend_styling(),
-    # .axis_titles_as_annotations()) re-merges, duplicating every annotation.
+    # axis_titles_as_annotations()) re-merges, duplicating every annotation.
     fig <- plotly::plotly_build(fig)
 
     # Derive the circle glyph sizes from the plot's actual marker sizes so the
