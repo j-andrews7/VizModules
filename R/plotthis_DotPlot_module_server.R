@@ -57,68 +57,68 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Data
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
             updateSelectInput(session, "y.data",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 )
             )
             updateSelectInput(session, "size.by",
-                selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
+                selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
             )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
+                selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
             )
-            updateNumericInput(session, "fill.cutoff", value = .get_default(defaults, "fill.cutoff", NA, is.numeric))
+            updateNumericInput(session, "fill.cutoff", value = get_default(defaults, "fill.cutoff", NA, is.numeric))
 
             # Facet
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed")
+                selected = get_default(defaults, "facet.scale", "fixed")
             )
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
             updateSelectInput(session, "palette.name",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names
                 )
             )
-            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
-            updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
+            updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
+            updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
 
             # Axes
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "axis.title.font.size",
-                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
+                value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
             .reset_axes_inputs(session, defaults)
 
             # Legend
             updateNumericInput(session, "size.legend.x",
-                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric)
+                value = get_default(defaults, "size.legend.x", 1.04, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
-                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric)
+                value = get_default(defaults, "size.legend.y", 0.35, is.numeric)
             )
             .reset_legend_inputs(session, defaults)
-            updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
-            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 6, is.numeric))
+            updateNumericInput(session, "size.min", value = get_default(defaults, "size.min", 1, is.numeric))
+            updateNumericInput(session, "size.max", value = get_default(defaults, "size.max", 6, is.numeric))
 
             # Plotly
             .reset_plotly_inputs(session, defaults)
@@ -214,7 +214,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -233,9 +233,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Custom Legend:
             # Generates a custom dot plot circle legend based on the number of values in size_values.

@@ -130,35 +130,35 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
+                selected = get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
-            updateSelectInput(session, "plot.mode", selected = .get_default(defaults, "plot.mode", "lines"))
-            updateSelectInput(session, "line.type", selected = .get_default(defaults, "line.type", "solid"))
+                selected = get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
+            updateSelectInput(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
+            updateSelectInput(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",
-                value = .get_default(defaults, "order.by", FALSE, is.logical))
+                value = get_default(defaults, "order.by", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.x",
-                value = .get_default(defaults, "flip.x", FALSE, is.logical))
+                value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
-                value = .get_default(defaults, "flip.y", FALSE, is.logical))
+                value = get_default(defaults, "flip.y", FALSE, is.logical))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.scales",
-                selected = .get_default(defaults, "facet.scales", "fixed"))
+                selected = get_default(defaults, "facet.scales", "fixed"))
             updateNumericInput(session, "facet.nrow",
-                value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+                value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateNumericInput(session, "facet.ncol",
-                value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
+                value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
-                value = .get_default(defaults, "error.bar", TRUE, is.logical))
+                value = get_default(defaults, "error.bar", TRUE, is.logical))
             updateNumericInput(session, "error.bar.width",
-                value = .get_default(defaults, "error.bar.width", 1, is.numeric))
+                value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
-                value = .get_default(defaults, "error.bar.colour", "#000000"))
+                value = get_default(defaults, "error.bar.colour", "#000000"))
 
             .reset_axes_inputs(session, defaults)
 
@@ -328,7 +328,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -347,9 +347,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

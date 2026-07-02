@@ -281,7 +281,7 @@ Standard pattern — always use `placement = "top"` and `options = list(containe
 tipify(
     textInput(ns("hline.intercepts"), "Y-intercepts",
         placeholder = "e.g. 2, -2",
-        value = .get_default(defaults, "hline.intercepts", "")
+        value = get_default(defaults, "hline.intercepts", "")
     ),
     paste(
         "For categorical or factor axes, enter the index (position) of the",
@@ -302,10 +302,10 @@ Before writing custom inputs, check whether a uniform helper already covers your
 
 | Helper | Provides |
 |---|---|
-| `.uniform_lines_inputs_ui()` | Horizontal, vertical, and diagonal reference line controls |
-| `.uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
+| `uniform_lines_inputs_ui()` | Horizontal, vertical, and diagonal reference line controls |
+| `uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
-| `.uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
+| `uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*` arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE` for scatter plots, `include.rotate = TRUE` for bar plots).
 

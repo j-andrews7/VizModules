@@ -146,77 +146,77 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             # Data
             updateSelectInput(session, "var",
-                selected = .get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
+                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
+                selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% char.choices))
             updateSelectInput(session, "shape.by",
-                selected = .get_default(defaults, "shape.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "shape.by", "", function(x) x == "" || x %in% char.choices))
 
 
             # Plot Type
             updateCheckboxGroupInput(session, "plots",
-                selected = .get_default(defaults, "plots", c("boxplot", "jitter")))
+                selected = get_default(defaults, "plots", c("boxplot", "jitter")))
 
             # Adjustments
             updateSelectInput(session, "var.adjustment",
-                selected = .get_default(defaults, "var.adjustment", ""))
+                selected = get_default(defaults, "var.adjustment", ""))
             updateSelectInput(session, "var.adj.fxn",
-                selected = .get_default(defaults, "var.adj.fxn", ""))
-            updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
-            updateMaterialSwitch(session, "do.raster", value = .get_default(defaults, "do.raster", FALSE, is.logical))
-            updateNumericInput(session, "raster.dpi", value = .get_default(defaults, "raster.dpi", 600, is.numeric))
+                selected = get_default(defaults, "var.adj.fxn", ""))
+            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
+            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
+            updateMaterialSwitch(session, "do.raster", value = get_default(defaults, "do.raster", FALSE, is.logical))
+            updateNumericInput(session, "raster.dpi", value = get_default(defaults, "raster.dpi", 600, is.numeric))
 
             # Jitter
-            updateNumericInput(session, "jitter.size", value = .get_default(defaults, "jitter.size", 1, is.numeric))
-            updateNumericInput(session, "jitter.width", value = .get_default(defaults, "jitter.width", 0.2, is.numeric))
+            updateNumericInput(session, "jitter.size", value = get_default(defaults, "jitter.size", 1, is.numeric))
+            updateNumericInput(session, "jitter.width", value = get_default(defaults, "jitter.width", 0.2, is.numeric))
             updateColourInput(session, "jitter.color",
-                value = .get_default(defaults, "jitter.color", "#000000"))
+                value = get_default(defaults, "jitter.color", "#000000"))
             updateNumericInput(session, "jitter.shape.legend.size",
-                value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric))
+                value = get_default(defaults, "jitter.shape.legend.size", 5, is.numeric))
             updateMaterialSwitch(session, "jitter.shape.legend.show",
-                value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical))
+                value = get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical))
 
             # Box
             updateMaterialSwitch(session, "boxplot.show.outliers",
-                value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical))
+                value = get_default(defaults, "boxplot.show.outliers", FALSE, is.logical))
             updateColourInput(session, "boxplot.color",
-                value = .get_default(defaults, "boxplot.color", "#000000"))
+                value = get_default(defaults, "boxplot.color", "#000000"))
             updateMaterialSwitch(session, "boxplot.fill",
-                value = .get_default(defaults, "boxplot.fill", TRUE, is.logical))
+                value = get_default(defaults, "boxplot.fill", TRUE, is.logical))
             updateNumericInput(session, "boxplot.lineweight",
-                value = .get_default(defaults, "boxplot.lineweight", 0.5, is.numeric))
-            updateNumericInput(session, "boxgap", value = .get_default(defaults, "boxgap", 0.3, is.numeric))
-            updateNumericInput(session, "boxgroupgap", value = .get_default(defaults, "boxgroupgap", 0.2, is.numeric))
+                value = get_default(defaults, "boxplot.lineweight", 0.5, is.numeric))
+            updateNumericInput(session, "boxgap", value = get_default(defaults, "boxgap", 0.3, is.numeric))
+            updateNumericInput(session, "boxgroupgap", value = get_default(defaults, "boxgroupgap", 0.2, is.numeric))
 
             # Violin
             updateNumericInput(session, "vlnplot.lineweight",
-                value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
+                value = get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
             updateSelectInput(session, "vlnplot.scaling",
-                selected = .get_default(defaults, "vlnplot.scaling", "area"))
+                selected = get_default(defaults, "vlnplot.scaling", "area"))
 
             # Ridge
             updateNumericInput(session, "ridgeplot.lineweight",
-                value = .get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric))
+                value = get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric))
             updateNumericInput(session, "ridgeplot.scale",
-                value = .get_default(defaults, "ridgeplot.scale", 1.25, is.numeric))
+                value = get_default(defaults, "ridgeplot.scale", 1.25, is.numeric))
             updateNumericInput(session, "ridgeplot.ymax.expansion",
-                value = .get_default(defaults, "ridgeplot.ymax.expansion", NA, is.numeric))
+                value = get_default(defaults, "ridgeplot.ymax.expansion", NA, is.numeric))
             updateSelectInput(session, "ridgeplot.shape",
-                selected = .get_default(defaults, "ridgeplot.shape", "smooth"))
+                selected = get_default(defaults, "ridgeplot.shape", "smooth"))
             updateNumericInput(session, "ridgeplot.bins",
-                value = .get_default(defaults, "ridgeplot.bins", 30, is.numeric))
+                value = get_default(defaults, "ridgeplot.bins", 30, is.numeric))
             updateNumericInput(session, "ridgeplot.binwidth",
-                value = .get_default(defaults, "ridgeplot.binwidth", NA, is.numeric))
+                value = get_default(defaults, "ridgeplot.binwidth", NA, is.numeric))
 
             # Facet
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "split.adjust", selected = .get_default(defaults, "split.adjust", "fixed"))
-            updateNumericInput(session, "split.ncol", value = .get_default(defaults, "split.ncol", NA, is.numeric))
-            updateNumericInput(session, "split.nrow", value = .get_default(defaults, "split.nrow", NA, is.numeric))
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
+            updateSelectInput(session, "split.adjust", selected = get_default(defaults, "split.adjust", "fixed"))
+            updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
+            updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
 
             # Axes
             .reset_axes_inputs(session, defaults)
@@ -399,7 +399,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -464,9 +464,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

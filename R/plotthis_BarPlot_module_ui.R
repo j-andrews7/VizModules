@@ -184,49 +184,49 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     inputs <- list(
     "Data" = tagList(
         tipify(selectInput(ns("x.data"), "X Values",
-        selected = .get_default(defaults, "x.data", char.choices[2],
+        selected = get_default(defaults, "x.data", char.choices[2],
             function(x) x %in% char.choices),
         choices = char.choices, selectize = FALSE
         ), documentParameters$x, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("y.data"), "Y Values",
-        selected = .get_default(defaults, "y.data", num.choices[2],
+        selected = get_default(defaults, "y.data", num.choices[2],
             function(x) x %in% num.choices),
         choices = num.choices, selectize = FALSE
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("group.by"), "Group By",
-        selected = .get_default(defaults, "group.by", char.choices[2],
+        selected = get_default(defaults, "group.by", char.choices[2],
             function(x) x %in% c("", names(data))),
         choices = c("", names(data)), selectize = FALSE
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("fill.by"), "Fill By",
-        selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
+        selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
             choices = c("", names(data)), selectize = FALSE),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 
     "Facet" = tagList(
         tipify(selectInput(ns("facet.by"), "Facet By",
-        selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+        selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("facet.scale"), "Facet Scale",
-        selected = .get_default(
+        selected = get_default(
             defaults, "facet.scale", "fixed",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
         choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Columns",
-        value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
+        value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_ncol, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.nrow"), "Rows",
-        value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
+        value = get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0, max = 20
         ), documentParameters$facet_nrow, placement = "top", options = list(container = "body")),
         tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
-        value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
+        value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
         tipify(selectInput(ns("split.by"), "Split By",
-        selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
+        selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
         choices = c(char.choices, ""), selectize = FALSE
         ), documentParameters$split_by, placement = "top", options = list(container = "body")),
         .uniform_subplot_spacing_inputs_ui(ns, defaults)
@@ -235,34 +235,34 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     "Aesthetics" = tagList(
         uiOutput(ns("palette.selection")),
         tipify(numericInput(ns("alpha"), "Alpha",
-            value = .get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
+            value = get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1),
             documentParameters$alpha, placement = "top", options = list(container = "body")),
         tipify(materialSwitch(ns("palreverse"), "Reverse Palette",
-        value = .get_default(defaults, "palreverse", FALSE, is.logical), status = "success"),
+        value = get_default(defaults, "palreverse", FALSE, is.logical), status = "success"),
             documentParameters$palreverse, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("width"), "Width",
-            value = .get_default(defaults, "width", NA, is.numeric)),
+            value = get_default(defaults, "width", NA, is.numeric)),
             documentParameters$width, placement = "top", options = list(container = "body")),
         tipify(textInput(ns("expand"), "Expand",
-            value = .get_default(defaults, "expand", ""),
+            value = get_default(defaults, "expand", ""),
         placeholder = "e.g. 1,2,3,4"
         ), documentParameters$expand, placement = "top", options = list(container = "body"))
     ),
 
     "Adjustments" = tagList(
         tipify(numericInput(ns("y.min"), "Y-axis Min",
-            value = .get_default(defaults, "y.min", min.y, is.numeric)
+            value = get_default(defaults, "y.min", min.y, is.numeric)
         ), documentParameters$y_min, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("y.max"), "Y-axis Max",
-            value = .get_default(defaults, "y.max", max.y, is.numeric)
+            value = get_default(defaults, "y.max", max.y, is.numeric)
         ), documentParameters$y_max, placement = "top", options = list(container = "body"))
     ),
 
     "Legend" = .uniform_legend_inputs_ui(ns, defaults),
 
-    "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-    "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-    "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+    "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+    "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+    "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
 

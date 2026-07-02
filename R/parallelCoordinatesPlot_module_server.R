@@ -109,52 +109,52 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             d <- data_reactive()
             all.choices <- c("", names(d))
             updateSelectInput(session, "dimensions",
-                selected = .get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
+                selected = get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
             )
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
+                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
             )
             updateSelectInput(session, "color.scale",
-                selected = .get_default(defaults, "color.scale", "Viridis")
+                selected = get_default(defaults, "color.scale", "Viridis")
             )
             updateSliderInput(session, "line.opacity",
-                value = .get_default(defaults, "line.opacity", 0.5, is.numeric)
+                value = get_default(defaults, "line.opacity", 0.5, is.numeric)
             )
             updateNumericInput(session, "line.width",
-                value = .get_default(defaults, "line.width", 1, is.numeric)
+                value = get_default(defaults, "line.width", 1, is.numeric)
             )
             updateCheckboxInput(session, "show.colorbar",
-                value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
+                value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             )
             updateNumericInput(session, "label.font.size",
-                value = .get_default(defaults, "label.font.size", 12, is.numeric)
+                value = get_default(defaults, "label.font.size", 12, is.numeric)
             )
             updateColourInput(session, "label.font.color",
-                value = .get_default(defaults, "label.font.color", "black")
+                value = get_default(defaults, "label.font.color", "black")
             )
             updateSelectInput(session, "label.font.family",
-                selected = .get_default(defaults, "label.font.family", "Arial")
+                selected = get_default(defaults, "label.font.family", "Arial")
             )
             updateNumericInput(session, "tick.font.size",
-                value = .get_default(defaults, "tick.font.size", 10, is.numeric)
+                value = get_default(defaults, "tick.font.size", 10, is.numeric)
             )
             updateColourInput(session, "tick.font.color",
-                value = .get_default(defaults, "tick.font.color", "black")
+                value = get_default(defaults, "tick.font.color", "black")
             )
             updateSelectInput(session, "tick.font.family",
-                selected = .get_default(defaults, "tick.font.family", "Arial")
+                selected = get_default(defaults, "tick.font.family", "Arial")
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 16, is.numeric)
+                value = get_default(defaults, "title.font.size", 16, is.numeric)
             )
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial")
+                selected = get_default(defaults, "title.font.family", "Arial")
             )
             updateColourInput(session, "title.font.color",
-                value = .get_default(defaults, "title.font.color", "#000000")
+                value = get_default(defaults, "title.font.color", "#000000")
             )
             updateColourInput(session, "bgcolor",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+                value = get_default(defaults, "bgcolor", "#FFFFFF")
             )
 
             click("reset_palette")
@@ -211,12 +211,12 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            config_list <- .add_plot_config(
+            config_list <- add_plot_config(
                 download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

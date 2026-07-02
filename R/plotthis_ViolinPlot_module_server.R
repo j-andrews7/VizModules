@@ -111,53 +111,53 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             # Data
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices))
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
+                selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
+                selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = .get_default(defaults, "sort_x", ""))
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
+            updateSelectInput(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
+            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
 
             # Points
-            updateMaterialSwitch(session, "add.points", value = .get_default(defaults, "add.points", FALSE, is.logical))
-            updateNumericInput(session, "pt.size", value = .get_default(defaults, "pt.size", 1, is.numeric))
-            updateNumericInput(session, "pt.alpha", value = .get_default(defaults, "pt.alpha", 1, is.numeric))
-            updateNumericInput(session, "jitter.width", value = .get_default(defaults, "jitter.width", 0.5, is.numeric))
-            updateNumericInput(session, "jitter.height", value = .get_default(defaults, "jitter.height", 0, is.numeric))
+            updateMaterialSwitch(session, "add.points", value = get_default(defaults, "add.points", FALSE, is.logical))
+            updateNumericInput(session, "pt.size", value = get_default(defaults, "pt.size", 1, is.numeric))
+            updateNumericInput(session, "pt.alpha", value = get_default(defaults, "pt.alpha", 1, is.numeric))
+            updateNumericInput(session, "jitter.width", value = get_default(defaults, "jitter.width", 0.5, is.numeric))
+            updateNumericInput(session, "jitter.height", value = get_default(defaults, "jitter.height", 0, is.numeric))
 
             # Box
-            updateMaterialSwitch(session, "add.box", value = .get_default(defaults, "add.box", FALSE, is.logical))
+            updateMaterialSwitch(session, "add.box", value = get_default(defaults, "add.box", FALSE, is.logical))
             updateColourInput(session, "box.color",
-                value = .get_default(defaults, "box.color", "#000000"))
-            updateNumericInput(session, "box.width", value = .get_default(defaults, "box.width", 0.1, is.numeric))
-            updateNumericInput(session, "box.ptsize", value = .get_default(defaults, "box.ptsize", 2.5, is.numeric))
+                value = get_default(defaults, "box.color", "#000000"))
+            updateNumericInput(session, "box.width", value = get_default(defaults, "box.width", 0.1, is.numeric))
+            updateNumericInput(session, "box.ptsize", value = get_default(defaults, "box.ptsize", 2.5, is.numeric))
 
             # Colors
             updateColourInput(session, "pt.color",
-                value = .get_default(defaults, "pt.color", "#000000"))
+                value = get_default(defaults, "pt.color", "#000000"))
 
             # Annotations
-            updateTextInput(session, "highlight", value = .get_default(defaults, "highlight", ""))
+            updateTextInput(session, "highlight", value = get_default(defaults, "highlight", ""))
             updateColourInput(session, "highlight.colour",
-                value = .get_default(defaults, "highlight.colour", "#000000"))
+                value = get_default(defaults, "highlight.colour", "#000000"))
             updateNumericInput(session, "highlight.size",
-                value = .get_default(defaults, "highlight.size", 1, is.numeric))
+                value = get_default(defaults, "highlight.size", 1, is.numeric))
             updateNumericInput(session, "highlight.alpha",
-                value = .get_default(defaults, "highlight.alpha", 1, is.numeric))
+                value = get_default(defaults, "highlight.alpha", 1, is.numeric))
 
             # Facet
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed"))
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+                selected = get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical))
 
 
             .reset_plotly_inputs(session, defaults)
@@ -296,7 +296,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -353,9 +353,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 )
             }
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

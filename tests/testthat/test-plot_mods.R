@@ -118,56 +118,56 @@ test_that(".hide_jitter_from_legend with mtcars dataset", {
     }
 })
 
-# ─── .parse_numeric_list ──────────────────────────────────────────────────────
+# ─── parse_numeric_list ──────────────────────────────────────────────────────
 
-test_that(".parse_numeric_list parses comma-separated numbers", {
-    expect_equal(VizModules:::.parse_numeric_list("1, 5, 8"), c(1, 5, 8))
-    expect_equal(VizModules:::.parse_numeric_list("3.14"), 3.14)
-    expect_equal(VizModules:::.parse_numeric_list("-1, 0, 2.5"), c(-1, 0, 2.5))
+test_that("parse_numeric_list parses comma-separated numbers", {
+    expect_equal(VizModules::parse_numeric_list("1, 5, 8"), c(1, 5, 8))
+    expect_equal(VizModules::parse_numeric_list("3.14"), 3.14)
+    expect_equal(VizModules::parse_numeric_list("-1, 0, 2.5"), c(-1, 0, 2.5))
 })
 
-test_that(".parse_numeric_list returns NULL for empty/invalid input", {
-    expect_null(VizModules:::.parse_numeric_list(NULL))
-    expect_null(VizModules:::.parse_numeric_list(""))
-    expect_null(VizModules:::.parse_numeric_list("   "))
-    expect_null(VizModules:::.parse_numeric_list("abc, def"))
+test_that("parse_numeric_list returns NULL for empty/invalid input", {
+    expect_null(VizModules::parse_numeric_list(NULL))
+    expect_null(VizModules::parse_numeric_list(""))
+    expect_null(VizModules::parse_numeric_list("   "))
+    expect_null(VizModules::parse_numeric_list("abc, def"))
 })
 
-test_that(".parse_numeric_list drops non-numeric values", {
-    expect_equal(VizModules:::.parse_numeric_list("1, abc, 3"), c(1, 3))
+test_that("parse_numeric_list drops non-numeric values", {
+    expect_equal(VizModules::parse_numeric_list("1, abc, 3"), c(1, 3))
 })
 
-# ─── .recycle_line_style ──────────────────────────────────────────────────────
+# ─── recycle_line_style ──────────────────────────────────────────────────────
 
-test_that(".recycle_line_style returns default when values is NULL or empty", {
-    expect_equal(VizModules:::.recycle_line_style(NULL, 3, "red"), rep("red", 3))
-    expect_equal(VizModules:::.recycle_line_style(character(0), 2, 1), rep(1, 2))
+test_that("recycle_line_style returns default when values is NULL or empty", {
+    expect_equal(VizModules::recycle_line_style(NULL, 3, "red"), rep("red", 3))
+    expect_equal(VizModules::recycle_line_style(character(0), 2, 1), rep(1, 2))
 })
 
-test_that(".recycle_line_style returns values unchanged when length matches", {
-    expect_equal(VizModules:::.recycle_line_style(c("a", "b", "c"), 3, "x"), c("a", "b", "c"))
+test_that("recycle_line_style returns values unchanged when length matches", {
+    expect_equal(VizModules::recycle_line_style(c("a", "b", "c"), 3, "x"), c("a", "b", "c"))
 })
 
-test_that(".recycle_line_style recycles first value when length mismatch", {
-    expect_equal(VizModules:::.recycle_line_style(c("a", "b"), 4, "x"), rep("a", 4))
-    expect_equal(VizModules:::.recycle_line_style(c(1, 2, 3), 2, 0), rep(1, 2))
+test_that("recycle_line_style recycles first value when length mismatch", {
+    expect_equal(VizModules::recycle_line_style(c("a", "b"), 4, "x"), rep("a", 4))
+    expect_equal(VizModules::recycle_line_style(c(1, 2, 3), 2, 0), rep(1, 2))
 })
 
-# ─── .linetype_to_dash ───────────────────────────────────────────────────────
+# ─── linetype_to_dash ───────────────────────────────────────────────────────
 
-test_that(".linetype_to_dash maps all known linetypes", {
-    expect_equal(VizModules:::.linetype_to_dash("solid"), "solid")
-    expect_equal(VizModules:::.linetype_to_dash("dashed"), "dash")
-    expect_equal(VizModules:::.linetype_to_dash("dotted"), "dot")
-    expect_equal(VizModules:::.linetype_to_dash("dotdash"), "dashdot")
-    expect_equal(VizModules:::.linetype_to_dash("longdash"), "longdash")
-    expect_equal(VizModules:::.linetype_to_dash("twodash"), "longdashdot")
+test_that("linetype_to_dash maps all known linetypes", {
+    expect_equal(VizModules::linetype_to_dash("solid"), "solid")
+    expect_equal(VizModules::linetype_to_dash("dashed"), "dash")
+    expect_equal(VizModules::linetype_to_dash("dotted"), "dot")
+    expect_equal(VizModules::linetype_to_dash("dotdash"), "dashdot")
+    expect_equal(VizModules::linetype_to_dash("longdash"), "longdash")
+    expect_equal(VizModules::linetype_to_dash("twodash"), "longdashdot")
 })
 
-test_that(".linetype_to_dash is case-insensitive and defaults to solid", {
-    expect_equal(VizModules:::.linetype_to_dash("SOLID"), "solid")
-    expect_equal(VizModules:::.linetype_to_dash("Dashed"), "dash")
-    expect_equal(VizModules:::.linetype_to_dash("unknown"), "solid")
+test_that("linetype_to_dash is case-insensitive and defaults to solid", {
+    expect_equal(VizModules::linetype_to_dash("SOLID"), "solid")
+    expect_equal(VizModules::linetype_to_dash("Dashed"), "dash")
+    expect_equal(VizModules::linetype_to_dash("unknown"), "solid")
 })
 
 # ─── adjust_column_values ───────────────────────────────────────────────────
@@ -207,10 +207,10 @@ test_that("adjust_column_values handles invalid expression gracefully", {
     expect_identical(result, df)
 })
 
-# ─── .add_plot_config ────────────────────────────────────────────────────────
+# ─── add_plot_config ────────────────────────────────────────────────────────
 
-test_that(".add_plot_config returns default config without facet", {
-    config <- VizModules:::.add_plot_config()
+test_that("add_plot_config returns default config without facet", {
+    config <- VizModules::add_plot_config()
     # Axis titles are rendered as draggable annotations, so native axis-title
     # text editing is disabled even in the non-faceted configuration.
     expect_false(config$edits$axisTitleText)
@@ -220,20 +220,20 @@ test_that(".add_plot_config returns default config without facet", {
     expect_true(length(config$modeBarButtonsToAdd) > 0)
 })
 
-test_that(".add_plot_config with facet.by disables axisTitleText editing", {
-    config <- VizModules:::.add_plot_config(facet.by = "group")
+test_that("add_plot_config with facet.by disables axisTitleText editing", {
+    config <- VizModules::add_plot_config(facet.by = "group")
     expect_false(config$edits$axisTitleText)
     expect_true(config$edits$titleText)
 })
 
-test_that(".add_plot_config respects download format and filename", {
-    config <- VizModules:::.add_plot_config(download.format = "svg", filename = "my_plot")
+test_that("add_plot_config respects download format and filename", {
+    config <- VizModules::add_plot_config(download.format = "svg", filename = "my_plot")
     expect_equal(config$toImageButtonOptions$format, "svg")
     expect_equal(config$toImageButtonOptions$filename, "my_plot")
 })
 
-test_that(".add_plot_config excludes modebar buttons when requested", {
-    config <- VizModules:::.add_plot_config(include.modebar.buttons = FALSE)
+test_that("add_plot_config excludes modebar buttons when requested", {
+    config <- VizModules::add_plot_config(include.modebar.buttons = FALSE)
     expect_null(config$modeBarButtonsToAdd)
 })
 
@@ -583,17 +583,17 @@ test_that(".compute_loess_fit removes groups with insufficient data", {
     expect_false("B" %in% names(result))
 })
 
-# ─── .add_hlines ─────────────────────────────────────────────────────────────
+# ─── add_hlines ─────────────────────────────────────────────────────────────
 
-test_that(".add_hlines returns empty list for NULL/empty intercepts", {
+test_that("add_hlines returns empty list for NULL/empty intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_hlines(fig, NULL), list())
-    expect_equal(VizModules:::.add_hlines(fig, numeric(0)), list())
+    expect_equal(VizModules::add_hlines(fig, NULL), list())
+    expect_equal(VizModules::add_hlines(fig, numeric(0)), list())
 })
 
-test_that(".add_hlines creates correct shape for single line", {
+test_that("add_hlines creates correct shape for single line", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_hlines(fig, intercepts = 3)
+    shapes <- VizModules::add_hlines(fig, intercepts = 3)
 
     expect_equal(length(shapes), 1)
     expect_equal(shapes[[1]]$type, "line")
@@ -604,9 +604,9 @@ test_that(".add_hlines creates correct shape for single line", {
     expect_equal(shapes[[1]]$line$color, "#000000")
 })
 
-test_that(".add_hlines creates multiple shapes with per-line styling", {
+test_that("add_hlines creates multiple shapes with per-line styling", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_hlines(fig,
+    shapes <- VizModules::add_hlines(fig,
         intercepts = c(1, 5),
         colors = c("red", "blue"), widths = c(2, 3)
     )
@@ -618,17 +618,17 @@ test_that(".add_hlines creates multiple shapes with per-line styling", {
     expect_equal(shapes[[2]]$line$width, 3)
 })
 
-# ─── .add_vlines ─────────────────────────────────────────────────────────────
+# ─── add_vlines ─────────────────────────────────────────────────────────────
 
-test_that(".add_vlines returns empty list for NULL/empty intercepts", {
+test_that("add_vlines returns empty list for NULL/empty intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_vlines(fig, NULL), list())
-    expect_equal(VizModules:::.add_vlines(fig, numeric(0)), list())
+    expect_equal(VizModules::add_vlines(fig, NULL), list())
+    expect_equal(VizModules::add_vlines(fig, numeric(0)), list())
 })
 
-test_that(".add_vlines creates correct shape for single line", {
+test_that("add_vlines creates correct shape for single line", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_vlines(fig, intercepts = 2)
+    shapes <- VizModules::add_vlines(fig, intercepts = 2)
 
     expect_equal(length(shapes), 1)
     expect_equal(shapes[[1]]$x0, 2)
@@ -637,21 +637,21 @@ test_that(".add_vlines creates correct shape for single line", {
     expect_equal(shapes[[1]]$y1, 1)
 })
 
-# ─── .add_ablines ───────────────────────────────────────────────────────────
+# ─── add_ablines ───────────────────────────────────────────────────────────
 
-test_that(".add_ablines returns empty list for NULL slopes or intercepts", {
+test_that("add_ablines returns empty list for NULL slopes or intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_ablines(fig, NULL, c(0)), list())
-    expect_equal(VizModules:::.add_ablines(fig, c(1), NULL), list())
-    expect_equal(VizModules:::.add_ablines(fig, numeric(0), c(0)), list())
+    expect_equal(VizModules::add_ablines(fig, NULL, c(0)), list())
+    expect_equal(VizModules::add_ablines(fig, c(1), NULL), list())
+    expect_equal(VizModules::add_ablines(fig, numeric(0), c(0)), list())
 })
 
-test_that(".add_ablines creates y = mx + b line", {
+test_that("add_ablines creates y = mx + b line", {
     fig <- make_plotly(
         data = list(list(type = "scatter", x = c(0, 10), y = c(0, 10))),
         layout = list(xaxis = list(range = c(0, 10)))
     )
-    shapes <- VizModules:::.add_ablines(fig, slopes = 2, intercepts = 1)
+    shapes <- VizModules::add_ablines(fig, slopes = 2, intercepts = 1)
 
     expect_equal(length(shapes), 1)
     # y0 = intercept + slope * x0 = 1 + 2*0 = 1
@@ -659,48 +659,48 @@ test_that(".add_ablines creates y = mx + b line", {
     expect_equal(shapes[[1]]$y1, 1 + 2 * shapes[[1]]$x1)
 })
 
-test_that(".add_ablines recycles shorter slopes/intercepts vector", {
+test_that("add_ablines recycles shorter slopes/intercepts vector", {
     fig <- make_plotly(
         data = list(list(type = "scatter", x = 1:5, y = 1:5)),
         layout = list(xaxis = list(range = c(0, 5)))
     )
     # 2 slopes, 1 intercept -> intercept recycled to length 2
-    shapes <- VizModules:::.add_ablines(fig, slopes = c(1, 2), intercepts = 0)
+    shapes <- VizModules::add_ablines(fig, slopes = c(1, 2), intercepts = 0)
     expect_equal(length(shapes), 2)
 })
 
-# ─── .add_reference_lines ────────────────────────────────────────────────────
+# ─── add_reference_lines ────────────────────────────────────────────────────
 
-test_that(".add_reference_lines adds horizontal lines to figure", {
+test_that("add_reference_lines adds horizontal lines to figure", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig, hline.intercepts = "2, 4")
+    result <- VizModules::add_reference_lines(fig, hline.intercepts = "2, 4")
 
     expect_true(length(result$x$layout$shapes) >= 2)
     expect_equal(result$x$layout$shapes[[1]]$y0, 2)
     expect_equal(result$x$layout$shapes[[2]]$y0, 4)
 })
 
-test_that(".add_reference_lines adds vertical lines to figure", {
+test_that("add_reference_lines adds vertical lines to figure", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig, vline.intercepts = "3")
+    result <- VizModules::add_reference_lines(fig, vline.intercepts = "3")
 
     expect_true(length(result$x$layout$shapes) >= 1)
     expect_equal(result$x$layout$shapes[[1]]$x0, 3)
 })
 
-test_that(".add_reference_lines returns figure unchanged with no lines", {
+test_that("add_reference_lines returns figure unchanged with no lines", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig)
+    result <- VizModules::add_reference_lines(fig)
     expect_null(result$x$layout$shapes)
 })
 
-test_that(".add_reference_lines preserves existing shapes", {
+test_that("add_reference_lines preserves existing shapes", {
     existing_shape <- list(type = "rect", x0 = 0, x1 = 1, y0 = 0, y1 = 1)
     fig <- make_plotly(
         data = list(list(type = "scatter", x = 1:5, y = 1:5)),
         layout = list(shapes = list(existing_shape))
     )
-    result <- VizModules:::.add_reference_lines(fig, hline.intercepts = "5")
+    result <- VizModules::add_reference_lines(fig, hline.intercepts = "5")
 
     expect_true(length(result$x$layout$shapes) >= 2)
     expect_equal(result$x$layout$shapes[[1]]$type, "rect")

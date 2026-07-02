@@ -88,69 +88,69 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
 
             # Data
             updateSelectInput(session, "a",
-                selected = .get_default(defaults, "a", default_a, function(x) x == "" || x %in% numeric.data))
+                selected = get_default(defaults, "a", default_a, function(x) x == "" || x %in% numeric.data))
             updateSelectInput(session, "b",
-                selected = .get_default(defaults, "b", default_b, function(x) x == "" || x %in% numeric.data))
+                selected = get_default(defaults, "b", default_b, function(x) x == "" || x %in% numeric.data))
             updateSelectInput(session, "c",
-                selected = .get_default(defaults, "c", default_c, function(x) x == "" || x %in% numeric.data))
+                selected = get_default(defaults, "c", default_c, function(x) x == "" || x %in% numeric.data))
             updateSelectInput(session, "group",
-                selected = .get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
-            updateNumericInput(session, "sum", value = .get_default(defaults, "sum", 100, is.numeric))
+                selected = get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
+            updateNumericInput(session, "sum", value = get_default(defaults, "sum", 100, is.numeric))
 
             # Trace style
-            updateSelectInput(session, "mode", selected = .get_default(defaults, "mode", "markers"))
+            updateSelectInput(session, "mode", selected = get_default(defaults, "mode", "markers"))
             updateNumericInput(session, "marker.size",
-                value = .get_default(defaults, "marker.size", 8, is.numeric))
+                value = get_default(defaults, "marker.size", 8, is.numeric))
             updateSelectInput(session, "marker.symbol",
-                selected = .get_default(defaults, "marker.symbol", "circle"))
+                selected = get_default(defaults, "marker.symbol", "circle"))
             updateNumericInput(session, "marker.line.width",
-                value = .get_default(defaults, "marker.line.width", 0, is.numeric))
+                value = get_default(defaults, "marker.line.width", 0, is.numeric))
             updateColourInput(session, "marker.line.color",
-                value = .get_default(defaults, "marker.line.color", "#000000"))
-            updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 2, is.numeric))
-            updateSelectInput(session, "line.dash", selected = .get_default(defaults, "line.dash", "solid"))
-            updateSliderInput(session, "opacity", value = .get_default(defaults, "opacity", 1, is.numeric))
+                value = get_default(defaults, "marker.line.color", "#000000"))
+            updateNumericInput(session, "line.width", value = get_default(defaults, "line.width", 2, is.numeric))
+            updateSelectInput(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
+            updateSliderInput(session, "opacity", value = get_default(defaults, "opacity", 1, is.numeric))
 
             # Axes
-            updateTextInput(session, "a.title", value = .get_default(defaults, "a.title", ""))
-            updateTextInput(session, "b.title", value = .get_default(defaults, "b.title", ""))
-            updateTextInput(session, "c.title", value = .get_default(defaults, "c.title", ""))
+            updateTextInput(session, "a.title", value = get_default(defaults, "a.title", ""))
+            updateTextInput(session, "b.title", value = get_default(defaults, "b.title", ""))
+            updateTextInput(session, "c.title", value = get_default(defaults, "c.title", ""))
             updateNumericInput(session, "a.titlefont.size",
-                value = .get_default(defaults, "a.titlefont.size", 16, is.numeric))
+                value = get_default(defaults, "a.titlefont.size", 16, is.numeric))
             updateNumericInput(session, "b.titlefont.size",
-                value = .get_default(defaults, "b.titlefont.size", 16, is.numeric))
+                value = get_default(defaults, "b.titlefont.size", 16, is.numeric))
             updateNumericInput(session, "c.titlefont.size",
-                value = .get_default(defaults, "c.titlefont.size", 16, is.numeric))
+                value = get_default(defaults, "c.titlefont.size", 16, is.numeric))
             updateColourInput(session, "a.gridcolor",
-                value = .get_default(defaults, "a.gridcolor", "#EEEEEE"))
+                value = get_default(defaults, "a.gridcolor", "#EEEEEE"))
             updateColourInput(session, "b.gridcolor",
-                value = .get_default(defaults, "b.gridcolor", "#EEEEEE"))
+                value = get_default(defaults, "b.gridcolor", "#EEEEEE"))
             updateColourInput(session, "c.gridcolor",
-                value = .get_default(defaults, "c.gridcolor", "#EEEEEE"))
+                value = get_default(defaults, "c.gridcolor", "#EEEEEE"))
 
             # Title
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 18, is.numeric))
+                value = get_default(defaults, "title.font.size", 18, is.numeric))
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial"))
+                selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
-                value = .get_default(defaults, "title.font.color", "#000000"))
+                value = get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
             updateCheckboxInput(session, "show.legend",
-                value = .get_default(defaults, "show.legend", TRUE, is.logical))
+                value = get_default(defaults, "show.legend", TRUE, is.logical))
             updateSelectInput(session, "legend.orientation",
-                selected = .get_default(defaults, "legend.orientation", "h"))
+                selected = get_default(defaults, "legend.orientation", "h"))
             updateSelectInput(session, "legend.font.family",
-                selected = .get_default(defaults, "legend.font.family", "Arial"))
+                selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
-                value = .get_default(defaults, "legend.font.size", 12, is.numeric))
+                value = get_default(defaults, "legend.font.size", 12, is.numeric))
             updateColourInput(session, "legend.font.color",
-                value = .get_default(defaults, "legend.font.color", "#000000"))
+                value = get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
             updateColourInput(session, "bgcolor",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
+                value = get_default(defaults, "bgcolor", "#FFFFFF"))
 
             .reset_plotly_inputs(session, defaults)
         })
@@ -244,12 +244,12 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            config_list <- .add_plot_config(
+            config_list <- add_plot_config(
                 download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = TRUE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

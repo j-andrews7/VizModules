@@ -84,72 +84,72 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
 
             # Data
             updateSelectInput(session, "theta",
-                selected = .get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
+                selected = get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
             updateSelectInput(session, "r",
-                selected = .get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
+                selected = get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
             updateSelectInput(session, "group",
-                selected = .get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
 
             # Trace style
-            updateSelectInput(session, "fill", selected = .get_default(defaults, "fill", "toself"))
-            updateNumericInput(session, "line.width", value = .get_default(defaults, "line.width", 2, is.numeric))
-            updateSelectInput(session, "line.dash", selected = .get_default(defaults, "line.dash", "solid"))
+            updateSelectInput(session, "fill", selected = get_default(defaults, "fill", "toself"))
+            updateNumericInput(session, "line.width", value = get_default(defaults, "line.width", 2, is.numeric))
+            updateSelectInput(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
             updateNumericInput(session, "marker.size",
-                value = .get_default(defaults, "marker.size", 5, is.numeric))
+                value = get_default(defaults, "marker.size", 5, is.numeric))
             updateSelectInput(session, "marker.symbol",
-                selected = .get_default(defaults, "marker.symbol", "circle"))
-            updateSliderInput(session, "opacity", value = .get_default(defaults, "opacity", 0.6, is.numeric))
+                selected = get_default(defaults, "marker.symbol", "circle"))
+            updateSliderInput(session, "opacity", value = get_default(defaults, "opacity", 0.6, is.numeric))
 
             # Radial axis
             updateCheckboxInput(session, "radial.visible",
-                value = .get_default(defaults, "radial.visible", TRUE, is.logical))
+                value = get_default(defaults, "radial.visible", TRUE, is.logical))
             updateCheckboxInput(session, "auto.radial.range",
-                value = .get_default(defaults, "auto.radial.range", TRUE, is.logical))
+                value = get_default(defaults, "auto.radial.range", TRUE, is.logical))
             updateNumericInput(session, "radial.min",
-                value = .get_default(defaults, "radial.min", 0, is.numeric))
+                value = get_default(defaults, "radial.min", 0, is.numeric))
             updateNumericInput(session, "radial.max",
-                value = .get_default(defaults, "radial.max", 100, is.numeric))
+                value = get_default(defaults, "radial.max", 100, is.numeric))
             updateCheckboxInput(session, "radial.showline",
-                value = .get_default(defaults, "radial.showline", TRUE, is.logical))
+                value = get_default(defaults, "radial.showline", TRUE, is.logical))
             updateColourInput(session, "radial.linecolor",
-                value = .get_default(defaults, "radial.linecolor", "#444444"))
+                value = get_default(defaults, "radial.linecolor", "#444444"))
             updateColourInput(session, "radial.gridcolor",
-                value = .get_default(defaults, "radial.gridcolor", "#EEEEEE"))
+                value = get_default(defaults, "radial.gridcolor", "#EEEEEE"))
 
             # Angular axis
             updateSelectInput(session, "angular.direction",
-                selected = .get_default(defaults, "angular.direction", "clockwise"))
+                selected = get_default(defaults, "angular.direction", "clockwise"))
             updateSliderInput(session, "angular.rotation",
-                value = .get_default(defaults, "angular.rotation", 90, is.numeric))
+                value = get_default(defaults, "angular.rotation", 90, is.numeric))
             updateColourInput(session, "angular.gridcolor",
-                value = .get_default(defaults, "angular.gridcolor", "#EEEEEE"))
+                value = get_default(defaults, "angular.gridcolor", "#EEEEEE"))
 
             # Title
-            updateSliderInput(session, "title.x", value = .get_default(defaults, "title.x", 0.5, is.numeric))
+            updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 18, is.numeric))
+                value = get_default(defaults, "title.font.size", 18, is.numeric))
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial"))
+                selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
-                value = .get_default(defaults, "title.font.color", "#000000"))
+                value = get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
             updateCheckboxInput(session, "show.legend",
-                value = .get_default(defaults, "show.legend", TRUE, is.logical))
+                value = get_default(defaults, "show.legend", TRUE, is.logical))
             updateSelectInput(session, "legend.orientation",
-                selected = .get_default(defaults, "legend.orientation", "h"))
+                selected = get_default(defaults, "legend.orientation", "h"))
             updateSelectInput(session, "legend.font.family",
-                selected = .get_default(defaults, "legend.font.family", "Arial"))
+                selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
-                value = .get_default(defaults, "legend.font.size", 12, is.numeric))
+                value = get_default(defaults, "legend.font.size", 12, is.numeric))
             updateColourInput(session, "legend.font.color",
-                value = .get_default(defaults, "legend.font.color", "#000000"))
+                value = get_default(defaults, "legend.font.color", "#000000"))
 
             # Background
             updateColourInput(session, "bgcolor",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF"))
+                value = get_default(defaults, "bgcolor", "#FFFFFF"))
             updateColourInput(session, "polar.bgcolor",
-                value = .get_default(defaults, "polar.bgcolor", "#FFFFFF"))
+                value = get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
             .reset_plotly_inputs(session, defaults)
         })
@@ -238,12 +238,12 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 polar.bgcolor = isolate_fn(input$polar.bgcolor)
             )
 
-            config_list <- .add_plot_config(
+            config_list <- add_plot_config(
                 download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = TRUE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

@@ -200,7 +200,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("var"), "Y Data",
                     choices = num.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "var", num.choices[2],
                         function(x) x %in% num.choices
                     ), selectize = FALSE
@@ -211,7 +211,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("group.by"), "Group By",
                     choices = cat.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "group.by", cat.choices[2],
                         function(x) x %in% cat.choices
                     ), selectize = FALSE
@@ -222,7 +222,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("color.by"), "Color By",
                     choices = cat.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "color.by", "",
                         function(x) x %in% cat.choices
                     ), selectize = FALSE
@@ -233,7 +233,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("shape.by"), "Shape By",
                     choices = cat.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "shape.by", "",
                         function(x) x %in% cat.choices
                     ), selectize = FALSE
@@ -248,7 +248,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 ns("plots"),
                 "Plots",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
-                selected = .get_default(
+                selected = get_default(
                     defaults, "plots", c("boxplot", "jitter"),
                     function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))
                 ),
@@ -260,7 +260,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("var.adjustment"), "Y Adjustment",
                     choices = adj.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "var.adjustment", "",
                         function(x) x %in% adj.choices
                     ), selectize = FALSE
@@ -271,7 +271,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("var.adj.fxn"), "Y Adjustment Function",
                     choices = adj.fxn.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "var.adj.fxn", "",
                         function(x) x %in% adj.fxn.choices
                     ), selectize = FALSE
@@ -281,7 +281,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.max"), "Y Axis Max",
-                    value = .get_default(defaults, "max", max.y, is.numeric),
+                    value = get_default(defaults, "max", max.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$max,
@@ -289,7 +289,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.min"), "Y Axis Min",
-                    value = .get_default(defaults, "min", min.y, is.numeric),
+                    value = get_default(defaults, "min", min.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$min,
@@ -297,7 +297,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 materialSwitch(ns("do.raster"), "Rasterize Jitter",
-                    value = .get_default(defaults, "do.raster", FALSE, is.logical),
+                    value = get_default(defaults, "do.raster", FALSE, is.logical),
                     status = "success"
                 ),
                 documentParameters$do.raster,
@@ -305,7 +305,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("raster.dpi"), "Raster DPI",
-                    value = .get_default(defaults, "raster.dpi", 600, is.numeric),
+                    value = get_default(defaults, "raster.dpi", 600, is.numeric),
                     min = 100, max = 1200
                 ),
                 documentParameters$raster.dpi,
@@ -316,7 +316,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 numericInput(ns("jitter.size"), "Jitter Point Size",
                     max = 10, min = 0.1,
-                    value = .get_default(defaults, "jitter.size", 1, is.numeric)
+                    value = get_default(defaults, "jitter.size", 1, is.numeric)
                 ),
                 documentParameters$jitter.size,
                 placement = "top", options = list(container = "body")
@@ -324,21 +324,21 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 numericInput(ns("jitter.width"), "Jitter Width",
                     min = 0, max = 1, step = 0.05,
-                    value = .get_default(defaults, "jitter.width", 0.2, is.numeric)
+                    value = get_default(defaults, "jitter.width", 0.2, is.numeric)
                 ),
                 documentParameters$jitter.width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
                 colourInput(ns("jitter.color"), "Jitter Point Color",
-                    value = .get_default(defaults, "jitter.color", "#000000")
+                    value = get_default(defaults, "jitter.color", "#000000")
                 ),
                 documentParameters$jitter.color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
                 numericInput(ns("jitter.shape.legend.size"), "Shape Legend Size",
-                    value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric),
+                    value = get_default(defaults, "jitter.shape.legend.size", 5, is.numeric),
                     min = 0, max = 20
                 ),
                 documentParameters$jitter.shape.legend.size,
@@ -346,7 +346,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 materialSwitch(ns("jitter.shape.legend.show"), "Show Shape Legend",
-                    value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical),
+                    value = get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical),
                     status = "success"
                 ),
                 documentParameters$jitter.shape.legend.show,
@@ -356,7 +356,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Box" = tagList(
             tipify(
                 materialSwitch(ns("boxplot.show.outliers"), "Show Outliers",
-                    value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical),
+                    value = get_default(defaults, "boxplot.show.outliers", FALSE, is.logical),
                     status = "success"
                 ),
                 documentParameters$boxplot.show.outliers,
@@ -364,14 +364,14 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 colourInput(ns("boxplot.color"), "Boxplot Color",
-                    value = .get_default(defaults, "boxplot.color", "#000000")
+                    value = get_default(defaults, "boxplot.color", "#000000")
                 ),
                 documentParameters$boxplot.color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
                 materialSwitch(ns("boxplot.fill"), "Fill Boxplot",
-                    value = .get_default(defaults, "boxplot.fill", TRUE, is.logical),
+                    value = get_default(defaults, "boxplot.fill", TRUE, is.logical),
                     status = "success"
                 ),
                 documentParameters$boxplot.fill,
@@ -379,7 +379,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("boxplot.lineweight"), "Boxplot Line Weight",
-                    value = .get_default(defaults, "boxplot.lineweight", 0.5, is.numeric),
+                    value = get_default(defaults, "boxplot.lineweight", 0.5, is.numeric),
                     min = 0, max = 5, step = 0.1
                 ),
                 documentParameters$boxplot.lineweight,
@@ -387,7 +387,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("boxgap"), "Boxplot Position Dodge",
-                    value = .get_default(defaults, "boxgap", 0.3, is.numeric),
+                    value = get_default(defaults, "boxgap", 0.3, is.numeric),
                     min = 0, max = 1, step = 0.05
                 ),
                 "Set the gap between boxplots within the same group, controlling how closely boxes are spaced",
@@ -395,7 +395,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("boxgroupgap"), "Boxplot Group Dodge",
-                    value = .get_default(defaults, "boxgroupgap", 0.2, is.numeric),
+                    value = get_default(defaults, "boxgroupgap", 0.2, is.numeric),
                     min = 0, max = 1, step = 0.05
                 ),
                 "Set the gap between groups of boxplots when a color.by variable is used",
@@ -405,7 +405,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Violin" = tagList(
             tipify(
                 numericInput(ns("vlnplot.lineweight"), "Violin Line Weight",
-                    value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric),
+                    value = get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric),
                     min = 0, max = 5, step = 0.1
                 ),
                 documentParameters$vlnplot.lineweight,
@@ -413,7 +413,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 selectInput(ns("vlnplot.scaling"), "Violin Scaling",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "vlnplot.scaling", "area",
                         function(x) x %in% c("area", "count", "width")
                     ),
@@ -426,7 +426,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Ridge" = tagList(
             tipify(
                 numericInput(ns("ridgeplot.lineweight"), "Ridge Line Weight",
-                    value = .get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric),
+                    value = get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric),
                     min = 0, max = 5, step = 0.1
                 ),
                 documentParameters$ridgeplot.lineweight,
@@ -434,7 +434,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("ridgeplot.scale"), "Ridge Scale (overlap)",
-                    value = .get_default(defaults, "ridgeplot.scale", 1.25, is.numeric),
+                    value = get_default(defaults, "ridgeplot.scale", 1.25, is.numeric),
                     min = 0.5, max = 3
                 ),
                 documentParameters$ridgeplot.scale,
@@ -442,7 +442,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("ridgeplot.ymax.expansion"), "Ridge Y-max Expansion",
-                    value = .get_default(
+                    value = get_default(
                         defaults, "ridgeplot.ymax.expansion", NA,
                         function(x) is.numeric(x) || is.na(x)
                     ),
@@ -453,7 +453,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 selectInput(ns("ridgeplot.shape"), "Ridge Shape",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "ridgeplot.shape", "smooth",
                         function(x) x %in% c("smooth", "hist")
                     ),
@@ -464,7 +464,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("ridgeplot.bins"), "Ridge Bins",
-                    value = .get_default(defaults, "ridgeplot.bins", 30, is.numeric),
+                    value = get_default(defaults, "ridgeplot.bins", 30, is.numeric),
                     min = 5, max = 100
                 ),
                 documentParameters$ridgeplot.bins,
@@ -472,7 +472,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("ridgeplot.binwidth"), "Ridge Binwidth",
-                    value = .get_default(
+                    value = get_default(
                         defaults, "ridgeplot.binwidth", NULL,
                         function(x) is.numeric(x) || is.null(x)
                     ),
@@ -487,7 +487,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 selectInput(ns("split.by"), "Split by (facet)",
                     choices = cat.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices
                     ), selectize = FALSE
@@ -497,7 +497,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 selectInput(ns("split.adjust"), "Facet Scaling",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "split.adjust", "fixed",
                         function(x) x %in% c("fixed", "free", "free_y", "free_x")
                     ),
@@ -508,18 +508,18 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(numericInput(ns("split.ncol"), "Columns",
                 step = 1, min = 0,
-                value = .get_default(defaults, "split.ncol", NA, is.numeric)
+                value = get_default(defaults, "split.ncol", NA, is.numeric)
             ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("split.nrow"), "Rows",
                 step = 1, min = 0,
-                value = .get_default(defaults, "split.nrow", NA, is.numeric)
+                value = get_default(defaults, "split.nrow", NA, is.numeric)
             ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Legend" = .uniform_legend_inputs_ui(ns, defaults),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults),
+        "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

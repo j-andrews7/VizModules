@@ -71,9 +71,11 @@
 #'   If the input is "" or NULL, returns "solid".
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_string_to_linetypes
-#' @keywords internal
-.string_to_linetypes <- function(x) {
+#' @export
+#' @examples
+#' string_to_linetypes("solid, dashed, dotted")
+#' string_to_linetypes("")
+string_to_linetypes <- function(x) {
     valid_linetypes <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
 
     if (is.null(x) || identical(x, "")) {

@@ -219,62 +219,62 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # Data
             # Data Section
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
+                selected = get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
             )
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
             )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
             )
 
             # Facet Section
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "free_y")
+                selected = get_default(defaults, "facet.scale", "free_y")
             )
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
             updateSelectInput(session, "alpha.by",
-                selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateMaterialSwitch(session, "alpha.reverse",
-                value = .get_default(defaults, "alpha.reverse", FALSE, is.logical)
+                value = get_default(defaults, "alpha.reverse", FALSE, is.logical)
             )
-            updateTextInput(session, "alpha.name", value = .get_default(defaults, "alpha.name", ""))
-            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
-            updateNumericInput(session, "bar.height", value = .get_default(defaults, "bar.height", 0.9, is.numeric))
-            updateNumericInput(session, "line.height", value = .get_default(defaults, "line.height", 0.5, is.numeric))
+            updateTextInput(session, "alpha.name", value = get_default(defaults, "alpha.name", ""))
+            updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
+            updateNumericInput(session, "bar.height", value = get_default(defaults, "bar.height", 0.9, is.numeric))
+            updateNumericInput(session, "line.height", value = get_default(defaults, "line.height", 0.5, is.numeric))
             updateMaterialSwitch(session, "label.on.y.axis",
-                value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical)
+                value = get_default(defaults, "label.on.y.axis", FALSE, is.logical)
             )
             updateSliderInput(session, "axis.scale.factor",
-                value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric)
+                value = get_default(defaults, "axis.scale.factor", 1.2, is.numeric)
             )
             updateSliderInput(session, "text.position",
-                value = .get_default(defaults, "text.position", 0, is.numeric)
+                value = get_default(defaults, "text.position", 0, is.numeric)
             )
 
             # Axes
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
-            updateNumericInput(session, "x.min", value = .get_default(defaults, "x.min", min.x, is.numeric))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "x.max", value = get_default(defaults, "x.max", max.x, is.numeric))
+            updateNumericInput(session, "x.min", value = get_default(defaults, "x.min", min.x, is.numeric))
             updateNumericInput(session, "axis.title.font.size",
-                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
+                value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
 
             .reset_axes_inputs(session, defaults)
@@ -498,7 +498,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -517,9 +517,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

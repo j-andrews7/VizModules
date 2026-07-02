@@ -111,13 +111,13 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.by"), "Color By",
                 choices = all.with.empty,
-                selected = .get_default(defaults, "color.by", ""), selectize = FALSE
+                selected = get_default(defaults, "color.by", ""), selectize = FALSE
             ), documentParameters$color.by, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("color.scale"), "Color Scale",
                 choices = colorscale.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "color.scale", "Viridis",
                     function(x) x %in% colorscale.choices
                 ), selectize = FALSE
@@ -125,46 +125,46 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             uiOutput(ns("palette.selection")),
             tipify(sliderInput(ns("line.opacity"), "Line Opacity",
                 min = 0, max = 1,
-                value = .get_default(defaults, "line.opacity", 0.5, is.numeric),
+                value = get_default(defaults, "line.opacity", 0.5, is.numeric),
                 step = 0.05
             ), documentParameters$line.opacity, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line Width",
-                value = .get_default(defaults, "line.width", 1, is.numeric),
+                value = get_default(defaults, "line.width", 1, is.numeric),
                 min = 0.5,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.colorbar"), "Show Colorbar",
-                value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
+                value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             ), documentParameters$show.colorbar, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("bgcolor"), "Background Color",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+                value = get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
             tipify(numericInput(ns("label.font.size"), "Label Size",
-                value = .get_default(defaults, "label.font.size", 12, is.numeric),
+                value = get_default(defaults, "label.font.size", 12, is.numeric),
                 min = 1, step = 1
             ), documentParameters$label.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("label.font.color"), "Label Color",
-                value = .get_default(defaults, "label.font.color", "black")
+                value = get_default(defaults, "label.font.color", "black")
             ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("label.font.family"), "Label Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "label.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("tick.font.size"), "Tick Font Size",
-                value = .get_default(defaults, "tick.font.size", 10, is.numeric),
+                value = get_default(defaults, "tick.font.size", 10, is.numeric),
                 min = 1, step = 1
             ), documentParameters$tick.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("tick.font.color"), "Tick Font Color",
-                value = .get_default(defaults, "tick.font.color", "black")
+                value = get_default(defaults, "tick.font.color", "black")
             ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("tick.font.family"), "Tick Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "tick.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
@@ -172,21 +172,21 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         ),
         "Title" = tagList(
             tipify(numericInput(ns("title.font.size"), "Title Size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric),
+                value = get_default(defaults, "title.font.size", 26, is.numeric),
                 min = 1, step = 1
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
-                value = .get_default(defaults, "title.font.color", "black")
+                value = get_default(defaults, "title.font.color", "black")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

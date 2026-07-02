@@ -102,35 +102,35 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
-            x_default <- .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+            x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
 
             # Data
             updateSelectInput(session, "x.data", selected = x_default)
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
+                selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
+                selected = get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
 
             # Facet
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% group_facet_choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% group_facet_choices))
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed"))
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
-            updateMaterialSwitch(session, "facet.by.row", value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                selected = get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateMaterialSwitch(session, "facet.by.row", value = get_default(defaults, "facet.by.row", TRUE, is.logical))
 
             # Aesthetic
             # (palette.selection is UI output, so no reset call here)
-            updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
-            updateMaterialSwitch(session, "scale.y", value = .get_default(defaults, "scale.y", FALSE, is.logical))
+            updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
+            updateMaterialSwitch(session, "scale.y", value = get_default(defaults, "scale.y", FALSE, is.logical))
 
             # Axes
             updateNumericInput(session, "axis.title.font.size",
-                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric))
+                value = get_default(defaults, "axis.title.font.size", 18, is.numeric))
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric))
+                value = get_default(defaults, "title.font.size", 26, is.numeric))
             .reset_axes_inputs(session, defaults)
 
             # Plotly
@@ -226,7 +226,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -245,9 +245,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

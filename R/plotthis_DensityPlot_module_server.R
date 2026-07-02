@@ -108,31 +108,31 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Data
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
+                selected = get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed"))
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+                selected = get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical))
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateMaterialSwitch(session, "add.bars",
-                value = .get_default(defaults, "add.bars", FALSE, is.logical))
+                value = get_default(defaults, "add.bars", FALSE, is.logical))
             updateNumericInput(session, "bar.height",
-                value = .get_default(defaults, "bar.height", 0.04, is.numeric))
-            updateSliderInput(session, "bar.alpha", value = .get_default(defaults, "bar.alpha", 1, is.numeric))
-            updateNumericInput(session, "bar.width", value = .get_default(defaults, "bar.width", 1, is.numeric))
-            updateSliderInput(session, "plot.alpha", value = .get_default(defaults, "plot.alpha", 0.5, is.numeric))
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "position", selected = .get_default(defaults, "position", "identity"))
+                value = get_default(defaults, "bar.height", 0.04, is.numeric))
+            updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
+            updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
+            updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 0.5, is.numeric))
+            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
-                value = .get_default(defaults, "single.fill.color", default_palette_values[1]))
+                value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
             # Action Button
             .reset_plotly_inputs(session, defaults)
@@ -237,7 +237,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -256,9 +256,9 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

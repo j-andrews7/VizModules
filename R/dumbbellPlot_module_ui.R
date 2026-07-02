@@ -138,7 +138,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("x.value"), "X Values (max 2)",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "x.value",
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
@@ -146,7 +146,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                 choices = num.choices, multiple = TRUE, selectize = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("y.value"), "Y Value",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "y.value",
                     if (length(cat.choices) > 1) cat.choices[2] else "",
                     function(x) x %in% cat.choices
@@ -155,14 +155,14 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
                 ), selectize = FALSE
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("colour.by"), "Colour By",
                 choices = c("X variables", "Y variables"),
-                selected = .get_default(
+                selected = get_default(
                     defaults, "colour.by", "X variables",
                     function(x) x %in% c("X variables", "Y variables")
                 ), selectize = FALSE
@@ -170,7 +170,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
@@ -178,7 +178,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
-                selected = .get_default(
+                selected = get_default(
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ), selectize = FALSE
@@ -188,7 +188,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
         "Aesthetics" = tagList(
             uiOutput(ns("palette.selection")),
             tipify(colourInput(ns("line.colour"), "Colour of Connectors",
-                value = .get_default(defaults, "line.colour", "gray30")),
+                value = get_default(defaults, "line.colour", "gray30")),
                 documentParameters$line.colour,
                 placement = "top", options = list(container = "body")
             )
@@ -196,9 +196,9 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
         "Legend" = .uniform_legend_inputs_ui(ns, defaults),
 
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),
+        "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
 

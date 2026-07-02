@@ -104,7 +104,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
         "Data" = tagList(
             tipify(
                 selectInput(ns("labels"), "Label Column",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "labels", cat.choices[2],
                         function(x) x %in% cat.choices
                     ),
@@ -115,7 +115,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             ),
             tipify(
                 selectInput(ns("values"), "Aggregated Value Column",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "values", num.choices[2],
                         function(x) x %in% num.choices
                     ),
@@ -125,108 +125,108 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 placement = "top", options = list(container = "body")
             ),
             tipify(checkboxInput(ns("sort.slices"), "Sort Slices by Value",
-                value = .get_default(defaults, "sort.slices", TRUE, is.logical)
+                value = get_default(defaults, "sort.slices", TRUE, is.logical)
             ), documentParameters$sort, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("direction"), "Slice Direction",
                 choices = c("Counterclockwise" = "counterclockwise", "Clockwise" = "clockwise"),
-                selected = .get_default(defaults, "direction", "counterclockwise"), selectize = FALSE
+                selected = get_default(defaults, "direction", "counterclockwise"), selectize = FALSE
             ), documentParameters$direction, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("rotation"), "Start Angle (Degrees)",
                 min = 0, max = 360,
-                value = .get_default(defaults, "rotation", 0),
+                value = get_default(defaults, "rotation", 0),
                 step = 5
             ), documentParameters$rotation, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             uiOutput(ns("color.picker")),
             tipify(colourInput(ns("slice.line.color"), "Slice Border Color",
-                value = .get_default(defaults, "slice.line.color", "#FFFFFF")
+                value = get_default(defaults, "slice.line.color", "#FFFFFF")
             ), documentParameters$slice.line.color, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("slice.line.width"), "Slice Border Width",
-                value = .get_default(defaults, "slice.line.width", 0, is.numeric),
+                value = get_default(defaults, "slice.line.width", 0, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$slice.line.width, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("hole"), "Center Hole Size",
                 min = 0, max = 0.9,
-                value = .get_default(defaults, "hole", 0),
+                value = get_default(defaults, "hole", 0),
                 step = 0.01
             ), documentParameters$hole, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
             tipify(selectInput(ns("textinfo"), "Slice Label",
-                selected = .get_default(defaults, "textinfo", c("label", "value", "percent")),
+                selected = get_default(defaults, "textinfo", c("label", "value", "percent")),
                 choices = c("label", "value", "percent", "none"),
                 multiple = TRUE, selectize = TRUE
             ), documentParameters$textinfo, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("textposition"), "Text Position",
                 choices = c("Auto" = "auto", "Inside" = "inside", "Outside" = "outside", "Hide text" = "none"),
-                selected = .get_default(defaults, "textposition", "auto"), selectize = FALSE
+                selected = get_default(defaults, "textposition", "auto"), selectize = FALSE
             ), documentParameters$textposition, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("insidetextorientation"), "Inside Text Orientation",
                 choices = c("auto", "horizontal", "radial", "tangential"),
-                selected = .get_default(defaults, "insidetextorientation", "auto"), selectize = FALSE
+                selected = get_default(defaults, "insidetextorientation", "auto"), selectize = FALSE
             ), documentParameters$insidetextorientation, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("text.font.size"), "Slice Text Size",
-                value = .get_default(defaults, "text.font.size", 12, is.numeric),
+                value = get_default(defaults, "text.font.size", 12, is.numeric),
                 min = 6,
                 step = 1
             ), documentParameters$text.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("text.font.family"), "Slice Text Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "text.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$text.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("text.font.color"), "Slice Text Color",
-                value = .get_default(defaults, "text.font.color", "#000000")
+                value = get_default(defaults, "text.font.color", "#000000")
             ), documentParameters$text.font.color, placement = "top", options = list(container = "body"))
         ),
         "Title & Legend" = tagList(
             tipify(sliderInput(ns("title.x"), "Title Position",
                 min = 0, max = 1,
-                value = .get_default(defaults, "title.x", 0.5),
+                value = get_default(defaults, "title.x", 0.5),
                 step = 0.01
             ), documentParameters$title.x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("title.font.size"), "Title Size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric),
+                value = get_default(defaults, "title.font.size", 28, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
-                value = .get_default(defaults, "title.font.color", "#000000")
+                value = get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.legend"), "Show Legend",
-                value = .get_default(defaults, "show.legend", TRUE, is.logical)
+                value = get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = .get_default(defaults, "legend.orientation", "h"), selectize = FALSE
+                selected = get_default(defaults, "legend.orientation", "h"), selectize = FALSE
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
-                value = .get_default(defaults, "legend.font.size", 12, is.numeric),
+                value = get_default(defaults, "legend.font.size", 12, is.numeric),
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
-                value = .get_default(defaults, "legend.font.color", "#000000")
+                value = get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

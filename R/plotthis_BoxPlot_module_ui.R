@@ -239,7 +239,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(
                 selectInput(ns("x.data"), "X Data",
                     choices = cat.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "x.data", cat.choices[2],
                         function(x) x %in% cat.choices
                     ), selectize = FALSE
@@ -250,7 +250,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(
                 selectInput(ns("y.data"), "Y Data",
                     choices = num.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices
                     ), selectize = FALSE
@@ -260,7 +260,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             ),
             tipify(
                 selectInput(ns("group.by"), "Group By",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "group.by", "",
                         function(x) x %in% c("", cat.choices)
                     ),
@@ -270,7 +270,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("show.outliers"), "Show Outliers",
-                value = .get_default(defaults, "show.outliers", TRUE, is.logical), status = "success"),
+                value = get_default(defaults, "show.outliers", TRUE, is.logical), status = "success"),
                 "Toggle whether outlier points beyond the whiskers are displayed on the boxplot",
                 placement = "top", options = list(container = "body")
             ),
@@ -278,80 +278,80 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ),
         "Adjustments" = tagList(
             tipify(numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1,
-                value = .get_default(defaults, "boxplot.width", 0.8, is.numeric), step = 0.05),
+                value = get_default(defaults, "boxplot.width", 0.8, is.numeric), step = 0.05),
                 "Set the relative width of each boxplot, where 1 fills the entire available space",
                 placement = "top", options = list(container = "body")
             ),
             tipify(textInput(ns("sort_x"), "Sort X By",
-                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y data col name)"), 
+                value = get_default(defaults, "sort_x", ""), placeholder = "mean(y data col name)"), 
                 documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Max Value of Y Axis",
-                value = .get_default(defaults, "y.max", max.y, is.numeric), min = -Inf, max = Inf),
+                value = get_default(defaults, "y.max", max.y, is.numeric), min = -Inf, max = Inf),
                 documentParameters$y_max,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("y.min"), "Y Axis Min",
-                value = .get_default(defaults, "y.min", min.y, is.numeric), min = -Inf, max = Inf),
+                value = get_default(defaults, "y.min", min.y, is.numeric), min = -Inf, max = Inf),
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("add.points"), "Add Jitter Points",
-                value = .get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
+                value = get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
                 documentParameters$add_point,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1,
-                value = .get_default(defaults, "pt.size", 1, is.numeric)),
+                value = get_default(defaults, "pt.size", 1, is.numeric)),
                 documentParameters$pt_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1,
-                value = .get_default(defaults, "pt.alpha", 1, is.numeric)),
+                value = get_default(defaults, "pt.alpha", 1, is.numeric)),
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
-                value = .get_default(defaults, "jitter.width", 0.3, is.numeric), step = 0.05),
+                value = get_default(defaults, "jitter.width", 0.3, is.numeric), step = 0.05),
                 documentParameters$jitter_width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("pt.color"), "Point Outline Colour",
-                value = .get_default(defaults, "pt.color", "#000000")),
+                value = get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Highlight" = tagList(
             tipify(textInput(ns("highlight"), "Highlight",
-                value = .get_default(defaults, "highlight", ""), placeholder = "E.g. col name > 0"),
+                value = get_default(defaults, "highlight", ""), placeholder = "E.g. col name > 0"),
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("highlight.colour"), "Highlight Colour",
-                value = .get_default(defaults, "highlight.colour", "#000000")),
+                value = get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.size"), "Highlight Size",
-                value = .get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
+                value = get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
                 documentParameters$highlight_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha",
-                value = .get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
+                value = get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
                 documentParameters$highlight_alpha,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
                 choices = c(cat.choices, ""), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(selectInput(ns("facet.scale"), "Facet Scale",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
@@ -360,17 +360,17 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.ncol"), "Columns",
-                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.nrow"), "Rows",
-                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
@@ -378,9 +378,9 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ),
         "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Legend" = .uniform_legend_inputs_ui(ns, defaults),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),
+        "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

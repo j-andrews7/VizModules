@@ -126,26 +126,26 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Data tab
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
+                selected = get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
             )
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
+                selected = get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
             )
 
-            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "colour.by",
-                selected = .get_default(defaults, "colour.by", "X variables")
+                selected = get_default(defaults, "colour.by", "X variables")
             )
 
             # Facet tab
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
             )
-            updateSelectInput(session, "facet.scales", selected = .get_default(defaults, "facet.scales", "fixed"))
+            updateSelectInput(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
             updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "gray30")
+                value = get_default(defaults, "line.colour", "gray30")
             )
 
             click("reset_palette")
@@ -259,7 +259,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -278,9 +278,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
             fig <- .apply_legend_styling(

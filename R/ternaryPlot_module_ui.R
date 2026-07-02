@@ -136,23 +136,23 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
     inputs <- list(
         "Data" = tagList(
             tipify(selectInput(ns("a"), "A-axis Column",
-                selected = .get_default(defaults, "a", default_a),
+                selected = get_default(defaults, "a", default_a),
                 choices = num.choices, selectize = FALSE
             ), documentParameters$a, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("b"), "B-axis Column",
-                selected = .get_default(defaults, "b", default_b),
+                selected = get_default(defaults, "b", default_b),
                 choices = num.choices, selectize = FALSE
             ), documentParameters$b, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("c"), "C-axis Column",
-                selected = .get_default(defaults, "c", default_c),
+                selected = get_default(defaults, "c", default_c),
                 choices = num.choices, selectize = FALSE
             ), documentParameters$c, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("group"), "Colour By",
-                selected = .get_default(defaults, "group", ""),
+                selected = get_default(defaults, "group", ""),
                 choices = all.choices, selectize = FALSE
             ), documentParameters$group, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("sum"), "Sum",
-                value = .get_default(defaults, "sum", 100, is.numeric),
+                value = get_default(defaults, "sum", 100, is.numeric),
                 min = 0
             ), documentParameters$sum, placement = "top", options = list(container = "body"))
         ),
@@ -162,10 +162,10 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Markers" = "markers",
                     "Lines + Markers" = "lines+markers"
                 ),
-                selected = .get_default(defaults, "mode", "markers"), selectize = FALSE
+                selected = get_default(defaults, "mode", "markers"), selectize = FALSE
             ), documentParameters$mode, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.size"), "Marker Size",
-                value = .get_default(defaults, "marker.size", 8, is.numeric),
+                value = get_default(defaults, "marker.size", 8, is.numeric),
                 min = 0,
                 step = 1
             ), documentParameters$marker.size, placement = "top", options = list(container = "body")),
@@ -179,18 +179,18 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Triangle up" = "triangle-up",
                     "Triangle down" = "triangle-down"
                 ),
-                selected = .get_default(defaults, "marker.symbol", "circle"), selectize = FALSE
+                selected = get_default(defaults, "marker.symbol", "circle"), selectize = FALSE
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.line.width"), "Marker Border Width",
-                value = .get_default(defaults, "marker.line.width", 0, is.numeric),
+                value = get_default(defaults, "marker.line.width", 0, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$marker.line.width, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("marker.line.color"), "Marker Border Color",
-                value = .get_default(defaults, "marker.line.color", "#000000")
+                value = get_default(defaults, "marker.line.color", "#000000")
             ), documentParameters$marker.line.color, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line Width",
-                value = .get_default(defaults, "line.width", 2, is.numeric),
+                value = get_default(defaults, "line.width", 2, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
@@ -203,89 +203,89 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
                     "Dash-dot" = "dashdot",
                     "Long dash-dot" = "longdashdot"
                 ),
-                selected = .get_default(defaults, "line.dash", "solid"), selectize = FALSE
+                selected = get_default(defaults, "line.dash", "solid"), selectize = FALSE
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
-                value = .get_default(defaults, "opacity", 1),
+                value = get_default(defaults, "opacity", 1),
                 step = 0.05
             ), documentParameters$opacity, placement = "top", options = list(container = "body")),
             uiOutput(ns("color.picker")),
             tipify(colourInput(ns("bgcolor"), "Background Color",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+                value = get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Axes" = tagList(
             tipify(textInput(ns("a.title"), "A-axis Title",
-                value = .get_default(defaults, "a.title", "")
+                value = get_default(defaults, "a.title", "")
             ), documentParameters$a.title, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("b.title"), "B-axis Title",
-                value = .get_default(defaults, "b.title", "")
+                value = get_default(defaults, "b.title", "")
             ), documentParameters$b.title, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("c.title"), "C-axis Title",
-                value = .get_default(defaults, "c.title", "")
+                value = get_default(defaults, "c.title", "")
             ), documentParameters$c.title, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("a.titlefont.size"), "A-axis Title Size",
-                value = .get_default(defaults, "a.titlefont.size", 16, is.numeric),
+                value = get_default(defaults, "a.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$a.titlefont.size, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("b.titlefont.size"), "B-axis Title Size",
-                value = .get_default(defaults, "b.titlefont.size", 16, is.numeric),
+                value = get_default(defaults, "b.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$b.titlefont.size, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("c.titlefont.size"), "C-axis Title Size",
-                value = .get_default(defaults, "c.titlefont.size", 16, is.numeric),
+                value = get_default(defaults, "c.titlefont.size", 16, is.numeric),
                 min = 0
             ), documentParameters$c.titlefont.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("a.gridcolor"), "A-axis Grid Color",
-                value = .get_default(defaults, "a.gridcolor", "#EEEEEE")
+                value = get_default(defaults, "a.gridcolor", "#EEEEEE")
             ), documentParameters$a.gridcolor, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("b.gridcolor"), "B-axis Grid Color",
-                value = .get_default(defaults, "b.gridcolor", "#EEEEEE")
+                value = get_default(defaults, "b.gridcolor", "#EEEEEE")
             ), documentParameters$b.gridcolor, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("c.gridcolor"), "C-axis Grid Color",
-                value = .get_default(defaults, "c.gridcolor", "#EEEEEE")
+                value = get_default(defaults, "c.gridcolor", "#EEEEEE")
             ), documentParameters$c.gridcolor, placement = "top", options = list(container = "body"))
         ),
         "Title & Legend" = tagList(
             tipify(numericInput(ns("title.font.size"), "Title Size",
-                value = .get_default(defaults, "title.font.size", 18, is.numeric),
+                value = get_default(defaults, "title.font.size", 18, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
-                value = .get_default(defaults, "title.font.color", "#000000")
+                value = get_default(defaults, "title.font.color", "#000000")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.legend"), "Show Legend",
-                value = .get_default(defaults, "show.legend", TRUE, is.logical)
+                value = get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = .get_default(defaults, "legend.orientation", "h"), selectize = FALSE
+                selected = get_default(defaults, "legend.orientation", "h"), selectize = FALSE
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
-                value = .get_default(defaults, "legend.font.size", 12, is.numeric),
+                value = get_default(defaults, "legend.font.size", 12, is.numeric),
                 min = 1,
                 step = 1
             ), documentParameters$legend.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("legend.font.color"), "Legend Font Color",
-                value = .get_default(defaults, "legend.font.color", "#000000")
+                value = get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(

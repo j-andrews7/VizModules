@@ -84,9 +84,11 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   \code{\link{.build_facet_annotations}}).
 #'
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_add_plot_config
-.add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()),
+#' @export
+#' @examples
+#' add_plot_config()
+#' add_plot_config(download.format = "svg", include.modebar.buttons = FALSE)
+add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()),
                              include.modebar.buttons = TRUE, facet.by = NULL) {
     if (is.null(facet.by)) {
         config <- list(

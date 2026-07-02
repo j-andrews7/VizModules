@@ -236,7 +236,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             tipify(
                 selectInput(ns("x.data"), "X Data",
                     choices = char.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "x.data", char.choices[2],
                         function(x) x %in% char.choices
                     ), selectize = FALSE
@@ -247,7 +247,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             tipify(
                 selectInput(ns("y.data"), "Y Data",
                     choices = num.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices
                     ), selectize = FALSE
@@ -257,7 +257,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             ),
             tipify(
                 selectInput(ns("group.by"), "Group By",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "group.by", "",
                         function(x) x %in% c("", char.choices)
                     ),
@@ -270,99 +270,99 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         ),
         "Adjustments" = tagList(
             tipify(textInput(ns("sort_x"), "Sort X By",
-                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+                value = get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Y Max",
-                value = .get_default(defaults, "y.max", max.y, is.numeric)),
+                value = get_default(defaults, "y.max", max.y, is.numeric)),
                 documentParameters$y_max,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("y.min"), "Y Min",
-                value = .get_default(defaults, "y.min", min.y, is.numeric)),
+                value = get_default(defaults, "y.min", min.y, is.numeric)),
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("add.points"), "Add Jitter",
-                value = .get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
+                value = get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
                 documentParameters$add_point,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1,
-                value = .get_default(defaults, "pt.size", 1, is.numeric)),
+                value = get_default(defaults, "pt.size", 1, is.numeric)),
                 documentParameters$pt_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1,
-                value = .get_default(defaults, "pt.alpha", 1, is.numeric)),
+                value = get_default(defaults, "pt.alpha", 1, is.numeric)),
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
-                value = .get_default(defaults, "jitter.width", 0.5, is.numeric)),
+                value = get_default(defaults, "jitter.width", 0.5, is.numeric)),
                 documentParameters$jitter_width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1,
-                value = .get_default(defaults, "jitter.height", 0, is.numeric)),
+                value = get_default(defaults, "jitter.height", 0, is.numeric)),
                 documentParameters$jitter_height,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("pt.color"), "Point Outline Colour",
-                value = .get_default(defaults, "pt.color", "#000000")),
+                value = get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("add.box"), "Add Box",
-                value = .get_default(defaults, "add.box", FALSE, is.logical), status = "success"),
+                value = get_default(defaults, "add.box", FALSE, is.logical), status = "success"),
                 documentParameters$add_box,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("box.color"), "Box Colour",
-                value = .get_default(defaults, "box.color", "#000000")),
+                value = get_default(defaults, "box.color", "#000000")),
                 documentParameters$box_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("box.width"), "Box Width", min = 0, max = 1,
-                value = .get_default(defaults, "box.width", 0.1, is.numeric)),
+                value = get_default(defaults, "box.width", 0.1, is.numeric)),
                 documentParameters$box_width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10,
-                value = .get_default(defaults, "box.ptsize", 2.5, is.numeric)),
+                value = get_default(defaults, "box.ptsize", 2.5, is.numeric)),
                 documentParameters$box_ptsize,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Highlight" = tagList(
             tipify(textInput(ns("highlight"), "Highlight",
-                value = .get_default(defaults, "highlight", ""), placeholder = "E.g. y > 0"),
+                value = get_default(defaults, "highlight", ""), placeholder = "E.g. y > 0"),
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("highlight.colour"), "Highlight Colour",
-                value = .get_default(defaults, "highlight.colour", "#000000")),
+                value = get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.size"), "Highlight Size",
-                value = .get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
+                value = get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
                 documentParameters$highlight_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha",
-                value = .get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
+                value = get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
                 documentParameters$highlight_alpha,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
                 choices = c(char.choices, ""), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(selectInput(ns("facet.scale"), "Facet Scale",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
@@ -371,17 +371,17 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.ncol"), "Columns",
-                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.nrow"), "Rows",
-                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("facet.by.row"), "Facet By Row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
@@ -389,9 +389,9 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         ),
         "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Legend" = .uniform_legend_inputs_ui(ns, defaults),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+        "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
     organize_inputs(
