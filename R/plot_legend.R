@@ -41,9 +41,14 @@
 #'
 #' @author Jared Andrews
 #' @importFrom plotly layout plotly_build
-#' @rdname INTERNAL_apply_legend_styling
-#' @keywords internal
-.apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(iris,
+#'     x = ~Sepal.Length, y = ~Sepal.Width,
+#'     color = ~Species, type = "scatter", mode = "markers"
+#' )
+#' apply_legend_styling(fig, title.size = 16, text.size = 10)
+apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -235,7 +240,7 @@
     # marker sizes can be read back) and, crucially, lets us append the legend
     # annotations directly to the built layout below. Using add_annotations()
     # instead would defer the annotations into layoutAttrs, which any later
-    # plotly_build() call (e.g. .apply_legend_styling(),
+    # plotly_build() call (e.g. apply_legend_styling(),
     # axis_titles_as_annotations()) re-merges, duplicating every annotation.
     fig <- plotly::plotly_build(fig)
 

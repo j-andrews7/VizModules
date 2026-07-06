@@ -237,7 +237,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             )
         ),
 
-        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
+        "Legend" = uniform_legend_inputs_ui(ns, defaults),
 
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = TRUE),

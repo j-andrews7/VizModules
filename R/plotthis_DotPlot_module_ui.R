@@ -222,7 +222,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 "legend drawn when 'Size By' is set. Lower it to offset the",
                 "size legend from an overlapping color or shape legend."
             ), placement = "top", options = list(container = "body")),
-            .uniform_legend_inputs_ui(ns, defaults)
+            uniform_legend_inputs_ui(ns, defaults)
         ),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),

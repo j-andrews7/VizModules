@@ -192,7 +192,7 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
 #' Reset uniform Legend inputs to defaults
 #'
 #' Resets the legend styling inputs (legend title and entry label font sizes)
-#' created by [.uniform_legend_inputs_ui()] back to their default values.
+#' created by [uniform_legend_inputs_ui()] back to their default values.
 #'
 #' @param session The Shiny session object.
 #' @param defaults A named list of default values. When provided, inputs reset

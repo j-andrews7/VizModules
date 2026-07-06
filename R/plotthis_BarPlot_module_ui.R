@@ -258,7 +258,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         ), documentParameters$y_max, placement = "top", options = list(container = "body"))
     ),
 
-    "Legend" = .uniform_legend_inputs_ui(ns, defaults),
+    "Legend" = uniform_legend_inputs_ui(ns, defaults),
 
     "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
     "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),

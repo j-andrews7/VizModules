@@ -520,7 +520,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(textInput(ns("legend.color.title"), "Legend Title",
                 value = get_default(defaults, "legend.color.title", "make")
             ), documentParameters$legend.color.title, placement = "top", options = list(container = "body")),
-            .uniform_legend_inputs_ui(ns, defaults),
+            uniform_legend_inputs_ui(ns, defaults),
             tipify(textInput(ns("legend.color.breaks"), "Color Tick Breaks",
                 placeholder = "e.g. -3, 0, 3",
                 value = get_default(defaults, "legend.color.breaks", "", is.character)

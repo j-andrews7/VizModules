@@ -744,9 +744,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
 #' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_legend_inputs_ui
-#' @keywords internal
-.uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot1")
+#' uniform_legend_inputs_ui(ns)
+#' uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
+uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
         tipify(

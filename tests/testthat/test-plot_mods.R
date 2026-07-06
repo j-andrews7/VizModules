@@ -367,41 +367,41 @@ test_that("axis_titles_as_annotations returns NULL input unchanged", {
 })
 
 
-# ─── .apply_legend_styling ───────────────────────────────────────────────────
+# ─── apply_legend_styling ───────────────────────────────────────────────────
 
-test_that(".apply_legend_styling sets legend title and text font sizes", {
+test_that("apply_legend_styling sets legend title and text font sizes", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, title.size = 20, text.size = 9)
+        VizModules::apply_legend_styling(fig, title.size = 20, text.size = 9)
     )
     expect_equal(built$x$layout$legend$font$size, 9)
     expect_equal(built$x$layout$legend$title$font$size, 20)
 })
 
-test_that(".apply_legend_styling ignores NULL/NA sizes", {
+test_that("apply_legend_styling ignores NULL/NA sizes", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
     # Both NULL -> figure returned unchanged (no legend args added).
     expect_identical(
-        VizModules:::.apply_legend_styling(fig, title.size = NULL, text.size = NULL),
+        VizModules::apply_legend_styling(fig, title.size = NULL, text.size = NULL),
         fig
     )
     # Only text.size supplied -> title font untouched.
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, text.size = 11)
+        VizModules::apply_legend_styling(fig, text.size = 11)
     )
     expect_equal(built$x$layout$legend$font$size, 11)
     expect_null(built$x$layout$legend$title$font$size)
 })
 
-test_that(".apply_legend_styling returns NULL input unchanged", {
-    expect_null(VizModules:::.apply_legend_styling(NULL, title.size = 12))
+test_that("apply_legend_styling returns NULL input unchanged", {
+    expect_null(VizModules::apply_legend_styling(NULL, title.size = 12))
 })
 
-test_that(".apply_legend_styling preserves existing legend position", {
+test_that("apply_legend_styling preserves existing legend position", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(legend = list(x = 0.8, y = 0.2, orientation = "h"))
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, text.size = 14)
+        VizModules::apply_legend_styling(fig, text.size = 14)
     )
     expect_equal(built$x$layout$legend$x, 0.8)
     expect_equal(built$x$layout$legend$y, 0.2)
@@ -409,7 +409,7 @@ test_that(".apply_legend_styling preserves existing legend position", {
     expect_equal(built$x$layout$legend$font$size, 14)
 })
 
-test_that(".apply_legend_styling styles continuous colorbar legends", {
+test_that("apply_legend_styling styles continuous colorbar legends", {
     # Numeric colour mappings render a colorbar rather than a categorical
     # legend, so the title/tick fonts live on the trace's marker$colorbar.
     fig <- plotly::plot_ly(
@@ -420,7 +420,7 @@ test_that(".apply_legend_styling styles continuous colorbar legends", {
         )
     )
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, title.size = 18, text.size = 8)
+        VizModules::apply_legend_styling(fig, title.size = 18, text.size = 8)
     )
     cb <- NULL
     for (tr in built$x$data) {

@@ -18,7 +18,7 @@ Called for side effects; returns \code{invisible(NULL)}.
 }
 \description{
 Resets the legend styling inputs (legend title and entry label font sizes)
-created by \code{.uniform_legend_inputs_ui()} back to their default values.
+created by \code{uniform_legend_inputs_ui()} back to their default values.
 }
 \examples{
 \dontrun{
