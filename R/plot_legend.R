@@ -34,13 +34,11 @@
 #'   \code{NULL} to leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
 #'   tick labels), or \code{NULL} to leave unchanged.
-#' @param position string used to determine the xanchor value of the legend position. e.g. position = "left". 
-#'   If NULL default plotly layout xanchor will be used. Can also be an integer to determine exact postion of legend. 
 #' @return The plotly figure with the requested legend font sizes applied.
 #'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
 #'   sizes are supplied.
 #'
-#' @author Jared Andrews, Jacob Martin 
+#' @author Jared Andrews
 #' @importFrom plotly layout plotly_build
 #' @export
 #' @examples
@@ -49,7 +47,7 @@
 #'     color = ~Species, type = "scatter", mode = "markers"
 #' )
 #' apply_legend_styling(fig, title.size = 16, text.size = 10)
-apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, position = NULL) {
+apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -78,17 +76,6 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
     }
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
-    }
-    #X axis position. 
-    if (!is.null(position)){
-        if (is.character(position)) {
-            legend_args$xanchor <- position
-        }
-        else if (is.numeric(position)){
-            legend_args$x <- position
-        }
-        
-
     }
     if (length(legend_args) > 0L) {
         fig <- plotly::layout(fig, legend = legend_args)
