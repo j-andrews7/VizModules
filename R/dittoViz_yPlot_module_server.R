@@ -419,7 +419,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             )
 
             # Remove outliers if jitter is shown or if user explicitly disabled outliers
-            if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$show.outliers)) {
+            if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$boxplot.show.outliers)) {
                 fig <- .remove_boxplot_outliers(fig)
             }
 

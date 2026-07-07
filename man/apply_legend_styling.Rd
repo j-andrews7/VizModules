@@ -4,7 +4,7 @@
 \alias{apply_legend_styling}
 \title{Apply uniform legend font styling to a plotly figure}
 \usage{
-apply_legend_styling(fig, title.size = NULL, text.size = NULL)
+apply_legend_styling(fig, title.size = NULL, text.size = NULL, position = NULL)
 }
 \arguments{
 \item{fig}{A plotly figure object.}
@@ -14,6 +14,8 @@ apply_legend_styling(fig, title.size = NULL, text.size = NULL)
 
 \item{text.size}{Numeric font size for the legend entry labels (or colorbar
 tick labels), or \code{NULL} to leave unchanged.}
+
+\item{position}{vector of an integer, an xanchor string, and a orientation argument. e.g. c(1.02, "left", "v"). Controls horizontal positioning of the legend.}
 }
 \value{
 The plotly figure with the requested legend font sizes applied.

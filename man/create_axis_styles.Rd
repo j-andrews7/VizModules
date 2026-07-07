@@ -12,9 +12,9 @@ create_axis_styles(
 )
 }
 \arguments{
-\item{input}{Shiny \code{input} object. Expected to contain axis- and
-font-related settings, such as \code{axis.title.font.size},
-\code{axis.title.font.family}, \code{axis.title.font.color},
+\item{input}{Shiny input object. Expected to contain axis-related fields
+such as \code{title.font.family}, \code{text.colour}, \code{axis.showline},
+\code{axis.mirror}, \code{axis.linecolor}, \code{axis.linewidth},
 \code{axis.tickfont.size}, \code{axis.tickfont.color},
 \code{axis.tickfont.family}, \code{axis.tickangle.x},
 \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
