@@ -34,6 +34,7 @@
 #'   \code{NULL} to leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
 #'   tick labels), or \code{NULL} to leave unchanged.
+#' @param position vector of an integer and an xanchor string. e.g. c(1.02, "left"). Controls horizontal positioning of the legend. 
 #' @return The plotly figure with the requested legend font sizes applied.
 #'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
 #'   sizes are supplied.
@@ -47,7 +48,7 @@
 #'     color = ~Species, type = "scatter", mode = "markers"
 #' )
 #' apply_legend_styling(fig, title.size = 16, text.size = 10)
-apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
+apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, position = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -77,6 +78,12 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
     }
+    
+    if (!is.null(position)){
+		legend_args$x <- position[1]
+		legend_args$xanchor <- position[2]
+    }
+    
     if (length(legend_args) > 0L) {
         fig <- plotly::layout(fig, legend = legend_args)
     }
@@ -121,7 +128,7 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL) {
         fig$x$layout$coloraxis$colorbar <-
             style_colorbar(fig$x$layout$coloraxis$colorbar)
     }
-
+    
     fig
 }
 
