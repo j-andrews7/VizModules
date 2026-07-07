@@ -97,20 +97,20 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
 #' Plotly's native axis titles can have their text edited interactively but
 #' cannot be dragged to a new position. Faceted figures already render their
 #' shared x/y axis titles as paper-anchored annotations (via
-#' \code{\link{.build_facet_annotations}}), which the plot configuration makes
+#' [.build_facet_annotations()]), which the plot configuration makes
 #' both editable and draggable. This helper brings the same behaviour to
 #' single-panel (non-faceted) figures by replacing the native x/y axis titles
 #' with equivalent paper-anchored annotations.
 #'
-#' The figure is first built with \code{plotly::plotly_build()} so that titles
-#' assigned via \code{layout()} (which are otherwise held in
-#' \code{layoutAttrs} until build time) are consolidated into the layout. Any
+#' The figure is first built with `plotly::plotly_build()` so that titles
+#' assigned via `layout()` (which are otherwise held in
+#' `layoutAttrs` until build time) are consolidated into the layout. Any
 #' pre-existing annotations (for example statistical brackets or facet labels)
 #' are preserved, and the font already applied to each native axis title is
 #' carried over to the corresponding annotation.
 #'
-#' Multi-panel figures (faceting or \code{split.by}, detected by the presence
-#' of secondary axes such as \code{xaxis2}/\code{yaxis2}) are returned
+#' Multi-panel figures (faceting or `split.by`, detected by the presence
+#' of secondary axes such as `xaxis2`/`yaxis2`) are returned
 #' unchanged, since their shared titles are already draggable annotations.
 #'
 #' @param fig A plotly figure object.
@@ -210,17 +210,17 @@ axis_titles_as_annotations <- function(fig) {
 #' Wraps a base column name with the names of any data adjustments that are
 #' applied to it before plotting, so that an axis title accurately describes the
 #' values displayed. The wrapping order mirrors how the adjustments are applied
-#' in dittoViz (the recognized \code{adjustment} is applied first, then the
-#' \code{adj.fxn}), producing labels such as \code{"log2(z-score(units))"}.
+#' in dittoViz (the recognized `adjustment` is applied first, then the
+#' `adj.fxn`), producing labels such as `"log2(z-score(units))"`.
 #'
-#' Empty strings, \code{NA}, and \code{NULL} adjustments are ignored, so when no
+#' Empty strings, `NA`, and `NULL` adjustments are ignored, so when no
 #' adjustment is requested the base label is returned unchanged.
 #'
 #' @param base Character scalar. The base axis label (typically the column name).
 #' @param adjustment Character scalar. A recognized data adjustment such as
-#'   \code{"z-score"} or \code{"relative.to.max"}. Optional.
+#'   `"z-score"` or `"relative.to.max"`. Optional.
 #' @param adj.fxn Character scalar. The name of a transformation function such as
-#'   \code{"log2"} or \code{"sqrt"}. Optional.
+#'   `"log2"` or `"sqrt"`. Optional.
 #'
 #' @return A character scalar containing the (possibly wrapped) axis label.
 #'
@@ -255,34 +255,34 @@ adjusted_axis_label <- function(base, adjustment = NULL, adj.fxn = NULL) {
 #' Create Plotly axis style list
 #'
 #' Constructs a style list for a Plotly axis using values from a Shiny
-#' \code{input} object, including title font, axis lines, tick
+#' `input` object, including title font, axis lines, tick
 #' appearance, and gridline settings.
 #'
 #' @param input Shiny input object. Expected to contain axis-related fields
-#'   such as \code{title.font.family}, \code{text.colour}, \code{axis.showline},
-#'   \code{axis.mirror}, \code{axis.linecolor}, \code{axis.linewidth},
-#'   \code{axis.tickfont.size}, \code{axis.tickfont.color},
-#'   \code{axis.tickfont.family}, \code{axis.tickangle.x},
-#'   \code{axis.tickangle.y}, \code{axis.ticks}, \code{axis.tickcolor},
-#'   \code{axis.ticklen}, \code{axis.tickwidth}, \code{show.grid.x},
-#'   \code{show.grid.y}, and \code{grid.color}.
-#' @param axis_side Character. Which axis to style, either \code{"x"} or
-#'   \code{"y"}. Determines whether \code{axis.tickangle.x} or
-#'   \code{axis.tickangle.y} is used for the tick angle, and which
+#'   such as `title.font.family`, `text.colour`, `axis.showline`,
+#'   `axis.mirror`, `axis.linecolor`, `axis.linewidth`,
+#'   `axis.tickfont.size`, `axis.tickfont.color`,
+#'   `axis.tickfont.family`, `axis.tickangle.x`,
+#'   `axis.tickangle.y`, `axis.ticks`, `axis.tickcolor`,
+#'   `axis.ticklen`, `axis.tickwidth`, `show.grid.x`,
+#'   `show.grid.y`, and `grid.color`.
+#' @param axis_side Character. Which axis to style, either `"x"` or
+#'   `"y"`. Determines whether `axis.tickangle.x` or
+#'   `axis.tickangle.y` is used for the tick angle, and which
 #'   gridline inputs are applied.
 #' @param isolate_fn Function. A function used to isolate Shiny inputs,
-#'   typically \code{shiny::isolate}. Defaults to \code{isolate}.
+#'   typically `shiny::isolate`. Defaults to `isolate`.
 #' @param ggplot.axis.styling Logical. Whether ggplot axis styling is applied.
-#'   Defaults to \code{TRUE}.
+#'   Defaults to `TRUE`.
 #' @return A named list containing Plotly-compatible axis styling
 #'   components, including title font, line properties, tick label
 #'   formatting, and gridline visibility.
 #'
 #' @details The function collects axis- and font-related settings from
-#'   the provided \code{input} object and assembles them into a list
+#'   the provided `input` object and assembles them into a list
 #'   suitable for use as an axis specification in Plotly layouts. The
 #'   tick angle and gridline visibility are chosen based on the value
-#'   of \code{axis_side}. If gridline inputs are not present in the
+#'   of `axis_side`. If gridline inputs are not present in the
 #'   input object, defaults to showing gridlines.
 #'
 #' @author Jacob Martin
@@ -412,7 +412,7 @@ create_ggplot_axis_style <- function(input, isolate_fn = isolate) {
 #' @param fig A plotly figure object.
 #' @param input Shiny input object containing axis title font fields.
 #' @param isolate_fn Function to isolate reactive values. Defaults to
-#'   \code{shiny::isolate}.
+#'   `shiny::isolate`.
 #'
 #' @return The modified plotly figure with updated annotation fonts.
 #'
@@ -480,14 +480,14 @@ apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
 #'
 #' Applies title font settings from the Shiny input object to an
 #' existing plotly figure. The title is centered horizontally and
-#' positioned using the supplied \code{title_y} value in the plotly
+#' positioned using the supplied `title_y` value in the plotly
 #' layout.
 #'
 #' @param plot A plotly figure object.
 #' @param input Shiny input object containing title font fields.
 #' @param isolate_fn Function to isolate reactive values.
 #' @param title_y Numeric y position for the plot title in the plotly
-#'   layout. Defaults to \code{0.95}. 
+#'   layout. Defaults to `0.95`. 
 #' @param title_x Numeric position for the title in the plotly layout.
 #' @return The modified plotly figure with updated title styling.
 #'
@@ -519,12 +519,12 @@ apply_title_layout <- function(plot, input, isolate_fn, title_y = 0.95, title_x 
 
 #' Apply standard render-time margin layout to a plotly figure
 #'
-#' The \code{renderPlotly} block in every plot module server applies the same
+#' The `renderPlotly` block in every plot module server applies the same
 #' user-configurable margins. This helper extracts that block into one call.
 #'
 #' @param fig A plotly figure object.
-#' @param input Shiny input object. Expected to contain \code{margin.t},
-#'   \code{margin.b}, \code{margin.l}, and \code{margin.r}.
+#' @param input Shiny input object. Expected to contain `margin.t`,
+#'   `margin.b`, `margin.l`, and `margin.r`.
 #'
 #' @return The plotly figure with margins applied.
 #'
@@ -547,4 +547,4 @@ apply_render_margins <- function(fig, input) {
         )
 }
 
-
+

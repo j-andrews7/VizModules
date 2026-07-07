@@ -79,6 +79,7 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{show.grid.lines} - Toggle grid lines (managed via the Axes tab gridline controls)
 \item \code{legend.color.breaks.labels} - Labels for color-scale breaks (not implemented)
 }
+
 The new Lines tab provides enhanced functionality including multiple lines per type,
 individual line widths, opacities, and diagonal/ablines with slope control.
 }

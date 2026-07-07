@@ -19,153 +19,151 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:
-#' \itemize{
-#'   \item \code{xlab} - X-axis label (auto-generated to reflect any applied X adjustment,
-#'     e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
-#'   \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'     e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
-#'   \item \code{main} - Plot title (plotly allows interactive editing)
-#'   \item \code{sub} - Plot subtitle (not supported in plotly)
-#'   \item \code{theme} - ggplot2 theme (not applicable to plotly)
-#'   \item \code{legend.title} - Legend title (managed by plotly interactively)
-#'   \item \code{legend.color.size} - Legend color size (not supported in plotly)
-#'   \item \code{legend.shape.size} - Legend shape size (not supported in plotly)
-#'   \item \code{add.xline} - Use \code{vline.intercepts} instead for vertical lines with full styling options
-#'   \item \code{add.yline} - Use \code{hline.intercepts} instead for horizontal lines with full styling options
-#'   \item \code{xline.linetype} - Use \code{vline.linetypes} instead
-#'   \item \code{xline.color} - Use \code{vline.colors} instead
-#'   \item \code{yline.linetype} - Use \code{hline.linetypes} instead
-#'   \item \code{yline.color} - Use \code{hline.colors} instead
-#'   \item \code{do.letter} - Lettering subplots (not implemented for plotly)
-#'   \item \code{do.label} - Labeling points interactively (not compatible with plotly hover)
-#'   \item \code{labels.size}, \code{labels.highlight}, \code{labels.use.numbers},
-#'     \code{labels.numbers.spacer}, \code{labels.repel}, \code{labels.repel.adjust},
-#'     \code{labels.split.by} - Point-label styling (tied to \code{do.label}, not implemented)
-#'   \item \code{rename.color.groups} - Rename color groups (not implemented)
-#'   \item \code{rename.shape.groups} - Rename shape groups (not implemented)
-#'   \item \code{add.trajectory.curves} - Add trajectory curves from coordinate matrices
-#'     (not implemented; use \code{add.trajectory.by.groups} instead)
-#'   \item \code{do.raster} - Rasterize the point layer (not implemented; use \code{webgl} for performance instead)
-#'   \item \code{raster.dpi} - Rasterization DPI (not applicable without \code{do.raster})
-#'   \item \code{show.grid.lines} - Toggle grid lines (managed via the Axes tab gridline controls)
-#'   \item \code{legend.color.breaks.labels} - Labels for color-scale breaks (not implemented)
-#' }
+#'
+#' - `xlab` - X-axis label (auto-generated to reflect any applied X adjustment,
+#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
+#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#' - `main` - Plot title (plotly allows interactive editing)
+#' - `sub` - Plot subtitle (not supported in plotly)
+#' - `theme` - ggplot2 theme (not applicable to plotly)
+#' - `legend.title` - Legend title (managed by plotly interactively)
+#' - `legend.color.size` - Legend color size (not supported in plotly)
+#' - `legend.shape.size` - Legend shape size (not supported in plotly)
+#' - `add.xline` - Use `vline.intercepts` instead for vertical lines with full styling options
+#' - `add.yline` - Use `hline.intercepts` instead for horizontal lines with full styling options
+#' - `xline.linetype` - Use `vline.linetypes` instead
+#' - `xline.color` - Use `vline.colors` instead
+#' - `yline.linetype` - Use `hline.linetypes` instead
+#' - `yline.color` - Use `hline.colors` instead
+#' - `do.letter` - Lettering subplots (not implemented for plotly)
+#' - `do.label` - Labeling points interactively (not compatible with plotly hover)
+#' - `labels.size`, `labels.highlight`, `labels.use.numbers`,
+#'   `labels.numbers.spacer`, `labels.repel`, `labels.repel.adjust`,
+#'   `labels.split.by` - Point-label styling (tied to `do.label`, not implemented)
+#' - `rename.color.groups` - Rename color groups (not implemented)
+#' - `rename.shape.groups` - Rename shape groups (not implemented)
+#' - `add.trajectory.curves` - Add trajectory curves from coordinate matrices
+#'   (not implemented; use `add.trajectory.by.groups` instead)
+#' - `do.raster` - Rasterize the point layer (not implemented; use `webgl` for performance instead)
+#' - `raster.dpi` - Rasterization DPI (not applicable without `do.raster`)
+#' - `show.grid.lines` - Toggle grid lines (managed via the Axes tab gridline controls)
+#' - `legend.color.breaks.labels` - Labels for color-scale breaks (not implemented)
+#'
 #' The new Lines tab provides enhanced functionality including multiple lines per type,
 #' individual line widths, opacities, and diagonal/ablines with slope control.
 #'
 #' @section Plot parameters and defaults:
-#' The following [dittoViz::scatterPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{x.by} - X-axis variable (UI: "X Data", default: 2nd column)
-#'   \item \code{y.by} - Y-axis variable (UI: "Y Data", default: 3rd column)
-#'   \item \code{color.by} - Coloring variable (UI: "Color By", default: "")
-#'   \item \code{shape.by} - Shape variable (UI: "Shape By", default: "")
-#'   \item \code{split.by} - Faceting variable (UI: "Split By", default: "")
-#'   \item \code{rows.use} - Row filter expression (UI: "Rows Filter", default: "")
-#'   \item \code{x.adjustment} - X-axis adjustment (UI: "X Adjustment", default: "")
-#'   \item \code{y.adjustment} - Y-axis adjustment (UI: "Y Adjustment", default: "")
-#'   \item \code{color.adjustment} - Color adjustment (UI: "Color Adjustment", default: "")
-#'   \item \code{x.adj.fxn} - X adjustment function (UI: "X Adjustment Function", default: "")
-#'   \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
-#'   \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
-#'   \item \code{size} - Point size (UI: "Point Size", default: 1)
-#'   \item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
-#'     a custom circle size legend is drawn since plotly cannot render a native size legend
-#'   \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
-#'   \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
-#'   \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
-#'   \item \code{plot.order} - Plot order (UI: "Plot Order", default: "unordered")
-#'   \item \code{shape.panel} - Shape panel values (UI: "Shape Panel", default: "16, 15, 17, 23, 25, 8")
-#'   \item \code{min.color} - Minimum color (UI: "Min Color", default: "#F0E442")
-#'   \item \code{max.color} - Maximum color (UI: "Max Color", default: "#0072B2")
-#'   \item \code{contour.color} - Contour color (UI: "Contour Color", default: "black")
-#'   \item \code{contour.linetype} - Contour linetype (UI: "Contour Linetype", default: "solid")
-#'   \item \code{color.panel} - Custom color values (UI: color.panel.ui, derived from palette)
-#'   \item \code{split.nrow} - Number of split rows (UI: "Rows", default: NA)
-#'   \item \code{split.ncol} - Number of split columns (UI: "Columns", default: NA)
-#'   \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")
-#'   \item \code{split.adjust.scales} - Facet scales (UI: "Facet Scales", default: "fixed")
-#'   \item \code{annotate.by} - Annotate by column (UI: "Annotate By", default: "")
-#'   \item \code{highlight.points} - Points to highlight (UI: "Points to Highlight", default: "")
-#'   \item \code{highlight.color} - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
-#'   \item \code{highlight.size} - Highlight size (UI: "Highlight Size", default: 7)
-#'   \item \code{highlight.border.color} - Highlight border color (UI: "Highlight Border Color", default: "#000000")
-#'   \item \code{highlight.border.width} - Highlight border width (UI: "Highlight Border Width", default: 1)
-#'   \item \code{highlight.auto.annotate} - Auto-annotate highlights (UI: "Auto-annotate Highlights", default: TRUE)
-#'   \item \code{annotation.color} - Annotation color (UI: "Annotation Color", default: "black")
-#'   \item \code{annotation.ax} - Annotation X offset (UI: "Annotation X Offset", default: 20)
-#'   \item \code{annotation.ay} - Annotation Y offset (UI: "Annotation Y Offset", default: -20)
-#'   \item \code{annotation.size} - Annotation size (UI: "Annotation Size", default: 10)
-#'   \item \code{annotation.showarrow} - Show arrow (UI: "Show Arrow", default: TRUE)
-#'   \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
-#'   \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
-#'   \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
-#'   \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
-#'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-#'     default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
-#'   \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-#'     default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
-#'   \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
-#'   \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
-#'   \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
-#'   \item \code{add.trajectory.by.groups} - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
-#'   \item \code{trajectory.arrow.size} - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
-#'   \item \code{do.ellipse} - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
-#'   \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
-#'   \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")
-#'   \item \code{hover.round.digits} - Hover round digits (UI: "Hover Round Digits", default: 5)
-#' }
+#' The following [dittoViz::scatterPlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
+#'
+#' - `x.by` - X-axis variable (UI: "X Data", default: 2nd column)
+#' - `y.by` - Y-axis variable (UI: "Y Data", default: 3rd column)
+#' - `color.by` - Coloring variable (UI: "Color By", default: "")
+#' - `shape.by` - Shape variable (UI: "Shape By", default: "")
+#' - `split.by` - Faceting variable (UI: "Split By", default: "")
+#' - `rows.use` - Row filter expression (UI: "Rows Filter", default: "")
+#' - `x.adjustment` - X-axis adjustment (UI: "X Adjustment", default: "")
+#' - `y.adjustment` - Y-axis adjustment (UI: "Y Adjustment", default: "")
+#' - `color.adjustment` - Color adjustment (UI: "Color Adjustment", default: "")
+#' - `x.adj.fxn` - X adjustment function (UI: "X Adjustment Function", default: "")
+#' - `y.adj.fxn` - Y adjustment function (UI: "Y Adjustment Function", default: "")
+#' - `color.adj.fxn` - Color adjustment function (UI: "Color Adjustment Function", default: "")
+#' - `size` - Point size (UI: "Point Size", default: 1)
+#' - `size.by` - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
+#'   a custom circle size legend is drawn since plotly cannot render a native size legend
+#' - `opacity` - Point opacity (UI: "Point Opacity", default: 1)
+#' - `show.others` - Show others (UI: "Show Others", default: TRUE)
+#' - `split.show.all.others` - Show split others (UI: "Show Split Others", default: TRUE)
+#' - `plot.order` - Plot order (UI: "Plot Order", default: "unordered")
+#' - `shape.panel` - Shape panel values (UI: "Shape Panel", default: "16, 15, 17, 23, 25, 8")
+#' - `min.color` - Minimum color (UI: "Min Color", default: "#F0E442")
+#' - `max.color` - Maximum color (UI: "Max Color", default: "#0072B2")
+#' - `contour.color` - Contour color (UI: "Contour Color", default: "black")
+#' - `contour.linetype` - Contour linetype (UI: "Contour Linetype", default: "solid")
+#' - `color.panel` - Custom color values (UI: color.panel.ui, derived from palette)
+#' - `split.nrow` - Number of split rows (UI: "Rows", default: NA)
+#' - `split.ncol` - Number of split columns (UI: "Columns", default: NA)
+#' - `multivar.split.dir` - Multivar split direction (UI: "Multivar Split Dir", default: "col")
+#' - `split.adjust.scales` - Facet scales (UI: "Facet Scales", default: "fixed")
+#' - `annotate.by` - Annotate by column (UI: "Annotate By", default: "")
+#' - `highlight.points` - Points to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.color` - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
+#' - `highlight.size` - Highlight size (UI: "Highlight Size", default: 7)
+#' - `highlight.border.color` - Highlight border color (UI: "Highlight Border Color", default: "#000000")
+#' - `highlight.border.width` - Highlight border width (UI: "Highlight Border Width", default: 1)
+#' - `highlight.auto.annotate` - Auto-annotate highlights (UI: "Auto-annotate Highlights", default: TRUE)
+#' - `annotation.color` - Annotation color (UI: "Annotation Color", default: "black")
+#' - `annotation.ax` - Annotation X offset (UI: "Annotation X Offset", default: 20)
+#' - `annotation.ay` - Annotation Y offset (UI: "Annotation Y Offset", default: -20)
+#' - `annotation.size` - Annotation size (UI: "Annotation Size", default: 10)
+#' - `annotation.showarrow` - Show arrow (UI: "Show Arrow", default: TRUE)
+#' - `annotation.arrowcolor` - Arrow color (UI: "Arrow Color", default: "black")
+#' - `annotation.arrowhead` - Arrowhead style (UI: "Arrowhead Style", default: 2)
+#' - `annotation.arrowwidth` - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+#' - `legend.color.breaks` - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
+#' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
+#'   default: 1.02); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
+#' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
+#'   default: 0.95); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
+#' - `min.value` - Minimum value (UI: "Min Value", default: NA)
+#' - `max.value` - Maximum value (UI: "Max Value", default: NA)
+#' - `trajectory.group.by` - Trajectory group by (UI: "Trajectory Group By", default: "")
+#' - `add.trajectory.by.groups` - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
+#' - `trajectory.arrow.size` - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+#' - `do.ellipse` - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
+#' - `do.contour` - Enable contour (UI: "Enable Contour", default: FALSE)
+#' - `hover.data` - Hover data columns (UI: "Hover Data", default: "")
+#' - `hover.round.digits` - Hover round digits (UI: "Hover Round Digits", default: 5)
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
-#' \itemize{
-#'   \item \code{webgl} - Plot with webGL (UI: "Plot with webGL", default: TRUE)
-#'   \item \code{shape.fill} - Shape fill color (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
-#'   \item \code{shape.line.color} - Shape line color (UI: "Shape Line Color", default: "black")
-#'   \item \code{shape.line.width} - Shape line width (UI: "Shape Line Width", default: 4)
-#'   \item \code{shape.linetype} - Shape linetype (UI: "Shape Linetype", default: "solid")
-#'   \item \code{shape.opacity} - Shape opacity (UI: "Shape Opacity", default: 1)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
-#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
-#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
-#'   \item \code{axis.showline} - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
-#'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
-#'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X Gridlines", default: TRUE)
-#'   \item \code{show.grid.y} - Show Y-axis major gridlines (UI: "Show Y Gridlines", default: TRUE)
-#'   \item \code{grid.color} - Gridline color (UI: "Gridline Color", default: "#CCCCCC")
-#'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis Line Color", default: "black")
-#'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis Line Width", default: 0.5)
-#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick Label Size", default: 12)
-#'   \item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick Label Color", default: "black")
-#'   \item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick Label Font", default: "Arial")
-#'   \item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X Tick Label Angle", default: 0)
-#'   \item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y Tick Label Angle", default: 0)
-#'   \item \code{axis.ticks} - Position of tick marks (UI: "Tick Position", default: "outside")
-#'   \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
-#'   \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
-#'   \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
-#'   \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
-#'   \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
-#'   \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
-#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
-#'   \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
-#'   \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
-#'   \item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line Types", default: "dashed")
-#'   \item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
-#'   \item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
-#'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
-#'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line Types", default: "dashed")
-#'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
-#'   \item \code{best.fit} - Enable line of best fit (UI: "Line of best fit:", default: FALSE)
-#'   \item \code{line.best.smoothness} - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
-#'   \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
-#'   \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
-#' }
+#'
+#' - `webgl` - Plot with webGL (UI: "Plot with webGL", default: TRUE)
+#' - `shape.fill` - Shape fill color (UI: "Shape Fill", default: "rgba(0, 0, 0, 0)")
+#' - `shape.line.color` - Shape line color (UI: "Shape Line Color", default: "black")
+#' - `shape.line.width` - Shape line width (UI: "Shape Line Width", default: 4)
+#' - `shape.linetype` - Shape linetype (UI: "Shape Linetype", default: "solid")
+#' - `shape.opacity` - Shape opacity (UI: "Shape Opacity", default: 1)
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `axis.title.font.size` - Axis title font size (UI: "Axis Title Size", default: 18)
+#' - `axis.title.font.color` - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#' - `axis.title.font.family` - Axis title font family (UI: "Axis Title Font", default: "Arial")
+#' - `axis.showline` - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
+#' - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
+#' - `show.grid.x` - Show X-axis major gridlines (UI: "Show X Gridlines", default: TRUE)
+#' - `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y Gridlines", default: TRUE)
+#' - `grid.color` - Gridline color (UI: "Gridline Color", default: "#CCCCCC")
+#' - `axis.linecolor` - Color of axis lines (UI: "Axis Line Color", default: "black")
+#' - `axis.linewidth` - Width of axis lines (UI: "Axis Line Width", default: 0.5)
+#' - `axis.tickfont.size` - Size of tick labels (UI: "Tick Label Size", default: 12)
+#' - `axis.tickfont.color` - Color of tick labels (UI: "Tick Label Color", default: "black")
+#' - `axis.tickfont.family` - Font family for tick labels (UI: "Tick Label Font", default: "Arial")
+#' - `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI: "X Tick Label Angle", default: 0)
+#' - `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI: "Y Tick Label Angle", default: 0)
+#' - `axis.ticks` - Position of tick marks (UI: "Tick Position", default: "outside")
+#' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
+#' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
+#' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
+#' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
+#' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+#' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+#' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
+#' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
+#' - `hline.linetypes` - Line types for horizontal lines (UI: "Line Types", default: "dashed")
+#' - `hline.opacities` - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+#' - `vline.intercepts` - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+#' - `vline.colors` - Colors for vertical lines (UI: "Colors", default: "#000000")
+#' - `vline.widths` - Widths for vertical lines (UI: "Widths", default: "1")
+#' - `vline.linetypes` - Line types for vertical lines (UI: "Line Types", default: "dashed")
+#' - `vline.opacities` - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#' - `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#' - `best.fit` - Enable line of best fit (UI: "Line of best fit:", default: FALSE)
+#' - `line.best.smoothness` - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
+#' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
+#' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -612,9 +610,9 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the scatterplot

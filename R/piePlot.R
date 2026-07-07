@@ -5,10 +5,10 @@
 #' @param labels Character, name of the column to use for the slice labels.
 #' @param values Character, name of the column to use for the aggregated values (slice sizes).
 #' @param colors Optional character vector of hex colors for the slices.
-#'   If named, values are matched to the values in \code{labels}; otherwise colours
+#'   If named, values are matched to the values in `labels`; otherwise colours
 #'   are recycled in data order.
 #' @param palette Optional character vector of fallback colors used when
-#'   \code{colors} is not supplied or missing values are present.
+#'   `colors` is not supplied or missing values are present.
 #' @param hole Numeric value between 0 and 1 for the hole size
 #'   (0 for pie chart, >0 for donut chart). Default: 0.
 #' @param textinfo Character string specifying the text info to show on slices.

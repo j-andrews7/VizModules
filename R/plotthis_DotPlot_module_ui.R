@@ -15,67 +15,65 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::DotPlot()] parameters are not available via UI inputs:
-#' \itemize{
-#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
-#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
-#'   \item \code{title} - Plot title (plotly allows interactive editing)
-#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
-#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
-#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
-#'   \item \code{legend.direction} - Legend orientation (plotly allows interactive adjustment)
-#'   \item \code{x_sep} - Separator for multiple x columns (not yet implemented)
-#'   \item \code{y_sep} - Separator for multiple y columns (not yet implemented)
-#'   \item \code{split_by} - Split variable for separate plots (doesn't work with plotly; `facet_by` available instead)
-#'   \item \code{split_by_sep} - Separator for multiple `split_by` columns (`split_by` not used in module)
-#'   \item \code{size_name} - Size legend name (plotly allows interactive editing)
-#'   \item \code{fill_name} - Fill legend name (not yet implemented)
-#'   \item \code{fill_cutoff_name} - Fill cutoff legend name (not yet implemented)
-#'   \item \code{theme} - ggplot2 theme (managed internally)
-#'   \item \code{theme_args} - Theme arguments (not yet implemented)
-#'   \item \code{palcolor} - Managed internally via the palette selection UI
-#'   \item \code{add_bg} - Add background stripes/shading (not yet implemented)
-#'   \item \code{bg_palette} - Background palette (not yet implemented)
-#'   \item \code{bg_palcolor} - Background palette colors (not yet implemented)
-#'   \item \code{bg_alpha} - Background alpha (not yet implemented)
-#'   \item \code{bg_direction} - Background stripe direction (not yet implemented)
-#'   \item \code{x_text_angle} - X-axis text angle (handled by axis.tickangle.x)
-#'   \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
-#'   \item \code{keep_na} - Keep NA values (not yet implemented)
-#'   \item \code{combine} - Combine multiple plots (not applicable as `split_by` is not implemented)
-#'   \item \code{seed} - Random seed (not applicable)
-#'   \item \code{nrow} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{ncol} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{byrow} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{axes} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{axis_titles} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{guides} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#'   \item \code{design} - Only applies if \code{split_by} is used with combine (`split_by` not used in module)
-#' }
+#'
+#' - `xlab` - X-axis label (plotly allows interactive editing)
+#' - `ylab` - Y-axis label (plotly allows interactive editing)
+#' - `title` - Plot title (plotly allows interactive editing)
+#' - `subtitle` - Plot subtitle (not supported in plotly)
+#' - `aspect.ratio` - Aspect ratio control (handled by plotly layout)
+#' - `legend.position` - Legend positioning (plotly allows interactive repositioning)
+#' - `legend.direction` - Legend orientation (plotly allows interactive adjustment)
+#' - `x_sep` - Separator for multiple x columns (not yet implemented)
+#' - `y_sep` - Separator for multiple y columns (not yet implemented)
+#' - `split_by` - Split variable for separate plots (doesn't work with plotly; `facet_by` available instead)
+#' - `split_by_sep` - Separator for multiple `split_by` columns (`split_by` not used in module)
+#' - `size_name` - Size legend name (plotly allows interactive editing)
+#' - `fill_name` - Fill legend name (not yet implemented)
+#' - `fill_cutoff_name` - Fill cutoff legend name (not yet implemented)
+#' - `theme` - ggplot2 theme (managed internally)
+#' - `theme_args` - Theme arguments (not yet implemented)
+#' - `palcolor` - Managed internally via the palette selection UI
+#' - `add_bg` - Add background stripes/shading (not yet implemented)
+#' - `bg_palette` - Background palette (not yet implemented)
+#' - `bg_palcolor` - Background palette colors (not yet implemented)
+#' - `bg_alpha` - Background alpha (not yet implemented)
+#' - `bg_direction` - Background stripe direction (not yet implemented)
+#' - `x_text_angle` - X-axis text angle (handled by axis.tickangle.x)
+#' - `keep_empty` - Keep empty factor levels (not yet implemented)
+#' - `keep_na` - Keep NA values (not yet implemented)
+#' - `combine` - Combine multiple plots (not applicable as `split_by` is not implemented)
+#' - `seed` - Random seed (not applicable)
+#' - `nrow` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `ncol` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `byrow` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `axes` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `axis_titles` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `guides` - Only applies if `split_by` is used with combine (`split_by` not used in module)
+#' - `design` - Only applies if `split_by` is used with combine (`split_by` not used in module)
 #'
 #' @section Plot parameters and defaults:
-#' The following [plotthis::DotPlot()] and custom parameters can be accessed via UI inputs and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{x} - X-axis variable (UI: "X Values", default: 2nd categorical variable)
-#'   \item \code{y} - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
-#'   \item \code{size_by} - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
-#'   \item \code{size_min} - Minimum dot size (UI: "Min Dot Size", default: 1)
-#'   \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 6)
-#'   \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
-#'   \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
-#'   \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-#'   \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
-#'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
-#'   \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
-#'   \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
-#'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
-#'   \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
-#'   \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
-#'   \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
-#'   \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-#'     default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
-#'   \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-#'     default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
-#' }
+#' The following [plotthis::DotPlot()] and custom parameters can be accessed via UI inputs and/or the `defaults` argument:
+#'
+#' - `x` - X-axis variable (UI: "X Values", default: 2nd categorical variable)
+#' - `y` - Y-axis variable (UI: "Y Values", default: 3rd categorical variable)
+#' - `size_by` - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
+#' - `size_min` - Minimum dot size (UI: "Min Dot Size", default: 1)
+#' - `size_max` - Maximum dot size (UI: "Max Dot Size", default: 6)
+#' - `fill_by` - Numeric column mapped to dot fill (UI: "Fill By", default: "")
+#' - `fill_cutoff` - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
+#' - `flip` - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
+#' - `facet_by` - Faceting variable (UI: "Facet By", default: "")
+#' - `facet_scales` - Facet scale behavior (UI: "Facet Scale", default: "fixed")
+#' - `facet_ncol` - Number of facet columns (UI: "Columns", default: NULL)
+#' - `facet_nrow` - Number of facet rows (UI: "Rows", default: NULL)
+#' - `facet_byrow` - Facet ordering direction (UI: "Facet by Row", default: TRUE)
+#' - `palette` - Continuous fill palette (UI: "Color Palette", default: "Spectral")
+#' - `palreverse` - Reverse the color palette (UI: "Reverse palette", default: FALSE)
+#' - `alpha` - Dot fill transparency (UI: "Alpha", default: 1)
+#' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
+#'   default: 1.04); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
+#' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
+#'   default: 0.35); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -244,9 +242,9 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the DotPlot

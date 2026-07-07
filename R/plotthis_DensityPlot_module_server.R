@@ -5,10 +5,10 @@
 #' reactive data processing, dynamic UI generation for color palettes,
 #' and the rendering of interactive Plotly density plots.
 #'
-#' @param id \code{character} unique ID for the shiny namespace.
-#' @param data \code{reactive} A reactive expression returning a data frame to be plotted.
-#' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
-#' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
+#' @param id `character` unique ID for the shiny namespace.
+#' @param data `reactive` A reactive expression returning a data frame to be plotted.
+#' @param hide.inputs `character` vector of input IDs to hide in the UI. Default is NULL.
+#' @param hide.tabs `character` vector of tab names to hide within the module. Default is NULL.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
 #'   the same list passed to the corresponding UI function.

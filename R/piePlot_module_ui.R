@@ -16,41 +16,39 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [VizModules::piePlot()] parameters are not exposed as UI inputs:
-#' \itemize{
-#'   \item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
-#'   \item \code{legend.x} - Legend horizontal position offset (use \code{defaults} to set)
-#'   \item \code{legend.y} - Legend vertical position offset (use \code{defaults} to set)
-#'   \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
-#' }
+#'
+#' - `palette` - Color palette name; use `colors` via the color picker UI instead
+#' - `legend.x` - Legend horizontal position offset (use `defaults` to set)
+#' - `legend.y` - Legend vertical position offset (use `defaults` to set)
+#' - `title.text` - Plot title text (plotly allows interactive editing; use `defaults` to set)
 #'
 #' @section Plot parameters and defaults:
-#' The following [VizModules::piePlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{labels} - Label column (UI: "Label column (summary data)", default: 2nd categorical column)
-#'   \item \code{values} - Aggregated value column (UI: "Aggregated value column", default: 2nd numeric column)
-#'   \item \code{sort} - Sort slices by value (UI: "Sort slices by value", default: TRUE)
-#'   \item \code{direction} - Slice direction (UI: "Slice direction", default: "counterclockwise")
-#'   \item \code{rotation} - Start angle in degrees (UI: "Start angle (degrees)", default: 0)
-#'   \item \code{hole} - Center hole size for donut chart (UI: "Center hole size", default: 0)
-#'   \item \code{colors} - Slice colors (UI: color picker, derived from palette)
-#'   \item \code{slice.line.color} - Slice border color (UI: "Slice border color", default: "#FFFFFF")
-#'   \item \code{slice.line.width} - Slice border width (UI: "Slice border width", default: 0)
-#'   \item \code{textinfo} - Text to show on slices (UI: "Text to show on slices", default: c("label", "value", "percent"))
-#'   \item \code{textposition} - Text position (UI: "Text position", default: "auto")
-#'   \item \code{insidetextorientation} - Inside text orientation (UI: "Inside text orientation", default: "auto")
-#'   \item \code{text.font.size} - Slice text size (UI: "Slice text size", default: 12)
-#'   \item \code{text.font.family} - Slice text font (UI: "Slice text font", default: "Arial")
-#'   \item \code{text.font.color} - Slice text color (UI: "Slice text color", default: "#000000")
-#'   \item \code{title.x} - Title horizontal position (UI: "Title horizontal position", default: 0.5)
-#'   \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
-#'   \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
-#'   \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
-#'   \item \code{legend.font.size} - Legend font size (UI: "Legend font size", default: 12)
-#'   \item \code{legend.font.color} - Legend font color (UI: "Legend font color", default: "#000000")
-#' }
+#' The following [VizModules::piePlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
+#'
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `labels` - Label column (UI: "Label column (summary data)", default: 2nd categorical column)
+#' - `values` - Aggregated value column (UI: "Aggregated value column", default: 2nd numeric column)
+#' - `sort` - Sort slices by value (UI: "Sort slices by value", default: TRUE)
+#' - `direction` - Slice direction (UI: "Slice direction", default: "counterclockwise")
+#' - `rotation` - Start angle in degrees (UI: "Start angle (degrees)", default: 0)
+#' - `hole` - Center hole size for donut chart (UI: "Center hole size", default: 0)
+#' - `colors` - Slice colors (UI: color picker, derived from palette)
+#' - `slice.line.color` - Slice border color (UI: "Slice border color", default: "#FFFFFF")
+#' - `slice.line.width` - Slice border width (UI: "Slice border width", default: 0)
+#' - `textinfo` - Text to show on slices (UI: "Text to show on slices", default: c("label", "value", "percent"))
+#' - `textposition` - Text position (UI: "Text position", default: "auto")
+#' - `insidetextorientation` - Inside text orientation (UI: "Inside text orientation", default: "auto")
+#' - `text.font.size` - Slice text size (UI: "Slice text size", default: 12)
+#' - `text.font.family` - Slice text font (UI: "Slice text font", default: "Arial")
+#' - `text.font.color` - Slice text color (UI: "Slice text color", default: "#000000")
+#' - `title.x` - Title horizontal position (UI: "Title horizontal position", default: 0.5)
+#' - `show.legend` - Show legend (UI: "Show legend", default: TRUE)
+#' - `legend.orientation` - Legend orientation (UI: "Legend orientation", default: "h")
+#' - `legend.font.family` - Legend font (UI: "Legend font", default: "Arial")
+#' - `legend.font.size` - Legend font size (UI: "Legend font size", default: 12)
+#' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation. Supply a summary table with one row per slice.
@@ -244,9 +242,9 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the piePlot

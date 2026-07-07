@@ -14,7 +14,7 @@
 #' @param line.type Character, line style.
 #'   Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
 #' @param colour.group.by Character or formula, column name(s) to group lines by color.
-#'   Can be a formula like \code{~ column_name}. Ignored if multiple `x` or `y` columns are provided.
+#'   Can be a formula like `~ column_name`. Ignored if multiple `x` or `y` columns are provided.
 #'   Default: `NULL`.
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
 #' @param facet.by Optional character, column name to facet plots by.
@@ -22,12 +22,12 @@
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
 #' @param facet.nrow Optional integer, number of rows in the faceted subplot grid.
-#'   If \code{NULL} (default), a single row is used unless \code{facet.ncol} is supplied,
+#'   If `NULL` (default), a single row is used unless `facet.ncol` is supplied,
 #'   in which case the number of rows is derived from the number of facet levels.
 #' @param facet.ncol Optional integer, number of columns in the faceted subplot grid.
-#'   If \code{NULL} (default), columns are derived from \code{facet.nrow} and the number
-#'   of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
-#'   if both are provided, \code{facet.nrow} takes precedence.
+#'   If `NULL` (default), columns are derived from `facet.nrow` and the number
+#'   of facet levels. Only one of `facet.nrow` / `facet.ncol` needs to be set;
+#'   if both are provided, `facet.nrow` takes precedence.
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
 #'   May be a single value (applied to both directions) or a length-2 vector
 #'   `c(horizontal, vertical)` to control the gap between columns and rows separately. Default: 0.05.

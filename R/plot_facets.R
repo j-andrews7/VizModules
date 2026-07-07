@@ -220,14 +220,14 @@
 
 #' Resolve facet axis sharing from facet.scales
 #'
-#' Converts a \code{facet.scales} string (one of \code{"fixed"}, \code{"free"},
-#' \code{"free_x"}, \code{"free_y"}) into the \code{shareX} / \code{shareY}
-#' logical values expected by \code{plotly::subplot}.
+#' Converts a `facet.scales` string (one of `"fixed"`, `"free"`,
+#' `"free_x"`, `"free_y"`) into the `shareX` / `shareY`
+#' logical values expected by `plotly::subplot`.
 #'
-#' @param facet.scales Character, one of \code{"fixed"} (default),
-#'   \code{"free"}, \code{"free_x"}, or \code{"free_y"}.
+#' @param facet.scales Character, one of `"fixed"` (default),
+#'   `"free"`, `"free_x"`, or `"free_y"`.
 #'
-#' @return A named list with logical elements \code{shareX} and \code{shareY}.
+#' @return A named list with logical elements `shareX` and `shareY`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_resolve_facet_sharing
@@ -250,24 +250,24 @@
 #' Resolve number of rows for a faceted subplot grid
 #'
 #' Given the number of facet levels and optional user-supplied
-#' \code{facet.nrow} / \code{facet.ncol} values, computes the \code{nrows}
-#' argument to pass to \code{plotly::subplot}.
+#' `facet.nrow` / `facet.ncol` values, computes the `nrows`
+#' argument to pass to `plotly::subplot`.
 #'
 #' Resolution rules:
-#' \itemize{
-#'   \item Both \code{NULL}/\code{NA}: returns 1 (single row, preserves legacy behaviour).
-#'   \item Only \code{facet.nrow} supplied: returns that value.
-#'   \item Only \code{facet.ncol} supplied: returns \code{ceiling(n_facets / facet.ncol)}.
-#'   \item Both supplied: \code{facet.nrow} wins.
-#' }
-#' The result is clamped to the range \code{[1, n_facets]}.
+#'
+#' - Both `NULL`/`NA`: returns 1 (single row, preserves legacy behaviour).
+#' - Only `facet.nrow` supplied: returns that value.
+#' - Only `facet.ncol` supplied: returns `ceiling(n_facets / facet.ncol)`.
+#' - Both supplied: `facet.nrow` wins.
+#'
+#' The result is clamped to the range `[1, n_facets]`.
 #'
 #' @param n_facets Integer, number of facet panels.
 #' @param facet.nrow Optional integer, user-requested number of rows.
 #' @param facet.ncol Optional integer, user-requested number of columns.
 #'
 #' @return A positive integer giving the number of rows for
-#'   \code{plotly::subplot}.
+#'   `plotly::subplot`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_resolve_facet_layout
@@ -296,29 +296,29 @@
 #' Build facet subplot annotations
 #'
 #' Creates a list of plotly annotation objects suitable for labelling faceted
-#' subplots arranged in a grid of \code{nrows} rows. When \code{nrows = 1}
+#' subplots arranged in a grid of `nrows` rows. When `nrows = 1`
 #' (the default) the behaviour matches the previous single-row layout.
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
 #' @param facet_levels Character vector of facet level labels, one per subplot.
-#' @param x.title Optional character, shared X-axis title. Default: \code{NULL}.
-#' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
+#' @param x.title Optional character, shared X-axis title. Default: `NULL`.
+#' @param y.title Optional character, shared Y-axis title. Default: `NULL`.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
 #' @param nrows Integer, number of rows the faceted subplots are arranged in.
 #'   Used to compute per-subplot annotation coordinates for multi-row grids
-#'   when \code{fig} is not supplied. Default: 1.
+#'   when `fig` is not supplied. Default: 1.
 #' @param fig Optional plotly figure. When supplied, per-panel title
 #'   coordinates are read directly from the figure's xaxis/yaxis domains so
 #'   that titles stay aligned with panels after domain-rewriting helpers such
-#'   as \code{.apply_facet_subplot_spacing()}. If \code{NULL} (the default),
-#'   coordinates are computed from \code{nrows} assuming evenly spaced
+#'   as `.apply_facet_subplot_spacing()`. If `NULL` (the default),
+#'   coordinates are computed from `nrows` assuming evenly spaced
 #'   panels filling the full paper area.
 #' @param title.offset Numeric fraction of the figure height to place each
-#'   subplot title above the top of its panel. Default: \code{0.02}.
+#'   subplot title above the top of its panel. Default: `0.02`.
 #'
-#' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
+#' @return A list of annotation lists suitable for `plotly::layout(annotations = ...)`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_build_facet_annotations
@@ -441,12 +441,11 @@
 #'
 #' The borders honour the same axis styling semantics used for single-panel
 #' figures:
-#' \itemize{
-#'   \item \code{showline} and \code{mirror} both \code{TRUE}: full rectangle
-#'     border around each panel.
-#'   \item only \code{showline} \code{TRUE}: left and bottom edges only.
-#'   \item \code{showline} \code{FALSE}: no borders (empty list).
-#' }
+#'
+#' - `showline` and `mirror` both `TRUE`: full rectangle
+#'   border around each panel.
+#' - only `showline` `TRUE`: left and bottom edges only.
+#' - `showline` `FALSE`: no borders (empty list).
 #'
 #' @param fig A plotly figure object whose `x$layout` contains the per-panel
 #'   `xaxis*`/`yaxis*` domains (typically after `subplot()` and

@@ -16,32 +16,30 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [VizModules::parallelCoordinatesPlot()] parameters are not exposed as UI inputs:
-#' \itemize{
-#'   \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
-#' }
+#'
+#' - `title.text` - Plot title text (plotly allows interactive editing; use `defaults` to set)
 #'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::parallelCoordinatesPlot()] parameters can be accessed via UI inputs
-#' and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
-#'   \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
-#'   \item \code{color.scale} - Colorscale for lines when \code{color.by} is numeric (UI: "Color Scale", default: "Viridis")
-#'   \item \code{palette.selection} - Discrete color palette used when \code{color.by} is categorical (UI: palette picker)
-#'   \item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
-#'   \item \code{line.width} - Line width (UI: "Line width", default: 1)
-#'   \item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
-#'   \item \code{label.font.size} - Dimension label font size (UI: "Label font size", default: 12)
-#'   \item \code{label.font.color} - Dimension label font color (UI: "Label font color", default: "black")
-#'   \item \code{label.font.family} - Dimension label font family (UI: "Label font", default: "Arial")
-#'   \item \code{tick.font.size} - Tick label font size (UI: "Tick font size", default: 10)
-#'   \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
-#'   \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
-#'   \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
-#' }
+#' and/or the `defaults` argument:
+#'
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `dimensions` - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
+#' - `color.by` - Column to color lines by (UI: "Color by", default: "")
+#' - `color.scale` - Colorscale for lines when `color.by` is numeric (UI: "Color Scale", default: "Viridis")
+#' - `palette.selection` - Discrete color palette used when `color.by` is categorical (UI: palette picker)
+#' - `line.opacity` - Line opacity (UI: "Line opacity", default: 0.5)
+#' - `line.width` - Line width (UI: "Line width", default: 1)
+#' - `show.colorbar` - Show colorbar (UI: "Show colorbar", default: TRUE)
+#' - `label.font.size` - Dimension label font size (UI: "Label font size", default: 12)
+#' - `label.font.color` - Dimension label font color (UI: "Label font color", default: "black")
+#' - `label.font.family` - Dimension label font family (UI: "Label font", default: "Arial")
+#' - `tick.font.size` - Tick label font size (UI: "Tick font size", default: 10)
+#' - `tick.font.color` - Tick label font color (UI: "Tick font color", default: "black")
+#' - `tick.font.family` - Tick label font family (UI: "Tick font", default: "Arial")
+#' - `bgcolor` - Plot background color (UI: "Background color", default: "#FFFFFF")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -204,9 +202,9 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the parallelCoordinatesPlot

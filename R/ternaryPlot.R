@@ -10,7 +10,7 @@
 #' @param colors Optional character vector of hex colors for the traces.
 #'   If named, values are matched to the group values; otherwise colours are recycled.
 #' @param palette Optional character vector of fallback colors used when
-#'   \code{colors} is not supplied or missing values are present.
+#'   `colors` is not supplied or missing values are present.
 #' @param sum Numeric, the constant sum for the ternary axes (e.g., 100 for percentages,
 #'   1 for proportions). All data points should sum to this value. Default: 100.
 #' @param mode Character, the trace mode. Options: "markers", "lines", "lines+markers". Default: "markers".

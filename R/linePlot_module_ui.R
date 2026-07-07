@@ -14,75 +14,73 @@
 #' for that function for an exhaustive list.
 #'
 #' @section Plot parameters and defaults:
-#' The following [VizModules::linePlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{x} - X-axis variable(s) (UI: "Select X values", defaults key: \code{x.value}, default: 1st column, multiple: TRUE)
-#'   \item \code{y} - Y-axis variable(s) (UI: "Select Y values", defaults key: \code{y.value}, default: 2nd column, multiple: TRUE)
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
-#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
-#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
-#'   \item \code{group.by} - Grouping variable (UI: "Group by", default: 1st categorical variable)
-#'   \item \code{order.by} - Order by Y values (UI: "Order by Y", default: FALSE)
-#'   \item \code{x.adjustment} - X-axis adjustment function (UI: "X Adjustment", default: "")
-#'   \item \code{y.adjustment} - Y-axis adjustment function (UI: "Y Adjustment", default: "")
-#'   \item \code{facet.by} - Faceting variable (UI: "Facet by", default: "")
-#'   \item \code{facet.scales} - Facet scale behavior (UI: "Facet scales", default: "fixed")
-#'   \item \code{facet.nrow} - Number of rows in the facet grid (UI: "Rows", default: NULL; blank = auto)
-#'   \item \code{facet.ncol} - Number of columns in the facet grid (UI: "Columns", default: NULL; blank = auto)
-#'   \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
-#'   \item \code{line.type} - Line type (UI: "Line type", default: "solid")
-#'   \item \code{error.bar} - Show error bars (UI: "Error Bars", default: TRUE; requires a categorical X and a single Y)
-#'   \item \code{error.colour} - Error bar color (UI: "Error Bar Colour", default: "#000000")
-#'   \item \code{error.width} - Error bar cap width (UI: "Error Bar Width", default: 1)
-#'   \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
-#'   \item \code{axis.showline} - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
-#'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
-#'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis Line Color", default: "black")
-#'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis Line Width", default: 0.5)
-#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick Label Size", default: 12)
-#'   \item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick Label Color", default: "black")
-#'   \item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick Label Font", default: "Arial")
-#'   \item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X Tick Label Angle", default: 0)
-#'   \item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y Tick Label Angle", default: 0)
-#'   \item \code{axis.ticks} - Position of tick marks (UI: "Tick Position", default: "outside")
-#'   \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
-#'   \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
-#'   \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
-#'   \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
-#'   \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
-#'   \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
-#'   \item \code{show.grid.x} - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
-#'   \item \code{show.grid.y} - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
-#'   \item \code{grid.color} - Gridline color (UI: "Gridline Color", default: "#CCCCCC")
-#'   \item \code{x.title} - X-axis title (auto-calculated from data)
-#'   \item \code{y.title} - Y-axis title (auto-calculated from data)
-#'   \item \code{flip.x} - Flip X-axis (UI: "Flip X", default: FALSE)
-#'   \item \code{flip.y} - Flip Y-axis (UI: "Flip Y", default: FALSE)
-#' }
+#' The following [VizModules::linePlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
+#'
+#' - `x` - X-axis variable(s) (UI: "Select X values", defaults key: `x.value`, default: 1st column, multiple: TRUE)
+#' - `y` - Y-axis variable(s) (UI: "Select Y values", defaults key: `y.value`, default: 2nd column, multiple: TRUE)
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `axis.title.font.size` - Axis title font size (UI: "Axis Title Size", default: 18)
+#' - `axis.title.font.color` - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#' - `axis.title.font.family` - Axis title font family (UI: "Axis Title Font", default: "Arial")
+#' - `group.by` - Grouping variable (UI: "Group by", default: 1st categorical variable)
+#' - `order.by` - Order by Y values (UI: "Order by Y", default: FALSE)
+#' - `x.adjustment` - X-axis adjustment function (UI: "X Adjustment", default: "")
+#' - `y.adjustment` - Y-axis adjustment function (UI: "Y Adjustment", default: "")
+#' - `facet.by` - Faceting variable (UI: "Facet by", default: "")
+#' - `facet.scales` - Facet scale behavior (UI: "Facet scales", default: "fixed")
+#' - `facet.nrow` - Number of rows in the facet grid (UI: "Rows", default: NULL; blank = auto)
+#' - `facet.ncol` - Number of columns in the facet grid (UI: "Columns", default: NULL; blank = auto)
+#' - `plot.mode` - Plot type (UI: "Plot type", default: "lines")
+#' - `line.type` - Line type (UI: "Line type", default: "solid")
+#' - `error.bar` - Show error bars (UI: "Error Bars", default: TRUE; requires a categorical X and a single Y)
+#' - `error.colour` - Error bar color (UI: "Error Bar Colour", default: "#000000")
+#' - `error.width` - Error bar cap width (UI: "Error Bar Width", default: 1)
+#' - `palette.selection` - Color palette (UI: palette picker, derived from palette)
+#' - `axis.showline` - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
+#' - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
+#' - `axis.linecolor` - Color of axis lines (UI: "Axis Line Color", default: "black")
+#' - `axis.linewidth` - Width of axis lines (UI: "Axis Line Width", default: 0.5)
+#' - `axis.tickfont.size` - Size of tick labels (UI: "Tick Label Size", default: 12)
+#' - `axis.tickfont.color` - Color of tick labels (UI: "Tick Label Color", default: "black")
+#' - `axis.tickfont.family` - Font family for tick labels (UI: "Tick Label Font", default: "Arial")
+#' - `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI: "X Tick Label Angle", default: 0)
+#' - `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI: "Y Tick Label Angle", default: 0)
+#' - `axis.ticks` - Position of tick marks (UI: "Tick Position", default: "outside")
+#' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
+#' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
+#' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
+#' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
+#' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+#' - `show.grid.x` - Show X-axis gridlines (UI: "Show X Gridlines", default: TRUE)
+#' - `show.grid.y` - Show Y-axis gridlines (UI: "Show Y Gridlines", default: TRUE)
+#' - `grid.color` - Gridline color (UI: "Gridline Color", default: "#CCCCCC")
+#' - `x.title` - X-axis title (auto-calculated from data)
+#' - `y.title` - Y-axis title (auto-calculated from data)
+#' - `flip.x` - Flip X-axis (UI: "Flip X", default: FALSE)
+#' - `flip.y` - Flip Y-axis (UI: "Flip Y", default: FALSE)
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing plotly-specific features are also available:
-#' \itemize{
-#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
-#'   \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
-#'   \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
-#'   \item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line Types", default: "dashed")
-#'   \item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
-#'   \item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
-#'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
-#'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line Types", default: "dashed")
-#'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
-#'   \item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
-#'   \item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
-#'   \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
-#'   \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line Types", default: "dashed")
-#'   \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
-#' }
+#'
+#' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+#' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
+#' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
+#' - `hline.linetypes` - Line types for horizontal lines (UI: "Line Types", default: "dashed")
+#' - `hline.opacities` - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+#' - `vline.intercepts` - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+#' - `vline.colors` - Colors for vertical lines (UI: "Colors", default: "#000000")
+#' - `vline.widths` - Widths for vertical lines (UI: "Widths", default: "1")
+#' - `vline.linetypes` - Line types for vertical lines (UI: "Line Types", default: "dashed")
+#' - `vline.opacities` - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#' - `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#' - `abline.intercepts` - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+#' - `abline.colors` - Colors for diagonal lines (UI: "Colors", default: "#000000")
+#' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
+#' - `abline.linetypes` - Line types for diagonal lines (UI: "Line Types", default: "dashed")
+#' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -260,9 +258,9 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the linePlot

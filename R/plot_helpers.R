@@ -22,8 +22,8 @@
 #' @param color.adj.fun Character scalar. Name of a transformation function to apply to color values,
 #'   as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty string, color values are left unchanged.
 #'
-#' @return A data frame identical to input \code{df} but with transformed columns added
-#'   (e.g., \code{mpg.adj}) when valid transformations are specified.
+#' @return A data frame identical to input `df` but with transformed columns added
+#'   (e.g., `mpg.adj`) when valid transformations are specified.
 #'
 #' @examples
 #' data(mtcars)
@@ -80,8 +80,8 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   annotation tails. It also adds drawing tools (lines, paths, circles,
 #'   rectangles, and an eraser) to the modebar. Native cartesian axis-title
 #'   text editing is disabled because axis titles are rendered as draggable,
-#'   editable annotations (see \code{\link{axis_titles_as_annotations}} and
-#'   \code{\link{.build_facet_annotations}}).
+#'   editable annotations (see [axis_titles_as_annotations()] and
+#'   [.build_facet_annotations()]).
 #'
 #' @author Jacob Martin
 #' @export
@@ -157,12 +157,12 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' reference labels are added/removed). To re-apply edits reliably, annotations
 #' are matched by a stable key derived from their content rather than position:
 #' draggable axis titles are keyed by axis side, all other annotations by their
-#' text. Returns \code{NULL} for annotations that cannot be keyed.
+#' text. Returns `NULL` for annotations that cannot be keyed.
 #'
-#' @param ann A single annotation list from \code{fig$x$layout$annotations}.
+#' @param ann A single annotation list from `fig$x$layout$annotations`.
 #'
-#' @return A character key (e.g. \code{"axis:x"}, \code{"axis:y"}, or
-#'   \code{"text:Sepal.Length"}), or \code{NULL} if no stable key applies.
+#' @return A character key (e.g. `"axis:x"`, `"axis:y"`, or
+#'   `"text:Sepal.Length"`), or `NULL` if no stable key applies.
 #'
 #' @author Jared Andrews
 #' @keywords internal
@@ -192,10 +192,10 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' annotation maps to a distinct, rebuild-stable slot. Order is preserved across
 #' rebuilds because annotations are regenerated deterministically.
 #'
-#' @param anns A list of annotations from \code{fig$x$layout$annotations}.
+#' @param anns A list of annotations from `fig$x$layout$annotations`.
 #'
-#' @return A character vector the same length as \code{anns}; entries are
-#'   \code{NA} for annotations that cannot be keyed.
+#' @return A character vector the same length as `anns`; entries are
+#'   `NA` for annotations that cannot be keyed.
 #'
 #' @author Jared Andrews
 #' @keywords internal
@@ -224,19 +224,19 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 
 #' Capture manual plot edits from a plotly relayout event
 #'
-#' Reads a \code{plotly_relayout} event payload and records user-driven
+#' Reads a `plotly_relayout` event payload and records user-driven
 #' repositioning/edits of the legend and annotations (including draggable axis
 #' titles) into a persistent list. Annotation entries are keyed via
-#' \code{\link{.annotation_edit_key}} so they survive index shifts on rebuild.
+#' [.annotation_edit_key()] so they survive index shifts on rebuild.
 #' Range/zoom and autosize keys are ignored so panning does not pin the axes.
 #'
-#' @param edits A list with components \code{legend} and \code{annotations}
-#'   (typically \code{reactiveValuesToList()} of the module's edit store).
-#' @param relayout The named list returned by \code{event_data("plotly_relayout")}.
+#' @param edits A list with components `legend` and `annotations`
+#'   (typically `reactiveValuesToList()` of the module's edit store).
+#' @param relayout The named list returned by `event_data("plotly_relayout")`.
 #' @param fig The most recently rendered plotly figure, used to map annotation
 #'   indices in the event to stable keys.
 #'
-#' @return The updated \code{edits} list.
+#' @return The updated `edits` list.
 #'
 #' @author Jared Andrews
 #' @keywords internal
@@ -311,12 +311,12 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' Re-apply captured manual edits onto a freshly built plotly figure
 #'
 #' Merges legend position and annotation position/text edits (captured by
-#' \code{\link{.capture_manual_edits}}) into a rebuilt figure so manual layout
+#' [.capture_manual_edits()]) into a rebuilt figure so manual layout
 #' tweaks persist across re-renders. Annotations are matched by stable key, so
 #' edits are preserved even if their order changed.
 #'
 #' @param fig A plotly figure object.
-#' @param edits A list with components \code{legend} and \code{annotations}.
+#' @param edits A list with components `legend` and `annotations`.
 #'
 #' @return The figure with manual edits re-applied.
 #'
@@ -378,14 +378,14 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' Forward colorbar drag events to a Shiny input
 #'
 #' Continuous-colour legends (colorbars) live on a trace's marker, so dragging
-#' one fires a \code{plotly_restyle} event, which \code{event_data()} does not
-#' expose. This attaches an \code{onRender} listener that reports the dropped
+#' one fires a `plotly_restyle` event, which `event_data()` does not
+#' expose. This attaches an `onRender` listener that reports the dropped
 #' colorbar x/y to a Shiny input so the position can be captured and re-applied
 #' across rebuilds.
 #'
 #' @param fig A plotly figure object.
 #' @param input_id Fully namespaced input id to receive the position (a list
-#'   with \code{x}/\code{y}).
+#'   with `x`/`y`).
 #'
 #' @return The figure with the listener attached.
 #'
@@ -421,39 +421,40 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' VizModules plots are fully rebuilt on every input change, which would normally
 #' discard any layout tweaks a user made by hand: dragging the legend, moving or
 #' editing annotations, repositioning the (draggable) axis titles, or sliding a
-#' continuous-colour legend (colorbar). \code{setup_manual_edits()} together with
-#' its companion \code{\link{finalize_manual_edits}()} add this persistence to a
+#' continuous-colour legend (colorbar). `setup_manual_edits()` together with
+#' its companion [finalize_manual_edits()] add this persistence to a
 #' plotting module with two short lines of wiring, so manually repositioned
 #' elements survive subsequent rebuilds.
 #'
-#' Call \code{setup_manual_edits()} \strong{once}, near the top of your module's
-#' \code{\link[shiny]{moduleServer}()} body, so the observers it registers belong
+#' Call `setup_manual_edits()` **once**, near the top of your module's
+#' [shiny::moduleServer()] body, so the observers it registers belong
 #' to the module's reactive domain. It creates a reactive store and registers the
-#' observers that capture \code{plotly_relayout} events (legend, annotation, and
+#' observers that capture `plotly_relayout` events (legend, annotation, and
 #' axis-title drags) plus the JavaScript-forwarded colorbar drag. Then, inside
-#' your \code{\link[plotly]{renderPlotly}()}, pass the freshly built figure through
-#' \code{\link{finalize_manual_edits}()} before returning it.
+#' your [plotly::renderPlotly()], pass the freshly built figure through
+#' [finalize_manual_edits()] before returning it.
 #'
-#' @param input The module's \code{input} object.
-#' @param session The module's \code{session} object.
+#' @param input The module's `input` object.
+#' @param session The module's `session` object.
 #' @param plot_source Character scalar. A unique plotly event source id for this
-#'   module instance, typically \code{session$ns("<plot-type>")} (e.g.
-#'   \code{session$ns("scatter")}). It scopes the captured \code{plotly_relayout}
-#'   events to this plot and \strong{must match} the \code{plot_source} later
-#'   passed to \code{\link{finalize_manual_edits}()}.
+#'   module instance, typically `session$ns("<plot-type>")` (e.g.
+#'   `session$ns("scatter")`). It scopes the captured `plotly_relayout`
+#'   events to this plot and **must match** the `plot_source` later
+#'   passed to [finalize_manual_edits()].
 #'
-#' @return A list (the "edit store") to hand to \code{\link{finalize_manual_edits}()},
+#' @return A list (the "edit store") to hand to [finalize_manual_edits()],
 #'   with components:
 #'   \describe{
-#'     \item{\code{edits}}{A \code{\link[shiny]{reactiveValues}} holding the
-#'       captured \code{legend}, \code{annotations}, and \code{colorbar} edits.}
-#'     \item{\code{rendered_fig}}{A \code{\link[shiny]{reactiveVal}} holding the
+#'     \item{`edits`}{A [shiny::reactiveValues()] holding the
+#'       captured `legend`, `annotations`, and `colorbar` edits.}
+#'     \item{`rendered_fig`}{A [shiny::reactiveVal()] holding the
 #'       most recently rendered figure, used to map relayout annotation indices to
 #'       stable, rebuild-proof keys.}
 #'   }
 #'
 #' @section Module wiring (three steps):
-#' \preformatted{
+#'
+#' ```
 #' myPlotServer <- function(id, data) {
 #'     moduleServer(id, function(input, output, session) {
 #'         # 1. Unique event source + edit store (once, near the top).
@@ -468,9 +469,9 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #'         })
 #'     })
 #' }
-#' }
+#' ```
 #'
-#' @seealso \code{\link{finalize_manual_edits}} for the render-step companion.
+#' @seealso [finalize_manual_edits()] for the render-step companion.
 #' @author Jared Andrews
 #' @export
 #' @examples
@@ -506,37 +507,36 @@ setup_manual_edits <- function(input, session, plot_source) {
 
 #' Render persistent manual plot layout edits across re-renders
 #'
-#' Render-step companion to \code{\link{setup_manual_edits}()}. Call this inside
-#' your module's \code{\link[plotly]{renderPlotly}()} on the freshly rebuilt
+#' Render-step companion to [setup_manual_edits()]. Call this inside
+#' your module's [plotly::renderPlotly()] on the freshly rebuilt
 #' figure, immediately before returning it.
 #' 
 #' It performs four jobs:
-#' \enumerate{
-#'   \item tags the figure with the module's plotly event \code{source} so its
-#'     \code{plotly_relayout} events are captured by \code{setup_manual_edits()};
-#'   \item restores any manually repositioned legend, annotations, axis titles,
-#'     and colorbar captured so far;
-#'   \item records the figure so future relayout events can be matched to stable
-#'     annotation keys (surviving re-ordering on rebuild); and
-#'   \item attaches the JavaScript listener that forwards colorbar drags.
-#' }
 #'
-#' Restored edits are applied under \code{\link[shiny]{isolate}()} so re-applying
+#' 1. tags the figure with the module's plotly event `source` so its
+#'   `plotly_relayout` events are captured by `setup_manual_edits()`;
+#' 2. restores any manually repositioned legend, annotations, axis titles,
+#'   and colorbar captured so far;
+#' 3. records the figure so future relayout events can be matched to stable
+#'   annotation keys (surviving re-ordering on rebuild); and
+#' 4. attaches the JavaScript listener that forwards colorbar drags.
+#'
+#' Restored edits are applied under [shiny::isolate()] so re-applying
 #' them never triggers an additional re-render.
 #'
 #' @param fig A plotly figure object, typically the result of your
-#'   plotting pipeline. If \code{NULL}, it is returned
+#'   plotting pipeline. If `NULL`, it is returned
 #'   unchanged.
-#' @param plot_source Character scalar. The \strong{same} plotly event source id
-#'   passed to \code{\link{setup_manual_edits}()}; assigned to \code{fig$x$source}.
-#' @param store The list returned by \code{\link{setup_manual_edits}()}.
-#' @param session The module's \code{session} object, used to namespace the
+#' @param plot_source Character scalar. The **same** plotly event source id
+#'   passed to [setup_manual_edits()]; assigned to `fig$x$source`.
+#' @param store The list returned by [setup_manual_edits()].
+#' @param session The module's `session` object, used to namespace the
 #'   colorbar drag input.
 #'
 #' @return The finalized plotly figure, ready to be returned from
-#'   \code{\link[plotly]{renderPlotly}()}.
+#'   [plotly::renderPlotly()].
 #'
-#' @seealso \code{\link{setup_manual_edits}} for the setup-step companion.
+#' @seealso [setup_manual_edits()] for the setup-step companion.
 #' @author Jared Andrews
 #' @export
 #' @examples
@@ -562,45 +562,44 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 #' Computes a numeric range for the Y-axis based on specified columns in a
 #' data frame, applying a scaling factor to the maximum value. Handles both
 #' simple (non-stacked) and stacked bar scenarios, where stacking occurs when
-#' \code{group.by} or \code{fill.by} is numeric.
+#' `group.by` or `fill.by` is numeric.
 #'
 #' @param df Data frame. The data containing the variables to range over.
 #' @param data_col_y Character string. Name of the numeric Y-axis data column.
-#'   Takes priority over \code{data_col_x} if both are provided.
+#'   Takes priority over `data_col_x` if both are provided.
 #' @param data_col_x Character string. Name of the X-axis data column. Required
-#'   when \code{grouping = TRUE} or \code{stack_by} is specified, as it defines
+#'   when `grouping = TRUE` or `stack_by` is specified, as it defines
 #'   the groups over which Y values are summed.
 #' @param axis_scale_factor Numeric. Multiplicative factor applied to the
 #'   maximum Y value to provide additional headroom on the axis.
-#' @param grouping Logical. If \code{TRUE}, bars are treated as stacked and the
+#' @param grouping Logical. If `TRUE`, bars are treated as stacked and the
 #'   maximum is derived from the sum of Y values within each X group rather than
-#'   the raw maximum. Defaults to \code{FALSE}.
-#' @param stack_by Character string or \code{NULL}. Name of the column used for
-#'   stacking (i.e. \code{group.by} or \code{fill.by}). When this column is
+#'   the raw maximum. Defaults to `FALSE`.
+#' @param stack_by Character string or `NULL`. Name of the column used for
+#'   stacking (i.e. `group.by` or `fill.by`). When this column is
 #'   numeric, bars are stacked and Y values are summed per X category before
-#'   computing the maximum. Ignored if \code{NULL} or if the column is
-#'   categorical. Defaults to \code{NULL}.
+#'   computing the maximum. Ignored if `NULL` or if the column is
+#'   categorical. Defaults to `NULL`.
 #'
-#' @return A named list with components \code{min} and \code{max} giving the
-#'   lower and upper limits for the Y-axis, or \code{NULL} if any required
+#' @return A named list with components `min` and `max` giving the
+#'   lower and upper limits for the Y-axis, or `NULL` if any required
 #'   column is missing, non-numeric, or otherwise invalid.
 #'
 #' @details
-#' The function resolves the primary data column from \code{data_col_y} or
-#' \code{data_col_x} and validates that it exists and is numeric in \code{df}.
+#' The function resolves the primary data column from `data_col_y` or
+#' `data_col_x` and validates that it exists and is numeric in `df`.
 #'
 #' Behaviour depends on whether bars are stacked:
-#' \itemize{
-#'   \item \strong{Non-stacked} (\code{grouping = FALSE}, categorical or absent
-#'     \code{stack_by}): the Y range is computed directly from the raw column
-#'     values using \code{min()} and \code{max()}.
-#'   \item \strong{Stacked} (\code{grouping = TRUE} or \code{stack_by} is
-#'     numeric): Y values are summed within each unique X category using
-#'     \code{tapply()}, and the maximum of those sums is used. The minimum is
-#'     fixed at 0 since stacked bars always originate from zero.
-#' }
 #'
-#' Non-finite results (e.g. from empty or all-\code{NA} columns) are replaced
+#' - **Non-stacked** (`grouping = FALSE`, categorical or absent
+#'   `stack_by`): the Y range is computed directly from the raw column
+#'   values using `min()` and `max()`.
+#' - **Stacked** (`grouping = TRUE` or `stack_by` is
+#'   numeric): Y values are summed within each unique X category using
+#'   `tapply()`, and the maximum of those sums is used. The minimum is
+#'   fixed at 0 since stacked bars always originate from zero.
+#'
+#' Non-finite results (e.g. from empty or all-`NA` columns) are replaced
 #' with default values of 0 for the minimum and 1 for the maximum.
 #'
 #' @author Jacob Martin
@@ -667,14 +666,14 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 #'
 #' @param text Character scalar to show in plot area.
 #' @param plotly Boolean indicating whether to return a plotly object.
-#' @return Either a ggplot object or a plotly object if \code{plotly = TRUE}.
+#' @return Either a ggplot object or a plotly object if `plotly = TRUE`.
 #'
 #' @importFrom ggplot2 theme_void geom_text theme margin ggplot aes
 #' @importFrom plotly ggplotly layout
 #'
 #' @author Jared Andrews
 #'
-#' @seealso \code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
+#' @seealso [ggplot2::geom_text()], [ggplot2::theme_void()]
 #' @export
 #' @examples
 #' library(VizModules)
@@ -711,14 +710,14 @@ empty_plot <- function(text = NULL, plotly = FALSE) {
 #'
 #' This function validates that a vector of column names from a data frame contains
 #' columns of only one data type category: either all numeric OR all categorical
-#' (factor/character). Returns \code{FALSE} for mixed numeric + categorical columns.
-#' Single columns always return \code{TRUE}. Used for Shiny plotting module input validation.
+#' (factor/character). Returns `FALSE` for mixed numeric + categorical columns.
+#' Single columns always return `TRUE`. Used for Shiny plotting module input validation.
 #'
 #' @param inputs Character vector of column names to validate.
-#' @param d Data frame containing the columns specified in \code{inputs}.
+#' @param d Data frame containing the columns specified in `inputs`.
 #'
-#' @return Logical scalar: \code{TRUE} if all numeric OR all categorical (factor/character);
-#'   \code{FALSE} if mixed numeric + categorical/factor detected.
+#' @return Logical scalar: `TRUE` if all numeric OR all categorical (factor/character);
+#'   `FALSE` if mixed numeric + categorical/factor detected.
 #'
 #' @author Jacob Martin
 #'
@@ -730,7 +729,7 @@ empty_plot <- function(text = NULL, plotly = FALSE) {
 #' is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 #'
 #' @rdname is_pure_type
-#' @seealso \code{\link[base]{for}}
+#' @seealso [base::for()]
 #' @export
 is_pure_type <- function(inputs, d) {
     cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
@@ -764,8 +763,8 @@ is_pure_type <- function(inputs, d) {
 
 #' Add multi-axis traces to a plotly figure
 #'
-#' Appends scatter traces for each element of a multi-valued \code{x} or
-#' multi-valued \code{y} vector to an existing plotly figure.
+#' Appends scatter traces for each element of a multi-valued `x` or
+#' multi-valued `y` vector to an existing plotly figure.
 #' Handles data ordering, line/marker styling, and palette colouring.
 #'
 #' @param fig A plotly figure object to add traces to.
@@ -774,12 +773,12 @@ is_pure_type <- function(inputs, d) {
 #' @param y Character vector of y-column name(s).
 #' @param order.cols Character vector of column name(s) used to sort trace
 #'   data before plotting.
-#' @param plot.mode Character, plotly scatter mode (e.g. \code{"lines"},
-#'   \code{"markers"}, \code{"lines+markers"}).
+#' @param plot.mode Character, plotly scatter mode (e.g. `"lines"`,
+#'   `"markers"`, `"lines+markers"`).
 #' @param line.type Character, plotly dash style for lines.
 #' @param palette.selection Character vector of hex colours.
 #' @param show.legend Logical, whether traces should appear in the legend.
-#'   Default: \code{TRUE}.
+#'   Default: `TRUE`.
 #'
 #' @return The modified plotly figure with added traces.
 #'

@@ -17,62 +17,60 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [VizModules::ternaryPlot()] parameters are not accessible via UI inputs:
-#' \itemize{
-#'   \item \code{a.titlefont.family}, \code{b.titlefont.family}, \code{c.titlefont.family} -
-#'     Axis title font families (use \code{defaults} to set)
-#'   \item \code{a.titlefont.color}, \code{b.titlefont.color}, \code{c.titlefont.color} -
-#'     Axis title font colors (use \code{defaults} to set)
-#'   \item \code{a.tickfont.size}, \code{b.tickfont.size}, \code{c.tickfont.size} -
-#'     Axis tick label font sizes (use \code{defaults} to set)
-#'   \item \code{a.tickcolor}, \code{b.tickcolor}, \code{c.tickcolor} -
-#'     Axis tick colors (use \code{defaults} to set)
-#'   \item \code{a.ticklen}, \code{b.ticklen}, \code{c.ticklen} -
-#'     Axis tick length (use \code{defaults} to set)
-#'   \item \code{legend.x}, \code{legend.y} - Legend position offsets (use \code{defaults} to set)
-#'   \item \code{title.x} - Title horizontal position (use \code{defaults} to set)
-#'   \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
-#'   \item \code{palette} - Color palette name; use \code{colors} via the color picker UI instead
-#' }
+#'
+#' - `a.titlefont.family`, `b.titlefont.family`, `c.titlefont.family` -
+#'   Axis title font families (use `defaults` to set)
+#' - `a.titlefont.color`, `b.titlefont.color`, `c.titlefont.color` -
+#'   Axis title font colors (use `defaults` to set)
+#' - `a.tickfont.size`, `b.tickfont.size`, `c.tickfont.size` -
+#'   Axis tick label font sizes (use `defaults` to set)
+#' - `a.tickcolor`, `b.tickcolor`, `c.tickcolor` -
+#'   Axis tick colors (use `defaults` to set)
+#' - `a.ticklen`, `b.ticklen`, `c.ticklen` -
+#'   Axis tick length (use `defaults` to set)
+#' - `legend.x`, `legend.y` - Legend position offsets (use `defaults` to set)
+#' - `title.x` - Title horizontal position (use `defaults` to set)
+#' - `title.text` - Plot title text (plotly allows interactive editing; use `defaults` to set)
+#' - `palette` - Color palette name; use `colors` via the color picker UI instead
 #'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::ternaryPlot()] parameters can be accessed via UI inputs
-#' and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{a} - Column for a-axis (top vertex)
-#'     (UI: "A-axis column", default: 1st numeric column)
-#'   \item \code{b} - Column for b-axis (bottom-left vertex)
-#'     (UI: "B-axis column", default: 2nd numeric column)
-#'   \item \code{c} - Column for c-axis (bottom-right vertex)
-#'     (UI: "C-axis column", default: 3rd numeric column)
-#'   \item \code{group} - Optional grouping column for multiple traces (UI: "Group column", default: NULL)
-#'   \item \code{sum} - Constant sum for ternary axes (UI: "Sum", default: 100)
-#'   \item \code{mode} - Trace mode (UI: "Mode", default: "markers")
-#'   \item \code{marker.size} - Marker size (UI: "Marker size", default: 8)
-#'   \item \code{marker.symbol} - Marker symbol (UI: "Marker symbol", default: "circle")
-#'   \item \code{marker.line.width} - Marker border width (UI: "Marker border width", default: 0)
-#'   \item \code{line.width} - Line width (UI: "Line width", default: 2)
-#'   \item \code{line.dash} - Line dash style (UI: "Line style", default: "solid")
-#'   \item \code{opacity} - Trace opacity (UI: "Opacity", default: 1)
-#'   \item \code{colors} - Trace colors (UI: color picker, derived from palette)
-#'   \item \code{a.title} - A-axis title (UI: "A-axis title", default: column name)
-#'   \item \code{b.title} - B-axis title (UI: "B-axis title", default: column name)
-#'   \item \code{c.title} - C-axis title (UI: "C-axis title", default: column name)
-#'   \item \code{a.titlefont.size} - A-axis title font size (UI: "A-axis title size", default: 16)
-#'   \item \code{b.titlefont.size} - B-axis title font size (UI: "B-axis title size", default: 16)
-#'   \item \code{c.titlefont.size} - C-axis title font size (UI: "C-axis title size", default: 16)
-#'   \item \code{a.gridcolor} - A-axis grid color (UI: "A-axis grid color", default: "#EEEEEE")
-#'   \item \code{b.gridcolor} - B-axis grid color (UI: "B-axis grid color", default: "#EEEEEE")
-#'   \item \code{c.gridcolor} - C-axis grid color (UI: "C-axis grid color", default: "#EEEEEE")
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{show.legend} - Show legend (UI: "Show legend", default: TRUE)
-#'   \item \code{legend.orientation} - Legend orientation (UI: "Legend orientation", default: "h")
-#'   \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
-#'   \item \code{legend.font.size} - Legend font size (UI: "Legend font size", default: 12)
-#'   \item \code{legend.font.color} - Legend font color (UI: "Legend font color", default: "#000000")
-#'   \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
-#' }
+#' and/or the `defaults` argument:
+#'
+#' - `a` - Column for a-axis (top vertex)
+#'   (UI: "A-axis column", default: 1st numeric column)
+#' - `b` - Column for b-axis (bottom-left vertex)
+#'   (UI: "B-axis column", default: 2nd numeric column)
+#' - `c` - Column for c-axis (bottom-right vertex)
+#'   (UI: "C-axis column", default: 3rd numeric column)
+#' - `group` - Optional grouping column for multiple traces (UI: "Group column", default: NULL)
+#' - `sum` - Constant sum for ternary axes (UI: "Sum", default: 100)
+#' - `mode` - Trace mode (UI: "Mode", default: "markers")
+#' - `marker.size` - Marker size (UI: "Marker size", default: 8)
+#' - `marker.symbol` - Marker symbol (UI: "Marker symbol", default: "circle")
+#' - `marker.line.width` - Marker border width (UI: "Marker border width", default: 0)
+#' - `line.width` - Line width (UI: "Line width", default: 2)
+#' - `line.dash` - Line dash style (UI: "Line style", default: "solid")
+#' - `opacity` - Trace opacity (UI: "Opacity", default: 1)
+#' - `colors` - Trace colors (UI: color picker, derived from palette)
+#' - `a.title` - A-axis title (UI: "A-axis title", default: column name)
+#' - `b.title` - B-axis title (UI: "B-axis title", default: column name)
+#' - `c.title` - C-axis title (UI: "C-axis title", default: column name)
+#' - `a.titlefont.size` - A-axis title font size (UI: "A-axis title size", default: 16)
+#' - `b.titlefont.size` - B-axis title font size (UI: "B-axis title size", default: 16)
+#' - `c.titlefont.size` - C-axis title font size (UI: "C-axis title size", default: 16)
+#' - `a.gridcolor` - A-axis grid color (UI: "A-axis grid color", default: "#EEEEEE")
+#' - `b.gridcolor` - B-axis grid color (UI: "B-axis grid color", default: "#EEEEEE")
+#' - `c.gridcolor` - C-axis grid color (UI: "C-axis grid color", default: "#EEEEEE")
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `show.legend` - Show legend (UI: "Show legend", default: TRUE)
+#' - `legend.orientation` - Legend orientation (UI: "Legend orientation", default: "h")
+#' - `legend.font.family` - Legend font (UI: "Legend font", default: "Arial")
+#' - `legend.font.size` - Legend font size (UI: "Legend font size", default: 12)
+#' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
+#' - `bgcolor` - Plot background color (UI: "Background color", default: "#FFFFFF")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -303,9 +301,9 @@ ternaryPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the ternaryPlot

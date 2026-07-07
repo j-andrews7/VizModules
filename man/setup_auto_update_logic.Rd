@@ -23,22 +23,22 @@ expressions or passes them through unchanged.
 }
 \details{
 This function consolidates the following common pattern:
-\preformatted{
-auto_update <- input$auto.update
-if (!auto_update) {
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{auto_update <- input$auto.update
+if (!auto_update) \{
     input$update
-}
+\}
 isolate_fn <- if (auto_update) identity else isolate
-}
+}\if{html}{\out{</div>}}
 
 Usage in a reactive context:
-\preformatted{
-output$plot <- renderPlotly({
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{output$plot <- renderPlotly(\{
     isolate_fn <- setup_auto_update_logic(input)
     # Now use isolate_fn to wrap input values
     x_val <- isolate_fn(input$x.value)
-})
-}
+\})
+}\if{html}{\out{</div>}}
 }
 \examples{
 if (interactive()) {

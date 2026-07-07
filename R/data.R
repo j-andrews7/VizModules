@@ -220,14 +220,13 @@
 #' comparisons visually informative.
 #'
 #' The dataset is designed to simultaneously support three VizModules plot types:
-#' \itemize{
-#'   \item DotPlot — summarised \code{avg_expression} and \code{pct_expressed}
-#'     columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
-#'   \item yPlot — per-replicate \code{log2_cpm} values grouped by
-#'     \code{cell_type} and coloured by \code{condition}.
-#'   \item DensityPlot — per-replicate \code{log2_cpm} values grouped by
-#'     \code{condition} and faceted by \code{cell_type}.
-#' }
+#'
+#' - DotPlot — summarised `avg_expression` and `pct_expressed`
+#'   columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
+#' - yPlot — per-replicate `log2_cpm` values grouped by
+#'   `cell_type` and coloured by `condition`.
+#' - DensityPlot — per-replicate `log2_cpm` values grouped by
+#'   `condition` and faceted by `cell_type`.
 #'
 #' @format A data frame with 288 rows and 7 columns:
 #' \describe{

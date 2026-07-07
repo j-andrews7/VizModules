@@ -15,15 +15,15 @@ setup_manual_edits(input, session, plot_source)
 module instance, typically \code{session$ns("<plot-type>")} (e.g.
 \code{session$ns("scatter")}). It scopes the captured \code{plotly_relayout}
 events to this plot and \strong{must match} the \code{plot_source} later
-passed to \code{\link{finalize_manual_edits}()}.}
+passed to \code{\link[=finalize_manual_edits]{finalize_manual_edits()}}.}
 }
 \value{
-A list (the "edit store") to hand to \code{\link{finalize_manual_edits}()},
+A list (the "edit store") to hand to \code{\link[=finalize_manual_edits]{finalize_manual_edits()}},
 with components:
 \describe{
-\item{\code{edits}}{A \code{\link[shiny]{reactiveValues}} holding the
+\item{\code{edits}}{A \code{\link[shiny:reactiveValues]{shiny::reactiveValues()}} holding the
 captured \code{legend}, \code{annotations}, and \code{colorbar} edits.}
-\item{\code{rendered_fig}}{A \code{\link[shiny]{reactiveVal}} holding the
+\item{\code{rendered_fig}}{A \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} holding the
 most recently rendered figure, used to map relayout annotation indices to
 stable, rebuild-proof keys.}
 }
@@ -33,37 +33,37 @@ VizModules plots are fully rebuilt on every input change, which would normally
 discard any layout tweaks a user made by hand: dragging the legend, moving or
 editing annotations, repositioning the (draggable) axis titles, or sliding a
 continuous-colour legend (colorbar). \code{setup_manual_edits()} together with
-its companion \code{\link{finalize_manual_edits}()} add this persistence to a
+its companion \code{\link[=finalize_manual_edits]{finalize_manual_edits()}} add this persistence to a
 plotting module with two short lines of wiring, so manually repositioned
 elements survive subsequent rebuilds.
 }
 \details{
 Call \code{setup_manual_edits()} \strong{once}, near the top of your module's
-\code{\link[shiny]{moduleServer}()} body, so the observers it registers belong
+\code{\link[shiny:moduleServer]{shiny::moduleServer()}} body, so the observers it registers belong
 to the module's reactive domain. It creates a reactive store and registers the
 observers that capture \code{plotly_relayout} events (legend, annotation, and
 axis-title drags) plus the JavaScript-forwarded colorbar drag. Then, inside
-your \code{\link[plotly]{renderPlotly}()}, pass the freshly built figure through
-\code{\link{finalize_manual_edits}()} before returning it.
+your \code{\link[plotly:renderPlotly]{plotly::renderPlotly()}}, pass the freshly built figure through
+\code{\link[=finalize_manual_edits]{finalize_manual_edits()}} before returning it.
 }
 \section{Module wiring (three steps)}{
 
-\preformatted{
-myPlotServer <- function(id, data) {
-    moduleServer(id, function(input, output, session) {
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{myPlotServer <- function(id, data) \{
+    moduleServer(id, function(input, output, session) \{
         # 1. Unique event source + edit store (once, near the top).
         plot_source <- session$ns("myplot")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
-        output$myPlot <- renderPlotly({
+        output$myPlot <- renderPlotly(\{
             # 2. Create your plotly plot
             fig <- build_my_plotly_figure(data(), input)
             # 3. Finalize on the rebuilt figure, then return it.
             finalize_manual_edits(fig, plot_source, edit_store, session)
-        })
-    })
-}
-}
+        \})
+    \})
+\}
+}\if{html}{\out{</div>}}
 }
 
 \examples{
@@ -74,7 +74,7 @@ edit_store <- setup_manual_edits(input, session, plot_source)
 }
 }
 \seealso{
-\code{\link{finalize_manual_edits}} for the render-step companion.
+\code{\link[=finalize_manual_edits]{finalize_manual_edits()}} for the render-step companion.
 }
 \author{
 Jared Andrews

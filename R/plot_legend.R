@@ -1,10 +1,10 @@
 #' Rendered diameter of the U+25CF circle glyph relative to its font-size
 #'
-#' The HTML "black circle" glyph (\code{&#9679;}, U+25CF) used by the custom
+#' The HTML "black circle" glyph (`&#9679;`, U+25CF) used by the custom
 #' size legend inks at roughly 0.44x its font-size across the sans-serif fonts
 #' in plotly's default font stack (measured via the rendered ink bounding box;
 #' the ratio is a property of the glyph design and is stable across those
-#' fonts). A plotly marker's \code{size} attribute, by contrast, is its
+#' fonts). A plotly marker's `size` attribute, by contrast, is its
 #' diameter in px. Dividing a target marker diameter by this ratio yields the
 #' glyph font-size that renders at that diameter, so the legend circles match
 #' the plotted dots.
@@ -18,25 +18,25 @@
 #' Sets the legend title and entry-label font sizes on a plotly figure so the
 #' "Legend" UI inputs behave consistently across plot types. Existing legend
 #' settings (orientation, position, font family/colour) are preserved because
-#' \code{plotly::layout()} merges the supplied attributes into the current
-#' layout. \code{NULL} or \code{NA} sizes are ignored, leaving the
+#' `plotly::layout()` merges the supplied attributes into the current
+#' layout. `NULL` or `NA` sizes are ignored, leaving the
 #' corresponding font size untouched.
 #'
-#' Numeric colour mappings (for example \code{fill.by}/\code{color.by} on a
-#' continuous variable) are rendered as a \emph{colorbar} rather than a
+#' Numeric colour mappings (for example `fill.by`/`color.by` on a
+#' continuous variable) are rendered as a *colorbar* rather than a
 #' categorical legend. The layout-level legend font does not affect a colorbar,
 #' so the colorbar title and tick fonts are updated directly on each trace (and
-#' on any shared \code{coloraxis}) using the same sizes. This keeps the "Legend"
+#' on any shared `coloraxis`) using the same sizes. This keeps the "Legend"
 #' controls functional for both categorical and continuous legends.
 #'
 #' @param fig A plotly figure object.
 #' @param title.size Numeric font size for the legend (or colorbar) title, or
-#'   \code{NULL} to leave unchanged.
+#'   `NULL` to leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
-#'   tick labels), or \code{NULL} to leave unchanged.
+#'   tick labels), or `NULL` to leave unchanged.
 #' @param position vector of an integer, an xanchor string, and a orientation argument. e.g. c(1.02, "left", "v"). Controls horizontal positioning of the legend. 
 #' @return The plotly figure with the requested legend font sizes applied.
-#'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
+#'   Returns the figure unchanged when `fig` is `NULL` or no valid
 #'   sizes are supplied.
 #'
 #' @author Jared Andrews
@@ -174,38 +174,38 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
 #'
 #' @param fig A plotly figure object.
 #' @param data A data frame containing the variable mapped to point size.
-#' @param size_by Character string, or \code{NULL}. Name of the column in
-#'   \code{data} whose range determines the legend break labels. When \code{NULL}
+#' @param size_by Character string, or `NULL`. Name of the column in
+#'   `data` whose range determines the legend break labels. When `NULL`
 #'   or empty (no size mapping is in effect), the figure is returned unchanged.
 #' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
-#'   consecutive legend entries. Defaults to \code{0.03}.
+#'   consecutive legend entries. Defaults to `0.03`.
 #' @param size_values Numeric vector of font sizes (px) used to render the
-#'   circle glyphs, one per legend entry. When \code{NULL} (the default), the
-#'   glyph sizes are derived from the actual marker sizes in \code{fig} so the
-#'   legend reflects the plot's size scaling (i.e. the \code{size_min}/
-#'   \code{size_max} passed to the plot function); the marker pixel diameters
-#'   are converted to glyph font-sizes via \code{.CIRCLE_GLYPH_DIAMETER_RATIO}
+#'   circle glyphs, one per legend entry. When `NULL` (the default), the
+#'   glyph sizes are derived from the actual marker sizes in `fig` so the
+#'   legend reflects the plot's size scaling (i.e. the `size_min`/
+#'   `size_max` passed to the plot function); the marker pixel diameters
+#'   are converted to glyph font-sizes via `.CIRCLE_GLYPH_DIAMETER_RATIO`
 #'   so the rendered circles match the plotted dots. When supplied, the vector
 #'   is used verbatim as font sizes and its length determines the number of
 #'   legend entries.
-#' @param title.size Numeric, or \code{NULL}. Font size (px) of the legend
-#'   title annotation. When \code{NULL}, plotly's default is used.
-#' @param text.size Numeric, or \code{NULL}. Font size (px) of the numeric
-#'   label annotations. Defaults to \code{12} when \code{NULL}.
+#' @param title.size Numeric, or `NULL`. Font size (px) of the legend
+#'   title annotation. When `NULL`, plotly's default is used.
+#' @param text.size Numeric, or `NULL`. Font size (px) of the numeric
+#'   label annotations. Defaults to `12` when `NULL`.
 #' @param start_y Numeric. Paper-space y coordinate (0–1) at which the legend
 #'   column begins; the title sits just above it and subsequent entries stack
 #'   downward. Lower it to vertically offset the size legend from an overlapping
 #'   color/shape legend. Invalid values fall back to the default. Defaults to
-#'   \code{0.95}.
+#'   `0.95`.
 #' @param start_x Numeric. Paper-space x coordinate at which the legend column
-#'   (circles, labels and title) is anchored. Values just above \code{1} place
+#'   (circles, labels and title) is anchored. Values just above `1` place
 #'   the legend to the right of the plot area; nudge it lower to pull the whole
 #'   set inward when it would otherwise overflow a narrow plot, or higher to push
-#'   it further out. Defaults to \code{1.02}.
+#'   it further out. Defaults to `1.02`.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
-#'   unmodified figure when \code{size_by} is \code{NULL}/empty or not present
-#'   in \code{data}.
+#'   unmodified figure when `size_by` is `NULL`/empty or not present
+#'   in `data`.
 #'
 #' @author Jacob Martin
 #' @keywords internal

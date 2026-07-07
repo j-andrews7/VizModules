@@ -12,20 +12,20 @@ plotting pipeline. If \code{NULL}, it is returned
 unchanged.}
 
 \item{plot_source}{Character scalar. The \strong{same} plotly event source id
-passed to \code{\link{setup_manual_edits}()}; assigned to \code{fig$x$source}.}
+passed to \code{\link[=setup_manual_edits]{setup_manual_edits()}}; assigned to \code{fig$x$source}.}
 
-\item{store}{The list returned by \code{\link{setup_manual_edits}()}.}
+\item{store}{The list returned by \code{\link[=setup_manual_edits]{setup_manual_edits()}}.}
 
 \item{session}{The module's \code{session} object, used to namespace the
 colorbar drag input.}
 }
 \value{
 The finalized plotly figure, ready to be returned from
-\code{\link[plotly]{renderPlotly}()}.
+\code{\link[plotly:renderPlotly]{plotly::renderPlotly()}}.
 }
 \description{
-Render-step companion to \code{\link{setup_manual_edits}()}. Call this inside
-your module's \code{\link[plotly]{renderPlotly}()} on the freshly rebuilt
+Render-step companion to \code{\link[=setup_manual_edits]{setup_manual_edits()}}. Call this inside
+your module's \code{\link[plotly:renderPlotly]{plotly::renderPlotly()}} on the freshly rebuilt
 figure, immediately before returning it.
 }
 \details{
@@ -40,7 +40,7 @@ annotation keys (surviving re-ordering on rebuild); and
 \item attaches the JavaScript listener that forwards colorbar drags.
 }
 
-Restored edits are applied under \code{\link[shiny]{isolate}()} so re-applying
+Restored edits are applied under \code{\link[shiny:isolate]{shiny::isolate()}} so re-applying
 them never triggers an additional re-render.
 }
 \examples{
@@ -51,7 +51,7 @@ fig
 }
 }
 \seealso{
-\code{\link{setup_manual_edits}} for the setup-step companion.
+\code{\link[=setup_manual_edits]{setup_manual_edits()}} for the setup-step companion.
 }
 \author{
 Jared Andrews

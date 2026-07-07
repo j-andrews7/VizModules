@@ -7,17 +7,17 @@
 #' @param dimensions Character vector of column names to use as dimensions (axes).
 #'   Must contain at least two columns. Non-numeric columns are mapped to integers.
 #' @param color.by Optional character, column name to color lines by.
-#'   Numeric columns use a continuous colorscale (\code{color.scale}); categorical
-#'   columns use a discrete palette (\code{palette.selection}) and are displayed
+#'   Numeric columns use a continuous colorscale (`color.scale`); categorical
+#'   columns use a discrete palette (`palette.selection`) and are displayed
 #'   with category names on the colorbar. Default: NULL.
 #' @param color.scale Character, plotly colorscale name for line coloring when
-#'   \code{color.by} is numeric. Options include "Viridis", "Cividis", "Inferno",
+#'   `color.by` is numeric. Options include "Viridis", "Cividis", "Inferno",
 #'   "Magma", "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu",
 #'   "Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".
 #' @param palette.selection Character vector of hex colors used to color lines
-#'   when \code{color.by} is categorical. May be unnamed (colors applied in
-#'   order to the sorted unique levels) or named by level. If \code{NULL}, the
-#'   plotly \code{color.scale} is used as a fallback. Default: NULL.
+#'   when `color.by` is categorical. May be unnamed (colors applied in
+#'   order to the sorted unique levels) or named by level. If `NULL`, the
+#'   plotly `color.scale` is used as a fallback. Default: NULL.
 #' @param line.opacity Numeric, opacity of lines between 0 and 1. Default: 0.5.
 #' @param line.width Numeric, width of lines in pixels. Default: 1.
 #' @param show.colorbar Logical, whether to show the colorbar. Default: TRUE.

@@ -23,7 +23,7 @@ A \code{downloadHandler} object suitable for assignment to a Shiny
 output.
 }
 \description{
-Generates a Shiny \code{\link[shiny:downloadHandler]{downloadHandler()}} that bundles the interactive plot and
+Generates a Shiny \code{\link[=downloadHandler]{downloadHandler()}} that bundles the interactive plot and
 its supporting data into a single \code{.zip} archive.
 }
 \examples{

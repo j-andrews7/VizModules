@@ -10,7 +10,7 @@
 #' @param colors Optional character vector of hex colors for the traces.
 #'   If named, values are matched to the group values; otherwise colours are recycled.
 #' @param palette Optional character vector of fallback colors used when
-#'   \code{colors} is not supplied or missing values are present.
+#'   `colors` is not supplied or missing values are present.
 #' @param fill Logical or character, whether to fill the area under each trace.
 #'   Use "toself" to fill to the first point, or FALSE for no fill. Default: "toself".
 #' @param line.width Numeric, width of the trace lines in pixels. Default: 2.

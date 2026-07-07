@@ -30,7 +30,7 @@ is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 
 }
 \seealso{
-\code{\link[base]{for}}
+\code{\link[base:for]{base::for()}}
 }
 \author{
 Jacob Martin
