@@ -34,7 +34,7 @@
 #'   \code{NULL} to leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
 #'   tick labels), or \code{NULL} to leave unchanged.
-#' @param position vector of an integer and an xanchor string. e.g. c(1.02, "left"). Controls horizontal positioning of the legend. 
+#' @param position vector of an integer, an xanchor string, and a orientation argument. e.g. c(1.02, "left", "v"). Controls horizontal positioning of the legend. 
 #' @return The plotly figure with the requested legend font sizes applied.
 #'   Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
 #'   sizes are supplied.
