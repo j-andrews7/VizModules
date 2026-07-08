@@ -7,7 +7,7 @@
 * Fixed an error in `plotthis_SplitBarPlot` where the categorical text position input was not respected if the axes were flipped. Now the text position input is respected regardless of axis orientation.
 * Export numerous internal helper functions for use in custom modules, particularly those related to axes, faceting, and layouts. It became apparent these were necessary as initial work began on `sciVizModules`. 
 * Fixed a bug in `dittoViz_yPlot` where plot selection and outlier hiding were not respected appropriately due to a typo in the `boxplot.show.outliers` input name.
-* Fixed a bug in `dittoViz_scatterPlot` where 2 `split.by` inputs were not applied due to improper checks for empty strings with multiple elements.
+* Fixed a bug in `dittoViz_scatterPlot` where 2 `split.by` inputs caused an error due to improper checks for empty strings on a vector of elements.
 
 # VizModules 0.2.0
 
