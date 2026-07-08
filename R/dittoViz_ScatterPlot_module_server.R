@@ -631,7 +631,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                                     next
                                 }
 
-                                # Match trace points to plot_data by coordinates
                                 trace_n <- length(trace$x)
 
                                 # Initialize marker properties if not present
@@ -669,28 +668,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                                     next
                                 }
 
-                                # Get plot coordinates for highlighted points
-                                x_adj_col <- paste0(isolate_fn(input$x.by), ".x.adj")
-                                y_adj_col <- paste0(isolate_fn(input$y.by), ".y.adj")
-                                x_match_col <- if (x_adj_col %in% names(plot_data)) {
-                                    x_adj_col
-                                } else {
-                                    isolate_fn(input$x.by)
-                                }
-                                y_match_col <- if (y_adj_col %in% names(plot_data)) {
-                                    y_adj_col
-                                } else {
-                                    isolate_fn(input$y.by)
-                                }
-
-                                highlight_coords <- .create_coord_id(
-                                    plot_data[[x_match_col]][highlight_idx],
-                                    plot_data[[y_match_col]][highlight_idx]
-                                )
-
-                                # Find which points in this trace should be highlighted
-                                trace_highlight_mask <- trace_map$coord_id %in% highlight_coords &
-                                    trace_map$anno_value %in% highlight_vals
+                                # Find which points in this trace should be highlighted.
+                                # Match on the annotation value alone rather than on
+                                # coordinates: ggplotly encodes categorical (factor) axes
+                                # as numeric positions that will not match the raw data
+                                # values in plot_data, which would otherwise drop the
+                                # highlight styling for categorical x/y axes.
+                                trace_highlight_mask <- trace_map$anno_value %in% highlight_vals
 
                                 if (any(trace_highlight_mask)) {
                                     # Apply highlight styling
