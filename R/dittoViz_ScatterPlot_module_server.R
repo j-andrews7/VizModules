@@ -382,7 +382,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
         observeEvent(input$split.by, {
-            if (!is.null(input$split.by) && nzchar(input$split.by)) {
+            if (!is.null(input$split.by) && any(nzchar(input$split.by))) {
                 .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
                 .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
@@ -551,7 +551,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
             fig <- do.call(config, c(list(p = p$plot), config_list))
 
-            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+            if (!is.null(null.na.inputs$split.by) && any(nzchar(null.na.inputs$split.by))) {
                 fig <- .apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
@@ -803,7 +803,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             # Apply axis title font to shared facet annotation titles
-            if (!is.null(null.na.inputs$split.by) && nzchar(null.na.inputs$split.by)) {
+            if (!is.null(null.na.inputs$split.by) && any(nzchar(null.na.inputs$split.by))) {
                 fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
