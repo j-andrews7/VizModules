@@ -19,7 +19,7 @@ Creates a standardized tagList of Plotly-specific inputs used across all plot
 modules. Includes interactive download controls, plot margin adjustments,
 and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
 controls live in each module's "Facet" tab via
-\code{\link[=uniform_subplot_spacing_inputs_ui]{uniform_subplot_spacing_inputs_ui()}}.)
+\code{\link[=.uniform_subplot_spacing_inputs_ui]{.uniform_subplot_spacing_inputs_ui()}}.)
 }
 \examples{
 ns <- shiny::NS("plot")
