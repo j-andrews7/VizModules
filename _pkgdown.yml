@@ -158,6 +158,18 @@ reference:
       - setup_auto_update_logic
       - empty_plot
 
+  - title: "Uniform UI Input Utilities"
+    desc: "Functions for creating/handling uniform UI inputs applicable to many modules."
+    contents:
+      - uniform_plotly_inputs_ui
+      - uniform_axes_inputs_ui
+      - uniform_lines_inputs_ui
+      - uniform_legend_inputs_ui
+      - reset_axes_inputs
+      - reset_plotly_inputs
+      - reset_legend_inputs
+      - reset_lines_inputs
+
   - title: "Data Downloading Utilities"
     desc: "Functions for preparing plot and source data for download."
     contents:
@@ -172,7 +184,7 @@ reference:
       - multiColorPicker
       - updateMultiColorPicker
 
-  - title: "Statistical Helpers"
+  - title: "Statistical Utilities"
     desc: "Functions for computing and displaying pairwise statistical test annotations on plots."
     contents:
       - compute_pairwise_stats
@@ -180,6 +192,28 @@ reference:
       - apply_stat_annotations
       - generate_pair_strings
       - parse_pair_strings
+
+  - title: "Axes, plotly, Layout, Plot Candy,and Config Utilities"
+    desc: "Functions for managing axes, layouts, plot candy, and plotly configuration."
+    contents: 
+      - apply_render_margins
+      - apply_axis_title_to_annotations
+      - create_ggplot_axis_style
+      - adjusted_axis_label
+      - axis_titles_as_annotations
+      - apply_legend_styling
+      - create_axis_styles
+      - apply_subplot_axis_styling
+      - apply_title_layout
+      - add_plot_config
+      - string_to_linetypes
+      - recycle_line_style
+      - linetype_to_dash
+      - add_hlines
+      - add_vlines
+      - add_ablines
+      - add_reference_lines
+      - apply_plotly_newshape
 
   - title: "Utility Functions"
     desc: "General-purpose helper functions for data handling and validation."
@@ -190,6 +224,8 @@ reference:
       - safe_eval_filter
       - safe_resolve_adj_fxn
       - validate_expression
+      - parse_numeric_list
+      - get_default
 
   - title: "Example Data"
     desc: "Built-in datasets for demos and testing."
