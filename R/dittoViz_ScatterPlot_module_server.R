@@ -376,9 +376,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             reset_axes_inputs(session, defaults)
 
             # Discard captured manual layout edits so positions revert to defaults
-            manual_edits$legend <- NULL
-            manual_edits$annotations <- list()
-            manual_edits$colorbar <- NULL
+            edit_store$legend <- NULL
+            edit_store$annotations <- list()
+            edit_store$colorbar <- NULL
         })
 
         observeEvent(input$split.by, {
