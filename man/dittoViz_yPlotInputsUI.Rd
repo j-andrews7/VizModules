@@ -91,7 +91,7 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be 
 \item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
 \item \code{jitter.size} - Jitter point size (UI: "Jitter Point Size", default: 1)
 \item \code{jitter.width} - Jitter width (UI: "Jitter Width", default: 0.2)
-\item \code{jitter.color} - Jitter point color (UI: "Jitter Point Color", default: "#000000")
+\item \code{jitter.color} - Jitter border color (UI: "Jitter Border Color", default: "#000000")
 \item \code{jitter.shape.legend.size} - Shape legend size (UI: "Shape Legend Size", default: 5)
 \item \code{jitter.shape.legend.show} - Show shape legend (UI: "Show Shape Legend", default: TRUE)
 \item \code{jitter.position.dodge} - Jitter position dodge (calculated from boxgap)

@@ -65,7 +65,7 @@
 #' - `raster.dpi` - DPI for rasterization (UI: "Raster DPI", default: 600)
 #' - `jitter.size` - Jitter point size (UI: "Jitter Point Size", default: 1)
 #' - `jitter.width` - Jitter width (UI: "Jitter Width", default: 0.2)
-#' - `jitter.color` - Jitter point color (UI: "Jitter Point Color", default: "#000000")
+#' - `jitter.color` - Jitter border color (UI: "Jitter Border Color", default: "#000000")
 #' - `jitter.shape.legend.size` - Shape legend size (UI: "Shape Legend Size", default: 5)
 #' - `jitter.shape.legend.show` - Show shape legend (UI: "Show Shape Legend", default: TRUE)
 #' - `jitter.position.dodge` - Jitter position dodge (calculated from boxgap)
@@ -327,7 +327,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                colourInput(ns("jitter.color"), "Jitter Point Color",
+                colourInput(ns("jitter.color"), "Jitter Border Color",
                     value = get_default(defaults, "jitter.color", "#000000")
                 ),
                 documentParameters$jitter.color,

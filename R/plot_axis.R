@@ -174,11 +174,13 @@ axis_titles_as_annotations <- function(fig) {
     if (!is.null(fig$x$layout$xaxis)) {
         fig$x$layout$xaxis$title <- list(text = "")
     }
+
     if (!is.null(fig$x$layout$yaxis)) {
         fig$x$layout$yaxis$title <- list(text = "")
     }
 
     new_anns <- list()
+
     if (has_x) {
         new_anns[[length(new_anns) + 1L]] <- list(
             x = 0.5, y = -0.1, xref = "paper", yref = "paper",
@@ -186,6 +188,7 @@ axis_titles_as_annotations <- function(fig) {
             yanchor = "top", annotationType = "axis", font = x_axis$font
         )
     }
+
     if (has_y) {
         new_anns[[length(new_anns) + 1L]] <- list(
             x = -0.05, y = 0.5, xref = "paper", yref = "paper",
@@ -196,9 +199,11 @@ axis_titles_as_annotations <- function(fig) {
     }
 
     existing <- fig$x$layout$annotations
+
     if (is.null(existing)) {
         existing <- list()
     }
+
     fig$x$layout$annotations <- c(existing, new_anns)
 
     fig
