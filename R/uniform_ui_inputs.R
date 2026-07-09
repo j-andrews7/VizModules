@@ -574,7 +574,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' modules. Includes interactive download controls, plot margin adjustments,
 #' and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
 #' controls live in each module's "Facet" tab via
-#' [.uniform_subplot_spacing_inputs_ui()].)
+#' [uniform_subplot_spacing_inputs_ui()].)
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.

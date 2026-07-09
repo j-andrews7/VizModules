@@ -37,7 +37,7 @@ annotation tails. It also adds drawing tools (lines, paths, circles,
 rectangles, and an eraser) to the modebar. Native cartesian axis-title
 text editing is disabled because axis titles are rendered as draggable,
 editable annotations (see \code{\link[=axis_titles_as_annotations]{axis_titles_as_annotations()}} and
-\code{\link[=.build_facet_annotations]{.build_facet_annotations()}}).
+\code{\link[=build_facet_annotations]{build_facet_annotations()}}).
 }
 \examples{
 add_plot_config()
