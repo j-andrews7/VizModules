@@ -276,8 +276,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            facet.nrow.val <- .clean_facet_dim(isolate_fn(input$facet.nrow))
-            facet.ncol.val <- .clean_facet_dim(isolate_fn(input$facet.ncol))
+            facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
+            facet.ncol.val <- clean_facet_dim(isolate_fn(input$facet.ncol))
 
             fig <- linePlot(
                 data = d,

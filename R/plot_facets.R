@@ -36,9 +36,14 @@
 #'
 #' @author Jacob Martin
 #' @importFrom stats approx
-#' @keywords internal
-#' @rdname INTERNAL_apply_facet_subplot_spacing
-.apply_facet_subplot_spacing <- function(fig, spacing = 0.04, ncol = NULL, nrow = NULL) {
+#' @export
+#' @examples
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::facet_wrap(~cyl)
+#' fig <- plotly::ggplotly(p)
+#' apply_facet_subplot_spacing(fig, spacing = 0.05)
+apply_facet_subplot_spacing <- function(fig, spacing = 0.04, ncol = NULL, nrow = NULL) {
     stopifnot("plotly" %in% class(fig))
     if (is.null(fig$x) || is.null(fig$x$layout)) {
         return(fig)
@@ -230,9 +235,11 @@
 #' @return A named list with logical elements `shareX` and `shareY`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_resolve_facet_sharing
-#' @keywords internal
-.resolve_facet_sharing <- function(facet.scales = "fixed") {
+#' @export
+#' @examples
+#' resolve_facet_sharing("fixed")
+#' resolve_facet_sharing("free_x")
+resolve_facet_sharing <- function(facet.scales = "fixed") {
     shareX <- TRUE
     shareY <- TRUE
     if (facet.scales == "free") {
@@ -270,9 +277,11 @@
 #'   `plotly::subplot`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_resolve_facet_layout
-#' @keywords internal
-.resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
+#' @export
+#' @examples
+#' resolve_facet_layout(6, facet.nrow = 2)
+#' resolve_facet_layout(6, facet.ncol = 3)
+resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
     n_facets <- max(1L, as.integer(n_facets))
 
     .is_set <- function(x) {
@@ -312,7 +321,7 @@
 #' @param fig Optional plotly figure. When supplied, per-panel title
 #'   coordinates are read directly from the figure's xaxis/yaxis domains so
 #'   that titles stay aligned with panels after domain-rewriting helpers such
-#'   as `.apply_facet_subplot_spacing()`. If `NULL` (the default),
+#'   as [apply_facet_subplot_spacing()]. If `NULL` (the default),
 #'   coordinates are computed from `nrows` assuming evenly spaced
 #'   panels filling the full paper area.
 #' @param title.offset Numeric fraction of the figure height to place each
@@ -321,9 +330,10 @@
 #' @return A list of annotation lists suitable for `plotly::layout(annotations = ...)`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_build_facet_annotations
-#' @keywords internal
-.build_facet_annotations <- function(facet_levels, x.title = NULL,
+#' @export
+#' @examples
+#' build_facet_annotations(c("A", "B", "C"), x.title = "X", y.title = "Y")
+build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
                                      title.font.size = 14,
                                      nrows = 1,
@@ -332,7 +342,7 @@
     n_facets <- length(facet_levels)
 
     # Prefer actual axis domains on the figure (if supplied) so titles follow
-    # any domain rewriting performed by e.g. .apply_facet_subplot_spacing().
+    # any domain rewriting performed by e.g. apply_facet_subplot_spacing().
     panel_coords <- NULL
     if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
         axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
@@ -449,7 +459,7 @@
 #'
 #' @param fig A plotly figure object whose `x$layout` contains the per-panel
 #'   `xaxis*`/`yaxis*` domains (typically after `subplot()` and
-#'   `.apply_facet_subplot_spacing()`).
+#'   [apply_facet_subplot_spacing()]).
 #' @param n_facets Integer, number of facet panels.
 #' @param showline Logical, whether to draw border lines. Default `TRUE`.
 #' @param mirror Logical, whether to mirror the lines to form a full box.
@@ -466,11 +476,16 @@
 #'   resolved.
 #'
 #' @author Jacob Martin
-#' @rdname INTERNAL_build_facet_panel_borders
-#' @keywords internal
-.build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
-                                       linecolor = "black", linewidth = 0.5,
-                                       ncol = NULL, nrow = NULL) {
+#' @export
+#' @examples
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::facet_wrap(~cyl)
+#' fig <- plotly::ggplotly(p)
+#' build_facet_panel_borders(fig, n_facets = 3)
+build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
+                                      linecolor = "black", linewidth = 0.5,
+                                      ncol = NULL, nrow = NULL) {
     if (!isTRUE(showline) || n_facets < 1L) {
         return(list())
     }
@@ -578,9 +593,12 @@
 #' @return `numeric(1)` or `NULL`  
 #'   Validated facet dimension value, or `NULL` if invalid.
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_clean_facet_dim
-.clean_facet_dim <- function(val) {
+#' @export
+#' @examples
+#' clean_facet_dim(3)
+#' clean_facet_dim(NA)
+#' clean_facet_dim(NULL)
+clean_facet_dim <- function(val) {
     if (is.null(val) || length(val) == 0 || is.na(val) ||
         !is.numeric(val) || val < 1) {
         return(NULL)

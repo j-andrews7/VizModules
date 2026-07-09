@@ -552,7 +552,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- do.call(config, c(list(p = p$plot), config_list))
 
             if (!is.null(null.na.inputs$split.by) && any(nzchar(null.na.inputs$split.by))) {
-                fig <- .apply_facet_subplot_spacing(
+                fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = null.na.inputs$split.ncol,

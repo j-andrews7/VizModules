@@ -256,27 +256,27 @@ linePlot <- function(data, x, y, palette.selection,
             do.call(plot_ly, plot_params)
         })
 
-        sharing <- .resolve_facet_sharing(facet.scales)
-        nrows <- .resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
+        sharing <- resolve_facet_sharing(facet.scales)
+        nrows <- resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
             plots, nrows = nrows, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
-        fig <- .apply_facet_subplot_spacing(
+        fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = subplot.margin,
                     ncol = ncols,
                     nrow = nrows
                 )    
       
-        annotations <- .build_facet_annotations(
+        annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
             nrows = nrows, fig = fig
         )
 
-        borders <- .build_facet_panel_borders(
+        borders <- build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
             linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -293,8 +293,8 @@ linePlot <- function(data, x, y, palette.selection,
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
-        sharing <- .resolve_facet_sharing(facet.scales)
-        nrows <- .resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
+        sharing <- resolve_facet_sharing(facet.scales)
+        nrows <- resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
 
         plots <- list()
         first_facet <- TRUE
@@ -316,19 +316,19 @@ linePlot <- function(data, x, y, palette.selection,
         )
       
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
-        fig <- .apply_facet_subplot_spacing(
+        fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = subplot.margin,
                     ncol = ncols,
                     nrow = nrows
                 ) 
       
-        annotations <- .build_facet_annotations(
+        annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
             nrows = nrows, fig = fig
         )
       
-        borders <- .build_facet_panel_borders(
+        borders <- build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
             linecolor = axis.linecolor, linewidth = axis.linewidth,

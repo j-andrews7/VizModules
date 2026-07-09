@@ -97,7 +97,7 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
 #' Plotly's native axis titles can have their text edited interactively but
 #' cannot be dragged to a new position. Faceted figures already render their
 #' shared x/y axis titles as paper-anchored annotations (via
-#' `.build_facet_annotations()`), which the plot configuration makes
+#' `build_facet_annotations()`), which the plot configuration makes
 #' both editable and draggable. This helper brings the same behaviour to
 #' single-panel (non-faceted) figures by replacing the native x/y axis titles
 #' with equivalent paper-anchored annotations.

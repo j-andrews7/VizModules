@@ -151,7 +151,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         plot_data <- data[order(data[[order.cols[1]]]), ]
     }
 
-    sharing <- .resolve_facet_sharing(facet.scales)
+    sharing <- resolve_facet_sharing(facet.scales)
 
     # Clear per-axis titles when faceting - single titles added as annotations instead
     if (!is.null(facet.by) && facet.by != "") {
@@ -181,7 +181,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
-        annotations <- .build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
+        annotations <- build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
         fig <- fig |> layout(annotations = annotations)
     } else {
         # WITHOUT FACETING

@@ -81,7 +81,7 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   rectangles, and an eraser) to the modebar. Native cartesian axis-title
 #'   text editing is disabled because axis titles are rendered as draggable,
 #'   editable annotations (see [axis_titles_as_annotations()] and
-#'   `.build_facet_annotations()`).
+#'   `build_facet_annotations()`).
 #'
 #' @author Jacob Martin
 #' @export

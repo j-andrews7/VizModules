@@ -436,9 +436,9 @@ test_that("apply_legend_styling styles continuous colorbar legends", {
 })
 
 
-# ─── .apply_facet_subplot_spacing ────────────────────────────────────────────
+# ─── apply_facet_subplot_spacing ────────────────────────────────────────────
 
-test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
+test_that("apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
     grid <- plotly::subplot(
         plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
         plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
@@ -447,7 +447,7 @@ test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical sp
         nrows = 2
     )
 
-    result <- VizModules:::.apply_facet_subplot_spacing(
+    result <- VizModules:::apply_facet_subplot_spacing(
         grid, spacing = c(0.2, 0.05), ncol = 2, nrow = 2
     )
 
@@ -474,7 +474,7 @@ test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical sp
     expect_equal(y_starts[2] - y_ends[1], 0.05, tolerance = 1e-6)
 })
 
-test_that(".apply_facet_subplot_spacing treats a single value as both directions", {
+test_that("apply_facet_subplot_spacing treats a single value as both directions", {
     grid <- plotly::subplot(
         plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
         plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
@@ -483,8 +483,8 @@ test_that(".apply_facet_subplot_spacing treats a single value as both directions
         nrows = 2
     )
 
-    single <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
-    vec <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
+    single <- VizModules:::apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
+    vec <- VizModules:::apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
 
     get_domains <- function(fig, prefix) {
         nms <- names(fig$x$layout)
