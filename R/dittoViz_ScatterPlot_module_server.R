@@ -95,6 +95,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 # No grouping - show single color picker for point color
                 initial_color <- isolate(input$single.point.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
+                    initial_color <- get_default(defaults, "single.point.color", "")
+                }
+                if (is.null(initial_color) || !nzchar(initial_color)) {
                     initial_color <- "#000000"
                 }
                 return(colourInput(
@@ -105,6 +108,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             initial_colors <- isolate(input$color.panel)
+            if (is.null(initial_colors) || length(initial_colors) == 0) {
+                initial_colors <- get_default(defaults, "color.panel", NULL)
+            }
             if (is.null(initial_colors) || length(initial_colors) == 0) {
                 initial_colors <- manual_color_values()
             }

@@ -57,7 +57,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
             if (is.null(grp) || grp == "" || !grp %in% names(d)) {
                 return(tagList(
                     colourInput(ns("single.color"), "Trace color:",
-                        value = "#1F77B4"
+                        value = isolate(get_default(defaults, "single.color", "#1F77B4"))
                     )
                 ))
             }
@@ -72,6 +72,7 @@ ternaryPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, de
                 label = "Trace colors",
                 groups = groups,
                 selected_palette = "dittoColors",
+                colors = isolate(input$trace.colors %||% get_default(defaults, "trace.colors", NULL)),
                 compact = TRUE
             )
         })

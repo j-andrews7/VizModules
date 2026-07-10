@@ -86,6 +86,28 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                         icon = icon("upload")
                     )
                 ),
+                # 'Session' is collapsed by default. It lets users download the
+                # whole canvas (modules, datasets, inputs, layout) as a JSON file
+                # and later restore it in a fresh session.
+                tags$details(
+                    class = "pb-details",
+                    tags$summary("Session"),
+                    helpText(
+                        "Save the current canvas (plots, datasets, inputs, and",
+                        "layout) to a JSON file, or restore a previously saved one.",
+                        "Datasets are referenced by name; re-upload any custom",
+                        "datasets under \"Load Data\" before restoring."
+                    ),
+                    downloadButton(ns("save_state"), "Save state (JSON)",
+                        icon = icon("download"), class = "btn-block"
+                    ),
+                    fileInput(ns("load_state"), "Restore from file:",
+                        accept = c(".json", ".JSON")
+                    ),
+                    actionButton(ns("restore_state"), "Restore state",
+                        icon = icon("rotate-left")
+                    )
+                ),
                 hr(),
                 h3("Canvas"),
                 splitLayout(

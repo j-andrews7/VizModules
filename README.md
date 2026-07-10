@@ -124,6 +124,8 @@ figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 
 Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
 
+Use the collapsible **Session** panel to save the whole canvas (plots, datasets, inputs, and layout) to a JSON file and restore it later. Datasets are referenced by name, so re-upload any custom datasets under **Load Data** before restoring.
+
 The Figure Builder is also a self-contained Shiny module, so you can embed it in a larger app (and even use more than one instance on a page) with `figureBuilderUI()` / `figureBuilderServer()`, just like the plot modules:
 
 ```r

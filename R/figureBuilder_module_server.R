@@ -79,6 +79,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
         rv <- reactiveValues(
             panel_ids = character(0), # ordered vector of active panel ids
             labels    = list(), # pid -> display label
+            meta      = list(), # pid -> list(module = key, dataset = name)
             counter   = 0L # monotonic id source
         )
 
@@ -221,14 +222,36 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             req(mod, ds_name %in% names(datasets))
             removeModal()
 
+            # Only apply built-in defaults when the dataset they target is chosen.
+            defaults <- if (identical(ds_name, mod$dataset)) mod$defaults else list()
+            create_panel(mod_key, ds_name, defaults = defaults)
+        })
+
+        # Build one panel (card + controls + filter table) and wire its servers.
+        # Shared by the "Add Plot" dialog and by state restoration. `defaults` is a
+        # named list keyed by module input name (fed to the module's `*InputsUI`);
+        # on restore this is the saved input snapshot. `label` overrides the
+        # auto-generated caption, and `geometry` (a list with numeric `top`,
+        # `left`, `width`, `height` in pixels) restores the card's position/size.
+        create_panel <- function(mod_key, ds_name, defaults = list(),
+                                 label = NULL, geometry = NULL) {
+            datasets <- dataset_store()
+            mod <- module_registry[[mod_key]]
+            if (is.null(mod) || !ds_name %in% names(datasets)) {
+                return(invisible(NULL))
+            }
+
             rv$counter <- rv$counter + 1L
             pid <- paste0("panel", rv$counter)
             data_snapshot <- datasets[[ds_name]]
             panel_data[[pid]] <- data_snapshot
 
-            label <- sprintf("%s #%d (%s)", mod$label, rv$counter, ds_name)
-            # Only apply built-in defaults when the dataset they target is chosen.
-            defaults <- if (identical(ds_name, mod$dataset)) mod$defaults else list()
+            if (is.null(label)) {
+                label <- sprintf("%s #%d (%s)", mod$label, rv$counter, ds_name)
+            }
+            if (is.null(defaults)) {
+                defaults <- list()
+            }
 
             # Hide empty-state hints once the first panel is added. shinyjs
             # namespaces these ids itself, so pass them bare.
@@ -239,6 +262,8 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             # 1) Plot card on the canvas (draggable via the hover toolbar's grip,
             #    resizable from the corner). The toolbar only appears on hover and
             #    is excluded from the SVG export, so the card stays free of chrome.
+            #    A restored `geometry` reinstates the saved position and size;
+            #    otherwise the card is pinned to the top-left of the canvas.
             card <- div(
                 id = ns(paste0(pid, "_card")),
                 class = "viz-panel-card",
@@ -246,7 +271,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                 # forced inline (with !important) so nothing in the cascade or any
                 # jQuery UI wrapper can drop the card back into normal document flow
                 # where the cards would stack vertically down the page.
-                style = "position:absolute !important; top:20px; left:20px;",
+                style = .panel_card_style(geometry),
                 div(
                     class = "viz-panel-toolbar",
                     span(
@@ -315,7 +340,15 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 
             # The module server returns a reactive yielding its interactive source
             # (plot + data + inputs); keep it so we can bundle every panel together.
-            panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
+            # Saved `defaults` are forwarded to servers that accept them so
+            # server-rendered widgets (e.g. the discrete color palette) can seed
+            # their initial values from a restored snapshot. Servers following the
+            # older `function(id, data)` contract are called without `defaults`.
+            if ("defaults" %in% names(formals(mod$server_fn))) {
+                panel_sources[[pid]] <- mod$server_fn(pid, data = filtered, defaults = defaults)
+            } else {
+                panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
+            }
 
             # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
             panel_observers[[pid]] <- observeEvent(
@@ -328,9 +361,11 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 
             # 6) Register the panel and focus it in both dropdowns.
             rv$labels[[pid]] <- label
+            rv$meta[[pid]] <- list(module = mod_key, dataset = ds_name)
             rv$panel_ids <- c(rv$panel_ids, pid)
             refresh_selectors(selected = pid)
-        })
+            invisible(pid)
+        }
 
         remove_panel <- function(pid) {
             if (!pid %in% rv$panel_ids) {
@@ -356,6 +391,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             panel_data[[pid]] <- NULL
             panel_sources[[pid]] <- NULL
             rv$labels[[pid]] <- NULL
+            rv$meta[[pid]] <- NULL
             rv$panel_ids <- setdiff(rv$panel_ids, pid)
 
             if (length(rv$panel_ids) == 0L) {
@@ -459,6 +495,196 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             filename_base = "panel_source"
         )
 
+        # --- Session state (save / restore) -------------------------------------
+        # Collect the module inputs for one panel from this module's namespaced
+        # input registry. Sub-module inputs live under the "<pid>-" prefix (the
+        # panel's own filter sits under "<pid>_filter-" and is intentionally not
+        # matched here). The prefix is stripped so keys line up with each module's
+        # `*InputsUI(defaults = ...)` argument on restore.
+        snapshot_panel_inputs <- function(pid) {
+            all_inputs <- reactiveValuesToList(input)
+            prefix <- paste0(pid, "-")
+            keys <- names(all_inputs)
+            sel <- keys[startsWith(keys, prefix)]
+            if (length(sel) == 0L) {
+                return(stats::setNames(list(), character(0)))
+            }
+            values <- all_inputs[sel]
+            names(values) <- substring(sel, nchar(prefix) + 1L)
+            sanitize_input_snapshot(values)
+        }
+
+        # Assemble the full app-state list for the current canvas.
+        build_app_state <- function() {
+            geometry <- input$pb_geometry
+            panels <- lapply(rv$panel_ids, function(pid) {
+                meta <- rv$meta[[pid]]
+                panel <- list(
+                    module = meta$module,
+                    dataset = meta$dataset,
+                    label = rv$labels[[pid]],
+                    inputs = snapshot_panel_inputs(pid)
+                )
+                geo <- if (is.list(geometry)) geometry[[pid]] else NULL
+                if (!is.null(geo)) {
+                    panel$geometry <- geo
+                }
+                panel
+            })
+
+            list(
+                app = list(
+                    name = "figure-builder",
+                    vizmodules_version = as.character(utils::packageVersion("VizModules"))
+                ),
+                app_inputs = list(
+                    orientation = input$pb_orientation,
+                    label_case = input$pb_label_case
+                ),
+                panels = panels
+            )
+        }
+
+        output$save_state <- downloadHandler(
+            filename = function() {
+                sprintf("figure-builder-state_%s.json", Sys.Date())
+            },
+            content = function(file) {
+                writeLines(serialize_app_state(build_app_state()), file)
+            },
+            contentType = "application/json"
+        )
+
+        observeEvent(input$restore_state, {
+            file <- input$load_state
+            if (is.null(file)) {
+                showNotification("Choose a JSON state file to restore first.",
+                    type = "warning"
+                )
+                return(invisible(NULL))
+            }
+
+            state <- tryCatch(
+                deserialize_app_state(readLines(file$datapath, warn = FALSE)),
+                error = function(e) e
+            )
+            if (inherits(state, "error")) {
+                showNotification(
+                    paste("Could not restore state:", conditionMessage(state)),
+                    type = "error", duration = 10
+                )
+                return(invisible(NULL))
+            }
+
+            # Clear the current canvas before rebuilding from the saved document.
+            for (pid in rv$panel_ids) {
+                remove_panel(pid)
+            }
+
+            # Restore app-level inputs (the orientation observer applies the class).
+            app_inputs <- state$app_inputs
+            if (!is.null(app_inputs$orientation)) {
+                updateSelectInput(session, "pb_orientation",
+                    selected = app_inputs$orientation
+                )
+            }
+            if (!is.null(app_inputs$label_case)) {
+                updateSelectInput(session, "pb_label_case",
+                    selected = app_inputs$label_case
+                )
+            }
+
+            datasets <- dataset_store()
+            missing_datasets <- character(0)
+            unknown_modules <- character(0)
+            restored <- 0L
+
+            for (panel in state$panels) {
+                mod_key <- panel$module
+                ds_name <- panel$dataset
+                if (is.null(mod_key) || is.null(module_registry[[mod_key]])) {
+                    unknown_modules <- c(unknown_modules, as.character(mod_key))
+                    next
+                }
+                if (is.null(ds_name) || !ds_name %in% names(datasets)) {
+                    missing_datasets <- c(missing_datasets, as.character(ds_name))
+                    next
+                }
+                create_panel(
+                    mod_key, ds_name,
+                    defaults = panel$inputs,
+                    label = panel$label,
+                    geometry = panel$geometry
+                )
+                restored <- restored + 1L
+            }
+
+            showNotification(
+                sprintf("Restored %d plot%s from saved state.", restored,
+                    if (restored == 1L) "" else "s"
+                ),
+                type = "message"
+            )
+            if (length(missing_datasets) > 0L) {
+                showNotification(
+                    sprintf(
+                        "Skipped %d plot(s): dataset(s) not loaded (%s). Load them first, then restore again.",
+                        length(missing_datasets),
+                        paste(unique(missing_datasets), collapse = ", ")
+                    ),
+                    type = "warning", duration = 12
+                )
+            }
+            if (length(unknown_modules) > 0L) {
+                showNotification(
+                    sprintf(
+                        "Skipped %d plot(s): unknown module type(s) (%s).",
+                        length(unknown_modules),
+                        paste(unique(unknown_modules), collapse = ", ")
+                    ),
+                    type = "warning", duration = 12
+                )
+            }
+        })
+
         invisible(NULL)
     })
+}
+
+# Inline style for a panel card. New cards are pinned to the top-left of the
+# canvas; a restored `geometry` (a list with numeric `top`, `left`, `width`,
+# and `height` in pixels) reinstates the saved position and size. `position` is
+# forced with !important so nothing in the cascade can drop the card back into
+# normal document flow (where cards would stack vertically down the page).
+.panel_card_style <- function(geometry = NULL) {
+    px <- function(x) {
+        if (is.null(x) || length(x) != 1L) {
+            return(NULL)
+        }
+        num <- suppressWarnings(as.numeric(x))
+        if (is.na(num)) {
+            return(NULL)
+        }
+        paste0(round(num), "px")
+    }
+    top <- px(geometry$top)
+    left <- px(geometry$left)
+    if (is.null(top)) {
+        top <- "20px"
+    }
+    if (is.null(left)) {
+        left <- "20px"
+    }
+    style <- sprintf(
+        "position:absolute !important; top:%s; left:%s;", top, left
+    )
+    w <- px(geometry$width)
+    h <- px(geometry$height)
+    if (!is.null(w)) {
+        style <- paste0(style, sprintf(" width:%s;", w))
+    }
+    if (!is.null(h)) {
+        style <- paste0(style, sprintf(" height:%s;", h))
+    }
+    style
 }
