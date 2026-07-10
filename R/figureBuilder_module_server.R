@@ -340,7 +340,15 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 
             # The module server returns a reactive yielding its interactive source
             # (plot + data + inputs); keep it so we can bundle every panel together.
-            panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
+            # Saved `defaults` are forwarded to servers that accept them so
+            # server-rendered widgets (e.g. the discrete color palette) can seed
+            # their initial values from a restored snapshot. Servers following the
+            # older `function(id, data)` contract are called without `defaults`.
+            if ("defaults" %in% names(formals(mod$server_fn))) {
+                panel_sources[[pid]] <- mod$server_fn(pid, data = filtered, defaults = defaults)
+            } else {
+                panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
+            }
 
             # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
             panel_observers[[pid]] <- observeEvent(

@@ -85,7 +85,11 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups,
+                input$palette.colours %||% get_default(defaults, "palette.colours", NULL),
+                default_palette_values
+            ))
 
             multiColorPicker(
                 ns("palette.colours"),
