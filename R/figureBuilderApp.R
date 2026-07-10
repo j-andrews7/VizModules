@@ -453,7 +453,8 @@ function pbEscapeXml(s) {
         .replace(/>/g, '&gt;');
 }
 // Order a canvas's cards the way a reader scans a figure: top-to-bottom by row,
-// then left-to-right within a row. A row tolerance groups roughly aligned tops.
+// then left-to-right within a row. Cards whose tops differ by less than half the
+// taller card's height are treated as the same row (the 'tol' tolerance below).
 function pbOrderCards(canvas) {
     var canvasRect = canvas.getBoundingClientRect();
     var items = Array.prototype.map.call(
@@ -494,12 +495,13 @@ function pbAssignLabelsAll() {
     document.querySelectorAll('.pb-canvas').forEach(pbAssignLabels);
 }
 // Recompute labels when the menu changes or after a drag settles the layout.
+// The 'Panel labels' <select> is tagged with the 'pb-label-case' class so this
+// delegated handler matches by class (like the SVG download button), then finds
+// the sibling canvas from the select's own namespaced id.
 document.addEventListener('change', function(e) {
     var t = e.target;
-    var suffix = 'pb_label_case';
-    if (t && t.id && t.id.slice(-suffix.length) === suffix) {
-        pbAssignLabels(pbCanvasForControl(t, suffix));
-    }
+    if (!t || !t.closest || !t.closest('.pb-label-case')) { return; }
+    pbAssignLabels(pbCanvasForControl(t, 'pb_label_case'));
 });
 document.addEventListener('mouseup', function() {
     setTimeout(pbAssignLabelsAll, 0);
