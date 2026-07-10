@@ -22,6 +22,13 @@ test_that("figureBuilderUI namespaces its ids and canvas markup", {
     expect_false(grepl("pbDownloadSVG\\(\\)", html))
     expect_true(grepl("addEventListener\\('click'", head_html))
     expect_true(grepl("pbCanvasForControl", head_html))
+
+    # Panel labels render live on the canvas: the menu is tagged so a delegated
+    # change handler can find it, the bundled JS assigns/reorders labels, and the
+    # label element is styled by class.
+    expect_true(grepl("pb-label-case", html))
+    expect_true(grepl("pbAssignLabels", head_html))
+    expect_true(grepl("\\.viz-panel-label", head_html))
 })
 
 test_that("figureBuilderUI can omit its header title", {

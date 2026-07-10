@@ -294,6 +294,22 @@ figureBuilderApp <- function(data_list = NULL,
     pointer-events: none;
 }
 .viz-panel-card:hover .viz-panel-toolbar { opacity: 1; pointer-events: auto; }
+/* Live panel label (a, b, c, ...) shown in the card's top-left corner. It sits
+   below the hover toolbar and is ignored by the SVG export (which draws its own
+   labels), so it only provides on-screen feedback for the 'Panel labels' menu. */
+.viz-panel-label {
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    z-index: 5;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #000;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+}
 .viz-panel-drag {
     cursor: move;
     color: #fff;
@@ -436,6 +452,58 @@ function pbEscapeXml(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 }
+// Order a canvas's cards the way a reader scans a figure: top-to-bottom by row,
+// then left-to-right within a row. A row tolerance groups roughly aligned tops.
+function pbOrderCards(canvas) {
+    var canvasRect = canvas.getBoundingClientRect();
+    var items = Array.prototype.map.call(
+        canvas.querySelectorAll('.viz-panel-card'),
+        function(card) {
+            var r = card.getBoundingClientRect();
+            return {
+                card: card,
+                x: r.left - canvasRect.left + canvas.scrollLeft,
+                y: r.top - canvasRect.top + canvas.scrollTop,
+                h: r.height
+            };
+        }
+    );
+    return items.sort(function(a, b) {
+        var tol = Math.max(a.h, b.h) * 0.5;
+        if (Math.abs(a.y - b.y) > tol) { return a.y - b.y; }
+        return a.x - b.x;
+    });
+}
+// Fill in each card's on-screen panel label from the 'Panel labels' menu, so
+// selecting Upper/Lowercase gives immediate visual feedback (the labels also
+// reorder as cards are dragged around). Mirrors the SVG export's labelling.
+function pbAssignLabels(canvas) {
+    if (!canvas) { return; }
+    var ns = pbNamespace(canvas);
+    var sel = document.getElementById(ns + 'pb_label_case');
+    var mode = sel ? sel.value : 'none';
+    pbOrderCards(canvas).forEach(function(it, i) {
+        var el = it.card.querySelector('.viz-panel-label');
+        if (!el) { return; }
+        var label = pbPanelLabel(i, mode);
+        el.textContent = label || '';
+        el.style.display = label ? '' : 'none';
+    });
+}
+function pbAssignLabelsAll() {
+    document.querySelectorAll('.pb-canvas').forEach(pbAssignLabels);
+}
+// Recompute labels when the menu changes or after a drag settles the layout.
+document.addEventListener('change', function(e) {
+    var t = e.target;
+    var suffix = 'pb_label_case';
+    if (t && t.id && t.id.slice(-suffix.length) === suffix) {
+        pbAssignLabels(pbCanvasForControl(t, suffix));
+    }
+});
+document.addEventListener('mouseup', function() {
+    setTimeout(pbAssignLabelsAll, 0);
+});
 function pbDownloadSVG(canvas) {
     if (!canvas) { return; }
     var cards = canvas.querySelectorAll('.viz-panel-card');
@@ -584,19 +652,23 @@ function pbScheduleResize() {
 // none are left blank.
 $(function() {
     var mo = new MutationObserver(function(mutations) {
+        var cardsChanged = false;
         mutations.forEach(function(m) {
             m.addedNodes.forEach(function(node) {
                 var card = pbFindCard(node);
-                if (card) { pbObserveCard(card); pbScheduleResize(); }
+                if (card) { pbObserveCard(card); pbScheduleResize(); cardsChanged = true; }
                 if (pbContainsPlot(node)) { pbScheduleResize(); }
             });
             m.removedNodes.forEach(function(node) {
                 var card = pbFindCard(node);
-                if (card) { pbUnobserveCard(card); }
+                if (card) { pbUnobserveCard(card); cardsChanged = true; }
             });
         });
+        // Renumber panel labels whenever the set of cards changes.
+        if (cardsChanged) { pbAssignLabelsAll(); }
     });
     mo.observe(document.body, { childList: true, subtree: true });
+    pbAssignLabelsAll();
 });
 })();
 ")

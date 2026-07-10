@@ -172,12 +172,14 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
         })
 
         observeEvent(input$pb_orientation, {
+            # shinyjs namespaces the `id` for us inside a module, so pass bare ids
+            # (wrapping in ns() here would double-namespace and silently no-op).
             if (identical(input$pb_orientation, "landscape")) {
-                shinyjs::removeClass(ns("pb_canvas"), "a4-portrait")
-                shinyjs::addClass(ns("pb_canvas"), "a4-landscape")
+                shinyjs::removeClass("pb_canvas", "a4-portrait")
+                shinyjs::addClass("pb_canvas", "a4-landscape")
             } else {
-                shinyjs::removeClass(ns("pb_canvas"), "a4-landscape")
-                shinyjs::addClass(ns("pb_canvas"), "a4-portrait")
+                shinyjs::removeClass("pb_canvas", "a4-landscape")
+                shinyjs::addClass("pb_canvas", "a4-portrait")
             }
         })
 
@@ -228,10 +230,11 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             # Only apply built-in defaults when the dataset they target is chosen.
             defaults <- if (identical(ds_name, mod$dataset)) mod$defaults else list()
 
-            # Hide empty-state hints once the first panel is added.
-            shinyjs::hide(ns("pb_canvas_empty"))
-            shinyjs::hide(ns("pb_controls_empty"))
-            shinyjs::hide(ns("pb_table_empty"))
+            # Hide empty-state hints once the first panel is added. shinyjs
+            # namespaces these ids itself, so pass them bare.
+            shinyjs::hide("pb_canvas_empty")
+            shinyjs::hide("pb_controls_empty")
+            shinyjs::hide("pb_table_empty")
 
             # 1) Plot card on the canvas (draggable via the hover toolbar's grip,
             #    resizable from the corner). The toolbar only appears on hover and
@@ -257,6 +260,10 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                         icon("times")
                     )
                 ),
+                # Live panel label (a, b, c, ...). Text is filled in client-side
+                # from the "Panel labels" control and reorders as cards are moved;
+                # it is excluded from the SVG export (which draws its own labels).
+                div(class = "viz-panel-label"),
                 div(class = "viz-panel-body", mod$output_ui(ns(pid), resizable = FALSE))
             )
             insertUI(
@@ -352,9 +359,9 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             rv$panel_ids <- setdiff(rv$panel_ids, pid)
 
             if (length(rv$panel_ids) == 0L) {
-                shinyjs::show(ns("pb_canvas_empty"))
-                shinyjs::show(ns("pb_controls_empty"))
-                shinyjs::show(ns("pb_table_empty"))
+                shinyjs::show("pb_canvas_empty")
+                shinyjs::show("pb_controls_empty")
+                shinyjs::show("pb_table_empty")
             }
             refresh_selectors()
         }
@@ -388,9 +395,9 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                 sel <- input$pb_controls_select
                 for (p in rv$panel_ids) {
                     if (identical(p, sel)) {
-                        shinyjs::show(ns(paste0(p, "_controls")))
+                        shinyjs::show(paste0(p, "_controls"))
                     } else {
-                        shinyjs::hide(ns(paste0(p, "_controls")))
+                        shinyjs::hide(paste0(p, "_controls"))
                     }
                 }
             },
@@ -403,9 +410,9 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                 sel <- input$pb_table_select
                 for (p in rv$panel_ids) {
                     if (identical(p, sel)) {
-                        shinyjs::show(ns(paste0(p, "_table")))
+                        shinyjs::show(paste0(p, "_table"))
                     } else {
-                        shinyjs::hide(ns(paste0(p, "_table")))
+                        shinyjs::hide(paste0(p, "_table"))
                     }
                 }
             },

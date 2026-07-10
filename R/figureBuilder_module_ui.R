@@ -104,7 +104,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                             "Lowercase (a, b, c)" = "lower"
                         ),
                         selectize = FALSE
-                    )
+                    ) |> tagAppendAttributes(class = "pb-label-case")
                 ),
                 # The SVG export is handled client-side; a delegated click handler
                 # (bound by class) finds this button's sibling canvas by namespace,
