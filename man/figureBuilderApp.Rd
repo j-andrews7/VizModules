@@ -51,9 +51,12 @@ can also upload additional datasets (CSV, TSV, TXT, or RDS) at runtime. The
 set of available plot modules is controlled by \code{module_registry}, so the app
 can be extended with custom wrapper modules without editing the package.
 
-This is the recommended way to launch the Figure Builder. The bundled app at
-\code{system.file("apps/figure-builder", package = "VizModules")} is a thin wrapper
-around this function.
+This is the recommended way to launch a standalone Figure Builder. Internally
+it is a thin wrapper around the \code{\link[=figureBuilderUI]{figureBuilderUI()}} / \code{\link[=figureBuilderServer]{figureBuilderServer()}}
+Shiny module, so the same builder can be embedded inside a larger app (and
+instantiated more than once) by calling those two functions directly. The
+bundled app at \code{system.file("apps/figure-builder", package = "VizModules")} is
+itself a thin wrapper around this function.
 }
 \examples{
 library(VizModules)
@@ -69,6 +72,9 @@ if (interactive()) runApp(app2)
 # Return the UI and server separately (e.g. for a deployment app.R):
 parts <- figureBuilderApp(return_components = TRUE)
 if (interactive()) shinyApp(parts$ui, parts$server)
+}
+\seealso{
+\code{\link[=figureBuilderUI]{figureBuilderUI()}}, \code{\link[=figureBuilderServer]{figureBuilderServer()}}
 }
 \author{
 Jared Andrews

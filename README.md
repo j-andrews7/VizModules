@@ -124,6 +124,22 @@ figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 
 Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
 
+The Figure Builder is also a self-contained Shiny module, so you can embed it in a larger app (and even use more than one instance on a page) with `figureBuilderUI()` / `figureBuilderServer()`, just like the plot modules:
+
+```r
+library(VizModules)
+
+ui <- fluidPage(
+    figureBuilderUI("figure_builder")
+)
+
+server <- function(input, output, session) {
+    figureBuilderServer("figure_builder")
+}
+
+shinyApp(ui, server)
+```
+
 It allows you to interactively compose complicated figures using the modules in a single page:
 
 - **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
