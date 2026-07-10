@@ -1,5 +1,8 @@
 test_that("figureBuilderUI namespaces its ids and canvas markup", {
-    html <- as.character(figureBuilderUI("figure_builder"))
+    ui <- figureBuilderUI("figure_builder")
+    html <- as.character(ui)
+    # The bundled CSS/JS is hoisted into the document head, so pull that slot too.
+    head_html <- as.character(htmltools::renderTags(ui)$head)
 
     # Every control id must be namespaced so the module can be embedded/reused.
     expect_true(grepl("figure_builder-pb_canvas", html))
@@ -10,11 +13,15 @@ test_that("figureBuilderUI namespaces its ids and canvas markup", {
     # under any namespace and for multiple instances.
     expect_true(grepl("pb-canvas a4-portrait", html))
     expect_true(grepl("pb-canvas-scroll", html))
+    expect_true(grepl("\\.pb-canvas", head_html))
 
     # The SVG download uses a delegated, class-based handler (no inline onclick
-    # to a global function, which would collide across instances).
+    # to a global function, which would collide across instances). The bundled
+    # JS wires that handler up and resolves each button's sibling canvas.
     expect_true(grepl("pb-download-svg", html))
     expect_false(grepl("pbDownloadSVG\\(\\)", html))
+    expect_true(grepl("addEventListener\\('click'", head_html))
+    expect_true(grepl("pbCanvasForControl", head_html))
 })
 
 test_that("figureBuilderUI can omit its header title", {

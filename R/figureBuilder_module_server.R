@@ -295,7 +295,9 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
             # 4) Wire up the servers. The dataset is fixed; the filter feeds the
             #    plot. Reads short-circuit once the panel's data is removed. The
             #    sub-module servers are called with bare ids so they namespace
-            #    themselves within this module's namespace (see the wrapper pattern).
+            #    themselves under this module's namespace prefix (the wrapper
+            #    pattern described in `vignette("custom-modules")`), while their
+            #    UI functions above are given `ns(pid)` to match.
             panel_reactive <- reactive({
                 d <- panel_data[[pid]]
                 req(d)
