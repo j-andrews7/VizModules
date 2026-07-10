@@ -234,9 +234,9 @@ deserialize_app_state <- function(json) {
     if (!is.list(panels)) {
         stop("App-state 'panels' must be a JSON array.", call. = FALSE)
     }
+    # A lone panel object decodes to a named list rather than a length-1 array;
+    # wrap it so callers always iterate over a list of panels.
     if (!is.null(panels$module)) {
-        # A lone panel object decoded to a named list rather than a length-1
-        # array; wrap it so callers always iterate over a list of panels.
         panels <- list(panels)
     }
 

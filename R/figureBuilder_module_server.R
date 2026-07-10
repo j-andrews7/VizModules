@@ -650,10 +650,14 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 # normal document flow (where cards would stack vertically down the page).
 .panel_card_style <- function(geometry = NULL) {
     px <- function(x) {
-        if (is.null(x) || length(x) != 1L || is.na(suppressWarnings(as.numeric(x)))) {
+        if (is.null(x) || length(x) != 1L) {
             return(NULL)
         }
-        paste0(round(as.numeric(x)), "px")
+        num <- suppressWarnings(as.numeric(x))
+        if (is.na(num)) {
+            return(NULL)
+        }
+        paste0(round(num), "px")
     }
     top <- px(geometry$top)
     left <- px(geometry$left)
