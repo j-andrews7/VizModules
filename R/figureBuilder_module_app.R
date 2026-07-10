@@ -1,4 +1,4 @@
-#' Launch the VizModules Figure Builder Application
+#' Create a VizModules Figure Builder Application
 #'
 #' Build the multi-panel **Figure Builder** Shiny application as a returnable
 #' object. The app lets users add any VizModules plot module to a free-form A4
