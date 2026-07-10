@@ -494,6 +494,26 @@ function pbAssignLabels(canvas) {
 function pbAssignLabelsAll() {
     document.querySelectorAll('.pb-canvas').forEach(pbAssignLabels);
 }
+// Report every card's position and size (in canvas pixels) back to Shiny so the
+// server can persist the layout when saving session state. Keyed by panel id
+// ('panel1', 'panel2', ...) derived from each card's namespaced element id.
+function pbReportGeometry(canvas) {
+    if (!canvas || !window.Shiny || !Shiny.setInputValue) { return; }
+    var ns = pbNamespace(canvas);
+    var geo = {};
+    canvas.querySelectorAll('.viz-panel-card').forEach(function(card) {
+        var pid = (card.id || '').slice(ns.length).replace(/_card$/, '');
+        if (!pid) { return; }
+        geo[pid] = {
+            top: card.offsetTop, left: card.offsetLeft,
+            width: card.offsetWidth, height: card.offsetHeight
+        };
+    });
+    Shiny.setInputValue(ns + 'pb_geometry', geo, { priority: 'event' });
+}
+function pbReportGeometryAll() {
+    document.querySelectorAll('.pb-canvas').forEach(pbReportGeometry);
+}
 // Recompute labels when the menu changes or after a drag settles the layout.
 // The 'Panel labels' <select> is tagged with the 'pb-label-case' class so this
 // delegated handler matches by class (like the SVG download button), then finds
@@ -504,8 +524,26 @@ document.addEventListener('change', function(e) {
     pbAssignLabels(pbCanvasForControl(t, 'pb_label_case'));
 });
 document.addEventListener('mouseup', function() {
-    setTimeout(pbAssignLabelsAll, 0);
+    setTimeout(function() { pbAssignLabelsAll(); pbReportGeometryAll(); }, 0);
 });
+// Keep the reported geometry current as cards are added or removed (so a save
+// captures the layout even without any intervening drag). A single observer
+// covers every canvas on the page.
+if (window.MutationObserver) {
+    var pbGeomObserver = new MutationObserver(function() {
+        setTimeout(pbReportGeometryAll, 0);
+    });
+    var pbObserveCanvases = function() {
+        document.querySelectorAll('.pb-canvas').forEach(function(c) {
+            pbGeomObserver.observe(c, { childList: true });
+        });
+    };
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', pbObserveCanvases);
+    } else {
+        pbObserveCanvases();
+    }
+}
 function pbDownloadSVG(canvas) {
     if (!canvas) { return; }
     var cards = canvas.querySelectorAll('.viz-panel-card');
