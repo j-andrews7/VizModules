@@ -15,11 +15,15 @@ test_that("figureBuilderUI namespaces its ids and canvas markup", {
     expect_true(grepl("pb-canvas-scroll", html))
     expect_true(grepl("\\.pb-canvas", head_html))
 
-    # The SVG download uses a delegated, class-based handler (no inline onclick
-    # to a global function, which would collide across instances). The bundled
-    # JS wires that handler up and resolves each button's sibling canvas.
+    # The figure download uses delegated, class-based handlers (no inline onclick
+    # to a global function, which would collide across instances). Both the SVG
+    # and PNG buttons are present, and the bundled JS wires the handlers up and
+    # resolves each button's sibling canvas.
     expect_true(grepl("pb-download-svg", html))
+    expect_true(grepl("pb-download-png", html))
+    expect_true(grepl("figure_builder-pb_download_png", html))
     expect_false(grepl("pbDownloadSVG\\(\\)", html))
+    expect_true(grepl("pbDownloadFigure", head_html))
     expect_true(grepl("addEventListener\\('click'", head_html))
     expect_true(grepl("pbCanvasForControl", head_html))
 

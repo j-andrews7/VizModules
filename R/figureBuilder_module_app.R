@@ -399,7 +399,8 @@ figureBuilderApp <- function(data_list = NULL,
 ")
 }
 
-# Client-side export of the whole canvas to a single SVG file.
+# Client-side export of every panel on the canvas to a single figure file,
+# cropped tight to the panels and offered as either SVG or PNG.
 .figure_builder_js <- function() {
     HTML("
 // The Figure Builder is a namespaced Shiny module, so its element ids are
@@ -506,7 +507,43 @@ document.addEventListener('change', function(e) {
 document.addEventListener('mouseup', function() {
     setTimeout(pbAssignLabelsAll, 0);
 });
-function pbDownloadSVG(canvas) {
+// Trigger a browser download of a Blob under the given file name.
+function pbTriggerDownload(blob, filename) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+}
+// Rasterise a self-contained SVG string into a PNG Blob. Plotly's exported SVG
+// is fully inlined (no external references), so drawing it onto a canvas does
+// not taint the canvas and toBlob() succeeds. Rendered at 2x for a crisp bitmap
+// on a white background.
+function pbSvgToPng(svgText, W, H, cb) {
+    var scale = 2;
+    var img = new Image();
+    img.onload = function() {
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(W * scale));
+        canvas.height = Math.max(1, Math.round(H * scale));
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(function(blob) { cb(blob); }, 'image/png');
+    };
+    img.onerror = function() { cb(null); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
+}
+// Export every plot on the canvas as a single figure. Each plot is a Plotly
+// chart, so we ask Plotly for an SVG of every plot and inline its vector markup
+// (not a rasterised <image>) into one SVG document positioned to match the cards
+// on the canvas. The document is cropped tight to the panels' bounding box so
+// the whole panel output is captured without a large empty page around it.
+// 'format' is 'svg' (download the vector document) or 'png' (rasterise it).
+function pbDownloadFigure(canvas, format) {
     if (!canvas) { return; }
     var cards = canvas.querySelectorAll('.viz-panel-card');
     if (!cards.length) {
@@ -516,20 +553,20 @@ function pbDownloadSVG(canvas) {
     var ns = pbNamespace(canvas);
     var labelSel = document.getElementById(ns + 'pb_label_case');
     var labelMode = labelSel ? labelSel.value : 'none';
-    var W = canvas.clientWidth, H = canvas.clientHeight;
     var canvasRect = canvas.getBoundingClientRect();
     var metas = [];
     var tasks = [];
     cards.forEach(function(card) {
         var cardRect = card.getBoundingClientRect();
-        var x = cardRect.left - canvasRect.left + canvas.scrollLeft;
-        var y = cardRect.top - canvasRect.top + canvas.scrollTop;
-        var w = cardRect.width, h = cardRect.height;
         var body = card.querySelector('.viz-panel-body');
         var gd = card.querySelector('.js-plotly-plot');
-        var pw = body ? body.clientWidth : w;
-        var ph = body ? body.clientHeight : h;
-        var meta = { x: x, y: y, w: w, h: h, pw: pw, ph: ph, svg: null };
+        var pw = body ? body.clientWidth : cardRect.width;
+        var ph = body ? body.clientHeight : cardRect.height;
+        // The plot sits inside the card body's 6px padding, so offset by 6 to
+        // record where the plot content actually starts on the canvas.
+        var x = cardRect.left - canvasRect.left + canvas.scrollLeft + 6;
+        var y = cardRect.top - canvasRect.top + canvas.scrollTop + 6;
+        var meta = { x: x, y: y, w: pw, h: ph, svg: null };
         metas.push(meta);
         if (gd && window.Plotly) {
             tasks.push(
@@ -553,6 +590,20 @@ function pbDownloadSVG(canvas) {
         ordered.forEach(function(it, i) {
             it.label = pbPanelLabel(i, labelMode);
         });
+        // Crop the export to the bounding box of every plot (plus a small
+        // margin) so the entire panel output is captured with no empty page
+        // around it. Offsets are relative to this box, not the whole canvas.
+        var PAD = 6;
+        var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        metas.forEach(function(it) {
+            minX = Math.min(minX, it.x);
+            minY = Math.min(minY, it.y);
+            maxX = Math.max(maxX, it.x + it.w);
+            maxY = Math.max(maxY, it.y + it.h);
+        });
+        if (!isFinite(minX)) { return; }
+        var W = Math.ceil(maxX - minX) + PAD * 2;
+        var H = Math.ceil(maxY - minY) + PAD * 2;
         var parts = [];
         parts.push('<?xml version=\"1.0\" encoding=\"UTF-8\"?>');
         parts.push('<svg xmlns=\"http://www.w3.org/2000/svg\" ' +
@@ -562,39 +613,56 @@ function pbDownloadSVG(canvas) {
         parts.push('<rect x=\"0\" y=\"0\" width=\"' + W + '\" height=\"' + H +
             '\" fill=\"#ffffff\"/>');
         metas.forEach(function(it) {
+            var ox = it.x - minX + PAD;
+            var oy = it.y - minY + PAD;
             if (it.svg) {
-                parts.push('<g transform=\"translate(' + (it.x + 6) + ',' +
-                    (it.y + 6) + ')\">');
+                parts.push('<g transform=\"translate(' + ox + ',' + oy + ')\">');
                 parts.push(it.svg);
                 parts.push('</g>');
             }
-            // Panel label sits in the top-left corner of the card, where the
+            // Panel label sits in the top-left corner of the panel, where the
             // hover toolbar lives in the live app.
             if (it.label) {
-                parts.push('<text x=\"' + (it.x + 8) + '\" y=\"' + (it.y + 24) +
+                parts.push('<text x=\"' + (ox + 2) + '\" y=\"' + (oy + 18) +
                     '\" font-family=\"Helvetica, Arial, sans-serif\" ' +
                     'font-size=\"20\" font-weight=\"bold\" fill=\"#000000\">' +
                     pbEscapeXml(it.label) + '</text>');
             }
         });
         parts.push('</svg>');
-        var blob = new Blob([parts.join('\\n')], { type: 'image/svg+xml' });
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'vizmodules-panel.svg';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
+        var svgText = parts.join('\\n');
+        if (format === 'png') {
+            pbSvgToPng(svgText, W, H, function(blob) {
+                if (!blob) {
+                    alert('Could not create a PNG. Try the SVG download instead.');
+                    return;
+                }
+                pbTriggerDownload(blob, 'vizmodules-panel.png');
+            });
+        } else {
+            pbTriggerDownload(
+                new Blob([svgText], { type: 'image/svg+xml' }),
+                'vizmodules-panel.svg'
+            );
+        }
     });
 }
-// Delegated handler so every instance's download button works without an inline
-// onclick (which would need a hardcoded, non-namespaced global).
+// Delegated handlers so every instance's download buttons work without an inline
+// onclick (which would need a hardcoded, non-namespaced global). Each button is
+// matched by class and resolves its sibling canvas from its own namespaced id.
 document.addEventListener('click', function(e) {
-    var btn = e.target.closest ? e.target.closest('.pb-download-svg') : null;
-    if (!btn) { return; }
-    e.preventDefault();
-    pbDownloadSVG(pbCanvasForControl(btn, 'pb_download'));
+    if (!e.target.closest) { return; }
+    var svgBtn = e.target.closest('.pb-download-svg');
+    if (svgBtn) {
+        e.preventDefault();
+        pbDownloadFigure(pbCanvasForControl(svgBtn, 'pb_download'), 'svg');
+        return;
+    }
+    var pngBtn = e.target.closest('.pb-download-png');
+    if (pngBtn) {
+        e.preventDefault();
+        pbDownloadFigure(pbCanvasForControl(pngBtn, 'pb_download_png'), 'png');
+    }
 });
 
 // Keep each plot sized to its card so dragging the resize handle changes the

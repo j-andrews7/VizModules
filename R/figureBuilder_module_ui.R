@@ -106,12 +106,20 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                         selectize = FALSE
                     ) |> tagAppendAttributes(class = "pb-label-case")
                 ),
-                # The SVG export is handled client-side; a delegated click handler
-                # (bound by class) finds this button's sibling canvas by namespace,
-                # so no inline onclick or hardcoded id is needed.
-                tags$button("Download Full Figure (SVG)",
-                    id = ns("pb_download"), type = "button",
-                    class = "btn btn-success btn-block pb-download-svg"
+                # The figure export is handled client-side; delegated click
+                # handlers (bound by class) find each button's sibling canvas by
+                # namespace, so no inline onclick or hardcoded id is needed. The
+                # export is cropped tight to the panels so the whole figure is
+                # captured, and can be saved as vector (SVG) or bitmap (PNG).
+                splitLayout(
+                    tags$button("Download Figure (SVG)",
+                        id = ns("pb_download"), type = "button",
+                        class = "btn btn-success btn-block pb-download-svg"
+                    ),
+                    tags$button("Download Figure (PNG)",
+                        id = ns("pb_download_png"), type = "button",
+                        class = "btn btn-success btn-block pb-download-png"
+                    )
                 ),
                 hr(),
                 h3("Plot Controls"),
