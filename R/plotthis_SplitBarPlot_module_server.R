@@ -265,6 +265,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateSliderInput(session, "text.position",
                 value = get_default(defaults, "text.position", 0, is.numeric)
             )
+            updateNumericInput(session, "lower.quantile",
+                value = get_default(defaults, "lower.quantile", 0, is.numeric)
+            )
+            updateNumericInput(session, "upper.quantile",
+                value = get_default(defaults, "upper.quantile", 1, is.numeric)
+            )
+            updateNumericInput(session, "lower.cutoff", value = get_default(defaults, "lower.cutoff", NA, is.numeric))
+            updateNumericInput(session, "upper.cutoff", value = get_default(defaults, "upper.cutoff", NA, is.numeric))
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
@@ -305,6 +313,17 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
+
+        # The color-scale trimming controls only affect a continuous fill gradient,
+        # so only expose them when the selected fill column is numeric.
+        observeEvent(list(input$fill.by, data()), {
+            fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
+            if (fill_by_is_numeric()) {
+                .show_input(session, fill.scale.inputs)
+            } else {
+                .hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
 
         generate_SplitBarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
@@ -385,7 +404,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
-                bar_height = isolate_fn(input$bar.height)
+                bar_height = isolate_fn(input$bar.height),
+                lower_quantile = isolate_fn(input$lower.quantile),
+                upper_quantile = isolate_fn(input$upper.quantile),
+                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
 
             y <- isolate_fn(input$y.data)

@@ -87,6 +87,14 @@
 #' - `expand` - Axis expansion values (UI: "Expand", default: "")
 #' - `y_min` - Y-axis minimum value (UI: "Y-axis min", default: 0)
 #' - `y_max` - Y-axis maximum value (UI: "Y-axis max", default: max of data)
+#' - `lower_quantile` - Lower quantile for the continuous fill color scale
+#'   (UI: "Lower Quantile", default: 0); only affects a numeric `fill_by`
+#' - `upper_quantile` - Upper quantile for the continuous fill color scale
+#'   (UI: "Upper Quantile", default: 1); only affects a numeric `fill_by`
+#' - `lower_cutoff` - Explicit lower cutoff for the continuous fill color scale
+#'   (UI: "Lower Cutoff", default: NA); overrides `lower_quantile` when set
+#' - `upper_cutoff` - Explicit upper cutoff for the continuous fill color scale
+#'   (UI: "Upper Cutoff", default: NA); overrides `upper_quantile` when set
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
@@ -170,7 +178,8 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "group_by", "fill_by",
         "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "split_by", "alpha", "width", "expand", "y_min", "y_max", "palreverse"
+        "split_by", "alpha", "width", "expand", "y_min", "y_max", "palreverse",
+        c("lower_quantile", "upper_quantile"), c("lower_cutoff", "upper_cutoff")
     )
 
     documentParameters <- get_documentation(
@@ -243,7 +252,21 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(textInput(ns("expand"), "Expand",
             value = get_default(defaults, "expand", ""),
         placeholder = "e.g. 1,2,3,4"
-        ), documentParameters$expand, placement = "top", options = list(container = "body"))
+        ), documentParameters$expand, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("lower.quantile"), "Lower Quantile",
+            value = get_default(defaults, "lower.quantile", 0, is.numeric),
+            min = 0, max = 1, step = 0.01
+        ), documentParameters$lower_quantile, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("upper.quantile"), "Upper Quantile",
+            value = get_default(defaults, "upper.quantile", 1, is.numeric),
+            min = 0, max = 1, step = 0.01
+        ), documentParameters$upper_quantile, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("lower.cutoff"), "Lower Cutoff",
+            value = get_default(defaults, "lower.cutoff", NA, is.numeric)
+        ), documentParameters$lower_cutoff, placement = "top", options = list(container = "body")),
+        tipify(numericInput(ns("upper.cutoff"), "Upper Cutoff",
+            value = get_default(defaults, "upper.cutoff", NA, is.numeric)
+        ), documentParameters$upper_cutoff, placement = "top", options = list(container = "body"))
     ),
 
     "Adjustments" = tagList(

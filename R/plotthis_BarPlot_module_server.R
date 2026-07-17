@@ -183,6 +183,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "width", value = get_default(defaults, "width", NA, is.numeric))
             updateTextInput(session, "expand", value = get_default(defaults, "expand", ""))
             updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
+            updateNumericInput(session, "lower.quantile",
+                value = get_default(defaults, "lower.quantile", 0, is.numeric)
+            )
+            updateNumericInput(session, "upper.quantile",
+                value = get_default(defaults, "upper.quantile", 1, is.numeric)
+            )
+            updateNumericInput(session, "lower.cutoff", value = get_default(defaults, "lower.cutoff", NA, is.numeric))
+            updateNumericInput(session, "upper.cutoff", value = get_default(defaults, "upper.cutoff", NA, is.numeric))
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
@@ -240,6 +248,17 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
+
+        # The color-scale trimming controls only affect a continuous fill gradient,
+        # so only expose them when the selected fill column is numeric.
+        observeEvent(list(input$fill.by, data()), {
+            fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
+            if (fill_numeric()) {
+                .show_input(session, fill.scale.inputs)
+            } else {
+                .hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
 
         observeEvent(c(input$facet.by, input$x.data), {
         if (input$facet.by == input$x.data){
@@ -325,7 +344,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 expand = expand,
                 width = width,
                 split_by = split.by,
-                fill_by = fill.by
+                fill_by = fill.by,
+                lower_quantile = isolate_fn(input$lower.quantile),
+                upper_quantile = isolate_fn(input$upper.quantile),
+                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {

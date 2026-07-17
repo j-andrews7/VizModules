@@ -72,6 +72,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
             )
             updateNumericInput(session, "fill.cutoff", value = get_default(defaults, "fill.cutoff", NA, is.numeric))
+            updateSelectInput(session, "fill.cutoff.direction",
+                selected = get_default(
+                    defaults, "fill.cutoff.direction", "<",
+                    function(x) x %in% c("<", "<=", ">", ">=")
+                )
+            )
 
             # Facet
             updateSelectInput(session, "facet.by",
@@ -98,6 +104,18 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
             updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
             updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
+            updateColourInput(session, "border.color",
+                value = get_default(defaults, "border.color", "black", is.character)
+            )
+            updateNumericInput(session, "border.size", value = get_default(defaults, "border.size", 0.5, is.numeric))
+            updateNumericInput(session, "lower.quantile",
+                value = get_default(defaults, "lower.quantile", 0, is.numeric)
+            )
+            updateNumericInput(session, "upper.quantile",
+                value = get_default(defaults, "upper.quantile", 1, is.numeric)
+            )
+            updateNumericInput(session, "lower.cutoff", value = get_default(defaults, "lower.cutoff", NA, is.numeric))
+            updateNumericInput(session, "upper.cutoff", value = get_default(defaults, "upper.cutoff", NA, is.numeric))
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
@@ -135,6 +153,17 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        # The color-scale trimming controls only affect the continuous fill gradient,
+        # so only expose them when a fill column is selected.
+        observeEvent(input$fill.by, {
+            fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
+            if (nzchar(input$fill.by)) {
+                .show_input(session, fill.scale.inputs)
+            } else {
+                .hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
+
         generate_DotPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
 
@@ -154,10 +183,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fill.by <- isolate_fn(input$fill.by)
             }
 
-            # fill_cutoff is only valid when fill_by is provided
+            # fill_cutoff is only valid when fill_by is provided. plotthis expects a
+            # string expression such as "< 18"; combine the numeric value with the
+            # selected direction operator.
             fill.cutoff <- NULL
             if (!is.null(fill.by) && !is.na(isolate_fn(input$fill.cutoff))) {
-                fill.cutoff <- isolate_fn(input$fill.cutoff)
+                fill.cutoff <- paste(isolate_fn(input$fill.cutoff.direction), isolate_fn(input$fill.cutoff))
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
@@ -188,7 +219,13 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palreverse = isolate_fn(input$palreverse),
                 theme = "theme_this",
                 theme_args = theme_args,
-                alpha = isolate_fn(input$alpha)
+                alpha = isolate_fn(input$alpha),
+                border_color = isolate_fn(input$border.color),
+                border_size = isolate_fn(input$border.size),
+                lower_quantile = isolate_fn(input$lower.quantile),
+                upper_quantile = isolate_fn(input$upper.quantile),
+                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
             fig <- ggplotly(p)
 

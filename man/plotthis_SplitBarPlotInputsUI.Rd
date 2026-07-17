@@ -101,6 +101,14 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
 \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
+\item \code{lower_quantile} - Lower quantile for the continuous fill color scale
+(UI: "Lower Quantile", default: 0); only affects a numeric \code{fill_by}
+\item \code{upper_quantile} - Upper quantile for the continuous fill color scale
+(UI: "Upper Quantile", default: 1); only affects a numeric \code{fill_by}
+\item \code{lower_cutoff} - Explicit lower cutoff for the continuous fill color scale
+(UI: "Lower Cutoff", default: NA); overrides \code{lower_quantile} when set
+\item \code{upper_cutoff} - Explicit upper cutoff for the continuous fill color scale
+(UI: "Upper Cutoff", default: NA); overrides \code{upper_quantile} when set
 }
 }
 

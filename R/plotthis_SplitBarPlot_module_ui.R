@@ -69,6 +69,14 @@
 #' - `x_max` - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 #' - `palcolor` - Custom color values (UI: palette picker, derived from palette)
 #' - `palreverse` - Reverse the color palette (UI: "Reverse palette", default: FALSE)
+#' - `lower_quantile` - Lower quantile for the continuous fill color scale
+#'   (UI: "Lower Quantile", default: 0); only affects a numeric `fill_by`
+#' - `upper_quantile` - Upper quantile for the continuous fill color scale
+#'   (UI: "Upper Quantile", default: 1); only affects a numeric `fill_by`
+#' - `lower_cutoff` - Explicit lower cutoff for the continuous fill color scale
+#'   (UI: "Lower Cutoff", default: NA); overrides `lower_quantile` when set
+#' - `upper_cutoff` - Explicit upper cutoff for the continuous fill color scale
+#'   (UI: "Upper Cutoff", default: NA); overrides `upper_quantile` when set
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
@@ -149,7 +157,8 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     selected <- list(
         "x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
         "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
-        "facet_byrow", "split_by", "x_min", "x_max", "palreverse"
+        "facet_byrow", "split_by", "x_min", "x_max", "palreverse",
+        c("lower_quantile", "upper_quantile"), c("lower_cutoff", "upper_cutoff")
     )
 
     documentParameters <- get_documentation(
@@ -273,6 +282,36 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                     value = get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100
                 ),
                 "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("lower.quantile"), "Lower Quantile",
+                    value = get_default(defaults, "lower.quantile", 0, is.numeric),
+                    min = 0, max = 1, step = 0.01
+                ),
+                documentParameters$lower_quantile,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("upper.quantile"), "Upper Quantile",
+                    value = get_default(defaults, "upper.quantile", 1, is.numeric),
+                    min = 0, max = 1, step = 0.01
+                ),
+                documentParameters$upper_quantile,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("lower.cutoff"), "Lower Cutoff",
+                    value = get_default(defaults, "lower.cutoff", NA, is.numeric)
+                ),
+                documentParameters$lower_cutoff,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("upper.cutoff"), "Upper Cutoff",
+                    value = get_default(defaults, "upper.cutoff", NA, is.numeric)
+                ),
+                documentParameters$upper_cutoff,
                 placement = "top", options = list(container = "body")
             )
         ),

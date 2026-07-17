@@ -4,7 +4,7 @@
 
 **VizModules** is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~16 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, ternary, parallel coordinates, split bar, y-plot), a reusable `dataFilter` module, and a multi-panel figure builder app for arranging modules in a free-form layout. Built on dittoViz and plotthis, all plots use plotly for interactive features.
 
-**Stack**: R 4.5+, Shiny, roxygen2 | **Version**: 0.2.1 | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.3.0 (dev) | **License**: MIT
 
 ## Repository Structure
 
@@ -25,7 +25,7 @@
 ## Build and Validation
 
 ### Prerequisites
-R 4.5+ is declared in DESCRIPTION, but use **R 4.6.0** for development/build/test (required by current `plotthis`): C:\Program Files\R\R-4.6.0\bin\x64\R.exe
+R 4.5+ is declared in DESCRIPTION, but use **R 4.6.1** for development/build/test (required by current `plotthis`): C:\Program Files\R\R-4.6.1\bin\x64\R.exe
 For `shinytest2` AppDriver tests, set `NOT_CRAN=true` (else they skip with "On CRAN"). The AppDriver background process uses the **installed** package, so run `R CMD INSTALL` on the dev code first (`load_all` is not seen by that process).
 
 ### Key R Commands

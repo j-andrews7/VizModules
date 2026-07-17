@@ -113,6 +113,14 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters can
 \item \code{expand} - Axis expansion values (UI: "Expand", default: "")
 \item \code{y_min} - Y-axis minimum value (UI: "Y-axis min", default: 0)
 \item \code{y_max} - Y-axis maximum value (UI: "Y-axis max", default: max of data)
+\item \code{lower_quantile} - Lower quantile for the continuous fill color scale
+(UI: "Lower Quantile", default: 0); only affects a numeric \code{fill_by}
+\item \code{upper_quantile} - Upper quantile for the continuous fill color scale
+(UI: "Upper Quantile", default: 1); only affects a numeric \code{fill_by}
+\item \code{lower_cutoff} - Explicit lower cutoff for the continuous fill color scale
+(UI: "Lower Cutoff", default: NA); overrides \code{lower_quantile} when set
+\item \code{upper_cutoff} - Explicit upper cutoff for the continuous fill color scale
+(UI: "Upper Cutoff", default: NA); overrides \code{upper_quantile} when set
 }
 }
 

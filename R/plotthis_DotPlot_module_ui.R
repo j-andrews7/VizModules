@@ -33,6 +33,7 @@
 #' - `theme` - ggplot2 theme (managed internally)
 #' - `theme_args` - Theme arguments (not yet implemented)
 #' - `palcolor` - Managed internally via the palette selection UI
+#' - `border_alpha` - Dot border transparency (not exposed; uses the plotthis default of 1)
 #' - `add_bg` - Add background stripes/shading (not yet implemented)
 #' - `bg_palette` - Background palette (not yet implemented)
 #' - `bg_palcolor` - Background palette colors (not yet implemented)
@@ -61,6 +62,8 @@
 #' - `size_max` - Maximum dot size (UI: "Max Dot Size", default: 6)
 #' - `fill_by` - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 #' - `fill_cutoff` - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
+#' - `fill_cutoff_direction` - Direction of the fill cutoff (UI: "Fill Cutoff Direction",
+#'   default: "<"); combined with `fill_cutoff` into a `plotthis` expression such as `"< 18"`.
 #' - `flip` - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
 #' - `facet_by` - Faceting variable (UI: "Facet By", default: "")
 #' - `facet_scales` - Facet scale behavior (UI: "Facet Scale", default: "fixed")
@@ -70,6 +73,17 @@
 #' - `palette` - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 #' - `palreverse` - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 #' - `alpha` - Dot fill transparency (UI: "Alpha", default: 1)
+#' - `border_color` - Dot border color; only constant colors are supported
+#'   (UI: "Border Color", default: "black")
+#' - `border_size` - Dot border stroke width (UI: "Border Size", default: 0.5)
+#' - `lower_quantile` - Lower quantile for the continuous fill color scale
+#'   (UI: "Lower Quantile", default: 0)
+#' - `upper_quantile` - Upper quantile for the continuous fill color scale
+#'   (UI: "Upper Quantile", default: 1)
+#' - `lower_cutoff` - Explicit lower cutoff for the continuous fill color scale
+#'   (UI: "Lower Cutoff", default: NA); overrides `lower_quantile` when set
+#' - `upper_cutoff` - Explicit upper cutoff for the continuous fill color scale
+#'   (UI: "Upper Cutoff", default: NA); overrides `upper_quantile` when set
 #' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
 #'   default: 1.04); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
 #' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
@@ -110,7 +124,8 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
         "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "palette", "palreverse", "alpha"
+        "palette", "palreverse", "alpha", "border_color", "border_size",
+        c("lower_quantile", "upper_quantile"), c("lower_cutoff", "upper_cutoff")
     )
 
     documentParameters <- get_documentation(
@@ -142,6 +157,17 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices),
                 choices = num.choices, selectize = FALSE
             ), documentParameters$fill_by, placement = "top", options = list(container = "body")),
+            tipify(selectInput(ns("fill.cutoff.direction"), "Fill Cutoff Direction",
+                selected = get_default(
+                    defaults, "fill.cutoff.direction", "<",
+                    function(x) x %in% c("<", "<=", ">", ">=")
+                ),
+                choices = c("<", "<=", ">", ">="), selectize = FALSE
+            ), paste(
+                "Direction of the fill cutoff. Values on the selected side of the",
+                "cutoff (e.g. '<' greys out values below it) are set to NA and drawn",
+                "in grey. Only applies when 'Fill By' and 'Fill Cutoff' are set."
+            ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("fill.cutoff"), "Fill Cutoff",
                 value = get_default(defaults, "fill.cutoff", NA, is.numeric)
             ), documentParameters$fill_cutoff, placement = "top", options = list(container = "body"))
@@ -193,6 +219,50 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     value = get_default(defaults, "alpha", 1, is.numeric), min = 0, max = 1
                 ),
                 documentParameters$alpha,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                colourInput(ns("border.color"), "Border Color",
+                    value = get_default(defaults, "border.color", "black", is.character)
+                ),
+                documentParameters$border_color,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("border.size"), "Border Size",
+                    value = get_default(defaults, "border.size", 0.5, is.numeric), min = 0, step = 0.1
+                ),
+                documentParameters$border_size,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("lower.quantile"), "Lower Quantile",
+                    value = get_default(defaults, "lower.quantile", 0, is.numeric),
+                    min = 0, max = 1, step = 0.01
+                ),
+                documentParameters$lower_quantile,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("upper.quantile"), "Upper Quantile",
+                    value = get_default(defaults, "upper.quantile", 1, is.numeric),
+                    min = 0, max = 1, step = 0.01
+                ),
+                documentParameters$upper_quantile,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("lower.cutoff"), "Lower Cutoff",
+                    value = get_default(defaults, "lower.cutoff", NA, is.numeric)
+                ),
+                documentParameters$lower_cutoff,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("upper.cutoff"), "Upper Cutoff",
+                    value = get_default(defaults, "upper.cutoff", NA, is.numeric)
+                ),
+                documentParameters$upper_cutoff,
                 placement = "top", options = list(container = "body")
             )
         ),
