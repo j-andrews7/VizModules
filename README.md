@@ -313,6 +313,10 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/DotPlot.png)
 
+[figureBuilder]
+
+![](man/figures/Figure_builder.png)
+
 ### UI Example
 
 ![](man/figures/UI_Overview.png)
