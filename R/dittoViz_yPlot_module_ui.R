@@ -186,7 +186,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "ridgeplot.ymax.expansion", "ridgeplot.shape",
         "ridgeplot.bins", "ridgeplot.binwidth"
     )
-
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
         selected = selected, cap = TRUE
