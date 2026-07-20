@@ -38,6 +38,10 @@
 #' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
 #'   still initialized and their values passed to the plot, but are not shown in the UI.
 #'   Passed through to `server_fn` when it accepts a `hide.tabs` argument.
+#' @param show.table Logical. When `TRUE` (default), a filterable DT table is
+#'   shown below the plot and its row selection drives the data passed to the
+#'   plot module. When `FALSE`, the table and filter controls are hidden and
+#'   the full (unfiltered) dataset is passed directly to the plot module.
 #' @return A [shiny::shinyApp()] object.
 #'
 #' @import shiny
@@ -79,6 +83,7 @@ createModuleApp <- function(inputs_ui_fn,
                             defaults = NULL,
                             hide.inputs = NULL,
                             hide.tabs = NULL,
+                            show.table = TRUE,
                             title = "VizModules App") {
     # Validate inputs
     stopifnot(is.function(inputs_ui_fn))
@@ -111,12 +116,14 @@ createModuleApp <- function(inputs_ui_fn,
             ),
             mainPanel(
                 output_ui_fn("active_plot"),
-                hr(),
-                h4("Data Table"),
-                p("Filtering the data table will update the plot.",
-                    style = "color: grey; font-size: 12px;"
-                ),
-                dataFilterUI("table")
+                if (isTRUE(show.table)) tagList(
+                    hr(),
+                    h4("Data Table"),
+                    p("Filtering the data table will update the plot.",
+                        style = "color: grey; font-size: 12px;"
+                    ),
+                    dataFilterUI("table")
+                )
             )
         )
     )
@@ -182,10 +189,13 @@ createModuleApp <- function(inputs_ui_fn,
             )
         })
 
-        filtered_data <- dataFilterServer(
-            "table",
-            reactive(rv$datasets[[input$plot_select]])
-        )
+        active_data <- reactive(rv$datasets[[input$plot_select]])
+
+        filtered_data <- if (isTRUE(show.table)) {
+            dataFilterServer("table", active_data)
+        } else {
+            active_data
+        }
 
         # Keep dataset selector in sync when new datasets are loaded
         observe({
