@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-**VizModules** is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~16 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, ternary, parallel coordinates, split bar, y-plot), a reusable `dataFilter` module, and a multi-panel figure builder app for arranging modules in a free-form layout. Built on dittoViz and plotthis, all plots use plotly for interactive features.
+**VizModules** is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~15 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot), a reusable `dataFilter` module, and a multi-panel figure builder app for arranging modules in a free-form layout. Built on dittoViz and plotthis, all plots use plotly for interactive features.
 
 **Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.3.0 (dev) | **License**: MIT
 
@@ -10,7 +10,7 @@
 
 - **R/** - 74 source files: `*_module_ui.R` (UI), `*_module_server.R` (logic), `*_module_app.R` (examples), plus utils and standalone plot functions
 - **man/** - Auto-generated roxygen2 docs (171 .Rd files)
-- **data/** - 11 example datasets (`example_bar`, `example_demographics`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_roles`, `example_sales`, `example_school_earnings`, `example_skills`)
+- **data/** - 10 example datasets (`example_bar`, `example_demographics`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`, `example_skills`)
 - **data-raw/** - `generate_example_data.R` script that builds the example datasets
 - **inst/apps/** - Standalone Shiny apps (`figure-builder`, `module-gallery`, `rnaseq-showcase`) plus per-module `test_*` apps; **inst/src/** - bundled JS/CSS assets
 - **vignettes/** - quick-start.Rmd, custom-modules.Rmd, adding-a-new-module.Rmd

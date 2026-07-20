@@ -5,7 +5,6 @@ utils::globalVariables(c(
     "example_bar",
     "example_markers",
     "example_skills",
-    "example_roles",
     "example_iris",
     "example_mtcars",
     "example_population",

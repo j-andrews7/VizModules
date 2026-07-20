@@ -61,14 +61,6 @@ example_skills <- data.frame(
     player   = rep(c("Player A", "Player B", "Player C"), each = 5)
 )
 
-# Roles data for ternary plots
-example_roles <- data.frame(
-    journalist = c(75, 70, 75, 5, 10, 10, 20, 10, 15, 10, 20),
-    developer  = c(25, 10, 20, 60, 80, 90, 70, 20, 5, 10, 10),
-    designer   = c(0, 20, 5, 35, 10, 0, 10, 70, 80, 80, 70),
-    label      = paste("point", seq_len(11)),
-    team       = c(rep("Team A", 6), rep("Team B", 5))
-)
 
 # For barplots and splitbar plots where a single value is what makes sense
 example_bar <- data.frame(
@@ -219,7 +211,7 @@ example_markers <- data.frame(
 usethis::use_data(
     example_iris, example_mtcars,
     example_bar, example_school_earnings,
-    example_skills, example_roles,
+    example_skills,
     example_sales, example_population, example_demographics,
     example_markers, example_rnaseq,
     internal = TRUE, overwrite = TRUE

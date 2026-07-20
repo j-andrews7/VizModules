@@ -187,7 +187,6 @@ Via direct implementation with plotly.
 * `piePlot` - Pie and donut plots
 * `radarPlot` - Radar plots
 * `parallelCoordinatesPlot` - Parallel coordinate plots
-* `ternaryPlot` - Ternary plots
 * `dumbbellPlot` - Dumbbell plots
 
 ## Statistical Testing
@@ -291,10 +290,6 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/SplitBarPlot.png)
 
-[ternaryPlot:][12]
-
-![](man/figures/ternaryPlot.png)
-
 [plotthis_ViolinPlot:][13]
 
 [(Source Plotting Function)][20]
@@ -345,7 +340,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
 > - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
 >
-> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, `ternaryPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
+> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
 >
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
@@ -367,7 +362,6 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [9]: https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
 [10]: https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
 [11]: https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
-[12]: https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html
 [13]: https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
 [14]: https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
 [15]: https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.html

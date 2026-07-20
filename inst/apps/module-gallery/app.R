@@ -68,7 +68,7 @@ module_data <- list(
     radar    = example_skills,
     scatter  = example_sales,
     splitbar = example_bar,
-    ternary  = example_roles,
+
     violin   = example_demographics,
     yplot    = example_demographics
 )
@@ -183,15 +183,6 @@ module_registry <- list(
         output_ui = plotthis_SplitBarPlotOutputUI,
         server_fn = plotthis_SplitBarPlotServer,
         defaults  = list("x.data" = "Score", "y.data" = "Group")
-    ),
-    list(
-        label     = "Ternary",
-        id        = "ternary",
-        inputs_ui = ternaryPlotInputsUI,
-        output_ui = ternaryPlotOutputUI,
-        server_fn = ternaryPlotServer,
-        defaults  = list("a" = "journalist", "b" = "developer",
-                         "c" = "designer", "group" = "team")
     ),
     list(
         label     = "Violin",

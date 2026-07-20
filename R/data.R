@@ -56,25 +56,6 @@
 #' @keywords datasets
 "example_skills"
 
-#' Example roles dataset for ternary plots
-#'
-#' A dataset of role proportions (journalist, developer, designer) for eleven
-#' individuals across two teams, suitable for ternary plot examples.
-#'
-#' @format A data frame with 11 rows and 5 columns:
-#' \describe{
-#'   \item{journalist}{Journalist role proportion}
-#'   \item{developer}{Developer role proportion}
-#'   \item{designer}{Designer role proportion}
-#'   \item{label}{Point label (point 1 through point 11)}
-#'   \item{team}{Team assignment (Team A or Team B)}
-#' }
-#'
-#' @source Generated in data-raw/generate_example_data.R.
-#'
-#' @author Jacob Martin
-#' @keywords datasets
-"example_roles"
 
 #' Example sales dataset
 #'

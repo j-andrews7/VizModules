@@ -96,7 +96,6 @@ figureBuilderApp <- function(data_list = NULL,
         "example_markers"         = example_markers,
         "example_school_earnings" = example_school_earnings,
         "example_skills"          = example_skills,
-        "example_roles"           = example_roles,
         "example_rnaseq"          = example_rnaseq,
         "example_iris"            = example_iris,
         "example_mtcars"          = example_mtcars,
@@ -213,16 +212,6 @@ figureBuilderApp <- function(data_list = NULL,
             output_ui = plotthis_SplitBarPlotOutputUI,
             server_fn = plotthis_SplitBarPlotServer,
             defaults = list("x.data" = "Score", "y.data" = "Group")
-        ),
-        ternary = list(
-            label = "Ternary Plot", dataset = "example_roles",
-            inputs_ui = ternaryPlotInputsUI,
-            output_ui = ternaryPlotOutputUI,
-            server_fn = ternaryPlotServer,
-            defaults = list(
-                "a" = "journalist", "b" = "developer",
-                "c" = "designer", "group" = "team"
-            )
         ),
         violin = list(
             label = "Violin Plot", dataset = "example_demographics",
