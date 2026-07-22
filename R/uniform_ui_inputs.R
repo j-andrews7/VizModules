@@ -244,7 +244,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 ),
                 max_per_row = 4,
                 panel = FALSE,
-                elements = list(models1 = list(model_type = "lm", formula = "y ~ x", line_colour = "#FF0000", line_width = 2))
+                elements = get_default(defaults, "custom.models", NULL)
             )
         ))
     }
