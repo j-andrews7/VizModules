@@ -135,7 +135,7 @@
 #'
 #' @return The modified plotly figure with fit lines added to all subplot panels.
 #'
-#' @author Jared Andrews
+#' @author Jared Andrews, Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_add_fit_lines_to_subplots
 .add_fit_lines_to_subplots <- function(fig, df, x.col, y.col, split.by = NULL, group.col = NULL,
@@ -302,4 +302,311 @@
     fig
 }
 
-
+
+#' Compute predicted values from a custom model object
+#'
+#' Generates a smooth grid of predicted x/y values from any model object that
+#' supports [stats::predict()]. The x variable name used in `predict()` must
+#' match `x.col` so that `newdata` is constructed correctly.
+#'
+#' For models that require additional columns in `newdata` (e.g. mixed-effects
+#' models from \pkg{lme4} that need random-effect grouping columns), all other
+#' numeric columns in `df` are included in `newdata` at their median value and
+#' all non-numeric columns at their first level/value. This allows
+#' `predict(..., re.form = NA)` (population-level predictions) to succeed for
+#' `lmer`/`glmer` models.
+#'
+#' Note: `lme4::lmer()` must be called with an explicit `data =` argument when
+#' fitting the model, otherwise the formula environment cannot be resolved.
+#'
+#' @param model A fitted model object with a `predict()` method (e.g. `lm`,
+#'   `glm`, `nls`, `loess`, `lme4::lmer`, `mgcv::gam`).
+#' @param df Data frame containing the x variable.
+#' @param x.col Character. Name of the column used as the x predictor.
+#' @param n.points Integer. Number of points in the prediction grid. Default 100.
+#'
+#' @return A `data.frame` with columns `x` and `y`, or `NULL` on failure.
+#'
+#' @importFrom stats predict median
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_compute_custom_model_fit
+.compute_custom_model_fit <- function(model, df, x.col, n.points = 100) {
+    x_vals <- df[[x.col]]
+    x_vals <- x_vals[is.finite(x_vals)]
+    if (length(x_vals) < 2) return(NULL)
+
+    x_grid <- seq(min(x_vals), max(x_vals), length.out = n.points)
+
+    # Building a new data frame based on x data to predict y values and the line coords
+
+    other_cols <- setdiff(names(df), x.col)
+    newdata <- setNames(data.frame(x_grid), x.col)
+    for (col in other_cols) {
+        vals <- df[[col]]
+        newdata[[col]] <- if (is.numeric(vals)) {
+            median(vals, na.rm = TRUE)
+        } else if (is.factor(vals)) {
+            factor(levels(vals)[1], levels = levels(vals))
+        } else {
+            as.character(vals)[1]
+        }
+    }
+
+    # For lmer/glmer, predict at the population level (re.form = NA) so no
+    # random-effect realisation is needed for the grid rows.
+    predict_args <- list(object = model, newdata = newdata)
+    if (inherits(model, c("lmerMod", "glmerMod"))) {
+        predict_args$re.form <- NA
+    }
+
+    y_grid <- tryCatch(
+        as.numeric(do.call(predict, predict_args)),
+        error = function(e) NULL
+    )
+    if (is.null(y_grid) || length(y_grid) != n.points) return(NULL)
+
+    data.frame(x = x_grid, y = y_grid)
+}
+
+
+#' Add custom model line traces to all subplot panels
+#'
+#' Renders a named list of pre-fitted model objects as overlay lines on a
+#' plotly scatter figure. Each model is evaluated across the x range of the
+#' data using [stats::predict()] and added as a separate `add_lines()` trace.
+#' Handles faceted subplots by adding each model line to every panel.
+#'
+#' Each entry in `custom.models` is a fitted model object (e.g. from [lm()],
+#' [glm()], [loess()], or [nls()]). The list name becomes the legend label.
+#' Line colour and width are shared across all entries and controlled via the
+#' `line_color` and `line_width` arguments.
+#'
+#' @param fig A plotly figure object.
+#' @param df Data frame containing the x variable.
+#' @param x.col Character. Name of the column used as the x predictor.
+#' @param custom.models Named list of model objects or styled model lists.
+#' @param split.by Character vector or NULL. Column name(s) used for faceting
+#'   (used only to determine subplot panel count; models are global).
+#' @param line_color Character. Default hex color for lines with no per-model
+#'   color specified. Default `"#000000"`.
+#' @param line_width Numeric. Default line width. Default `2`.
+#'
+#' @return The modified plotly figure with custom model lines added.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_add_custom_model_lines_to_subplots
+.add_custom_model_lines_to_subplots <- function(fig, df, x.col, custom.models,
+                                                split.by = NULL,
+                                                line_color = "#000000",
+                                                line_width = 2) {
+    if (is.null(custom.models) || length(custom.models) == 0) return(fig)
+    if (is.null(names(custom.models)) || any(!nzchar(names(custom.models)))) {
+        warning("custom.models must be a named list; unnamed entries will be skipped.")
+    }
+
+    # Extract axis pairs from existing traces (mirrors .add_fit_lines_to_subplots)
+    axis_pairs_raw <- lapply(fig$x$data, function(tr) {
+        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
+        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
+        list(x = xaxis, y = yaxis)
+    })
+    seen_keys <- character(0)
+    axis_pairs <- list()
+    for (pair in axis_pairs_raw) {
+        key <- paste0(pair$x, "_", pair$y)
+        if (!key %in% seen_keys) {
+            seen_keys <- c(seen_keys, key)
+            axis_pairs <- c(axis_pairs, list(pair))
+        }
+    }
+    get_axis_num <- function(pair) {
+        x_num <- suppressWarnings(as.numeric(sub("^x", "", pair$x)))
+        if (is.na(x_num)) x_num <- 1
+        x_num
+    }
+    axis_pairs <- axis_pairs[order(vapply(axis_pairs, get_axis_num, numeric(1)))]
+    if (length(axis_pairs) == 0) axis_pairs <- list(list(x = "x", y = "y"))
+
+    # Facet subsets so predictions are scoped to each panel's x range
+    if (!is.null(split.by) && length(split.by) > 0 && all(split.by %in% names(df))) {
+        if (length(split.by) == 1) {
+            facet_levels <- if (is.factor(df[[split.by]])) levels(df[[split.by]]) else unique(as.character(df[[split.by]]))
+            df$`.facet_combined` <- as.character(df[[split.by]])
+        } else {
+            df$`.facet_combined` <- apply(df[, split.by, drop = FALSE], 1, paste, collapse = "_")
+            facet_levels <- unique(df$`.facet_combined`)
+        }
+    } else {
+        facet_levels <- NULL
+        df$`.facet_combined` <- "all"
+    }
+
+    added_names <- character(0)
+
+    for (model_name in names(custom.models)) {
+        # Each entry is a fitted model object. Colour and width are supplied by
+        # the caller (line_color/line_width) rather than per-entry, so a bare
+        # model list (e.g. an `lm`, which is itself a list) is never mistaken
+        # for a styled config list.
+        model   <- custom.models[[model_name]]
+        m_color <- line_color
+        m_width <- line_width
+
+        for (idx in seq_along(axis_pairs)) {
+            pair <- axis_pairs[[idx]]
+
+            subset_df <- if (!is.null(facet_levels) && idx <= length(facet_levels)) {
+                df[df$`.facet_combined` == facet_levels[idx], , drop = FALSE]
+            } else {
+                df
+            }
+
+            if (nrow(subset_df) == 0) next
+
+            fit_data <- .compute_custom_model_fit(model, subset_df, x.col)
+            if (is.null(fit_data)) next
+
+            show_legend <- !model_name %in% added_names
+
+            fig <- fig |>
+                plotly::add_lines(
+                    data        = fit_data,
+                    x           = ~x,
+                    y           = ~y,
+                    xaxis       = pair$x,
+                    yaxis       = pair$y,
+                    line        = list(color = m_color, width = m_width),
+                    name        = model_name,
+                    legendgroup = model_name,
+                    showlegend  = show_legend,
+                    inherit     = FALSE
+                )
+            added_names <- c(added_names, model_name)
+        }
+    }
+
+    fig
+}
+
+#' Safely build a model from a user-supplied formula string
+#'
+#' Validates and fits a model from a user-typed formula string without
+#' evaluating arbitrary code. Intended for interactive contexts (e.g. a Shiny
+#' text input) where the formula originates from untrusted user input. The
+#' function only ever converts the text into a `formula` object — it never
+#' calls `eval(parse(...))` on raw input — and rejects anything that is not a
+#' recognised formula built from allow-listed terms.
+#'
+#' Validation proceeds in stages, returning `NULL` (with a `warning()`) at the
+#' first failure:
+#' \enumerate{
+#'   \item The fit function name is checked against a fixed allow-list and
+#'     resolved via [match.fun()] on a hardcoded value.
+#'   \item The text is parsed with [parse()] and required to be a single
+#'     expression.
+#'   \item The expression's abstract syntax tree is walked recursively; only
+#'     data-column symbols, a small set of literal keywords, and an allow-list
+#'     of math/transform calls are permitted. Calls such as `system`, `eval`,
+#'     or `source` are structurally rejected.
+#'   \item The text is converted with [stats::as.formula()] and confirmed to be
+#'     of class `"formula"`.
+#'   \item The model is fitted inside [tryCatch()] scoped to `data`, and the
+#'     returned object's class is verified before it is returned.
+#' }
+#'
+#' @param formula_text Character string containing the model formula
+#'   (e.g. `"revenue ~ poly(units, 2)"`). Must reference only columns present
+#'   in `data`.
+#' @param data A `data.frame` whose columns the formula may reference and
+#'   against which the model is fitted.
+#' @param fit_fn_name Character string naming the fitting function. Must be one
+#'   of `"lm"`, `"glm"`, `"loess"`, or `"nls"`.
+#'
+#' @return A fitted model object of class `lm`, `glm`, `loess`, or `nls`, or
+#'   `NULL` if the input is empty, unparseable, contains disallowed terms, or
+#'   fails to fit.
+#'
+#' @importFrom stats as.formula
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_safe_build_model
+.safe_build_model <- function(formula_text, data, fit_fn_name){
+    if (is.null(formula_text) | is.null(data) | !nzchar(trimws(formula_text))){
+        return(NULL)
+    }
+
+    fn_map <- c(lm = 'lm', glm = 'glm', loess = 'loess', nls = 'nls')
+
+    if (!fit_fn_name %in% names(fn_map) | is.null(fit_fn_name)){
+        warning("Unrecognized model type: ", fit_fn_name)
+        return(NULL)
+    }
+    fit_fn <- match.fun(fn_map[[fit_fn_name]])
+
+    #Check the parsed formula 
+    # Parse() turns the string into an R expression 
+    #Check if the parse is only 1 expression 
+
+    parsed <- tryCatch(parse(text = formula_text), error = function(e) NULL)
+        if (is.null(parsed) || length(parsed) != 1) {
+        warning("Could not parse a single formula expression.")
+        return(NULL)
+    }
+
+    expr <- parsed[[1]] # Model expression 
+
+    # Require a formula (~) at the top node; structurally blocks calls like
+    # system(...) or eval(...) that are not formulas.
+    if (!is.call(expr) || !identical(expr[[1]], as.name("~"))) {
+        warning("Input must be a model formula (contain '~').")
+        return(NULL)
+    }
+
+    #Checking the exxpr only contains specific expressions: 
+
+    allowed_calls <- c("~", "+", "-", "*", "/", "^", "(", ":", "I", "log", "log2", "log10", "sqrt", "exp", "poly")
+    col_names <- names(data)
+
+    .check_node <- function(node) {
+        # Literals (numbers, strings) are always fine
+        if (is.atomic(node) || is.null(node)) return(TRUE)
+
+        if (is.symbol(node)) {
+            nm <- as.character(node)
+            return(nm %in% col_names ||
+                nm %in% c("TRUE", "FALSE", "NA", "Inf", "T", "F"))
+        }
+
+        if (is.call(node)) {
+            fn <- as.character(node[[1]])
+            if (!fn %in% allowed_calls) return(FALSE)
+            return(all(vapply(as.list(node)[-1], .check_node, logical(1))))
+        }
+
+        FALSE 
+    }
+
+    if (!.check_node(expr)) {
+        warning("Formula contains disallowed terms. Only data columns and ",
+                "basic math/transform functions are permitted.")
+        return(NULL)
+    }
+
+    formula <- tryCatch(stats::as.formula(formula_text), error = function(e) NULL)
+
+    if (is.null(formula) | !inherits(formula, "formula")){
+        warning("Could not construct a valid formula")
+        return(NULL)
+    }
+
+    #Build the final model and check the class: 
+    model <- tryCatch(fit_fn(formula, data = data), error = function(e) NULL)
+    if (is.null(model) || !inherits(model, c("lm", "glm", "loess", "nls"))) {
+        return(NULL)
+    }
+    return(model)
+}

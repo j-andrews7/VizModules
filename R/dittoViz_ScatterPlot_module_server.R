@@ -845,6 +845,51 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 )
             }
 
+            # User-defined custom model lines from the multiDynamicInput. Each
+            # row supplies a model_type, formula, colour and width. Formula text
+            # is validated by .safe_build_model() (allow-listed fit function +
+            # AST whitelist), so no arbitrary code is executed.
+            if (isTRUE(input$custom.model.enable)) {
+                model_rows <- isolate_fn(input$custom.models)
+                if (!is.null(model_rows) && length(model_rows) > 0) {
+                    for (row_name in names(model_rows)) {
+                        row <- model_rows[[row_name]]
+                        formula_text <- row$formula
+                        if (is.null(formula_text) || !nzchar(trimws(formula_text))) {
+                            next
+                        }
+                        user_model <- .safe_build_model(
+                            formula_text = formula_text,
+                            data         = data(),
+                            fit_fn_name  = row$model_type
+                        )
+                        if (!is.null(user_model)) {
+                            line_w <- suppressWarnings(as.numeric(row$line_width))
+                            if (is.na(line_w)) line_w <- 2
+                            fig <- .add_custom_model_lines_to_subplots(
+                                fig           = fig,
+                                df            = data(),
+                                x.col         = isolate_fn(input$x.by),
+                                custom.models = setNames(list(user_model), row_name),
+                                split.by      = null.na.inputs$split.by,
+                                line_color    = row$line_colour %__% "#000000",
+                                line_width    = line_w
+                            )
+                        } else {
+                            showNotification(
+                                paste0(
+                                    "Model '", row_name, "' was rejected. Use only ",
+                                    "data columns and basic math/transform terms ",
+                                    "(e.g. '", isolate_fn(input$y.by), " ~ poly(",
+                                    isolate_fn(input$x.by), ", 2)')."
+                                ),
+                                type = "warning"
+                            )
+                        }
+                    }
+                }
+            }
+
             # Custom size legend:
             # plotly drops the size legend when point size encodes a numeric
             # column (see plotly.R#705), so draw a manual circle legend that

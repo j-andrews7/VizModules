@@ -1,0 +1,96 @@
+.multi-dynamic-input {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fff;
+  font-size: 13px;
+}
+
+.multi-dynamic-input.is-plain {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.multi-dynamic-input .mdi-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.multi-dynamic-input .mdi-top .control-label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.multi-dynamic-input .mdi-add {
+  margin-left: auto;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+.multi-dynamic-input .mdi-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.multi-dynamic-input .mdi-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background: #f8f9fa;
+}
+
+.multi-dynamic-input .mdi-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.multi-dynamic-input .mdi-field {
+  min-width: 120px;
+}
+
+.multi-dynamic-input .mdi-field .form-group,
+.multi-dynamic-input .mdi-field .shiny-input-container {
+  margin-bottom: 0;
+}
+
+.multi-dynamic-input .mdi-field .control-label {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.multi-dynamic-input .mdi-field .form-control {
+  font-size: 12px;
+  padding: 3px 6px;
+  height: auto;
+}
+
+.multi-dynamic-input .mdi-delete {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: #b02a37;
+  border: 1px solid #ced4da;
+  background: #fff;
+  border-radius: 4px;
+  align-self: center;
+  cursor: pointer;
+}
+
+.multi-dynamic-input .mdi-delete:hover {
+  background: #f8d7da;
+  border-color: #b02a37;
+}

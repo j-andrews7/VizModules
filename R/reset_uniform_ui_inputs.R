@@ -70,7 +70,7 @@ reset_axes_inputs <- function(session, defaults = NULL) {
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
-#' @importFrom shiny updateTextInput updateNumericInput
+#' @importFrom shiny updateTextInput updateNumericInput updateSelectInput
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom colourpicker updateColourInput
 #'
@@ -104,6 +104,8 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
         updateNumericInput(session, "line.best.smoothness", value = get_default(defaults, "line.best.smoothness", 1, is.numeric))
         updateColourInput(session, "line.best.colour", value = get_default(defaults, "line.best.colour", "#000000"))
         updateMaterialSwitch(session, "linear.model", value = get_default(defaults, "linear.model", FALSE, is.logical))
+        updateMaterialSwitch(session, "custom.model.enable", value = get_default(defaults, "custom.model.enable", FALSE, is.logical))
+        updateMultiDynamicInput(session, "custom.models", clear = TRUE)
     }
     invisible(NULL)
 }

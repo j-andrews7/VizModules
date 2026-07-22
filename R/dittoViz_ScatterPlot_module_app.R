@@ -41,13 +41,13 @@ dittoViz_scatterPlotApp <- function(data_list = NULL, defaults = NULL, hide.inpu
         data_list <- list("sales" = example_sales)
     }
     createModuleApp(
-        inputs_ui_fn = dittoViz_scatterPlotInputsUI,
-        output_ui_fn = dittoViz_scatterPlotOutputUI,
-        server_fn    = dittoViz_scatterPlotServer,
-        data_list    = data_list,
-        defaults     = defaults,
-        hide.inputs  = hide.inputs,
-        hide.tabs    = hide.tabs,
-        title        = "Modular scatterPlots"
+        inputs_ui_fn  = dittoViz_scatterPlotInputsUI,
+        output_ui_fn  = dittoViz_scatterPlotOutputUI,
+        server_fn     = dittoViz_scatterPlotServer,
+        data_list     = data_list,
+        defaults      = defaults,
+        hide.inputs   = hide.inputs,
+        hide.tabs     = hide.tabs,
+        title         = "Modular scatterPlots"
     )
 }

@@ -215,6 +215,36 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 ),
                 "Add a linear regression line to the scatter plot",
                 placement = "top", options = tip_opts
+            ),
+            tipify(
+                materialSwitch(ns("custom.model.enable"), "Custom Model Lines",
+                    value = FALSE,
+                    status = "success"
+                ),
+                paste(
+                    "Fit one or more custom models from formulas you define below",
+                    "and overlay them as lines. Only data columns and basic",
+                    "math/transform terms are allowed."
+                ),
+                placement = "top", options = tip_opts
+            ),
+            multiDynamicInput(
+                ns("custom.models"),
+                label = "Models",
+                row_spec = list(
+                    model_type  = list(type = "select",
+                        args = list(choices = c("lm", "glm", "loess", "nls"),
+                                    selected = "lm")),
+                    formula     = list(type = "text",
+                        args = list(placeholder = "e.g. y ~ poly(x, 2)")),
+                    line_colour = list(type = "colour",
+                        args = list(value = "#000000")),
+                    line_width  = list(type = "numeric",
+                        args = list(value = 2, min = 0.5, max = 20, step = 0.5))
+                ),
+                max_per_row = 4,
+                panel = FALSE,
+                elements = list(models1 = list(model_type = "lm", formula = "y ~ x", line_colour = "#FF0000", line_width = 2))
             )
         ))
     }
