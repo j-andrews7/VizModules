@@ -16,7 +16,7 @@
 * Fixed a bug in `dittoViz_yPlot` where plot selection and outlier hiding were not respected appropriately due to a typo in the `boxplot.show.outliers` input name.
 * Fixed a bug in `dittoViz_scatterPlot` where 2 `split.by` inputs caused an error due to improper checks for empty strings on a vector of elements.
 * Fixed a bug in `dittoViz_scatterPlot` where highlight aesthetics weren't applied when a categorical x-axis was used.
-* Remove `ternaryPlot` module, as it is just a bad plot that's impossible to actually interpret or really utilize effectively.
+* Removed `ternaryPlot` module, as it is just a bad plot that's impossible to actually interpret or really utilize effectively.
 
 # VizModules 0.2.0
 
