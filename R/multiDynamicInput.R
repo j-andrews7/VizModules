@@ -361,15 +361,4 @@ updateMultiDynamicInput <- function(session, inputId, elements = NULL, clear = F
 }
 
 
-#' Null-or-empty coalescing operator (local)
-#'
-#' @param x Primary value.
-#' @param y Fallback value.
-#' @return `x` when present, otherwise `y`.
-#'
-#' @author Jacob Martin
-#' @rdname INTERNAL_mdi_null_coalesce
-#' @keywords internal
-`%||%` <- function(x, y) {
-    if (is.null(x) || length(x) == 0) y else x
-}
+
