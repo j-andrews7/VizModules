@@ -481,5 +481,3 @@ apply_plotly_newshape <- function(fig, input, isolate_fn = isolate) {
         )
     )
 }
-
-
