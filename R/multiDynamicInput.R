@@ -101,10 +101,18 @@ multiDynamicInput <- function(inputId,
         args <- if (!is.null(spec$args)) spec$args else list()
         if (is.null(args$label)) args$label <- .mdi_prettify(key)
         control <- do.call(fn, c(list(inputId = field_id), args))
+        # Backend-specific fields are hidden by default; JS reveals them
+        # when the matching model_type is selected.
+        backend_attr <- spec$backend
+        field_style <- sprintf("flex: 1 1 calc(%d%% - 8px); min-width: 120px;", basis)
+        if (!is.null(backend_attr)) {
+            field_style <- paste0(field_style, " display: none;")
+        }
         tags$div(
             class = "mdi-field",
             `data-key` = key,
-            style = sprintf("flex: 1 1 calc(%d%% - 8px); min-width: 120px;", basis),
+            `data-backend` = backend_attr,
+            style = field_style,
             control
         )
     }

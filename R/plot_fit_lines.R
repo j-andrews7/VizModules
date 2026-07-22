@@ -332,7 +332,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @keywords internal
 #' @rdname INTERNAL_compute_custom_model_fit
-.compute_custom_model_fit <- function(model, df, x.col, n.points = 100) {
+.compute_custom_model_fit <- function(model, df, x.col, n.points = 100, backend = NULL) {
     x_vals <- df[[x.col]]
     x_vals <- x_vals[is.finite(x_vals)]
     if (length(x_vals) < 2) return(NULL)
@@ -354,17 +354,23 @@
         }
     }
 
-    # For lmer/glmer, predict at the population level (re.form = NA) so no
-    # random-effect realisation is needed for the grid rows.
-    predict_args <- list(object = model, newdata = newdata)
-    if (inherits(model, c("lmerMod", "glmerMod"))) {
-        predict_args$re.form <- NA
+    # Use the backend's predict function if provided, otherwise fall back to
+    # generic predict with special-casing for lmer/glmer.
+    if (!is.null(backend) && is.function(backend$predict)) {
+        y_grid <- tryCatch(
+            as.numeric(backend$predict(model, newdata)),
+            error = function(e) NULL
+        )
+    } else {
+        predict_args <- list(object = model, newdata = newdata)
+        if (inherits(model, c("lmerMod", "glmerMod"))) {
+            predict_args$re.form <- NA
+        }
+        y_grid <- tryCatch(
+            as.numeric(do.call(predict, predict_args)),
+            error = function(e) NULL
+        )
     }
-
-    y_grid <- tryCatch(
-        as.numeric(do.call(predict, predict_args)),
-        error = function(e) NULL
-    )
     if (is.null(y_grid) || length(y_grid) != n.points) return(NULL)
 
     data.frame(x = x_grid, y = y_grid)
@@ -401,7 +407,8 @@
 .add_custom_model_lines_to_subplots <- function(fig, df, x.col, custom.models,
                                                 split.by = NULL,
                                                 line_color = "#000000",
-                                                line_width = 2) {
+                                                line_width = 2,
+                                                backend = NULL) {
     if (is.null(custom.models) || length(custom.models) == 0) return(fig)
     if (is.null(names(custom.models)) || any(!nzchar(names(custom.models)))) {
         warning("custom.models must be a named list; unnamed entries will be skipped.")
@@ -466,7 +473,7 @@
 
             if (nrow(subset_df) == 0) next
 
-            fit_data <- .compute_custom_model_fit(model, subset_df, x.col)
+            fit_data <- .compute_custom_model_fit(model, subset_df, x.col, backend = backend)
             if (is.null(fit_data)) next
 
             show_legend <- !model_name %in% added_names
@@ -503,8 +510,8 @@
 #' Validation proceeds in stages, returning `NULL` (with a `warning()`) at the
 #' first failure:
 #' \enumerate{
-#'   \item The fit function name is checked against a fixed allow-list and
-#'     resolved via [match.fun()] on a hardcoded value.
+#'   \item The fit function name is looked up in the model backend registry
+#'     via [get_model_backend()].
 #'   \item The text is parsed with [parse()] and required to be a single
 #'     expression.
 #'   \item The expression's abstract syntax tree is walked recursively; only
@@ -513,8 +520,9 @@
 #'     or `source` are structurally rejected.
 #'   \item The text is converted with [stats::as.formula()] and confirmed to be
 #'     of class `"formula"`.
-#'   \item The model is fitted inside [tryCatch()] scoped to `data`, and the
-#'     returned object's class is verified before it is returned.
+#'   \item The model is fitted via the backend's `fit` function inside
+#'     [tryCatch()] scoped to `data`, and the returned object's class is
+#'     verified against the backend's `validate_classes`.
 #' }
 #'
 #' @param formula_text Character string containing the model formula
@@ -522,72 +530,64 @@
 #'   in `data`.
 #' @param data A `data.frame` whose columns the formula may reference and
 #'   against which the model is fitted.
-#' @param fit_fn_name Character string naming the fitting function. Must be one
-#'   of `"lm"`, `"glm"`, `"loess"`, or `"nls"`.
+#' @param fit_fn_name Character string naming the model backend. Must be a name
+#'   registered via [register_model_backend()] (e.g. `"lm"`, `"glm"`,
+#'   `"loess"`, `"nls"`, or any user-registered backend).
+#' @param ... Extra arguments forwarded to the backend's `fit` function. These
+#'   typically come from additional fields in the [multiDynamicInput()] row
+#'   (e.g. `drc_fct = "LL.4"` for a drc backend).
 #'
-#' @return A fitted model object of class `lm`, `glm`, `loess`, or `nls`, or
-#'   `NULL` if the input is empty, unparseable, contains disallowed terms, or
-#'   fails to fit.
+#' @return A fitted model object whose class matches the backend's
+#'   `validate_classes`, or `NULL` if the input is empty, unparseable, contains
+#'   disallowed terms, or fails to fit.
 #'
 #' @importFrom stats as.formula
 #'
 #' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_safe_build_model
-.safe_build_model <- function(formula_text, data, fit_fn_name){
-    if (is.null(formula_text) | is.null(data) | !nzchar(trimws(formula_text))){
+.safe_build_model <- function(formula_text, data, fit_fn_name, ...) {
+    if (is.null(formula_text) | is.null(data) | !nzchar(trimws(formula_text))) {
         return(NULL)
     }
 
-    fn_map <- c(lm = 'lm', glm = 'glm', loess = 'loess', nls = 'nls')
-
-    if (!fit_fn_name %in% names(fn_map) | is.null(fit_fn_name)){
-        warning("Unrecognized model type: ", fit_fn_name)
+    backend <- get_model_backend(fit_fn_name)
+    if (is.null(backend)) {
+        warning("Unrecognized model type: ", fit_fn_name,
+                ". Registered backends: ", paste(list_model_backends(), collapse = ", "))
         return(NULL)
     }
-    fit_fn <- match.fun(fn_map[[fit_fn_name]])
-
-    #Check the parsed formula 
-    # Parse() turns the string into an R expression 
-    #Check if the parse is only 1 expression 
 
     parsed <- tryCatch(parse(text = formula_text), error = function(e) NULL)
-        if (is.null(parsed) || length(parsed) != 1) {
+    if (is.null(parsed) || length(parsed) != 1) {
         warning("Could not parse a single formula expression.")
         return(NULL)
     }
 
-    expr <- parsed[[1]] # Model expression 
+    expr <- parsed[[1]]
 
-    # Require a formula (~) at the top node; structurally blocks calls like
-    # system(...) or eval(...) that are not formulas.
     if (!is.call(expr) || !identical(expr[[1]], as.name("~"))) {
         warning("Input must be a model formula (contain '~').")
         return(NULL)
     }
 
-    #Checking the exxpr only contains specific expressions: 
-
-    allowed_calls <- c("~", "+", "-", "*", "/", "^", "(", ":", "I", "log", "log2", "log10", "sqrt", "exp", "poly")
+    allowed_calls <- c("~", "+", "-", "*", "/", "^", "(", ":", "I",
+                        "log", "log2", "log10", "sqrt", "exp", "poly")
     col_names <- names(data)
 
     .check_node <- function(node) {
-        # Literals (numbers, strings) are always fine
         if (is.atomic(node) || is.null(node)) return(TRUE)
-
         if (is.symbol(node)) {
             nm <- as.character(node)
             return(nm %in% col_names ||
                 nm %in% c("TRUE", "FALSE", "NA", "Inf", "T", "F"))
         }
-
         if (is.call(node)) {
             fn <- as.character(node[[1]])
             if (!fn %in% allowed_calls) return(FALSE)
             return(all(vapply(as.list(node)[-1], .check_node, logical(1))))
         }
-
-        FALSE 
+        FALSE
     }
 
     if (!.check_node(expr)) {
@@ -597,15 +597,16 @@
     }
 
     formula <- tryCatch(stats::as.formula(formula_text), error = function(e) NULL)
-
-    if (is.null(formula) | !inherits(formula, "formula")){
+    if (is.null(formula) | !inherits(formula, "formula")) {
         warning("Could not construct a valid formula")
         return(NULL)
     }
 
-    #Build the final model and check the class: 
-    model <- tryCatch(fit_fn(formula, data = data), error = function(e) NULL)
-    if (is.null(model) || !inherits(model, c("lm", "glm", "loess", "nls"))) {
+    model <- tryCatch(backend$fit(formula, data, ...), error = function(e) {
+        warning("Model fitting failed: ", conditionMessage(e))
+        NULL
+    })
+    if (is.null(model) || !inherits(model, backend$validate_classes)) {
         return(NULL)
     }
     return(model)

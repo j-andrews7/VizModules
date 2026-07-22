@@ -231,17 +231,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
             multiDynamicInput(
                 ns("custom.models"),
                 label = "Models",
-                row_spec = list(
-                    model_type  = list(type = "select",
-                        args = list(choices = c("lm", "glm", "loess", "nls"),
-                                    selected = "lm")),
-                    formula     = list(type = "text",
-                        args = list(placeholder = "e.g. y ~ poly(x, 2)")),
-                    line_colour = list(type = "colour",
-                        args = list(value = "#000000")),
-                    line_width  = list(type = "numeric",
-                        args = list(value = 2, min = 0.5, max = 20, step = 0.5))
-                ),
+                row_spec = build_model_row_spec(),
                 max_per_row = 4,
                 panel = FALSE,
                 elements = get_default(defaults, "custom.models", NULL)

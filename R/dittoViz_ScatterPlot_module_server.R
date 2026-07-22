@@ -846,9 +846,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             # User-defined custom model lines from the multiDynamicInput. Each
-            # row supplies a model_type, formula, colour and width. Formula text
-            # is validated by .safe_build_model() (allow-listed fit function +
-            # AST whitelist), so no arbitrary code is executed.
+            # row supplies a model_type, formula, colour and width, plus any
+            # backend-specific extra fields. Formula text is validated by
+            # .safe_build_model() (allow-listed fit function + AST whitelist),
+            # so no arbitrary code is executed.
             if (isTRUE(input$custom.model.enable)) {
                 model_rows <- isolate_fn(input$custom.models)
                 if (!is.null(model_rows) && length(model_rows) > 0) {
@@ -858,14 +859,20 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         if (is.null(formula_text) || !nzchar(trimws(formula_text))) {
                             next
                         }
-                        user_model <- .safe_build_model(
-                            formula_text = formula_text,
-                            data         = data(),
-                            fit_fn_name  = row$model_type
-                        )
+                        # Collect extra fields beyond the known UI keys and
+                        # forward them to the backend's fit function via ...
+                        known_keys <- c("model_type", "formula", "line_colour", "line_width")
+                        extra_args <- row[!names(row) %in% known_keys]
+                        user_model <- do.call(.safe_build_model, c(
+                            list(formula_text = formula_text,
+                                 data         = data(),
+                                 fit_fn_name  = row$model_type),
+                            extra_args
+                        ))
                         if (!is.null(user_model)) {
                             line_w <- suppressWarnings(as.numeric(row$line_width))
                             if (is.na(line_w)) line_w <- 2
+                            backend <- get_model_backend(row$model_type)
                             fig <- .add_custom_model_lines_to_subplots(
                                 fig           = fig,
                                 df            = data(),
@@ -873,7 +880,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                                 custom.models = setNames(list(user_model), row_name),
                                 split.by      = null.na.inputs$split.by,
                                 line_color    = row$line_colour %__% "#000000",
-                                line_width    = line_w
+                                line_width    = line_w,
+                                backend       = backend
                             )
                         } else {
                             showNotification(

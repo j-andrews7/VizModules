@@ -139,6 +139,22 @@
     });
   };
 
+  // Show/hide backend-specific fields within a row based on model_type value.
+  const syncBackendFields = (row) => {
+    const modelTypeSelect = row.querySelector('.mdi-field[data-key="model_type"] select');
+    if (!modelTypeSelect) return;
+    const selectedBackend = modelTypeSelect.value;
+    row.querySelectorAll(".mdi-field[data-backend]").forEach((field) => {
+      const backend = field.dataset.backend;
+      field.style.display = (backend === selectedBackend) ? "" : "none";
+    });
+  };
+
+  // Sync all rows in a container.
+  const syncAllBackendFields = (el) => {
+    el.querySelectorAll(".mdi-rows > .mdi-row").forEach(syncBackendFields);
+  };
+
   const addRow = (el, fields, callback) => {
     const data = getData(el);
     data.counter += 1;
@@ -151,6 +167,8 @@
     // Defer special input init slightly to ensure DOM is settled and
     // bindings have had a chance to run.
     setTimeout(function() { initSpecialInputs(row); }, 0);
+    // Show/hide backend fields based on initial model_type value
+    syncBackendFields(row);
     if (callback) setTimeout(callback, 10);
   };
 
@@ -233,6 +251,14 @@
         $el.on("input.multiDynamicInput change.multiDynamicInput",
           ".mdi-rows input, .mdi-rows select, .mdi-rows textarea",
           function () { callback(); });
+
+        // When model_type changes, show/hide backend-specific fields in that row.
+        $el.on("change.multiDynamicInput",
+          '.mdi-field[data-key="model_type"] select',
+          function (evt) {
+            const row = evt.currentTarget.closest(".mdi-row");
+            if (row) syncBackendFields(row);
+          });
       },
       unsubscribe: function (el) {
         $(el).off(".multiDynamicInput");

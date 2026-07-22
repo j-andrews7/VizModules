@@ -210,6 +210,14 @@ reference:
       - finalize_manual_edits
       - setup_manual_edits
 
+  - title: "Model Backends"
+    desc: "Pluggable model fitting registry for custom model line overlays. Register new backends to support any modelling package (drc, mgcv, brms, etc.)."
+    contents:
+      - build_model_row_spec
+      - get_model_backend
+      - list_model_backends
+      - register_model_backend
+
   - title: "Statistical Utilities"
     desc: "Functions for computing and displaying pairwise statistical test annotations."
     contents:
