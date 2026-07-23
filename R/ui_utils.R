@@ -307,7 +307,7 @@ module_tack_ui <- function(ns, defaults = NULL) {
                 style = "margin-top: 25px;"
             ),
             column(
-                2,
+                3,
                 actionButton(
                     ns("update"),
                     "Update",
