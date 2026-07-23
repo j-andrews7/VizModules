@@ -371,6 +371,7 @@
             error = function(e) NULL
         )
     }
+
     if (is.null(y_grid) || length(y_grid) != n.points) return(NULL)
 
     data.frame(x = x_grid, y = y_grid)
@@ -683,28 +684,36 @@ register_model_backend <- function(name, backend) {
     if (!is.character(name) || length(name) != 1 || !nzchar(name)) {
         stop("`name` must be a single non-empty string.")
     }
+
     if (!is.list(backend)) {
         stop("`backend` must be a named list with `fit`, `predict`, and `validate_classes`.")
     }
+
     required <- c("fit", "predict", "validate_classes")
     missing <- setdiff(required, names(backend))
+
     if (length(missing) > 0) {
         stop("Backend is missing required elements: ", paste(missing, collapse = ", "))
     }
+
     if (!is.function(backend$fit)) {
         stop("`backend$fit` must be a function(formula, data, ...).")
     }
+
     if (!is.function(backend$predict)) {
         stop("`backend$predict` must be a function(model, newdata).")
     }
+
     if (!is.character(backend$validate_classes) || length(backend$validate_classes) == 0) {
         stop("`backend$validate_classes` must be a non-empty character vector.")
     }
+
     # Optional: extra UI fields this backend contributes to the row_spec.
     # Must be a named list of field specs (same format as row_spec entries).
     if (!is.null(backend$fields) && (!is.list(backend$fields) || is.null(names(backend$fields)))) {
         stop("`backend$fields` must be a named list of field specs or NULL.")
     }
+
     .model_backend_registry[[name]] <- backend
     invisible(NULL)
 }
@@ -814,20 +823,24 @@ build_model_row_spec <- function() {
         predict = function(model, newdata) as.numeric(stats::predict(model, newdata = newdata)),
         validate_classes = "lm"
     ))
+
     register_model_backend("glm", list(
         fit = function(formula, data, ...) stats::glm(formula, data = data),
         predict = function(model, newdata) as.numeric(stats::predict(model, newdata = newdata)),
         validate_classes = "glm"
     ))
+
     register_model_backend("loess", list(
         fit = function(formula, data, ...) stats::loess(formula, data = data),
         predict = function(model, newdata) as.numeric(stats::predict(model, newdata = newdata)),
         validate_classes = "loess"
     ))
+
     register_model_backend("nls", list(
         fit = function(formula, data, ...) stats::nls(formula, data = data),
         predict = function(model, newdata) as.numeric(stats::predict(model, newdata = newdata)),
         validate_classes = "nls"
     ))
+
     invisible(NULL)
 }
