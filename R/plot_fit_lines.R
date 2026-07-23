@@ -664,21 +664,21 @@ NULL
 #' @examples
 #' # Register a custom backend for dose-response curves (requires drc)
 #' if (requireNamespace("drc", quietly = TRUE)) {
-#'     register_model_backend("drm", list(
-#'         fit = function(formula, data, drc_fct = "LL.4", ...) {
-#'             fct_map <- list(
-#'                 "LL.4" = drc::LL.4, "LL.3" = drc::LL.3,
-#'                 "LL.2" = drc::LL.2, "W1.4" = drc::W1.4
-#'             )
-#'             fct_fn <- fct_map[[drc_fct]]
-#'             if (is.null(fct_fn)) stop("Unknown drc family: ", drc_fct)
-#'             drc::drm(formula, data = data, fct = fct_fn())
-#'         },
-#'         predict = function(model, newdata) {
-#'             as.numeric(predict(model, newdata = newdata))
-#'         },
-#'         validate_classes = "drc"
-#'     ))
+# '     register_model_backend("drm", list(
+# '         fit = function(formula, data, drc_fct = "LL.4", ...) {
+# '             fct_map <- list(
+# '                 "LL.4" = drc::LL.4, "LL.3" = drc::LL.3,
+# '                 "LL.2" = drc::LL.2, "W1.4" = drc::W1.4
+# '             )
+# '             fct_fn <- fct_map[[drc_fct]]
+# '             if (is.null(fct_fn)) stop("Unknown drc family: ", drc_fct)
+# '             drc::drm(formula, data = data, fct = fct_fn())
+# '         },
+# '         predict = function(model, newdata) {
+# '             as.numeric(predict(model, newdata = newdata))
+# '         },
+# '         validate_classes = "drc"
+# '     ))
 #' }
 register_model_backend <- function(name, backend) {
     if (!is.character(name) || length(name) != 1 || !nzchar(name)) {

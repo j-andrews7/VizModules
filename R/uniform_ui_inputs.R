@@ -186,7 +186,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
         inputs <- c(inputs, list(
             tipify(
                 materialSwitch(ns("best.fit"), "Plot Best Fit Line",
-                    value = FALSE,
+                    value = get_default(defaults, "best.fit", FALSE, is.logical),
                     status = "success"
                 ),
                 "Add a LOESS smoothed curve of best fit to the scatter plot",
@@ -194,7 +194,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
             ),
             tipify(
                 numericInput(ns("line.best.smoothness"), "Best Fit Line Smoothness",
-                    value = 1,
+                    value = get_default(defaults, "line.best.smoothness", 1, is.numeric),
                     min = 0,
                     max = 10000
                 ),
@@ -203,14 +203,14 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
             ),
             tipify(
                 colourInput(ns("line.best.colour"), "Best Fit Line Color",
-                    value = "#000000"
+                    value = get_default(defaults, "line.best.colour", "#000000")
                 ),
                 "Color for the LOESS best fit line",
                 placement = "top", options = tip_opts
             ),
             tipify(
                 materialSwitch(ns("linear.model"), "Linear Model Line",
-                    value = FALSE,
+                    value = get_default(defaults, "linear.model", FALSE, is.logical),
                     status = "success"
                 ),
                 "Add a linear regression line to the scatter plot",
@@ -218,7 +218,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
             ),
             tipify(
                 materialSwitch(ns("custom.model.enable"), "Custom Model Lines",
-                    value = FALSE,
+                    value = get_default(defaults, "custom.model.enable", FALSE, is.logical),
                     status = "success"
                 ),
                 paste(
