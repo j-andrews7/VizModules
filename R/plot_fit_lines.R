@@ -738,6 +738,7 @@ get_model_backend <- function(name) {
     if (!is.character(name) || length(name) != 1 || !nzchar(name)) {
         return(NULL)
     }
+
     if (exists(name, envir = .model_backend_registry, inherits = FALSE)) {
         .model_backend_registry[[name]]
     } else {
@@ -809,6 +810,8 @@ build_model_row_spec <- function() {
 
     c(base_spec, extra_fields)
 }
+
+
 #'
 #' Called from `.onLoad()` to seed the registry with the four standard backends.
 #'
