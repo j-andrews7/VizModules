@@ -277,7 +277,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 highlight_alpha = isolate_fn(input$highlight.alpha)
             )
 
-
+            # Remove outliers if jitter points are shown or if user explicitly disabled outliers
+            if (isolate_fn(input$add.points) || !isolate_fn(input$show.outliers)) {
+                p <- p + geom_boxplot(outlier.shape = NA)
+            }
             fig <- ggplotly(p) |>
                 layout(
                     boxmode = ifelse(!is.null(group.by), "group", "overlay"),
@@ -364,10 +367,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            # Remove outliers if jitter points are shown or if user explicitly disabled outliers
-            if (isolate_fn(input$add.points) || !isolate_fn(input$show.outliers)) {
-                fig <- .remove_boxplot_outliers(fig)
-            }
+
 
             # Hide jitter points from legend if they are shown
             if (isolate_fn(input$add.points)) {

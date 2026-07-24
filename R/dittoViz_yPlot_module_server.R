@@ -345,7 +345,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
                 jitter.position.dodge = 1 - isolate_fn(input$boxgap),
                 boxplot.color = isolate_fn(input$boxplot.color),
-                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
+                # Hide outliers when jitter points are shown (to avoid
+                # double-plotting) or when the user disables them. dittoViz::yPlot
+                # sets boxpoints = FALSE natively, so no post-hoc removal needed.
+                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers) &&
+                    !("jitter" %in% isolate_fn(input$plots)),
                 boxplot.fill = isolate_fn(input$boxplot.fill),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
@@ -417,11 +421,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 abline.linetypes = isolate_fn(input$abline.linetypes),
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
-
-            # Remove outliers if jitter is shown or if user explicitly disabled outliers
-            if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$boxplot.show.outliers)) {
-                fig <- .remove_boxplot_outliers(fig)
-            }
 
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {

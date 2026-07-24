@@ -751,39 +751,6 @@ test_that(".calculate_range works in grouping mode", {
     expect_equal(result$max, 60)
 })
 
-# ─── .remove_boxplot_outliers ────────────────────────────────────────────────
-
-test_that(".remove_boxplot_outliers hides box trace markers", {
-    fig <- make_plotly(data = list(
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all"),
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all")
-    ))
-    result <- VizModules:::.remove_boxplot_outliers(fig)
-
-    for (trace in result$x$data) {
-        expect_equal(trace$marker$opacity, 0)
-        expect_equal(trace$hoverinfo, "none")
-    }
-})
-
-test_that(".remove_boxplot_outliers leaves non-box traces unchanged", {
-    fig <- make_plotly(data = list(
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all"),
-        list(type = "scatter", mode = "markers", marker = list(opacity = 0.8))
-    ))
-    result <- VizModules:::.remove_boxplot_outliers(fig)
-
-    expect_equal(result$x$data[[1]]$marker$opacity, 0)
-    expect_equal(result$x$data[[2]]$marker$opacity, 0.8)
-})
-
-test_that(".remove_boxplot_outliers rejects non-plotly objects", {
-    expect_error(
-        VizModules:::.remove_boxplot_outliers(list(x = list(data = list()))),
-        "plotly"
-    )
-})
-
 # ─── empty_plot ─────────────────────────────────────────────────────────────
 
 test_that(".empty_plot returns ggplot by default", {
