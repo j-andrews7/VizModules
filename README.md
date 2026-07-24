@@ -24,9 +24,9 @@ remotes::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted example gallery: <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Explore the hosted [example gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/).
 - Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Check out the included Figure Builder app for a demo of how the modules can be used together to build a free-form, multi-pane figure: https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/
+- Check out the hosted [Figure Builder app](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/) for a demo of how the modules can be used together to build a free-form, multi-pane figure.
 - Run the Figure Builder app locally: `VizModules::figureBuilderApp()`
 - See the vignette for a full walkthrough of using the modules in your own apps: [`vignette("quick-start", package = "VizModules")`][18]
 
@@ -161,13 +161,25 @@ The modules in **VizModules** are designed to be composed and extended. You can 
 
 For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
+## Custom Shiny Inputs
+
+Beyond the standard `shiny::*Input` widgets, **VizModules** ships two reusable custom Shiny inputs that are used throughout the package and are available for your own apps: `multiColorPicker()` and `multiDynamicInput()`. See [`vignette("custom-shiny-inputs", package = "VizModules")`][27] for full details.
+
+**`multiColorPicker()`** assigns a color to each level of a discrete variable, either by applying a named palette to every group at once or by fine-tuning individual groups with a color picker and an editable hex field. It returns a named character vector of hex colors keyed by group and can be updated from the server with `updateMultiColorPicker()`.
+
+![](man/figures/multiColorPicker.png)
+
+**`multiDynamicInput()`** is a general-purpose widget that lets users dynamically add and remove rows of heterogeneous inputs (e.g. a color, a numeric, and a select per row). It returns a named list of rows and can be updated from the server with `updateMultiDynamicInput()`.
+
+![](man/figures/multiDynamicInput.png)
+
 ## Modules Provided
 
 Currently, **VizModules** contains a functional Shiny module for the following visualization functions:
 
 ### `dittoViz`
 
-* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, `nls`), line colour, and width. Formula input is validated against an allow-list of columns and safe math/transform terms, so no arbitrary code is executed. The model line system is extensible via a pluggable backend registry (`register_model_backend()`); see [`vignette("custom-model-lines", package = "VizModules")`][26]. The interactive multi-row control is powered by the reusable `multiDynamicInput()` widget; see [`vignette("using-custom-shiny-inputs", package = "VizModules")`][27].
+* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, `nls`), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26]. 
 * `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps `dittoViz::yPlot`).
 
 ### `plotthis`
@@ -195,7 +207,7 @@ Via direct implementation with plotly.
 
 The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure. The underlying helpers (`compute_pairwise_stats()`, `create_stat_annotations()`, `apply_stat_annotations()`, `generate_pair_strings()`, `parse_pair_strings()`) are exported so you can add the same bracket annotations to any custom plotly figure. See [`vignette("statistical-testing", package = "VizModules")`][29].
 
-## Export Summary Data:
+### Export Summary Data
 
 `collect_source_data()` collects the interactive plot as HTML, its plot data, pairwise testing statistics (if applied), and UI input values into a single list, and `create_source_download_handler()` turns that into a compact zip folder of summary data for the output plot. `create_source_download_handler()` also accepts a named list of summaries (one per plot), which is how the Figure Builder bundles every plot on the canvas into one download.
 
@@ -314,10 +326,6 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/Figure_builder.png)
 
-### UI Example
-
-![](man/figures/UI_Overview.png)
-
 ## AI Usage Statement
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
 AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs/hands to ensure accuracy and quality.
@@ -341,7 +349,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > - `vignette("defaults-and-hiding", package = "VizModules")` — using `defaults`, `hide.inputs`, and `hide.tabs` to pre-fill or hide controls.
 > - `vignette("statistical-testing", package = "VizModules")` — the Stats tab and the exported `compute_pairwise_stats()` / `create_stat_annotations()` / `apply_stat_annotations()` helpers.
 > - `vignette("custom-model-lines", package = "VizModules")` — the pluggable model-line backend registry (`register_model_backend()`).
-> - `vignette("using-custom-shiny-inputs", package = "VizModules")` — the reusable `multiDynamicInput()` widget.
+> - `vignette("custom-shiny-inputs", package = "VizModules")` — the reusable `multiDynamicInput()` widget.
 > - The README — overview, install, the full list of available modules, the App Factory (`createModuleApp()`), statistical-testing features, and summary-data export.
 > - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
 > - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
@@ -383,6 +391,6 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [25]: https://pwwang.github.io/plotthis/reference/dotplot.html
 
 [26]: https://j-andrews7.github.io/VizModules/articles/custom-model-lines.html
-[27]: https://j-andrews7.github.io/VizModules/articles/using-custom-shiny-inputs.html
+[27]: https://j-andrews7.github.io/VizModules/articles/custom-shiny-inputs.html
 [28]: https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html
 [29]: https://j-andrews7.github.io/VizModules/articles/statistical-testing.html

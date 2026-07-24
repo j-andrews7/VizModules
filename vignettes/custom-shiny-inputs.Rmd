@@ -52,7 +52,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+```{r, echo = FALSE, eval = TRUE, out.width = "50%"}
 knitr::include_graphics("../man/figures/multiColorPicker.png")
 ```
 
