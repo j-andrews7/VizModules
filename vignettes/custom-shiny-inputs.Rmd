@@ -15,14 +15,110 @@ knitr::opts_chunk$set(
 )
 ```
 
-VizModules ships two custom Shiny inputs that go beyond standard `shiny::*Input` widgets: **multiColorPicker** and **multiDynamicInput**. This vignette covers `multiDynamicInput`, a general-purpose widget that lets users dynamically add and remove rows of heterogeneous inputs.
+VizModules ships two custom Shiny inputs that go beyond standard `shiny::*Input` widgets: **multiColorPicker** and **multiDynamicInput**. `multiColorPicker` maps colors to the discrete levels of a variable using palettes or per-group hex pickers, while `multiDynamicInput` is a general-purpose widget that lets users dynamically add and remove rows of heterogeneous inputs.
+
+# multiColorPicker
+
+`multiColorPicker` assigns a color to each level of a discrete variable. Users can apply a named palette to every group at once, or fine-tune individual groups with a native color picker and an editable hex field. The value reported to `input[[inputId]]` is a named character vector of hex colors keyed by group. It is used throughout the package wherever a plot maps a discrete variable to color for more granular control than just a palette selection.
+
+## Overview
+
+The widget renders a palette selector with **Apply** and **Reset** buttons, a preview row of swatches, and one row per group. Selecting a palette and clicking Apply recolors every group in order; the per-group color picker and hex input let users override any single group afterwards.
+
+## Basic Usage
+
+```{r}
+library(shiny)
+library(VizModules)
+
+ui <- fluidPage(
+    br(),
+    splitLayout(
+        multiColorPicker(
+            "dept_cols",
+            label = "Plot colors",
+            groups = c("Engineering", "Finance", "HR",
+                       "Marketing", "Operations", "Sales"),
+            selected_palette = "dittoColors"
+        ),
+        verbatimTextOutput("value")
+    )
+)
+
+server <- function(input, output, session) {
+    output$value <- renderPrint(input$dept_cols)
+}
+
+shinyApp(ui, server)
+```
+
+```{r, echo = FALSE, eval = TRUE}
+knitr::include_graphics("../man/figures/multiColorPicker.png", width = "100%")
+```
+
+## Key Arguments
+
+| Argument           | Description                                                                             |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| `inputId`          | Shiny input id. The value is accessed via `input[[inputId]]`.                           |
+| `label`            | Optional label displayed above the control.                                            |
+| `groups`           | Character or factor vector of group names — one color row is created per unique value.  |
+| `palette_options`  | Named list of palettes (each a character vector of colors). Defaults to `default_palettes()`. |
+| `selected_palette` | Name of the palette to preselect.                                                      |
+| `colors`           | Optional named vector of starting colors, matched to `groups` by name.                 |
+| `show_text`        | If `TRUE` (default), show editable hex text inputs beside the color pickers.           |
+| `compact`          | If `TRUE`, render a tighter layout with smaller controls.                              |
+| `panel`            | If `FALSE`, remove the surrounding panel/well styling.                                 |
+
+## Reading the Value
+
+The value in `input[[inputId]]` is a named character vector of hex colors keyed by group:
+
+```{r}
+# With groups = c("Engineering", "Finance", "HR", ...)
+input$dept_cols
+#> c(
+#>   Engineering = "#E69F00",
+#>   Finance     = "#56B4E9",
+#>   HR          = "#009E73",
+#>   Marketing   = "#F0E442",
+#>   Operations  = "#0072B2",
+#>   Sales       = "#D55E00"
+#> )
+```
+
+## Updating from the Server
+
+Use `updateMultiColorPicker()` to set specific colors, apply a palette by name, or reset the widget to its initial state:
+
+```{r}
+# Set specific group colors (only named groups change)
+updateMultiColorPicker(session, "dept_cols",
+    colors = c(Engineering = "#1B9E77", Finance = "#D95F02"))
+
+# Apply a named palette to all groups
+updateMultiColorPicker(session, "dept_cols", palette = "ggplot2")
+
+# Reset colors and palette back to the initial state
+updateMultiColorPicker(session, "dept_cols", reset = TRUE)
+```
+
+Exactly one of `colors`, `palette`, or `reset` should be supplied per call; `reset` takes precedence, followed by `palette`, then `colors`.
+
+## Summary
+
+- `multiColorPicker()` — place in your UI, one color row per group
+- `input[[inputId]]` — read the named character vector of hex colors in your server
+- `updateMultiColorPicker()` — set colors, apply a palette, or reset from the server
+
+# multiDynamicInput
 
 ## Overview
 
 `multiDynamicInput` renders a "+ Add" button and a container. Each time the user clicks Add, a new row appears with whatever fields you define. An "×" button on each row deletes it. The collected value is reported to `input[[inputId]]` as a named list of rows.
 
 Unlike `insertUI`/`removeUI`, rows are managed entirely client-side via DOM template cloning — no server round-trips for add/delete.
- 
+
 ## Basic Usage
 
 ```{r}
@@ -36,9 +132,16 @@ ui <- fluidPage(
             "layers",
             label = "Layers",
             row_spec = list(
-                colour = list(type = "colour", args = list(value = "#000000")),
-                size   = list(type = "numeric", args = list(value = 2, min = 0.5, max = 10)),
-                style  = list(type = "select", args = list(choices = c("solid", "dashed", "dotted")))
+                colour = list(
+                    type = "colour",
+                    args = list(value = "#000000")
+                ),
+                size   = list(
+                    type = "numeric",
+                    args = list(value = 2, min = 0.5, max = 10)
+                ),
+                style  = list(type = "select",
+                args = list(choices = c("solid", "dashed", "dotted")))
             )
         ),
         verbatimTextOutput("value")
@@ -53,19 +156,19 @@ shinyApp(ui, server)
 ```
 
 ```{r, echo = FALSE, eval = TRUE}
-knitr::include_graphics("../man/figures/multiDynamicInput.png")
+knitr::include_graphics("../man/figures/multiDynamicInput.png", width = "100%")
 ```
 
 ## Key Arguments
 
-| Argument | Description |
-|----------|-------------|
-| `inputId` | Shiny input id. The value is accessed via `input[[inputId]]`. |
-| `label` | Label shown next to the + Add button. Also determines row naming (lowercased). |
-| `row_spec` | Named list defining one row's fields. Each entry has `type` (or `fn`) and `args`. |
-| `elements` | Optional list of pre-filled rows to show on startup. |
-| `max_per_row` | Number of fields per visual line before wrapping (default 4). |
-| `panel` | If `FALSE`, removes the border/background styling. |
+| Argument      | Description                                                                       |
+| ------------- | --------------------------------------------------------------------------------- |
+| `inputId`     | Shiny input id. The value is accessed via `input[[inputId]]`.                     |
+| `label`       | Label shown next to the + Add button. Also determines row naming (lowercased).    |
+| `row_spec`    | Named list defining one row's fields. Each entry has `type` (or `fn`) and `args`. |
+| `elements`    | Optional list of pre-filled rows to show on startup.                              |
+| `max_per_row` | Number of fields per visual line before wrapping (default 4).                     |
+| `panel`       | If `FALSE`, removes the border/background styling.                                |
 
 ## Defining Fields with `row_spec`
 
@@ -141,7 +244,7 @@ updateMultiDynamicInput(session, "models", clear = TRUE)
 ## Backend-Specific Fields
 
 When used with the model backend system (see `vignette("custom-model-lines")`), fields can be tagged with a `backend` attribute. These fields are hidden by default and only appear when the matching model type is selected:
- 
+
 ```{r}
 row_spec = list(
     model_type = list(type = "select", args = list(choices = c("lm", "drm"))),
