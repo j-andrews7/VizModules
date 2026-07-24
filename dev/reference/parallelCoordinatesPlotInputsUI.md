@@ -140,25 +140,25 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="4754">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="7558">
 #>     <li class="active">
-#>       <a href="#tab-4754-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-7558-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4754-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-7558-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4754-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-7558-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4754-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title">Title</a>
+#>       <a href="#tab-7558-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title">Title</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-4754-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-7558-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="4754">
-#>     <div class="tab-pane active" data-value="Data" id="tab-4754-1">
+#>   <div class="tab-content" data-tabsetid="7558">
+#>     <div class="tab-pane active" data-value="Data" id="tab-7558-1">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify5428372">
@@ -202,7 +202,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4754-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7558-2">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify5088936">
@@ -267,7 +267,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-4754-3">
+#>     <div class="tab-pane" data-value="Labels" id="tab-7558-3">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify9594826">
@@ -349,7 +349,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title" id="tab-4754-4">
+#>     <div class="tab-pane" data-value="Title" id="tab-7558-4">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify9381526">
@@ -392,7 +392,7 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-4754-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-7558-5">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" style="width:100%;">

@@ -31,13 +31,14 @@ remotes::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted example gallery:
-  <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Explore the hosted [example
+  gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/).
 - Run the same gallery locally after installation:
   `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Check out the included Figure Builder app for a demo of how the
-  modules can be used together to build a free-form, multi-pane figure:
-  <https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/>
+- Check out the hosted [Figure Builder
+  app](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
+  for a demo of how the modules can be used together to build a
+  free-form, multi-pane figure.
 - Run the Figure Builder app locally:
   [`VizModules::figureBuilderApp()`](https://j-andrews7.github.io/VizModules/dev/reference/figureBuilderApp.md)
 - See the vignette for a full walkthrough of using the modules in your
@@ -270,6 +271,37 @@ the `defaults`/`hide.inputs`/`hide.tabs` controls covered in
 For more details, see
 [`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
 
+## Custom Shiny Inputs
+
+Beyond the standard `shiny::*Input` widgets, **VizModules** ships two
+reusable custom Shiny inputs that are used throughout the package and
+are available for your own apps:
+[`multiColorPicker()`](https://j-andrews7.github.io/VizModules/dev/reference/multiColorPicker.md)
+and
+[`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.md).
+See
+[`vignette("custom-shiny-inputs", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-shiny-inputs.html)
+for full details.
+
+**[`multiColorPicker()`](https://j-andrews7.github.io/VizModules/dev/reference/multiColorPicker.md)**
+assigns a color to each level of a discrete variable, either by applying
+a named palette to every group at once or by fine-tuning individual
+groups with a color picker and an editable hex field. It returns a named
+character vector of hex colors keyed by group and can be updated from
+the server with
+[`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/dev/reference/updateMultiColorPicker.md).
+
+![](reference/figures/multiColorPicker.png)
+
+**[`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.md)**
+is a general-purpose widget that lets users dynamically add and remove
+rows of heterogeneous inputs (e.g. a color, a numeric, and a select per
+row). It returns a named list of rows and can be updated from the server
+with
+[`updateMultiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/updateMultiDynamicInput.md).
+
+![](reference/figures/multiDynamicInput.png)
+
 ## Modules Provided
 
 Currently, **VizModules** contains a functional Shiny module for the
@@ -283,17 +315,8 @@ following visualization functions:
   Supports overlaying fit lines, including **multiple custom model
   lines** defined interactively: add a row per model, each with its own
   R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function
-  (`lm`, `glm`, `loess`, `nls`), line colour, and width. Formula input
-  is validated against an allow-list of columns and safe math/transform
-  terms, so no arbitrary code is executed. The model line system is
-  extensible via a pluggable backend registry
-  ([`register_model_backend()`](https://j-andrews7.github.io/VizModules/dev/reference/register_model_backend.md));
-  see
+  (`lm`, `glm`, `loess`, `nls`), line colour, and width, see
   [`vignette("custom-model-lines", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-model-lines.html).
-  The interactive multi-row control is powered by the reusable
-  [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.md)
-  widget; see
-  [`vignette("using-custom-shiny-inputs", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/using-custom-shiny-inputs.html).
 - `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter,
   violinplots - wraps
   [`dittoViz::yPlot`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)).
@@ -341,7 +364,7 @@ are exported so you can add the same bracket annotations to any custom
 plotly figure. See
 [`vignette("statistical-testing", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/statistical-testing.html).
 
-## Export Summary Data:
+### Export Summary Data
 
 [`collect_source_data()`](https://j-andrews7.github.io/VizModules/dev/reference/collect_source_data.md)
 collects the interactive plot as HTML, its plot data, pairwise testing
@@ -491,10 +514,6 @@ Function)](https://pwwang.github.io/plotthis/reference/dotplot.html)
 
 ![](reference/figures/Figure_builder.png)
 
-### UI Example
-
-![](reference/figures/UI_Overview.png)
-
 ## AI Usage Statement
 
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code)
@@ -564,8 +583,8 @@ locally-installed sources of truth so it can use the package correctly.
 > [`vignette("custom-model-lines", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/custom-model-lines.md)
 > — the pluggable model-line backend registry
 > ([`register_model_backend()`](https://j-andrews7.github.io/VizModules/dev/reference/register_model_backend.md)). -
-> `vignette("using-custom-shiny-inputs", package = "VizModules")` — the
-> reusable
+> [`vignette("custom-shiny-inputs", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/custom-shiny-inputs.md)
+> — the reusable
 > [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.md)
 > widget. - The README — overview, install, the full list of available
 > modules, the App Factory

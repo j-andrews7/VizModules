@@ -472,37 +472,37 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="8586">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="1344">
 #>     <li class="active">
-#>       <a href="#tab-8586-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-1344-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-1344-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-1344-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-1344-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-1344-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-1344-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-1344-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-1344-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-8586-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-1344-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="8586">
-#>     <div class="tab-pane active" data-value="Data" id="tab-8586-1">
+#>   <div class="tab-content" data-tabsetid="1344">
+#>     <div class="tab-pane active" data-value="Data" id="tab-1344-1">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify7277020">
@@ -558,7 +558,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-8586-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-1344-2">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify8438703">
@@ -628,7 +628,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-8586-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-1344-3">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify3927519">
@@ -660,7 +660,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-8586-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-1344-4">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify5261067">
@@ -723,7 +723,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-8586-5">
+#>     <div class="tab-pane" data-value="Stats" id="tab-1344-5">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify871839">
@@ -868,7 +868,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-8586-6">
+#>     <div class="tab-pane" data-value="Legend" id="tab-1344-6">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify7117534">
@@ -886,7 +886,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-8586-7">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-1344-7">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -971,7 +971,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-8586-8">
+#>     <div class="tab-pane" data-value="Axes" id="tab-1344-8">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container">
@@ -1232,7 +1232,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-8586-9">
+#>     <div class="tab-pane" data-value="Lines" id="tab-1344-9">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify985664">
