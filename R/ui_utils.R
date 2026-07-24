@@ -88,6 +88,10 @@ organize_inputs <- function(
             }),
             recursive = FALSE
         ))
+        # Drop NULL entries (e.g. the placeholders returned by the uniform input
+        # helpers for disabled optional controls, such as the rotate/flip
+        # switches) so they do not create empty grid cells.
+        tag.list <- Filter(Negate(is.null), tag.list)
         n.tags <- length(tag.list)
 
         # Determine the number of columns; derive it from `rows` if only `rows`

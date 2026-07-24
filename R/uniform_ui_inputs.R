@@ -504,7 +504,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         ),
         tipify(
             materialSwitch(ns("stat.hide.ns"), "Hide Non-Significant",
-                value = get_default(defaults, "stat.hide.ns", FALSE, is.logical),
+                value = get_default(defaults, "stat.hide.ns", TRUE, is.logical),
                 status = "success"
             ),
             "Hide comparison brackets where the adjusted p-value exceeds the significance threshold",
