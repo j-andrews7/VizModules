@@ -15,14 +15,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-The scatter plot module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, `loess`, and `nls`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
+The `dittoViz_scatterPlot` module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, `loess`, and `nls`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
 
 ## How It Works
 
 The custom model line system has three layers:
 
 1. **Model backend registry** — a named storage of "recipe cards" that tell the pipeline how to fit and predict for each model type.
-2. **UI** — a `multiDynamicInput` widget where users add rows (model type, formula, colour, width, plus any backend-specific fields).
+2. **UI** — a `multiDynamicInput` widget where users add rows (model type, formula, line color and width, plus any backend-specific fields).
 3. **Server pipeline** — validates the formula, fits via the backend, predicts over an x-grid, and draws the line on the plot.
 
 ### The Pipeline
@@ -32,14 +32,14 @@ User fills a row → input$custom.models → .safe_build_model() → backend$fit
     → .compute_custom_model_fit() → backend$predict() → plotly::add_lines()
 ```
 
-Formula validation (AST whitelist) runs before any model is fitted, blocking arbitrary code execution regardless of backend.
+A formula validation (AST whitelist) runs before any model is fitted, blocking arbitrary code execution regardless of backend.
 
 ## Using Custom Models in the App
 
 1. Open a scatter plot app (e.g. `dittoViz_scatterPlotApp()`).
 2. In the **Lines** tab, toggle **Custom Model Lines** on.
 3. Click **+ Add** to create a model row.
-4. Select a model type, enter a formula using your data's column names (e.g. `revenue ~ poly(units, 2)`), pick a colour and width.
+4. Select a model type, enter a formula using your data's column names (e.g. `revenue ~ poly(units, 2)`), pick line colour and width.
 5. The fitted line appears on the plot.
 
 You can add multiple rows — each draws its own line with independent settings.
@@ -49,9 +49,13 @@ You can add multiple rows — each draws its own line with independent settings.
 To pre-fill model rows on startup, pass them via the `defaults` argument to the app or module:
 
 ```{r}
+library(VizModules)
+
 dittoViz_scatterPlotApp(
-    data_list = list("sales" = my_data),
+    data_list = list("sales" = example_sales),
     defaults = list(
+        x.by = "revenue",
+        y.by = "units",
         custom.model.enable = TRUE,
         custom.models = list(
             models1 = list(

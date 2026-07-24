@@ -329,7 +329,7 @@
 #'
 #' @importFrom stats predict median
 #'
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_compute_custom_model_fit
 .compute_custom_model_fit <- function(model, df, x.col, n.points = 100, backend = NULL) {
@@ -402,7 +402,7 @@
 #'
 #' @return The modified plotly figure with custom model lines added.
 #'
-#' @author Jacob Martin, Jared Andrews
+#' @author Jacob Martin
 #' @keywords internal
 #' @rdname INTERNAL_add_custom_model_lines_to_subplots
 .add_custom_model_lines_to_subplots <- function(fig, df, x.col, custom.models,

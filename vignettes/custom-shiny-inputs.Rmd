@@ -1,8 +1,8 @@
 ---
-title: "Using Custom Shiny Inputs"
+title: "VizModules Custom Shiny Inputs"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using Custom Shiny Inputs}
+  %\VignetteIndexEntry{VizModules Custom Shiny Inputs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,16 +30,19 @@ library(shiny)
 library(VizModules)
 
 ui <- fluidPage(
-    multiDynamicInput(
-        "layers",
-        label = "Layers",
-        row_spec = list(
-            colour = list(type = "colour", args = list(value = "#000000")),
-            size   = list(type = "numeric", args = list(value = 2, min = 0.5, max = 10)),
-            style  = list(type = "select", args = list(choices = c("solid", "dashed", "dotted")))
-        )
-    ),
-    verbatimTextOutput("value")
+    br(),
+    splitLayout(
+        multiDynamicInput(
+            "layers",
+            label = "Layers",
+            row_spec = list(
+                colour = list(type = "colour", args = list(value = "#000000")),
+                size   = list(type = "numeric", args = list(value = 2, min = 0.5, max = 10)),
+                style  = list(type = "select", args = list(choices = c("solid", "dashed", "dotted")))
+            )
+        ),
+        verbatimTextOutput("value")
+    )
 )
 
 server <- function(input, output, session) {
@@ -47,6 +50,10 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+```
+
+```{r, echo = FALSE}
+knitr::include_graphics("../man/figures/multiDynamicInput.png")
 ```
 
 ## Key Arguments
