@@ -52,8 +52,8 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r, echo = FALSE, eval = TRUE}
-knitr::include_graphics("../man/figures/multiColorPicker.png", width = "100%")
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("../man/figures/multiColorPicker.png")
 ```
 
 ## Key Arguments
@@ -155,8 +155,8 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r, echo = FALSE, eval = TRUE}
-knitr::include_graphics("../man/figures/multiDynamicInput.png", width = "100%")
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("../man/figures/multiDynamicInput.png")
 ```
 
 ## Key Arguments
