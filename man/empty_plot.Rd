@@ -23,7 +23,7 @@ library(VizModules)
 empty_plot("No data to display")
 }
 \seealso{
-\code{\link[ggplot2]{geom_text}}, \code{\link[ggplot2]{theme_void}}
+\code{\link[ggplot2:geom_text]{ggplot2::geom_text()}}, \code{\link[ggplot2:theme_void]{ggplot2::theme_void()}}
 }
 \author{
 Jared Andrews

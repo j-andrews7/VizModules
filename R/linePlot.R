@@ -14,7 +14,7 @@
 #' @param line.type Character, line style.
 #'   Options: "solid", "dot", "dash", "longdash", "dashdot", "longdashdot". Default: "solid".
 #' @param colour.group.by Character or formula, column name(s) to group lines by color.
-#'   Can be a formula like \code{~ column_name}. Ignored if multiple `x` or `y` columns are provided.
+#'   Can be a formula like `~ column_name`. Ignored if multiple `x` or `y` columns are provided.
 #'   Default: `NULL`.
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
 #' @param facet.by Optional character, column name to facet plots by.
@@ -22,12 +22,12 @@
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
 #' @param facet.nrow Optional integer, number of rows in the faceted subplot grid.
-#'   If \code{NULL} (default), a single row is used unless \code{facet.ncol} is supplied,
+#'   If `NULL` (default), a single row is used unless `facet.ncol` is supplied,
 #'   in which case the number of rows is derived from the number of facet levels.
 #' @param facet.ncol Optional integer, number of columns in the faceted subplot grid.
-#'   If \code{NULL} (default), columns are derived from \code{facet.nrow} and the number
-#'   of facet levels. Only one of \code{facet.nrow} / \code{facet.ncol} needs to be set;
-#'   if both are provided, \code{facet.nrow} takes precedence.
+#'   If `NULL` (default), columns are derived from `facet.nrow` and the number
+#'   of facet levels. Only one of `facet.nrow` / `facet.ncol` needs to be set;
+#'   if both are provided, `facet.nrow` takes precedence.
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
 #'   May be a single value (applied to both directions) or a length-2 vector
 #'   `c(horizontal, vertical)` to control the gap between columns and rows separately. Default: 0.05.
@@ -256,27 +256,27 @@ linePlot <- function(data, x, y, palette.selection,
             do.call(plot_ly, plot_params)
         })
 
-        sharing <- .resolve_facet_sharing(facet.scales)
-        nrows <- .resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
+        sharing <- resolve_facet_sharing(facet.scales)
+        nrows <- resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
         fig <- subplot(
             plots, nrows = nrows, shareX = sharing$shareX, shareY = sharing$shareY,
             titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
-        fig <- .apply_facet_subplot_spacing(
+        fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = subplot.margin,
                     ncol = ncols,
                     nrow = nrows
                 )    
       
-        annotations <- .build_facet_annotations(
+        annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
             nrows = nrows, fig = fig
         )
 
-        borders <- .build_facet_panel_borders(
+        borders <- build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
             linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -293,8 +293,8 @@ linePlot <- function(data, x, y, palette.selection,
     } else if (!is.null(facet.by) && facet.by != "" && multi_axis) {
         # Faceting with multi-axis: create subplots where each subplot contains all traces
         facet_levels <- unique(plot_data[[facet.by]])
-        sharing <- .resolve_facet_sharing(facet.scales)
-        nrows <- .resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
+        sharing <- resolve_facet_sharing(facet.scales)
+        nrows <- resolve_facet_layout(length(facet_levels), facet.nrow, facet.ncol)
 
         plots <- list()
         first_facet <- TRUE
@@ -316,19 +316,19 @@ linePlot <- function(data, x, y, palette.selection,
         )
       
         ncols <- max(1L, as.integer(ceiling(length(facet_levels) / nrows)))
-        fig <- .apply_facet_subplot_spacing(
+        fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = subplot.margin,
                     ncol = ncols,
                     nrow = nrows
                 ) 
       
-        annotations <- .build_facet_annotations(
+        annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
             nrows = nrows, fig = fig
         )
       
-        borders <- .build_facet_panel_borders(
+        borders <- build_facet_panel_borders(
             fig, length(facet_levels),
             showline = axis.showline, mirror = axis.mirror,
             linecolor = axis.linecolor, linewidth = axis.linewidth,
@@ -389,7 +389,7 @@ linePlot <- function(data, x, y, palette.selection,
     )
 
     # Apply axis styling to all subplot axes (handles faceting)
-    fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+    fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
 }

@@ -76,3 +76,48 @@ test_that("scatterPlot custom legend is omitted when size is not a column", {
         VizModules:::.custom_legend(fig, example_mtcars, size_by = NULL), fig
     )
 })
+
+test_that("highlight styling matches points by value on a categorical x-axis", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    set.seed(1)
+    df <- data.frame(
+        grp = rep(c("A", "B", "C"), each = 5),
+        val = rnorm(15),
+        lab = paste0("pt", seq_len(15)),
+        stringsAsFactors = FALSE
+    )
+
+    p <- dittoViz::scatterPlot(
+        df,
+        x.by = "grp", y.by = "val",
+        do.hover = TRUE, hover.data = c("lab", "grp", "val"),
+        data.out = TRUE
+    )
+    fig <- plotly::ggplotly(p$plot)
+    tr <- fig$x$data[[1]]
+
+    # ggplotly encodes a categorical (factor) x-axis as numeric positions, so
+    # the trace x-coordinates never equal the raw category values in the data.
+    expect_true(is.numeric(tr$x))
+
+    trace_map <- VizModules:::.build_trace_anno_map(tr, "lab")
+    highlight_vals <- c("pt1", "pt7")
+
+    # Value-based matching (the fix) identifies exactly the highlighted points
+    # regardless of the categorical axis encoding.
+    value_mask <- trace_map$anno_value %in% highlight_vals
+    expect_equal(sum(value_mask), length(highlight_vals))
+    expect_setequal(trace_map$anno_value[value_mask], highlight_vals)
+
+    # The previous coordinate-based matching fails for categorical axes because
+    # the raw data x-values ("A"/"B"/...) cannot match the trace's numeric
+    # positions, which is what dropped the highlight styling (issue #309).
+    highlight_idx <- which(as.character(df[["lab"]]) %in% highlight_vals)
+    highlight_coords <- VizModules:::.create_coord_id(
+        df[["grp"]][highlight_idx], df[["val"]][highlight_idx]
+    )
+    coord_mask <- trace_map$coord_id %in% highlight_coords & value_mask
+    expect_equal(sum(coord_mask), 0)
+})

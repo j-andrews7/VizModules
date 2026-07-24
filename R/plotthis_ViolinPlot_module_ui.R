@@ -15,169 +15,165 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [plotthis::ViolinPlot()] parameters are not available via UI inputs:
-#' \itemize{
-#'   \item \code{xlab} - X-axis label (plotly allows interactive editing)
-#'   \item \code{ylab} - Y-axis label (plotly allows interactive editing)
-#'   \item \code{title} - Plot title (plotly allows interactive editing)
-#'   \item \code{subtitle} - Plot subtitle (not supported in plotly)
-#'   \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
-#'   \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
-#'   \item \code{x_sep} - Separator for x columns (not applicable in UI context)
-#'   \item \code{in_form} - Data input format (not applicable - always long form)
-#'   \item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use `facet_by` instead
-#'   \item \code{split_by_sep} - Only applies if `split_by` is used
-#'   \item \code{symnum_args} - Significance symbol arguments (the Stats tab manages symbol display)
-#'   \item \code{keep_empty} - Keep empty values (not implemented)
-#'   \item \code{keep_na} - Keep NA values (not implemented)
-#'   \item \code{group_by_sep} - Separator for group columns (not applicable in UI context)
-#'   \item \code{group_name} - Group legend name (handled by plotly)
-#'   \item \code{paired_by} - Pairing variable for paired tests (use the Stats tab "Paired Test" input instead)
-#'   \item \code{x_text_angle} - X-axis text angle (handled by plotly axis settings)
-#'   \item \code{step_increase} - Step increase for significance brackets (set via the Stats tab "Bracket Spacing")
-#'   \item \code{fill_mode} - Fill mode for grouped data (handled automatically)
-#'   \item \code{position_dodge_preserve} - Preserve dodge width (not implemented)
-#'   \item \code{theme} - ggplot2 theme (not applicable in plotly)
-#'   \item \code{theme_args} - Theme arguments (not applicable in plotly)
-#'   \item \code{palette} - Managed internally via the palette selection UI
-#'   \item \code{palreverse} - Reverse the color palette (not implemented)
-#'   \item \code{alpha} - Alpha transparency (not implemented in UI)
-#'   \item \code{stack} - Stack violins (not implemented)
-#'   \item \code{add_beeswarm} - Add beeswarm points (not implemented in UI)
-#'   \item \code{beeswarm_method} - Beeswarm arrangement method (not implemented)
-#'   \item \code{beeswarm_cex} - Beeswarm point size factor (not implemented)
-#'   \item \code{beeswarm_priority} - Beeswarm priority order (not implemented)
-#'   \item \code{beeswarm_dodge} - Beeswarm dodge width (not implemented)
-#'   \item \code{add_trend} - Add trend line (not implemented in UI)
-#'   \item \code{trend_color} - Trend line color (not implemented)
-#'   \item \code{trend_linewidth} - Trend line width (not implemented)
-#'   \item \code{trend_ptsize} - Trend point size (not implemented)
-#'   \item \code{add_stat} - Add statistical annotation (not implemented)
-#'   \item \code{stat_name} - Statistical test name (not implemented)
-#'   \item \code{stat_color} - Statistical annotation color (not implemented)
-#'   \item \code{stat_size} - Statistical annotation size (not implemented)
-#'   \item \code{stat_stroke} - Statistical annotation stroke (not implemented)
-#'   \item \code{stat_shape} - Statistical annotation shape (not implemented)
-#'   \item \code{add_bg} - Add background shading (not implemented)
-#'   \item \code{bg_palette} - Background palette (not implemented)
-#'   \item \code{bg_palcolor} - Background color (not implemented)
-#'   \item \code{bg_alpha} - Background transparency (not implemented)
-#'   \item \code{add_line} - Add horizontal line (not implemented in UI - use Lines tab)
-#'   \item \code{line_color} - Line color (not implemented)
-#'   \item \code{line_width} - Line width (not implemented)
-#'   \item \code{line_type} - Line type (not implemented)
-#'   \item \code{comparisons} - plotthis pairwise comparisons are not passed; equivalent pairwise
-#'     significance testing is provided via the module's Stats tab (see "Statistical annotation parameters")
-#'   \item \code{ref_group} - Reference group for comparisons (use the Stats tab instead)
-#'   \item \code{pairwise_method} - Pairwise test method (set via the Stats tab "Test" input instead)
-#'   \item \code{multiplegroup_comparisons} - Multiple-group comparison flag (use the Stats tab instead)
-#'   \item \code{multiple_method} - Multiple-group test method (set via the Stats tab "Test" input instead)
-#'   \item \code{sig_label} - Significance label format (set via the Stats tab "Display" input instead)
-#'   \item \code{sig_labelsize} - Significance label size (handled by the Stats tab)
-#'   \item \code{hide_ns} - Hide non-significant comparisons (use the Stats tab "Hide Non-Significant" input)
-#'   \item \code{seed} - Random seed (not applicable)
-#'   \item \code{combine} - Only applies if `split_by` is used
-#'   \item \code{nrow} - Only applies if `split_by` is used
-#'   \item \code{ncol} - Only applies if `split_by` is used
-#'   \item \code{byrow} - Only applies if `split_by` is used
-#'   \item \code{axes} - Only applies if `split_by` is used
-#'   \item \code{axis_titles} - Only applies if `split_by` is used
-#'   \item \code{guides} - Only applies if `split_by` is used
-#'   \item \code{legend.direction} - Managed position of legend however this can be handled via plotly
-#' }
+#'
+#' - `xlab` - X-axis label (plotly allows interactive editing)
+#' - `ylab` - Y-axis label (plotly allows interactive editing)
+#' - `title` - Plot title (plotly allows interactive editing)
+#' - `subtitle` - Plot subtitle (not supported in plotly)
+#' - `aspect.ratio` - Aspect ratio control (handled by plotly layout)
+#' - `legend.position` - Legend positioning (plotly allows interactive repositioning)
+#' - `x_sep` - Separator for x columns (not applicable in UI context)
+#' - `in_form` - Data input format (not applicable - always long form)
+#' - `split_by` - Split variable (returns a patchwork object, not supported in plotly), use `facet_by` instead
+#' - `split_by_sep` - Only applies if `split_by` is used
+#' - `symnum_args` - Significance symbol arguments (the Stats tab manages symbol display)
+#' - `keep_empty` - Keep empty values (not implemented)
+#' - `keep_na` - Keep NA values (not implemented)
+#' - `group_by_sep` - Separator for group columns (not applicable in UI context)
+#' - `group_name` - Group legend name (handled by plotly)
+#' - `paired_by` - Pairing variable for paired tests (use the Stats tab "Paired Test" input instead)
+#' - `x_text_angle` - X-axis text angle (handled by plotly axis settings)
+#' - `step_increase` - Step increase for significance brackets (set via the Stats tab "Bracket Spacing")
+#' - `fill_mode` - Fill mode for grouped data (handled automatically)
+#' - `position_dodge_preserve` - Preserve dodge width (not implemented)
+#' - `theme` - ggplot2 theme (not applicable in plotly)
+#' - `theme_args` - Theme arguments (not applicable in plotly)
+#' - `palette` - Managed internally via the palette selection UI
+#' - `palreverse` - Reverse the color palette (not implemented)
+#' - `alpha` - Alpha transparency (not implemented in UI)
+#' - `stack` - Stack violins (not implemented)
+#' - `add_beeswarm` - Add beeswarm points (not implemented in UI)
+#' - `beeswarm_method` - Beeswarm arrangement method (not implemented)
+#' - `beeswarm_cex` - Beeswarm point size factor (not implemented)
+#' - `beeswarm_priority` - Beeswarm priority order (not implemented)
+#' - `beeswarm_dodge` - Beeswarm dodge width (not implemented)
+#' - `add_trend` - Add trend line (not implemented in UI)
+#' - `trend_color` - Trend line color (not implemented)
+#' - `trend_linewidth` - Trend line width (not implemented)
+#' - `trend_ptsize` - Trend point size (not implemented)
+#' - `add_stat` - Add statistical annotation (not implemented)
+#' - `stat_name` - Statistical test name (not implemented)
+#' - `stat_color` - Statistical annotation color (not implemented)
+#' - `stat_size` - Statistical annotation size (not implemented)
+#' - `stat_stroke` - Statistical annotation stroke (not implemented)
+#' - `stat_shape` - Statistical annotation shape (not implemented)
+#' - `add_bg` - Add background shading (not implemented)
+#' - `bg_palette` - Background palette (not implemented)
+#' - `bg_palcolor` - Background color (not implemented)
+#' - `bg_alpha` - Background transparency (not implemented)
+#' - `add_line` - Add horizontal line (not implemented in UI - use Lines tab)
+#' - `line_color` - Line color (not implemented)
+#' - `line_width` - Line width (not implemented)
+#' - `line_type` - Line type (not implemented)
+#' - `comparisons` - plotthis pairwise comparisons are not passed; equivalent pairwise
+#'   significance testing is provided via the module's Stats tab (see "Statistical annotation parameters")
+#' - `ref_group` - Reference group for comparisons (use the Stats tab instead)
+#' - `pairwise_method` - Pairwise test method (set via the Stats tab "Test" input instead)
+#' - `multiplegroup_comparisons` - Multiple-group comparison flag (use the Stats tab instead)
+#' - `multiple_method` - Multiple-group test method (set via the Stats tab "Test" input instead)
+#' - `sig_label` - Significance label format (set via the Stats tab "Display" input instead)
+#' - `sig_labelsize` - Significance label size (handled by the Stats tab)
+#' - `hide_ns` - Hide non-significant comparisons (use the Stats tab "Hide Non-Significant" input)
+#' - `seed` - Random seed (not applicable)
+#' - `combine` - Only applies if `split_by` is used
+#' - `nrow` - Only applies if `split_by` is used
+#' - `ncol` - Only applies if `split_by` is used
+#' - `byrow` - Only applies if `split_by` is used
+#' - `axes` - Only applies if `split_by` is used
+#' - `axis_titles` - Only applies if `split_by` is used
+#' - `guides` - Only applies if `split_by` is used
+#' - `legend.direction` - Managed position of legend however this can be handled via plotly
 #'
 #' @section Plot parameters and defaults:
-#' The following [plotthis::ViolinPlot()] parameters can be accessed via UI inputs and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{x} - X-axis variable (UI: "X Data", default: 2nd categorical variable)
-#'   \item \code{y} - Y-axis variable (UI: "Y Data", default: 2nd numeric variable)
-#'   \item \code{group_by} - Grouping variable (UI: "Group By", default: "")
-#'   \item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-#'   \item \code{sort_x} - Sort X-axis by statistic (UI: "Sort X By", default: "none")
-#'   \item \code{y_max} - Maximum Y-axis value (UI: "Y Max", default: calculated)
-#'   \item \code{y_min} - Minimum Y-axis value (UI: "Y Min", default: calculated)
-#'   \item \code{add_point} - Add jitter points (UI: "Add Jitter Points", default: FALSE)
-#'   \item \code{pt_size} - Point size (UI: "Point Size", default: 1)
-#'   \item \code{pt_alpha} - Point transparency (UI: "Point Alpha", default: 1)
-#'   \item \code{jitter_width} - Jitter width (UI: "Jitter Width", default: 0.5)
-#'   \item \code{jitter_height} - Jitter height (UI: "Jitter Height", default: 0)
-#'   \item \code{pt_color} - Point outline color (UI: "Point Outline Colour", default: "#000000")
-#'   \item \code{add_box} - Add box plot overlay (UI: "Add Box", default: FALSE)
-#'   \item \code{box_color} - Box outline color (UI: "Box Colour", default: "#000000")
-#'   \item \code{box_width} - Box width (UI: "Box Width", default: 0.1)
-#'   \item \code{box_ptsize} - Box point size (UI: "Box Point Size", default: 2.5)
-#'   \item \code{highlight} - Highlight condition (UI: "Highlight", default: "")
-#'   \item \code{highlight_color} - Highlight color (UI: "Highlight Colour", default: "#000000")
-#'   \item \code{highlight_size} - Highlight size (UI: "Highlight Size", default: 1)
-#'   \item \code{highlight_alpha} - Highlight transparency (UI: "Highlight Alpha", default: 1)
-#'   \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
-#'   \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
-#'   \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
-#'   \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
-#'   \item \code{facet_byrow} - Facet ordering direction (UI: "Facet By Row", default: TRUE)
-#'   \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
-#' }
+#' The following [plotthis::ViolinPlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
+#'
+#' - `x` - X-axis variable (UI: "X Data", default: 2nd categorical variable)
+#' - `y` - Y-axis variable (UI: "Y Data", default: 2nd numeric variable)
+#' - `group_by` - Grouping variable (UI: "Group By", default: "")
+#' - `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
+#' - `sort_x` - Sort X-axis by statistic (UI: "Sort X By", default: "none")
+#' - `y_max` - Maximum Y-axis value (UI: "Y Max", default: calculated)
+#' - `y_min` - Minimum Y-axis value (UI: "Y Min", default: calculated)
+#' - `add_point` - Add jitter points (UI: "Add Jitter Points", default: FALSE)
+#' - `pt_size` - Point size (UI: "Point Size", default: 1)
+#' - `pt_alpha` - Point transparency (UI: "Point Alpha", default: 1)
+#' - `jitter_width` - Jitter width (UI: "Jitter Width", default: 0.5)
+#' - `jitter_height` - Jitter height (UI: "Jitter Height", default: 0)
+#' - `pt_color` - Point outline color (UI: "Point Outline Colour", default: "#000000")
+#' - `add_box` - Add box plot overlay (UI: "Add Box", default: FALSE)
+#' - `box_color` - Box outline color (UI: "Box Colour", default: "#000000")
+#' - `box_width` - Box width (UI: "Box Width", default: 0.1)
+#' - `box_ptsize` - Box point size (UI: "Box Point Size", default: 2.5)
+#' - `highlight` - Highlight condition (UI: "Highlight", default: "")
+#' - `highlight_color` - Highlight color (UI: "Highlight Colour", default: "#000000")
+#' - `highlight_size` - Highlight size (UI: "Highlight Size", default: 1)
+#' - `highlight_alpha` - Highlight transparency (UI: "Highlight Alpha", default: 1)
+#' - `facet_by` - Faceting variable (UI: "Facet By", default: "")
+#' - `facet_scales` - Facet scale behavior (UI: "Facet Scale", default: "fixed")
+#' - `facet_ncol` - Number of facet columns (UI: "Columns", default: NULL)
+#' - `facet_nrow` - Number of facet rows (UI: "Rows", default: NULL)
+#' - `facet_byrow` - Facet ordering direction (UI: "Facet By Row", default: TRUE)
+#' - `palcolor` - Custom color values (UI: palette picker, derived from palette)
 #'
 #' @section Statistical annotation parameters:
 #' The module provides plotly-based significance testing via the Stats tab. The following inputs are available:
-#' \itemize{
-#'   \item \code{stats.enabled} - Enable statistical annotations (UI: "Enable Stats", default: FALSE)
-#'   \item \code{stat.test} - Test to apply: Wilcoxon, t-test, Kruskal-Wallis, or ANOVA (UI: "Test")
-#'   \item \code{stat.p.adjust} - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
-#'   \item \code{stat.display} - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
-#'   \item \code{stat.sig.threshold} - Significance threshold for symbols/hiding (UI: "Significance Threshold")
-#'   \item \code{stat.hide.ns} - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
-#'   \item \code{stat.paired} - Use a paired test (UI: "Paired Test", default: FALSE)
-#'   \item \code{stat.pairs} - Group comparisons to test (UI: "Comparisons", multiple selection)
-#'   \item \code{stat.line.color} - Bracket line color (UI: "Line Color", default: "#000000")
-#'   \item \code{stat.line.width} - Bracket line width (UI: "Line Width")
-#'   \item \code{stat.bracket.style} - Bracket style, capped or flat (UI: "Bracket Style")
-#'   \item \code{stat.step.increase} - Vertical spacing between stacked brackets (UI: "Bracket Spacing")
-#'   \item \code{stat.text.bump} - Offset of the significance text above the bracket (UI: "Text Offset")
-#'   \item \code{stat.bracket.inset} - Horizontal inset of the brackets (UI: "Bracket Inset")
-#'   \item \code{stat.per.facet} - Compute statistics independently per facet panel (UI: "Per Facet Panel")
-#' }
+#'
+#' - `stats.enabled` - Enable statistical annotations (UI: "Enable Stats", default: FALSE)
+#' - `stat.test` - Test to apply: Wilcoxon, t-test, Kruskal-Wallis, or ANOVA (UI: "Test")
+#' - `stat.p.adjust` - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
+#' - `stat.display` - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
+#' - `stat.sig.threshold` - Significance threshold for symbols/hiding (UI: "Significance Threshold")
+#' - `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
+#' - `stat.paired` - Use a paired test (UI: "Paired Test", default: FALSE)
+#' - `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple selection)
+#' - `stat.line.color` - Bracket line color (UI: "Line Color", default: "#000000")
+#' - `stat.line.width` - Bracket line width (UI: "Line Width")
+#' - `stat.bracket.style` - Bracket style, capped or flat (UI: "Bracket Style")
+#' - `stat.step.increase` - Vertical spacing between stacked brackets (UI: "Bracket Spacing")
+#' - `stat.text.bump` - Offset of the significance text above the bracket (UI: "Text Offset")
+#' - `stat.bracket.inset` - Horizontal inset of the brackets (UI: "Bracket Inset")
+#' - `stat.per.facet` - Compute statistics independently per facet panel (UI: "Per Facet Panel")
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
-#' \itemize{
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{axis.title.font.size} - Axis title font size (UI: "Axis Title Size", default: 18)
-#'   \item \code{axis.title.font.color} - Axis title font color (UI: "Axis Title Color", default: "#000000")
-#'   \item \code{axis.title.font.family} - Axis title font family (UI: "Axis Title Font", default: "Arial")
-#'   \item \code{axis.showline} - Show axis border lines (UI: "Show axis lines", default: TRUE)
-#'   \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
-#'   \item \code{show.grid.x} - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
-#'   \item \code{show.grid.y} - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
-#'   \item \code{axis.linecolor} - Color of axis lines (UI: "Axis line color", default: "black")
-#'   \item \code{axis.linewidth} - Width of axis lines (UI: "Axis line width", default: 0.5)
-#'   \item \code{axis.tickfont.size} - Size of tick labels (UI: "Tick label size", default: 12)
-#'   \item \code{axis.tickfont.color} - Color of tick labels (UI: "Tick label color", default: "black")
-#'   \item \code{axis.tickfont.family} - Font family for tick labels (UI: "Tick label font", default: "Arial")
-#'   \item \code{axis.tickangle.x} - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
-#'   \item \code{axis.tickangle.y} - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
-#'   \item \code{axis.ticks} - Position of tick marks (UI: "Tick position", default: "outside")
-#'   \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
-#'   \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
-#'   \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
-#'   \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
-#'   \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
-#'   \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
-#'   \item \code{hline.linetypes} - Line types for horizontal lines (UI: "Line types", default: "dashed")
-#'   \item \code{hline.opacities} - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{vline.intercepts} - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
-#'   \item \code{vline.colors} - Colors for vertical lines (UI: "Colors", default: "#000000")
-#'   \item \code{vline.widths} - Widths for vertical lines (UI: "Widths", default: "1")
-#'   \item \code{vline.linetypes} - Line types for vertical lines (UI: "Line types", default: "dashed")
-#'   \item \code{vline.opacities} - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
-#'   \item \code{abline.slopes} - Slopes for diagonal reference lines (UI: "Slopes", default: "")
-#'   \item \code{abline.intercepts} - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
-#'   \item \code{abline.colors} - Colors for diagonal lines (UI: "Colors", default: "#000000")
-#'   \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
-#'   \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
-#'   \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
-#' }
+#'
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `axis.title.font.size` - Axis title font size (UI: "Axis Title Size", default: 18)
+#' - `axis.title.font.color` - Axis title font color (UI: "Axis Title Color", default: "#000000")
+#' - `axis.title.font.family` - Axis title font family (UI: "Axis Title Font", default: "Arial")
+#' - `axis.showline` - Show axis border lines (UI: "Show axis lines", default: TRUE)
+#' - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror axis lines", default: TRUE)
+#' - `show.grid.x` - Show X-axis major gridlines (UI: "Show X major gridlines", default: TRUE)
+#' - `show.grid.y` - Show Y-axis major gridlines (UI: "Show Y major gridlines", default: TRUE)
+#' - `axis.linecolor` - Color of axis lines (UI: "Axis line color", default: "black")
+#' - `axis.linewidth` - Width of axis lines (UI: "Axis line width", default: 0.5)
+#' - `axis.tickfont.size` - Size of tick labels (UI: "Tick label size", default: 12)
+#' - `axis.tickfont.color` - Color of tick labels (UI: "Tick label color", default: "black")
+#' - `axis.tickfont.family` - Font family for tick labels (UI: "Tick label font", default: "Arial")
+#' - `axis.tickangle.x` - Rotation angle for X-axis tick labels (UI: "X-axis tick label angle", default: 0)
+#' - `axis.tickangle.y` - Rotation angle for Y-axis tick labels (UI: "Y-axis tick label angle", default: 0)
+#' - `axis.ticks` - Position of tick marks (UI: "Tick position", default: "outside")
+#' - `axis.tickcolor` - Color of tick marks (UI: "Tick mark color", default: "black")
+#' - `axis.ticklen` - Length of tick marks (UI: "Tick mark length", default: 5)
+#' - `axis.tickwidth` - Width of tick marks (UI: "Tick mark width", default: 1)
+#' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
+#' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
+#' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
+#' - `hline.linetypes` - Line types for horizontal lines (UI: "Line types", default: "dashed")
+#' - `hline.opacities` - Opacities for horizontal lines (UI: "Opacities (0-1)", default: "1")
+#' - `vline.intercepts` - X-coordinates for vertical reference lines (UI: "X-intercepts", default: "")
+#' - `vline.colors` - Colors for vertical lines (UI: "Colors", default: "#000000")
+#' - `vline.widths` - Widths for vertical lines (UI: "Widths", default: "1")
+#' - `vline.linetypes` - Line types for vertical lines (UI: "Line types", default: "dashed")
+#' - `vline.opacities` - Opacities for vertical lines (UI: "Opacities (0-1)", default: "1")
+#' - `abline.slopes` - Slopes for diagonal reference lines (UI: "Slopes", default: "")
+#' - `abline.intercepts` - Y-intercepts for diagonal lines (UI: "Y-intercepts", default: "")
+#' - `abline.colors` - Colors for diagonal lines (UI: "Colors", default: "#000000")
+#' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
+#' - `abline.linetypes` - Line types for diagonal lines (UI: "Line types", default: "dashed")
+#' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -236,7 +232,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             tipify(
                 selectInput(ns("x.data"), "X Data",
                     choices = char.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "x.data", char.choices[2],
                         function(x) x %in% char.choices
                     ), selectize = FALSE
@@ -247,7 +243,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             tipify(
                 selectInput(ns("y.data"), "Y Data",
                     choices = num.choices,
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices
                     ), selectize = FALSE
@@ -257,7 +253,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             ),
             tipify(
                 selectInput(ns("group.by"), "Group By",
-                    selected = .get_default(
+                    selected = get_default(
                         defaults, "group.by", "",
                         function(x) x %in% c("", char.choices)
                     ),
@@ -270,99 +266,99 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         ),
         "Adjustments" = tagList(
             tipify(textInput(ns("sort_x"), "Sort X By",
-                value = .get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
+                value = get_default(defaults, "sort_x", ""), placeholder = "mean(y) or mean(-y)"), documentParameters$sort_x, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("y.max"), "Y Max",
-                value = .get_default(defaults, "y.max", max.y, is.numeric)),
+                value = get_default(defaults, "y.max", max.y, is.numeric)),
                 documentParameters$y_max,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("y.min"), "Y Min",
-                value = .get_default(defaults, "y.min", min.y, is.numeric)),
+                value = get_default(defaults, "y.min", min.y, is.numeric)),
                 documentParameters$y_min,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("add.points"), "Add Jitter",
-                value = .get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
+                value = get_default(defaults, "add.points", FALSE, is.logical), status = "success"),
                 documentParameters$add_point,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.size"), "Point Size", max = 100, min = 0.1,
-                value = .get_default(defaults, "pt.size", 1, is.numeric)),
+                value = get_default(defaults, "pt.size", 1, is.numeric)),
                 documentParameters$pt_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("pt.alpha"), "Point Alpha", min = 0, max = 1,
-                value = .get_default(defaults, "pt.alpha", 1, is.numeric)),
+                value = get_default(defaults, "pt.alpha", 1, is.numeric)),
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
-                value = .get_default(defaults, "jitter.width", 0.5, is.numeric)),
+                value = get_default(defaults, "jitter.width", 0.5, is.numeric)),
                 documentParameters$jitter_width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("jitter.height"), "Jitter Height", min = 0, max = 1,
-                value = .get_default(defaults, "jitter.height", 0, is.numeric)),
+                value = get_default(defaults, "jitter.height", 0, is.numeric)),
                 documentParameters$jitter_height,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("pt.color"), "Point Outline Colour",
-                value = .get_default(defaults, "pt.color", "#000000")),
+                value = get_default(defaults, "pt.color", "#000000")),
                 documentParameters$pt_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("add.box"), "Add Box",
-                value = .get_default(defaults, "add.box", FALSE, is.logical), status = "success"),
+                value = get_default(defaults, "add.box", FALSE, is.logical), status = "success"),
                 documentParameters$add_box,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("box.color"), "Box Colour",
-                value = .get_default(defaults, "box.color", "#000000")),
+                value = get_default(defaults, "box.color", "#000000")),
                 documentParameters$box_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("box.width"), "Box Width", min = 0, max = 1,
-                value = .get_default(defaults, "box.width", 0.1, is.numeric)),
+                value = get_default(defaults, "box.width", 0.1, is.numeric)),
                 documentParameters$box_width,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("box.ptsize"), "Box Point Size", min = 0, max = 10,
-                value = .get_default(defaults, "box.ptsize", 2.5, is.numeric)),
+                value = get_default(defaults, "box.ptsize", 2.5, is.numeric)),
                 documentParameters$box_ptsize,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Highlight" = tagList(
             tipify(textInput(ns("highlight"), "Highlight",
-                value = .get_default(defaults, "highlight", ""), placeholder = "E.g. y > 0"),
+                value = get_default(defaults, "highlight", ""), placeholder = "E.g. y > 0"),
                 documentParameters$highlight,
                 placement = "top", options = list(container = "body")
             ),
             tipify(colourInput(ns("highlight.colour"), "Highlight Colour",
-                value = .get_default(defaults, "highlight.colour", "#000000")),
+                value = get_default(defaults, "highlight.colour", "#000000")),
                 documentParameters$highlight_color,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.size"), "Highlight Size",
-                value = .get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
+                value = get_default(defaults, "highlight.size", 1, is.numeric), min = 0),
                 documentParameters$highlight_size,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("highlight.alpha"), "Highlight Alpha",
-                value = .get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
+                value = get_default(defaults, "highlight.alpha", 1, is.numeric), min = 0, max = 1),
                 documentParameters$highlight_alpha,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c(char.choices, ""), selectize = FALSE),
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
+                choices = c("", .facet_check(data)), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(selectInput(ns("facet.scale"), "Facet Scale",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
@@ -371,27 +367,27 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.ncol"), "Columns",
-                value = .get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0),
                 documentParameters$facet_ncol,
                 placement = "top", options = list(container = "body")
             ),
             tipify(numericInput(ns("facet.nrow"), "Rows",
-                value = .get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
+                value = get_default(defaults, "facet.nrow", NULL, is.numeric), min = 0),
                 documentParameters$facet_nrow,
                 placement = "top", options = list(container = "body")
             ),
             tipify(materialSwitch(ns("facet.by.row"), "Facet By Row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Stats" = .uniform_stats_inputs_ui(ns, defaults),
-        "Legend" = .uniform_legend_inputs_ui(ns, defaults),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = .uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
-        "Lines" = .uniform_lines_inputs_ui(ns, defaults)
+        "Legend" = uniform_legend_inputs_ui(ns, defaults),
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+        "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 
     organize_inputs(
@@ -409,9 +405,9 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the ViolinPlot

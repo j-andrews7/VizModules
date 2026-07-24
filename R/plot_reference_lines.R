@@ -11,9 +11,11 @@
 #'   If all values are NA or the input is empty, returns NULL.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_parse_numeric_list
-.parse_numeric_list <- function(text) {
+#' @export
+#' @examples
+#' parse_numeric_list("1, 5, 8")
+#' parse_numeric_list("")
+parse_numeric_list <- function(text) {
     if (is.null(text) || !nzchar(trimws(text))) {
         return(NULL)
     }
@@ -39,9 +41,11 @@
 #' @return A vector of length n with recycled values.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_recycle_line_style
-.recycle_line_style <- function(values, n, default) {
+#' @export
+#' @examples
+#' recycle_line_style(c("red", "blue"), 2, "black")
+#' recycle_line_style(NULL, 3, "black")
+recycle_line_style <- function(values, n, default) {
     if (is.null(values) || length(values) == 0) {
         return(rep(default, n))
     }
@@ -61,9 +65,11 @@
 #' @return Character. Plotly-compatible dash specification.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_linetype_to_dash
-.linetype_to_dash <- function(linetype) {
+#' @export
+#' @examples
+#' linetype_to_dash("dashed")
+#' linetype_to_dash("dotted")
+linetype_to_dash <- function(linetype) {
     switch(tolower(linetype),
         "solid" = "solid",
         "dashed" = "dash",
@@ -94,18 +100,20 @@
 #'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_add_hlines
-.add_hlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' add_hlines(fig, intercepts = c(20, 30), colors = c("red", "blue"))
+add_hlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
     if (is.null(intercepts) || length(intercepts) == 0) {
         return(list())
     }
 
     n <- length(intercepts)
-    colors <- .recycle_line_style(colors, n, "#000000")
-    widths <- .recycle_line_style(widths, n, 1)
-    linetypes <- .recycle_line_style(linetypes, n, "solid")
-    opacities <- .recycle_line_style(opacities, n, 1)
+    colors <- recycle_line_style(colors, n, "#000000")
+    widths <- recycle_line_style(widths, n, 1)
+    linetypes <- recycle_line_style(linetypes, n, "solid")
+    opacities <- recycle_line_style(opacities, n, 1)
 
     # Extract unique axis pairs from traces
     # Each trace has xaxis (e.g., "x", "x2") and yaxis (e.g., "y", "y2") attributes
@@ -134,7 +142,7 @@
                 line = list(
                     color = colors[i],
                     width = widths[i],
-                    dash = .linetype_to_dash(linetypes[i])
+                    dash = linetype_to_dash(linetypes[i])
                 ),
                 opacity = opacities[i]
             )))
@@ -164,18 +172,20 @@
 #'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_add_vlines
-.add_vlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' add_vlines(fig, intercepts = c(3, 4), colors = c("red", "blue"))
+add_vlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
     if (is.null(intercepts) || length(intercepts) == 0) {
         return(list())
     }
 
     n <- length(intercepts)
-    colors <- .recycle_line_style(colors, n, "#000000")
-    widths <- .recycle_line_style(widths, n, 1)
-    linetypes <- .recycle_line_style(linetypes, n, "solid")
-    opacities <- .recycle_line_style(opacities, n, 1)
+    colors <- recycle_line_style(colors, n, "#000000")
+    widths <- recycle_line_style(widths, n, 1)
+    linetypes <- recycle_line_style(linetypes, n, "solid")
+    opacities <- recycle_line_style(opacities, n, 1)
 
     # Extract unique axis pairs from traces
     axis_pairs <- unique(lapply(fig$x$data, function(tr) {
@@ -203,7 +213,7 @@
                 line = list(
                     color = colors[i],
                     width = widths[i],
-                    dash = .linetype_to_dash(linetypes[i])
+                    dash = linetype_to_dash(linetypes[i])
                 ),
                 opacity = opacities[i]
             )))
@@ -234,9 +244,11 @@
 #'   (e.g., from faceting), lines are replicated across all panels with correct axis references.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_add_ablines
-.add_ablines <- function(fig, slopes, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' add_ablines(fig, slopes = 1, intercepts = 0, colors = "red")
+add_ablines <- function(fig, slopes, intercepts, colors = "#000000", widths = 1, linetypes = "solid", opacities = 1) {
     if (is.null(slopes) || length(slopes) == 0 || is.null(intercepts) || length(intercepts) == 0) {
         return(list())
     }
@@ -250,10 +262,10 @@
         intercepts <- rep(intercepts[1], n)
     }
 
-    colors <- .recycle_line_style(colors, n, "#000000")
-    widths <- .recycle_line_style(widths, n, 1)
-    linetypes <- .recycle_line_style(linetypes, n, "solid")
-    opacities <- .recycle_line_style(opacities, n, 1)
+    colors <- recycle_line_style(colors, n, "#000000")
+    widths <- recycle_line_style(widths, n, 1)
+    linetypes <- recycle_line_style(linetypes, n, "solid")
+    opacities <- recycle_line_style(opacities, n, 1)
 
     # Extract unique axis pairs from traces
     axis_pairs <- unique(lapply(fig$x$data, function(tr) {
@@ -309,7 +321,7 @@
                 line = list(
                     color = colors[i],
                     width = widths[i],
-                    dash = .linetype_to_dash(linetypes[i])
+                    dash = linetype_to_dash(linetypes[i])
                 ),
                 opacity = opacities[i]
             )))
@@ -345,9 +357,14 @@
 #' @return The modified plotly figure with all specified lines added.
 #'
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_add_reference_lines
-.add_reference_lines <- function(fig,
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' add_reference_lines(fig,
+#'     hline.intercepts = "20, 30", hline.colors = "red, blue",
+#'     vline.intercepts = "3", abline.slopes = "5", abline.intercepts = "0"
+#' )
+add_reference_lines <- function(fig,
                                  hline.intercepts = NULL, hline.colors = NULL, hline.widths = NULL,
                                  hline.linetypes = NULL, hline.opacities = NULL,
                                  vline.intercepts = NULL, vline.colors = NULL, vline.widths = NULL,
@@ -364,54 +381,54 @@
     }
 
     # Parse and add horizontal line shapes
-    h_intercepts <- .parse_numeric_list(hline.intercepts)
+    h_intercepts <- parse_numeric_list(hline.intercepts)
     if (!is.null(h_intercepts)) {
         h_colors <- if (!is.null(hline.colors) && nzchar(hline.colors)) {
             trimws(unlist(strsplit(hline.colors, ",")))
         } else {
             "#000000"
         }
-        h_widths <- .parse_numeric_list(hline.widths)
+        h_widths <- parse_numeric_list(hline.widths)
         if (is.null(h_widths)) h_widths <- 1
-        h_linetypes <- .string_to_linetypes(hline.linetypes)
-        h_opacities <- .parse_numeric_list(hline.opacities)
+        h_linetypes <- string_to_linetypes(hline.linetypes)
+        h_opacities <- parse_numeric_list(hline.opacities)
         if (is.null(h_opacities)) h_opacities <- 1
-        h_shapes <- .add_hlines(fig, h_intercepts, h_colors, h_widths, h_linetypes, h_opacities)
+        h_shapes <- add_hlines(fig, h_intercepts, h_colors, h_widths, h_linetypes, h_opacities)
         all_shapes <- c(all_shapes, h_shapes)
     }
 
     # Parse and add vertical line shapes
-    v_intercepts <- .parse_numeric_list(vline.intercepts)
+    v_intercepts <- parse_numeric_list(vline.intercepts)
     if (!is.null(v_intercepts)) {
         v_colors <- if (!is.null(vline.colors) && nzchar(vline.colors)) {
             trimws(unlist(strsplit(vline.colors, ",")))
         } else {
             "#000000"
         }
-        v_widths <- .parse_numeric_list(vline.widths)
+        v_widths <- parse_numeric_list(vline.widths)
         if (is.null(v_widths)) v_widths <- 1
-        v_linetypes <- .string_to_linetypes(vline.linetypes)
-        v_opacities <- .parse_numeric_list(vline.opacities)
+        v_linetypes <- string_to_linetypes(vline.linetypes)
+        v_opacities <- parse_numeric_list(vline.opacities)
         if (is.null(v_opacities)) v_opacities <- 1
-        v_shapes <- .add_vlines(fig, v_intercepts, v_colors, v_widths, v_linetypes, v_opacities)
+        v_shapes <- add_vlines(fig, v_intercepts, v_colors, v_widths, v_linetypes, v_opacities)
         all_shapes <- c(all_shapes, v_shapes)
     }
 
     # Parse and add diagonal line shapes
-    ab_slopes <- .parse_numeric_list(abline.slopes)
-    ab_intercepts <- .parse_numeric_list(abline.intercepts)
+    ab_slopes <- parse_numeric_list(abline.slopes)
+    ab_intercepts <- parse_numeric_list(abline.intercepts)
     if (!is.null(ab_slopes) && !is.null(ab_intercepts)) {
         ab_colors <- if (!is.null(abline.colors) && nzchar(abline.colors)) {
             trimws(unlist(strsplit(abline.colors, ",")))
         } else {
             "#000000"
         }
-        ab_widths <- .parse_numeric_list(abline.widths)
+        ab_widths <- parse_numeric_list(abline.widths)
         if (is.null(ab_widths)) ab_widths <- 1
-        ab_linetypes <- .string_to_linetypes(abline.linetypes)
-        ab_opacities <- .parse_numeric_list(abline.opacities)
+        ab_linetypes <- string_to_linetypes(abline.linetypes)
+        ab_opacities <- parse_numeric_list(abline.opacities)
         if (is.null(ab_opacities)) ab_opacities <- 1
-        ab_shapes <- .add_ablines(fig, ab_slopes, ab_intercepts, ab_colors, ab_widths, ab_linetypes, ab_opacities)
+        ab_shapes <- add_ablines(fig, ab_slopes, ab_intercepts, ab_colors, ab_widths, ab_linetypes, ab_opacities)
         all_shapes <- c(all_shapes, ab_shapes)
     }
 
@@ -427,7 +444,7 @@
 #' Apply Plotly newshape styling from uniform Plotly inputs
 #'
 #' Applies user-drawn shape styling to a Plotly figure using inputs from
-#' [.uniform_plotly_inputs_ui()]. Updates the `newshape` layout property to
+#' [uniform_plotly_inputs_ui()]. Updates the `newshape` layout property to
 #' style shapes drawn with Plotly's drawing tools (rectangles, circles, lines,
 #' etc.) in the modebar.
 #'
@@ -443,9 +460,15 @@
 #' @importFrom plotly layout
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_apply_plotly_newshape
-#' @keywords internal
-.apply_plotly_newshape <- function(fig, input, isolate_fn = isolate) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' shape_input <- list(
+#'     shape.fill = "#ff000030", shape.line.color = "#ff0000",
+#'     shape.line.width = 2, shape.linetype = "solid", shape.opacity = 0.5
+#' )
+#' apply_plotly_newshape(fig, shape_input, isolate_fn = identity)
+apply_plotly_newshape <- function(fig, input, isolate_fn = isolate) {
     fig |> plotly::layout(
         newshape = list(
             fillcolor = isolate_fn(input$shape.fill),
@@ -458,5 +481,3 @@
         )
     )
 }
-
-

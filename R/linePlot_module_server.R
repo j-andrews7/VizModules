@@ -17,7 +17,7 @@
 #' @import plotly
 #' @importFrom stats na.omit
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide delay
 #'
 #' @seealso [VizModules::linePlot()], [VizModules::linePlotInputsUI()],
 #' [VizModules::linePlotOutputUI()], [VizModules::linePlotApp()]
@@ -37,26 +37,30 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
     moduleServer(id, function(input, output, session) {
         # Hide individual inputs if specified
 
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("line")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         observeEvent(input$x.value, {
             req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                hide("error.bar.width")
-                hide("error.bar.colour")
-                hide("error.bar")
+                .hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
             } else {
-                show("error.bar")
-                show("error.bar.width")
-                show("error.bar.colour")
+                .show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
             }
         })
 
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         default_palette_name <- "dittoColors"
@@ -126,60 +130,58 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
+                selected = get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
-            updateSelectInput(session, "plot.mode", selected = .get_default(defaults, "plot.mode", "lines"))
-            updateSelectInput(session, "line.type", selected = .get_default(defaults, "line.type", "solid"))
+                selected = get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
+            updateSelectInput(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
+            updateSelectInput(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",
-                value = .get_default(defaults, "order.by", FALSE, is.logical))
+                value = get_default(defaults, "order.by", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.x",
-                value = .get_default(defaults, "flip.x", FALSE, is.logical))
+                value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
-                value = .get_default(defaults, "flip.y", FALSE, is.logical))
+                value = get_default(defaults, "flip.y", FALSE, is.logical))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             updateSelectInput(session, "facet.scales",
-                selected = .get_default(defaults, "facet.scales", "fixed"))
+                selected = get_default(defaults, "facet.scales", "fixed"))
             updateNumericInput(session, "facet.nrow",
-                value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+                value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateNumericInput(session, "facet.ncol",
-                value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = .get_default(defaults, "y.adjustment", ""))
+                value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
-                value = .get_default(defaults, "error.bar", TRUE, is.logical))
+                value = get_default(defaults, "error.bar", TRUE, is.logical))
             updateNumericInput(session, "error.bar.width",
-                value = .get_default(defaults, "error.bar.width", 1, is.numeric))
+                value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
-                value = .get_default(defaults, "error.bar.colour", "#000000"))
+                value = get_default(defaults, "error.bar.colour", "#000000"))
 
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
-                show("facet.nrow")
-                show("facet.ncol")
+                .show_input(session, c(
+                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
+                    "facet.nrow", "facet.ncol"
+                ))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
-                hide("facet.nrow")
-                hide("facet.ncol")
+                .hide_input(session, c(
+                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
+                    "facet.nrow", "facet.ncol"
+                ))
             }
         })
 
@@ -267,15 +269,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Reflect any applied data adjustment in the axis titles so they accurately
             # describe the values displayed (e.g. "log2(units)"), matching other modules.
-            x_title <- .adjusted_axis_label(x_title, NULL, x.adjustment)
-            y_title <- .adjusted_axis_label(y_title, NULL, y.adjustment)
+            x_title <- adjusted_axis_label(x_title, NULL, x.adjustment)
+            y_title <- adjusted_axis_label(y_title, NULL, y.adjustment)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            facet.nrow.val <- .clean_facet_dim(isolate_fn(input$facet.nrow))
-            facet.ncol.val <- .clean_facet_dim(isolate_fn(input$facet.ncol))
+            facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
+            facet.ncol.val <- clean_facet_dim(isolate_fn(input$facet.ncol))
 
             fig <- linePlot(
                 data = d,
@@ -323,10 +325,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             )
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -345,19 +347,19 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -401,8 +403,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_linePlot(), input)
+                fig <- apply_render_margins(generate_linePlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

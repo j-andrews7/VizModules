@@ -2,141 +2,134 @@ url: https://j-andrews7.github.io/VizModules/
 template:
   bootstrap: 5
   light-switch: true
+development:
+  mode: auto
 
 reference:
   - title: "ScatterPlot Module"
     desc: "dittoViz-based interactive scatter plot module."
     contents:
-      - dittoViz_scatterPlotServer
+      - dittoViz_scatterPlotApp
       - dittoViz_scatterPlotInputsUI
       - dittoViz_scatterPlotOutputUI
-      - dittoViz_scatterPlotApp
+      - dittoViz_scatterPlotServer
 
   - title: "yPlot Module"
     desc: "dittoViz-based Y-axis plot module (box, violin, ridgeplot, etc.)."
     contents:
-      - dittoViz_yPlotServer
+      - dittoViz_yPlotApp
       - dittoViz_yPlotInputsUI
       - dittoViz_yPlotOutputUI
-      - dittoViz_yPlotApp
+      - dittoViz_yPlotServer
 
   - title: "linePlot Module"
     desc: "Interactive line plot module."
     contents:
       - linePlot
-      - linePlotServer
+      - linePlotApp
       - linePlotInputsUI
       - linePlotOutputUI
-      - linePlotApp
+      - linePlotServer
 
   - title: "dumbbellPlot Module"
     desc: "Interactive dumbbell plot module."
     contents:
       - dumbbellPlot
-      - dumbbellPlotServer
+      - dumbbellPlotApp
       - dumbbellPlotInputsUI
       - dumbbellPlotOutputUI
-      - dumbbellPlotApp
+      - dumbbellPlotServer
 
   - title: "piePlot Module"
     desc: "Interactive pie/donut chart module."
     contents:
       - piePlot
-      - piePlotServer
+      - piePlotApp
       - piePlotInputsUI
       - piePlotOutputUI
-      - piePlotApp
+      - piePlotServer
 
   - title: "radarPlot Module"
     desc: "Interactive radar/spider chart module."
     contents:
       - radarPlot
-      - radarPlotServer
+      - radarPlotApp
       - radarPlotInputsUI
       - radarPlotOutputUI
-      - radarPlotApp
-
-  - title: "ternaryPlot Module"
-    desc: "Interactive ternary plot module."
-    contents:
-      - ternaryPlot
-      - ternaryPlotServer
-      - ternaryPlotInputsUI
-      - ternaryPlotOutputUI
-      - ternaryPlotApp
+      - radarPlotServer
 
   - title: "parallelCoordinatesPlot Module"
     desc: "Interactive parallel coordinates plot module."
     contents:
       - parallelCoordinatesPlot
-      - parallelCoordinatesPlotServer
+      - parallelCoordinatesPlotApp
       - parallelCoordinatesPlotInputsUI
       - parallelCoordinatesPlotOutputUI
-      - parallelCoordinatesPlotApp
+      - parallelCoordinatesPlotServer
 
   - title: "AreaPlot Module"
     desc: "plotthis-based interactive area plot module."
     contents:
-      - plotthis_AreaPlotServer
+      - plotthis_AreaPlotApp
       - plotthis_AreaPlotInputsUI
       - plotthis_AreaPlotOutputUI
-      - plotthis_AreaPlotApp
+      - plotthis_AreaPlotServer
 
   - title: "BarPlot Module"
     desc: "plotthis-based interactive bar plot module."
     contents:
-      - plotthis_BarPlotServer
+      - plotthis_BarPlotApp
       - plotthis_BarPlotInputsUI
       - plotthis_BarPlotOutputUI
-      - plotthis_BarPlotApp
+      - plotthis_BarPlotServer
 
   - title: "SplitBarPlot Module"
     desc: "plotthis-based interactive split/stacked bar plot module."
     contents:
-      - plotthis_SplitBarPlotServer
+      - plotthis_SplitBarPlotApp
       - plotthis_SplitBarPlotInputsUI
       - plotthis_SplitBarPlotOutputUI
-      - plotthis_SplitBarPlotApp
+      - plotthis_SplitBarPlotServer
 
   - title: "BoxPlot Module"
     desc: "plotthis-based interactive box plot module."
     contents:
-      - plotthis_BoxPlotServer
+      - plotthis_BoxPlotApp
       - plotthis_BoxPlotInputsUI
       - plotthis_BoxPlotOutputUI
-      - plotthis_BoxPlotApp
+      - plotthis_BoxPlotServer
 
   - title: "ViolinPlot Module"
     desc: "plotthis-based interactive violin plot module."
     contents:
-      - plotthis_ViolinPlotServer
+      - plotthis_ViolinPlotApp
       - plotthis_ViolinPlotInputsUI
       - plotthis_ViolinPlotOutputUI
-      - plotthis_ViolinPlotApp
+      - plotthis_ViolinPlotServer
 
   - title: "DensityPlot Module"
     desc: "plotthis-based interactive density plot module."
     contents:
-      - plotthis_DensityPlotServer
+      - plotthis_DensityPlotApp
       - plotthis_DensityPlotInputsUI
       - plotthis_DensityPlotOutputUI
-      - plotthis_DensityPlotApp
+      - plotthis_DensityPlotServer
 
   - title: "DotPlot Module"
     desc: "plotthis-based interactive dot plot module."
     contents:
-      - plotthis_DotPlotServer
+      - plotthis_DotPlotApp
       - plotthis_DotPlotInputsUI
       - plotthis_DotPlotOutputUI
-      - plotthis_DotPlotApp
+      - plotthis_DotPlotServer
 
   - title: "Histogram Module"
     desc: "plotthis-based interactive histogram module."
     contents:
-      - plotthis_HistogramServer
+      - plotthis_HistogramApp
       - plotthis_HistogramInputsUI
       - plotthis_HistogramOutputUI
-      - plotthis_HistogramApp
+      - plotthis_HistogramServer
 
   - title: "dataFilter Module"
     desc: "Reusable data filtering module for use with plot modules."
@@ -144,44 +137,117 @@ reference:
       - dataFilterServer
       - dataFilterUI
 
-  - title: "UI Helpers & Widgets"
-    desc: "Utility functions for building module UIs."
+  - title: "Figure Builder App"
+    desc: "Multi-panel figure builder application."
+    contents:
+      - figureBuilderApp
+      - figureBuilderServer
+      - figureBuilderUI
+
+  - title: "Custom Inputs & Widgets"
+    desc: "Reusable custom Shiny inputs for use in module UIs."
+    contents:
+      - multiColorPicker
+      - multiDynamicInput
+      - updateMultiColorPicker
+      - updateMultiDynamicInput
+
+  - title: "UI Helpers"
+    desc: "Utility functions for building and organising module UIs."
     contents:
       - createModuleApp
-      - organize_inputs
-      - module_tack_ui
-      - setup_auto_update_logic
       - empty_plot
+      - module_tack_ui
+      - organize_inputs
+      - setup_auto_update_logic
 
-  - title: "Data Downloading Utilities"
+  - title: "Uniform UI Inputs"
+    desc: "Standardised input builders and reset functions shared across modules."
+    contents:
+      - uniform_axes_inputs_ui
+      - uniform_legend_inputs_ui
+      - uniform_lines_inputs_ui
+      - uniform_plotly_inputs_ui
+      - reset_axes_inputs
+      - reset_legend_inputs
+      - reset_lines_inputs
+      - reset_plotly_inputs
+      - get_default
+
+  - title: "Facet & Subplot Utilities"
+    desc: "Functions for faceted/multi-panel subplot layout and styling."
+    contents:
+      - apply_facet_subplot_spacing
+      - build_facet_annotations
+      - build_facet_panel_borders
+      - clean_facet_dim
+      - resolve_facet_layout
+      - resolve_facet_sharing
+
+  - title: "Axes, Layout & Plotly Config"
+    desc: "Functions for axis styling, layout, reference lines, and plotly configuration."
+    contents:
+      - add_ablines
+      - add_hlines
+      - add_plot_config
+      - add_reference_lines
+      - add_vlines
+      - adjusted_axis_label
+      - apply_axis_title_to_annotations
+      - apply_legend_styling
+      - apply_plotly_newshape
+      - apply_render_margins
+      - apply_subplot_axis_styling
+      - apply_title_layout
+      - axis_titles_as_annotations
+      - create_axis_styles
+      - create_ggplot_axis_style
+      - linetype_to_dash
+      - recycle_line_style
+      - string_to_linetypes
+
+  - title: "Manual Plot Edits"
+    desc: "Functions for applying user-drawn shapes and annotations to plotly figures."
+    contents:
+      - finalize_manual_edits
+      - setup_manual_edits
+
+  - title: "Model Backends"
+    desc: "Pluggable model fitting registry for custom model line overlays. Register new backends to support any modelling package (drc, mgcv, brms, etc.)."
+    contents:
+      - build_model_row_spec
+      - get_model_backend
+      - list_model_backends
+      - register_model_backend
+
+  - title: "Statistical Utilities"
+    desc: "Functions for computing and displaying pairwise statistical test annotations."
+    contents:
+      - apply_stat_annotations
+      - compute_pairwise_stats
+      - create_stat_annotations
+      - generate_pair_strings
+      - parse_pair_strings
+
+  - title: "Palette & Color Utilities"
+    desc: "Functions for managing color palettes."
+    contents:
+      - default_palettes
+      - resolve_palette
+
+  - title: "Data Download Utilities"
     desc: "Functions for preparing plot and source data for download."
     contents:
       - collect_source_data
       - create_source_download_handler
 
-  - title: "Palette & Color Utilities"
-    desc: "Functions/inputs for managing color palettes."
-    contents:
-      - default_palettes
-      - resolve_palette
-      - multiColorPicker
-      - updateMultiColorPicker
-
-  - title: "Statistical Helpers"
-    desc: "Functions for computing and displaying pairwise statistical test annotations on plots."
-    contents:
-      - compute_pairwise_stats
-      - create_stat_annotations
-      - apply_stat_annotations
-      - generate_pair_strings
-      - parse_pair_strings
-
   - title: "Utility Functions"
     desc: "General-purpose helper functions for data handling and validation."
     contents:
-      - get_documentation
       - adjust_column_values
+      - get_documentation
       - is_pure_type
+      - parse_numeric_list
       - safe_eval_filter
       - safe_resolve_adj_fxn
       - validate_expression
@@ -189,14 +255,13 @@ reference:
   - title: "Example Data"
     desc: "Built-in datasets for demos and testing."
     contents:
-      - example_roles
-      - example_school_earnings
-      - example_skills
       - example_bar
       - example_demographics
-      - example_sales
       - example_iris
+      - example_markers
       - example_mtcars
       - example_population
-      - example_markers
       - example_rnaseq
+      - example_sales
+      - example_school_earnings
+      - example_skills

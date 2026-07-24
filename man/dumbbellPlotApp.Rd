@@ -4,12 +4,25 @@
 \alias{dumbbellPlotApp}
 \title{Create a Shiny App for Dumbbell Plots}
 \usage{
-dumbbellPlotApp(data_list = NULL)
+dumbbellPlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
 \code{list("school_earnings" = example_school_earnings)}
 is used as example data.}
+
+\item{defaults}{A named list of input IDs and their default values to apply on startup.}
+
+\item{hide.inputs}{A character vector of input IDs to hide. Their values are still
+initialized and used, but the controls are not shown in the UI.}
+
+\item{hide.tabs}{A character vector of tab names to hide. Inputs in these tabs are
+still initialized and used, but the controls are not shown in the UI.}
 }
 \value{
 A Shiny app object.

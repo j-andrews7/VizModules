@@ -56,25 +56,6 @@
 #' @keywords datasets
 "example_skills"
 
-#' Example roles dataset for ternary plots
-#'
-#' A dataset of role proportions (journalist, developer, designer) for eleven
-#' individuals across two teams, suitable for ternary plot examples.
-#'
-#' @format A data frame with 11 rows and 5 columns:
-#' \describe{
-#'   \item{journalist}{Journalist role proportion}
-#'   \item{developer}{Developer role proportion}
-#'   \item{designer}{Designer role proportion}
-#'   \item{label}{Point label (point 1 through point 11)}
-#'   \item{team}{Team assignment (Team A or Team B)}
-#' }
-#'
-#' @source Generated in data-raw/generate_example_data.R.
-#'
-#' @author Jacob Martin
-#' @keywords datasets
-"example_roles"
 
 #' Example sales dataset
 #'
@@ -220,14 +201,13 @@
 #' comparisons visually informative.
 #'
 #' The dataset is designed to simultaneously support three VizModules plot types:
-#' \itemize{
-#'   \item DotPlot — summarised \code{avg_expression} and \code{pct_expressed}
-#'     columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
-#'   \item yPlot — per-replicate \code{log2_cpm} values grouped by
-#'     \code{cell_type} and coloured by \code{condition}.
-#'   \item DensityPlot — per-replicate \code{log2_cpm} values grouped by
-#'     \code{condition} and faceted by \code{cell_type}.
-#' }
+#'
+#' - DotPlot — summarised `avg_expression` and `pct_expressed`
+#'   columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
+#' - yPlot — per-replicate `log2_cpm` values grouped by
+#'   `cell_type` and coloured by `condition`.
+#' - DensityPlot — per-replicate `log2_cpm` values grouped by
+#'   `condition` and faceted by `cell_type`.
 #'
 #' @format A data frame with 288 rows and 7 columns:
 #' \describe{

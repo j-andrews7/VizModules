@@ -68,7 +68,7 @@ module_data <- list(
     radar    = example_skills,
     scatter  = example_sales,
     splitbar = example_bar,
-    ternary  = example_roles,
+
     violin   = example_demographics,
     yplot    = example_demographics
 )
@@ -185,15 +185,6 @@ module_registry <- list(
         defaults  = list("x.data" = "Score", "y.data" = "Group")
     ),
     list(
-        label     = "Ternary",
-        id        = "ternary",
-        inputs_ui = ternaryPlotInputsUI,
-        output_ui = ternaryPlotOutputUI,
-        server_fn = ternaryPlotServer,
-        defaults  = list("a" = "journalist", "b" = "developer",
-                         "c" = "designer", "group" = "team")
-    ),
-    list(
         label     = "Violin",
         id        = "violin",
         inputs_ui = plotthis_ViolinPlotInputsUI,
@@ -211,6 +202,14 @@ module_registry <- list(
     )
 )
 
+
+# Figure Builder tab – embeds the self-contained figureBuilder module, seeded
+# with the same bundled datasets used elsewhere in the gallery.
+figure_builder_tab <- tabPanel(
+    "Figure Builder",
+    value = "figure_builder",
+    figureBuilderUI("figure_builder")
+)
 
 # Helper: build a tab panel for one module
 build_tab <- function(mod) {
@@ -252,7 +251,10 @@ about_tab <- tabPanel(
                 p(
                     "This gallery app showcases VizModules' interactive",
                     "Shiny modules using bundled example datasets so you can",
-                    "preview each plot type and its configurable inputs."
+                    "preview each plot type and its configurable inputs. The",
+                    tags$strong("Figure Builder"), "tab lets you compose",
+                    "multiple modules into a free-form, multi-panel figure and",
+                    "export it as a single editable SVG."
                 ),
                 tags$p(
                     tags$strong("Repository: "),
@@ -382,7 +384,8 @@ ui <- do.call(navbarPage, c(
         )
     ),
     list(about_tab),
-    lapply(module_registry, build_tab)
+    lapply(module_registry, build_tab),
+    list(figure_builder_tab)
 ))
 
 
@@ -412,6 +415,11 @@ server <- function(input, output, session) {
 
         m$server_fn(m$id, data = filtered_data)
     })
+
+    # Figure Builder: uses its own bundled dataset catalogue and module
+    # registry (including the pie-plot summary and per-dataset defaults),
+    # so no data_list/module_registry override is needed here.
+    figureBuilderServer("figure_builder")
 }
 
 shinyApp(ui, server)

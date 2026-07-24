@@ -118,56 +118,56 @@ test_that(".hide_jitter_from_legend with mtcars dataset", {
     }
 })
 
-# ─── .parse_numeric_list ──────────────────────────────────────────────────────
+# ─── parse_numeric_list ──────────────────────────────────────────────────────
 
-test_that(".parse_numeric_list parses comma-separated numbers", {
-    expect_equal(VizModules:::.parse_numeric_list("1, 5, 8"), c(1, 5, 8))
-    expect_equal(VizModules:::.parse_numeric_list("3.14"), 3.14)
-    expect_equal(VizModules:::.parse_numeric_list("-1, 0, 2.5"), c(-1, 0, 2.5))
+test_that("parse_numeric_list parses comma-separated numbers", {
+    expect_equal(VizModules::parse_numeric_list("1, 5, 8"), c(1, 5, 8))
+    expect_equal(VizModules::parse_numeric_list("3.14"), 3.14)
+    expect_equal(VizModules::parse_numeric_list("-1, 0, 2.5"), c(-1, 0, 2.5))
 })
 
-test_that(".parse_numeric_list returns NULL for empty/invalid input", {
-    expect_null(VizModules:::.parse_numeric_list(NULL))
-    expect_null(VizModules:::.parse_numeric_list(""))
-    expect_null(VizModules:::.parse_numeric_list("   "))
-    expect_null(VizModules:::.parse_numeric_list("abc, def"))
+test_that("parse_numeric_list returns NULL for empty/invalid input", {
+    expect_null(VizModules::parse_numeric_list(NULL))
+    expect_null(VizModules::parse_numeric_list(""))
+    expect_null(VizModules::parse_numeric_list("   "))
+    expect_null(VizModules::parse_numeric_list("abc, def"))
 })
 
-test_that(".parse_numeric_list drops non-numeric values", {
-    expect_equal(VizModules:::.parse_numeric_list("1, abc, 3"), c(1, 3))
+test_that("parse_numeric_list drops non-numeric values", {
+    expect_equal(VizModules::parse_numeric_list("1, abc, 3"), c(1, 3))
 })
 
-# ─── .recycle_line_style ──────────────────────────────────────────────────────
+# ─── recycle_line_style ──────────────────────────────────────────────────────
 
-test_that(".recycle_line_style returns default when values is NULL or empty", {
-    expect_equal(VizModules:::.recycle_line_style(NULL, 3, "red"), rep("red", 3))
-    expect_equal(VizModules:::.recycle_line_style(character(0), 2, 1), rep(1, 2))
+test_that("recycle_line_style returns default when values is NULL or empty", {
+    expect_equal(VizModules::recycle_line_style(NULL, 3, "red"), rep("red", 3))
+    expect_equal(VizModules::recycle_line_style(character(0), 2, 1), rep(1, 2))
 })
 
-test_that(".recycle_line_style returns values unchanged when length matches", {
-    expect_equal(VizModules:::.recycle_line_style(c("a", "b", "c"), 3, "x"), c("a", "b", "c"))
+test_that("recycle_line_style returns values unchanged when length matches", {
+    expect_equal(VizModules::recycle_line_style(c("a", "b", "c"), 3, "x"), c("a", "b", "c"))
 })
 
-test_that(".recycle_line_style recycles first value when length mismatch", {
-    expect_equal(VizModules:::.recycle_line_style(c("a", "b"), 4, "x"), rep("a", 4))
-    expect_equal(VizModules:::.recycle_line_style(c(1, 2, 3), 2, 0), rep(1, 2))
+test_that("recycle_line_style recycles first value when length mismatch", {
+    expect_equal(VizModules::recycle_line_style(c("a", "b"), 4, "x"), rep("a", 4))
+    expect_equal(VizModules::recycle_line_style(c(1, 2, 3), 2, 0), rep(1, 2))
 })
 
-# ─── .linetype_to_dash ───────────────────────────────────────────────────────
+# ─── linetype_to_dash ───────────────────────────────────────────────────────
 
-test_that(".linetype_to_dash maps all known linetypes", {
-    expect_equal(VizModules:::.linetype_to_dash("solid"), "solid")
-    expect_equal(VizModules:::.linetype_to_dash("dashed"), "dash")
-    expect_equal(VizModules:::.linetype_to_dash("dotted"), "dot")
-    expect_equal(VizModules:::.linetype_to_dash("dotdash"), "dashdot")
-    expect_equal(VizModules:::.linetype_to_dash("longdash"), "longdash")
-    expect_equal(VizModules:::.linetype_to_dash("twodash"), "longdashdot")
+test_that("linetype_to_dash maps all known linetypes", {
+    expect_equal(VizModules::linetype_to_dash("solid"), "solid")
+    expect_equal(VizModules::linetype_to_dash("dashed"), "dash")
+    expect_equal(VizModules::linetype_to_dash("dotted"), "dot")
+    expect_equal(VizModules::linetype_to_dash("dotdash"), "dashdot")
+    expect_equal(VizModules::linetype_to_dash("longdash"), "longdash")
+    expect_equal(VizModules::linetype_to_dash("twodash"), "longdashdot")
 })
 
-test_that(".linetype_to_dash is case-insensitive and defaults to solid", {
-    expect_equal(VizModules:::.linetype_to_dash("SOLID"), "solid")
-    expect_equal(VizModules:::.linetype_to_dash("Dashed"), "dash")
-    expect_equal(VizModules:::.linetype_to_dash("unknown"), "solid")
+test_that("linetype_to_dash is case-insensitive and defaults to solid", {
+    expect_equal(VizModules::linetype_to_dash("SOLID"), "solid")
+    expect_equal(VizModules::linetype_to_dash("Dashed"), "dash")
+    expect_equal(VizModules::linetype_to_dash("unknown"), "solid")
 })
 
 # ─── adjust_column_values ───────────────────────────────────────────────────
@@ -207,10 +207,10 @@ test_that("adjust_column_values handles invalid expression gracefully", {
     expect_identical(result, df)
 })
 
-# ─── .add_plot_config ────────────────────────────────────────────────────────
+# ─── add_plot_config ────────────────────────────────────────────────────────
 
-test_that(".add_plot_config returns default config without facet", {
-    config <- VizModules:::.add_plot_config()
+test_that("add_plot_config returns default config without facet", {
+    config <- VizModules::add_plot_config()
     # Axis titles are rendered as draggable annotations, so native axis-title
     # text editing is disabled even in the non-faceted configuration.
     expect_false(config$edits$axisTitleText)
@@ -220,39 +220,39 @@ test_that(".add_plot_config returns default config without facet", {
     expect_true(length(config$modeBarButtonsToAdd) > 0)
 })
 
-test_that(".add_plot_config with facet.by disables axisTitleText editing", {
-    config <- VizModules:::.add_plot_config(facet.by = "group")
+test_that("add_plot_config with facet.by disables axisTitleText editing", {
+    config <- VizModules::add_plot_config(facet.by = "group")
     expect_false(config$edits$axisTitleText)
     expect_true(config$edits$titleText)
 })
 
-test_that(".add_plot_config respects download format and filename", {
-    config <- VizModules:::.add_plot_config(download.format = "svg", filename = "my_plot")
+test_that("add_plot_config respects download format and filename", {
+    config <- VizModules::add_plot_config(download.format = "svg", filename = "my_plot")
     expect_equal(config$toImageButtonOptions$format, "svg")
     expect_equal(config$toImageButtonOptions$filename, "my_plot")
 })
 
-test_that(".add_plot_config excludes modebar buttons when requested", {
-    config <- VizModules:::.add_plot_config(include.modebar.buttons = FALSE)
+test_that("add_plot_config excludes modebar buttons when requested", {
+    config <- VizModules::add_plot_config(include.modebar.buttons = FALSE)
     expect_null(config$modeBarButtonsToAdd)
 })
 
-# ─── .apply_subplot_axis_styling ─────────────────────────────────────────────
+# ─── apply_subplot_axis_styling ─────────────────────────────────────────────
 
-test_that(".apply_subplot_axis_styling returns NULL/empty fig unchanged", {
-    expect_null(VizModules:::.apply_subplot_axis_styling(NULL, list(), list()))
+test_that("apply_subplot_axis_styling returns NULL/empty fig unchanged", {
+    expect_null(VizModules::apply_subplot_axis_styling(NULL, list(), list()))
 
     fig_no_x <- list(y = 1)
-    expect_identical(VizModules:::.apply_subplot_axis_styling(fig_no_x, list(), list()), fig_no_x)
+    expect_identical(VizModules::apply_subplot_axis_styling(fig_no_x, list(), list()), fig_no_x)
 })
 
-test_that(".apply_subplot_axis_styling applies style to single axes", {
+test_that("apply_subplot_axis_styling applies style to single axes", {
     fig <- make_plotly(layout = list(
         xaxis = list(title = "X"),
         yaxis = list(title = "Y")
     ))
 
-    result <- VizModules:::.apply_subplot_axis_styling(
+    result <- VizModules::apply_subplot_axis_styling(
         fig,
         xaxis_style = list(showgrid = FALSE),
         yaxis_style = list(showgrid = TRUE)
@@ -266,7 +266,7 @@ test_that(".apply_subplot_axis_styling applies style to single axes", {
     expect_equal(layout_update$xaxis$title, "X")
 })
 
-test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", {
+test_that("apply_subplot_axis_styling applies style to multiple subplot axes", {
     fig <- make_plotly(layout = list(
         xaxis = list(title = "X1"),
         xaxis2 = list(title = "X2"),
@@ -274,7 +274,7 @@ test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", 
         yaxis2 = list(title = "Y2")
     ))
 
-    result <- VizModules:::.apply_subplot_axis_styling(
+    result <- VizModules::apply_subplot_axis_styling(
         fig,
         xaxis_style = list(linecolor = "red"),
         yaxis_style = list(linecolor = "blue")
@@ -287,19 +287,19 @@ test_that(".apply_subplot_axis_styling applies style to multiple subplot axes", 
     expect_equal(layout_update$yaxis2$linecolor, "blue")
 })
 
-test_that(".apply_subplot_axis_styling handles empty layout names", {
+test_that("apply_subplot_axis_styling handles empty layout names", {
     fig <- make_plotly(layout = list())
-    result <- VizModules:::.apply_subplot_axis_styling(fig, list(a = 1), list(b = 2))
+    result <- VizModules::apply_subplot_axis_styling(fig, list(a = 1), list(b = 2))
     expect_s3_class(result, "plotly")
 })
 
-# ─── .axis_titles_as_annotations ─────────────────────────────────────────────
+# ─── axis_titles_as_annotations ─────────────────────────────────────────────
 
-test_that(".axis_titles_as_annotations converts single-panel titles to annotations", {
+test_that("axis_titles_as_annotations converts single-panel titles to annotations", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines") |>
         plotly::layout(xaxis = list(title = "Weight"), yaxis = list(title = "MPG"))
 
-    result <- VizModules:::.axis_titles_as_annotations(fig)
+    result <- VizModules::axis_titles_as_annotations(fig)
     built <- plotly::plotly_build(result)
 
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
@@ -318,32 +318,32 @@ test_that(".axis_titles_as_annotations converts single-panel titles to annotatio
     expect_equal(y_ann$textangle, -90)
 })
 
-test_that(".axis_titles_as_annotations preserves the native axis title font", {
+test_that("axis_titles_as_annotations preserves the native axis title font", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(
             xaxis = list(title = list(text = "Cyl", font = list(size = 18, color = "red"))),
             yaxis = list(title = list(text = "MPG", font = list(size = 18)))
         )
 
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     x_ann <- Filter(function(a) identical(a$text, "Cyl"), built$x$layout$annotations)[[1]]
     expect_equal(x_ann$font$size, 18)
     expect_equal(x_ann$font$color, "red")
 })
 
-test_that(".axis_titles_as_annotations preserves pre-existing annotations", {
+test_that("axis_titles_as_annotations preserves pre-existing annotations", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(
             xaxis = list(title = "X"), yaxis = list(title = "Y"),
             annotations = list(list(x = 1, y = 1, text = "stat", showarrow = FALSE))
         )
 
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     ann_text <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
     expect_true(all(c("stat", "X", "Y") %in% ann_text))
 })
 
-test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
+test_that("axis_titles_as_annotations leaves multi-panel figures unchanged", {
     # A subplot figure has secondary axes (xaxis2/yaxis2); its shared titles
     # are already draggable annotations, so the helper must not alter it.
     fig <- plotly::plotly_build(plotly::subplot(
@@ -352,56 +352,56 @@ test_that(".axis_titles_as_annotations leaves multi-panel figures unchanged", {
         nrows = 1
     ))
     n_before <- length(fig$x$layout$annotations)
-    result <- VizModules:::.axis_titles_as_annotations(fig)
+    result <- VizModules::axis_titles_as_annotations(fig)
     expect_equal(length(result$x$layout$annotations), n_before)
 })
 
-test_that(".axis_titles_as_annotations is a no-op without axis titles", {
+test_that("axis_titles_as_annotations is a no-op without axis titles", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
-    built <- plotly::plotly_build(VizModules:::.axis_titles_as_annotations(fig))
+    built <- plotly::plotly_build(VizModules::axis_titles_as_annotations(fig))
     expect_null(built$x$layout$annotations)
 })
 
-test_that(".axis_titles_as_annotations returns NULL input unchanged", {
-    expect_null(VizModules:::.axis_titles_as_annotations(NULL))
+test_that("axis_titles_as_annotations returns NULL input unchanged", {
+    expect_null(VizModules::axis_titles_as_annotations(NULL))
 })
 
 
-# ─── .apply_legend_styling ───────────────────────────────────────────────────
+# ─── apply_legend_styling ───────────────────────────────────────────────────
 
-test_that(".apply_legend_styling sets legend title and text font sizes", {
+test_that("apply_legend_styling sets legend title and text font sizes", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "lines")
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, title.size = 20, text.size = 9)
+        VizModules::apply_legend_styling(fig, title.size = 20, text.size = 9)
     )
     expect_equal(built$x$layout$legend$font$size, 9)
     expect_equal(built$x$layout$legend$title$font$size, 20)
 })
 
-test_that(".apply_legend_styling ignores NULL/NA sizes", {
+test_that("apply_legend_styling ignores NULL/NA sizes", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter")
     # Both NULL -> figure returned unchanged (no legend args added).
     expect_identical(
-        VizModules:::.apply_legend_styling(fig, title.size = NULL, text.size = NULL),
+        VizModules::apply_legend_styling(fig, title.size = NULL, text.size = NULL),
         fig
     )
     # Only text.size supplied -> title font untouched.
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, text.size = 11)
+        VizModules::apply_legend_styling(fig, text.size = 11)
     )
     expect_equal(built$x$layout$legend$font$size, 11)
     expect_null(built$x$layout$legend$title$font$size)
 })
 
-test_that(".apply_legend_styling returns NULL input unchanged", {
-    expect_null(VizModules:::.apply_legend_styling(NULL, title.size = 12))
+test_that("apply_legend_styling returns NULL input unchanged", {
+    expect_null(VizModules::apply_legend_styling(NULL, title.size = 12))
 })
 
-test_that(".apply_legend_styling preserves existing legend position", {
+test_that("apply_legend_styling preserves existing legend position", {
     fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter") |>
         plotly::layout(legend = list(x = 0.8, y = 0.2, orientation = "h"))
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, text.size = 14)
+        VizModules::apply_legend_styling(fig, text.size = 14)
     )
     expect_equal(built$x$layout$legend$x, 0.8)
     expect_equal(built$x$layout$legend$y, 0.2)
@@ -409,7 +409,7 @@ test_that(".apply_legend_styling preserves existing legend position", {
     expect_equal(built$x$layout$legend$font$size, 14)
 })
 
-test_that(".apply_legend_styling styles continuous colorbar legends", {
+test_that("apply_legend_styling styles continuous colorbar legends", {
     # Numeric colour mappings render a colorbar rather than a categorical
     # legend, so the title/tick fonts live on the trace's marker$colorbar.
     fig <- plotly::plot_ly(
@@ -420,7 +420,7 @@ test_that(".apply_legend_styling styles continuous colorbar legends", {
         )
     )
     built <- plotly::plotly_build(
-        VizModules:::.apply_legend_styling(fig, title.size = 18, text.size = 8)
+        VizModules::apply_legend_styling(fig, title.size = 18, text.size = 8)
     )
     cb <- NULL
     for (tr in built$x$data) {
@@ -436,9 +436,9 @@ test_that(".apply_legend_styling styles continuous colorbar legends", {
 })
 
 
-# ─── .apply_facet_subplot_spacing ────────────────────────────────────────────
+# ─── apply_facet_subplot_spacing ────────────────────────────────────────────
 
-test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
+test_that("apply_facet_subplot_spacing supports separate horizontal/vertical spacing", {
     grid <- plotly::subplot(
         plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
         plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
@@ -447,7 +447,7 @@ test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical sp
         nrows = 2
     )
 
-    result <- VizModules:::.apply_facet_subplot_spacing(
+    result <- VizModules:::apply_facet_subplot_spacing(
         grid, spacing = c(0.2, 0.05), ncol = 2, nrow = 2
     )
 
@@ -474,7 +474,7 @@ test_that(".apply_facet_subplot_spacing supports separate horizontal/vertical sp
     expect_equal(y_starts[2] - y_ends[1], 0.05, tolerance = 1e-6)
 })
 
-test_that(".apply_facet_subplot_spacing treats a single value as both directions", {
+test_that("apply_facet_subplot_spacing treats a single value as both directions", {
     grid <- plotly::subplot(
         plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter"),
         plotly::plot_ly(x = 1:3, y = 3:1, type = "scatter"),
@@ -483,8 +483,8 @@ test_that(".apply_facet_subplot_spacing treats a single value as both directions
         nrows = 2
     )
 
-    single <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
-    vec <- VizModules:::.apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
+    single <- VizModules:::apply_facet_subplot_spacing(grid, spacing = 0.1, ncol = 2, nrow = 2)
+    vec <- VizModules:::apply_facet_subplot_spacing(grid, spacing = c(0.1, 0.1), ncol = 2, nrow = 2)
 
     get_domains <- function(fig, prefix) {
         nms <- names(fig$x$layout)
@@ -583,17 +583,17 @@ test_that(".compute_loess_fit removes groups with insufficient data", {
     expect_false("B" %in% names(result))
 })
 
-# ─── .add_hlines ─────────────────────────────────────────────────────────────
+# ─── add_hlines ─────────────────────────────────────────────────────────────
 
-test_that(".add_hlines returns empty list for NULL/empty intercepts", {
+test_that("add_hlines returns empty list for NULL/empty intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_hlines(fig, NULL), list())
-    expect_equal(VizModules:::.add_hlines(fig, numeric(0)), list())
+    expect_equal(VizModules::add_hlines(fig, NULL), list())
+    expect_equal(VizModules::add_hlines(fig, numeric(0)), list())
 })
 
-test_that(".add_hlines creates correct shape for single line", {
+test_that("add_hlines creates correct shape for single line", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_hlines(fig, intercepts = 3)
+    shapes <- VizModules::add_hlines(fig, intercepts = 3)
 
     expect_equal(length(shapes), 1)
     expect_equal(shapes[[1]]$type, "line")
@@ -604,9 +604,9 @@ test_that(".add_hlines creates correct shape for single line", {
     expect_equal(shapes[[1]]$line$color, "#000000")
 })
 
-test_that(".add_hlines creates multiple shapes with per-line styling", {
+test_that("add_hlines creates multiple shapes with per-line styling", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_hlines(fig,
+    shapes <- VizModules::add_hlines(fig,
         intercepts = c(1, 5),
         colors = c("red", "blue"), widths = c(2, 3)
     )
@@ -618,17 +618,17 @@ test_that(".add_hlines creates multiple shapes with per-line styling", {
     expect_equal(shapes[[2]]$line$width, 3)
 })
 
-# ─── .add_vlines ─────────────────────────────────────────────────────────────
+# ─── add_vlines ─────────────────────────────────────────────────────────────
 
-test_that(".add_vlines returns empty list for NULL/empty intercepts", {
+test_that("add_vlines returns empty list for NULL/empty intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_vlines(fig, NULL), list())
-    expect_equal(VizModules:::.add_vlines(fig, numeric(0)), list())
+    expect_equal(VizModules::add_vlines(fig, NULL), list())
+    expect_equal(VizModules::add_vlines(fig, numeric(0)), list())
 })
 
-test_that(".add_vlines creates correct shape for single line", {
+test_that("add_vlines creates correct shape for single line", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    shapes <- VizModules:::.add_vlines(fig, intercepts = 2)
+    shapes <- VizModules::add_vlines(fig, intercepts = 2)
 
     expect_equal(length(shapes), 1)
     expect_equal(shapes[[1]]$x0, 2)
@@ -637,21 +637,21 @@ test_that(".add_vlines creates correct shape for single line", {
     expect_equal(shapes[[1]]$y1, 1)
 })
 
-# ─── .add_ablines ───────────────────────────────────────────────────────────
+# ─── add_ablines ───────────────────────────────────────────────────────────
 
-test_that(".add_ablines returns empty list for NULL slopes or intercepts", {
+test_that("add_ablines returns empty list for NULL slopes or intercepts", {
     fig <- make_plotly()
-    expect_equal(VizModules:::.add_ablines(fig, NULL, c(0)), list())
-    expect_equal(VizModules:::.add_ablines(fig, c(1), NULL), list())
-    expect_equal(VizModules:::.add_ablines(fig, numeric(0), c(0)), list())
+    expect_equal(VizModules::add_ablines(fig, NULL, c(0)), list())
+    expect_equal(VizModules::add_ablines(fig, c(1), NULL), list())
+    expect_equal(VizModules::add_ablines(fig, numeric(0), c(0)), list())
 })
 
-test_that(".add_ablines creates y = mx + b line", {
+test_that("add_ablines creates y = mx + b line", {
     fig <- make_plotly(
         data = list(list(type = "scatter", x = c(0, 10), y = c(0, 10))),
         layout = list(xaxis = list(range = c(0, 10)))
     )
-    shapes <- VizModules:::.add_ablines(fig, slopes = 2, intercepts = 1)
+    shapes <- VizModules::add_ablines(fig, slopes = 2, intercepts = 1)
 
     expect_equal(length(shapes), 1)
     # y0 = intercept + slope * x0 = 1 + 2*0 = 1
@@ -659,48 +659,48 @@ test_that(".add_ablines creates y = mx + b line", {
     expect_equal(shapes[[1]]$y1, 1 + 2 * shapes[[1]]$x1)
 })
 
-test_that(".add_ablines recycles shorter slopes/intercepts vector", {
+test_that("add_ablines recycles shorter slopes/intercepts vector", {
     fig <- make_plotly(
         data = list(list(type = "scatter", x = 1:5, y = 1:5)),
         layout = list(xaxis = list(range = c(0, 5)))
     )
     # 2 slopes, 1 intercept -> intercept recycled to length 2
-    shapes <- VizModules:::.add_ablines(fig, slopes = c(1, 2), intercepts = 0)
+    shapes <- VizModules::add_ablines(fig, slopes = c(1, 2), intercepts = 0)
     expect_equal(length(shapes), 2)
 })
 
-# ─── .add_reference_lines ────────────────────────────────────────────────────
+# ─── add_reference_lines ────────────────────────────────────────────────────
 
-test_that(".add_reference_lines adds horizontal lines to figure", {
+test_that("add_reference_lines adds horizontal lines to figure", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig, hline.intercepts = "2, 4")
+    result <- VizModules::add_reference_lines(fig, hline.intercepts = "2, 4")
 
     expect_true(length(result$x$layout$shapes) >= 2)
     expect_equal(result$x$layout$shapes[[1]]$y0, 2)
     expect_equal(result$x$layout$shapes[[2]]$y0, 4)
 })
 
-test_that(".add_reference_lines adds vertical lines to figure", {
+test_that("add_reference_lines adds vertical lines to figure", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig, vline.intercepts = "3")
+    result <- VizModules::add_reference_lines(fig, vline.intercepts = "3")
 
     expect_true(length(result$x$layout$shapes) >= 1)
     expect_equal(result$x$layout$shapes[[1]]$x0, 3)
 })
 
-test_that(".add_reference_lines returns figure unchanged with no lines", {
+test_that("add_reference_lines returns figure unchanged with no lines", {
     fig <- make_plotly(data = list(list(type = "scatter", x = 1:5, y = 1:5)))
-    result <- VizModules:::.add_reference_lines(fig)
+    result <- VizModules::add_reference_lines(fig)
     expect_null(result$x$layout$shapes)
 })
 
-test_that(".add_reference_lines preserves existing shapes", {
+test_that("add_reference_lines preserves existing shapes", {
     existing_shape <- list(type = "rect", x0 = 0, x1 = 1, y0 = 0, y1 = 1)
     fig <- make_plotly(
         data = list(list(type = "scatter", x = 1:5, y = 1:5)),
         layout = list(shapes = list(existing_shape))
     )
-    result <- VizModules:::.add_reference_lines(fig, hline.intercepts = "5")
+    result <- VizModules::add_reference_lines(fig, hline.intercepts = "5")
 
     expect_true(length(result$x$layout$shapes) >= 2)
     expect_equal(result$x$layout$shapes[[1]]$type, "rect")
@@ -749,39 +749,6 @@ test_that(".calculate_range works in grouping mode", {
 
     expect_equal(result$min, 0)
     expect_equal(result$max, 60)
-})
-
-# ─── .remove_boxplot_outliers ────────────────────────────────────────────────
-
-test_that(".remove_boxplot_outliers hides box trace markers", {
-    fig <- make_plotly(data = list(
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all"),
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all")
-    ))
-    result <- VizModules:::.remove_boxplot_outliers(fig)
-
-    for (trace in result$x$data) {
-        expect_equal(trace$marker$opacity, 0)
-        expect_equal(trace$hoverinfo, "none")
-    }
-})
-
-test_that(".remove_boxplot_outliers leaves non-box traces unchanged", {
-    fig <- make_plotly(data = list(
-        list(type = "box", marker = list(opacity = 1), hoverinfo = "all"),
-        list(type = "scatter", mode = "markers", marker = list(opacity = 0.8))
-    ))
-    result <- VizModules:::.remove_boxplot_outliers(fig)
-
-    expect_equal(result$x$data[[1]]$marker$opacity, 0)
-    expect_equal(result$x$data[[2]]$marker$opacity, 0.8)
-})
-
-test_that(".remove_boxplot_outliers rejects non-plotly objects", {
-    expect_error(
-        VizModules:::.remove_boxplot_outliers(list(x = list(data = list()))),
-        "plotly"
-    )
 })
 
 # ─── empty_plot ─────────────────────────────────────────────────────────────
@@ -844,9 +811,9 @@ test_that("get_documentation capitalizes when cap = TRUE", {
     expect_equal(first_char, toupper(first_char))
 })
 
-# ─── .create_axis_styles ────────────────────────────────────────────────────
+# ─── create_axis_styles ────────────────────────────────────────────────────
 
-test_that(".create_axis_styles returns expected structure for x axis", {
+test_that("create_axis_styles returns expected structure for x axis", {
     mock_input <- list(
         axis.title.font.size = 14,
         axis.title.font.family = "Arial",
@@ -869,7 +836,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
         axis.linewidth = 1
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input, axis_side = "x", isolate_fn = identity)
+    result <- VizModules::create_axis_styles(mock_input, axis_side = "x", isolate_fn = identity)
 
     expect_equal(result$title$font$size, 14)
     expect_equal(result$title$font$family, "Arial")
@@ -878,7 +845,7 @@ test_that(".create_axis_styles returns expected structure for x axis", {
     expect_equal(result$gridcolor, "#CCCCCC")
 })
 
-test_that(".create_axis_styles returns expected structure for y axis", {
+test_that("create_axis_styles returns expected structure for y axis", {
     mock_input <- list(
         axis.title.font.size = 14,
         axis.title.font.family = "Arial",
@@ -901,14 +868,14 @@ test_that(".create_axis_styles returns expected structure for y axis", {
         axis.linewidth = 1
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input, axis_side = "y", isolate_fn = identity)
+    result <- VizModules::create_axis_styles(mock_input, axis_side = "y", isolate_fn = identity)
 
     expect_equal(result$tickangle, -90)
     expect_false(result$showgrid)
     expect_equal(result$gridcolor, "#CCCCCC")
 })
 
-test_that(".create_axis_styles excludes line props when ggplot.axis.styling is TRUE", {
+test_that("create_axis_styles excludes line props when ggplot.axis.styling is TRUE", {
     mock_input <- list(
         axis.title.font.size = 14, axis.title.font.family = "Arial",
         axis.title.font.color = "black", axis.tickfont.size = 12,
@@ -922,14 +889,14 @@ test_that(".create_axis_styles excludes line props when ggplot.axis.styling is T
         axis.linecolor = "red", axis.linewidth = 2
     )
 
-    result <- VizModules:::.create_axis_styles(mock_input,
+    result <- VizModules::create_axis_styles(mock_input,
         axis_side = "x",
         isolate_fn = identity, ggplot.axis.styling = TRUE
     )
     expect_null(result$showline)
     expect_null(result$mirror)
 
-    result2 <- VizModules:::.create_axis_styles(mock_input,
+    result2 <- VizModules::create_axis_styles(mock_input,
         axis_side = "x",
         isolate_fn = identity, ggplot.axis.styling = FALSE
     )
@@ -938,42 +905,42 @@ test_that(".create_axis_styles excludes line props when ggplot.axis.styling is T
     expect_equal(result2$linecolor, "red")
 })
 
-# ─── .create_ggplot_axis_style ───────────────────────────────────────────────
+# ─── create_ggplot_axis_style ───────────────────────────────────────────────
 
-test_that(".create_ggplot_axis_style returns full border when showline + mirror", {
+test_that("create_ggplot_axis_style returns full border when showline + mirror", {
     mock_input <- list(
         axis.showline = TRUE,
         axis.mirror = TRUE,
         axis.linecolor = "red",
         axis.linewidth = 2
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$panel.border, "element_rect"))
     expect_true(inherits(result$axis.line, "element_blank"))
 })
 
-test_that(".create_ggplot_axis_style returns axis lines only when showline but no mirror", {
+test_that("create_ggplot_axis_style returns axis lines only when showline but no mirror", {
     mock_input <- list(
         axis.showline = TRUE,
         axis.mirror = FALSE,
         axis.linecolor = "blue",
         axis.linewidth = 1
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$axis.line, "element_line"))
     expect_true(inherits(result$panel.border, "element_blank"))
 })
 
-test_that(".create_ggplot_axis_style returns no borders when showline is FALSE", {
+test_that("create_ggplot_axis_style returns no borders when showline is FALSE", {
     mock_input <- list(
         axis.showline = FALSE,
         axis.mirror = FALSE,
         axis.linecolor = "black",
         axis.linewidth = 1
     )
-    result <- VizModules:::.create_ggplot_axis_style(mock_input, isolate_fn = identity)
+    result <- VizModules::create_ggplot_axis_style(mock_input, isolate_fn = identity)
 
     expect_true(inherits(result$panel.border, "element_blank"))
     expect_true(inherits(result$axis.line, "element_blank"))
@@ -1220,29 +1187,159 @@ test_that(".extract_marker_sizes collects numeric marker sizes", {
     expect_equal(VizModules:::.extract_marker_sizes(fig2), numeric(0))
 })
 
-# ─── .adjusted_axis_label ────────────────────────────────────────────────────
+# ─── adjusted_axis_label ────────────────────────────────────────────────────
 
-test_that(".adjusted_axis_label returns the base label when no adjustment is set", {
-    expect_equal(VizModules:::.adjusted_axis_label("units"), "units")
-    expect_equal(VizModules:::.adjusted_axis_label("units", "", ""), "units")
-    expect_equal(VizModules:::.adjusted_axis_label("units", NA, NULL), "units")
+test_that("adjusted_axis_label returns the base label when no adjustment is set", {
+    expect_equal(VizModules::adjusted_axis_label("units"), "units")
+    expect_equal(VizModules::adjusted_axis_label("units", "", ""), "units")
+    expect_equal(VizModules::adjusted_axis_label("units", NA, NULL), "units")
 })
 
-test_that(".adjusted_axis_label wraps with the data adjustment", {
-    expect_equal(VizModules:::.adjusted_axis_label("units", "z-score"), "z-score(units)")
+test_that("adjusted_axis_label wraps with the data adjustment", {
+    expect_equal(VizModules::adjusted_axis_label("units", "z-score"), "z-score(units)")
     expect_equal(
-        VizModules:::.adjusted_axis_label("units", "relative.to.max"),
+        VizModules::adjusted_axis_label("units", "relative.to.max"),
         "relative.to.max(units)"
     )
 })
 
-test_that(".adjusted_axis_label wraps with the adjustment function", {
-    expect_equal(VizModules:::.adjusted_axis_label("units", NULL, "log2"), "log2(units)")
+test_that("adjusted_axis_label wraps with the adjustment function", {
+    expect_equal(VizModules::adjusted_axis_label("units", NULL, "log2"), "log2(units)")
 })
 
-test_that(".adjusted_axis_label nests adjustment then function", {
+test_that("adjusted_axis_label nests adjustment then function", {
     expect_equal(
-        VizModules:::.adjusted_axis_label("units", "z-score", "log2"),
+        VizModules::adjusted_axis_label("units", "z-score", "log2"),
         "log2(z-score(units))"
     )
+})
+
+test_that(".annotation_edit_key keys axis titles by side and others by text", {
+    expect_equal(
+        VizModules:::.annotation_edit_key(list(annotationType = "axis", textangle = 0)),
+        "axis:x"
+    )
+    expect_equal(
+        VizModules:::.annotation_edit_key(list(annotationType = "axis", textangle = -90)),
+        "axis:y"
+    )
+    expect_equal(VizModules:::.annotation_edit_key(list(text = "p = 0.01")), "text:p = 0.01")
+    expect_null(VizModules:::.annotation_edit_key(list(text = "")))
+    expect_null(VizModules:::.annotation_edit_key(NULL))
+})
+
+test_that(".capture_manual_edits records legend and annotation moves", {
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "X", annotationType = "axis", textangle = 0)
+    ))))
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`legend.x` = 0.2, `legend.y` = 0.3, `annotations[0].x` = 0.8),
+        fig
+    )
+    expect_equal(edits$legend$x, 0.2)
+    expect_equal(edits$legend$y, 0.3)
+    expect_equal(edits$annotations[["axis:x#1"]]$x, 0.8)
+})
+
+test_that(".capture_manual_edits disambiguates repeated annotation text", {
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "P"), list(text = "P")
+    ))))
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`annotations[0].x` = 0.1, `annotations[1].x` = 0.9),
+        fig
+    )
+    expect_equal(edits$annotations[["text:P#1"]]$x, 0.1)
+    expect_equal(edits$annotations[["text:P#2"]]$x, 0.9)
+})
+
+test_that(".capture_manual_edits records colorbar drag", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`coloraxis.colorbar.x` = 1.2, `coloraxis.colorbar.y` = 0.4),
+        NULL
+    )
+    expect_equal(edits$colorbar$x, 1.2)
+    expect_equal(edits$colorbar$y, 0.4)
+})
+
+test_that(".capture_manual_edits records legend drag anchors", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`legend.x` = 0.2, `legend.y` = 0.3, `legend.xanchor` = "left", `legend.yanchor` = "top"),
+        NULL
+    )
+    expect_equal(edits$legend$xanchor, "left")
+    expect_equal(edits$legend$yanchor, "top")
+})
+
+test_that(".capture_manual_edits ignores range/zoom keys", {
+    edits <- .capture_manual_edits(
+        list(legend = NULL, annotations = list()),
+        list(`xaxis.range[0]` = 1, `xaxis.range[1]` = 2),
+        NULL
+    )
+    expect_null(edits$legend)
+    expect_length(edits$annotations, 0)
+})
+
+test_that(".reapply_manual_edits restores positions across index shifts", {
+    edits <- list(
+        legend = list(x = 0.2, y = 0.3),
+        annotations = list("axis:x#1" = list(x = 0.8, y = 0.9))
+    )
+    fig <- list(x = list(layout = list(
+        legend = list(x = 1, y = 1),
+        annotations = list(
+            list(text = "stat"),
+            list(text = "X", annotationType = "axis", textangle = 0, x = 0.5, y = -0.1)
+        )
+    )))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$legend$x, 0.2)
+    expect_equal(out$x$layout$annotations[[2]]$x, 0.8)
+    expect_equal(out$x$layout$annotations[[2]]$y, 0.9)
+})
+
+test_that(".reapply_manual_edits restores dragged arrow offsets", {
+    edits <- list(
+        legend = NULL,
+        annotations = list("text:Pt#1" = list(x = 1, y = 2, ax = 30, ay = -40))
+    )
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "Pt", x = 0, y = 0, ax = 20, ay = -20)
+    ))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$annotations[[1]]$ax, 30)
+    expect_equal(out$x$layout$annotations[[1]]$ay, -40)
+})
+
+test_that(".reapply_manual_edits keeps repeated-text annotations independent", {
+    edits <- list(
+        legend = NULL,
+        annotations = list("text:P#1" = list(x = 0.1), "text:P#2" = list(x = 0.9))
+    )
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "P", x = 0), list(text = "P", x = 0)
+    ))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$layout$annotations[[1]]$x, 0.1)
+    expect_equal(out$x$layout$annotations[[2]]$x, 0.9)
+})
+
+test_that(".reapply_manual_edits restores a dragged colorbar onto its trace", {
+    edits <- list(legend = NULL, annotations = list(), colorbar = list(x = 1.2, y = 0.4))
+    fig <- list(x = list(data = list(list(marker = list(colorbar = list(x = 1, y = 0.5))))))
+    out <- .reapply_manual_edits(fig, edits)
+    expect_equal(out$x$data[[1]]$marker$colorbar$x, 1.2)
+    expect_equal(out$x$data[[1]]$marker$colorbar$y, 0.4)
+})
+
+test_that(".add_colorbar_listener attaches a render hook to the figure", {
+    p <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers")
+    out <- .add_colorbar_listener(p, "mod-colorbar.move")
+    expect_s3_class(out, "plotly")
+    expect_false(is.null(out$jsHooks$render))
 })

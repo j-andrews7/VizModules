@@ -15,9 +15,12 @@
 #' @return The resolved default value or `fallback`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_get_default
-#' @keywords internal
-.get_default <- function(defaults, key, fallback, validator = NULL) {
+#' @export
+#' @examples
+#' get_default(list(color = "red"), "color", "black")
+#' get_default(list(), "missing", 10)
+#' get_default(list(n = "x"), "n", 5, is.numeric)
+get_default <- function(defaults, key, fallback, validator = NULL) {
     if (!is.null(defaults) && key %in% names(defaults)) {
         value <- defaults[[key]]
         if (is.null(validator) || isTRUE(validator(value))) {
@@ -46,9 +49,12 @@
 #' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_lines_inputs_ui
-#' @keywords internal
-.uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot")
+#' uniform_lines_inputs_ui(ns)
+#' uniform_lines_inputs_ui(ns, include.fit.lines = TRUE)
+uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FALSE) {
     tip_opts <- list(container = "body")
     intercept_tip <- paste(
         "For categorical or factor axes, enter the index (position) of the",
@@ -60,21 +66,21 @@
         tipify(
             textInput(ns("hline.intercepts"), "Y-intercepts",
                 placeholder = "e.g. 2, -2",
-                value = .get_default(defaults, "hline.intercepts", "")
+                value = get_default(defaults, "hline.intercepts", "")
             ),
             intercept_tip,
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("hline.colors"), "Y Colors",
-                value = .get_default(defaults, "hline.colors", "#000000")
+                value = get_default(defaults, "hline.colors", "#000000")
             ),
             "Color(s) for horizontal reference lines, as comma-separated hex codes or color names",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("hline.widths"), "Y Widths",
-                value = .get_default(defaults, "hline.widths", "1")
+                value = get_default(defaults, "hline.widths", "1")
             ),
             "Width(s) for horizontal reference lines in pixels, as comma-separated values",
             placement = "top", options = tip_opts
@@ -82,14 +88,14 @@
         tipify(
             textInput(ns("hline.linetypes"), "Y Line Types",
                 placeholder = "solid, dashed, dotted, ...",
-                value = .get_default(defaults, "hline.linetypes", "dashed")
+                value = get_default(defaults, "hline.linetypes", "dashed")
             ),
             "Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("hline.opacities"), "Y Opacities (0-1)",
-                value = .get_default(defaults, "hline.opacities", "1")
+                value = get_default(defaults, "hline.opacities", "1")
             ),
             "Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
             placement = "top", options = tip_opts
@@ -97,21 +103,21 @@
         tipify(
             textInput(ns("vline.intercepts"), "X-intercepts",
                 placeholder = "e.g. 2, -2",
-                value = .get_default(defaults, "vline.intercepts", "")
+                value = get_default(defaults, "vline.intercepts", "")
             ),
             intercept_tip,
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("vline.colors"), "X Colors",
-                value = .get_default(defaults, "vline.colors", "#000000")
+                value = get_default(defaults, "vline.colors", "#000000")
             ),
             "Color(s) for vertical reference lines, as comma-separated hex codes or color names",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("vline.widths"), "X Widths",
-                value = .get_default(defaults, "vline.widths", "1")
+                value = get_default(defaults, "vline.widths", "1")
             ),
             "Width(s) for vertical reference lines in pixels, as comma-separated values",
             placement = "top", options = tip_opts
@@ -119,42 +125,42 @@
         tipify(
             textInput(ns("vline.linetypes"), "X Line Types",
                 placeholder = "solid, dashed, dotted, ...",
-                value = .get_default(defaults, "vline.linetypes", "dashed")
+                value = get_default(defaults, "vline.linetypes", "dashed")
             ),
             "Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("vline.opacities"), "X Opacities (0-1)",
-                value = .get_default(defaults, "vline.opacities", "1")
+                value = get_default(defaults, "vline.opacities", "1")
             ),
             "Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("abline.slopes"), "Ab Slopes",
-                value = .get_default(defaults, "abline.slopes", "")
+                value = get_default(defaults, "abline.slopes", "")
             ),
             "Slope(s) of diagonal reference lines (rise/run), as comma-separated values",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("abline.intercepts"), "Ab Y-intercepts",
-                value = .get_default(defaults, "abline.intercepts", "")
+                value = get_default(defaults, "abline.intercepts", "")
             ),
             intercept_tip,
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("abline.colors"), "Ab Colors",
-                value = .get_default(defaults, "abline.colors", "#000000")
+                value = get_default(defaults, "abline.colors", "#000000")
             ),
             "Color(s) for diagonal reference lines, as comma-separated hex codes or color names",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("abline.widths"), "Ab Widths",
-                value = .get_default(defaults, "abline.widths", "1")
+                value = get_default(defaults, "abline.widths", "1")
             ),
             "Width(s) for diagonal reference lines in pixels, as comma-separated values",
             placement = "top", options = tip_opts
@@ -162,14 +168,14 @@
         tipify(
             textInput(ns("abline.linetypes"), "Ab Line Types",
                 placeholder = "solid, dashed, dotted, ...",
-                value = .get_default(defaults, "abline.linetypes", "dashed")
+                value = get_default(defaults, "abline.linetypes", "dashed")
             ),
             "Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)",
             placement = "top", options = tip_opts
         ),
         tipify(
             textInput(ns("abline.opacities"), "Ab Opacities (0-1)",
-                value = .get_default(defaults, "abline.opacities", "1")
+                value = get_default(defaults, "abline.opacities", "1")
             ),
             "Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values",
             placement = "top", options = tip_opts
@@ -180,7 +186,7 @@
         inputs <- c(inputs, list(
             tipify(
                 materialSwitch(ns("best.fit"), "Plot Best Fit Line",
-                    value = FALSE,
+                    value = get_default(defaults, "best.fit", FALSE, is.logical),
                     status = "success"
                 ),
                 "Add a LOESS smoothed curve of best fit to the scatter plot",
@@ -188,7 +194,7 @@
             ),
             tipify(
                 numericInput(ns("line.best.smoothness"), "Best Fit Line Smoothness",
-                    value = 1,
+                    value = get_default(defaults, "line.best.smoothness", 1, is.numeric),
                     min = 0,
                     max = 10000
                 ),
@@ -197,18 +203,38 @@
             ),
             tipify(
                 colourInput(ns("line.best.colour"), "Best Fit Line Color",
-                    value = "#000000"
+                    value = get_default(defaults, "line.best.colour", "#000000")
                 ),
                 "Color for the LOESS best fit line",
                 placement = "top", options = tip_opts
             ),
             tipify(
                 materialSwitch(ns("linear.model"), "Linear Model Line",
-                    value = FALSE,
+                    value = get_default(defaults, "linear.model", FALSE, is.logical),
                     status = "success"
                 ),
                 "Add a linear regression line to the scatter plot",
                 placement = "top", options = tip_opts
+            ),
+            tipify(
+                materialSwitch(ns("custom.model.enable"), "Custom Model Lines",
+                    value = get_default(defaults, "custom.model.enable", FALSE, is.logical),
+                    status = "success"
+                ),
+                paste(
+                    "Fit one or more custom models from formulas you define below",
+                    "and overlay them as lines. Only data columns and basic",
+                    "math/transform terms are allowed."
+                ),
+                placement = "top", options = tip_opts
+            ),
+            multiDynamicInput(
+                ns("custom.models"),
+                label = "Models",
+                row_spec = build_model_row_spec(),
+                max_per_row = 4,
+                panel = FALSE,
+                elements = get_default(defaults, "custom.models", NULL)
             )
         ))
     }
@@ -236,9 +262,12 @@
 #' @importFrom shinyWidgets materialSwitch
 #'
 #' @author Jared Andrews Jacob Martin
-#' @rdname INTERNAL_uniform_axes_inputs_ui
-#' @keywords internal
-.uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot")
+#' uniform_axes_inputs_ui(ns)
+#' uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
+uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
     font_choices <- c(
         "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
         "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
@@ -248,7 +277,7 @@
 
     rotate_input <- if (include.rotate) {
         materialSwitch(ns("rotate"), "Rotate (swap X/Y)",
-            value = .get_default(defaults, "rotate", FALSE, is.logical),
+            value = get_default(defaults, "rotate", FALSE, is.logical),
             status = "success"
         )
     } else {
@@ -257,11 +286,11 @@
 
     if (include.flip) {
         flip_x <- materialSwitch(ns("flip.x"), "Flip X Axis",
-            value = .get_default(defaults, "flip.x", FALSE, is.logical),
+            value = get_default(defaults, "flip.x", FALSE, is.logical),
             status = "success"
         )
         flip_y <- materialSwitch(ns("flip.y"), "Flip Y Axis",
-            value = .get_default(defaults, "flip.y", FALSE, is.logical),
+            value = get_default(defaults, "flip.y", FALSE, is.logical),
             status = "success"
         )
     } else {
@@ -275,119 +304,119 @@
         flip_y,
         selectInput(ns("title.font.family"), "Title Font",
             choices = font_choices,
-            selected = .get_default(
+            selected = get_default(
                 defaults, "title.font.family", "Arial",
                 function(x) x %in% font_choices
             ), selectize = FALSE
         ),
         colourInput(ns("title.font.color"), "Title Color",
-            value = .get_default(defaults, "title.font.color", "#000000")
+            value = get_default(defaults, "title.font.color", "#000000")
         ),
         numericInput(ns("title.font.size"), "Title Size",
-            value = .get_default(defaults, "title.font.size", 26, is.numeric),
+            value = get_default(defaults, "title.font.size", 26, is.numeric),
             min = 1,
             step = 1
         ),
         numericInput(ns("axis.title.horizontal.position"), "Title position",
-            value = .get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric),
+            value = get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric),
             max = 1, min = 0, step = 0.1
         ),
         numericInput(ns("axis.title.font.size"), "Axis Title Size",
-            value = .get_default(defaults, "axis.title.font.size", 18, is.numeric),
+            value = get_default(defaults, "axis.title.font.size", 18, is.numeric),
             min = 1,
             step = 1
         ),
         colourInput(ns("axis.title.font.color"), "Axis Title Color",
-            value = .get_default(defaults, "axis.title.font.color", "#000000")
+            value = get_default(defaults, "axis.title.font.color", "#000000")
         ),
         selectInput(ns("axis.title.font.family"), "Axis Title Font",
             choices = font_choices,
-            selected = .get_default(
+            selected = get_default(
                 defaults, "axis.title.font.family", "Arial",
                 function(x) x %in% font_choices
             ), selectize = FALSE
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
-            value = .get_default(defaults, "axis.showline", TRUE, is.logical)
+            value = get_default(defaults, "axis.showline", TRUE, is.logical)
         ),
         checkboxInput(ns("axis.mirror"), "Mirror Axis Borders",
-            value = .get_default(defaults, "axis.mirror", TRUE, is.logical)
+            value = get_default(defaults, "axis.mirror", TRUE, is.logical)
         ),
         checkboxInput(ns("show.grid.x"), "Show X Gridlines",
-            value = .get_default(defaults, "show.grid.x", TRUE, is.logical)
+            value = get_default(defaults, "show.grid.x", TRUE, is.logical)
         ),
         checkboxInput(ns("show.grid.y"), "Show Y Gridlines",
-            value = .get_default(defaults, "show.grid.y", TRUE, is.logical)
+            value = get_default(defaults, "show.grid.y", TRUE, is.logical)
         ),
         colourInput(ns("grid.color"), "Gridline Color",
-            value = .get_default(defaults, "grid.color", "#CCCCCC")
+            value = get_default(defaults, "grid.color", "#CCCCCC")
         ),
         colourInput(ns("axis.linecolor"), "Axis Line Color",
-            value = .get_default(defaults, "axis.linecolor", "black")
+            value = get_default(defaults, "axis.linecolor", "black")
         ),
         numericInput(ns("axis.linewidth"), "Axis Line Width",
-            value = .get_default(defaults, "axis.linewidth", 0.5, is.numeric),
+            value = get_default(defaults, "axis.linewidth", 0.5, is.numeric),
             min = 0,
             step = 0.1
         ),
         numericInput(ns("axis.tickfont.size"), "Tick Label Size",
-            value = .get_default(defaults, "axis.tickfont.size", 12, is.numeric),
+            value = get_default(defaults, "axis.tickfont.size", 12, is.numeric),
             min = 1,
             step = 1
         ),
         colourInput(ns("axis.tickfont.color"), "Tick Label Color",
-            value = .get_default(defaults, "axis.tickfont.color", "black")
+            value = get_default(defaults, "axis.tickfont.color", "black")
         ),
         selectInput(ns("axis.tickfont.family"), "Tick Label Font",
             choices = font_choices,
-            selected = .get_default(
+            selected = get_default(
                 defaults, "axis.tickfont.family", "Arial",
                 function(x) x %in% font_choices
             ), selectize = FALSE
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
-            value = .get_default(defaults, "axis.tickangle.x", 0, is.numeric),
+            value = get_default(defaults, "axis.tickangle.x", 0, is.numeric),
             min = -180,
             max = 180,
             step = 15
         ),
         numericInput(ns("axis.tickangle.y"), "Y Tick Label Angle",
-            value = .get_default(defaults, "axis.tickangle.y", 0, is.numeric),
+            value = get_default(defaults, "axis.tickangle.y", 0, is.numeric),
             min = -180,
             max = 180,
             step = 15
         ),
         selectInput(ns("axis.ticks"), "Tick Position",
             choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
-            selected = .get_default(
+            selected = get_default(
                 defaults, "axis.ticks", "outside",
                 function(x) x %in% c("outside", "inside", "")
             ), selectize = FALSE
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
-            value = .get_default(defaults, "axis.tickcolor", "black")
+            value = get_default(defaults, "axis.tickcolor", "black")
         ),
         numericInput(ns("axis.ticklen"), "Tick Mark Length",
-            value = .get_default(defaults, "axis.ticklen", 5, is.numeric),
+            value = get_default(defaults, "axis.ticklen", 5, is.numeric),
             min = 0,
             step = 1
         ),
         numericInput(ns("axis.tickwidth"), "Tick Mark Width",
-            value = .get_default(defaults, "axis.tickwidth", 1, is.numeric),
+            value = get_default(defaults, "axis.tickwidth", 1, is.numeric),
             min = 0,
             step = 0.1
         ),
         numericInput(ns("facet.title.font.size"), "Facet Subplot Title Size",
-            value = .get_default(defaults, "facet.title.font.size", 18, is.numeric),
+            value = get_default(defaults, "facet.title.font.size", 18, is.numeric),
             min = 1,
             step = 1
         ),
         colourInput(ns("facet.title.font.color"), "Facet Title Color",
-            value = .get_default(defaults, "facet.title.font.color", "#000000")
+            value = get_default(defaults, "facet.title.font.color", "#000000")
         ),
         selectInput(ns("facet.title.font.family"), "Facet Title Font",
             choices = font_choices,
-            selected = .get_default(
+            selected = get_default(
                 defaults, "facet.title.font.family", "Arial",
                 function(x) x %in% font_choices
             ), selectize = FALSE
@@ -419,7 +448,7 @@
     tagList(
         tipify(
             materialSwitch(ns("stats.enabled"), "Enable Stats",
-                value = .get_default(defaults, "stats.enabled", FALSE, is.logical),
+                value = get_default(defaults, "stats.enabled", FALSE, is.logical),
                 status = "success"
             ),
             "Toggle pairwise statistical testing with bracket annotations on the plot",
@@ -433,7 +462,7 @@
                     "Kruskal-Wallis" = "kruskal.test",
                     "ANOVA" = "anova"
                 ),
-                selected = .get_default(defaults, "stat.test", "wilcox.test"), selectize = FALSE
+                selected = get_default(defaults, "stat.test", "wilcox.test"), selectize = FALSE
             ),
             paste(
                 "Statistical test for comparisons.",
@@ -448,7 +477,7 @@
                     "holm", "hochberg", "hommel", "bonferroni",
                     "BH", "BY", "fdr", "none"
                 ),
-                selected = .get_default(defaults, "stat.p.adjust", "holm"), selectize = FALSE
+                selected = get_default(defaults, "stat.p.adjust", "holm"), selectize = FALSE
             ),
             "Method for multiple testing correction applied to all p-values",
             placement = "top", options = tip_opts
@@ -460,14 +489,14 @@
                     "P-value" = "p.value",
                     "Symbols" = "symbol"
                 ),
-                selected = .get_default(defaults, "stat.display", "p.adj"), selectize = FALSE
+                selected = get_default(defaults, "stat.display", "p.adj"), selectize = FALSE
             ),
             "What to display on brackets: adjusted p-values, raw p-values, or significance symbols (*, **, ***, ****)",
             placement = "top", options = tip_opts
         ),
         tipify(
             numericInput(ns("stat.sig.threshold"), "Significance Threshold",
-                value = .get_default(defaults, "stat.sig.threshold", 0.05, is.numeric),
+                value = get_default(defaults, "stat.sig.threshold", 0.05, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             "(Adjusted, if applied) P-values above this threshold are labeled 'ns'. Also used as the boundary for the '*' significance symbol.",
@@ -475,7 +504,7 @@
         ),
         tipify(
             materialSwitch(ns("stat.hide.ns"), "Hide Non-Significant",
-                value = .get_default(defaults, "stat.hide.ns", FALSE, is.logical),
+                value = get_default(defaults, "stat.hide.ns", TRUE, is.logical),
                 status = "success"
             ),
             "Hide comparison brackets where the adjusted p-value exceeds the significance threshold",
@@ -483,7 +512,7 @@
         ),
         tipify(
             materialSwitch(ns("stat.paired"), "Paired Test",
-                value = .get_default(defaults, "stat.paired", FALSE, is.logical),
+                value = get_default(defaults, "stat.paired", FALSE, is.logical),
                 status = "success"
             ),
             paste(
@@ -502,14 +531,14 @@
         ),
         tipify(
             colourpicker::colourInput(ns("stat.line.color"), "Line Color",
-                value = .get_default(defaults, "stat.line.color", "#000000")
+                value = get_default(defaults, "stat.line.color", "#000000")
             ),
             "Color for bracket lines and annotation text",
             placement = "top", options = tip_opts
         ),
         tipify(
             numericInput(ns("stat.line.width"), "Line Width",
-                value = .get_default(defaults, "stat.line.width", 1, is.numeric),
+                value = get_default(defaults, "stat.line.width", 1, is.numeric),
                 min = 1, max = 50, step = 1
             ),
             "Width of bracket lines in pixels",
@@ -518,14 +547,14 @@
         tipify(
             selectInput(ns("stat.bracket.style"), "Bracket Style",
                 choices = c("Capped" = "capped", "Flat" = "flat"),
-                selected = .get_default(defaults, "stat.bracket.style", "capped"), selectize = FALSE
+                selected = get_default(defaults, "stat.bracket.style", "capped"), selectize = FALSE
             ),
             "Capped brackets have vertical ticks at each end; flat brackets are a single horizontal line",
             placement = "top", options = tip_opts
         ),
         tipify(
             numericInput(ns("stat.step.increase"), "Bracket Spacing",
-                value = .get_default(defaults, "stat.step.increase", 0.06, is.numeric),
+                value = get_default(defaults, "stat.step.increase", 0.06, is.numeric),
                 min = 0.01, max = 0.3, step = 0.01
             ),
             "Fraction of the y-axis range used as vertical spacing between successive bracket levels",
@@ -533,7 +562,7 @@
         ),
         tipify(
             numericInput(ns("stat.text.bump"), "Text Offset",
-                value = .get_default(defaults, "stat.text.bump", 0.04, is.numeric),
+                value = get_default(defaults, "stat.text.bump", 0.04, is.numeric),
                 min = 0.005, max = 0.2, step = 0.005
             ),
             "Fraction of the y-axis range for vertical distance between the bracket line and annotation text",
@@ -541,7 +570,7 @@
         ),
         tipify(
             numericInput(ns("stat.bracket.inset"), "Bracket Inset",
-                value = .get_default(defaults, "stat.bracket.inset", 0.025, is.numeric),
+                value = get_default(defaults, "stat.bracket.inset", 0.025, is.numeric),
                 min = 0, max = 0.2, step = 0.005
             ),
             "Fixed amount to inset bracket endpoints from group centers, preventing overlap of adjacent brackets",
@@ -549,7 +578,7 @@
         ),
         tipify(
             materialSwitch(ns("stat.per.facet"), "Per Facet Panel",
-                value = .get_default(defaults, "stat.per.facet", TRUE, is.logical),
+                value = get_default(defaults, "stat.per.facet", TRUE, is.logical),
                 status = "success"
             ),
             "When enabled, statistical tests run independently within each facet panel. When disabled, tests run on the full dataset.",
@@ -565,7 +594,7 @@
 #' modules. Includes interactive download controls, plot margin adjustments,
 #' and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
 #' controls live in each module's "Facet" tab via
-#' [.uniform_subplot_spacing_inputs_ui()].)
+#' `.uniform_subplot_spacing_inputs_ui()`.)
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -577,15 +606,17 @@
 #' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_plotly_inputs_ui
-#' @keywords internal
-.uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot")
+#' uniform_plotly_inputs_ui(ns)
+uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
         selectInput(
             ns("download.format"),
             "Download Format",
-            selected = .get_default(
+            selected = get_default(
                 defaults, "download.format", "svg",
                 function(x) x %in% c("svg", "png", "jpeg", "webp")
             ),
@@ -594,7 +625,7 @@
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
-                value = .get_default(defaults, "margin.t", 70, is.numeric),
+                value = get_default(defaults, "margin.t", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Top margin of the plot in pixels",
@@ -602,7 +633,7 @@
         ),
         tipify(
             numericInput(ns("margin.b"), "Margin Bottom",
-                value = .get_default(defaults, "margin.b", 70, is.numeric),
+                value = get_default(defaults, "margin.b", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Bottom margin of the plot in pixels",
@@ -610,7 +641,7 @@
         ),
         tipify(
             numericInput(ns("margin.l"), "Margin Left",
-                value = .get_default(defaults, "margin.l", 70, is.numeric),
+                value = get_default(defaults, "margin.l", 70, is.numeric),
                 min = 0, step = 5
             ),
             "Left margin of the plot in pixels",
@@ -618,7 +649,7 @@
         ),
         tipify(
             numericInput(ns("margin.r"), "Margin Right",
-                value = .get_default(defaults, "margin.r", 90, is.numeric),
+                value = get_default(defaults, "margin.r", 90, is.numeric),
                 min = 0, step = 5
             ),
             "Right margin of the plot in pixels",
@@ -627,7 +658,7 @@
         tipify(
             colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
-                value = .get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
+                value = get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)")
             ),
             "Interior fill color for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts
@@ -635,14 +666,14 @@
         tipify(
             colourInput(ns("shape.line.color"), "Shape Line Color",
                 allowTransparent = TRUE,
-                value = .get_default(defaults, "shape.line.color", "black")
+                value = get_default(defaults, "shape.line.color", "black")
             ),
             "Outline color for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts
         ),
         tipify(
             numericInput(ns("shape.line.width"), "Shape Line Width",
-                value = .get_default(defaults, "shape.line.width", 4, is.numeric),
+                value = get_default(defaults, "shape.line.width", 4, is.numeric),
                 min = 0, step = 0.25
             ),
             "Outline width for shapes drawn on the plot using Plotly's drawing tools",
@@ -651,7 +682,7 @@
         tipify(
             selectInput(ns("shape.linetype"), "Shape Linetype",
                 choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"),
-                selected = .get_default(
+                selected = get_default(
                     defaults, "shape.linetype", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
                 ), selectize = FALSE
@@ -661,7 +692,7 @@
         ),
         tipify(
             numericInput(ns("shape.opacity"), "Shape Opacity",
-                value = .get_default(defaults, "shape.opacity", 1, is.numeric),
+                value = get_default(defaults, "shape.opacity", 1, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             "Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque",
@@ -694,7 +725,7 @@
     tagList(
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = .get_default(defaults, "subplot.margin.x", 0.03, is.numeric),
+                value = get_default(defaults, "subplot.margin.x", 0.03, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -705,7 +736,7 @@
         ),
         tipify(
             numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = .get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
+                value = get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -733,14 +764,17 @@
 #' @importFrom shinyBS tipify
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_legend_inputs_ui
-#' @keywords internal
-.uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot1")
+#' uniform_legend_inputs_ui(ns)
+#' uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
+uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
         tipify(
             numericInput(ns("legend.title.size"), "Legend Title Size",
-                value = .get_default(defaults, "legend.title.size", 14, is.numeric),
+                value = get_default(defaults, "legend.title.size", 14, is.numeric),
                 min = 0, step = 1
             ),
             "Font size of the legend title.",
@@ -748,7 +782,7 @@
         ),
         tipify(
             numericInput(ns("legend.text.size"), "Legend Text Size",
-                value = .get_default(defaults, "legend.text.size", 12, is.numeric),
+                value = get_default(defaults, "legend.text.size", 12, is.numeric),
                 min = 0, step = 1
             ),
             "Font size of the legend entry labels.",

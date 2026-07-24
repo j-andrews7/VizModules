@@ -16,7 +16,7 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom shinyjs hide show
+#' @importFrom shinyjs hide show delay
 #' @importFrom stats na.omit setNames
 #' @importFrom ggplot2 sym .data element_text element_line theme unit
 #' @importFrom plotthis SplitBarPlot
@@ -49,27 +49,34 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
 
 
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         # Toggle text.position slider visibility based on label.on.y.axis switch
         observeEvent(input$label.on.y.axis, {
             if (isTRUE(input$label.on.y.axis)) {
-                hide("text.position")
+                .hide_input(session, "text.position")
             } else {
-                show("text.position")
+                .show_input(session, "text.position")
             }
         })
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("splitbar")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         default_palette_name <- "dittoColors"
         default_gradient_palette <- "Spectral"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
@@ -212,68 +219,76 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # Data
             # Data Section
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
+                selected = get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
             )
             updateSelectInput(session, "y.data",
-                selected = .get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
             )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
             )
 
             # Facet Section
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "free_y")
+                selected = get_default(defaults, "facet.scale", "free_y")
             )
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
             updateSelectInput(session, "alpha.by",
-                selected = .get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateMaterialSwitch(session, "alpha.reverse",
-                value = .get_default(defaults, "alpha.reverse", FALSE, is.logical)
+                value = get_default(defaults, "alpha.reverse", FALSE, is.logical)
             )
-            updateTextInput(session, "alpha.name", value = .get_default(defaults, "alpha.name", ""))
-            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
-            updateNumericInput(session, "bar.height", value = .get_default(defaults, "bar.height", 0.9, is.numeric))
-            updateNumericInput(session, "line.height", value = .get_default(defaults, "line.height", 0.5, is.numeric))
+            updateTextInput(session, "alpha.name", value = get_default(defaults, "alpha.name", ""))
+            updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
+            updateNumericInput(session, "bar.height", value = get_default(defaults, "bar.height", 0.9, is.numeric))
+            updateNumericInput(session, "line.height", value = get_default(defaults, "line.height", 0.5, is.numeric))
             updateMaterialSwitch(session, "label.on.y.axis",
-                value = .get_default(defaults, "label.on.y.axis", FALSE, is.logical)
+                value = get_default(defaults, "label.on.y.axis", FALSE, is.logical)
             )
             updateSliderInput(session, "axis.scale.factor",
-                value = .get_default(defaults, "axis.scale.factor", 1.2, is.numeric)
+                value = get_default(defaults, "axis.scale.factor", 1.2, is.numeric)
             )
             updateSliderInput(session, "text.position",
-                value = .get_default(defaults, "text.position", 0, is.numeric)
+                value = get_default(defaults, "text.position", 0, is.numeric)
             )
+            updateNumericInput(session, "lower.quantile",
+                value = get_default(defaults, "lower.quantile", 0, is.numeric)
+            )
+            updateNumericInput(session, "upper.quantile",
+                value = get_default(defaults, "upper.quantile", 1, is.numeric)
+            )
+            updateNumericInput(session, "lower.cutoff", value = get_default(defaults, "lower.cutoff", NA, is.numeric))
+            updateNumericInput(session, "upper.cutoff", value = get_default(defaults, "upper.cutoff", NA, is.numeric))
 
             # Axes
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "x.max", value = .get_default(defaults, "x.max", max.x, is.numeric))
-            updateNumericInput(session, "x.min", value = .get_default(defaults, "x.min", min.x, is.numeric))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "x.max", value = get_default(defaults, "x.max", max.x, is.numeric))
+            updateNumericInput(session, "x.min", value = get_default(defaults, "x.min", min.x, is.numeric))
             updateNumericInput(session, "axis.title.font.size",
-                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
+                value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
 
-            .reset_axes_inputs(session, defaults)
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_axes_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         # Update x-axis range when data columns or fill.by change (when auto-update is off)
@@ -293,15 +308,22 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
+                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
+                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
+
+        # The color-scale trimming controls only affect a continuous fill gradient,
+        # so only expose them when the selected fill column is numeric.
+        observeEvent(list(input$fill.by, data()), {
+            fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
+            if (fill_by_is_numeric()) {
+                .show_input(session, fill.scale.inputs)
+            } else {
+                .hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
 
         generate_SplitBarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
@@ -355,7 +377,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
 
 
-            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_args$panel.spacing.x <- unit(isolate_fn(input$subplot.margin.x), "pt")
             theme_args$panel.spacing.y <- unit(isolate_fn(input$subplot.margin.y), "pt")
 
@@ -382,7 +404,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
                 split_by = split.by,
-                bar_height = isolate_fn(input$bar.height)
+                bar_height = isolate_fn(input$bar.height),
+                lower_quantile = isolate_fn(input$lower.quantile),
+                upper_quantile = isolate_fn(input$upper.quantile),
+                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
 
             y <- isolate_fn(input$y.data)
@@ -392,90 +418,110 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             # to replace it with user-controlled positioning. This is necessary because
             # plotthis::SplitBarPlot() adds a non-customizable geom_text layer for
             # category labels at x=0 that cannot be controlled through its parameters.
+            #
+            # plotthis keeps the same aesthetics for both orientations (x = value,
+            # y = category) and only swaps the visual axes via coord_flip() when the
+            # plot is rotated. Under coord_flip() the category axis becomes the X axis
+            # and the manual labels are rotated 90 degrees, so the custom positioning
+            # must run for both orientations or the slider has no effect when flipped.
+            rotated <- isTRUE(isolate_fn(input$rotate))
 
-            
-            if (!isolate_fn(input$rotate)) {
-                p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
+            p$layers <- p$layers[!vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1))]
 
-                if (isTRUE(isolate_fn(input$label.on.y.axis))) {
-                    # Show category labels on the Y axis by re-enabling axis text
-                    # that plotthis::SplitBarPlot() hides internally
+            if (isTRUE(isolate_fn(input$label.on.y.axis))) {
+                # Show category labels on the category axis by re-enabling the axis text
+                # that plotthis::SplitBarPlot() hides internally. The category axis is
+                # the X axis when flipped (coord_flip) and the Y axis otherwise.
+                if (rotated) {
+                    p <- p + theme(
+                        axis.text.x = element_text(),
+                        axis.ticks.x = element_line()
+                    )
+                } else {
                     p <- p + theme(
                         axis.text.y = element_text(),
                         axis.ticks.y = element_line()
                     )
+                }
+            } else {
+                # Show category labels at the slider-controlled position along the
+                # value axis. plotthis rotates these labels 90 degrees when flipped.
+                position <- isolate_fn(input$text.position)
+                lineheight <- 0.5
+                label_angle <- if (rotated) 90 else 0
+
+                p <- p + geom_text(
+                    data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers
+                    aes(
+                        x = position, y = !!sym(y),
+                        label = ifelse(
+                            is.na(!!sym(y)), " NA ",
+                            ifelse(
+                                .data[[x]] >= 0,
+                                gsub("(\\n|$)", " \\1", !!sym(y)),
+                                gsub("(^|\\n)", "\\1 ", !!sym(y))
+                            )
+                        ),
+                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                    ),
+                    color = "black",
+                    lineheight = lineheight,
+                    angle = label_angle,
+                    inherit.aes = FALSE
+                )
+
+                p <- p + geom_text(
+                    data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
+                    aes(
+                        x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction
+                        label = ifelse(
+                            is.na(!!sym(y)), " NA ",
+                            ifelse(
+                                .data[[x]] >= 0,
+                                gsub("(\\n|$)", " \\1", !!sym(y)),
+                                gsub("(^|\\n)", "\\1 ", !!sym(y))
+                            )
+                        ),
+                        hjust = ifelse(.data[[x]] >= 0, 1, 0)
+                    ),
+                    color = "black",
+                    lineheight = lineheight,
+                    angle = label_angle,
+                    inherit.aes = FALSE
+                )
+
+                # Hide the category axis labels/ticks drawn by plotthis (replaced by the
+                # manual labels above). The category axis is the X axis when flipped.
+                if (rotated) {
+                    p <- p + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
                 } else {
-                    # #Determining wether each y value is positive or negative
-                    # Show category labels at the slider-controlled position on the x axis
-                    position <- isolate_fn(input$text.position)
-                    lineheight <- 0.5
-
-
-                    p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] >= 0), # Adding labels for categories with only positive x axis numbers
-                        aes(
-                            x = position, y = !!sym(y),
-                            label = ifelse(
-                                is.na(!!sym(y)), " NA ",
-                                ifelse(
-                                    .data[[x]] >= 0,
-                                    gsub("(\\n|$)", " \\1", !!sym(y)),
-                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
-                                )
-                            ),
-                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
-                        ),
-                        color = "black",
-                        lineheight = lineheight,
-                        inherit.aes = FALSE
-                    ) +
-                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
-
-                    p <- p + geom_text(
-                        data = ~ dplyr::filter(.x, .data[[x]] < 0), # Adding labels for categories with only negative x axis numbers
-                        aes(
-                            x = -position, y = !!sym(y), # Position is set to negative as labels are being moved in the opposite direction
-                            label = ifelse(
-                                is.na(!!sym(y)), " NA ",
-                                ifelse(
-                                    .data[[x]] >= 0,
-                                    gsub("(\\n|$)", " \\1", !!sym(y)),
-                                    gsub("(^|\\n)", "\\1 ", !!sym(y))
-                                )
-                            ),
-                            hjust = ifelse(.data[[x]] >= 0, 1, 0)
-                        ),
-                        color = "black",
-                        lineheight = lineheight,
-                        inherit.aes = FALSE
-                    ) +
-                        theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+                    p <- p + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
                 }
             }
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_facet_subplot_spacing(
+                fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -494,19 +540,19 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
             return(fig)
         })
 
@@ -514,7 +560,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         output$SplitBarPlot <- renderPlotly({
             req(input$x.data, input$y.data)
 
-            fig <- .apply_render_margins(generate_SplitBarPlot(), input)
+            fig <- apply_render_margins(generate_SplitBarPlot(), input)
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

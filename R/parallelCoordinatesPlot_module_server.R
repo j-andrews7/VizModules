@@ -16,7 +16,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide show click
+#' @importFrom shinyjs hide show click delay
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotApp()]
@@ -28,17 +28,25 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "parallelCoordinatesPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "parallelCoordinatesPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("parcoords")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -90,9 +98,9 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 return()
             }
             if (length(palette_groups()) > 0) {
-                hide("color.scale")
+                .hide_input(session, "color.scale")
             } else {
-                show("color.scale")
+                .show_input(session, "color.scale")
             }
         }, ignoreNULL = FALSE)
 
@@ -101,57 +109,57 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             d <- data_reactive()
             all.choices <- c("", names(d))
             updateSelectInput(session, "dimensions",
-                selected = .get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
+                selected = get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
             )
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
+                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
             )
             updateSelectInput(session, "color.scale",
-                selected = .get_default(defaults, "color.scale", "Viridis")
+                selected = get_default(defaults, "color.scale", "Viridis")
             )
             updateSliderInput(session, "line.opacity",
-                value = .get_default(defaults, "line.opacity", 0.5, is.numeric)
+                value = get_default(defaults, "line.opacity", 0.5, is.numeric)
             )
             updateNumericInput(session, "line.width",
-                value = .get_default(defaults, "line.width", 1, is.numeric)
+                value = get_default(defaults, "line.width", 1, is.numeric)
             )
             updateCheckboxInput(session, "show.colorbar",
-                value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
+                value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             )
             updateNumericInput(session, "label.font.size",
-                value = .get_default(defaults, "label.font.size", 12, is.numeric)
+                value = get_default(defaults, "label.font.size", 12, is.numeric)
             )
             updateColourInput(session, "label.font.color",
-                value = .get_default(defaults, "label.font.color", "black")
+                value = get_default(defaults, "label.font.color", "black")
             )
             updateSelectInput(session, "label.font.family",
-                selected = .get_default(defaults, "label.font.family", "Arial")
+                selected = get_default(defaults, "label.font.family", "Arial")
             )
             updateNumericInput(session, "tick.font.size",
-                value = .get_default(defaults, "tick.font.size", 10, is.numeric)
+                value = get_default(defaults, "tick.font.size", 10, is.numeric)
             )
             updateColourInput(session, "tick.font.color",
-                value = .get_default(defaults, "tick.font.color", "black")
+                value = get_default(defaults, "tick.font.color", "black")
             )
             updateSelectInput(session, "tick.font.family",
-                selected = .get_default(defaults, "tick.font.family", "Arial")
+                selected = get_default(defaults, "tick.font.family", "Arial")
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 16, is.numeric)
+                value = get_default(defaults, "title.font.size", 16, is.numeric)
             )
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial")
+                selected = get_default(defaults, "title.font.family", "Arial")
             )
             updateColourInput(session, "title.font.color",
-                value = .get_default(defaults, "title.font.color", "#000000")
+                value = get_default(defaults, "title.font.color", "#000000")
             )
             updateColourInput(session, "bgcolor",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+                value = get_default(defaults, "bgcolor", "#FFFFFF")
             )
 
             click("reset_palette")
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -203,12 +211,12 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 bgcolor = isolate_fn(input$bgcolor)
             )
 
-            config_list <- .add_plot_config(
+            config_list <- add_plot_config(
                 download.format = isolate_fn(input$download.format),
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -232,8 +240,10 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_parallelCoordinatesPlot(), input)
+                fig <- apply_render_margins(generate_parallelCoordinatesPlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

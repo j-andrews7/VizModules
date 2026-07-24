@@ -327,7 +327,7 @@ test_that("linePlot omits panel borders when axis lines are disabled", {
     expect_equal(length(rect_shapes), 0)
 })
 
-test_that(".build_facet_panel_borders honours showline and mirror", {
+test_that("build_facet_panel_borders honours showline and mirror", {
     fig <- structure(
         list(x = list(layout = list(
             xaxis = list(domain = c(0, 0.45)),
@@ -339,21 +339,21 @@ test_that(".build_facet_panel_borders honours showline and mirror", {
     )
 
     # Full box per panel when showline and mirror are TRUE.
-    full <- .build_facet_panel_borders(fig, 2, showline = TRUE, mirror = TRUE)
+    full <- build_facet_panel_borders(fig, 2, showline = TRUE, mirror = TRUE)
     expect_equal(length(full), 2)
     expect_true(all(vapply(full, function(s) identical(s$type, "rect"), logical(1))))
 
     # Left + bottom edges per panel when mirror is FALSE.
-    edges <- .build_facet_panel_borders(fig, 2, showline = TRUE, mirror = FALSE)
+    edges <- build_facet_panel_borders(fig, 2, showline = TRUE, mirror = FALSE)
     expect_equal(length(edges), 4)
     expect_true(all(vapply(edges, function(s) identical(s$type, "line"), logical(1))))
 
     # No shapes when showline is FALSE.
-    none <- .build_facet_panel_borders(fig, 2, showline = FALSE, mirror = TRUE)
+    none <- build_facet_panel_borders(fig, 2, showline = FALSE, mirror = TRUE)
     expect_equal(length(none), 0)
 })
 
-test_that(".build_facet_panel_borders draws a distinct box per panel across rows", {
+test_that("build_facet_panel_borders draws a distinct box per panel across rows", {
     # Emulate a 3-column x 2-row shared-axis subplot: plotly only keeps one axis
     # per column (x) and one per row (y), so the per-panel index lookup breaks.
     fig <- structure(
@@ -367,7 +367,7 @@ test_that(".build_facet_panel_borders draws a distinct box per panel across rows
         class = "plotly"
     )
 
-    borders <- .build_facet_panel_borders(
+    borders <- build_facet_panel_borders(
         fig, 6, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2
     )
     expect_equal(length(borders), 6)
@@ -384,7 +384,7 @@ test_that(".build_facet_panel_borders draws a distinct box per panel across rows
     expect_true(all(bottom_y == 0.00))
 })
 
-test_that(".build_facet_panel_borders skips empty cells in a partial grid", {
+test_that("build_facet_panel_borders skips empty cells in a partial grid", {
     # 5 panels in a 3x2 grid leaves the bottom-right cell empty.
     fig <- structure(
         list(x = list(layout = list(
@@ -397,7 +397,7 @@ test_that(".build_facet_panel_borders skips empty cells in a partial grid", {
         class = "plotly"
     )
 
-    borders <- .build_facet_panel_borders(
+    borders <- build_facet_panel_borders(
         fig, 5, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2
     )
     expect_equal(length(borders), 5)

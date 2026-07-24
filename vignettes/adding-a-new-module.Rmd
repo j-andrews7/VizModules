@@ -31,6 +31,7 @@ This checklist walks through how to add a new plotting module to **VizModules** 
   - `@section Plot parameters and defaults:` - Document all exposed parameters with UI labels and defaults
   - `@section Plot parameters implementing new functionality:` - Document any new or plotly-specific controls (axes, ticks, reference lines, etc)
 - [ ] Add an example app that uses the module twice to prove multi-instance behavior.
+- [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
 - [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
 - [ ] **Never use `eval(str2expression())` on raw user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()` instead (see [Sanitizing User-Provided Expressions] below).
@@ -150,6 +151,67 @@ myPlotApp <- function(data_list = NULL) {
 - [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
 - [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
 
+## Persisting Manual Layout Edits
+
+Every VizModules plot is interactively editable: users can drag the legend,
+reposition or re-text annotations, drag the (draggable) axis titles, and slide a
+continuous-colour legend (colorbar) to their heart's content. 
+
+Because each module rebuilds its figure from scratch on every input change, 
+those hand-made tweaks would be lost on the next re-render unless they are captured and re-applied.
+
+Two exported helpers handle this for you. 
+Use them in **every** new module so the behaviour is available from the start.
+
+### Server
+
+- [ ] Near the top of your `moduleServer()` body, create a unique plotly event
+  source for this module instance and the edit store:
+
+    ```r
+    # Unique source so each module instance captures only its own events.
+    plot_source <- session$ns("myplot")
+    edit_store <- setup_manual_edits(input, session, plot_source)
+    ```
+
+- [ ] In your `renderPlotly()`, pass the freshly built figure through
+  `finalize_manual_edits()` immediately before returning it:
+
+    ```r
+    output$myPlot <- renderPlotly({
+        req(input$x, input$y)
+        fig <- generate_myPlot()  # your function that builds the plotly figure
+        finalize_manual_edits(fig, plot_source, edit_store, session)
+    })
+    ```
+
+Pretty simple. 
+
+`setup_manual_edits()` registers the observers that capture `plotly_relayout` events (legend, annotation, and axis-title drags)
+plus the JavaScript-forwarded colorbar drag; `finalize_manual_edits()` tags the
+figure with the event source, restores any captured edits, records the figure for
+stable annotation keying, and re-attaches the colorbar listener.
+
+Edits are matched to annotations by a content-derived key, 
+so they survive even when annotations are
+added, removed, or reordered between rebuilds 
+(e.g. when statistical brackets or
+reference labels appear).
+
+### Key helpers (all in `R/plot_helpers.R`)
+
+| Function | Purpose |
+|---|---|
+| `setup_manual_edits()` | Create the edit store and register the relayout/colorbar capture observers (call **once**, near the top of the server) |
+| `finalize_manual_edits()` | Tag the event source, restore captured edits, record the figure, and attach the colorbar listener (call in `renderPlotly()`, just before returning) |
+
+Both functions are exported, so the same two-step pattern works from a custom
+module in your own package. The supporting internals (`.capture_manual_edits()`,
+`.reapply_manual_edits()`, `.add_colorbar_listener()`) are not exported and shouldn't 
+need to be used directly (though you can always access them via `VizModules:::` if really necessary.
+
+See any module server (e.g. `dittoViz_scatterPlotServer`) for a complete example.
+
 ## Integrating Statistical Testing (Stats Tab)
 
 Modules for categorical-vs-numeric plots (box, violin, etc.) can include an optional **Stats** tab that provides pairwise statistical testing with plotly bracket annotations. If your new module supports grouped comparisons along a categorical x-axis, follow this pattern:
@@ -219,7 +281,7 @@ Standard pattern — always use `placement = "top"` and `options = list(containe
 tipify(
     textInput(ns("hline.intercepts"), "Y-intercepts",
         placeholder = "e.g. 2, -2",
-        value = .get_default(defaults, "hline.intercepts", "")
+        value = get_default(defaults, "hline.intercepts", "")
     ),
     paste(
         "For categorical or factor axes, enter the index (position) of the",
@@ -240,10 +302,10 @@ Before writing custom inputs, check whether a uniform helper already covers your
 
 | Helper | Provides |
 |---|---|
-| `.uniform_lines_inputs_ui()` | Horizontal, vertical, and diagonal reference line controls |
-| `.uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
+| `uniform_lines_inputs_ui()` | Horizontal, vertical, and diagonal reference line controls |
+| `uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
-| `.uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
+| `uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*` arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE` for scatter plots, `include.rotate = TRUE` for bar plots).
 

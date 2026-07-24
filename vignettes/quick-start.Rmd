@@ -30,7 +30,7 @@ shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
 ## Drop a module into your app
 
 All modules follow the same pattern: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic.
-Here is a minimal `scatterPlot` example:
+Here is a minimal scatter plot example using the `dittoViz_scatterPlot` module:
 
 ```{r scatter-example}
 library(VizModules)
@@ -62,7 +62,7 @@ shinyApp(ui, server)
 ## Set defaults and hide controls
 
 - **Defaults**: Pass a named list to the `defaults` argument of `*InputsUI()` to pre-fill inputs. Names match the underlying plot function arguments (e.g., `defaults = list(fill.color = "steelblue")`).
-- **Hide inputs**: Use `hide.inputs` in the server call to remove controls while still initializing their values. This is useful when your app sets certain parameters itself.
+- **Hide inputs**: Use `hide.inputs` in the server call to remove controls while still initializing their values. This is useful when your app sets certain parameters itself or wants to hide control of various elements while still passing their initial values.
 - **Hide tabs**: Use `hide.tabs` to remove whole groups of controls (e.g., `"Plotly"` or `"Legend"` in `scatterPlot`).
 
 ```{r hide-controls}
@@ -99,7 +99,7 @@ All built-in `*App()` convenience functions (e.g. `plotthis_BarPlotApp()`, `line
 are thin wrappers around `createModuleApp()` with sensible default data. You can also pass
 custom wrapper module functions to `createModuleApp()` for rapid prototyping.
 
-## Export Summary Data: 
+## Export Summary Data
 
 We provide `collect_source_data()` to assemble a compact record of the
 plotted data, stats, UI inputs, and the rendered plot, and `create_source_download_handler()`

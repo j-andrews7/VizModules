@@ -58,3 +58,4 @@ INTERNAL_*
 .DS_Store
 sandbox.R
 
+.posit/

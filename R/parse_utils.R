@@ -71,9 +71,11 @@
 #'   If the input is "" or NULL, returns "solid".
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_string_to_linetypes
-#' @keywords internal
-.string_to_linetypes <- function(x) {
+#' @export
+#' @examples
+#' string_to_linetypes("solid, dashed, dotted")
+#' string_to_linetypes("")
+string_to_linetypes <- function(x) {
     valid_linetypes <- c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
 
     if (is.null(x) || identical(x, "")) {
@@ -209,22 +211,24 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #' @details
 #' This function consolidates the following common pattern:
-#' \preformatted{
+#'
+#' ```
 #' auto_update <- input$auto.update
 #' if (!auto_update) {
 #'     input$update
 #' }
 #' isolate_fn <- if (auto_update) identity else isolate
-#' }
+#' ```
 #'
 #' Usage in a reactive context:
-#' \preformatted{
+#'
+#' ```
 #' output$plot <- renderPlotly({
 #'     isolate_fn <- setup_auto_update_logic(input)
 #'     # Now use isolate_fn to wrap input values
 #'     x_val <- isolate_fn(input$x.value)
 #' })
-#' }
+#' ```
 #'
 #' @export
 #' @author Jared Andrews

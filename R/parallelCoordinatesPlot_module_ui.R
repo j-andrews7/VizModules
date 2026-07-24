@@ -16,32 +16,30 @@
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [VizModules::parallelCoordinatesPlot()] parameters are not exposed as UI inputs:
-#' \itemize{
-#'   \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
-#' }
+#'
+#' - `title.text` - Plot title text (plotly allows interactive editing; use `defaults` to set)
 #'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::parallelCoordinatesPlot()] parameters can be accessed via UI inputs
-#' and/or the \code{defaults} argument:
-#' \itemize{
-#'   \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
-#'   \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
-#'   \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
-#'   \item \code{dimensions} - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
-#'   \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
-#'   \item \code{color.scale} - Colorscale for lines when \code{color.by} is numeric (UI: "Color Scale", default: "Viridis")
-#'   \item \code{palette.selection} - Discrete color palette used when \code{color.by} is categorical (UI: palette picker)
-#'   \item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
-#'   \item \code{line.width} - Line width (UI: "Line width", default: 1)
-#'   \item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
-#'   \item \code{label.font.size} - Dimension label font size (UI: "Label font size", default: 12)
-#'   \item \code{label.font.color} - Dimension label font color (UI: "Label font color", default: "black")
-#'   \item \code{label.font.family} - Dimension label font family (UI: "Label font", default: "Arial")
-#'   \item \code{tick.font.size} - Tick label font size (UI: "Tick font size", default: 10)
-#'   \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
-#'   \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
-#'   \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
-#' }
+#' and/or the `defaults` argument:
+#'
+#' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
+#' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
+#' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
+#' - `dimensions` - Columns to use as axes (UI: "Select dimensions", multiple: TRUE)
+#' - `color.by` - Column to color lines by (UI: "Color by", default: "")
+#' - `color.scale` - Colorscale for lines when `color.by` is numeric (UI: "Color Scale", default: "Viridis")
+#' - `palette.selection` - Discrete color palette used when `color.by` is categorical (UI: palette picker)
+#' - `line.opacity` - Line opacity (UI: "Line opacity", default: 0.5)
+#' - `line.width` - Line width (UI: "Line width", default: 1)
+#' - `show.colorbar` - Show colorbar (UI: "Show colorbar", default: TRUE)
+#' - `label.font.size` - Dimension label font size (UI: "Label font size", default: 12)
+#' - `label.font.color` - Dimension label font color (UI: "Label font color", default: "black")
+#' - `label.font.family` - Dimension label font family (UI: "Label font", default: "Arial")
+#' - `tick.font.size` - Tick label font size (UI: "Tick font size", default: 10)
+#' - `tick.font.color` - Tick label font color (UI: "Tick font color", default: "black")
+#' - `tick.font.family` - Tick label font family (UI: "Tick font", default: "Arial")
+#' - `bgcolor` - Plot background color (UI: "Background color", default: "#FFFFFF")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -111,13 +109,13 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("color.by"), "Color By",
                 choices = all.with.empty,
-                selected = .get_default(defaults, "color.by", ""), selectize = FALSE
+                selected = get_default(defaults, "color.by", ""), selectize = FALSE
             ), documentParameters$color.by, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
             tipify(selectInput(ns("color.scale"), "Color Scale",
                 choices = colorscale.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "color.scale", "Viridis",
                     function(x) x %in% colorscale.choices
                 ), selectize = FALSE
@@ -125,46 +123,46 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             uiOutput(ns("palette.selection")),
             tipify(sliderInput(ns("line.opacity"), "Line Opacity",
                 min = 0, max = 1,
-                value = .get_default(defaults, "line.opacity", 0.5, is.numeric),
+                value = get_default(defaults, "line.opacity", 0.5, is.numeric),
                 step = 0.05
             ), documentParameters$line.opacity, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line Width",
-                value = .get_default(defaults, "line.width", 1, is.numeric),
+                value = get_default(defaults, "line.width", 1, is.numeric),
                 min = 0.5,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.colorbar"), "Show Colorbar",
-                value = .get_default(defaults, "show.colorbar", TRUE, is.logical)
+                value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             ), documentParameters$show.colorbar, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("bgcolor"), "Background Color",
-                value = .get_default(defaults, "bgcolor", "#FFFFFF")
+                value = get_default(defaults, "bgcolor", "#FFFFFF")
             ), documentParameters$bgcolor, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
             tipify(numericInput(ns("label.font.size"), "Label Size",
-                value = .get_default(defaults, "label.font.size", 12, is.numeric),
+                value = get_default(defaults, "label.font.size", 12, is.numeric),
                 min = 1, step = 1
             ), documentParameters$label.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("label.font.color"), "Label Color",
-                value = .get_default(defaults, "label.font.color", "black")
+                value = get_default(defaults, "label.font.color", "black")
             ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("label.font.family"), "Label Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "label.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("tick.font.size"), "Tick Font Size",
-                value = .get_default(defaults, "tick.font.size", 10, is.numeric),
+                value = get_default(defaults, "tick.font.size", 10, is.numeric),
                 min = 1, step = 1
             ), documentParameters$tick.font.size, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("tick.font.color"), "Tick Font Color",
-                value = .get_default(defaults, "tick.font.color", "black")
+                value = get_default(defaults, "tick.font.color", "black")
             ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("tick.font.family"), "Tick Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "tick.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
@@ -172,21 +170,21 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
         ),
         "Title" = tagList(
             tipify(numericInput(ns("title.font.size"), "Title Size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric),
+                value = get_default(defaults, "title.font.size", 26, is.numeric),
                 min = 1, step = 1
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("title.font.family"), "Title Font",
                 choices = font.choices,
-                selected = .get_default(
+                selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
                 ), selectize = FALSE
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
-                value = .get_default(defaults, "title.font.color", "black")
+                value = get_default(defaults, "title.font.color", "black")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = .uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
     )
 
     organize_inputs(
@@ -204,9 +202,9 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
 #' This should be placed in the UI where the plot should be shown.
 #'
 #' @param id The ID for the Shiny module.
-#' @param resizable Logical; when \code{TRUE} (the default) the plot output
-#'   is wrapped in \code{\link[shinyjqui]{jqui_resizable}} so it can be resized
-#'   by dragging. Set to \code{FALSE} when embedding the output in a container
+#' @param resizable Logical; when `TRUE` (the default) the plot output
+#'   is wrapped in [shinyjqui::jqui_resizable()] so it can be resized
+#'   by dragging. Set to `FALSE` when embedding the output in a container
 #'   that already provides resizing.
 #'
 #' @return A Shiny plotlyOutput for the parallelCoordinatesPlot

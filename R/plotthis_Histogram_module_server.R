@@ -5,10 +5,10 @@
 #' reactive data processing, dynamic UI generation for color palettes,
 #' and the rendering of interactive Plotly histograms.
 #'
-#' @param id \code{character} unique ID for the shiny namespace.
-#' @param data \code{reactive} A reactive expression returning a data frame to be plotted.
-#' @param hide.inputs \code{character} vector of input IDs to hide in the UI. Default is NULL.
-#' @param hide.tabs \code{character} vector of tab names to hide within the module. Default is NULL.
+#' @param id `character` unique ID for the shiny namespace.
+#' @param data `reactive` A reactive expression returning a data frame to be plotted.
+#' @param hide.inputs `character` vector of input IDs to hide in the UI. Default is NULL.
+#' @param hide.tabs `character` vector of tab names to hide within the module. Default is NULL.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
 #'   the same list passed to the corresponding UI function.
@@ -29,17 +29,25 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "histogramPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "histogramPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("histogram")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -107,65 +115,61 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
 
             # Data
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
+                selected = get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed"))
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+                selected = get_default(defaults, "facet.scale", "fixed"))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical))
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical))
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "bins", value = .get_default(defaults, "bins", NA, is.numeric))
-            updateNumericInput(session, "bin.width", value = .get_default(defaults, "bin.width", NA, is.numeric))
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
+            updateNumericInput(session, "bins", value = get_default(defaults, "bins", NA, is.numeric))
+            updateNumericInput(session, "bin.width", value = get_default(defaults, "bin.width", NA, is.numeric))
             updateMaterialSwitch(session, "use.trend",
-                value = .get_default(defaults, "use.trend", FALSE, is.logical))
+                value = get_default(defaults, "use.trend", FALSE, is.logical))
             updateMaterialSwitch(session, "trend.skip.zero",
-                value = .get_default(defaults, "trend.skip.zero", FALSE, is.logical))
+                value = get_default(defaults, "trend.skip.zero", FALSE, is.logical))
             updateMaterialSwitch(session, "add.trend",
-                value = .get_default(defaults, "add.trend", FALSE, is.logical))
+                value = get_default(defaults, "add.trend", FALSE, is.logical))
             updateSliderInput(session, "trend.alpha",
-                value = .get_default(defaults, "trend.alpha", 1, is.numeric))
+                value = get_default(defaults, "trend.alpha", 1, is.numeric))
             updateNumericInput(session, "trend.linewidth",
-                value = .get_default(defaults, "trend.linewidth", 0.8, is.numeric))
+                value = get_default(defaults, "trend.linewidth", 0.8, is.numeric))
             updateNumericInput(session, "trend.pt.size",
-                value = .get_default(defaults, "trend.pt.size", 1.5, is.numeric))
+                value = get_default(defaults, "trend.pt.size", 1.5, is.numeric))
             updateMaterialSwitch(session, "add.bars",
-                value = .get_default(defaults, "add.bars", FALSE, is.logical))
+                value = get_default(defaults, "add.bars", FALSE, is.logical))
             updateNumericInput(session, "bar.height",
-                value = .get_default(defaults, "bar.height", 0.04, is.numeric))
-            updateSliderInput(session, "bar.alpha", value = .get_default(defaults, "bar.alpha", 1, is.numeric))
-            updateNumericInput(session, "bar.width", value = .get_default(defaults, "bar.width", 1, is.numeric))
-            updateSliderInput(session, "plot.alpha", value = .get_default(defaults, "plot.alpha", 1, is.numeric))
-            updateSelectInput(session, "theme", selected = .get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "position", selected = .get_default(defaults, "position", "identity"))
+                value = get_default(defaults, "bar.height", 0.04, is.numeric))
+            updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
+            updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
+            updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 1, is.numeric))
+            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            updateSelectInput(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
-                value = .get_default(defaults, "single.fill.color", default_palette_values[1]))
+                value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
 
 
-            .reset_legend_inputs(session, defaults)
-            .reset_lines_inputs(session, defaults = defaults)
-            .reset_axes_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
+            reset_lines_inputs(session, defaults = defaults)
+            reset_axes_inputs(session, defaults)
         })
 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
+                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
+                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -214,7 +218,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
 
-            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_args$panel.spacing.x <- unit(isolate_fn(input$subplot.margin.x), "pt")
             theme_args$panel.spacing.y <- unit(isolate_fn(input$subplot.margin.y), "pt")
 
@@ -251,28 +255,28 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             fig <- ggplotly(p)
 
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_facet_subplot_spacing(
+                fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -291,19 +295,19 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -312,7 +316,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         output$histogramPlot <- renderPlotly({
             req(input$x.data)
 
-            fig <- .apply_render_margins(generate_Histogram(), input)
+            fig <- apply_render_margins(generate_Histogram(), input)
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

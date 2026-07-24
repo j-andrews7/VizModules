@@ -15,6 +15,11 @@
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
 #'   `list("markers" = example_markers)` is used as example data.
+#' @param defaults A named list of input IDs and their default values to apply on startup.
+#' @param hide.inputs A character vector of input IDs to hide. Their values are still
+#'   initialized and used, but the controls are not shown in the UI.
+#' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are
+#'   still initialized and used, but the controls are not shown in the UI.
 #' @return A Shiny app object.
 #'
 #' @export
@@ -28,7 +33,7 @@
 #' # Launch with custom data:
 #' app2 <- plotthis_DotPlotApp(list("markers" = example_markers))
 #' if (interactive()) runApp(app2)
-plotthis_DotPlotApp <- function(data_list = NULL) {
+plotthis_DotPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
         data_list <- list("markers" = example_markers)
     }
@@ -37,6 +42,9 @@ plotthis_DotPlotApp <- function(data_list = NULL) {
         output_ui_fn = plotthis_DotPlotOutputUI,
         server_fn    = plotthis_DotPlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular DotPlots"
     )
 }

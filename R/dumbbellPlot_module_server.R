@@ -17,7 +17,7 @@
 #' @import plotly
 #' @importFrom stats na.omit
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide click
+#' @importFrom shinyjs hide click delay
 #'
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
@@ -29,17 +29,25 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "dumbbellPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "dumbbellPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("dumbbell")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -118,51 +126,47 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Data tab
             updateSelectInput(session, "x.value",
-                selected = .get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
+                selected = get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
             )
             updateSelectInput(session, "y.value",
-                selected = .get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
+                selected = get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
             )
 
-            updateSelectInput(session, "x.adjustment", selected = .get_default(defaults, "x.adjustment", ""))
+            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
             updateSelectInput(session, "colour.by",
-                selected = .get_default(defaults, "colour.by", "X variables")
+                selected = get_default(defaults, "colour.by", "X variables")
             )
 
             # Facet tab
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
             )
-            updateSelectInput(session, "facet.scales", selected = .get_default(defaults, "facet.scales", "fixed"))
+            updateSelectInput(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
             updateColourInput(session, "line.colour",
-                value = .get_default(defaults, "line.colour", "gray30")
+                value = get_default(defaults, "line.colour", "gray30")
             )
 
             click("reset_palette")
 
 
             # Axes
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
+                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
+                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -251,11 +255,11 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -274,19 +278,19 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -295,7 +299,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         output$dumbbellPlot <- renderPlotly({
             req(input$x.value, input$y.value)
 
-            fig <- .apply_render_margins(generate_dumbbellPlot(), input)
+            fig <- apply_render_margins(generate_dumbbellPlot(), input)
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

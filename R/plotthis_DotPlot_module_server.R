@@ -18,7 +18,7 @@
 #' @importFrom colourpicker updateColourInput
 #' @importFrom plotthis DotPlot
 #' @importFrom stats na.omit
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide delay
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
 #' @export
@@ -28,17 +28,25 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "DotPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "DotPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("dot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
         if (is.null(defaults)) defaults <- list()
         if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 70
         # Reset functionality
@@ -49,87 +57,112 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Data
             updateSelectInput(session, "x.data",
-                selected = .get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
             updateSelectInput(session, "y.data",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 )
             )
             updateSelectInput(session, "size.by",
-                selected = .get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
+                selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
             )
             updateSelectInput(session, "fill.by",
-                selected = .get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
+                selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
             )
-            updateNumericInput(session, "fill.cutoff", value = .get_default(defaults, "fill.cutoff", NA, is.numeric))
+            updateNumericInput(session, "fill.cutoff", value = get_default(defaults, "fill.cutoff", NA, is.numeric))
+            updateSelectInput(session, "fill.cutoff.direction",
+                selected = get_default(
+                    defaults, "fill.cutoff.direction", "<",
+                    function(x) x %in% c("<", "<=", ">", ">=")
+                )
+            )
 
             # Facet
             updateSelectInput(session, "facet.by",
-                selected = .get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateSelectInput(session, "facet.scale",
-                selected = .get_default(defaults, "facet.scale", "fixed")
+                selected = get_default(defaults, "facet.scale", "fixed")
             )
-            updateNumericInput(session, "facet.ncol", value = .get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateNumericInput(session, "facet.nrow", value = .get_default(defaults, "facet.nrow", NA, is.numeric))
+            updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
+            updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
-                value = .get_default(defaults, "facet.by.row", TRUE, is.logical)
+                value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
             updateSelectInput(session, "palette.name",
-                selected = .get_default(
+                selected = get_default(
                     defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names
                 )
             )
-            updateMaterialSwitch(session, "palreverse", value = .get_default(defaults, "palreverse", FALSE, is.logical))
-            updateNumericInput(session, "alpha", value = .get_default(defaults, "alpha", 1, is.numeric))
+            updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
+            updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
+            updateColourInput(session, "border.color",
+                value = get_default(defaults, "border.color", "black", is.character)
+            )
+            updateNumericInput(session, "border.size", value = get_default(defaults, "border.size", 0.5, is.numeric))
+            updateNumericInput(session, "lower.quantile",
+                value = get_default(defaults, "lower.quantile", 0, is.numeric)
+            )
+            updateNumericInput(session, "upper.quantile",
+                value = get_default(defaults, "upper.quantile", 1, is.numeric)
+            )
+            updateNumericInput(session, "lower.cutoff", value = get_default(defaults, "lower.cutoff", NA, is.numeric))
+            updateNumericInput(session, "upper.cutoff", value = get_default(defaults, "upper.cutoff", NA, is.numeric))
 
             # Axes
-            updateMaterialSwitch(session, "rotate", value = .get_default(defaults, "rotate", FALSE, is.logical))
+            updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "axis.title.font.size",
-                value = .get_default(defaults, "axis.title.font.size", 18, is.numeric)
+                value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 26, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Legend
             updateNumericInput(session, "size.legend.x",
-                value = .get_default(defaults, "size.legend.x", 1.04, is.numeric)
+                value = get_default(defaults, "size.legend.x", 1.04, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
-                value = .get_default(defaults, "size.legend.y", 0.35, is.numeric)
+                value = get_default(defaults, "size.legend.y", 0.35, is.numeric)
             )
-            .reset_legend_inputs(session, defaults)
-            updateNumericInput(session, "size.min", value = .get_default(defaults, "size.min", 1, is.numeric))
-            updateNumericInput(session, "size.max", value = .get_default(defaults, "size.max", 6, is.numeric))
+            reset_legend_inputs(session, defaults)
+            updateNumericInput(session, "size.min", value = get_default(defaults, "size.min", 1, is.numeric))
+            updateNumericInput(session, "size.max", value = get_default(defaults, "size.max", 6, is.numeric))
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
+                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
+                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
+
+        # The color-scale trimming controls only affect the continuous fill gradient,
+        # so only expose them when a fill column is selected.
+        observeEvent(input$fill.by, {
+            fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
+            if (nzchar(input$fill.by)) {
+                .show_input(session, fill.scale.inputs)
+            } else {
+                .hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
 
         generate_DotPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input)
@@ -150,10 +183,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fill.by <- isolate_fn(input$fill.by)
             }
 
-            # fill_cutoff is only valid when fill_by is provided
+            # fill_cutoff is only valid when fill_by is provided. plotthis expects a
+            # string expression such as "< 18"; combine the numeric value with the
+            # selected direction operator.
             fill.cutoff <- NULL
             if (!is.null(fill.by) && !is.na(isolate_fn(input$fill.cutoff))) {
-                fill.cutoff <- isolate_fn(input$fill.cutoff)
+                fill.cutoff <- paste(isolate_fn(input$fill.cutoff.direction), isolate_fn(input$fill.cutoff))
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
@@ -163,7 +198,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             palette_arg <- isolate_fn(input$palette.name)
             if (is.null(palette_arg) || !nzchar(palette_arg)) palette_arg <- "Spectral"
 
-            theme_args <- .create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- DotPlot(
                 data(),
@@ -184,33 +219,39 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palreverse = isolate_fn(input$palreverse),
                 theme = "theme_this",
                 theme_args = theme_args,
-                alpha = isolate_fn(input$alpha)
+                alpha = isolate_fn(input$alpha),
+                border_color = isolate_fn(input$border.color),
+                border_size = isolate_fn(input$border.size),
+                lower_quantile = isolate_fn(input$lower.quantile),
+                upper_quantile = isolate_fn(input$upper.quantile),
+                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
             fig <- ggplotly(p)
 
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_facet_subplot_spacing(
+                fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = facet.ncol,
                     nrow = facet.nrow
                 )
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
+            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting)
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -229,9 +270,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Custom Legend:
             # Generates a custom dot plot circle legend based on the number of values in size_values.
@@ -247,14 +288,14 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -274,8 +315,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_DotPlot(), input)
+                fig <- apply_render_margins(generate_DotPlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

@@ -56,6 +56,7 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} parameters are
 \item \code{theme} - ggplot2 theme (managed internally)
 \item \code{theme_args} - Theme arguments (not yet implemented)
 \item \code{palcolor} - Managed internally via the palette selection UI
+\item \code{border_alpha} - Dot border transparency (not exposed; uses the plotthis default of 1)
 \item \code{add_bg} - Add background stripes/shading (not yet implemented)
 \item \code{bg_palette} - Background palette (not yet implemented)
 \item \code{bg_palcolor} - Background palette colors (not yet implemented)
@@ -87,6 +88,8 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom par
 \item \code{size_max} - Maximum dot size (UI: "Max Dot Size", default: 6)
 \item \code{fill_by} - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 \item \code{fill_cutoff} - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
+\item \code{fill_cutoff_direction} - Direction of the fill cutoff (UI: "Fill Cutoff Direction",
+default: "<"); combined with \code{fill_cutoff} into a \code{plotthis} expression such as \code{"< 18"}.
 \item \code{flip} - Flip the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
 \item \code{facet_by} - Faceting variable (UI: "Facet By", default: "")
 \item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
@@ -96,6 +99,17 @@ The following \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}} and custom par
 \item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
+\item \code{border_color} - Dot border color; only constant colors are supported
+(UI: "Border Color", default: "black")
+\item \code{border_size} - Dot border stroke width (UI: "Border Size", default: 0.5)
+\item \code{lower_quantile} - Lower quantile for the continuous fill color scale
+(UI: "Lower Quantile", default: 0)
+\item \code{upper_quantile} - Upper quantile for the continuous fill color scale
+(UI: "Upper Quantile", default: 1)
+\item \code{lower_cutoff} - Explicit lower cutoff for the continuous fill color scale
+(UI: "Lower Cutoff", default: NA); overrides \code{lower_quantile} when set
+\item \code{upper_cutoff} - Explicit upper cutoff for the continuous fill color scale
+(UI: "Upper Cutoff", default: NA); overrides \code{upper_quantile} when set
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",

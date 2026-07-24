@@ -15,10 +15,10 @@
 #'
 #' @import shiny
 #' @import plotly
-#' @importFrom ggplot2 theme_bw theme unit
+#' @importFrom ggplot2 theme_bw theme unit element_blank
 #' @importFrom stats na.omit
 #' @importFrom dittoViz yPlot
-#' @importFrom shinyjs hide show
+#' @importFrom shinyjs hide show delay
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom colourpicker updateColourInput
 #'
@@ -31,14 +31,17 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
+                })
+            })
         }
 
         # Conditionally show/hide Stats tab based on plot type selection
@@ -59,6 +62,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         })
 
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("yplot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
 
         # Store last computed stats table for download
         last_stats_df <- reactiveVal(NULL)
@@ -139,87 +146,87 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             # Data
             updateSelectInput(session, "var",
-                selected = .get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
+                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
             updateSelectInput(session, "group.by",
-                selected = .get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
+                selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
             updateSelectInput(session, "color.by",
-                selected = .get_default(defaults, "color.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% char.choices))
             updateSelectInput(session, "shape.by",
-                selected = .get_default(defaults, "shape.by", "", function(x) x == "" || x %in% char.choices))
+                selected = get_default(defaults, "shape.by", "", function(x) x == "" || x %in% char.choices))
 
 
             # Plot Type
             updateCheckboxGroupInput(session, "plots",
-                selected = .get_default(defaults, "plots", c("boxplot", "jitter")))
+                selected = get_default(defaults, "plots", c("boxplot", "jitter")))
 
             # Adjustments
             updateSelectInput(session, "var.adjustment",
-                selected = .get_default(defaults, "var.adjustment", ""))
+                selected = get_default(defaults, "var.adjustment", ""))
             updateSelectInput(session, "var.adj.fxn",
-                selected = .get_default(defaults, "var.adj.fxn", ""))
-            updateNumericInput(session, "y.min", value = .get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = .get_default(defaults, "y.max", max.y, is.numeric))
-            updateMaterialSwitch(session, "do.raster", value = .get_default(defaults, "do.raster", FALSE, is.logical))
-            updateNumericInput(session, "raster.dpi", value = .get_default(defaults, "raster.dpi", 600, is.numeric))
+                selected = get_default(defaults, "var.adj.fxn", ""))
+            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
+            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
+            updateMaterialSwitch(session, "do.raster", value = get_default(defaults, "do.raster", FALSE, is.logical))
+            updateNumericInput(session, "raster.dpi", value = get_default(defaults, "raster.dpi", 600, is.numeric))
 
             # Jitter
-            updateNumericInput(session, "jitter.size", value = .get_default(defaults, "jitter.size", 1, is.numeric))
-            updateNumericInput(session, "jitter.width", value = .get_default(defaults, "jitter.width", 0.2, is.numeric))
+            updateNumericInput(session, "jitter.size", value = get_default(defaults, "jitter.size", 1, is.numeric))
+            updateNumericInput(session, "jitter.width", value = get_default(defaults, "jitter.width", 0.2, is.numeric))
             updateColourInput(session, "jitter.color",
-                value = .get_default(defaults, "jitter.color", "#000000"))
+                value = get_default(defaults, "jitter.color", "#000000"))
             updateNumericInput(session, "jitter.shape.legend.size",
-                value = .get_default(defaults, "jitter.shape.legend.size", 5, is.numeric))
+                value = get_default(defaults, "jitter.shape.legend.size", 5, is.numeric))
             updateMaterialSwitch(session, "jitter.shape.legend.show",
-                value = .get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical))
+                value = get_default(defaults, "jitter.shape.legend.show", TRUE, is.logical))
 
             # Box
             updateMaterialSwitch(session, "boxplot.show.outliers",
-                value = .get_default(defaults, "boxplot.show.outliers", FALSE, is.logical))
+                value = get_default(defaults, "boxplot.show.outliers", FALSE, is.logical))
             updateColourInput(session, "boxplot.color",
-                value = .get_default(defaults, "boxplot.color", "#000000"))
+                value = get_default(defaults, "boxplot.color", "#000000"))
             updateMaterialSwitch(session, "boxplot.fill",
-                value = .get_default(defaults, "boxplot.fill", TRUE, is.logical))
+                value = get_default(defaults, "boxplot.fill", TRUE, is.logical))
             updateNumericInput(session, "boxplot.lineweight",
-                value = .get_default(defaults, "boxplot.lineweight", 0.5, is.numeric))
-            updateNumericInput(session, "boxgap", value = .get_default(defaults, "boxgap", 0.3, is.numeric))
-            updateNumericInput(session, "boxgroupgap", value = .get_default(defaults, "boxgroupgap", 0.2, is.numeric))
+                value = get_default(defaults, "boxplot.lineweight", 0.5, is.numeric))
+            updateNumericInput(session, "boxgap", value = get_default(defaults, "boxgap", 0.3, is.numeric))
+            updateNumericInput(session, "boxgroupgap", value = get_default(defaults, "boxgroupgap", 0.2, is.numeric))
 
             # Violin
             updateNumericInput(session, "vlnplot.lineweight",
-                value = .get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
+                value = get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
             updateSelectInput(session, "vlnplot.scaling",
-                selected = .get_default(defaults, "vlnplot.scaling", "area"))
+                selected = get_default(defaults, "vlnplot.scaling", "area"))
 
             # Ridge
             updateNumericInput(session, "ridgeplot.lineweight",
-                value = .get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric))
+                value = get_default(defaults, "ridgeplot.lineweight", 0.5, is.numeric))
             updateNumericInput(session, "ridgeplot.scale",
-                value = .get_default(defaults, "ridgeplot.scale", 1.25, is.numeric))
+                value = get_default(defaults, "ridgeplot.scale", 1.25, is.numeric))
             updateNumericInput(session, "ridgeplot.ymax.expansion",
-                value = .get_default(defaults, "ridgeplot.ymax.expansion", NA, is.numeric))
+                value = get_default(defaults, "ridgeplot.ymax.expansion", NA, is.numeric))
             updateSelectInput(session, "ridgeplot.shape",
-                selected = .get_default(defaults, "ridgeplot.shape", "smooth"))
+                selected = get_default(defaults, "ridgeplot.shape", "smooth"))
             updateNumericInput(session, "ridgeplot.bins",
-                value = .get_default(defaults, "ridgeplot.bins", 30, is.numeric))
+                value = get_default(defaults, "ridgeplot.bins", 30, is.numeric))
             updateNumericInput(session, "ridgeplot.binwidth",
-                value = .get_default(defaults, "ridgeplot.binwidth", NA, is.numeric))
+                value = get_default(defaults, "ridgeplot.binwidth", NA, is.numeric))
 
             # Facet
             updateSelectInput(session, "split.by",
-                selected = .get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "split.adjust", selected = .get_default(defaults, "split.adjust", "free"))
-            updateNumericInput(session, "split.ncol", value = .get_default(defaults, "split.ncol", NA, is.numeric))
-            updateNumericInput(session, "split.nrow", value = .get_default(defaults, "split.nrow", NA, is.numeric))
+                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
+            updateSelectInput(session, "split.adjust", selected = get_default(defaults, "split.adjust", "fixed"))
+            updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
+            updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
 
             # Axes
-            .reset_axes_inputs(session, defaults)
+            reset_axes_inputs(session, defaults)
 
             # Plotly
-            .reset_plotly_inputs(session, defaults)
-            .reset_legend_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
+            reset_legend_inputs(session, defaults)
 
             # Lines
-            .reset_lines_inputs(session, defaults = defaults)
+            reset_lines_inputs(session, defaults = defaults)
 
             # Stats
             .reset_stats_inputs(session, defaults)
@@ -236,13 +243,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         observeEvent(input$split.by, {
             if (!is.null(input$split.by) && nzchar(input$split.by)) {
-                show("facet.title.font.size")
-                show("facet.title.font.color")
-                show("facet.title.font.family")
+                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                hide("facet.title.font.size")
-                hide("facet.title.font.color")
-                hide("facet.title.font.family")
+                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -297,7 +300,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # accurately describes the values displayed (e.g. "log2(z-score(units))").
             var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
             var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
-            y_axis_label <- .adjusted_axis_label(
+            y_axis_label <- adjusted_axis_label(
                 isolate_fn(input$var), var.adjustment, var.adj.fxn.name
             )
 
@@ -306,7 +309,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
-            p <- dittoViz::yPlot(
+            # Draw axis borders at the ggplot level 
+            additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
+            theme_style <- theme_bw() + theme(
+                panel.border = additional_theme$panel.border,
+                axis.line = additional_theme$axis.line,
+                axis.ticks = additional_theme$axis.ticks,
+                strip.background = element_blank()
+            )
+
+            p <- yPlot(
                 data_frame = data(),
                 var = isolate_fn(input$var),
                 var.adjustment = var.adjustment,
@@ -333,7 +345,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 jitter.shape.legend.show = isolate_fn(input$jitter.shape.legend.show),
                 jitter.position.dodge = 1 - isolate_fn(input$boxgap),
                 boxplot.color = isolate_fn(input$boxplot.color),
-                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers),
+                # Hide outliers when jitter points are shown (to avoid
+                # double-plotting) or when the user disables them. dittoViz::yPlot
+                # sets boxpoints = FALSE natively, so no post-hoc removal needed.
+                boxplot.show.outliers = isolate_fn(input$boxplot.show.outliers) &&
+                    !("jitter" %in% isolate_fn(input$plots)),
                 boxplot.fill = isolate_fn(input$boxplot.fill),
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
@@ -346,13 +362,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
-                theme = theme_bw() + theme(
-                    panel.border = element_blank(),
-                    axis.line = element_line(colour = "black"),  # draws only bottom + left
-                    axis.ticks.top = element_blank(),
-                    axis.ticks.right = element_blank(),
-                    strip.background = element_blank()
-                )
+                theme = theme_style
             )
 
             fig <- p |>
@@ -362,7 +372,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
             if (!is.null(split.by) && nzchar(split.by)) {
-                fig <- .apply_facet_subplot_spacing(
+                fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
                     ncol = split.ncol,
@@ -370,7 +380,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 )
 
             }
-            fig <- .apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
             
             
 
@@ -380,20 +390,20 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig <- .fix_boxplot_facet_positions(fig)
             }
 
-            # Apply axis styling
-            xaxis_style <- .create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
-            yaxis_style <- .create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = FALSE)
+            # Apply axis styling (borders handled at the ggplot level via theme_style above)
+            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
+            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
-            fig <- .apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
+            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
 
             # Apply axis title font to shared facet annotation titles
             if (!is.null(split.by) && nzchar(split.by)) {
-                fig <- .apply_axis_title_to_annotations(fig, input, isolate_fn)
+                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
             # Add reference lines
-            fig <- .add_reference_lines(fig,
+            fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
                 hline.colors = isolate_fn(input$hline.colors),
                 hline.widths = isolate_fn(input$hline.widths),
@@ -412,17 +422,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            # Remove outliers if jitter is shown or if user explicitly disabled outliers
-            if ("jitter" %in% isolate_fn(input$plots) || !isolate_fn(input$show.outliers)) {
-                fig <- .remove_boxplot_outliers(fig)
-            }
-
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
                 # yPlot uses group.by as the x-axis, color.by for nested grouping
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
+
                 stats_df <- compute_pairwise_stats(
                     df = data(), x = xvar,
                     y = isolate_fn(input$var), pairs = stat_pairs,
@@ -433,7 +439,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     per.facet = isolate_fn(input$stat.per.facet),
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
+
                 last_stats_df(stats_df)
+
                 stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = data(),
                     x = xvar, y = isolate_fn(input$var),
@@ -448,25 +456,26 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
+
                 fig <- apply_stat_annotations(fig, stat_result,
                     y.min = isolate_fn(input$y.min)
                 )
             }
 
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Apply uniform legend title/label font sizes
-            fig <- .apply_legend_styling(
+            fig <- apply_legend_styling(
                 fig,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size)
             )
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- .axis_titles_as_annotations(fig)
+            fig <- axis_titles_as_annotations(fig)
 
             return(fig)
         })
@@ -475,8 +484,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         output$yPlot <- renderPlotly({
             req(input$var)
 
-            fig <- .apply_render_margins(generate_yPlot(), input)
-
+            fig <- apply_render_margins(generate_yPlot(), input)
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

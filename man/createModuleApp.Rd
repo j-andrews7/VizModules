@@ -10,6 +10,9 @@ createModuleApp(
   server_fn,
   data_list,
   defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL,
+  show.table = TRUE,
   title = "VizModules App"
 )
 }
@@ -30,6 +33,19 @@ At least one element is required.}
 
 \item{defaults}{A named list of ui ids and their default values that can change the ui default
 settings on startup.}
+
+\item{hide.inputs}{A character vector of input IDs to hide. These inputs are still
+initialized and their values passed to the plot, but are not shown in the UI.
+Passed through to \code{server_fn} when it accepts a \code{hide.inputs} argument.}
+
+\item{hide.tabs}{A character vector of tab names to hide. Inputs in these tabs are
+still initialized and their values passed to the plot, but are not shown in the UI.
+Passed through to \code{server_fn} when it accepts a \code{hide.tabs} argument.}
+
+\item{show.table}{Logical. When \code{TRUE} (default), a filterable DT table is
+shown below the plot and its row selection drives the data passed to the
+plot module. When \code{FALSE}, the table and filter controls are hidden and
+the full (unfiltered) dataset is passed directly to the plot module.}
 
 \item{title}{A character string used as the page title
 (default: \code{"VizModules App"}).}

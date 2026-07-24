@@ -18,7 +18,7 @@
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
 #' @importFrom stats na.omit
-#' @importFrom shinyjs hide
+#' @importFrom shinyjs hide delay
 #'
 #' @seealso [VizModules::piePlot()], [VizModules::piePlotInputsUI()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotApp()]
@@ -30,16 +30,23 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
-        # Hide individual inputs if specified
-        if (!is.null(hide.inputs)) {
-            for (input.name in hide.inputs) hide(input.name)
-        }
-
-        # Hide tabs if specified
-        if (!is.null(hide.tabs)) {
-            for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
+        # Hide individual inputs/tabs if specified. The inputs UI is injected by the
+        # parent app via renderUI (and re-injected when the dataset changes), so the
+        # hiding must be (re)applied after the controls exist in the DOM rather than
+        # once at module initialization.
+        if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
+            observeEvent(data(), {
+                delay(100, {
+                    .hide_input(session, hide.inputs)
+                    for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
+                })
+            })
         }
         ns <- session$ns
+
+        # Persist manual legend/annotation/colorbar repositioning across rebuilds.
+        plot_source <- session$ns("pie")
+        edit_store <- setup_manual_edits(input, session, plot_source)
 
         output$color.picker <- renderUI({
             d <- data_reactive()
@@ -67,63 +74,63 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
 
             # Data
             updateSelectInput(session, "labels",
-                selected = .get_default(defaults, "labels", char.choices[2], function(x) x %in% char.choices))
+                selected = get_default(defaults, "labels", char.choices[2], function(x) x %in% char.choices))
             updateSelectInput(session, "values",
-                selected = .get_default(defaults, "values", numeric.data[2], function(x) x %in% numeric.data))
+                selected = get_default(defaults, "values", numeric.data[2], function(x) x %in% numeric.data))
 
             # Slice layout
             updateCheckboxInput(session, "sort.slices",
-                value = .get_default(defaults, "sort.slices", TRUE, is.logical))
+                value = get_default(defaults, "sort.slices", TRUE, is.logical))
             updateSelectInput(session, "direction",
-                selected = .get_default(defaults, "direction", "counterclockwise"))
-            updateSliderInput(session, "rotation", value = .get_default(defaults, "rotation", 0, is.numeric))
-            updateSliderInput(session, "hole", value = .get_default(defaults, "hole", 0, is.numeric))
+                selected = get_default(defaults, "direction", "counterclockwise"))
+            updateSliderInput(session, "rotation", value = get_default(defaults, "rotation", 0, is.numeric))
+            updateSliderInput(session, "hole", value = get_default(defaults, "hole", 0, is.numeric))
 
             # Text
             updateSelectInput(session, "textinfo",
-                selected = .get_default(defaults, "textinfo", c("label", "percent")))
+                selected = get_default(defaults, "textinfo", c("label", "percent")))
             updateSelectInput(session, "textposition",
-                selected = .get_default(defaults, "textposition", "auto"))
+                selected = get_default(defaults, "textposition", "auto"))
             updateSelectInput(session, "insidetextorientation",
-                selected = .get_default(defaults, "insidetextorientation", "auto"))
+                selected = get_default(defaults, "insidetextorientation", "auto"))
             updateNumericInput(session, "text.font.size",
-                value = .get_default(defaults, "text.font.size", 12, is.numeric))
+                value = get_default(defaults, "text.font.size", 12, is.numeric))
             updateSelectInput(session, "text.font.family",
-                selected = .get_default(defaults, "text.font.family", "Arial"))
+                selected = get_default(defaults, "text.font.family", "Arial"))
             updateColourInput(session, "text.font.color",
-                value = .get_default(defaults, "text.font.color", "#000000"))
+                value = get_default(defaults, "text.font.color", "#000000"))
 
             # Title
-            updateSliderInput(session, "title.x", value = .get_default(defaults, "title.x", 0.5, is.numeric))
+            updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
-                value = .get_default(defaults, "title.font.size", 28, is.numeric))
+                value = get_default(defaults, "title.font.size", 28, is.numeric))
             updateSelectInput(session, "title.font.family",
-                selected = .get_default(defaults, "title.font.family", "Arial"))
+                selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
-                value = .get_default(defaults, "title.font.color", "#000000"))
+                value = get_default(defaults, "title.font.color", "#000000"))
 
             # Legend
             updateCheckboxInput(session, "show.legend",
-                value = .get_default(defaults, "show.legend", TRUE, is.logical))
+                value = get_default(defaults, "show.legend", TRUE, is.logical))
             updateSelectInput(session, "legend.orientation",
-                selected = .get_default(defaults, "legend.orientation", "h"))
+                selected = get_default(defaults, "legend.orientation", "h"))
             updateSelectInput(session, "legend.font.family",
-                selected = .get_default(defaults, "legend.font.family", "Arial"))
+                selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
-                value = .get_default(defaults, "legend.font.size", 12, is.numeric))
+                value = get_default(defaults, "legend.font.size", 12, is.numeric))
             updateColourInput(session, "legend.font.color",
-                value = .get_default(defaults, "legend.font.color", "#000000"))
+                value = get_default(defaults, "legend.font.color", "#000000"))
 
             # Slice borders
             updateColourInput(session, "slice.line.color",
-                value = .get_default(defaults, "slice.line.color", "#FFFFFF"))
+                value = get_default(defaults, "slice.line.color", "#FFFFFF"))
             updateNumericInput(session, "slice.line.width",
-                value = .get_default(defaults, "slice.line.width", 0, is.numeric))
+                value = get_default(defaults, "slice.line.width", 0, is.numeric))
 
             # Slice colors
             updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
 
-            .reset_plotly_inputs(session, defaults)
+            reset_plotly_inputs(session, defaults)
         })
 
         build_textinfo <- function(selected) {
@@ -199,9 +206,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 slice.line.width = isolate_fn(input$slice.line.width)
             )
 
-            config_list <- .add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- .apply_plotly_newshape(fig, input, isolate_fn)
+            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })
@@ -233,8 +240,10 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             if (return_empty) {
                 fig <- empty_plot(text = txt, plotly = TRUE)
             } else {
-                fig <- .apply_render_margins(generate_piePlot(), input)
+                fig <- apply_render_margins(generate_piePlot(), input)
             }
+
+            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 
             return(fig)
         })

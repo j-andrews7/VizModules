@@ -36,9 +36,14 @@
 #'
 #' @author Jacob Martin
 #' @importFrom stats approx
-#' @keywords internal
-#' @rdname INTERNAL_apply_facet_subplot_spacing
-.apply_facet_subplot_spacing <- function(fig, spacing = 0.04, ncol = NULL, nrow = NULL) {
+#' @export
+#' @examples
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::facet_wrap(~cyl)
+#' fig <- plotly::ggplotly(p)
+#' apply_facet_subplot_spacing(fig, spacing = 0.05)
+apply_facet_subplot_spacing <- function(fig, spacing = 0.04, ncol = NULL, nrow = NULL) {
     stopifnot("plotly" %in% class(fig))
     if (is.null(fig$x) || is.null(fig$x$layout)) {
         return(fig)
@@ -220,19 +225,21 @@
 
 #' Resolve facet axis sharing from facet.scales
 #'
-#' Converts a \code{facet.scales} string (one of \code{"fixed"}, \code{"free"},
-#' \code{"free_x"}, \code{"free_y"}) into the \code{shareX} / \code{shareY}
-#' logical values expected by \code{plotly::subplot}.
+#' Converts a `facet.scales` string (one of `"fixed"`, `"free"`,
+#' `"free_x"`, `"free_y"`) into the `shareX` / `shareY`
+#' logical values expected by `plotly::subplot`.
 #'
-#' @param facet.scales Character, one of \code{"fixed"} (default),
-#'   \code{"free"}, \code{"free_x"}, or \code{"free_y"}.
+#' @param facet.scales Character, one of `"fixed"` (default),
+#'   `"free"`, `"free_x"`, or `"free_y"`.
 #'
-#' @return A named list with logical elements \code{shareX} and \code{shareY}.
+#' @return A named list with logical elements `shareX` and `shareY`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_resolve_facet_sharing
-#' @keywords internal
-.resolve_facet_sharing <- function(facet.scales = "fixed") {
+#' @export
+#' @examples
+#' resolve_facet_sharing("fixed")
+#' resolve_facet_sharing("free_x")
+resolve_facet_sharing <- function(facet.scales = "fixed") {
     shareX <- TRUE
     shareY <- TRUE
     if (facet.scales == "free") {
@@ -250,29 +257,31 @@
 #' Resolve number of rows for a faceted subplot grid
 #'
 #' Given the number of facet levels and optional user-supplied
-#' \code{facet.nrow} / \code{facet.ncol} values, computes the \code{nrows}
-#' argument to pass to \code{plotly::subplot}.
+#' `facet.nrow` / `facet.ncol` values, computes the `nrows`
+#' argument to pass to `plotly::subplot`.
 #'
 #' Resolution rules:
-#' \itemize{
-#'   \item Both \code{NULL}/\code{NA}: returns 1 (single row, preserves legacy behaviour).
-#'   \item Only \code{facet.nrow} supplied: returns that value.
-#'   \item Only \code{facet.ncol} supplied: returns \code{ceiling(n_facets / facet.ncol)}.
-#'   \item Both supplied: \code{facet.nrow} wins.
-#' }
-#' The result is clamped to the range \code{[1, n_facets]}.
+#'
+#' - Both `NULL`/`NA`: returns 1 (single row, preserves legacy behaviour).
+#' - Only `facet.nrow` supplied: returns that value.
+#' - Only `facet.ncol` supplied: returns `ceiling(n_facets / facet.ncol)`.
+#' - Both supplied: `facet.nrow` wins.
+#'
+#' The result is clamped to the range `[1, n_facets]`.
 #'
 #' @param n_facets Integer, number of facet panels.
 #' @param facet.nrow Optional integer, user-requested number of rows.
 #' @param facet.ncol Optional integer, user-requested number of columns.
 #'
 #' @return A positive integer giving the number of rows for
-#'   \code{plotly::subplot}.
+#'   `plotly::subplot`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_resolve_facet_layout
-#' @keywords internal
-.resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
+#' @export
+#' @examples
+#' resolve_facet_layout(6, facet.nrow = 2)
+#' resolve_facet_layout(6, facet.ncol = 3)
+resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL) {
     n_facets <- max(1L, as.integer(n_facets))
 
     .is_set <- function(x) {
@@ -296,34 +305,35 @@
 #' Build facet subplot annotations
 #'
 #' Creates a list of plotly annotation objects suitable for labelling faceted
-#' subplots arranged in a grid of \code{nrows} rows. When \code{nrows = 1}
+#' subplots arranged in a grid of `nrows` rows. When `nrows = 1`
 #' (the default) the behaviour matches the previous single-row layout.
 #' Optionally appends a shared X-axis title (bottom centre) and a shared,
 #' rotated Y-axis title (left centre).
 #'
 #' @param facet_levels Character vector of facet level labels, one per subplot.
-#' @param x.title Optional character, shared X-axis title. Default: \code{NULL}.
-#' @param y.title Optional character, shared Y-axis title. Default: \code{NULL}.
+#' @param x.title Optional character, shared X-axis title. Default: `NULL`.
+#' @param y.title Optional character, shared Y-axis title. Default: `NULL`.
 #' @param title.font.size Numeric, font size for all annotation text.
 #'   Default: 14.
 #' @param nrows Integer, number of rows the faceted subplots are arranged in.
 #'   Used to compute per-subplot annotation coordinates for multi-row grids
-#'   when \code{fig} is not supplied. Default: 1.
+#'   when `fig` is not supplied. Default: 1.
 #' @param fig Optional plotly figure. When supplied, per-panel title
 #'   coordinates are read directly from the figure's xaxis/yaxis domains so
 #'   that titles stay aligned with panels after domain-rewriting helpers such
-#'   as \code{.apply_facet_subplot_spacing()}. If \code{NULL} (the default),
-#'   coordinates are computed from \code{nrows} assuming evenly spaced
+#'   as [apply_facet_subplot_spacing()]. If `NULL` (the default),
+#'   coordinates are computed from `nrows` assuming evenly spaced
 #'   panels filling the full paper area.
 #' @param title.offset Numeric fraction of the figure height to place each
-#'   subplot title above the top of its panel. Default: \code{0.02}.
+#'   subplot title above the top of its panel. Default: `0.02`.
 #'
-#' @return A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.
+#' @return A list of annotation lists suitable for `plotly::layout(annotations = ...)`.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_build_facet_annotations
-#' @keywords internal
-.build_facet_annotations <- function(facet_levels, x.title = NULL,
+#' @export
+#' @examples
+#' build_facet_annotations(c("A", "B", "C"), x.title = "X", y.title = "Y")
+build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      y.title = NULL,
                                      title.font.size = 14,
                                      nrows = 1,
@@ -332,7 +342,7 @@
     n_facets <- length(facet_levels)
 
     # Prefer actual axis domains on the figure (if supplied) so titles follow
-    # any domain rewriting performed by e.g. .apply_facet_subplot_spacing().
+    # any domain rewriting performed by e.g. apply_facet_subplot_spacing().
     panel_coords <- NULL
     if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
         axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
@@ -441,16 +451,15 @@
 #'
 #' The borders honour the same axis styling semantics used for single-panel
 #' figures:
-#' \itemize{
-#'   \item \code{showline} and \code{mirror} both \code{TRUE}: full rectangle
-#'     border around each panel.
-#'   \item only \code{showline} \code{TRUE}: left and bottom edges only.
-#'   \item \code{showline} \code{FALSE}: no borders (empty list).
-#' }
+#'
+#' - `showline` and `mirror` both `TRUE`: full rectangle
+#'   border around each panel.
+#' - only `showline` `TRUE`: left and bottom edges only.
+#' - `showline` `FALSE`: no borders (empty list).
 #'
 #' @param fig A plotly figure object whose `x$layout` contains the per-panel
 #'   `xaxis*`/`yaxis*` domains (typically after `subplot()` and
-#'   `.apply_facet_subplot_spacing()`).
+#'   [apply_facet_subplot_spacing()]).
 #' @param n_facets Integer, number of facet panels.
 #' @param showline Logical, whether to draw border lines. Default `TRUE`.
 #' @param mirror Logical, whether to mirror the lines to form a full box.
@@ -467,11 +476,16 @@
 #'   resolved.
 #'
 #' @author Jacob Martin
-#' @rdname INTERNAL_build_facet_panel_borders
-#' @keywords internal
-.build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
-                                       linecolor = "black", linewidth = 0.5,
-                                       ncol = NULL, nrow = NULL) {
+#' @export
+#' @examples
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'     ggplot2::geom_point() +
+#'     ggplot2::facet_wrap(~cyl)
+#' fig <- plotly::ggplotly(p)
+#' build_facet_panel_borders(fig, n_facets = 3)
+build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = TRUE,
+                                      linecolor = "black", linewidth = 0.5,
+                                      ncol = NULL, nrow = NULL) {
     if (!isTRUE(showline) || n_facets < 1L) {
         return(list())
     }
@@ -579,9 +593,12 @@
 #' @return `numeric(1)` or `NULL`  
 #'   Validated facet dimension value, or `NULL` if invalid.
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_clean_facet_dim
-.clean_facet_dim <- function(val) {
+#' @export
+#' @examples
+#' clean_facet_dim(3)
+#' clean_facet_dim(NA)
+#' clean_facet_dim(NULL)
+clean_facet_dim <- function(val) {
     if (is.null(val) || length(val) == 0 || is.na(val) ||
         !is.numeric(val) || val < 1) {
         return(NULL)
@@ -589,4 +606,46 @@
     val
 }
 
-
+#' Identify columns valid for faceting or splitting
+#'
+#' Scans a data frame and returns the names of columns that are appropriate
+#' choices for a facet/split selector. A column qualifies when it is
+#' categorical (character or factor) and has fewer than 50 unique values.
+#' This keeps facet/split inputs from offering numeric columns or
+#' high-cardinality categoricals that would produce an unwieldy number of
+#' panels.
+#'
+#' Intended to populate the `choices` of a facet/split `selectInput()` via
+#' [shiny::updateSelectInput()] inside a module server, so that only sensible
+#' faceting variables are exposed to the user.
+#'
+#' @param data A data frame whose columns are evaluated.
+#'
+#' @return A character vector of column names suitable for faceting/splitting.
+#'   Returns `character(0)` when no column qualifies.
+#'
+#' @details A column is considered valid when both of the following hold:
+#'   \itemize{
+#'     \item It is categorical: `is.character(col)` or `is.factor(col)`.
+#'     \item It has fewer than 50 unique values (`NA`s excluded).
+#'   }
+#'   Numeric columns and categorical columns with 50 or more distinct values
+#'   are always excluded.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_facet_check
+.facet_check <- function(data) {
+    if (is.null(data) || ncol(data) == 0) {
+        return(character(0))
+    }
+    valid_cols <- character(0)
+    for (nm in names(data)) {
+        col <- data[[nm]]
+        if ((is.character(col) || is.factor(col)) &&
+            length(unique(col[!is.na(col)])) < 50) {
+            valid_cols <- c(valid_cols, nm)
+        }
+    }
+    valid_cols
+}
