@@ -264,7 +264,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ), selectize = FALSE
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
             tipify(selectizeInput(ns("split.by"), "Split By",
-                choices = cat.choices,
+                choices = c("", .facet_check(data)),
                 selected = get_default(
                     defaults, "split.by", "",
                     function(x) all(x %in% cat.choices)

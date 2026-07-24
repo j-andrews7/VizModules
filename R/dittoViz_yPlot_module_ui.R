@@ -482,7 +482,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Facet" = tagList(
             tipify(
                 selectInput(ns("split.by"), "Split by (facet)",
-                    choices = cat.choices,
+                    choices = c("", .facet_check(data)),
                     selected = get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices

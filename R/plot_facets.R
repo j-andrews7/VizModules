@@ -606,4 +606,46 @@ clean_facet_dim <- function(val) {
     val
 }
 
-
+#' Identify columns valid for faceting or splitting
+#'
+#' Scans a data frame and returns the names of columns that are appropriate
+#' choices for a facet/split selector. A column qualifies when it is
+#' categorical (character or factor) and has fewer than 50 unique values.
+#' This keeps facet/split inputs from offering numeric columns or
+#' high-cardinality categoricals that would produce an unwieldy number of
+#' panels.
+#'
+#' Intended to populate the `choices` of a facet/split `selectInput()` via
+#' [shiny::updateSelectInput()] inside a module server, so that only sensible
+#' faceting variables are exposed to the user.
+#'
+#' @param data A data frame whose columns are evaluated.
+#'
+#' @return A character vector of column names suitable for faceting/splitting.
+#'   Returns `character(0)` when no column qualifies.
+#'
+#' @details A column is considered valid when both of the following hold:
+#'   \itemize{
+#'     \item It is categorical: `is.character(col)` or `is.factor(col)`.
+#'     \item It has fewer than 50 unique values (`NA`s excluded).
+#'   }
+#'   Numeric columns and categorical columns with 50 or more distinct values
+#'   are always excluded.
+#'
+#' @author Jacob Martin
+#' @keywords internal
+#' @rdname INTERNAL_facet_check
+.facet_check <- function(data) {
+    if (is.null(data) || ncol(data) == 0) {
+        return(character(0))
+    }
+    valid_cols <- character(0)
+    for (nm in names(data)) {
+        col <- data[[nm]]
+        if ((is.character(col) || is.factor(col)) &&
+            length(unique(col[!is.na(col)])) < 50) {
+            valid_cols <- c(valid_cols, nm)
+        }
+    }
+    valid_cols
+}

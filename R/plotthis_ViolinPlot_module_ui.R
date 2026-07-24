@@ -353,7 +353,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         "Facet" = tagList(
             tipify(selectInput(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c(char.choices, ""), selectize = FALSE),
+                choices = c("", .facet_check(data)), selectize = FALSE),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),

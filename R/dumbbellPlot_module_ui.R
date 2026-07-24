@@ -171,7 +171,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = cat.choices, selectize = FALSE
+                choices = c("", .facet_check(data)), selectize = FALSE
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),

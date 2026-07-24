@@ -179,7 +179,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                     defaults, "facet.by", "",
                     function(x) x %in% c(group_facet_choices, "")
                 ),
-                choices = c(group_facet_choices, ""), selectize = FALSE
+                choices = c(intersect(group_facet_choices, .facet_check(data)), ""), selectize = FALSE
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(selectInput(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
