@@ -1,0 +1,206 @@
+# Building Custom Modules
+
+## Introduction
+
+The modules in **VizModules** are designed to be composed and extended.
+You can build higher-level modules that add custom logic such as data
+filtering, transformations, or additional UI controls while reusing the
+full functionality of the base modules.
+
+This vignette demonstrates how to create a custom module by building on
+top of the `scatterPlot` module.
+
+## The Pattern
+
+When building a custom module, you need to handle Shiny’s namespacing
+correctly. The key insight is:
+
+1.  **Your module’s custom inputs** need to be namespaced with `NS(id)`.
+2.  **The base module’s UI and server functions** should receive the
+    bare `id`, not a namespaced version.
+3.  **Data processing** that requires access to your module’s inputs
+    must happen inside a
+    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+    block.
+4.  **The base module’s server** should be called *outside* that
+    [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+    block to avoid double-namespacing issues.
+
+## A Minimal Example
+
+Let’s build a custom module that adds a simple filtering checkbox to the
+`scatterPlot` module.
+
+### The UI
+
+``` r
+
+library(VizModules)
+
+minimalModuleUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Minimal Module Controls"),
+        # Custom input - uses the module's namespace
+        checkboxInput(ns("filter_setosa"), "Start with Setosa Only", value = FALSE),
+        hr(),
+        # Base module UI - pass the bare 'id', not ns(id)
+        dittoViz_scatterPlotInputsUI(id, iris)
+    )
+}
+
+minimalModuleOutput <- function(id) {
+    # Simply delegate to the base module's output UI
+    dittoViz_scatterPlotOutputUI(id)
+}
+```
+
+Notice that
+[`checkboxInput()`](https://rdrr.io/pkg/shiny/man/checkboxInput.html)
+uses `ns("filter_setosa")` to namespace the custom input, while
+[`dittoViz_scatterPlotInputsUI()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_scatterPlotInputsUI.md)
+receives the bare `id`. This ensures the base module creates its inputs
+in the correct namespace.
+
+### The Server
+
+``` r
+
+minimalModuleServer <- function(id, data_reactive) {
+    # Step 1: Process data inside a moduleServer block
+    # This gives us access to inputs namespaced to 'id' (our module's inputs)
+    filtered_data <- moduleServer(id, function(input, output, session) {
+        reactive({
+            req(data_reactive())
+            df <- data_reactive()
+
+            # Input specific to this custom module
+            if (isTRUE(input$filter_setosa)) {
+                if ("Species" %in% names(df)) {
+                    df <- df[df$Species == "setosa", ]
+                }
+            }
+            df
+        })
+    })
+
+    # Step 2: Call the base module server OUTSIDE the moduleServer block
+    # This is critical! If we called this inside the moduleServer above,
+    # dittoViz_scatterPlotServer would look for inputs at id-id-inputName instead of id-inputName
+    dittoViz_scatterPlotServer(id, filtered_data)
+}
+```
+
+**Why this pattern?**
+
+- `moduleServer(id, ...)` gives us access to `input$filter_setosa`,
+  which is namespaced to our wrapper’s `id`.
+- By calling `dittoViz_scatterPlotServer(id, filtered_data)` *outside*
+  the
+  [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+  closure, the base module attaches to the same namespace as our UI, not
+  a nested one.
+- If we called
+  [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_scatterPlotServer.md)
+  inside the
+  [`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html)
+  block, it would create nested namespaces like `id-id-x_axis`, which
+  wouldn’t match the actual input IDs in the UI.
+
+### Putting It Together
+
+``` r
+
+ui <- fluidPage(
+    titlePanel("Minimal Module Example"),
+    sidebarLayout(
+        sidebarPanel(
+            minimalModuleUI("demo")
+        ),
+        mainPanel(
+            minimalModuleOutput("demo")
+        )
+    )
+)
+
+server <- function(input, output, session) {
+    # Pass a reactive data source to the module
+    minimalModuleServer("demo", reactive({
+        iris
+    }))
+}
+
+shinyApp(ui, server)
+```
+
+## Hiding Base Module Inputs
+
+If your module pre-sets certain parameters, you can hide those inputs
+from the user to keep them from being changed:
+
+``` r
+
+focusedModuleUI <- function(id) {
+    ns <- NS(id)
+    tagList(
+        h4("Simplified Scatter Plot"),
+        # Hide a few parameters
+        dittoViz_scatterPlotInputsUI(id, iris,
+            hide.inputs = c("shape.by", "color.by")
+        )
+    )
+}
+```
+
+## Automatically Preserving Manual Title/Legend/Annotation Edits
+
+The base modules let users interactively drag and edit the plot title,
+legend, annotations, draggable axis titles, and continuous-colour legend
+(colorbar), and they re-apply those manual tweaks across re-renders.
+When you wrap a base module (as in the examples above), this persistence
+is inherited for free.
+
+If you build a brand-new `plotly` output from scratch inside a custom
+module (rather than delegating to a base module’s server), you can add
+the same behaviour simply with 3 basic steps:
+
+``` r
+
+customPlotServer <- function(id, data_reactive) {
+    moduleServer(id, function(input, output, session) {
+        # 1. A unique event source + the edit store, created once.
+        plot_source <- session$ns("customplot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
+        output$plot <- renderPlotly({
+            # 2. Create your plotly object with your plotting function
+            fig <- build_my_plotly_figure(data_reactive(), input)
+            # 3. Restore + capture edits on every render, then return the figure.
+            finalize_manual_edits(fig, plot_source, edit_store, session)
+        })
+    })
+}
+```
+
+See the “Adding a New Module” vignette for the full description of these
+helpers, but this is pretty much all you need to do.
+
+## Best Practices
+
+1.  **Keep wrapper logic focused**: Each wrapper should add a cohesive
+    set of related functionality.
+
+2.  **Document the data requirements**: If your wrapper expects certain
+    columns, a specific class or data structure, etc, document this
+    clearly.
+
+3.  **Use reactive expressions**: Use reactive data inputs.
+
+4.  **Test the namespace**: If inputs aren’t working, check that you’re
+    handling namespaces correctly. A common symptom of namespace issues
+    is that inputs seem to have no effect.
+
+5.  **Consider composability**: Design your wrappers so they could
+    potentially be wrapped by even higher-level modules.
+
+See any of the existing modules for clear reference examples.

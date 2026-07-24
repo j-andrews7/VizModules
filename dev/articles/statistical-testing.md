@@ -1,0 +1,164 @@
+# Statistical Testing
+
+The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a
+**Stats** tab that adds pairwise statistical test results as bracket
+annotations directly on the plotly figure. The same helpers are exported
+so you can add bracket annotations to any custom plotly figure.
+
+## Using the Stats tab
+
+Enable testing from the Stats tab in any supported module app:
+
+``` r
+
+library(VizModules)
+plotthis_BoxPlotApp()
+```
+
+The Stats tab exposes these controls:
+
+| Control | Default | Description |
+|----|----|----|
+| Enable Stats | OFF | Master toggle |
+| Test | Wilcoxon | `wilcox.test`, `t.test`, `kruskal.test`, or `anova` |
+| P-value Adjustment | holm | Any `p.adjust` method |
+| Display | Adjusted P-value | `p.adj`, `p.value`, or `symbol` (`*`/`**`/`***`/`****`) |
+| Significance Threshold | 0.05 | Boundary for `*` vs `ns` |
+| Hide Non-Significant | OFF | Suppress `ns` brackets |
+| Paired Test | OFF | Paired Wilcoxon or paired t-test |
+| Comparisons | (all pairs) | Restrict to specific pairs |
+| Bracket Style | Capped | `capped` (ticked) or `flat` |
+| Bracket Spacing / Text Offset / Bracket Inset | — | Fine layout control (fractions of y-range) |
+| Per Facet Panel | ON | Test independently per facet, or across the full dataset |
+
+### Supported tests
+
+- **Pairwise**: Wilcoxon rank-sum, t-test (paired or unpaired) — draw a
+  bracket per pair.
+- **Omnibus**: Kruskal-Wallis, ANOVA — draw a single draggable text
+  annotation with the overall p-value.
+
+### Paired tests
+
+When **Paired Test** is enabled, each group must have the same number of
+observations, sorted so paired samples align row-by-row within each
+group.
+
+### Downloading statistics
+
+The **Download Summary** button (Source Data, at the bottom of the
+controls panel) includes a statistics CSV with a metadata header
+(correction method, threshold, symbol legend) alongside the plot HTML
+and source data.
+
+## Using the stat helpers in a custom module
+
+The pipeline is fully exported:
+
+1.  [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/dev/reference/compute_pairwise_stats.md)
+    — run the tests, return a data frame.
+2.  [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/create_stat_annotations.md)
+    — convert results to plotly shapes and annotations.
+3.  [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/apply_stat_annotations.md)
+    — append them to a plotly figure.
+
+``` r
+
+library(VizModules)
+library(ggplot2)
+library(plotly)
+
+stats_df <- compute_pairwise_stats(
+    df   = example_iris,
+    x    = "Species",
+    y    = "Sepal.Length",
+    test = "wilcox.test",
+    p.adjust.method = "holm"
+)
+
+# Build the figure with ggplot2 + ggplotly(), matching how the plot modules
+# construct their figures. This matters for bracket placement: ggplotly()
+# categorical axes are 1-based (the first factor level sits at x = 1), which
+# is the convention create_stat_annotations() expects.
+p <- ggplot(example_iris, aes(x = Species, y = Sepal.Length)) +
+    geom_boxplot()
+fig <- ggplotly(p)
+
+stat_result <- create_stat_annotations(
+    stats_df = stats_df,
+    fig      = fig,
+    df       = example_iris,
+    x        = "Species",
+    y        = "Sepal.Length",
+    display  = "symbol"
+)
+
+apply_stat_annotations(fig, stat_result)
+```
+
+> **Axis coordinates.**
+> [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/create_stat_annotations.md)
+> positions brackets using 1-based categorical x-coordinates, matching
+> figures built with
+> [`ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html) (as every
+> VizModules plot module does). If you build the figure with a raw
+> `plot_ly(type = "box")` call instead, plotly uses 0-based category
+> positions and the brackets will appear shifted one category to the
+> right — prefer
+> [`ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html) for a
+> `ggplot` object to stay consistent with the modules.
+
+### Restricting comparisons
+
+By default all pairwise combinations are tested. Pass a list of length-2
+character vectors to `pairs`, or convert to/from the UI’s `"A vs B"`
+strings with
+[`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/dev/reference/generate_pair_strings.md)
+/
+[`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/dev/reference/parse_pair_strings.md):
+
+``` r
+
+choices <- generate_pair_strings(example_iris, x = "Species")
+pairs   <- parse_pair_strings(choices[1:2])
+
+stats_df <- compute_pairwise_stats(
+    df    = example_iris,
+    x     = "Species",
+    y     = "Sepal.Length",
+    test  = "wilcox.test",
+    pairs = pairs
+)
+```
+
+### Faceted plots and nested grouping
+
+Pass `facet.by` with `per.facet = TRUE` to test independently within
+each panel, or `group.by` to compare group levels within each x
+category:
+
+``` r
+
+compute_pairwise_stats(
+    df        = example_rnaseq,
+    x         = "condition",
+    y         = "expression",
+    test      = "wilcox.test",
+    facet.by  = "gene",
+    per.facet = TRUE
+)
+```
+
+Pass the same `facet.by`/`group.by` values to
+[`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/create_stat_annotations.md)
+so brackets land on the correct subplot axes.
+
+### `compute_pairwise_stats()` return value
+
+| Column | Description |
+|----|----|
+| `group1`, `group2` | Groups compared (`"all"` for omnibus) |
+| `p.value`, `p.adj` | Raw and adjusted p-values |
+| `p.signif` | Significance symbol (`ns`, `*`, `**`, `***`, `****`) |
+| `test` | Test name |
+| `facet_level`, `x_level` | Facet panel / nested x level (NA when not applicable) |
