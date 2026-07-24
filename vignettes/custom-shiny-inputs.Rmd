@@ -52,7 +52,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 knitr::include_graphics("../man/figures/multiDynamicInput.png")
 ```
 
