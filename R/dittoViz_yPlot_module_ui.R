@@ -237,9 +237,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$shape.by,
                 placement = "top", options = list(container = "body")
             ),
-            uiOutput(ns("palette.selection"))
-        ),
-        "Plot Type" = tagList(
             tipify(selectInput(
                 ns("plots"),
                 "Plots",
@@ -250,7 +247,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 ),
                 multiple = TRUE, selectize = TRUE
             ), documentParameters$plots, placement = "top", options = list(container = "body")),
-            helpText("Order not currently respected")
+            helpText("Order not currently respected"),
+            uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
             tipify(
@@ -289,22 +287,6 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     min = -1000, max = 1000
                 ),
                 documentParameters$min,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                materialSwitch(ns("do.raster"), "Rasterize Jitter",
-                    value = get_default(defaults, "do.raster", FALSE, is.logical),
-                    status = "success"
-                ),
-                documentParameters$do.raster,
-                placement = "top", options = list(container = "body")
-            ),
-            tipify(
-                numericInput(ns("raster.dpi"), "Raster DPI",
-                    value = get_default(defaults, "raster.dpi", 600, is.numeric),
-                    min = 100, max = 1200
-                ),
-                documentParameters$raster.dpi,
                 placement = "top", options = list(container = "body")
             )
         ),
@@ -346,6 +328,22 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     status = "success"
                 ),
                 documentParameters$jitter.shape.legend.show,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                materialSwitch(ns("do.raster"), "Rasterize Jitter",
+                    value = get_default(defaults, "do.raster", FALSE, is.logical),
+                    status = "success"
+                ),
+                documentParameters$do.raster,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                numericInput(ns("raster.dpi"), "Raster DPI",
+                    value = get_default(defaults, "raster.dpi", 600, is.numeric),
+                    min = 100, max = 1200
+                ),
+                documentParameters$raster.dpi,
                 placement = "top", options = list(container = "body")
             )
         ),
