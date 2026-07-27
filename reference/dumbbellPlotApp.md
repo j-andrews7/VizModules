@@ -8,7 +8,12 @@ configuring and displaying an interactive dumbbell plot.
 ## Usage
 
 ``` r
-dumbbellPlotApp(data_list = NULL)
+dumbbellPlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 ```
 
 ## Arguments
@@ -18,6 +23,21 @@ dumbbellPlotApp(data_list = NULL)
   An optional named list of data frames. If `NULL` (the default),
   `list("school_earnings" = example_school_earnings)` is used as example
   data.
+
+- defaults:
+
+  A named list of input IDs and their default values to apply on
+  startup.
+
+- hide.inputs:
+
+  A character vector of input IDs to hide. Their values are still
+  initialized and used, but the controls are not shown in the UI.
+
+- hide.tabs:
+
+  A character vector of tab names to hide. Inputs in these tabs are
+  still initialized and used, but the controls are not shown in the UI.
 
 ## Value
 

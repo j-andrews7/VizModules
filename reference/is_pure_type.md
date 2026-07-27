@@ -30,7 +30,7 @@ detected.
 
 ## See also
 
-[`for`](https://rdrr.io/r/base/Control.html)
+[`base::for()`](https://rdrr.io/r/base/Control.html)
 
 ## Author
 

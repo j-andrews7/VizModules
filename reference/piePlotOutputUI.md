@@ -17,7 +17,7 @@ piePlotOutputUI(id, resizable = TRUE)
 - resizable:
 
   Logical; when `TRUE` (the default) the plot output is wrapped in
-  [`jqui_resizable`](https://yang-tang.github.io/shinyjqui/reference/Interactions.html)
+  [`shinyjqui::jqui_resizable()`](https://yang-tang.github.io/shinyjqui/reference/Interactions.html)
   so it can be resized by dragging. Set to `FALSE` when embedding the
   output in a container that already provides resizing.
 

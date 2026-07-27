@@ -17,7 +17,7 @@ plot."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,8 +29,12 @@ plot."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
+    <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -72,6 +76,9 @@ plot.</p>
 <span>  <span class="va">server_fn</span>,</span>
 <span>  <span class="va">data_list</span>,</span>
 <span>  defaults <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hide.inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  hide.tabs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  show.table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"VizModules App"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -105,6 +112,25 @@ At least one element is required.</p></dd>
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
 <dd><p>A named list of ui ids and their default values that can change the ui default
 settings on startup.</p></dd>
+
+
+<dt id="arg-hide-inputs">hide.inputs<a class="anchor" aria-label="anchor" href="#arg-hide-inputs"></a></dt>
+<dd><p>A character vector of input IDs to hide. These inputs are still
+initialized and their values passed to the plot, but are not shown in the UI.
+Passed through to <code>server_fn</code> when it accepts a <code>hide.inputs</code> argument.</p></dd>
+
+
+<dt id="arg-hide-tabs">hide.tabs<a class="anchor" aria-label="anchor" href="#arg-hide-tabs"></a></dt>
+<dd><p>A character vector of tab names to hide. Inputs in these tabs are
+still initialized and their values passed to the plot, but are not shown in the UI.
+Passed through to <code>server_fn</code> when it accepts a <code>hide.tabs</code> argument.</p></dd>
+
+
+<dt id="arg-show-table">show.table<a class="anchor" aria-label="anchor" href="#arg-show-table"></a></dt>
+<dd><p>Logical. When <code>TRUE</code> (default), a filterable DT table is
+shown below the plot and its row selection drives the data passed to the
+plot module. When <code>FALSE</code>, the table and filter controls are hidden and
+the full (unfiltered) dataset is passed directly to the plot module.</p></dd>
 
 
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
@@ -169,7 +195,7 @@ for custom wrapper modules.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

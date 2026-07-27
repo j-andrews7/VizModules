@@ -8,7 +8,12 @@ area for configuring and displaying an interactive radar plot.
 ## Usage
 
 ``` r
-radarPlotApp(data_list = NULL)
+radarPlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 ```
 
 ## Arguments
@@ -19,6 +24,21 @@ radarPlotApp(data_list = NULL)
   `list("skills" = example_skills)` is used. Each data frame should
   contain columns for categories (theta) and values (r). For multiple
   traces, include a grouping column.
+
+- defaults:
+
+  A named list of input IDs and their default values to apply on
+  startup.
+
+- hide.inputs:
+
+  A character vector of input IDs to hide. Their values are still
+  initialized and used, but the controls are not shown in the UI.
+
+- hide.tabs:
+
+  A character vector of tab names to hide. Inputs in these tabs are
+  still initialized and used, but the controls are not shown in the UI.
 
 ## Value
 

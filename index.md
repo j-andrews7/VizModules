@@ -31,15 +31,16 @@ remotes::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted example gallery:
-  <https://j-andrews7-vizmodules.share.connect.posit.cloud/>
+- Explore the hosted [example
+  gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/).
 - Run the same gallery locally after installation:
   `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Check out the included Figure Builder app for a demo of how the
-  modules can be used together to build a free-form, multi-pane figure:
-  <https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/>
+- Check out the hosted [Figure Builder
+  app](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
+  for a demo of how the modules can be used together to build a
+  free-form, multi-pane figure.
 - Run the Figure Builder app locally:
-  `shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))`
+  [`VizModules::figureBuilderApp()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.md)
 - See the vignette for a full walkthrough of using the modules in your
   own apps:
   [`vignette("quick-start", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/quick-start.html)
@@ -137,7 +138,12 @@ is a thin wrapper around
 with sensible default data. You can also pass your own custom wrapper
 module functions to
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
-for rapid prototyping after defining the UI and server functions.
+for rapid prototyping after defining the UI and server functions. All
+`*App()` wrappers and
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+accept `defaults`, `hide.inputs`, and `hide.tabs` so you can pre-fill or
+hide controls when testing a module in isolation; see
+[`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html).
 
 ``` r
 
@@ -156,17 +162,60 @@ runApp(app)
 
 ## Figure Builder App
 
-The bundled **Figure Builder** app (`inst/apps/figure-builder`) turns
-the modules into a free-form figure builder. Run it with:
+The **Figure Builder** is now a fully reusable, namespaced Shiny module
+([`figureBuilderUI()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderUI.md)
+/
+[`figureBuilderServer()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderServer.md))
+that turns the plot modules into a free-form figure builder. It can be
+launched as a standalone app, embedded inside a larger app, or even
+instantiated more than once on a single page. Launch the standalone app
+with
+[`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.md):
 
 ``` r
 
 library(VizModules)
-shiny::runApp(system.file("apps/figure-builder", package = "VizModules"))
+
+# Launch with the bundled example datasets and all modules
+figureBuilderApp()
+
+# Or seed it with your own datasets
+figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 ```
+
+[`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.md)
+accepts `data_list` to seed datasets, `module_registry` to add custom
+modules, and `return_components = TRUE` to get separate `ui`/`server`
+objects instead of a
+[`shinyApp()`](https://rdrr.io/pkg/shiny/man/shinyApp.html). See
+[`?figureBuilderApp`](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.md)
+for details.
 
 Or try the [hosted
 example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
+
+The Figure Builder is also a self-contained Shiny module, so you can
+embed it in a larger app (and even use more than one instance on a page)
+with
+[`figureBuilderUI()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderUI.md)
+/
+[`figureBuilderServer()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderServer.md),
+just like the plot modules:
+
+``` r
+
+library(VizModules)
+
+ui <- fluidPage(
+    figureBuilderUI("figure_builder")
+)
+
+server <- function(input, output, session) {
+    figureBuilderServer("figure_builder")
+}
+
+shinyApp(ui, server)
+```
 
 It allows you to interactively compose complicated figures using the
 modules in a single page:
@@ -199,9 +248,12 @@ modules in a single page:
   formatting and syling options available in each module.
 - **Automatic panel labels.** Use the *Panel labels* dropdown to add
   panel letters (`A`, `B`, `C`, … or lowercase `a`, `b`, `c`, …) to the
-  top-left of each panel in the SVG export. Labels are ordered the way a
-  reader scans a figure — top-to-bottom by row, then left-to-right
-  within a row. Choose *None* to leave the figure unlabelled.
+  top-left of each panel. Labels now render live on the canvas as soon
+  as they are chosen (and renumber as panels are added, removed, or
+  dragged), in addition to appearing in the SVG export. Labels are
+  ordered the way a reader scans a figure — top-to-bottom by row, then
+  left-to-right within a row. Choose *None* to leave the figure
+  unlabelled.
 - **Download source data.** Click *Download Summary* to download a
   single `.zip` containing all plot data (plot + data + the inputs used
   to build it + statistical testing information (if applied)) for every
@@ -211,10 +263,44 @@ modules in a single page:
 
 The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic while reusing
-the full functionality of the base modules.
+the full functionality of the base modules. Many internal helpers for
+axes, faceting, and layouts are now exported to support this, along with
+the `defaults`/`hide.inputs`/`hide.tabs` controls covered in
+[`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html).
 
 For more details, see
 [`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
+
+## Custom Shiny Inputs
+
+Beyond the standard `shiny::*Input` widgets, **VizModules** ships two
+reusable custom Shiny inputs that are used throughout the package and
+are available for your own apps:
+[`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+and
+[`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md).
+See
+[`vignette("custom-shiny-inputs", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-shiny-inputs.html)
+for full details.
+
+**[`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)**
+assigns a color to each level of a discrete variable, either by applying
+a named palette to every group at once or by fine-tuning individual
+groups with a color picker and an editable hex field. It returns a named
+character vector of hex colors keyed by group and can be updated from
+the server with
+[`updateMultiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/updateMultiColorPicker.md).
+
+![](reference/figures/multiColorPicker.png)
+
+**[`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)**
+is a general-purpose widget that lets users dynamically add and remove
+rows of heterogeneous inputs (e.g. a color, a numeric, and a select per
+row). It returns a named list of rows and can be updated from the server
+with
+[`updateMultiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/updateMultiDynamicInput.md).
+
+![](reference/figures/multiDynamicInput.png)
 
 ## Modules Provided
 
@@ -226,6 +312,11 @@ following visualization functions:
 - `dittoViz_scatterPlot` - x/y coordinate plots with additional color
   and shape encodings (wraps
   [`dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)).
+  Supports overlaying fit lines, including **multiple custom model
+  lines** defined interactively: add a row per model, each with its own
+  R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function
+  (`lm`, `glm`, `loess`, `nls`), line colour, and width, see
+  [`vignette("custom-model-lines", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-model-lines.html).
 - `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter,
   violinplots - wraps
   [`dittoViz::yPlot`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)).
@@ -257,24 +348,33 @@ Via direct implementation with plotly.
 - `piePlot` - Pie and donut plots
 - `radarPlot` - Radar plots
 - `parallelCoordinatesPlot` - Parallel coordinate plots
-- `ternaryPlot` - Ternary plots
 - `dumbbellPlot` - Dumbbell plots
 
 ## Statistical Testing
 
 The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a
 **Stats** tab that adds pairwise statistical testing with bracket
-annotations directly on the plotly figure.
+annotations directly on the plotly figure. The underlying helpers
+([`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md),
+[`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md),
+[`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md),
+[`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md),
+[`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md))
+are exported so you can add the same bracket annotations to any custom
+plotly figure. See
+[`vignette("statistical-testing", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/statistical-testing.html).
 
-## Export Summary Data:
+### Export Summary Data
 
-`create_interactive_summary_data()` collects the interactive plot as
-HTML, its plot data, pairwise testing statistics (if applied), and UI
-input values into a single list, and `.create_download_file()` turns
-that into a compact zip folder of summary data for the output plot.
-`.create_download_file()` also accepts a named list of summaries (one
-per plot), which is how the Panel Builder bundles every plot on the
-canvas into one download.
+[`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+collects the interactive plot as HTML, its plot data, pairwise testing
+statistics (if applied), and UI input values into a single list, and
+[`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
+turns that into a compact zip folder of summary data for the output
+plot.
+[`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
+also accepts a named list of summaries (one per plot), which is how the
+Figure Builder bundles every plot on the canvas into one download.
 
 ### Supported Tests
 
@@ -389,10 +489,6 @@ Function)](https://pwwang.github.io/plotthis/reference/barplot.html)
 
 ![](reference/figures/SplitBarPlot.png)
 
-[ternaryPlot:](https://j-andrews7.github.io/VizModules/reference/ternaryPlotApp.html)
-
-![](reference/figures/ternaryPlot.png)
-
 [plotthis_ViolinPlot:](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html)
 
 [(Source Plotting
@@ -414,9 +510,9 @@ Function)](https://pwwang.github.io/plotthis/reference/dotplot.html)
 
 ![](reference/figures/DotPlot.png)
 
-### UI Example
+[figureBuilder:](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html)
 
-![](reference/figures/UI_Overview.png)
+![](reference/figures/Figure_builder.png)
 
 ## AI Usage Statement
 
@@ -472,9 +568,26 @@ locally-installed sources of truth so it can use the package correctly.
 > avoid double-namespacing. -
 > [`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.md)
 > — how to **author a brand-new module** from scratch (the
-> InputsUI/OutputUI/Server contract, conventions, and helpers). - The
-> README — overview, install, the full list of available modules, the
-> App Factory
+> InputsUI/OutputUI/Server contract, conventions, and helpers). -
+> [`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.md)
+> — using `defaults`, `hide.inputs`, and `hide.tabs` to pre-fill or hide
+> controls. -
+> [`vignette("statistical-testing", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/statistical-testing.md)
+> — the Stats tab and the exported
+> [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md)
+> /
+> [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
+> /
+> [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md)
+> helpers. -
+> [`vignette("custom-model-lines", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-model-lines.md)
+> — the pluggable model-line backend registry
+> ([`register_model_backend()`](https://j-andrews7.github.io/VizModules/reference/register_model_backend.md)). -
+> [`vignette("custom-shiny-inputs", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-shiny-inputs.md)
+> — the reusable
+> [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)
+> widget. - The README — overview, install, the full list of available
+> modules, the App Factory
 > ([`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)),
 > statistical-testing features, and summary-data export. - Per-function
 > help pages via `?` —
@@ -497,8 +610,8 @@ locally-installed sources of truth so it can use the package correctly.
 > `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`,
 > `plotthis_DotPlot`, `plotthis_Histogram`, plus the
 > natively-implemented `linePlot`, `piePlot`, `radarPlot`,
-> `parallelCoordinatesPlot`, `ternaryPlot`, and `dumbbellPlot`. Each has
-> a matching `*App()` function
+> `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching
+> `*App()` function
 > (e.g. [`plotthis_BarPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.md))
 > you can run to see it in action.
 >

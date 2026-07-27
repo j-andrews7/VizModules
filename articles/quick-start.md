@@ -17,7 +17,7 @@ shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
 
 All modules follow the same pattern: `*InputsUI()` for controls,
 `*OutputUI()` for the plot, and `*Server()` for the logic. Here is a
-minimal `scatterPlot` example:
+minimal scatter plot example using the `dittoViz_scatterPlot` module:
 
 ``` r
 
@@ -54,7 +54,8 @@ shinyApp(ui, server)
   `defaults = list(fill.color = "steelblue")`).
 - **Hide inputs**: Use `hide.inputs` in the server call to remove
   controls while still initializing their values. This is useful when
-  your app sets certain parameters itself.
+  your app sets certain parameters itself or wants to hide control of
+  various elements while still passing their initial values.
 - **Hide tabs**: Use `hide.tabs` to remove whole groups of controls
   (e.g., `"Plotly"` or `"Legend"` in `scatterPlot`).
 
@@ -102,7 +103,7 @@ functions to
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
 for rapid prototyping.
 
-## Export Summary Data:
+## Export Summary Data
 
 We provide
 [`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)

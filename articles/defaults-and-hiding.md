@@ -1,0 +1,299 @@
+# Defaults and Hiding Controls
+
+Two closely related arguments — `defaults` and `hide.inputs`/`hide.tabs`
+— let you control what users see and what the module starts with. This
+vignette covers both in depth.
+
+## `defaults`: pre-filling inputs
+
+Pass a named list to the `defaults` argument of any `*InputsUI()` call.
+Each name is an input ID (matching the underlying plot function
+argument), and its value is what the control initialises to.
+
+``` r
+
+library(VizModules)
+
+ui <- fluidPage(
+    sidebarLayout(
+        sidebarPanel(
+            dittoViz_scatterPlotInputsUI(
+                "p", mtcars,
+                defaults = list(
+                    x.by        = "wt",
+                    y.by        = "mpg",
+                    color.by    = "cyl",
+                    size        = 3,
+                    best.fit    = TRUE
+                )
+            )
+        ),
+        mainPanel(dittoViz_scatterPlotOutputUI("p"))
+    )
+)
+
+server <- function(input, output, session) {
+    dittoViz_scatterPlotServer("p", data = reactive(mtcars))
+}
+
+shinyApp(ui, server)
+```
+
+### Finding valid keys
+
+Defaults keys map directly to the argument names of the underlying plot
+function. The quickest way to find them is the module’s `*InputsUI()`
+help page,
+e.g. [`?dittoViz_scatterPlotInputsUI`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotInputsUI.md).
+The **Plot parameters and defaults** section lists every wired argument,
+its UI label, and its built-in default.
+
+For inputs that come from the uniform tab helpers (Axes, Legend, Lines,
+Plotly), see
+[`?uniform_axes_inputs_ui`](https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.md),
+[`?uniform_legend_inputs_ui`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md),
+[`?uniform_lines_inputs_ui`](https://j-andrews7.github.io/VizModules/reference/uniform_lines_inputs_ui.md),
+and
+[`?uniform_plotly_inputs_ui`](https://j-andrews7.github.io/VizModules/reference/uniform_plotly_inputs_ui.md)
+respectively.
+
+### Validation
+
+[`get_default()`](https://j-andrews7.github.io/VizModules/reference/get_default.md)
+(used internally by every module) accepts an optional `validator`
+predicate. If the value you supply fails validation — e.g. passing a
+string where a logical is expected — the module silently falls back to
+its built-in default rather than erroring. This means a typo in a key is
+silent; double-check key names against the help page if a default
+appears to have no effect.
+
+### Passing defaults through `createModuleApp()` and `*App()`
+
+`defaults` is forwarded all the way through the app factory:
+
+``` r
+
+plotthis_BoxPlotApp(
+    defaults = list(
+        x.by     = "Species",
+        y.by     = "Sepal.Length",
+        pt.size  = 0
+    )
+)
+```
+
+The same `defaults` list is accepted by
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
+directly:
+
+``` r
+
+app <- createModuleApp(
+    inputs_ui_fn = plotthis_BoxPlotInputsUI,
+    output_ui_fn = plotthis_BoxPlotOutputUI,
+    server_fn    = plotthis_BoxPlotServer,
+    data_list    = list("iris" = iris),
+    defaults     = list(x.by = "Species", y.by = "Sepal.Length")
+)
+if (interactive()) runApp(app)
+```
+
+------------------------------------------------------------------------
+
+## `hide.inputs`: hiding individual controls
+
+Pass a character vector of input IDs to `hide.inputs` on the **server**
+function. Those controls are hidden from the UI while their values are
+still initialised (from `defaults` if supplied, otherwise the built-in
+default) and passed to the plot on every render.
+
+``` r
+
+server <- function(input, output, session) {
+    dittoViz_scatterPlotServer(
+        "p",
+        data        = reactive(mtcars),
+        hide.inputs = c("shape.by", "plot.order", "opacity")
+    )
+}
+```
+
+Hidden inputs reflow: the surrounding controls close the gap rather than
+leaving an empty space. This is handled automatically by the flexbox
+grid that
+[`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md)
+creates.
+
+### Use case: app-level fixed parameters
+
+A common pattern is to fix a column mapping or aesthetic so that app
+users cannot change it, while still applying it to every plot:
+
+``` r
+
+server <- function(input, output, session) {
+    dittoViz_scatterPlotServer(
+        "p",
+        data        = reactive(mtcars),
+        defaults    = list(color.by = "cyl"),
+        hide.inputs = "color.by"
+    )
+}
+```
+
+The colour mapping is always `cyl`, and the control for it never
+appears.
+
+------------------------------------------------------------------------
+
+## `hide.tabs`: hiding entire tab panels
+
+Modules organise their inputs into named tabs (e.g. `"Data"`,
+`"Points"`, `"Lines"`, `"Axes"`, `"Legend"`, `"Plotly"`). Pass a
+character vector of tab names to `hide.tabs` to remove whole groups at
+once.
+
+``` r
+
+server <- function(input, output, session) {
+    dittoViz_scatterPlotServer(
+        "p",
+        data      = reactive(mtcars),
+        hide.tabs = c("Plotly", "Lines", "Trajectory")
+    )
+}
+```
+
+All inputs in a hidden tab are still initialised and active — they just
+aren’t shown. This is useful when you want to keep the defaults for an
+entire feature group (e.g. plotly export settings) without exposing the
+controls to users.
+
+### Available tab names
+
+Tab names are module-specific. Inspect the `inputs` list inside the
+relevant `*InputsUI()` source, or open `?<module>InputsUI` and look for
+the tab headings described there. Common tabs across most modules
+include:
+
+| Tab        | Contents                                      |
+|------------|-----------------------------------------------|
+| `"Data"`   | Column selectors (x, y, color, split, etc.)   |
+| `"Axes"`   | Title font, gridlines, tick styling           |
+| `"Legend"` | Legend title and text sizes                   |
+| `"Lines"`  | Reference lines (h/v/ablines)                 |
+| `"Plotly"` | Download format, margins, drawn shape styling |
+| `"Facet"`  | Facet rows/columns, scales, subplot spacing   |
+
+------------------------------------------------------------------------
+
+## Combining `defaults`, `hide.inputs`, and `hide.tabs`
+
+These three arguments compose freely. A typical production pattern is to
+set defaults for everything the user shouldn’t touch, hide the
+individual controls that need fine-grained locking, and hide any whole
+tabs that are irrelevant for your use case:
+
+``` r
+
+ui <- fluidPage(
+    sidebarLayout(
+        sidebarPanel(
+            plotthis_ViolinPlotInputsUI(
+                "v", example_rnaseq,
+                defaults = list(
+                    x.by     = "condition",
+                    y.by     = "expression",
+                    color.by = "condition"
+                )
+            )
+        ),
+        mainPanel(plotthis_ViolinPlotOutputUI("v"))
+    )
+)
+
+server <- function(input, output, session) {
+    plotthis_ViolinPlotServer(
+        "v",
+        data        = reactive(example_rnaseq),
+        hide.inputs = c("color.by"),
+        hide.tabs   = c("Plotly", "Lines")
+    )
+}
+
+shinyApp(ui, server)
+```
+
+Here `color.by` is fixed to `"condition"` and hidden. The entire
+`"Plotly"` and `"Lines"` tabs are removed because they aren’t relevant
+to this app.
+
+------------------------------------------------------------------------
+
+## Using `hide.inputs` in `createModuleApp()` and `*App()`
+
+Both accept `hide.inputs` and `hide.tabs`, forwarding them to the server
+if it supports those arguments:
+
+``` r
+
+plotthis_ViolinPlotApp(
+    defaults    = list(x.by = "Species", y.by = "Sepal.Length"),
+    hide.inputs = "color.by",
+    hide.tabs   = "Plotly"
+)
+```
+
+------------------------------------------------------------------------
+
+## Hiding inputs dynamically in a custom module
+
+When building a wrapper module (see
+[`vignette("custom-modules", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/custom-modules.md)),
+you can hide and show inputs at runtime in response to other inputs
+using `shinyjs`:
+
+``` r
+
+library(shinyjs)
+
+myModuleServer <- function(id, data_reactive) {
+    moduleServer(id, function(input, output, session) {
+        # Hide the 'size' input whenever a size.by column is chosen
+        observe({
+            if (nzchar(input$size.by)) {
+                shinyjs::hide(id = "size")
+            } else {
+                shinyjs::show(id = "size")
+            }
+        })
+    })
+
+    dittoViz_scatterPlotServer(id, data_reactive)
+}
+```
+
+Note that
+[`shinyjs::hide()`](https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html)
+/
+[`shinyjs::show()`](https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html)
+act on the input element itself. For the reflow behaviour (no empty
+gap), use the internal `.hide_input()` / `.show_input()` helpers
+instead, which target the wrapping cell in the flexbox grid:
+
+``` r
+
+myModuleServer <- function(id, data_reactive) {
+    moduleServer(id, function(input, output, session) {
+        observe({
+            if (nzchar(input$size.by)) {
+                VizModules:::.hide_input(session, "size")
+            } else {
+                VizModules:::.show_input(session, "size")
+            }
+        })
+    })
+
+    dittoViz_scatterPlotServer(id, data_reactive)
+}
+```

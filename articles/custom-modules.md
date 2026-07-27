@@ -152,13 +152,47 @@ focusedModuleUI <- function(id) {
 }
 ```
 
+## Automatically Preserving Manual Title/Legend/Annotation Edits
+
+The base modules let users interactively drag and edit the plot title,
+legend, annotations, draggable axis titles, and continuous-colour legend
+(colorbar), and they re-apply those manual tweaks across re-renders.
+When you wrap a base module (as in the examples above), this persistence
+is inherited for free.
+
+If you build a brand-new `plotly` output from scratch inside a custom
+module (rather than delegating to a base module’s server), you can add
+the same behaviour simply with 3 basic steps:
+
+``` r
+
+customPlotServer <- function(id, data_reactive) {
+    moduleServer(id, function(input, output, session) {
+        # 1. A unique event source + the edit store, created once.
+        plot_source <- session$ns("customplot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
+        output$plot <- renderPlotly({
+            # 2. Create your plotly object with your plotting function
+            fig <- build_my_plotly_figure(data_reactive(), input)
+            # 3. Restore + capture edits on every render, then return the figure.
+            finalize_manual_edits(fig, plot_source, edit_store, session)
+        })
+    })
+}
+```
+
+See the “Adding a New Module” vignette for the full description of these
+helpers, but this is pretty much all you need to do.
+
 ## Best Practices
 
 1.  **Keep wrapper logic focused**: Each wrapper should add a cohesive
     set of related functionality.
 
 2.  **Document the data requirements**: If your wrapper expects certain
-    columns or data types, document this clearly.
+    columns, a specific class or data structure, etc, document this
+    clearly.
 
 3.  **Use reactive expressions**: Use reactive data inputs.
 
@@ -169,8 +203,4 @@ focusedModuleUI <- function(id) {
 5.  **Consider composability**: Design your wrappers so they could
     potentially be wrapped by even higher-level modules.
 
-## See Also
-
-- The base modules (`dittoViz_scatterPlotInputsUI`,
-  `dittoViz_scatterPlotOutputUI`, `dittoViz_scatterPlotServer`) are
-  documented in the package reference.
+See any of the existing modules for clear reference examples.

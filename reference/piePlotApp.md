@@ -8,7 +8,12 @@ area for configuring and displaying an interactive pie plot.
 ## Usage
 
 ``` r
-piePlotApp(data_list = NULL)
+piePlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 ```
 
 ## Arguments
@@ -19,6 +24,21 @@ piePlotApp(data_list = NULL)
   `NULL` (the default), aggregated example data is used. Each data frame
   should already contain a label column and an aggregated numeric value
   column.
+
+- defaults:
+
+  A named list of input IDs and their default values to apply on
+  startup.
+
+- hide.inputs:
+
+  A character vector of input IDs to hide. Their values are still
+  initialized and used, but the controls are not shown in the UI.
+
+- hide.tabs:
+
+  A character vector of tab names to hide. Inputs in these tabs are
+  still initialized and used, but the controls are not shown in the UI.
 
 ## Value
 

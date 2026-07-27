@@ -46,7 +46,7 @@ module_tack_ui(ns)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-2" style="margin-top: 25px;">
+#>   <div class="col-sm-3" style="margin-top: 25px;">
 #>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
 #>   </div>
 #>   <div class="col-sm-2" style="margin-top: 25px;">

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
+    <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -125,6 +129,10 @@ lines, etc)</li>
 </li>
 <li><label><input type="checkbox">Add an example app that uses the
 module twice to prove multi-instance behavior.</label></li>
+<li><label><input type="checkbox">Wire up manual layout-edit
+persistence so user-dragged titles, legends, annotations, and colorbars
+survive re-renders (see <a href="#persisting-manual-layout-edits">Persisting Manual Layout
+Edits</a>).</label></li>
 <li><label><input type="checkbox">Cover the base plotting function
 with <code>testthat</code>; cover the module/app with
 <code>shinytest2</code>.</label></li>
@@ -333,6 +341,94 @@ stable, build the module UI/server/app wrappers around it.</label></li>
 </ul>
 </div>
 <div class="section level2">
+<h2 id="persisting-manual-layout-edits">Persisting Manual Layout Edits<a class="anchor" aria-label="anchor" href="#persisting-manual-layout-edits"></a>
+</h2>
+<p>Every VizModules plot is interactively editable: users can drag the
+legend, reposition or re-text annotations, drag the (draggable) axis
+titles, and slide a continuous-colour legend (colorbar) to their heart’s
+content.</p>
+<p>Because each module rebuilds its figure from scratch on every input
+change, those hand-made tweaks would be lost on the next re-render
+unless they are captured and re-applied.</p>
+<p>Two exported helpers handle this for you. Use them in
+<strong>every</strong> new module so the behaviour is available from the
+start.</p>
+<div class="section level3">
+<h3 id="server">Server<a class="anchor" aria-label="anchor" href="#server"></a>
+</h3>
+<ul class="task-list">
+<li>
+<p><label><input type="checkbox">Near the top of your
+<code><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer()</a></code> body, create a unique plotly event source
+for this module instance and the edit store:</label></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Unique source so each module instance captures only its own events.</span></span>
+<span><span class="va">plot_source</span> <span class="op">&lt;-</span> <span class="va">session</span><span class="op">$</span><span class="fu">ns</span><span class="op">(</span><span class="st">"myplot"</span><span class="op">)</span></span>
+<span><span class="va">edit_store</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_manual_edits.html">setup_manual_edits</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">session</span>, <span class="va">plot_source</span><span class="op">)</span></span></code></pre></div>
+</li>
+<li>
+<p><label><input type="checkbox">In your
+<code><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly()</a></code>, pass the freshly built figure through
+<code><a href="../reference/finalize_manual_edits.html">finalize_manual_edits()</a></code> immediately before returning
+it:</label></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span><span class="op">$</span><span class="va">myPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x</span>, <span class="va">input</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu">generate_myPlot</span><span class="op">(</span><span class="op">)</span>  <span class="co"># your function that builds the plotly figure</span></span>
+<span>    <span class="fu"><a href="../reference/finalize_manual_edits.html">finalize_manual_edits</a></span><span class="op">(</span><span class="va">fig</span>, <span class="va">plot_source</span>, <span class="va">edit_store</span>, <span class="va">session</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+</li>
+</ul>
+<p>Pretty simple.</p>
+<p><code><a href="../reference/setup_manual_edits.html">setup_manual_edits()</a></code> registers the observers that
+capture <code>plotly_relayout</code> events (legend, annotation, and
+axis-title drags) plus the JavaScript-forwarded colorbar drag;
+<code><a href="../reference/finalize_manual_edits.html">finalize_manual_edits()</a></code> tags the figure with the event
+source, restores any captured edits, records the figure for stable
+annotation keying, and re-attaches the colorbar listener.</p>
+<p>Edits are matched to annotations by a content-derived key, so they
+survive even when annotations are added, removed, or reordered between
+rebuilds (e.g. when statistical brackets or reference labels
+appear).</p>
+</div>
+<div class="section level3">
+<h3 id="key-helpers-all-in-rplot_helpers-r">Key helpers (all in <code>R/plot_helpers.R</code>)<a class="anchor" aria-label="anchor" href="#key-helpers-all-in-rplot_helpers-r"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="../reference/setup_manual_edits.html">setup_manual_edits()</a></code></td>
+<td>Create the edit store and register the relayout/colorbar capture
+observers (call <strong>once</strong>, near the top of the server)</td>
+</tr>
+<tr class="even">
+<td><code><a href="../reference/finalize_manual_edits.html">finalize_manual_edits()</a></code></td>
+<td>Tag the event source, restore captured edits, record the figure, and
+attach the colorbar listener (call in <code><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly()</a></code>, just
+before returning)</td>
+</tr>
+</tbody>
+</table>
+<p>Both functions are exported, so the same two-step pattern works from
+a custom module in your own package. The supporting internals
+(<code>.capture_manual_edits()</code>,
+<code>.reapply_manual_edits()</code>,
+<code>.add_colorbar_listener()</code>) are not exported and shouldn’t
+need to be used directly (though you can always access them via
+<code>VizModules:::</code> if really necessary.</p>
+<p>See any module server (e.g. <code>dittoViz_scatterPlotServer</code>)
+for a complete example.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="integrating-statistical-testing-stats-tab">Integrating Statistical Testing (Stats Tab)<a class="anchor" aria-label="anchor" href="#integrating-statistical-testing-stats-tab"></a>
 </h2>
 <p>Modules for categorical-vs-numeric plots (box, violin, etc.) can
@@ -350,7 +446,7 @@ the module’s <code>tabsetPanel</code> containing
 </ul>
 </div>
 <div class="section level3">
-<h3 id="server">Server<a class="anchor" aria-label="anchor" href="#server"></a>
+<h3 id="server-1">Server<a class="anchor" aria-label="anchor" href="#server-1"></a>
 </h3>
 <ul class="task-list">
 <li><label><input type="checkbox">Create a <code>reactiveVal</code> to
@@ -489,11 +585,11 @@ correction methods, bracket inset).</li>
 <p>Standard pattern — always use <code>placement = "top"</code> and
 <code>options = list(container = "body")</code> so tooltips render
 correctly inside sidebar panels:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/shinyBS/man/tipify.html" class="external-link">tipify</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput</a></span><span class="op">(</span><span class="fu">ns</span><span class="op">(</span><span class="st">"hline.intercepts"</span><span class="op">)</span>, <span class="st">"Y-intercepts"</span>,</span>
 <span>        placeholder <span class="op">=</span> <span class="st">"e.g. 2, -2"</span>,</span>
-<span>        value <span class="op">=</span> <span class="fu">.get_default</span><span class="op">(</span><span class="va">defaults</span>, <span class="st">"hline.intercepts"</span>, <span class="st">""</span><span class="op">)</span></span>
+<span>        value <span class="op">=</span> <span class="fu"><a href="../reference/get_default.html">get_default</a></span><span class="op">(</span><span class="va">defaults</span>, <span class="st">"hline.intercepts"</span>, <span class="st">""</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
 <span>        <span class="st">"For categorical or factor axes, enter the index (position) of the"</span>,</span>
@@ -524,11 +620,11 @@ covers your needs:</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>.uniform_lines_inputs_ui()</code></td>
+<td><code><a href="../reference/uniform_lines_inputs_ui.html">uniform_lines_inputs_ui()</a></code></td>
 <td>Horizontal, vertical, and diagonal reference line controls</td>
 </tr>
 <tr class="even">
-<td><code>.uniform_axes_inputs_ui()</code></td>
+<td><code><a href="../reference/uniform_axes_inputs_ui.html">uniform_axes_inputs_ui()</a></code></td>
 <td>Font, axis border, gridline, tick, and facet styling</td>
 </tr>
 <tr class="odd">
@@ -536,7 +632,7 @@ covers your needs:</p>
 <td>Pairwise statistical testing and bracket annotation controls</td>
 </tr>
 <tr class="even">
-<td><code>.uniform_plotly_inputs_ui()</code></td>
+<td><code><a href="../reference/uniform_plotly_inputs_ui.html">uniform_plotly_inputs_ui()</a></code></td>
 <td>Download buttons, margins, subplot spacing, and draw-shape
 styling</td>
 </tr>
@@ -599,7 +695,7 @@ expression is parsed, its AST is walked to ensure only allowed
 operations are present (comparisons, logical operators, column
 references, and literals), and then it is evaluated in a restricted
 environment containing only the data frame’s columns.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — filtering rows by a textInput:</span></span>
 <span><span class="va">rows.use</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rows.use</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns a logical vector (same length as <code>nrow(data)</code>), or
@@ -614,7 +710,7 @@ disallowed operations.</p>
 string through to a downstream plotting function that will evaluate it
 internally (e.g., <code>plotthis::BoxPlot(highlight = ...)</code>). The
 string is validated but not executed.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — passing a highlight expression to plotthis:</span></span>
 <span><span class="va">highlight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_expression.html">validate_expression</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">highlight</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the original string if safe, or <code>NULL</code>.</p>
@@ -630,7 +726,7 @@ the allowed list (<code>"log2"</code>, <code>"log"</code>,
 <code>"log10"</code>, <code>"neg_log10"</code>, <code>"log1p"</code>,
 <code>"as.factor"</code>, <code>"abs"</code>, <code>"sqrt"</code>) are
 accepted.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — resolving an adjustment function:</span></span>
 <span><span class="va">x.adj.fxn</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.adj.fxn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the function, or <code>NULL</code> if the name is empty or
@@ -686,7 +782,7 @@ not in the allowed list.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

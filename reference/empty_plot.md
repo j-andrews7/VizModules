@@ -25,8 +25,8 @@ Either a ggplot object or a plotly object if `plotly = TRUE`.
 
 ## See also
 
-[`geom_text`](https://ggplot2.tidyverse.org/reference/geom_text.html),
-[`theme_void`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+[`ggplot2::geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html),
+[`ggplot2::theme_void()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 
 ## Author
 

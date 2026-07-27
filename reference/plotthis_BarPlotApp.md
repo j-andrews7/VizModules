@@ -9,7 +9,12 @@ area for configuring and displaying an interactive bar plot.
 ## Usage
 
 ``` r
-plotthis_BarPlotApp(data_list = NULL)
+plotthis_BarPlotApp(
+  data_list = NULL,
+  defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL
+)
 ```
 
 ## Arguments
@@ -18,6 +23,21 @@ plotthis_BarPlotApp(data_list = NULL)
 
   An optional named list of data frames. If `NULL` (the default),
   `list("Bar" = example_bar)` is used as example data.
+
+- defaults:
+
+  A named list of input IDs and their default values to apply on
+  startup.
+
+- hide.inputs:
+
+  A character vector of input IDs to hide. Their values are still
+  initialized and used, but the controls are not shown in the UI.
+
+- hide.tabs:
+
+  A character vector of tab names to hide. Inputs in these tabs are
+  still initialized and used, but the controls are not shown in the UI.
 
 ## Value
 

@@ -1,0 +1,52 @@
+# Apply axis title font styling to shared facet axis annotations
+
+When ggplotly converts a faceted ggplot, shared axis titles become
+annotations rather than axis title properties. This function finds those
+shared title annotations and applies the user's axis title font settings
+to them.
+
+## Usage
+
+``` r
+apply_axis_title_to_annotations(fig, input, isolate_fn = isolate)
+```
+
+## Arguments
+
+- fig:
+
+  A plotly figure object.
+
+- input:
+
+  Shiny input object containing axis title font fields.
+
+- isolate_fn:
+
+  Function to isolate reactive values. Defaults to
+  [`shiny::isolate`](https://rdrr.io/pkg/shiny/man/isolate.html).
+
+## Value
+
+The modified plotly figure with updated annotation fonts.
+
+## Author
+
+Jacob Martin
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    ggplot2::facet_wrap(~cyl)
+fig <- plotly::ggplotly(p)
+input <- list(
+    axis.title.font.size = 14, axis.title.font.family = "Arial",
+    axis.title.font.color = "black", facet.title.font.size = 12,
+    facet.title.font.family = "Arial", facet.title.font.color = "black"
+)
+apply_axis_title_to_annotations(fig, input, isolate_fn = identity)
+} # }
+```

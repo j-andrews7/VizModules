@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,12 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
+    <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -227,13 +231,43 @@ from the user to keep them from being changed:</p>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="automatically-preserving-manual-titlelegendannotation-edits">Automatically Preserving Manual Title/Legend/Annotation Edits<a class="anchor" aria-label="anchor" href="#automatically-preserving-manual-titlelegendannotation-edits"></a>
+</h2>
+<p>The base modules let users interactively drag and edit the plot
+title, legend, annotations, draggable axis titles, and continuous-colour
+legend (colorbar), and they re-apply those manual tweaks across
+re-renders. When you wrap a base module (as in the examples above), this
+persistence is inherited for free.</p>
+<p>If you build a brand-new <code>plotly</code> output from scratch
+inside a custom module (rather than delegating to a base module’s
+server), you can add the same behaviour simply with 3 basic steps:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">customPlotServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="co"># 1. A unique event source + the edit store, created once.</span></span>
+<span>        <span class="va">plot_source</span> <span class="op">&lt;-</span> <span class="va">session</span><span class="op">$</span><span class="fu">ns</span><span class="op">(</span><span class="st">"customplot"</span><span class="op">)</span></span>
+<span>        <span class="va">edit_store</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/setup_manual_edits.html">setup_manual_edits</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">session</span>, <span class="va">plot_source</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="co"># 2. Create your plotly object with your plotting function</span></span>
+<span>            <span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu">build_my_plotly_figure</span><span class="op">(</span><span class="fu">data_reactive</span><span class="op">(</span><span class="op">)</span>, <span class="va">input</span><span class="op">)</span></span>
+<span>            <span class="co"># 3. Restore + capture edits on every render, then return the figure.</span></span>
+<span>            <span class="fu"><a href="../reference/finalize_manual_edits.html">finalize_manual_edits</a></span><span class="op">(</span><span class="va">fig</span>, <span class="va">plot_source</span>, <span class="va">edit_store</span>, <span class="va">session</span><span class="op">)</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>See the “Adding a New Module” vignette for the full description of
+these helpers, but this is pretty much all you need to do.</p>
+</div>
+<div class="section level2">
 <h2 id="best-practices">Best Practices<a class="anchor" aria-label="anchor" href="#best-practices"></a>
 </h2>
 <ol style="list-style-type: decimal">
 <li><p><strong>Keep wrapper logic focused</strong>: Each wrapper should
 add a cohesive set of related functionality.</p></li>
 <li><p><strong>Document the data requirements</strong>: If your wrapper
-expects certain columns or data types, document this clearly.</p></li>
+expects certain columns, a specific class or data structure, etc,
+document this clearly.</p></li>
 <li><p><strong>Use reactive expressions</strong>: Use reactive data
 inputs.</p></li>
 <li><p><strong>Test the namespace</strong>: If inputs aren’t working,
@@ -242,16 +276,7 @@ namespace issues is that inputs seem to have no effect.</p></li>
 <li><p><strong>Consider composability</strong>: Design your wrappers so
 they could potentially be wrapped by even higher-level modules.</p></li>
 </ol>
-</div>
-<div class="section level2">
-<h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
-</h2>
-<ul>
-<li>The base modules (<code>dittoViz_scatterPlotInputsUI</code>,
-<code>dittoViz_scatterPlotOutputUI</code>,
-<code>dittoViz_scatterPlotServer</code>) are documented in the package
-reference.</li>
-</ul>
+<p>See any of the existing modules for clear reference examples.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -264,7 +289,7 @@ reference.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

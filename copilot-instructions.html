@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,8 +19,12 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="articles/custom-modules.html">Building Custom Modules</a></li>
+    <li><a class="dropdown-item" href="articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="articles/quick-start.html">Quick Start with VizModules</a></li>
+    <li><a class="dropdown-item" href="articles/statistical-testing.html">Statistical Testing</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -48,21 +52,27 @@
 
 <div class="section level2">
 <h2 id="repository-overview">Repository Overview<a class="anchor" aria-label="anchor" href="#repository-overview"></a></h2>
-<p><strong>VizModules</strong> is an R package (63 R files) providing interactivity-first Shiny modules for common plot types. Built on dittoViz and plotthis, all plots use plotly for interactive features.</p>
-<p><strong>Stack</strong>: R 4.5+, Shiny, roxygen2 | <strong>Version</strong>: 0.1.0 | <strong>License</strong>: MIT</p>
+<p><strong>VizModules</strong> is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~15 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot), a reusable <code>dataFilter</code> module, and a multi-panel figure builder app for arranging modules in a free-form layout. Built on dittoViz and plotthis, all plots use plotly for interactive features.</p>
+<p><strong>Stack</strong>: R 4.6.1+, Shiny, roxygen2 | <strong>Version</strong>: 0.3.0 (dev) | <strong>License</strong>: MIT</p>
 </div>
 <div class="section level2">
 <h2 id="repository-structure">Repository Structure<a class="anchor" aria-label="anchor" href="#repository-structure"></a></h2>
 <ul><li>
-<strong>R/</strong> - 63 source files: <code>*_module_ui.R</code> (UI), <code>*_module_server.R</code> (logic), <code>*_module_app.R</code> (examples), plus utils and standalone plot functions</li>
+<strong>R/</strong> - 74 source files: <code>*_module_ui.R</code> (UI), <code>*_module_server.R</code> (logic), <code>*_module_app.R</code> (examples), plus utils and standalone plot functions</li>
 <li>
-<strong>man/</strong> - Auto-generated roxygen2 docs (91 .Rd files)</li>
+<strong>man/</strong> - Auto-generated roxygen2 docs (171 .Rd files)</li>
 <li>
-<strong>data/</strong> - 9 example datasets (<code>example_bar</code>, <code>example_demographics</code>, <code>example_iris</code>, <code>example_mtcars</code>, <code>example_population</code>, <code>example_roles</code>, <code>example_sales</code>, <code>example_school_earnings</code>, <code>example_skills</code>)</li>
+<strong>data/</strong> - 10 example datasets (<code>example_bar</code>, <code>example_demographics</code>, <code>example_iris</code>, <code>example_markers</code>, <code>example_mtcars</code>, <code>example_population</code>, <code>example_rnaseq</code>, <code>example_sales</code>, <code>example_school_earnings</code>, <code>example_skills</code>)</li>
+<li>
+<strong>data-raw/</strong> - <code>generate_example_data.R</code> script that builds the example datasets</li>
+<li>
+<strong>inst/apps/</strong> - Standalone Shiny apps (<code>figure-builder</code>, <code>module-gallery</code>, <code>rnaseq-showcase</code>) plus per-module <code>test_*</code> apps; <strong>inst/src/</strong> - bundled JS/CSS assets</li>
 <li>
 <strong>vignettes/</strong> - quick-start.Rmd, custom-modules.Rmd, adding-a-new-module.Rmd</li>
 <li>
-<strong>tests/testthat/</strong> - 7 test files using testthat (expression safety, plots, stats, widgets)</li>
+<strong>tests/testthat/</strong> - 11 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)</li>
+<li>
+<strong>paper.md / paper.bib</strong> - JOSS manuscript sources</li>
 <li>
 <strong>.github/workflows/pkgdown.yaml</strong> - Builds/deploys package website to GitHub Pages</li>
 <li>
@@ -78,7 +88,7 @@
 <h2 id="build-and-validation">Build and Validation<a class="anchor" aria-label="anchor" href="#build-and-validation"></a></h2>
 <div class="section level3">
 <h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a></h3>
-<p>R 4.5+, available at: C:Files.3.exe</p>
+<p>R 4.5+ is declared in DESCRIPTION, but use <strong>R 4.6.1</strong> for development/build/test (required by current <code>plotthis</code>): C:Files.1.exe For <code>shinytest2</code> AppDriver tests, set <code>NOT_CRAN=true</code> (else they skip with “On CRAN”). The AppDriver background process uses the <strong>installed</strong> package, so run <code>R CMD INSTALL</code> on the dev code first (<code>load_all</code> is not seen by that process).</p>
 </div>
 <div class="section level3">
 <h3 id="key-r-commands">Key R Commands<a class="anchor" aria-label="anchor" href="#key-r-commands"></a></h3>
@@ -97,7 +107,7 @@
 <span></span>
 <span><span class="co"># Testing</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">test</span><span class="op">(</span><span class="op">)</span>               <span class="co"># Run testthat test suite</span></span>
-<span><span class="fu"><a href="reference/dittoViz_scatterPlotApp.html">dittoViz_scatterPlotApp</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mtcars"</span> <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Interactive testing</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/dittoViz_scatterPlotApp.html">dittoViz_scatterPlotApp</a></span><span class="op">(</span>data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"mtcars"</span> <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Interactive testing</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="build-commands-shell">Build Commands (Shell)<a class="anchor" aria-label="anchor" href="#build-commands-shell"></a></h3>
@@ -140,7 +150,7 @@
 </div>
 <div class="section level3">
 <h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a></h3>
-<p><strong>Depends</strong>: shiny, dittoViz, plotly, shinyBS, plotthis (&gt;= 0.11.0), R (&gt;= 4.5) | <strong>Imports</strong>: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets | <strong>Suggests</strong>: knitr, rmarkdown, shinytest2, testthat</p>
+<p><strong>Depends</strong>: shiny, dittoViz, plotly, shinyBS, plotthis (&gt;= 0.12.1), R (&gt;= 4.5) | <strong>Imports</strong>: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | <strong>Suggests</strong>: withr, knitr, rmarkdown, shinytest2, testthat (&gt;= 3.0.0)</p>
 </div>
 </div>
 <div class="section level2">
@@ -193,7 +203,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

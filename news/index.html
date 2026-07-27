@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,8 +19,12 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/adding-a-new-module.html">Adding a New Module</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
+    <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
+    <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -45,6 +49,47 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="vizmodules-030">VizModules 0.3.0<a class="anchor" aria-label="anchor" href="#vizmodules-030"></a></h2>
+<div class="section level3">
+<h3 id="new-modules-0-3-0">New Modules<a class="anchor" aria-label="anchor" href="#new-modules-0-3-0"></a></h3>
+<ul><li>Turned the Figure Builder into a reusable, namespaced Shiny module (<code><a href="../reference/figureBuilderUI.html">figureBuilderUI()</a></code> / <code><a href="../reference/figureBuilderServer.html">figureBuilderServer()</a></code>), so it can be embedded inside a larger app and instantiated more than once, just like the plot modules. <code><a href="../reference/figureBuilderApp.html">figureBuilderApp()</a></code> is now a thin wrapper around this module and keeps its existing behaviour. The canvas CSS/JS was made namespace-safe (class-based, per-instance) so multiple builders can coexist on one page.
+<ul><li>Panel labels (a, b, c …) now render live on the canvas as soon as they are chosen from the “Panel labels” menu (and renumber as panels are added, removed, or dragged), instead of only appearing in the exported SVG.</li>
+<li>Moved the Figure Builder app into an exported <code><a href="../reference/figureBuilderApp.html">figureBuilderApp()</a></code> function so it can be launched directly (<code><a href="../reference/figureBuilderApp.html">figureBuilderApp()</a></code>), seeded with custom datasets via <code>data_list</code>, extended with custom modules via <code>module_registry</code>, and returned either as a <code><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp()</a></code> object or as separate <code>ui</code>/<code>server</code> components (<code>return_components = TRUE</code>). The bundled <code>inst/apps/figure-builder</code> app is now a thin wrapper around this function.</li>
+<li>Added to Gallery App.</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvednew-functionality-0-3-0">Improved/New Functionality<a class="anchor" aria-label="anchor" href="#improvednew-functionality-0-3-0"></a></h3>
+<ul><li>Facet/split selectors across all modules now only offer valid faceting variables. Faceting (or splitting) is restricted to <strong>categorical columns</strong> (character or factor) with <strong>fewer than 50 unique values</strong>; numeric columns and high-cardinality categoricals are no longer selectable, preventing accidental creation of an unwieldy number of panels. This is powered by a new internal helper, <code>.facet_check()</code>, whose output populates the facet/split input choices.</li>
+<li>Simplified boxplot outlier hiding to rely on native plotly <code>boxpoints = FALSE</code> behaviour (via ggplot2’s <code>outlier.shape = NA</code> in the <code>plotthis_BoxPlot</code> module and <code><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">dittoViz::yPlot</a></code>’s <code>boxplot.show.outliers</code> argument in <code>dittoViz_yPlot</code>), rather than post-hoc marker manipulation. Removed the now-unused internal helper <code>.remove_boxplot_outliers()</code>. This is more robust with plotly 4.12.0+.</li>
+<li>Added a new reusable custom Shiny input, <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code> (with <code><a href="../reference/updateMultiDynamicInput.html">updateMultiDynamicInput()</a></code>), that lets users dynamically add and remove rows of heterogeneous inputs. Each row is described by a generic <code>row_spec</code> (a named list of field specs using either a <code>type</code> alias — <code>select</code>, <code>text</code>, <code>numeric</code>, <code>slider</code>, <code>checkbox</code>, <code>colour</code> — or an arbitrary input constructor via <code>fn</code>), a <code>+ Add</code> button appends rows, each row has an <code>X</code> delete button, and fields wrap to a new line after <code>max_per_row</code> (default 4). The value returned to the server is a named list of rows (<code>model1</code>, <code>model2</code>, …), each a named list keyed by the field names. Add/delete are handled client-side, and values are read back generically via each field’s registered Shiny input binding, so any input type is supported.
+<ul><li>Added vignette <code>vignette("using-custom-shiny-inputs")</code> documenting <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code> usage: row_spec definition, pre-filling with <code>elements</code>, reading values, and server-side updates.</li>
+</ul></li>
+<li>Added generic modeling capabilities to <code>dittoViz_scatterPlot module</code>. The module’s custom-model feature now supports <strong>multiple</strong> models at once via <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code>: add as many rows as you like, each with its own model type (<code>lm</code>/<code>glm</code>/<code>loess</code>/<code>nls</code>), formula, line colour, and line width, and every valid model is fitted against the active (filtered) data and overlaid as its own line (respecting faceting). Formulas are validated by the internal <code>.safe_build_model()</code> helper to ensure safety.
+<ul><li>This includes the ability to add custom model backends via <code><a href="../reference/register_model_backend.html">register_model_backend()</a></code>, <code><a href="../reference/get_model_backend.html">get_model_backend()</a></code>, <code><a href="../reference/list_model_backends.html">list_model_backends()</a></code>, and <code><a href="../reference/build_model_row_spec.html">build_model_row_spec()</a></code>. Backends declare a <code>fit</code> function, a <code>predict</code> function, validated output classes, and optional extra UI <code>fields</code> that appear/hide dynamically based on the selected model type. The four built-in backends (lm, glm, loess, nls) are registered automatically at package load. Extra UI fields from backends are forwarded to <code>fit()</code> via <code>...</code>.</li>
+<li>Added vignette <code><a href="../articles/custom-model-lines.html">vignette("custom-model-lines")</a></code> documenting the model backend registry: how the pipeline works, setting model defaults, registering custom backends (with drc and mgcv examples), and how extra fields flow through to the fit function.</li>
+</ul></li>
+<li>Pass <code>defaults</code>, <code>hide.inputs</code>, and <code>hide.tabs</code> arguments to the module app factory functions in all module app wrappers, so that users can pre-fill or hide controls when testing modules in isolation.</li>
+<li>More intelligent input hiding logic so that when individual inputs are hidden (via <code>hide.inputs</code> or dynamically in response to other inputs), the remaining controls reflow to fill the space and no empty gaps are left in the UI. Input grids are now laid out with a wrapping flexbox container via <code><a href="../reference/organize_inputs.html">organize_inputs()</a></code>. Optional elements are handled gracefully.</li>
+<li>Added continuous color-scale trimming controls (“Lower Quantile”, “Upper Quantile”, “Lower Cutoff”, and “Upper Cutoff”) to the <code>plotthis_DotPlot</code>, <code>plotthis_BarPlot</code>, and <code>plotthis_SplitBarPlot</code> modules, exposing the new <code>lower_quantile</code>/<code>upper_quantile</code>/<code>lower_cutoff</code>/<code>upper_cutoff</code> arguments from plotthis 0.13.0. These controls appear only when the selected fill column is numeric.</li>
+<li>Added dot border controls (“Border Color” and “Border Size”) to the <code>plotthis_DotPlot</code> module, exposing the new <code>border_color</code> and <code>border_size</code> arguments from plotthis 0.13.0. <code>border_color</code> is limited to a single constant color in the module UI.</li>
+<li>Updated the <code>plotthis_DotPlot</code> “Fill Cutoff” control to pair a numeric value with a new “Fill Cutoff Direction” selector (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>), matching plotthis 0.13.0’s string-expression <code>fill_cutoff</code> (e.g. <code>"&lt; 18"</code>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-3-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
+<ul><li>Fixed broken input hiding when using <code>hide.inputs</code> and <code>hide.tabs</code> arguments in module app wrappers due to lazy UI injection via <code>renderUI</code>, which effectively overwrote the <code>hide</code> calls. <code>renderUI</code> also re-renders the input UIs every time a dataset changes - now if the dataset changes, the inputs are re-rendered but the <code>hide</code> calls are re-applied to maintain the hidden state.</li>
+<li>Fixed an error in <code>plotthis_SplitBarPlot</code> where the categorical text position input was not respected if the axes were flipped. Now the text position input is respected regardless of axis orientation.</li>
+<li>Export numerous internal helper functions for use in custom modules, particularly those related to axes, faceting, and layouts. It became apparent these were necessary as initial work began on <code>sciVizModules</code>.</li>
+<li>Fixed a bug in <code>dittoViz_yPlot</code> where plot selection and outlier hiding were not respected appropriately due to a typo in the <code>boxplot.show.outliers</code> input name.</li>
+<li>Fixed a bug in <code>dittoViz_scatterPlot</code> where 2 <code>split.by</code> inputs caused an error due to improper checks for empty strings on a vector of elements.</li>
+<li>Fixed a bug in <code>dittoViz_scatterPlot</code> where highlight aesthetics weren’t applied when a categorical x-axis was used.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="deprecations-and-removals-0-3-0">Deprecations and Removals<a class="anchor" aria-label="anchor" href="#deprecations-and-removals-0-3-0"></a></h3>
+<ul><li>Removed <code>ternaryPlot</code> module, as it is just a bad plot that’s impossible to actually interpret or really utilize effectively.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="vizmodules-020">VizModules 0.2.0<a class="anchor" aria-label="anchor" href="#vizmodules-020"></a></h2><p class="text-muted">CRAN release: 2026-06-16</p>
 <ul><li>Created the Figure Builder app so that users can dynamically construct multi-panel figures using different data sets and plot types on a single page. Allows for full page SVG export, source data dump organized per panel, and full customization of plot position and size.</li>
 <li>All <code>*OutputUI()</code> functions gained a <code>resizable</code> argument (default <code>TRUE</code>). When <code>FALSE</code>, the plot output is no longer wrapped in <code><a href="https://yang-tang.github.io/shinyjqui/reference/Interactions.html" class="external-link">shinyjqui::jqui_resizable()</a></code>, which avoids a redundant resize handle when the output is embedded in a container that already provides resizing (such as the Figure Builder app cards).</li>
@@ -57,7 +102,7 @@
 <li>Exposed <code><a href="../reference/empty_plot.html">empty_plot()</a></code> for use as a placeholder, e.g. if parameters aren’t valid for a given plot type, to pass that info to user without ugly error messages.</li>
 <li>Faceting improvements - new internal helpers that control subplot spacing, subplot size, and facet_scale handling. This fixes much of the wonkiness for plots with many panels. Uniform inputs added for panel spacing across all modules.</li>
 <li>Axis titles now uniformly added as annotations to allow interactive repositioning.</li>
-<li>Condensed package wide workflows with simple helpers, e.g. <code>.apply_title_layout()</code>, resulting in significantly less jank.</li>
+<li>Condensed package wide workflows with simple helpers, e.g. <code><a href="../reference/apply_title_layout.html">apply_title_layout()</a></code>, resulting in significantly less jank.</li>
 <li>Axis adjustments are now properly reflected in axis/legend titles for appropriate modules, e.g. <code>yPlot</code>, <code>scatterPlot</code>, <code>linePlot</code>.</li>
 <li>Removed a handful of spurious/non-functional inputs, particularly for the <code>dittoViz_scatterPlot</code> module.</li>
 <li>Custom <code>size.by</code> legends added for <code>plotthis_DotPlot</code> and <code>dittoViz_scatterPlot</code> modules, since plotly does not yet support these.</li>
@@ -81,7 +126,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

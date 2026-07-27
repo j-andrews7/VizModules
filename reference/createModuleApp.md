@@ -15,6 +15,9 @@ createModuleApp(
   server_fn,
   data_list,
   defaults = NULL,
+  hide.inputs = NULL,
+  hide.tabs = NULL,
+  show.table = TRUE,
   title = "VizModules App"
 )
 ```
@@ -47,6 +50,27 @@ createModuleApp(
 
   A named list of ui ids and their default values that can change the ui
   default settings on startup.
+
+- hide.inputs:
+
+  A character vector of input IDs to hide. These inputs are still
+  initialized and their values passed to the plot, but are not shown in
+  the UI. Passed through to `server_fn` when it accepts a `hide.inputs`
+  argument.
+
+- hide.tabs:
+
+  A character vector of tab names to hide. Inputs in these tabs are
+  still initialized and their values passed to the plot, but are not
+  shown in the UI. Passed through to `server_fn` when it accepts a
+  `hide.tabs` argument.
+
+- show.table:
+
+  Logical. When `TRUE` (default), a filterable DT table is shown below
+  the plot and its row selection drives the data passed to the plot
+  module. When `FALSE`, the table and filter controls are hidden and the
+  full (unfiltered) dataset is passed directly to the plot module.
 
 - title:
 
