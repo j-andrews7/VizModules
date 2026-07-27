@@ -94,6 +94,14 @@
       } else {
         target.value = f.value;
       }
+      // Colour inputs are initialized by the colourpicker binding, which reads
+      // the starting colour from the `data-init-value` attribute rather than the
+      // raw input value. Keep it in sync so pre-filled colours survive binding
+      // instead of being reset to the template default (e.g. black).
+      if (f.value != null && target.classList &&
+          target.classList.contains("shiny-colour-input")) {
+        target.setAttribute("data-init-value", f.value);
+      }
     });
   };
 
