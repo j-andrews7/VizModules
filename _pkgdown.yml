@@ -137,8 +137,8 @@ reference:
       - dataFilterServer
       - dataFilterUI
 
-  - title: "Figure Builder App"
-    desc: "Multi-panel figure builder application."
+  - title: "Figure Builder Module"
+    desc: "Multi-panel figure builder module."
     contents:
       - figureBuilderApp
       - figureBuilderServer

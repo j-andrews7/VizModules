@@ -322,7 +322,7 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/DotPlot.png)
 
-[figureBuilder]
+[figureBuilder:][30]
 
 ![](man/figures/Figure_builder.png)
 
@@ -394,3 +394,5 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [27]: https://j-andrews7.github.io/VizModules/articles/custom-shiny-inputs.html
 [28]: https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html
 [29]: https://j-andrews7.github.io/VizModules/articles/statistical-testing.html
+
+[30]: https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html
