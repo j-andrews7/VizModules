@@ -117,6 +117,9 @@
   value with a new “Fill Cutoff Direction” selector (`<`, `<=`, `>`,
   `>=`), matching plotthis 0.13.0’s string-expression `fill_cutoff`
   (e.g. `"< 18"`).
+- Added annotation persistence, i.e. annotation positions persist when
+  the plot is re-rendered. This extends to axis/facet titles and custom
+  annotations, which means much less finagling during iterative editing.
 
 ### Bug Fixes
 

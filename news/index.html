@@ -74,6 +74,7 @@
 <li>Added continuous color-scale trimming controls (“Lower Quantile”, “Upper Quantile”, “Lower Cutoff”, and “Upper Cutoff”) to the <code>plotthis_DotPlot</code>, <code>plotthis_BarPlot</code>, and <code>plotthis_SplitBarPlot</code> modules, exposing the new <code>lower_quantile</code>/<code>upper_quantile</code>/<code>lower_cutoff</code>/<code>upper_cutoff</code> arguments from plotthis 0.13.0. These controls appear only when the selected fill column is numeric.</li>
 <li>Added dot border controls (“Border Color” and “Border Size”) to the <code>plotthis_DotPlot</code> module, exposing the new <code>border_color</code> and <code>border_size</code> arguments from plotthis 0.13.0. <code>border_color</code> is limited to a single constant color in the module UI.</li>
 <li>Updated the <code>plotthis_DotPlot</code> “Fill Cutoff” control to pair a numeric value with a new “Fill Cutoff Direction” selector (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>), matching plotthis 0.13.0’s string-expression <code>fill_cutoff</code> (e.g. <code>"&lt; 18"</code>).</li>
+<li>Added annotation persistence, i.e. annotation positions persist when the plot is re-rendered. This extends to axis/facet titles and custom annotations, which means much less finagling during iterative editing.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-3-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
