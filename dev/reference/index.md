@@ -214,9 +214,9 @@ Reusable data filtering module for use with plot modules.
 - [`dataFilterUI()`](https://j-andrews7.github.io/VizModules/dev/reference/dataFilterUI.md)
   : UI component for the dataFilter module
 
-## Figure Builder App
+## Figure Builder Module
 
-Multi-panel figure builder application.
+Multi-panel figure builder module.
 
 - [`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/dev/reference/figureBuilderApp.md)
   : Create a VizModules Figure Builder Application

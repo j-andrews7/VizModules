@@ -510,7 +510,7 @@ Function)](https://pwwang.github.io/plotthis/reference/dotplot.html)
 
 ![](reference/figures/DotPlot.png)
 
-\[figureBuilder\]
+[figureBuilder:](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html)
 
 ![](reference/figures/Figure_builder.png)
 

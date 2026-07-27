@@ -30,14 +30,14 @@ get_model_backend("lm")
 #> $fit
 #> function (formula, data, ...) 
 #> stats::lm(formula, data = data)
-#> <bytecode: 0x55c0ceb82b28>
-#> <environment: 0x55c0ceb84d20>
+#> <bytecode: 0x556c26b3ab08>
+#> <environment: 0x556c26b3cd00>
 #> 
 #> $predict
 #> function (model, newdata) 
 #> as.numeric(stats::predict(model, newdata = newdata))
-#> <bytecode: 0x55c0ceb82818>
-#> <environment: 0x55c0ceb84d20>
+#> <bytecode: 0x556c26b3a7f8>
+#> <environment: 0x556c26b3cd00>
 #> 
 #> $validate_classes
 #> [1] "lm"
