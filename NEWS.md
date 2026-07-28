@@ -1,3 +1,16 @@
+# VizModules 0.3.1.9000
+
+## Improved/New Functionality
+
+* Tweaked `multiColorPicker()` layout for easier tetrising into compact UIs (moved Apply/Reset buttons under group color pickers).
+* Added ability to show/hide columns in the `dataFilter` module with DataTables' built-in column visibility controls. This is useful for hiding columns that are not relevant to the user, or for hiding columns that are used for internal logic but not meant to be displayed. The `hide.columns` argument can be used to specify which columns to hide by default, and users can toggle visibility via the DataTables UI.
+* Changed to server-side rendering of `var` element for `dittoViz_yPlot` module, which is much more performant when many options exist (e.g. genes).
+
+## Bug Fixes
+
+* Fixed an initialization bug in `multiColorPicker()` due to string indexing rather than position, leading to out of bounds errors when a group label was an empty string.
+
+
 # VizModules 0.3.0
 
 ## New Modules

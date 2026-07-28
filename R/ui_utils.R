@@ -298,55 +298,40 @@ default_palettes <- function() {
 #' ns <- NS("myModule")
 #' module_tack_ui(ns)
 module_tack_ui <- function(ns, defaults = NULL) {
+    # A wrapping flex row (rather than fixed Bootstrap columns) so the controls
+    # never truncate in a narrow sidebar - buttons size to their content and
+    # wrap onto additional lines when there isn't room.
     tagList(
-        fluidRow(
-            column(
-                2,
+        div(
+            class = "module-tack",
+            style = paste0(
+                "display: flex; flex-wrap: wrap; align-items: center; ",
+                "gap: 10px; margin-top: 12px;"
+            ),
+            div(
+                style = "flex: 0 0 auto;",
                 materialSwitch(
                     ns("auto.update"),
                     "Auto Update",
                     value = TRUE,
                     status = "success"
-                ),
-                style = "margin-top: 25px;"
+                )
             ),
-            column(
-                3,
-                actionButton(
-                    ns("update"),
-                    "Update",
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                2,
-                actionButton(
-                    ns("reset"),
-                    "Reset",
+            actionButton(ns("update"), "Update", class = "btn-primary"),
+            actionButton(ns("reset"), "Reset", class = "btn-secondary"),
+            tipify(
+                downloadButton(
+                    ns("download.source"),
+                    "Source Download",
                     class = "btn-secondary",
-                    width = "100%"
+                    icon = icon("file-code")
                 ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                5,
-                tipify(
-                    downloadButton(
-                        ns("download.source"),
-                        "Source Download",
-                        class = "btn-secondary",
-                        icon = icon("file-code"),
-                        width = "100%"
-                    ),
-                    title = paste(
-                        "Download the plot as a self-contained HTML file,",
-                        "along with the plot source data and statistics (if applicable) as CSV files."
-                    ),
-                    placement = "top",
-                    options = list(container = "body")
+                title = paste(
+                    "Download the plot as a self-contained HTML file,",
+                    "along with the plot source data and statistics (if applicable) as CSV files."
                 ),
-                style = "margin-top: 25px;"
+                placement = "top",
+                options = list(container = "body")
             )
         )
     )
