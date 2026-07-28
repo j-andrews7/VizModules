@@ -14,6 +14,9 @@
 #'   free-text search boxes. Defaults to `TRUE`.
 #' @param page.length Integer. The default number of rows shown per page.
 #'   Defaults to `10`.
+#' @param col.visibility Logical. When `TRUE`, adds a DT "Columns" button
+#'   (Buttons extension `colvis`) so users can show/hide individual columns.
+#'   Defaults to `FALSE`.
 #'
 #' @return A `reactive` expression that evaluates to the filtered subset of
 #'   `data` based on the current DT selection/filter state. Pass this
@@ -41,7 +44,8 @@
 #' }
 #'
 #' if (interactive()) shinyApp(ui, server)
-dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10) {
+dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10,
+                             col.visibility = FALSE) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
@@ -56,15 +60,20 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
         })
 
         output$table <- DT::renderDataTable({
+            dt_opts <- list(pageLength = page.length, scrollX = TRUE)
+            dt_ext <- character(0)
+            if (isTRUE(col.visibility)) {
+                dt_ext <- "Buttons"
+                dt_opts$dom <- "Blfrtip"
+                dt_opts$buttons <- list(list(extend = "colvis", text = "Columns"))
+            }
             DT::datatable(
                 prepared_data(),
                 filter = "top",
                 selection = "none",
                 rownames = FALSE,
-                options = list(
-                    pageLength = page.length,
-                    scrollX = TRUE
-                )
+                extensions = dt_ext,
+                options = dt_opts
             )
         })
 
