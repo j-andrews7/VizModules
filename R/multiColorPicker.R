@@ -123,6 +123,11 @@ multiColorPicker <- function(inputId,
 
     rows <- lapply(seq_along(groups), function(i) {
         grp <- groups[[i]]
+        # Index by position, not by name: `initial_colors` is aligned to
+        # `groups` by construction, and a name lookup (`[[grp]]`) throws
+        # "subscript out of bounds" when a group label is "" (a blank factor
+        # level, common in real metadata).
+        col_val <- initial_colors[[i]]
         tags$div(
             class = paste("mc-color-row", if (i == 1) "is-active"),
             `data-group` = grp,
@@ -130,14 +135,14 @@ multiColorPicker <- function(inputId,
             tags$input(
                 type = "color",
                 class = "mc-color-input",
-                value = initial_colors[[grp]],
+                value = col_val,
                 `aria-label` = paste0(grp, " color")
             ),
             if (isTRUE(show_text)) {
                 tags$input(
                     type = "text",
                     class = "mc-text-input form-control input-sm",
-                    value = initial_colors[[grp]],
+                    value = col_val,
                     `aria-label` = paste0(grp, " hex code")
                 )
             }
