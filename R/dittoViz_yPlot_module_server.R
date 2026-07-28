@@ -44,6 +44,36 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             })
         }
 
+        # Populate the (server-side) Y-data selector. Choices are pushed from the
+        # server so datasets with many numeric columns (e.g. genome-wide gene
+        # tables) stay searchable without serialising every option to the client.
+        # Only refresh when the set of numeric columns actually changes (not on
+        # every row-filter), to preserve the user's current selection.
+        var_choice_cache <- reactiveVal(NULL)
+        observeEvent(data(), {
+            df <- data()
+            req(df)
+            num.cols <- names(df)[vapply(df, is.numeric, logical(1))]
+            if (identical(num.cols, var_choice_cache())) {
+                return()
+            }
+            var_choice_cache(num.cols)
+            current <- isolate(input$var)
+            default.var <- get_default(
+                defaults, "var",
+                if (length(num.cols)) num.cols[1] else "",
+                function(x) x %in% num.cols
+            )
+            selected.var <- if (!is.null(current) && nzchar(current) && current %in% num.cols) {
+                current
+            } else {
+                default.var
+            }
+            updateSelectizeInput(session, "var",
+                choices = num.cols, selected = selected.var, server = TRUE
+            )
+        }, ignoreNULL = TRUE)
+
         # Conditionally show/hide Stats tab based on plot type selection
         observeEvent(input$plots, {
             if (length(input$plots) == 1 && input$plots == "ridgeplot") {
@@ -144,9 +174,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 min.y <- 0
             }
 
-            # Data
-            updateSelectInput(session, "var",
-                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
+            # Data. `var` is a server-side selectize (see population observer
+            # above), so refresh via updateSelectizeInput with server = TRUE.
+            updateSelectizeInput(session, "var",
+                choices = num.choices[nzchar(num.choices)],
+                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices),
+                server = TRUE)
             updateSelectInput(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
             updateSelectInput(session, "color.by",

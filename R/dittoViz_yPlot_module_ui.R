@@ -194,12 +194,16 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     inputs <- list(
         "Data" = tagList(
             tipify(
-                selectInput(ns("var"), "Y Data",
-                    choices = num.choices,
-                    selected = get_default(
-                        defaults, "var", num.choices[2],
-                        function(x) x %in% num.choices
-                    ), selectize = FALSE
+                # Choices are populated server-side (see dittoViz_yPlotServer) so
+                # that datasets with very many numeric columns (e.g. genome-wide
+                # gene tables) remain searchable without rendering every option
+                # in the DOM.
+                selectizeInput(ns("var"), "Y Data",
+                    choices = NULL, selected = NULL, multiple = FALSE,
+                    options = list(
+                        maxOptions = 1000,
+                        placeholder = "Type to search..."
+                    )
                 ),
                 documentParameters$var,
                 placement = "top", options = list(container = "body")
