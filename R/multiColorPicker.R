@@ -197,7 +197,7 @@ multiColorPicker <- function(inputId,
         tags$div(class = "mc-color-rows", rows)
     )
 
-    htmltools::attachDependencies(
+    attachDependencies(
         widget,
         .multi_color_picker_dependency()
     )
@@ -308,12 +308,14 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #'
 #' @return An `htmltools::htmlDependency` object.
 #'
+#' @importFrom htmltools htmlDependency
+#'
 #' @author Jared Andrews
 #' @rdname INTERNAL_multi_color_picker_dependency
 #' @keywords internal
 .multi_color_picker_dependency <- function() {
     list(
-        htmltools::htmlDependency(
+        htmlDependency(
             name = "multi-color-picker",
             version = as.character(utils::packageVersion("VizModules")),
             src = "src",
@@ -321,7 +323,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
             script = "multiColorPicker.js",
             stylesheet = "multiColorPicker.css"
         ),
-        htmltools::htmlDependency(
+        htmlDependency(
             name = "selectize",
             version = as.character(utils::packageVersion("shiny")),
             src = "www/shared/selectize",
@@ -642,11 +644,11 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
   flex: 1;
   min-width: 0;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .multi-color-picker .mc-color-input {
-  width: 42px;
+  width: 38px;
   height: 28px;
   padding: 0;
   border: 1px solid #ced4da;
@@ -743,7 +745,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
   display: flex;
   gap: 1px;
   flex: 1;
-  min-width: 140px;
+  min-width: 100px;
   align-items: center;
   height: 18px;
   border-radius: 3px;
@@ -774,7 +776,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 
 .multi-color-picker.is-compact {
   padding: 6px;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .multi-color-picker.is-compact .mc-actions {

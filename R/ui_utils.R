@@ -298,18 +298,17 @@ default_palettes <- function() {
 #' ns <- NS("myModule")
 #' module_tack_ui(ns)
 module_tack_ui <- function(ns, defaults = NULL) {
-    # A wrapping flex row (rather than fixed Bootstrap columns) so the controls
-    # never truncate in a narrow sidebar - buttons size to their content and
-    # wrap onto additional lines when there isn't room.
+    # Auto-update toggle on its own line, then a wrapping button row. Buttons
+    # size to content (no fixed-width columns) so nothing truncates in a narrow
+    # sidebar; Update/Reset share a row and the wider Source Download wraps to
+    # its own full-width line.
     tagList(
         div(
             class = "module-tack",
-            style = paste0(
-                "display: flex; flex-wrap: wrap; align-items: center; ",
-                "gap: 10px; margin-top: 12px;"
-            ),
+            style = "margin-top: 12px;",
             div(
-                style = "flex: 0 0 auto;",
+                class = "module-tack-switch",
+                style = "margin-bottom: 4px;",
                 materialSwitch(
                     ns("auto.update"),
                     "Auto Update",
@@ -317,21 +316,28 @@ module_tack_ui <- function(ns, defaults = NULL) {
                     status = "success"
                 )
             ),
-            actionButton(ns("update"), "Update", class = "btn-primary"),
-            actionButton(ns("reset"), "Reset", class = "btn-secondary"),
-            tipify(
-                downloadButton(
-                    ns("download.source"),
-                    "Source Download",
-                    class = "btn-secondary",
-                    icon = icon("file-code")
-                ),
-                title = paste(
-                    "Download the plot as a self-contained HTML file,",
-                    "along with the plot source data and statistics (if applicable) as CSV files."
-                ),
-                placement = "top",
-                options = list(container = "body")
+            div(
+                class = "module-tack-buttons",
+                style = "display: flex; flex-wrap: wrap; gap: 8px;",
+                actionButton(ns("update"), "Update",
+                    class = "btn-primary", style = "flex: 1 1 45%;"),
+                actionButton(ns("reset"), "Reset",
+                    class = "btn-secondary", style = "flex: 1 1 45%;"),
+                tipify(
+                    downloadButton(
+                        ns("download.source"),
+                        "Source Download",
+                        class = "btn-secondary",
+                        icon = icon("file-code"),
+                        style = "flex: 1 1 100%;"
+                    ),
+                    title = paste(
+                        "Download the plot as a self-contained HTML file,",
+                        "along with the plot source data and statistics (if applicable) as CSV files."
+                    ),
+                    placement = "top",
+                    options = list(container = "body")
+                )
             )
         )
     )
