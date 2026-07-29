@@ -63,8 +63,6 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{boxplot.width} - Boxplot width (controlled via \code{boxgap} and \code{boxgroupgap})
 \item \code{boxplot.outlier.size} - Outlier point size (not implemented)
 \item \code{boxplot.position.dodge} - Boxplot dodge (controlled via \code{boxgap})
-\item \code{hover.data} - Columns shown on hover (not implemented; a default set is used)
-\item \code{hover.round.digits} - Hover value rounding (not implemented)
 \item \code{vlnplot.quantiles} - Violin quantiles (doesn't translate to plotly)
 }
 }
@@ -108,6 +106,9 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be 
 \item \code{ridgeplot.shape} - Ridge shape (UI: "Ridge Shape", default: "smooth")
 \item \code{ridgeplot.bins} - Ridge bins (UI: "Ridge Bins", default: 30)
 \item \code{ridgeplot.binwidth} - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)
+\item \code{hover.data} - Columns shown on hover (UI: "Hover Data", default: "";
+empty uses a sensible default set of columns)
+\item \code{hover.round.digits} - Hover value rounding (UI: "Hover Round Digits", default: 5)
 \item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
 }
 }

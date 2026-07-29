@@ -40,8 +40,6 @@
 #' - `boxplot.width` - Boxplot width (controlled via `boxgap` and `boxgroupgap`)
 #' - `boxplot.outlier.size` - Outlier point size (not implemented)
 #' - `boxplot.position.dodge` - Boxplot dodge (controlled via `boxgap`)
-#' - `hover.data` - Columns shown on hover (not implemented; a default set is used)
-#' - `hover.round.digits` - Hover value rounding (not implemented)
 #' - `vlnplot.quantiles` - Violin quantiles (doesn't translate to plotly)
 #'
 #' @section Plot parameters and defaults:
@@ -82,6 +80,9 @@
 #' - `ridgeplot.shape` - Ridge shape (UI: "Ridge Shape", default: "smooth")
 #' - `ridgeplot.bins` - Ridge bins (UI: "Ridge Bins", default: 30)
 #' - `ridgeplot.binwidth` - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)
+#' - `hover.data` - Columns shown on hover (UI: "Hover Data", default: "";
+#'   empty uses a sensible default set of columns)
+#' - `hover.round.digits` - Hover value rounding (UI: "Hover Round Digits", default: 5)
 #' - `legend.show` - Show legend (always `TRUE`; not directly settable)
 #'
 #' @section Parameters controlling additional functionality:
@@ -184,7 +185,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "vlnplot.lineweight", "vlnplot.scaling",
         "ridgeplot.lineweight", "ridgeplot.scale",
         "ridgeplot.ymax.expansion", "ridgeplot.shape",
-        "ridgeplot.bins", "ridgeplot.binwidth"
+        "ridgeplot.bins", "ridgeplot.binwidth",
+        "hover.data", "hover.round.digits"
     )
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
@@ -316,6 +318,22 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     value = get_default(defaults, "jitter.color", "#000000")
                 ),
                 documentParameters$jitter.color,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(selectizeInput(ns("hover.data"), "Hover Data",
+                choices = choices,
+                multiple = TRUE,
+                selected = get_default(
+                    defaults, "hover.data", "",
+                    function(x) all(x %in% choices)
+                )
+            ), documentParameters$hover.data, placement = "top", options = list(container = "body")),
+            tipify(
+                numericInput(ns("hover.round.digits"), "Hover Round Digits",
+                    value = get_default(defaults, "hover.round.digits", 5, is.numeric),
+                    step = 1,
+                    min = 1
+                ), documentParameters$hover.round.digits,
                 placement = "top", options = list(container = "body")
             ),
             tipify(

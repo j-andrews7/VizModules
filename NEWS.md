@@ -2,7 +2,8 @@
 
 ## Improved/New Functionality
 
-* Tweaked `multiColorPicker()` layout for easier tetrising into compact UIs (moved Apply/Reset buttons under group color pickers).
+* Wired up `hover.data` and `hover.round.digits` in the `dittoViz_yPlot` module (#317). When no columns are selected, the module reproduces `dittoViz::yPlot()`'s default hover content, so existing plots are unchanged.
+* Tweaked `multiColorPicker()` layout slightly for easier tetrising into compact UIs.
 * Added ability to show/hide columns in the `dataFilter` module with DataTables' built-in column visibility controls. This is useful for hiding columns that are not relevant to the user, or for hiding columns that are used for internal logic but not meant to be displayed. The `hide.columns` argument can be used to specify which columns to hide by default, and users can toggle visibility via the DataTables UI.
 * Changed to server-side rendering of `var` element for `dittoViz_yPlot` module, which is much more performant when many options exist (e.g. genes).
 

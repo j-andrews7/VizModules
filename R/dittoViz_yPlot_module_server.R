@@ -164,6 +164,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            choices <- c("", names(data()))
 
             # Calculate y.max and y.min from the default selections
             if (length(num.choices) >= 2) {
@@ -258,6 +259,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
+            # Hover
+            updateSelectizeInput(session, "hover.data",
+                selected = get_default(defaults, "hover.data", "", function(x) x == "" || all(x %in% choices)))
+            updateNumericInput(session, "hover.round.digits",
+                value = get_default(defaults, "hover.round.digits", 5, is.numeric))
+
             # Lines
             reset_lines_inputs(session, defaults = defaults)
 
@@ -342,7 +349,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
-            # Draw axis borders at the ggplot level 
+            # Draw axis borders at the ggplot level
             additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_style <- theme_bw() + theme(
                 panel.border = additional_theme$panel.border,
@@ -350,6 +357,24 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 axis.ticks = additional_theme$axis.ticks,
                 strip.background = element_blank()
             )
+
+            # Collect hover data. When the user makes no explicit selection,
+            # reconstruct dittoViz::yPlot()'s internal default set so hover
+            # content is unchanged from the package default. Columns that do not
+            # exist in the plotted data are ignored downstream by dittoViz.
+            hover.data <- .na_to_null(isolate_fn(input$hover.data))
+            if (is.null(hover.data)) {
+                var.name <- isolate_fn(input$var)
+                hover.data <- unique(c(
+                    var.name,
+                    paste0(var.name, ".adj"),
+                    "var.multi", "var.which",
+                    isolate_fn(input$group.by),
+                    color.by,
+                    shape.by,
+                    split.by
+                ))
+            }
 
             p <- yPlot(
                 data_frame = data(),
@@ -363,6 +388,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 split.by = split.by,
                 plots = isolate_fn(input$plots),
                 do.hover = TRUE,
+                hover.data = hover.data,
+                hover.round.digits = isolate_fn(input$hover.round.digits),
                 color.panel = if (!is.null(color.panel.arg)) color.panel.arg else dittoViz::dittoColors(),
                 min = if (adjustment.active) NA else isolate_fn(input$y.min),
                 max = if (adjustment.active) NA else isolate_fn(input$y.max),
