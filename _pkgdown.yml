@@ -194,6 +194,7 @@ reference:
       - add_vlines
       - adjusted_axis_label
       - apply_axis_title_to_annotations
+      - reset_axis_title_text
       - apply_legend_styling
       - apply_plotly_newshape
       - apply_render_margins
