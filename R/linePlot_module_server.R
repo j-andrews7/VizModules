@@ -41,6 +41,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         plot_source <- session$ns("line")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
+        # Axis side(s) whose title is regenerated (not persisted) because a data
+        # adjustment is active; set inside generate_linePlot() and read at render.
+        regen_keys_rv <- reactiveVal(character(0))
+
+        # x/y variables at the last build; when one changes we drop any persisted
+        # manual title text for that axis so it regenerates for the new variable.
+        last_axis_val <- reactiveVal(NULL)
+
         observeEvent(input$x.value, {
             req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
@@ -272,6 +280,27 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             x_title <- adjusted_axis_label(x_title, NULL, x.adjustment)
             y_title <- adjusted_axis_label(y_title, NULL, y.adjustment)
 
+            # Flag adjustment-derived axis titles so finalize_manual_edits() regenerates
+            # rather than persists their text on rebuild.
+            regen_keys_rv(c(
+                if (!is.null(x.adjustment)) "axis:x",
+                if (!is.null(y.adjustment)) "axis:y"
+            ))
+
+            # When the x or y variable changes, drop any persisted manual title text for
+            # that side so it regenerates for the new variable (position still persists).
+            cur_val <- list(x = x_input, y = y_input)
+            prev_val <- last_axis_val()
+            if (!identical(cur_val, prev_val)) {
+                if (is.null(prev_val) || !identical(cur_val$x, prev_val$x)) {
+                    reset_axis_title_text(edit_store, "axis:x")
+                }
+                if (is.null(prev_val) || !identical(cur_val$y, prev_val$y)) {
+                    reset_axis_title_text(edit_store, "axis:y")
+                }
+                last_axis_val(cur_val)
+            }
+
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
@@ -406,7 +435,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 fig <- apply_render_margins(generate_linePlot(), input)
             }
 
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+            fig <- finalize_manual_edits(
+                fig, plot_source, edit_store, session,
+                regen_keys = isolate(regen_keys_rv())
+            )
 
             return(fig)
         })

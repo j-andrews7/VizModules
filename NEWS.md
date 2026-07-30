@@ -10,6 +10,8 @@
 ## Bug Fixes
 
 * Fixed an initialization bug in `multiColorPicker()` due to string indexing rather than position, leading to out of bounds errors when a group label was an empty string.
+* Fixed axis titles not reflecting applied data adjustments in the `dittoViz_yPlot`, `dittoViz_scatterPlot`, and `linePlot` modules (#321). The annotation-persistence feature added in 0.3.0 was re-applying the previously captured title text on every rebuild, clobbering the freshly generated adjustment-aware label (e.g. `log2(units)`). Axis titles carrying an active adjustment are now always regenerated, while a manually edited title with no adjustment still persists and the dragged title position persists in all cases. `finalize_manual_edits()` gains a `regen_keys` argument to drive this. Axis titles are also regenerated (rather than persisted) when the plotted variable for that axis changes, via the new exported helper `reset_axis_title_text()`, since a manual title only makes sense for the variable it was written for. Shared axis titles in faceted `linePlot`/`dumbbellPlot` figures (built via `build_facet_annotations()`) are now tagged as axis annotations so their dragged position survives label changes; as a result they now pick up the axis-title font settings rather than the facet-title font settings.
+* The main plot title is now blank by default in the `dittoViz_yPlot` and `dittoViz_scatterPlot` modules (previously dittoViz's `main = "make"` auto-generated a title from the variable name and regenerated it on every re-render). Users can still add a title interactively by editing it on the plot.
 
 
 # VizModules 0.3.0

@@ -174,6 +174,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # moves) so they persist across re-renders. See setup_manual_edits().
         edit_store <- setup_manual_edits(input, session, plot_source)
 
+        # Axis side(s) whose title is regenerated (not persisted) because a data
+        # adjustment is active; set inside generate_scatterPlot() and read at render.
+        regen_keys_rv <- reactiveVal(character(0))
+
+        # x/y variables at the last build; when one changes we drop any persisted
+        # manual title text for that axis so it regenerates for the new variable.
+        last_axis_by <- reactiveVal(NULL)
+
         # dataframe of selected data, which is added to with multiple selections
         selected.data <- reactiveVal()
 
@@ -466,6 +474,29 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 isolate_fn(input$y.by), null.na.inputs$y.adjustment, isolate_fn(input$y.adj.fxn)
             )
 
+            # Flag axis sides whose title is adjustment-derived so finalize_manual_edits()
+            # regenerates rather than persists their text. adjusted_axis_label() returns the
+            # base unchanged when no adjustment, so a difference means an adjustment is active.
+            regen_keys_rv(c(
+                if (!identical(x_axis_label, isolate_fn(input$x.by))) "axis:x",
+                if (!identical(y_axis_label, isolate_fn(input$y.by))) "axis:y"
+            ))
+
+            # When the x or y variable changes, drop any persisted manual title text for
+            # that side so it regenerates for the new variable (position still persists).
+            # Runs before finalize_manual_edits() in the same render pass.
+            cur_by <- list(x = isolate_fn(input$x.by), y = isolate_fn(input$y.by))
+            prev_by <- last_axis_by()
+            if (!identical(cur_by, prev_by)) {
+                if (is.null(prev_by) || !identical(cur_by$x, prev_by$x)) {
+                    reset_axis_title_text(edit_store, "axis:x")
+                }
+                if (is.null(prev_by) || !identical(cur_by$y, prev_by$y)) {
+                    reset_axis_title_text(edit_store, "axis:y")
+                }
+                last_axis_by(cur_by)
+            }
+
             # Reflect any applied color data adjustments in the color.by legend title so it
             # accurately describes the values displayed (e.g. "log2(z-score(units))"). Only
             # the auto-generated title ("make") is rewritten so user-supplied titles are kept.
@@ -483,6 +514,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 data(),
                 x.by = isolate_fn(input$x.by),
                 y.by = isolate_fn(input$y.by),
+                # Blank main title by default; dittoViz's "make" would otherwise
+                # auto-generate one and re-render it every rebuild.
+                main = NULL,
                 xlab = x_axis_label,
                 ylab = y_axis_label,
                 color.by = null.na.inputs$color.by,
@@ -933,7 +967,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- apply_render_margins(generate_scatterPlot(), input)
             # Restore manually repositioned legend/annotations/axis titles/colorbar
             # so they survive rebuilds, and wire up edit capture for this figure.
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+            fig <- finalize_manual_edits(
+                fig, plot_source, edit_store, session,
+                regen_keys = isolate(regen_keys_rv())
+            )
             fig
         })
 

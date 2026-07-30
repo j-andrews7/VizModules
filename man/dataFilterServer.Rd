@@ -4,7 +4,13 @@
 \alias{dataFilterServer}
 \title{Server logic for the dataFilter module}
 \usage{
-dataFilterServer(id, data, factor.char.cols = TRUE, page.length = 10)
+dataFilterServer(
+  id,
+  data,
+  factor.char.cols = TRUE,
+  page.length = 10,
+  col.visibility = FALSE
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module. Must match the \code{id} used in
@@ -19,6 +25,10 @@ free-text search boxes. Defaults to \code{TRUE}.}
 
 \item{page.length}{Integer. The default number of rows shown per page.
 Defaults to \code{10}.}
+
+\item{col.visibility}{Logical. When \code{TRUE}, adds a DT "Columns" button
+(Buttons extension \code{colvis}) so users can show/hide individual columns.
+Defaults to \code{FALSE}.}
 }
 \value{
 A \code{reactive} expression that evaluates to the filtered subset of

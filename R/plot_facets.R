@@ -397,7 +397,9 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
         )
     })
 
-    # Shared X-axis title at bottom centre
+    # Shared X-axis title at bottom centre. Tagged as an axis annotation so the
+    # persistence layer keys it by side ("axis:x") rather than its text, keeping
+    # a dragged position across label changes (e.g. when an adjustment is applied).
     if (!is.null(x.title)) {
         annotations <- c(annotations, list(list(
             x = 0.5,
@@ -408,11 +410,13 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
             showarrow = FALSE,
             xanchor = "center",
             yanchor = "top",
+            annotationType = "axis",
             font = list(size = title.font.size)
         )))
     }
 
-    # Shared Y-axis title at left centre (rotated)
+    # Shared Y-axis title at left centre (rotated). Tagged as an axis annotation
+    # (keys "axis:y" via textangle) for the same position-persistence reason.
     if (!is.null(y.title)) {
         annotations <- c(annotations, list(list(
             x = -0.05,
@@ -424,6 +428,7 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
             xanchor = "center",
             yanchor = "middle",
             textangle = -90,
+            annotationType = "axis",
             font = list(size = title.font.size)
         )))
     }

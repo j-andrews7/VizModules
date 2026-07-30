@@ -317,13 +317,19 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #'
 #' @param fig A plotly figure object.
 #' @param edits A list with components `legend` and `annotations`.
+#' @param regen_keys Character vector of annotation keys (e.g. `"axis:y"`) whose
+#'   `text` is regenerated from scratch on every rebuild and must therefore not
+#'   be overwritten by a captured edit. Used for axis titles carrying an active
+#'   data adjustment (e.g. `"log2(units)"`), so the fresh label wins while any
+#'   captured position/font still persists. The `#<occurrence>` suffix added by
+#'   [.annotation_edit_keys()] is stripped before matching. Defaults to none.
 #'
 #' @return The figure with manual edits re-applied.
 #'
 #' @author Jared Andrews
 #' @keywords internal
 #' @rdname INTERNAL_reapply_manual_edits
-.reapply_manual_edits <- function(fig, edits) {
+.reapply_manual_edits <- function(fig, edits, regen_keys = character(0)) {
     if (is.null(fig) || is.null(edits)) {
         return(fig)
     }
@@ -363,7 +369,12 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
             if (is.na(ann_key)) next
             e <- edits$annotations[[ann_key]]
             if (is.null(e)) next
+            # Axis titles with an active data adjustment are regenerated every
+            # rebuild (e.g. "log2(units)"), so never re-apply a captured `text`
+            # for those sides; their position/font still persists.
+            regen <- sub("#[0-9]+$", "", ann_key) %in% regen_keys
             for (prop in names(e)) {
+                if (regen && identical(prop, "text")) next
                 anns[[i]][[prop]] <- e[[prop]]
             }
         }
@@ -532,6 +543,12 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' @param store The list returned by [setup_manual_edits()].
 #' @param session The module's `session` object, used to namespace the
 #'   colorbar drag input.
+#' @param regen_keys Character vector of annotation keys (e.g. `"axis:y"`) whose
+#'   `text` is regenerated on every rebuild and must not be overwritten by a
+#'   captured edit. Pass the axis side(s) carrying an active data adjustment so
+#'   the freshly built label (e.g. `"log2(units)"`) always wins, while the
+#'   captured position still persists. Defaults to none (all captured props are
+#'   restored, the pre-existing behaviour).
 #'
 #' @return The finalized plotly figure, ready to be returned from
 #'   [plotly::renderPlotly()].
@@ -545,15 +562,70 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 #' fig
 #' }
-finalize_manual_edits <- function(fig, plot_source, store, session) {
+finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys = character(0)) {
     if (is.null(fig)) {
         return(fig)
     }
 
     fig$x$source <- plot_source
-    fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)))
+    fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)), regen_keys)
     store$rendered_fig(fig)
     .add_colorbar_listener(fig, session$ns("colorbar.move"))
+}
+
+
+#' Drop persisted axis-title text edits
+#'
+#' Removes any captured `text` edit for the given axis-title annotation keys from
+#' an edit store, so the axis title is regenerated from its (possibly adjusted)
+#' data-derived label on the next rebuild rather than restoring a stale manual
+#' edit. Any captured position for those titles is left intact, so a dragged
+#' title keeps its place. Intended to be called when the plotted variable for an
+#' axis changes (e.g. from an `observeEvent()` or inside the plot-building
+#' reactive), matching the convention that a manual title only makes sense for
+#' the variable it was written for.
+#'
+#' @param store The list returned by [setup_manual_edits()].
+#' @param keys Character vector of axis annotation keys to clear text for.
+#'   Defaults to both axis titles, `c("axis:x", "axis:y")`. The
+#'   `#<occurrence>` suffix added by [.annotation_edit_keys()] is ignored when
+#'   matching.
+#'
+#' @return Invisibly, `TRUE` if any stored text was removed, otherwise `FALSE`.
+#'
+#' @seealso [setup_manual_edits()], [finalize_manual_edits()].
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Regenerate the y-axis title whenever the plotted variable changes:
+#' observeEvent(input$var, reset_axis_title_text(edit_store, "axis:y"),
+#'     ignoreInit = TRUE)
+#' }
+reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
+    anns <- isolate(store$edits$annotations)
+    if (is.null(anns) || length(anns) == 0) {
+        return(invisible(FALSE))
+    }
+
+    changed <- FALSE
+    for (nm in names(anns)) {
+        base_key <- sub("#[0-9]+$", "", nm)
+        if (base_key %in% keys && !is.null(anns[[nm]][["text"]])) {
+            anns[[nm]][["text"]] <- NULL
+            # Drop the whole entry if only the (now removed) text was stored.
+            if (length(anns[[nm]]) == 0) {
+                anns[[nm]] <- NULL
+            }
+            changed <- TRUE
+        }
+    }
+
+    if (changed) {
+        store$edits$annotations <- anns
+    }
+
+    invisible(changed)
 }
 
 

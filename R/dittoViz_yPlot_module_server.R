@@ -97,6 +97,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         plot_source <- session$ns("yplot")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
+        # Axis side(s) whose title is regenerated (not persisted) because a data
+        # adjustment is active; set inside generate_yPlot() and read at render.
+        regen_keys_rv <- reactiveVal(character(0))
+
+        # Axis-defining variables at the last build; when they change we drop any
+        # persisted manual axis-title text so the title regenerates for the new
+        # variable (its dragged position still persists).
+        last_axis_vars <- reactiveVal(NULL)
+
         # Store last computed stats table for download
         last_stats_df <- reactiveVal(NULL)
         default_palette_name <- "dittoColors"
@@ -349,6 +358,29 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
+            # When an adjustment is active the axis title is regenerated to reflect it, so
+            # flag its side for finalize_manual_edits() to skip persisting the text. The
+            # continuous var lands on the x-axis for ridgeplots, otherwise the y-axis.
+            regen_keys_rv(if (adjustment.active) {
+                if ("ridgeplot" %in% isolate_fn(input$plots)) "axis:x" else "axis:y"
+            } else {
+                character(0)
+            })
+
+            # If a variable feeding an axis title (or the ridge orientation that swaps
+            # which axis it lands on) changed, drop any persisted manual title text so the
+            # title regenerates for the new variable. Runs before finalize_manual_edits()
+            # in the same render pass, so the cleared store is what gets re-applied.
+            axis_vars <- list(
+                var = isolate_fn(input$var),
+                group.by = isolate_fn(input$group.by),
+                ridge = "ridgeplot" %in% isolate_fn(input$plots)
+            )
+            if (!identical(axis_vars, last_axis_vars())) {
+                reset_axis_title_text(edit_store)
+                last_axis_vars(axis_vars)
+            }
+
             # Draw axis borders at the ggplot level
             additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
             theme_style <- theme_bw() + theme(
@@ -381,6 +413,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 var = isolate_fn(input$var),
                 var.adjustment = var.adjustment,
                 var.adj.fxn = safe_resolve_adj_fxn(var.adj.fxn.name),
+                # Blank main title by default; dittoViz's "make" would otherwise
+                # auto-generate one (the var name) and re-render it every rebuild.
+                main = NULL,
                 ylab = y_axis_label,
                 group.by = isolate_fn(input$group.by),
                 color.by = color.by,
@@ -545,7 +580,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             req(input$var)
 
             fig <- apply_render_margins(generate_yPlot(), input)
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+            fig <- finalize_manual_edits(
+                fig, plot_source, edit_store, session,
+                regen_keys = isolate(regen_keys_rv())
+            )
 
             return(fig)
         })

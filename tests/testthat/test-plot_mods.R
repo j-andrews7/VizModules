@@ -1337,6 +1337,102 @@ test_that(".reapply_manual_edits restores a dragged colorbar onto its trace", {
     expect_equal(out$x$data[[1]]$marker$colorbar$y, 0.4)
 })
 
+test_that(".reapply_manual_edits regenerates an adjusted axis title but keeps its position", {
+    edits <- list(legend = NULL, annotations = list(
+        "axis:y#1" = list(text = "old label", x = 0.9, y = 0.4)
+    ))
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "log2(units)", annotationType = "axis", textangle = -90, x = -0.05, y = 0.5)
+    ))))
+    out <- .reapply_manual_edits(fig, edits, regen_keys = "axis:y")
+    expect_equal(out$x$layout$annotations[[1]]$text, "log2(units)") # regenerated, not clobbered
+    expect_equal(out$x$layout$annotations[[1]]$x, 0.9)              # drag position persists
+    expect_equal(out$x$layout$annotations[[1]]$y, 0.4)
+})
+
+test_that(".reapply_manual_edits persists a manual axis title edit when no adjustment is active", {
+    edits <- list(legend = NULL, annotations = list(
+        "axis:y#1" = list(text = "My label", x = 0.9)
+    ))
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "units", annotationType = "axis", textangle = -90, x = -0.05, y = 0.5)
+    ))))
+    out <- .reapply_manual_edits(fig, edits) # regen_keys defaults to none
+    expect_equal(out$x$layout$annotations[[1]]$text, "My label")
+    expect_equal(out$x$layout$annotations[[1]]$x, 0.9)
+})
+
+test_that(".reapply_manual_edits only regenerates the named side", {
+    edits <- list(legend = NULL, annotations = list(
+        "axis:x#1" = list(text = "custom X"),
+        "axis:y#1" = list(text = "custom Y")
+    ))
+    fig <- list(x = list(layout = list(annotations = list(
+        list(text = "grp", annotationType = "axis", textangle = 0),
+        list(text = "log2(units)", annotationType = "axis", textangle = -90)
+    ))))
+    out <- .reapply_manual_edits(fig, edits, regen_keys = "axis:y")
+    expect_equal(out$x$layout$annotations[[1]]$text, "custom X")    # x not regenerated
+    expect_equal(out$x$layout$annotations[[2]]$text, "log2(units)") # y regenerated
+})
+
+test_that("build_facet_annotations keys shared axis titles by side, not text", {
+    anns <- build_facet_annotations(c("A", "B"), x.title = "grp", y.title = "units", nrows = 1)
+    keys <- VizModules:::.annotation_edit_keys(anns)
+    expect_true("axis:x#1" %in% keys)
+    expect_true("axis:y#1" %in% keys)
+    expect_false(any(c("text:grp#1", "text:units#1") %in% keys))
+})
+
+test_that("faceted shared-axis-title position survives a label text change", {
+    # Position captured on the pre-adjustment faceted figure...
+    anns_before <- build_facet_annotations(c("A", "B"), x.title = "grp", y.title = "units")
+    fig_before <- list(x = list(layout = list(annotations = anns_before)))
+    yi <- which(VizModules:::.annotation_edit_keys(anns_before) == "axis:y#1") - 1L
+    rl <- setNames(list(0.02, 0.55), sprintf(c("annotations[%d].x", "annotations[%d].y"), yi))
+    edits <- .capture_manual_edits(list(legend = NULL, annotations = list()), rl, fig_before)
+    # ...re-applied on the rebuilt faceted figure whose y label changed to log2(units).
+    anns_after <- build_facet_annotations(c("A", "B"), x.title = "grp", y.title = "log2(units)")
+    out <- .reapply_manual_edits(
+        list(x = list(layout = list(annotations = anns_after))),
+        edits, regen_keys = "axis:y"
+    )
+    kk <- VizModules:::.annotation_edit_keys(out$x$layout$annotations)
+    ya <- out$x$layout$annotations[[which(kk == "axis:y#1")]]
+    expect_equal(ya$x, 0.02) # dragged position kept
+    expect_equal(ya$y, 0.55)
+    expect_equal(ya$text, "log2(units)") # regenerated label wins
+})
+
+test_that("reset_axis_title_text drops text for the named side but keeps position and others", {
+    store <- list(edits = shiny::reactiveValues(annotations = list(
+        "axis:y#1" = list(text = "custom", x = 0.9, y = 0.4),
+        "axis:x#1" = list(text = "keep x"),
+        "text:Pt#1" = list(text = "stay", x = 1)
+    )))
+    shiny::isolate({
+        changed <- reset_axis_title_text(store, "axis:y")
+        expect_true(changed)
+        anns <- store$edits$annotations
+        expect_null(anns[["axis:y#1"]]$text)             # text dropped
+        expect_equal(anns[["axis:y#1"]]$x, 0.9)          # dragged position kept
+        expect_equal(anns[["axis:x#1"]]$text, "keep x")  # other axis untouched
+        expect_equal(anns[["text:Pt#1"]]$text, "stay")   # non-axis annotation untouched
+    })
+})
+
+test_that("reset_axis_title_text removes a text-only entry entirely and reports no-op", {
+    store <- list(edits = shiny::reactiveValues(annotations = list(
+        "axis:y#1" = list(text = "custom")
+    )))
+    shiny::isolate({
+        expect_true(reset_axis_title_text(store, "axis:y"))
+        expect_false("axis:y#1" %in% names(store$edits$annotations))
+        # Nothing left to clear -> FALSE, and no error on an empty store.
+        expect_false(reset_axis_title_text(store, "axis:y"))
+    })
+})
+
 test_that(".add_colorbar_listener attaches a render hook to the figure", {
     p <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers")
     out <- .add_colorbar_listener(p, "mod-colorbar.move")
