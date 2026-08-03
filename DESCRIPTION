@@ -48,6 +48,10 @@ Roxygen: list(markdown = TRUE)
 Suggests:
     drc,
     withr,
+    ComplexHeatmap,
+    InteractiveComplexHeatmap,
+    circlize,
+    grid,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)

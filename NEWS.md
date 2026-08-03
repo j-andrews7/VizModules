@@ -1,5 +1,9 @@
 # VizModules 0.3.1.9000
 
+## New Modules
+
+* Added a `ComplexHeatmap` module (`ComplexHeatmap_HeatmapInputsUI()`, `ComplexHeatmap_HeatmapOutputUI()`, `ComplexHeatmap_HeatmapServer()`, `ComplexHeatmap_HeatmapApp()`) wrapping [ComplexHeatmap::Heatmap()]. Unlike the other plotly-based modules, its interactive output is delivered via the `InteractiveComplexHeatmap` package (sub-heatmap zoom, cell hover/click/select). The incoming data frame is converted to a numeric matrix (user-selected columns, with an optional row-name column), and a curated subset of `Heatmap()` parameters (colors, clustering, labels, splitting) is exposed via UI inputs. `ComplexHeatmap`, `InteractiveComplexHeatmap`, and `circlize` are Bioconductor dependencies kept in `Suggests` with runtime guards, so the rest of the package installs without them. Ships a new `example_matrix_df` demo dataset (column-scaled `mtcars`).
+
 ## Improved/New Functionality
 
 * Wired up `hover.data` and `hover.round.digits` in the `dittoViz_yPlot` module (#317). When no columns are selected, the module reproduces `dittoViz::yPlot()`'s default hover content, so existing plots are unchanged.
