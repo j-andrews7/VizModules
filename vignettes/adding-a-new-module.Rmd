@@ -31,6 +31,7 @@ This checklist walks through how to add a new plotting module to **VizModules** 
   - `@section Plot parameters and defaults:` - Document all exposed parameters with UI labels and defaults
   - `@section Plot parameters implementing new functionality:` - Document any new or plotly-specific controls (axes, ticks, reference lines, etc)
 - [ ] Add an example app that uses the module twice to prove multi-instance behavior.
+- [ ] Wire up reactive `defaults` support so parent apps can drive parameters from app state (see [Supporting Reactive Defaults]).
 - [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
 - [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
@@ -150,6 +151,45 @@ myPlotApp <- function(data_list = NULL) {
 - [ ] Document any assumptions about input shape (e.g., pre-summarized table for pies).
 - [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
 - [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
+
+## Supporting Reactive Defaults
+
+An entry in `defaults` may be a `reactive()` rather than a fixed value, so a
+parent app can make an input follow its state without the double render that
+`update*Input()` causes (see
+`vignette("defaults-and-hiding", package = "VizModules")`). Two lines wire this
+up, and they are required in every new module.
+
+- [ ] Make the first statement of your `moduleServer()` body build the parameter
+  store:
+
+    ```r
+    params <- setup_reactive_defaults(defaults, input, session)
+    ```
+
+- [ ] Pass that store to `setup_auto_update_logic()` inside your generate
+  reactive:
+
+    ```r
+    generate_myPlot <- reactive({
+        isolate_fn <- setup_auto_update_logic(input, params)
+        ...
+        main = isolate_fn(input$main)
+    })
+    ```
+
+That is the whole change. `setup_reactive_defaults()` returns `NULL` when no
+entry is reactive, in which case `isolate_fn` is the plain `identity`/`isolate`
+it has always been. When a store is present, `isolate_fn` recognises direct
+`input$<key>` reads and resolves them from the store instead — so your existing
+read sites need no edits, as long as they stay in the
+`isolate_fn(input$<key>)` form. A wrapped read such as
+`isolate_fn(as.numeric(input$size))` cannot be recognised and will not support a
+reactive default; do the conversion outside the call instead.
+
+Your `*InputsUI()` and reset observer need no special handling: both go through
+`get_default()`, which resolves reactive entries on its own. Reset therefore
+restores the reactive's current value.
 
 ## Persisting Manual Layout Edits
 

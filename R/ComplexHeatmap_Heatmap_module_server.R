@@ -9,7 +9,9 @@
 #'   will still be initialized and used, but not shown in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset
 #'   button is clicked, inputs are reset to these values rather than hardcoded
-#'   fallbacks. Typically the same list passed to the UI function.
+#'   fallbacks. Typically the same list passed to the UI function. An entry may also
+#'   be a [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks
+#'   it as the parent app's state changes; see [setup_reactive_defaults()].
 #'
 #' @return The `moduleServer` function for the ComplexHeatmap module. The
 #'   returned reactive yields the source-download bundle (matrix data + inputs).
@@ -45,6 +47,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
     }
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
         ns <- session$ns
 
         # Hide individual inputs/tabs if specified. UI is (re)injected by the
@@ -109,7 +112,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
 
         # Build (and draw) the Heatmap object from the current inputs.
         build_heatmap <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
             mat <- heatmap_matrix()
 
             col_fun <- circlize::colorRamp2(

@@ -59,6 +59,57 @@ For inputs that come from the uniform tab helpers (Axes, Legend, Lines, Plotly),
 
 `get_default()` (used internally by every module) accepts an optional `validator` predicate. If the value you supply fails validation — e.g. passing a string where a logical is expected — the module silently falls back to its built-in default rather than erroring. This means a typo in a key is silent; double-check key names against the help page if a default appears to have no effect.
 
+### Reactive defaults: driving inputs from app state
+
+Sometimes a parameter needs to *follow* your app rather than be fixed once. A common case is a plot title that should track whichever sample the user has selected. For this, any individual entry in `defaults` may be a `reactive()` or a `reactiveVal()` instead of a plain value:
+
+```{r defaults-reactive}
+library(VizModules)
+
+ui <- fluidPage(
+    selectInput("sample", "Sample", choices = c("SampleA", "SampleB", "SampleC")),
+    sidebarLayout(
+        sidebarPanel(uiOutput("controls")),
+        mainPanel(dittoViz_scatterPlotOutputUI("p"))
+    )
+)
+
+server <- function(input, output, session) {
+    plot_defaults <- list(
+        x.by = "wt",
+        y.by = "mpg",
+        main = reactive(input$sample)
+    )
+
+    output$controls <- renderUI({
+        dittoViz_scatterPlotInputsUI("p", mtcars, defaults = plot_defaults)
+    })
+
+    dittoViz_scatterPlotServer("p", data = reactive(mtcars), defaults = plot_defaults)
+}
+
+shinyApp(ui, server)
+```
+
+Pass the same list to both `*InputsUI()` and `*Server()`, as you would for static defaults. Because the UI needs access to the reactive, build it inside `renderUI()` (the UI seed is taken with `isolate()`, so this does not cause the controls to re-render whenever the reactive changes).
+
+You get three guarantees:
+
+- **The parameter tracks the reactive.** Every change flows through to the plot.
+- **The control stays correct and editable.** The Plot Title box shows the current sample, and the user can still type over it.
+- **The plot renders once per change.** The value is resolved server-side, in the same reactive flush as the data, so there is no flicker.
+
+Semantics worth knowing:
+
+- **An external change always wins.** If the user has typed a custom title and then picks a different sample, the new sample's value replaces what they typed.
+- **Reset restores the reactive's *current* value**, not the value it held at startup.
+- **Only `reactive()` and `reactiveVal()` are recognised.** A plain function is treated as a literal default value, not as something to call.
+- **Composite widgets sync cosmetically only.** The plot always uses the current value, but a compound control that does not accept a generic value message — `custom.models` in the scatter module is the one to watch — will not re-display it. Reactive defaults are not supported for that input.
+
+#### Why not `update*Input()` from the parent?
+
+The obvious alternative is an `observeEvent()` in the parent calling `updateTextInput(session, "p-main", ...)`. That works, but `update*Input()` is an asynchronous round-trip to the browser, so each change renders the plot **twice**: once with the stale value, then again when the new value arrives back from the client. Reactive defaults exist to avoid that second render. `dev-notes/reactive-defaults-repro.R` in the package source runs both approaches side by side with render counters if you want to see the difference.
+
 ### Passing defaults through `createModuleApp()` and `*App()`
 
 `defaults` is forwarded all the way through the app factory:
@@ -120,6 +171,8 @@ server <- function(input, output, session) {
 ```
 
 The colour mapping is always `cyl`, and the control for it never appears.
+
+This composes with reactive defaults: a hidden control whose default is a `reactive()` still drives the plot, because the value is resolved server-side rather than read back from the (now invisible) input. That is the cleanest way to lock a parameter to app state entirely.
 
 ---
 

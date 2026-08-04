@@ -62,6 +62,7 @@ shinyApp(ui, server)
 ## Set defaults and hide controls
 
 - **Defaults**: Pass a named list to the `defaults` argument of `*InputsUI()` to pre-fill inputs. Names match the underlying plot function arguments (e.g., `defaults = list(fill.color = "steelblue")`).
+- **Reactive defaults**: An entry may be a `reactive()` instead of a fixed value, so an input follows your app's state (e.g. `defaults = list(main = reactive(input$sample))`). See `vignette("defaults-and-hiding", package = "VizModules")`.
 - **Hide inputs**: Use `hide.inputs` in the server call to remove controls while still initializing their values. This is useful when your app sets certain parameters itself or wants to hide control of various elements while still passing their initial values.
 - **Hide tabs**: Use `hide.tabs` to remove whole groups of controls (e.g., `"Plotly"` or `"Legend"` in `scatterPlot`).
 

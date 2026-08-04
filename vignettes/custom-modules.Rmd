@@ -138,6 +138,31 @@ focusedModuleUI <- function(id) {
 }
 ```
 
+## Driving Base Module Inputs From Your Wrapper
+
+Hiding an input fixes it to one value. When a base module parameter instead needs
+to *follow* something your wrapper computes, pass a `reactive()` as that entry of
+`defaults` rather than reaching for `updateTextInput()`:
+
+```{r reactive-defaults}
+labelledModuleServer <- function(id, data_reactive) {
+    subset_label <- moduleServer(id, function(input, output, session) {
+        reactive(if (isTRUE(input$filter_setosa)) "Setosa only" else "All species")
+    })
+
+    # The title tracks the checkbox, but the user can still type over it.
+    dittoViz_scatterPlotServer(
+        id, data_reactive,
+        defaults = list(main = subset_label)
+    )
+}
+```
+
+This is the recommended parent-to-child channel for parameter values. It resolves
+server-side, so the plot renders once per change instead of twice, and the control
+stays user-editable. See `vignette("defaults-and-hiding", package = "VizModules")`
+for the full semantics.
+
 ## Automatically Preserving Manual Title/Legend/Annotation Edits
 
 The base modules let users interactively drag and edit the plot title, legend,
@@ -181,5 +206,7 @@ but this is pretty much all you need to do.
 A common symptom of namespace issues is that inputs seem to have no effect.
 
 5. **Consider composability**: Design your wrappers so they could potentially be wrapped by even higher-level modules.
+
+6. **Prefer reactive `defaults` over `update*Input()`**: To drive a base module parameter from your wrapper's state, pass a `reactive()` in `defaults`. Pushing values with `update*Input()` costs an extra render on every change.
 
 See any of the existing modules for clear reference examples.

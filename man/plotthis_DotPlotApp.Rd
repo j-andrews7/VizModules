@@ -15,7 +15,9 @@ plotthis_DotPlotApp(
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
 \code{list("markers" = example_markers)} is used as example data.}
 
-\item{defaults}{A named list of input IDs and their default values to apply on startup.}
+\item{defaults}{A named list of input IDs and their default values to apply on startup.
+An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to have the input
+follow the parent app's state; see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}.}
 
 \item{hide.inputs}{A character vector of input IDs to hide. Their values are still
 initialized and used, but the controls are not shown in the UI.}
