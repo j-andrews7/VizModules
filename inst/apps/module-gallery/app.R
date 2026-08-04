@@ -61,6 +61,7 @@ module_data <- list(
     density  = example_demographics,
     dotplot  = example_markers,
     dumbbell = example_school_earnings,
+    heatmap  = example_matrix_df,
     histogram = example_demographics,
     line     = example_sales,
     parallel = example_sales,
@@ -72,6 +73,14 @@ module_data <- list(
     violin   = example_demographics,
     yplot    = example_demographics
 )
+
+# The ComplexHeatmap module depends on Bioconductor packages that may not be
+# installed. Only register its tab when they are available so the gallery
+# still runs without them.
+heatmap_available <- all(vapply(
+    c("ComplexHeatmap", "InteractiveComplexHeatmap", "circlize"),
+    requireNamespace, logical(1), quietly = TRUE
+))
 
 # Module registry – each entry defines one plot module for the gallery.
 module_registry <- list(
@@ -201,6 +210,21 @@ module_registry <- list(
         defaults  = list("var" = "salary", "group.by" = "department")
     )
 )
+
+# Append the ComplexHeatmap module only when its Bioconductor dependencies are
+# installed (see heatmap_available above).
+if (heatmap_available) {
+    module_registry <- c(module_registry, list(
+        list(
+            label     = "Heatmap",
+            id        = "heatmap",
+            inputs_ui = ComplexHeatmap_HeatmapInputsUI,
+            output_ui = ComplexHeatmap_HeatmapOutputUI,
+            server_fn = ComplexHeatmap_HeatmapServer,
+            defaults  = list()
+        )
+    ))
+}
 
 
 # Figure Builder tab – embeds the self-contained figureBuilder module, seeded
