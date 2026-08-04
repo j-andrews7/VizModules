@@ -122,8 +122,26 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
 
             row_km <- isolate_fn(input$row_km)
             column_km <- isolate_fn(input$column_km)
+            # ComplexHeatmap requires a split of >= 2; a value of 1 (or NA)
+            # means "no split" and must be passed as NULL. Also clamp to the
+            # matrix dimensions so the split can't exceed the available
+            # rows/columns.
             row_split <- isolate_fn(input$row_split)
             column_split <- isolate_fn(input$column_split)
+
+            sanitize_split <- function(value, n) {
+                if (is.null(value) || is.na(value)) {
+                    return(NULL)
+                }
+                value <- as.integer(value)
+                if (value < 2) {
+                    return(NULL)
+                }
+                min(value, n)
+            }
+
+            row_split <- sanitize_split(row_split, nrow(mat))
+            column_split <- sanitize_split(column_split, ncol(mat))
 
             ht <- ComplexHeatmap::Heatmap(
                 matrix = mat,
@@ -142,8 +160,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 show_column_dend = isolate_fn(input$show_column_dend),
                 row_km = if (is.na(row_km)) 1 else max(1, as.integer(row_km)),
                 column_km = if (is.na(column_km)) 1 else max(1, as.integer(column_km)),
-                row_split = if (is.na(row_split)) NULL else as.integer(row_split),
-                column_split = if (is.na(column_split)) NULL else as.integer(column_split),
+                row_split = row_split,
+                column_split = column_split,
                 row_gap = grid::unit(isolate_fn(input$row_gap), "mm"),
                 column_gap = grid::unit(isolate_fn(input$column_gap), "mm"),
                 row_title = isolate_fn(input$row_title),

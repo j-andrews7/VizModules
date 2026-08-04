@@ -243,13 +243,13 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                 value = get_default(defaults, "border", FALSE, is.logical)
             ), "Draw a border around the heatmap body", placement = "top", options = tip_opts),
             tipify(numericInput(ns("row_split"), "Row Split",
-                min = 1, step = 1,
+                min = 2, step = 1,
                 value = get_default(defaults, "row_split", NA, is.numeric)
-            ), "Split rows into this many slices (leave blank for none)", placement = "top", options = tip_opts),
+            ), "Split rows into this many slices (2 or more; leave blank for none)", placement = "top", options = tip_opts),
             tipify(numericInput(ns("column_split"), "Column Split",
-                min = 1, step = 1,
+                min = 2, step = 1,
                 value = get_default(defaults, "column_split", NA, is.numeric)
-            ), "Split columns into this many slices (leave blank for none)", placement = "top", options = tip_opts),
+            ), "Split columns into this many slices (2 or more; leave blank for none)", placement = "top", options = tip_opts),
             tipify(numericInput(ns("row_gap"), "Row Gap (mm)",
                 min = 0, step = 0.5,
                 value = get_default(defaults, "row_gap", 1, is.numeric)
