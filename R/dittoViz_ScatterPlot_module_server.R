@@ -112,6 +112,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 initial_colors <- manual_color_values()
             }
 
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "color.panel")
+
             multiColorPicker(
                 ns("color.panel"),
                 label = "Color palette",

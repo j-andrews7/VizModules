@@ -90,6 +90,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
 
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
+
             multiColorPicker(
                 ns("palette.colours"),
                 label = "Plot colors",
@@ -105,6 +109,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
             pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
+            # Pause readers until the client echoes the cleared selection, otherwise
+            # the plot renders once now and again when that echo lands.
+            freezeReactiveValue(input, "stat.pairs")
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -200,6 +207,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
+                # Pause readers until the new limits arrive from the client, else the
+                # plot renders once with the stale limits and again on their echo.
+                freezeReactiveValue(input, "y.max")
+                freezeReactiveValue(input, "y.min")
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -208,6 +219,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(c(input$facet.by, input$x.data),
             {
                 if (input$facet.by == input$x.data) {
+                    # Pause readers until the client echoes the new scale, else the
+                    # plot renders once now and again when that echo lands.
+                    freezeReactiveValue(input, "facet.scale")
                     updateSelectInput(session, "facet.scale", selected = "free_x")
                 }
             },

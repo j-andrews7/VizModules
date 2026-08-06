@@ -92,6 +92,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             req(input$group.by)
             color_by <- if (!is.null(input$color.by) && nzchar(input$color.by)) input$color.by else NULL
             pair_strings <- generate_pair_strings(data(), input$group.by, color_by)
+            # Pause readers until the client echoes the cleared selection, otherwise
+            # the plot renders once now and again when that echo lands.
+            freezeReactiveValue(input, "stat.pairs")
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -160,6 +163,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -289,6 +296,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         observeEvent(input$var, {
             y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
+                # Pause readers until the new limits arrive from the client, else the
+                # plot renders once with the stale limits and again on their echo.
+                freezeReactiveValue(input, "y.max")
+                freezeReactiveValue(input, "y.min")
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }

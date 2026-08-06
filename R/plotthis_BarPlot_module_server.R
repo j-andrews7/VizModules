@@ -123,6 +123,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
                 initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
 
+                # The rebuilt picker reports its value on a client round-trip. Pause
+                # readers until it does, so the plot renders once rather than twice.
+                freezeReactiveValue(input, "palette.colours")
+
                 multiColorPicker(
                     ns("palette.colours"),
                     label = "Plot colors",
@@ -239,6 +243,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             if (!is.null(y_range)) {
+                # Pause readers until the new limits arrive from the client, else the
+                # plot renders once with the stale limits and again on their echo.
+                freezeReactiveValue(input, "y.max")
+                freezeReactiveValue(input, "y.min")
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
