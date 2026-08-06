@@ -32,7 +32,8 @@ returns the module's output UI (e.g. \code{\link[=plotthis_BarPlotOutputUI]{plot
 At least one element is required.}
 
 \item{defaults}{A named list of ui ids and their default values that can change the ui default
-settings on startup.}
+settings on startup. An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to
+have the input follow app state; see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}.}
 
 \item{hide.inputs}{A character vector of input IDs to hide. These inputs are still
 initialized and their values passed to the plot, but are not shown in the UI.

@@ -7,7 +7,8 @@
 get_default(defaults, key, fallback, validator = NULL)
 }
 \arguments{
-\item{defaults}{A named list of default values, or NULL.}
+\item{defaults}{A named list of default values, or NULL. Individual entries
+may be a \code{reactive()}/\code{reactiveVal}.}
 
 \item{key}{Character string — the name to look up.}
 
@@ -15,7 +16,8 @@ get_default(defaults, key, fallback, validator = NULL)
 
 \item{validator}{An optional single-argument predicate function (e.g.,
 \code{is.numeric}, \code{is.logical}). When supplied, the stored value is returned
-only if \code{validator(value)} is \code{TRUE}.}
+only if \code{validator(value)} is \code{TRUE}. Reactive entries are validated on
+their resolved value.}
 }
 \value{
 The resolved default value or \code{fallback}.
@@ -26,10 +28,17 @@ supplied), returns the stored value; otherwise returns \code{fallback}.
 Uses standard \code{if}/\verb{else} instead of vectorized \code{ifelse()} to avoid
 silent truncation of multi-valued defaults.
 }
+\details{
+Entries that are a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} are resolved
+with \code{\link[shiny:isolate]{shiny::isolate()}} before validation, so this returns the reactive's
+\emph{current} value. See \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}} for how modules keep such
+entries live at render time.
+}
 \examples{
 get_default(list(color = "red"), "color", "black")
 get_default(list(), "missing", 10)
 get_default(list(n = "x"), "n", 5, is.numeric)
+get_default(list(color = shiny::reactiveVal("blue")), "color", "black")
 }
 \author{
 Jared Andrews

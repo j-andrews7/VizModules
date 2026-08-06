@@ -11,7 +11,9 @@
 #' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny
@@ -31,6 +33,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
         ns <- session$ns
         # Unique source ID for plotly event_data, scoped to this module instance
         plot_source <- session$ns("scatter")
@@ -109,6 +112,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 initial_colors <- manual_color_values()
             }
 
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "color.panel")
+
             multiColorPicker(
                 ns("color.panel"),
                 label = "Color palette",
@@ -122,7 +129,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Get color panel aligned to the current groups
         color.panel <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             levels <- color_levels()
 
@@ -399,7 +406,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
@@ -570,8 +577,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
             
             plot_data <- p$Target_data
-            # Colour mapping for fit lines — palette_values from color.panel() is already
-            # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
+            # Colour mapping for fit lines â€” palette_values from color.panel() is already
+            # fully resolved (match â†’ fallback â†’ rep_len â†’ setNames), so reuse it directly.
             color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
                 palette_values
             } else {

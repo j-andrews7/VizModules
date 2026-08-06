@@ -1,4 +1,4 @@
-# VizModules 0.3.1.9000
+# VizModules 0.4.0.9000
 
 ## New Modules
 
@@ -6,6 +6,7 @@
 
 ## Improved/New Functionality
 
+* Individual `defaults` entries can now be a `reactive()` or `reactiveVal()`, letting a parent app drive a module parameter from its own state (#325). Previously the only route was `update*Input()` from the parent, which is an asynchronous client round-trip and so re-rendered the plot twice per change (a visible flicker). Reactive defaults are resolved server-side in the same reactive flush as the data, so the plot renders once, while the on-screen control stays populated and user-editable. An external change takes precedence over a value the user has typed, and Reset restores the reactive's current value. Adds the exported helper `setup_reactive_defaults()`; `setup_auto_update_logic()` gains an optional `params` argument to consume its store, and `get_default()` now resolves reactive entries with `isolate()`. Modules with purely static `defaults` are unaffected. Not supported for the scatter module's compound `custom.models` input.
 * Wired up `hover.data` and `hover.round.digits` in the `dittoViz_yPlot` module (#317). When no columns are selected, the module reproduces `dittoViz::yPlot()`'s default hover content, so existing plots are unchanged.
 * Tweaked `multiColorPicker()` layout slightly for easier tetrising into compact UIs.
 * Added ability to show/hide columns in the `dataFilter` module with DataTables' built-in column visibility controls. This is useful for hiding columns that are not relevant to the user, or for hiding columns that are used for internal logic but not meant to be displayed. The `hide.columns` argument can be used to specify which columns to hide by default, and users can toggle visibility via the DataTables UI.
@@ -13,6 +14,9 @@
 
 ## Bug Fixes
 
+* Fixed modules rendering their plot two or three times for a single change (somewhat related to #325). Several modules compute a value on the server and push it into one of their own inputs with `update*Input()`, which is an asynchronous client round-trip: the plot rendered once with the stale value and again when the client echoed the new one. On load `dittoViz_yPlot` did this three times over (y-axis range, stat comparison pairs, and the rebuilt `multiColorPicker`). 
+  * These inputs are now wrapped in `freezeReactiveValue()` so dependents pause until the new value lands, giving a single render. Applied to the y-axis range (`dittoViz_yPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_ViolinPlot`), `stat.pairs` (`dittoViz_yPlot`, `plotthis_BoxPlot`, `plotthis_ViolinPlot`), `facet.scale` (`plotthis_BoxPlot`), and the rebuilt colour picker in all modules with a palette selector. 
+  * Added a section in the "Adding a New Module" vignette describing this pattern.
 * Fixed an initialization bug in `multiColorPicker()` due to string indexing rather than position, leading to out of bounds errors when a group label was an empty string.
 * Fixed axis titles not reflecting applied data adjustments in the `dittoViz_yPlot`, `dittoViz_scatterPlot`, and `linePlot` modules (#321). The annotation-persistence feature added in 0.3.0 was re-applying the previously captured title text on every rebuild, clobbering the freshly generated adjustment-aware label (e.g. `log2(units)`). Axis titles carrying an active adjustment are now always regenerated, while a manually edited title with no adjustment still persists and the dragged title position persists in all cases. `finalize_manual_edits()` gains a `regen_keys` argument to drive this. Axis titles are also regenerated (rather than persisted) when the plotted variable for that axis changes, via the new exported helper `reset_axis_title_text()`, since a manual title only makes sense for the variable it was written for. Shared axis titles in faceted `linePlot`/`dumbbellPlot` figures (built via `build_facet_annotations()`) are now tagged as axis annotations so their dragged position survives label changes; as a result they now pick up the axis-title font settings rather than the facet-title font settings.
 * The main plot title is now blank by default in the `dittoViz_yPlot` and `dittoViz_scatterPlot` modules (previously dittoViz's `main = "make"` auto-generated a title from the variable name and regenerated it on every re-render). Users can still add a title interactively by editing it on the plot.

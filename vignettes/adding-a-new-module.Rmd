@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 
 This checklist walks through how to add a new plotting module to **VizModules** so it matches the package's organization, documentation, and testing standards.
 
+**VizModules** modules are designed to be a joy to use, which requires some discipline to implement in a consistent way. This checklist may seem daunting at first glance, but most of the items already have helpers to implement them. 
+
+And a fair few are to keep you from shooting yourself in the foot and avoiding most of the common module pitfalls.
+
 ## Quick Checklist
 
 - [ ] Pick the plot function you are wrapping and name your module accordingly:
@@ -31,8 +35,10 @@ This checklist walks through how to add a new plotting module to **VizModules** 
   - `@section Plot parameters and defaults:` - Document all exposed parameters with UI labels and defaults
   - `@section Plot parameters implementing new functionality:` - Document any new or plotly-specific controls (axes, ticks, reference lines, etc)
 - [ ] Add an example app that uses the module twice to prove multi-instance behavior.
+- [ ] Wire up reactive `defaults` support so parent apps can drive parameters from app state (see [Supporting Reactive Defaults]).
+- [ ] Freeze any input you update from the server so the plot does not render twice (see [Updating Your Own Inputs From the Server]).
 - [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
-- [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
+- [ ] Cover the base plotting function with `testthat`; cover the module/app with `testServer` where feasible.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
 - [ ] **Never use `eval(str2expression())` on raw user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()` instead (see [Sanitizing User-Provided Expressions] below).
 
@@ -138,7 +144,7 @@ myPlotApp <- function(data_list = NULL) {
 ## Testing Requirements
 
 - [ ] `testthat`: cover the base plotting function's core behavior and arguments (data handling, grouping, palette handling, etc.).
-- [ ] `shinytest2`: cover the module/app (rendering inputs, updating outputs, download buttons if present).
+- [ ] `testServer`: cover the module/app where feasible.
 - [ ] Place tests under `tests/testthat/` with clear file names (`test-<plot>.R`, `test-<plot>-app.R`).
 - [ ] Ensure tests run headless and deterministically (seed randomness where needed).
 - [ ] For new plotting functions, add dedicated `testthat` coverage of the plotting helper itself (input validation, defaults, edge cases) in addition to the module tests.
@@ -151,11 +157,87 @@ myPlotApp <- function(data_list = NULL) {
 - [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
 - [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
 
+## Supporting Reactive Defaults
+
+An entry in `defaults` may be a `reactive()` rather than a fixed value, so a
+parent app can make an input follow its state without the double render that
+`update*Input()` causes (see
+`vignette("defaults-and-hiding", package = "VizModules")`). Two lines wire this
+up, and they are required in every new module.
+
+- [ ] Make the first statement of your `moduleServer()` body build the parameter
+  store:
+
+    ```r
+    params <- setup_reactive_defaults(defaults, input, session)
+    ```
+
+- [ ] Pass that store to `setup_auto_update_logic()` inside your generate
+  reactive:
+
+    ```r
+    generate_myPlot <- reactive({
+        isolate_fn <- setup_auto_update_logic(input, params)
+        ...
+        main = isolate_fn(input$main)
+    })
+    ```
+
+Easy. `setup_reactive_defaults()` returns `NULL` when no
+entry is reactive, in which case `isolate_fn` is the plain `identity()`/`isolate()`
+it has always been. When a store is present, `isolate_fn` recognises direct
+`input$<key>` reads and resolves them from the store instead, so your existing
+read sites need no edits, as long as they stay in the
+`isolate_fn(input$<key>)` form. A wrapped read such as
+`isolate_fn(as.numeric(input$size))` cannot be recognised and will not support a
+reactive default; do the conversion outside the call instead.
+
+Your `*InputsUI()` and reset observer need no special handling: both go through
+`get_default()`, which resolves reactive entries on its own. Reset therefore
+restores the reactive's current value.
+
+## Updating Your Own Inputs From the Server
+
+Modules often derive a value on the server and push it back into one of their
+own controls, e.g. an auto-calculated y-axis range, a regenerated list of stat
+comparison pairs, a rebuilt colour picker. `update*Input()` is an asynchronous
+round-trip to the browser, so the plot renders **twice**: once immediately with
+the stale value, then again when the client echoes the new one. This is annoying as hell and can be avoided by freezing the input before you update it:
+
+- [ ] Call `freezeReactiveValue()` on the input immediately before you update it:
+
+    ```r
+    observeEvent(input$y.data, {
+        y_range <- .calculate_range(df = data(), data_col_y = input$y.data, grouping = FALSE)
+        if (!is.null(y_range)) {
+            freezeReactiveValue(input, "y.max")
+            freezeReactiveValue(input, "y.min")
+            updateNumericInput(session, "y.max", value = y_range$max)
+            updateNumericInput(session, "y.min", value = y_range$min)
+        }
+    })
+    ```
+
+Freezing pauses everything that reads that input until the real value arrives,
+so the intermediate render never happens. Three rules:
+
+- **Freeze only when you are definitely going to update.** A frozen input that
+  never receives a value leaves the plot suspended. Keep the freeze inside the
+  same `if` branch as the `update*Input()` call.
+- **For a widget rebuilt by `renderUI()`, freeze inside the render function**,
+  after reading the old value and before returning the widget. Putting it in an
+  observer instead would freeze even when the output is suspended (hidden tab),
+  and nothing would ever thaw it.
+- **Do not add a catch-all `tryCatch()` to your `renderPlotly()`.** The pause is
+  delivered as a silent condition; swallowing it turns a clean pause into a blank
+  plot. Guard with `req()` and explicit `if` branches instead.
+
+This does not apply to the reset observer, where a burst of updates is expected.
+
 ## Persisting Manual Layout Edits
 
 Every VizModules plot is interactively editable: users can drag the legend,
-reposition or re-text annotations, drag the (draggable) axis titles, and slide a
-continuous-colour legend (colorbar) to their heart's content. 
+reposition or re-text annotations, drag the (draggable) axis titles to their heart's content. 
 
 Because each module rebuilds its figure from scratch on every input change, 
 those hand-made tweaks would be lost on the next re-render unless they are captured and re-applied.

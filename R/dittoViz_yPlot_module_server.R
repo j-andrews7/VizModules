@@ -10,7 +10,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the yPlot module.
 #'
 #' @import shiny
@@ -31,6 +33,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -88,6 +92,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             req(input$group.by)
             color_by <- if (!is.null(input$color.by) && nzchar(input$color.by)) input$color.by else NULL
             pair_strings <- generate_pair_strings(data(), input$group.by, color_by)
+            # Pause readers until the client echoes the cleared selection, otherwise
+            # the plot renders once now and again when that echo lands.
+            freezeReactiveValue(input, "stat.pairs")
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -156,6 +163,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -285,6 +296,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         observeEvent(input$var, {
             y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
+                # Pause readers until the new limits arrive from the client, else the
+                # plot renders once with the stale limits and again on their echo.
+                freezeReactiveValue(input, "y.max")
+                freezeReactiveValue(input, "y.min")
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -300,7 +315,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         # Generate yPlot reactive
         generate_yPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Parse inputs that might need conversion
             split.by <- .na_to_null(isolate_fn(input$split.by))

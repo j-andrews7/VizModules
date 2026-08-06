@@ -11,7 +11,9 @@
 #' @param hide.tabs `character` vector of tab names to hide within the module. Default is NULL.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #'
 #' @return The `moduleServer` function for the DensityPlot module.
 #'
@@ -27,6 +29,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -86,6 +90,10 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -155,7 +163,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
         generate_DensityPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {

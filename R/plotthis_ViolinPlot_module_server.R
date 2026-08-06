@@ -10,7 +10,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the ViolinPlot module.
 #'
 #' @import shiny
@@ -27,6 +29,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -81,6 +85,10 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             }
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -173,6 +181,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
             pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
+            # Pause readers until the client echoes the cleared selection, otherwise
+            # the plot renders once now and again when that echo lands.
+            freezeReactiveValue(input, "stat.pairs")
             updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
@@ -180,6 +191,10 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
+                # Pause readers until the new limits arrive from the client, else the
+                # plot renders once with the stale limits and again on their echo.
+                freezeReactiveValue(input, "y.max")
+                freezeReactiveValue(input, "y.min")
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -200,7 +215,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         }, ignoreInit = FALSE)
 
         generate_ViolinPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Facet By Null option Upstream:
             facet.by <- NULL

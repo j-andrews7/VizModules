@@ -205,9 +205,17 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #' @param input The Shiny input object from the module server,
 #'   should have both `auto.update` (boolean) and `update` (button) inputs.
-#' @return A function that wraps reactive expressions. Returns `identity` if auto-update
-#'   is enabled (expressions will be reactive), or `isolate` if auto-update is disabled
-#'   (expressions will not trigger reactivity).
+#' @param params Optional reactive-defaults store from [setup_reactive_defaults()],
+#'   or `NULL`. When supplied, an `input$<key>` read whose `key` is backed by the
+#'   store resolves from the store instead of the client input, so a parameter
+#'   driven by the parent app updates in a single render.
+#' @return A function that wraps reactive expressions. With `params = NULL` this is
+#'   `identity` if auto-update is enabled (expressions will be reactive), or `isolate`
+#'   if auto-update is disabled (expressions will not trigger reactivity). With a
+#'   store supplied it is a wrapper with the same isolation semantics that additionally
+#'   redirects store-backed `input$<key>` reads.
+#'
+#' @seealso [setup_reactive_defaults()]
 #'
 #' @details
 #' This function consolidates the following common pattern:
@@ -257,7 +265,7 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #'     shinyApp(ui, server)
 #' }
-setup_auto_update_logic <- function(input) {
+setup_auto_update_logic <- function(input, params = NULL) {
     auto_update <- input$auto.update
     req(!is.null(auto_update))
 
@@ -266,7 +274,21 @@ setup_auto_update_logic <- function(input) {
         input$update
     }
 
-    if (auto_update) identity else isolate
+    if (is.null(params)) {
+        return(if (auto_update) identity else isolate)
+    }
+
+    function(x) {
+        key <- .input_key(substitute(x))
+
+        if (!is.null(key) && params$has(key)) {
+            if (auto_update) params$get(key) else isolate(params$get(key))
+        } else if (auto_update) {
+            x
+        } else {
+            isolate(x)
+        }
+    }
 }
 
 

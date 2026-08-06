@@ -4,16 +4,23 @@
 \alias{setup_auto_update_logic}
 \title{Set up auto-update/isolate logic for reactive contexts}
 \usage{
-setup_auto_update_logic(input)
+setup_auto_update_logic(input, params = NULL)
 }
 \arguments{
 \item{input}{The Shiny input object from the module server,
 should have both \code{auto.update} (boolean) and \code{update} (button) inputs.}
+
+\item{params}{Optional reactive-defaults store from \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}},
+or \code{NULL}. When supplied, an \verb{input$<key>} read whose \code{key} is backed by the
+store resolves from the store instead of the client input, so a parameter
+driven by the parent app updates in a single render.}
 }
 \value{
-A function that wraps reactive expressions. Returns \code{identity} if auto-update
-is enabled (expressions will be reactive), or \code{isolate} if auto-update is disabled
-(expressions will not trigger reactivity).
+A function that wraps reactive expressions. With \code{params = NULL} this is
+\code{identity} if auto-update is enabled (expressions will be reactive), or \code{isolate}
+if auto-update is disabled (expressions will not trigger reactivity). With a
+store supplied it is a wrapper with the same isolation semantics that additionally
+redirects store-backed \verb{input$<key>} reads.
 }
 \description{
 A helper function that encapsulates the common pattern of handling auto-update
@@ -65,6 +72,9 @@ if (interactive()) {
 
     shinyApp(ui, server)
 }
+}
+\seealso{
+\code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}
 }
 \author{
 Jared Andrews
