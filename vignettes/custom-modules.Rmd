@@ -207,6 +207,6 @@ A common symptom of namespace issues is that inputs seem to have no effect.
 
 5. **Consider composability**: Design your wrappers so they could potentially be wrapped by even higher-level modules.
 
-6. **Prefer reactive `defaults` over `update*Input()`**: To drive a base module parameter from your wrapper's state, pass a `reactive()` in `defaults`. Pushing values with `update*Input()` costs an extra render on every change. When you must update one of your *own* inputs from the server, call `freezeReactiveValue()` on it first so readers pause instead of rendering with the stale value.
+6. **Prefer reactive `defaults` over `update*Input()`**: To drive a base module parameter from your wrapper's state, pass a `reactive()` in `defaults`. Pushing values with `update*Input()` costs an extra render on every change. When you must update one of your *own* inputs from the server, call `freezeReactiveValue()` on it first so readers pause instead of rendering with the stale value (see the "Updating Your Own Inputs From the Server" section in `vignette("adding-a-new-module", package = "VizModules")` for more info).
 
 See any of the existing modules for clear reference examples.

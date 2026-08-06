@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 
 This checklist walks through how to add a new plotting module to **VizModules** so it matches the package's organization, documentation, and testing standards.
 
+**VizModules** modules are designed to be a joy to use, which requires some discipline to implement in a consistent way. This checklist may seem daunting at first glance, but most of the items already have helpers to implement them. 
+
+And a fair few are to keep you from shooting yourself in the foot and avoiding most of the common module pitfalls.
+
 ## Quick Checklist
 
 - [ ] Pick the plot function you are wrapping and name your module accordingly:
@@ -34,7 +38,7 @@ This checklist walks through how to add a new plotting module to **VizModules** 
 - [ ] Wire up reactive `defaults` support so parent apps can drive parameters from app state (see [Supporting Reactive Defaults]).
 - [ ] Freeze any input you update from the server so the plot does not render twice (see [Updating Your Own Inputs From the Server]).
 - [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
-- [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
+- [ ] Cover the base plotting function with `testthat`; cover the module/app with `testServer` where feasible.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
 - [ ] **Never use `eval(str2expression())` on raw user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()` instead (see [Sanitizing User-Provided Expressions] below).
 
@@ -140,7 +144,7 @@ myPlotApp <- function(data_list = NULL) {
 ## Testing Requirements
 
 - [ ] `testthat`: cover the base plotting function's core behavior and arguments (data handling, grouping, palette handling, etc.).
-- [ ] `shinytest2`: cover the module/app (rendering inputs, updating outputs, download buttons if present).
+- [ ] `testServer`: cover the module/app where feasible.
 - [ ] Place tests under `tests/testthat/` with clear file names (`test-<plot>.R`, `test-<plot>-app.R`).
 - [ ] Ensure tests run headless and deterministically (seed randomness where needed).
 - [ ] For new plotting functions, add dedicated `testthat` coverage of the plotting helper itself (input validation, defaults, edge cases) in addition to the module tests.
@@ -179,10 +183,10 @@ up, and they are required in every new module.
     })
     ```
 
-That is the whole change. `setup_reactive_defaults()` returns `NULL` when no
-entry is reactive, in which case `isolate_fn` is the plain `identity`/`isolate`
+Easy. `setup_reactive_defaults()` returns `NULL` when no
+entry is reactive, in which case `isolate_fn` is the plain `identity()`/`isolate()`
 it has always been. When a store is present, `isolate_fn` recognises direct
-`input$<key>` reads and resolves them from the store instead — so your existing
+`input$<key>` reads and resolves them from the store instead, so your existing
 read sites need no edits, as long as they stay in the
 `isolate_fn(input$<key>)` form. A wrapped read such as
 `isolate_fn(as.numeric(input$size))` cannot be recognised and will not support a
@@ -195,10 +199,10 @@ restores the reactive's current value.
 ## Updating Your Own Inputs From the Server
 
 Modules often derive a value on the server and push it back into one of their
-own controls — an auto-calculated y-axis range, a regenerated list of stat
+own controls, e.g. an auto-calculated y-axis range, a regenerated list of stat
 comparison pairs, a rebuilt colour picker. `update*Input()` is an asynchronous
 round-trip to the browser, so the plot renders **twice**: once immediately with
-the stale value, then again when the client echoes the new one.
+the stale value, then again when the client echoes the new one. This is annoying as hell and can be avoided by freezing the input before you update it:
 
 - [ ] Call `freezeReactiveValue()` on the input immediately before you update it:
 
@@ -233,8 +237,7 @@ This does not apply to the reset observer, where a burst of updates is expected.
 ## Persisting Manual Layout Edits
 
 Every VizModules plot is interactively editable: users can drag the legend,
-reposition or re-text annotations, drag the (draggable) axis titles, and slide a
-continuous-colour legend (colorbar) to their heart's content. 
+reposition or re-text annotations, drag the (draggable) axis titles to their heart's content. 
 
 Because each module rebuilds its figure from scratch on every input change, 
 those hand-made tweaks would be lost on the next re-render unless they are captured and re-applied.
