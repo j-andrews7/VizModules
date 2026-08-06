@@ -99,8 +99,8 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                     # client-side SVG export can read the chosen value directly.
                     selectInput(ns("pb_label_case"), "Panel labels:",
                         choices = c(
-                            "None" = "none",
                             "Uppercase (A, B, C)" = "upper",
+                            "None" = "none",
                             "Lowercase (a, b, c)" = "lower"
                         ),
                         selectize = FALSE

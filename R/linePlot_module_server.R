@@ -126,6 +126,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
 
+            # The rebuilt picker reports its value on a client round-trip. Pause
+            # readers until it does, so the plot renders once rather than twice.
+            freezeReactiveValue(input, "palette.colours")
+
             multiColorPicker(
                 ns("palette.colours"),
                 label = "Plot colors",
