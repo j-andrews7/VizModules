@@ -32,6 +32,7 @@ This checklist walks through how to add a new plotting module to **VizModules** 
   - `@section Plot parameters implementing new functionality:` - Document any new or plotly-specific controls (axes, ticks, reference lines, etc)
 - [ ] Add an example app that uses the module twice to prove multi-instance behavior.
 - [ ] Wire up reactive `defaults` support so parent apps can drive parameters from app state (see [Supporting Reactive Defaults]).
+- [ ] Freeze any input you update from the server so the plot does not render twice (see [Updating Your Own Inputs From the Server]).
 - [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
 - [ ] Cover the base plotting function with `testthat`; cover the module/app with `shinytest2`.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
@@ -190,6 +191,44 @@ reactive default; do the conversion outside the call instead.
 Your `*InputsUI()` and reset observer need no special handling: both go through
 `get_default()`, which resolves reactive entries on its own. Reset therefore
 restores the reactive's current value.
+
+## Updating Your Own Inputs From the Server
+
+Modules often derive a value on the server and push it back into one of their
+own controls — an auto-calculated y-axis range, a regenerated list of stat
+comparison pairs, a rebuilt colour picker. `update*Input()` is an asynchronous
+round-trip to the browser, so the plot renders **twice**: once immediately with
+the stale value, then again when the client echoes the new one.
+
+- [ ] Call `freezeReactiveValue()` on the input immediately before you update it:
+
+    ```r
+    observeEvent(input$y.data, {
+        y_range <- .calculate_range(df = data(), data_col_y = input$y.data, grouping = FALSE)
+        if (!is.null(y_range)) {
+            freezeReactiveValue(input, "y.max")
+            freezeReactiveValue(input, "y.min")
+            updateNumericInput(session, "y.max", value = y_range$max)
+            updateNumericInput(session, "y.min", value = y_range$min)
+        }
+    })
+    ```
+
+Freezing pauses everything that reads that input until the real value arrives,
+so the intermediate render never happens. Three rules:
+
+- **Freeze only when you are definitely going to update.** A frozen input that
+  never receives a value leaves the plot suspended. Keep the freeze inside the
+  same `if` branch as the `update*Input()` call.
+- **For a widget rebuilt by `renderUI()`, freeze inside the render function**,
+  after reading the old value and before returning the widget. Putting it in an
+  observer instead would freeze even when the output is suspended (hidden tab),
+  and nothing would ever thaw it.
+- **Do not add a catch-all `tryCatch()` to your `renderPlotly()`.** The pause is
+  delivered as a silent condition; swallowing it turns a clean pause into a blank
+  plot. Guard with `req()` and explicit `if` branches instead.
+
+This does not apply to the reset observer, where a burst of updates is expected.
 
 ## Persisting Manual Layout Edits
 
