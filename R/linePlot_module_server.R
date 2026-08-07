@@ -56,9 +56,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         observeEvent(input$x.value, {
             req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                hideInput(session, c("error.bar.width", "error.bar.colour", "error.bar"))
+                hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
             } else {
-                showInput(session, c("error.bar", "error.bar.width", "error.bar.colour"))
+                show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
             }
         })
 
@@ -69,7 +69,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    hideInput(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
                 })
             })
@@ -189,12 +189,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                showInput(session, c(
+                show_input(session, c(
                     "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
                     "facet.nrow", "facet.ncol"
                 ))
             } else {
-                hideInput(session, c(
+                hide_input(session, c(
                     "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
                     "facet.nrow", "facet.ncol"
                 ))
