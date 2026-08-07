@@ -60,7 +60,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hideInput(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -69,9 +69,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Toggle text.position slider visibility based on label.on.y.axis switch
         observeEvent(input$label.on.y.axis, {
             if (isTRUE(input$label.on.y.axis)) {
-                .hide_input(session, "text.position")
+                hideInput(session, "text.position")
             } else {
-                .show_input(session, "text.position")
+                showInput(session, "text.position")
             }
         })
 
@@ -316,9 +316,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                showInput(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hideInput(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -327,9 +327,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         observeEvent(list(input$fill.by, data()), {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
             if (fill_by_is_numeric()) {
-                .show_input(session, fill.scale.inputs)
+                showInput(session, fill.scale.inputs)
             } else {
-                .hide_input(session, fill.scale.inputs)
+                hideInput(session, fill.scale.inputs)
             }
         }, ignoreInit = FALSE)
 

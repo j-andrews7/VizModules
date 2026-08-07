@@ -41,7 +41,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hideInput(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
                 })
             })

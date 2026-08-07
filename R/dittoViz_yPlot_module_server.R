@@ -42,7 +42,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hideInput(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "yPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -307,9 +307,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         observeEvent(input$split.by, {
             if (!is.null(input$split.by) && nzchar(input$split.by)) {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                showInput(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hideInput(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 

@@ -105,7 +105,7 @@ organize_inputs <- function(
 
         # Lay the inputs out in a single wrapping flex container rather than a set
         # of fixed Bootstrap rows. Each input lives in its own `.vizmodules-input-cell`
-        # so that hiding a cell (see `.hide_input()`) lets the remaining inputs
+        # so that hiding a cell (see `hideInput()`) lets the remaining inputs
         # reflow and pack together with no empty gaps.
         cell.style <- sprintf(
             paste0(
@@ -151,9 +151,15 @@ organize_inputs <- function(
 #' @return Invisibly `NULL`, called for the side effect of running client-side JS.
 #'
 #' @importFrom shinyjs runjs
-#' @keywords internal
-#' @noRd
-.toggle_input_cell <- function(session, ids, show) {
+#' @export
+#' @author Jared Andrews
+#' @seealso [hideInput()], [showInput()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server, e.g. from an observeEvent():
+#' toggleInputCell(session, "size", show = input$show.size)
+#' }
+toggleInputCell <- function(session, ids, show) {
     if (length(ids) == 0) {
         return(invisible(NULL))
     }
@@ -174,22 +180,34 @@ organize_inputs <- function(
 
 #' Hide the grid cells wrapping module inputs
 #'
-#' @inheritParams .toggle_input_cell
-#' @return Invisibly `NULL`.
-#' @keywords internal
-#' @noRd
-.hide_input <- function(session, ids) {
-    .toggle_input_cell(session, ids, show = FALSE)
+#' @inheritParams toggleInputCell
+#' @inherit toggleInputCell description return
+#' @export
+#' @author Jared Andrews
+#' @seealso [showInput()], [toggleInputCell()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server:
+#' hideInput(session, c("size", "opacity"))
+#' }
+hideInput <- function(session, ids) {
+    toggleInputCell(session, ids, show = FALSE)
 }
 
 #' Show the grid cells wrapping module inputs
 #'
-#' @inheritParams .toggle_input_cell
-#' @return Invisibly `NULL`.
-#' @keywords internal
-#' @noRd
-.show_input <- function(session, ids) {
-    .toggle_input_cell(session, ids, show = TRUE)
+#' @inheritParams toggleInputCell
+#' @inherit toggleInputCell description return
+#' @export
+#' @author Jared Andrews
+#' @seealso [hideInput()], [toggleInputCell()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server:
+#' showInput(session, c("size", "opacity"))
+#' }
+showInput <- function(session, ids) {
+    toggleInputCell(session, ids, show = TRUE)
 }
 
 

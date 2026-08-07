@@ -281,16 +281,16 @@ myModuleServer <- function(id, data_reactive) {
 }
 ```
 
-Note that `shinyjs::hide()` / `shinyjs::show()` act on the input element itself. For the reflow behaviour (no empty gap), use the internal `.hide_input()` / `.show_input()` helpers instead, which target the wrapping cell in the flexbox grid:
+Note that `shinyjs::hide()` / `shinyjs::show()` act on the input element itself. For the reflow behaviour (no empty gap), use the `hideInput()` / `showInput()` helpers instead, which target the wrapping cell in the flexbox grid:
 
 ```{r dynamic-hide-reflow}
 myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
         observe({
             if (nzchar(input$size.by)) {
-                VizModules:::.hide_input(session, "size")
+                VizModules::hideInput(session, "size")
             } else {
-                VizModules:::.show_input(session, "size")
+                VizModules::showInput(session, "size")
             }
         })
     })
