@@ -11,7 +11,9 @@
 #' @param factor.char.cols Logical. When `TRUE`, all character columns in
 #'   `data` are converted to factors before the table is rendered. This
 #'   causes DT to display select-box filters for those columns instead of
-#'   free-text search boxes. Defaults to `TRUE`.
+#'   free-text search boxes. Note that DT serialises every level of a factor
+#'   column into the page, so this is best avoided for columns with very many
+#'   distinct values. Defaults to `TRUE`.
 #' @param page.length Integer. The default number of rows shown per page.
 #'   Defaults to `10`.
 #' @param col.visibility Logical. When `TRUE`, adds a DT "Columns" button
@@ -24,6 +26,10 @@
 #'   them. Set `col.visibility = TRUE` if users should be able to bring them
 #'   back; otherwise they stay hidden. Names that do not occur in `data` are
 #'   ignored with a warning. Defaults to `NULL` (show every column).
+#' @param filter.max.options Integer. The maximum number of options a factor
+#'   column's filter dropdown renders at once. Typing in the box narrows the
+#'   list, so a low cap keeps high-cardinality columns usable. Defaults to
+#'   `50`.
 #'
 #' @return A `reactive` expression that evaluates to the filtered subset of
 #'   `data` based on the current DT selection/filter state. All columns are
@@ -59,8 +65,12 @@
 #'
 #' if (interactive()) shinyApp(ui, server)
 dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10,
-                             col.visibility = FALSE, hide.columns = NULL) {
+                             col.visibility = FALSE, hide.columns = NULL,
+                             filter.max.options = 50) {
     stopifnot(is.reactive(data))
+    if (!is.numeric(filter.max.options) || length(filter.max.options) != 1 || filter.max.options < 1) {
+        stop("'filter.max.options' must be a single positive number.", call. = FALSE)
+    }
     if (!is.null(hide.columns) && !is.character(hide.columns) && !is.numeric(hide.columns)) {
         stop("'hide.columns' must be a character vector of column names or a ",
             "numeric vector of column positions.",
@@ -94,7 +104,10 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             }
             DT::datatable(
                 d,
-                filter = "top",
+                filter = list(
+                    position = "top",
+                    settings = list(select = list(maxOptions = filter.max.options))
+                ),
                 selection = "none",
                 rownames = FALSE,
                 extensions = dt_ext,

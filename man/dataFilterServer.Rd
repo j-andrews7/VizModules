@@ -10,7 +10,8 @@ dataFilterServer(
   factor.char.cols = TRUE,
   page.length = 10,
   col.visibility = FALSE,
-  hide.columns = NULL
+  hide.columns = NULL,
+  filter.max.options = 50
 )
 }
 \arguments{
@@ -22,7 +23,9 @@ dataFilterServer(
 \item{factor.char.cols}{Logical. When \code{TRUE}, all character columns in
 \code{data} are converted to factors before the table is rendered. This
 causes DT to display select-box filters for those columns instead of
-free-text search boxes. Defaults to \code{TRUE}.}
+free-text search boxes. Note that DT serialises every level of a factor
+column into the page, so this is best avoided for columns with very many
+distinct values. Defaults to \code{TRUE}.}
 
 \item{page.length}{Integer. The default number of rows shown per page.
 Defaults to \code{10}.}
@@ -38,6 +41,11 @@ They are still present in the returned data, so plotting modules can use
 them. Set \code{col.visibility = TRUE} if users should be able to bring them
 back; otherwise they stay hidden. Names that do not occur in \code{data} are
 ignored with a warning. Defaults to \code{NULL} (show every column).}
+
+\item{filter.max.options}{Integer. The maximum number of options a factor
+column's filter dropdown renders at once. Typing in the box narrows the
+list, so a low cap keeps high-cardinality columns usable. Defaults to
+\code{50}.}
 }
 \value{
 A \code{reactive} expression that evaluates to the filtered subset of
