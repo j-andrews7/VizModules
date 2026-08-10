@@ -162,6 +162,8 @@ reference:
       - organize_inputs
       - setup_auto_update_logic
       - setup_reactive_defaults
+      - viz_select_input
+      - update_viz_select
 
   - title: "Uniform UI Inputs"
     desc: "Standardised input builders and reset functions shared across modules."
