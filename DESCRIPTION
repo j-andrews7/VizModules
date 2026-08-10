@@ -39,7 +39,7 @@ Imports:
     htmltools,
     jsonlite,
     methods,
-    shinyWidgets,
+    shinyWidgets (>= 0.7.0),
     htmlwidgets,
     zip
 Encoding: UTF-8
