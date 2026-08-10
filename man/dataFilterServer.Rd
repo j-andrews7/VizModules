@@ -9,7 +9,8 @@ dataFilterServer(
   data,
   factor.char.cols = TRUE,
   page.length = 10,
-  col.visibility = FALSE
+  col.visibility = FALSE,
+  hide.columns = NULL
 )
 }
 \arguments{
@@ -29,12 +30,21 @@ Defaults to \code{10}.}
 \item{col.visibility}{Logical. When \code{TRUE}, adds a DT "Columns" button
 (Buttons extension \code{colvis}) so users can show/hide individual columns.
 Defaults to \code{FALSE}.}
+
+\item{hide.columns}{Character vector of column names (or a numeric vector of
+column positions) to hide when the table is first drawn. Hidden columns get
+no filter box, which keeps the interface focused on the columns that matter.
+They are still present in the returned data, so plotting modules can use
+them. Set \code{col.visibility = TRUE} if users should be able to bring them
+back; otherwise they stay hidden. Names that do not occur in \code{data} are
+ignored with a warning. Defaults to \code{NULL} (show every column).}
 }
 \value{
 A \code{reactive} expression that evaluates to the filtered subset of
-\code{data} based on the current DT selection/filter state. Pass this
-reactive to a plotting module's \code{data} argument to keep the plot in
-sync with the table filters.
+\code{data} based on the current DT selection/filter state. All columns are
+retained, including any hidden via \code{hide.columns}. Pass this reactive to a
+plotting module's \code{data} argument to keep the plot in sync with the table
+filters.
 }
 \description{
 Renders an interactive DT table with column-level filters and returns a
@@ -53,7 +63,13 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
     data <- reactive(iris)
-    filtered <- dataFilterServer("filter", data, factor.char.cols = TRUE)
+    # Petal columns are hidden on load, but the "Columns" button lets users
+    # bring them back, and they remain in the returned data either way.
+    filtered <- dataFilterServer("filter", data,
+        factor.char.cols = TRUE,
+        hide.columns = c("Petal.Length", "Petal.Width"),
+        col.visibility = TRUE
+    )
     output$rows <- renderPrint(nrow(filtered()))
 }
 

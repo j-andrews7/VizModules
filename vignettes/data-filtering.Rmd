@@ -60,12 +60,42 @@ data (reactive) --> character cols to factors --> DT table (user filters)
 | `data` | -- | A **reactive** containing the data frame to display and filter. |
 | `factor.char.cols` | `TRUE` | Convert character columns to factors so they get drop-down filters. |
 | `page.length` | `10` | Rows shown per page. |
+| `col.visibility` | `FALSE` | Add a "Columns" button so users can show/hide individual columns. |
+| `hide.columns` | `NULL` | Column names (or positions) to hide when the table is first drawn. |
 
 ### Return value
 
 A **reactive** that evaluates to the filtered subset of `data`. This is the key
 to the module's flexibility: a reactive can be read by as many consumers as you
 like, so the same filtered data can drive one plot or several.
+
+## Showing fewer columns
+
+Wide data frames make for a busy table and a wall of filter boxes. Pass the
+columns you don't want on screen to `hide.columns` and the table is drawn
+without them -- no column, no filter box:
+
+```{r hide-columns}
+filtered <- dataFilterServer("filter", reactive(example_bar),
+    hide.columns = c("internal_id", "batch")
+)
+```
+
+Two things to keep in mind:
+
+- **Hiding is display-only.** The returned reactive still contains every
+  column, so a plotting module can map a hidden column to an aesthetic even
+  though users never see it in the table.
+- **Hidden stays hidden unless you say otherwise.** Add `col.visibility = TRUE`
+  to get DT's "Columns" button, which lets users switch any column -- including
+  the ones you hid -- back on.
+
+```{r hide-columns-toggle}
+filtered <- dataFilterServer("filter", reactive(example_bar),
+    hide.columns = c("internal_id", "batch"),
+    col.visibility = TRUE
+)
+```
 
 ## A minimal example
 
