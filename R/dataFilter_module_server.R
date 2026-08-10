@@ -35,7 +35,7 @@
 #'
 #' @export
 #' @author Jacob Martin
-#' @seealso [dataFilterUI()]
+#' @seealso [dataFilterUI()], [resolve_column_targets()]
 #' @examples
 #' library(shiny)
 #' library(VizModules)
@@ -88,7 +88,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
                 dt_opts$dom <- "Blfrtip"
                 dt_opts$buttons <- list(list(extend = "colvis", text = "Columns"))
             }
-            hidden <- .resolve_hidden_cols(names(d), hide.columns)
+            hidden <- resolve_column_targets(d, hide.columns)
             if (length(hidden) > 0) {
                 dt_opts$columnDefs <- list(list(visible = FALSE, targets = hidden))
             }
@@ -118,43 +118,78 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
 }
 
 
-#' Translate hidden column names/positions into DT column targets
+#' Translate column names or positions into DT column targets
 #'
-#' Maps the `hide.columns` argument of [dataFilterServer()] onto the
-#' zero-based `targets` indices DataTables expects in a `columnDefs` entry.
-#' Zero-based because the table is rendered with `rownames = FALSE`, so the
-#' first data column is column 0.
+#' Maps a set of columns onto the zero-based `targets` indices DataTables
+#' expects inside a `columnDefs` entry. This is what [dataFilterServer()] uses
+#' to honour its `hide.columns` argument, but it is useful for any hand-rolled
+#' [DT::datatable()] where columns are referred to by name rather than by
+#' position -- hiding them, setting widths, disabling ordering, and so on.
 #'
-#' @param cols Character vector of the column names currently in the data.
-#' @param hide.columns `NULL`, a character vector of column names, or a
-#'   numeric vector of one-based column positions.
+#' Columns that do not exist are dropped with a warning rather than raising an
+#' error, so a table fed by a changing data frame keeps rendering when a column
+#' comes and goes.
+#'
+#' @param data A data frame, or a character vector of the column names in the
+#'   order they are passed to [DT::datatable()].
+#' @param columns `NULL`, a character vector of column names, or a numeric
+#'   vector of one-based column positions to resolve.
+#' @param rownames Logical. Whether the table is drawn with a row-names column
+#'   (the `rownames` argument of [DT::datatable()]). When `TRUE`, row names
+#'   occupy column 0 and every data column shifts one to the right, so the
+#'   returned targets are shifted to match. Defaults to `FALSE`.
 #'
 #' @return An integer vector of zero-based column indices, possibly empty.
-#'   Entries that do not match a column are dropped with a warning.
 #'
+#' @export
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_resolve_hidden_cols
-.resolve_hidden_cols <- function(cols, hide.columns) {
-    if (length(hide.columns) == 0) {
+#' @seealso [dataFilterServer()]
+#' @examples
+#' # Hide two columns of a plain DT table by name.
+#' targets <- resolve_column_targets(iris, c("Petal.Length", "Petal.Width"))
+#' targets
+#'
+#' if (interactive()) {
+#'     DT::datatable(
+#'         iris,
+#'         rownames = FALSE,
+#'         options = list(
+#'             columnDefs = list(list(visible = FALSE, targets = targets))
+#'         )
+#'     )
+#' }
+resolve_column_targets <- function(data, columns, rownames = FALSE) {
+    if (is.data.frame(data)) {
+        data <- names(data)
+    }
+    stopifnot(is.character(data))
+    if (!is.null(columns) && !is.character(columns) && !is.numeric(columns)) {
+        stop("'columns' must be a character vector of column names or a ",
+            "numeric vector of column positions.",
+            call. = FALSE
+        )
+    }
+
+    if (length(columns) == 0) {
         return(integer(0))
     }
 
-    if (is.numeric(hide.columns)) {
-        idx <- as.integer(hide.columns)
-        unmatched <- is.na(idx) | idx < 1L | idx > length(cols)
+    if (is.numeric(columns)) {
+        idx <- as.integer(columns)
+        unmatched <- is.na(idx) | idx < 1L | idx > length(data)
     } else {
-        idx <- match(as.character(hide.columns), cols)
+        idx <- match(as.character(columns), data)
         unmatched <- is.na(idx)
     }
 
     if (any(unmatched)) {
         warning(
-            "'hide.columns' entries not found in the data, ignoring: ",
-            paste(hide.columns[unmatched], collapse = ", "),
+            "Column(s) not found in the data, ignoring: ",
+            paste(columns[unmatched], collapse = ", "),
             call. = FALSE
         )
     }
 
-    unique(idx[!unmatched]) - 1L
+    # DT targets are zero-based, offset by the row-names column when shown.
+    unique(idx[!unmatched]) - 1L + isTRUE(rownames)
 }

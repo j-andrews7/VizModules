@@ -97,6 +97,26 @@ filtered <- dataFilterServer("filter", reactive(example_bar),
 )
 ```
 
+The name-to-position lookup behind `hide.columns` is exported as
+`resolve_column_targets()`, so you can reach for it in your own tables too.
+DataTables addresses columns in `columnDefs` by zero-based position; this turns
+column names into those positions (pass `rownames = TRUE` if your table shows a
+row-names column, which shifts everything over by one). Hiding is just one use
+- the same targets drive `width`, `orderable`, `className`, and friends:
+
+```{r resolve-helper}
+DT::datatable(
+    example_bar,
+    rownames = FALSE,
+    options = list(
+        columnDefs = list(list(
+            visible = FALSE,
+            targets = resolve_column_targets(example_bar, c("internal_id", "batch"))
+        ))
+    )
+)
+```
+
 ## A minimal example
 
 Pass the returned reactive straight into a plotting module's `data` argument.

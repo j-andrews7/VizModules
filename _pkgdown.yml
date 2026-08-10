@@ -136,6 +136,7 @@ reference:
     contents:
       - dataFilterServer
       - dataFilterUI
+      - resolve_column_targets
 
   - title: "Figure Builder Module"
     desc: "Multi-panel figure builder module."

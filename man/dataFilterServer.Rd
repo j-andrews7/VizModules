@@ -76,7 +76,7 @@ server <- function(input, output, session) {
 if (interactive()) shinyApp(ui, server)
 }
 \seealso{
-\code{\link[=dataFilterUI]{dataFilterUI()}}
+\code{\link[=dataFilterUI]{dataFilterUI()}}, \code{\link[=resolve_column_targets]{resolve_column_targets()}}
 }
 \author{
 Jacob Martin
