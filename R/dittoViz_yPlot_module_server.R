@@ -48,11 +48,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             })
         }
 
-        # Populate the (server-side) Y-data selector. Choices are pushed from the
-        # server so datasets with many numeric columns (e.g. genome-wide gene
-        # tables) stay searchable without serialising every option to the client.
-        # Only refresh when the set of numeric columns actually changes (not on
-        # every row-filter), to preserve the user's current selection.
+        # Keep the Y-data selector in step with the data. Only refresh when the set
+        # of numeric columns actually changes (not on every row-filter), to
+        # preserve the user's current selection.
         var_choice_cache <- reactiveVal(NULL)
         observeEvent(data(), {
             df <- data()
@@ -73,9 +71,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             } else {
                 default.var
             }
-            updateSelectizeInput(session, "var",
-                choices = num.cols, selected = selected.var, server = TRUE
-            )
+            update_viz_select(session, "var", choices = num.cols, selected = selected.var)
         }, ignoreNULL = TRUE)
 
         # Conditionally show/hide Stats tab based on plot type selection
@@ -195,28 +191,26 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 min.y <- 0
             }
 
-            # Data. `var` is a server-side selectize (see population observer
-            # above), so refresh via updateSelectizeInput with server = TRUE.
-            updateSelectizeInput(session, "var",
+            # Data
+            update_viz_select(session, "var",
                 choices = num.choices[nzchar(num.choices)],
-                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices),
-                server = TRUE)
-            updateSelectInput(session, "group.by",
+                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
-            updateSelectInput(session, "color.by",
+            update_viz_select(session, "color.by",
                 selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "shape.by",
+            update_viz_select(session, "shape.by",
                 selected = get_default(defaults, "shape.by", "", function(x) x == "" || x %in% char.choices))
 
 
             # Plot Type
-            updateCheckboxGroupInput(session, "plots",
+            update_viz_select(session, "plots",
                 selected = get_default(defaults, "plots", c("boxplot", "jitter")))
 
             # Adjustments
-            updateSelectInput(session, "var.adjustment",
+            update_viz_select(session, "var.adjustment",
                 selected = get_default(defaults, "var.adjustment", ""))
-            updateSelectInput(session, "var.adj.fxn",
+            update_viz_select(session, "var.adj.fxn",
                 selected = get_default(defaults, "var.adj.fxn", ""))
             updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
             updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
@@ -248,7 +242,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Violin
             updateNumericInput(session, "vlnplot.lineweight",
                 value = get_default(defaults, "vlnplot.lineweight", 0.5, is.numeric))
-            updateSelectInput(session, "vlnplot.scaling",
+            update_viz_select(session, "vlnplot.scaling",
                 selected = get_default(defaults, "vlnplot.scaling", "area"))
 
             # Ridge
@@ -258,7 +252,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 value = get_default(defaults, "ridgeplot.scale", 1.25, is.numeric))
             updateNumericInput(session, "ridgeplot.ymax.expansion",
                 value = get_default(defaults, "ridgeplot.ymax.expansion", NA, is.numeric))
-            updateSelectInput(session, "ridgeplot.shape",
+            update_viz_select(session, "ridgeplot.shape",
                 selected = get_default(defaults, "ridgeplot.shape", "smooth"))
             updateNumericInput(session, "ridgeplot.bins",
                 value = get_default(defaults, "ridgeplot.bins", 30, is.numeric))
@@ -266,9 +260,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 value = get_default(defaults, "ridgeplot.binwidth", NA, is.numeric))
 
             # Facet
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "split.adjust", selected = get_default(defaults, "split.adjust", "fixed"))
+            update_viz_select(session, "split.adjust", selected = get_default(defaults, "split.adjust", "fixed"))
             updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
 
@@ -280,7 +274,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             reset_legend_inputs(session, defaults)
 
             # Hover
-            updateSelectizeInput(session, "hover.data",
+            update_viz_select(session, "hover.data",
                 selected = get_default(defaults, "hover.data", "", function(x) x == "" || all(x %in% choices)))
             updateNumericInput(session, "hover.round.digits",
                 value = get_default(defaults, "hover.round.digits", 5, is.numeric))
