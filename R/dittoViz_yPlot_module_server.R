@@ -91,7 +91,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Pause readers until the client echoes the cleared selection, otherwise
             # the plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "stat.pairs")
-            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
         ns <- session$ns

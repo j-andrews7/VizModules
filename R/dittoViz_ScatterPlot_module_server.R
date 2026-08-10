@@ -223,32 +223,32 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
 
             # Data
-            updateSelectInput(session, "x.by",
+            update_viz_select(session, "x.by",
                 selected = get_default(defaults, "x.by", choices[2], function(x) x %in% choices)
             )
-            updateSelectInput(session, "y.by",
+            update_viz_select(session, "y.by",
                 selected = get_default(defaults, "y.by", choices[3], function(x) x %in% choices)
             )
-            updateSelectInput(session, "color.by",
+            update_viz_select(session, "color.by",
                 selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% choices)
             )
-            updateSelectInput(session, "shape.by",
+            update_viz_select(session, "shape.by",
                 selected = get_default(defaults, "shape.by", "", function(x) x == "" || x %in% choices)
             )
-            updateSelectizeInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% choices)
             )
 
             # Adjustments
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
-            updateSelectInput(session, "color.adjustment", selected = get_default(defaults, "color.adjustment", ""))
-            updateSelectInput(session, "x.adj.fxn", selected = get_default(defaults, "x.adj.fxn", ""))
-            updateSelectInput(session, "y.adj.fxn", selected = get_default(defaults, "y.adj.fxn", ""))
-            updateSelectInput(session, "color.adj.fxn", selected = get_default(defaults, "color.adj.fxn", ""))
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
+            update_viz_select(session, "color.adjustment", selected = get_default(defaults, "color.adjustment", ""))
+            update_viz_select(session, "x.adj.fxn", selected = get_default(defaults, "x.adj.fxn", ""))
+            update_viz_select(session, "y.adj.fxn", selected = get_default(defaults, "y.adj.fxn", ""))
+            update_viz_select(session, "color.adj.fxn", selected = get_default(defaults, "color.adj.fxn", ""))
 
             # Points
-            updateSelectInput(session, "size.by", selected = get_default(defaults, "size.by", ""))
+            update_viz_select(session, "size.by", selected = get_default(defaults, "size.by", ""))
             updateNumericInput(session, "size", value = get_default(defaults, "size", 1, is.numeric))
             updateNumericInput(session, "opacity", value = get_default(defaults, "opacity", 1, is.numeric))
             updateCheckboxInput(session, "show.others",
@@ -257,7 +257,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "split.show.all.others",
                 value = get_default(defaults, "split.show.all.others", TRUE, is.logical)
             )
-            updateSelectInput(session, "plot.order", selected = get_default(defaults, "plot.order", "unordered"))
+            update_viz_select(session, "plot.order", selected = get_default(defaults, "plot.order", "unordered"))
             updateTextInput(session, "shape.panel",
                 value = get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8")
             )
@@ -272,7 +272,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateColourInput(session, "contour.color",
                 value = get_default(defaults, "contour.color", "black")
             )
-            updateSelectInput(session, "contour.linetype",
+            update_viz_select(session, "contour.linetype",
                 selected = get_default(defaults, "contour.linetype", "solid")
             )
             updateColourInput(session, "single.point.color",
@@ -285,15 +285,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Facets
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
             updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
-            updateSelectInput(session, "multivar.split.dir",
+            update_viz_select(session, "multivar.split.dir",
                 selected = get_default(defaults, "multivar.split.dir", "col")
             )
-            updateSelectInput(session, "split.adjust.scales",
+            update_viz_select(session, "split.adjust.scales",
                 selected = get_default(defaults, "split.adjust.scales", "fixed")
             )
 
             # Annotations
-            updateSelectInput(session, "annotate.by",
+            update_viz_select(session, "annotate.by",
                 selected = get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices)
             )
             updateTextAreaInput(session, "highlight.points",
@@ -353,7 +353,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "max.value", value = get_default(defaults, "max.value", NA, is.numeric))
 
             # Trajectory
-            updateSelectInput(session, "trajectory.group.by",
+            update_viz_select(session, "trajectory.group.by",
                 selected = get_default(defaults, "trajectory.group.by", "", function(x) x == "" || x %in% choices)
             )
             updateTextInput(session, "add.trajectory.by.groups",
@@ -379,7 +379,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "do.contour",
                 value = get_default(defaults, "do.contour", FALSE, is.logical)
             )
-            updateSelectizeInput(session, "hover.data",
+            update_viz_select(session, "hover.data",
                 selected = get_default(defaults, "hover.data", "", function(x) x == "" || x %in% choices)
             )
             updateNumericInput(session, "hover.round.digits",

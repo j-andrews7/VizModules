@@ -128,11 +128,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palette_choices <- lapply(raw_choices, function(group) {
                     setNames(names(group), names(group))
                 })
-                selectInput(
+                viz_select_input(
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = default_gradient_palette, selectize = FALSE
+                    selected = default_gradient_palette
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
@@ -226,21 +226,21 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Data
             # Data Section
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
             )
 
             # Facet Section
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "free_y")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -248,13 +248,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "alpha.by",
+            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            update_viz_select(session, "alpha.by",
                 selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateMaterialSwitch(session, "alpha.reverse",

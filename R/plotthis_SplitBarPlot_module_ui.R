@@ -170,43 +170,43 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Values",
+            tipify(viz_select_input(ns("x.data"), "X Values",
                 selected = get_default(
                     defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices, selectize = FALSE
+                choices = num.choices
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(
-                selectInput(ns("y.data"), "Y Values",
+                viz_select_input(ns("y.data"), "Y Values",
                     selected = get_default(
                         defaults, "y.data", char.choices[2],
                         function(x) x %in% char.choices
                     ),
-                    choices = char.choices, selectize = FALSE
+                    choices = char.choices
                 ), "Select the categorical column to use for the Y axis groupings",
                 placement = "top", options = list(container = "body")
             ),
             # Changed from group.by to fill.by
-            tipify(selectInput(ns("fill.by"), "Fill By",
+            tipify(viz_select_input(ns("fill.by"), "Fill By",
                 selected = get_default(
                     defaults, "fill.by", choices[2],
                     function(x) x %in% choices
                 ),
-                choices = choices, selectize = FALSE
+                choices = choices
             ), documentParameters$fill_by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By",
+            tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c("", .facet_check(data)), selectize = FALSE
+                choices = c("", .facet_check(data))
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+            tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
                     defaults, "facet.scale", "free_y",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
+                choices = c("fixed", "free", "free_x", "free_y")
             ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Columns",
                 value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -221,9 +221,9 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(selectInput(ns("split.by"), "Split By",
+            tipify(viz_select_input(ns("split.by"), "Split By",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c(char.choices, ""), selectize = FALSE
+                choices = c(char.choices, "")
             ), documentParameters$split_by, placement = "top", options = list(container = "body")),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
@@ -237,9 +237,9 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("alpha.by"), "Alpha By",
+                viz_select_input(ns("alpha.by"), "Alpha By",
                     selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% num.choices),
-                    choices = c("", num.choices), selectize = FALSE
+                    choices = c("", num.choices)
                 ),
                 documentParameters$alpha_by,
                 placement = "top", options = list(container = "body")

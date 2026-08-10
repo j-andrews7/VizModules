@@ -145,30 +145,30 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         observeEvent(input$reset, {
             choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
-            updateSelectInput(session, "x.value",
+            update_viz_select(session, "x.value",
                 selected = get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
-            updateSelectInput(session, "y.value",
+            update_viz_select(session, "y.value",
                 selected = get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
-            updateSelectInput(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
-            updateSelectInput(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
+            update_viz_select(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
+            update_viz_select(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",
                 value = get_default(defaults, "order.by", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.x",
                 value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
                 value = get_default(defaults, "flip.y", FALSE, is.logical))
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
-            updateSelectInput(session, "facet.scales",
+            update_viz_select(session, "facet.scales",
                 selected = get_default(defaults, "facet.scales", "fixed"))
             updateNumericInput(session, "facet.nrow",
                 value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateNumericInput(session, "facet.ncol",
                 value = get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
                 value = get_default(defaults, "error.bar", TRUE, is.logical))
             updateNumericInput(session, "error.bar.width",
@@ -275,11 +275,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Checking that all columns are numeric for x and y adjustment to be available
             if (!all(vapply(d[x_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "x.adjustment", selected = "")
+                update_viz_select(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
             if (!all(vapply(d[y_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "y.adjustment", selected = "")
+                update_viz_select(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
 

@@ -115,19 +115,19 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateMaterialSwitch(session, "add.bars",
@@ -137,8 +137,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
             updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
             updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 0.5, is.numeric))
-            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "position", selected = get_default(defaults, "position", "identity"))
+            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            update_viz_select(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 

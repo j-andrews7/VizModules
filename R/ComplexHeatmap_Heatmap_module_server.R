@@ -215,23 +215,23 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             num.cols <- names(df)[vapply(df, is.numeric, logical(1))]
             id.choices <- c("", names(df)[vapply(df, function(x) !is.numeric(x), logical(1))])
 
-            updateSelectizeInput(session, "matrix.cols",
+            update_viz_select(session, "matrix.cols",
                 selected = get_default(defaults, "matrix.cols", num.cols, function(x) all(x %in% num.cols)))
-            updateSelectInput(session, "rowname.col",
+            update_viz_select(session, "rowname.col",
                 selected = get_default(defaults, "rowname.col", "", function(x) x %in% id.choices))
             updateTextInput(session, "name", value = get_default(defaults, "name", "value"))
             colourpicker::updateColourInput(session, "na_col", value = get_default(defaults, "na_col", "grey"))
 
-            updateSelectInput(session, "palette", selected = get_default(defaults, "palette", "Blue-White-Red"))
+            update_viz_select(session, "palette", selected = get_default(defaults, "palette", "Blue-White-Red"))
             updateCheckboxInput(session, "reverse.palette", value = get_default(defaults, "reverse.palette", FALSE, is.logical))
             updateCheckboxInput(session, "show_heatmap_legend", value = get_default(defaults, "show_heatmap_legend", TRUE, is.logical))
 
             updateCheckboxInput(session, "cluster_rows", value = get_default(defaults, "cluster_rows", TRUE, is.logical))
             updateCheckboxInput(session, "cluster_columns", value = get_default(defaults, "cluster_columns", TRUE, is.logical))
-            updateSelectInput(session, "clustering_distance_rows", selected = get_default(defaults, "clustering_distance_rows", "euclidean"))
-            updateSelectInput(session, "clustering_distance_columns", selected = get_default(defaults, "clustering_distance_columns", "euclidean"))
-            updateSelectInput(session, "clustering_method_rows", selected = get_default(defaults, "clustering_method_rows", "complete"))
-            updateSelectInput(session, "clustering_method_columns", selected = get_default(defaults, "clustering_method_columns", "complete"))
+            update_viz_select(session, "clustering_distance_rows", selected = get_default(defaults, "clustering_distance_rows", "euclidean"))
+            update_viz_select(session, "clustering_distance_columns", selected = get_default(defaults, "clustering_distance_columns", "euclidean"))
+            update_viz_select(session, "clustering_method_rows", selected = get_default(defaults, "clustering_method_rows", "complete"))
+            update_viz_select(session, "clustering_method_columns", selected = get_default(defaults, "clustering_method_columns", "complete"))
             updateCheckboxInput(session, "show_row_dend", value = get_default(defaults, "show_row_dend", TRUE, is.logical))
             updateCheckboxInput(session, "show_column_dend", value = get_default(defaults, "show_column_dend", TRUE, is.logical))
             updateNumericInput(session, "row_km", value = get_default(defaults, "row_km", 1, is.numeric))
@@ -241,8 +241,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             updateTextInput(session, "column_title", value = get_default(defaults, "column_title", ""))
             updateCheckboxInput(session, "show_row_names", value = get_default(defaults, "show_row_names", TRUE, is.logical))
             updateCheckboxInput(session, "show_column_names", value = get_default(defaults, "show_column_names", TRUE, is.logical))
-            updateSelectInput(session, "row_names_side", selected = get_default(defaults, "row_names_side", "right"))
-            updateSelectInput(session, "column_names_side", selected = get_default(defaults, "column_names_side", "bottom"))
+            update_viz_select(session, "row_names_side", selected = get_default(defaults, "row_names_side", "right"))
+            update_viz_select(session, "column_names_side", selected = get_default(defaults, "column_names_side", "bottom"))
             updateNumericInput(session, "column_names_rot", value = get_default(defaults, "column_names_rot", 90, is.numeric))
             updateNumericInput(session, "row_names_fontsize", value = get_default(defaults, "row_names_fontsize", 12, is.numeric))
             updateNumericInput(session, "column_names_fontsize", value = get_default(defaults, "column_names_fontsize", 12, is.numeric))

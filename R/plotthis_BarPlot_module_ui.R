@@ -191,38 +191,38 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
     "Data" = tagList(
-        tipify(selectInput(ns("x.data"), "X Values",
+        tipify(viz_select_input(ns("x.data"), "X Values",
         selected = get_default(defaults, "x.data", char.choices[2],
             function(x) x %in% char.choices),
-        choices = char.choices, selectize = FALSE
+        choices = char.choices
         ), documentParameters$x, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("y.data"), "Y Values",
+        tipify(viz_select_input(ns("y.data"), "Y Values",
         selected = get_default(defaults, "y.data", num.choices[2],
             function(x) x %in% num.choices),
-        choices = num.choices, selectize = FALSE
+        choices = num.choices
         ), documentParameters$y, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("group.by"), "Group By",
+        tipify(viz_select_input(ns("group.by"), "Group By",
         selected = get_default(defaults, "group.by", char.choices[2],
             function(x) x %in% c("", names(data))),
-        choices = c("", names(data)), selectize = FALSE
+        choices = c("", names(data))
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("fill.by"), "Fill By",
+        tipify(viz_select_input(ns("fill.by"), "Fill By",
         selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
-            choices = c("", names(data)), selectize = FALSE),
+            choices = c("", names(data))),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 
     "Facet" = tagList(
-        tipify(selectInput(ns("facet.by"), "Facet By",
+        tipify(viz_select_input(ns("facet.by"), "Facet By",
         selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c("", .facet_check(data)), selectize = FALSE
+        choices = c("", .facet_check(data))
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("facet.scale"), "Facet Scale",
+        tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
         selected = get_default(
             defaults, "facet.scale", "fixed",
             function(x) x %in% c("fixed", "free", "free_x", "free_y")
         ),
-        choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
+        choices = c("fixed", "free", "free_x", "free_y")
         ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
         tipify(numericInput(ns("facet.ncol"), "Columns",
         value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -233,9 +233,9 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
         value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(selectInput(ns("split.by"), "Split By",
+        tipify(viz_select_input(ns("split.by"), "Split By",
         selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, ""), selectize = FALSE
+        choices = c(char.choices, "")
         ), documentParameters$split_by, placement = "top", options = list(container = "body")),
         .uniform_subplot_spacing_inputs_ui(ns, defaults)
     ),

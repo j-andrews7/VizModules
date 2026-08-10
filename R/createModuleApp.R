@@ -109,8 +109,8 @@ createModuleApp <- function(inputs_ui_fn,
                 ),
                 hr(),
                 h4("Plot Settings"),
-                selectInput("plot_select", "Select Dataset:",
-                    choices = names(data_list), selectize = FALSE
+                viz_select_input("plot_select", "Select Dataset:",
+                    choices = names(data_list)
                 ),
                 helpText("Plot settings reset when switching datasets."),
                 uiOutput("plot_inputs_ui")
@@ -200,7 +200,7 @@ createModuleApp <- function(inputs_ui_fn,
 
         # Keep dataset selector in sync when new datasets are loaded
         observe({
-            updateSelectInput(session, "plot_select",
+            update_viz_select(session, "plot_select",
                 choices = names(rv$datasets)
             )
         })

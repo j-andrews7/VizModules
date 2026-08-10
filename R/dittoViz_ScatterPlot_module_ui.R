@@ -230,42 +230,42 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     # Broken up by sensible categories (e.g. "Data", "Point Styling")
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.by"), "X Data",
+            tipify(viz_select_input(ns("x.by"), "X Data",
                 choices = choices,
                 selected = get_default(
                     defaults, "x.by", choices[2],
                     function(x) x %in% choices
-                ), selectize = FALSE
+                )
             ), documentParameters$x.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.by"), "Y Data",
+            tipify(viz_select_input(ns("y.by"), "Y Data",
                 choices = choices,
                 selected = get_default(
                     defaults, "y.by", choices[3],
                     function(x) x %in% choices
-                ), selectize = FALSE
+                )
             ), documentParameters$y.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.by"), "Color By",
+            tipify(viz_select_input(ns("color.by"), "Color By",
                 choices = choices,
                 selected = get_default(
                     defaults, "color.by", "",
                     function(x) x %in% choices
-                ), selectize = FALSE
+                )
             ), documentParameters$color.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("size.by"), "Size By",
+            tipify(viz_select_input(ns("size.by"), "Size By",
                 choices = num.choices,
                 selected = get_default(
                     defaults, "size.by", "",
                     function(x) x == "" || x %in% num.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("shape.by"), "Shape By",
+            tipify(viz_select_input(ns("shape.by"), "Shape By",
                 choices = cat.choices,
                 selected = get_default(
                     defaults, "shape.by", "",
                     function(x) x %in% cat.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
-            tipify(selectizeInput(ns("split.by"), "Split By",
+            tipify(viz_select_input(ns("split.by"), "Split By",
                 choices = c("", .facet_check(data)),
                 selected = get_default(
                     defaults, "split.by", "",
@@ -276,47 +276,47 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$split.by, placement = "top", options = list(container = "body"))
         ),
         "Adjustments" = tagList(
-            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
+            tipify(viz_select_input(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
+            tipify(viz_select_input(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "y.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.adjustment"), "Color Adjustment",
+            tipify(viz_select_input(ns("color.adjustment"), "Color Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "color.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$color.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("x.adj.fxn"), "X Adjustment Function",
+            tipify(viz_select_input(ns("x.adj.fxn"), "X Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = get_default(
                     defaults, "x.adj.fxn", "",
                     function(x) x %in% adj.fxn.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$x.adj.fxn, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.adj.fxn"), "Y Adjustment Function",
+            tipify(viz_select_input(ns("y.adj.fxn"), "Y Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = get_default(
                     defaults, "y.adj.fxn", "",
                     function(x) x %in% adj.fxn.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$y.adj.fxn, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.adj.fxn"), "Color Adjustment Function",
+            tipify(viz_select_input(ns("color.adj.fxn"), "Color Adjustment Function",
                 choices = adj.fxn.choices,
                 selected = get_default(
                     defaults, "color.adj.fxn", "",
                     function(x) x %in% adj.fxn.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$color.adj.fxn, placement = "top", options = list(container = "body"))
         ),
         "Points" = tagList(
@@ -337,12 +337,12 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 "Show Split Others",
                 value = get_default(defaults, "split.show.all.others", TRUE, is.logical)
             ), documentParameters$split.show.all.others, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("plot.order"), "Plot Order",
+            tipify(viz_select_input(ns("plot.order"), "Plot Order",
                 choices = c("unordered", "increasing", "decreasing", "randomize"),
                 selected = get_default(
                     defaults, "plot.order", "unordered",
                     function(x) x %in% c("unordered", "increasing", "decreasing", "randomize")
-                ), selectize = FALSE
+                )
             ), documentParameters$plot.order, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("shape.panel"), "Shape Panel",
                 value = get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8")
@@ -358,7 +358,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(colourInput(ns("contour.color"), "Contour Color",
                 value = get_default(defaults, "contour.color", "black")
             ), documentParameters$contour.color, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("contour.linetype"), "Contour Linetype",
+            tipify(viz_select_input(ns("contour.linetype"), "Contour Linetype",
                 choices = c(
                     "solid", "dashed", "dotted", "dotdash",
                     "longdash", "twodash"
@@ -371,7 +371,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                             "longdash", "twodash"
                         )
                     }
-                ), selectize = FALSE
+                )
             ), documentParameters$contour.linetype, placement = "top", options = list(container = "body")),
             uiOutput(ns("color.panel.ui"))
         ),
@@ -384,20 +384,20 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 step = 1, min = 0,
                 value = get_default(defaults, "split.ncol", NA, is.numeric)
             ), documentParameters$split.ncol, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("multivar.split.dir"), "Multivar Split Dir",
+            tipify(viz_select_input(ns("multivar.split.dir"), "Multivar Split Dir",
                 choices = c("col", "row"),
                 selected = get_default(
                     defaults, "multivar.split.dir", "col",
                     function(x) x %in% c("col", "row")
-                ), selectize = FALSE
+                )
             ), documentParameters$multivar.split.dir, placement = "top", options = list(container = "body")),
             tipify(
-                selectInput(ns("split.adjust.scales"), "Facet Scales",
+                viz_select_input(ns("split.adjust.scales"), "Facet Scales",
                     choices = c("fixed", "free", "free_x", "free_y"),
                     selected = get_default(
                         defaults, "split.adjust.scales", "fixed",
                         function(x) x %in% c("fixed", "free", "free_x", "free_y")
-                    ), selectize = FALSE
+                    )
                 ), "Control whether facet panels share the same axis scales or allow them to vary independently",
                 placement = "top", options = list(container = "body")
             ),
@@ -405,12 +405,12 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Annotations" = tagList(
             tipify(
-                selectInput(ns("annotate.by"), "Annotate By",
+                viz_select_input(ns("annotate.by"), "Annotate By",
                     choices = choices,
                     selected = get_default(
                         defaults, "annotate.by", "",
                         function(x) x %in% choices
-                    ), selectize = FALSE
+                    )
                 ), "Select a column whose values will be used to identify points for highlighting and annotation",
                 placement = "top", options = list(container = "body")
             ),
@@ -550,12 +550,12 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             ), documentParameters$max.value, placement = "top", options = list(container = "body"))
         ),
         "Trajectory" = tagList(
-            tipify(selectInput(ns("trajectory.group.by"), "Trajectory Group By",
+            tipify(viz_select_input(ns("trajectory.group.by"), "Trajectory Group By",
                 choices = cat.choices,
                 selected = get_default(
                     defaults, "trajectory.group.by", "",
                     function(x) x %in% cat.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$trajectory.group.by, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
                 placeholder = "e.g. [A,B],[C,D,E]",
@@ -579,7 +579,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
             tipify(checkboxInput(ns("do.contour"), "Enable Contour",
                 value = get_default(defaults, "do.contour", FALSE, is.logical)
             ), documentParameters$do.contour, placement = "top", options = list(container = "body")),
-            tipify(selectizeInput(ns("hover.data"), "Hover Data",
+            tipify(viz_select_input(ns("hover.data"), "Hover Data",
                 choices = choices,
                 multiple = TRUE,
                 selected = get_default(

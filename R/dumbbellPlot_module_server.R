@@ -93,7 +93,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         observeEvent(input$x.value,
             {
                 if (!is.null(input$x.value) && length(input$x.value) > 2) {
-                    updateSelectInput(session, "x.value", selected = input$x.value[1:2])
+                    update_viz_select(session, "x.value", selected = input$x.value[1:2])
                 }
             },
             ignoreNULL = FALSE
@@ -133,23 +133,23 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             # Reset Data columns to default. First and second index of data named list
 
             # Data tab
-            updateSelectInput(session, "x.value",
+            update_viz_select(session, "x.value",
                 selected = get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
             )
-            updateSelectInput(session, "y.value",
+            update_viz_select(session, "y.value",
                 selected = get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
             )
 
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "colour.by",
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "colour.by",
                 selected = get_default(defaults, "colour.by", "X variables")
             )
 
             # Facet tab
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
             )
-            updateSelectInput(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
+            update_viz_select(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
             updateColourInput(session, "line.colour",
@@ -217,7 +217,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Checking that all columns are numeric for x adjustment to be available
             if (!is.null(x_input) && length(x_input) > 0 && !all(vapply(d[x_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "x.adjustment", selected = "")
+                update_viz_select(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
 

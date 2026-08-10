@@ -118,14 +118,14 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
             updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
@@ -158,9 +158,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 value = get_default(defaults, "highlight.alpha", 1, is.numeric))
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
@@ -184,7 +184,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             # Pause readers until the client echoes the cleared selection, otherwise
             # the plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "stat.pairs")
-            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
         # Update y-axis range when y data column is changed
@@ -210,7 +210,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         observeEvent(c(input$facet.by, input$x.data), {
             if (input$facet.by == input$x.data){
-                updateSelectInput(session, "facet.scale", selected = "free_x")
+                update_viz_select(session, "facet.scale", selected = "free_x")
             }
         }, ignoreInit = FALSE)
 
