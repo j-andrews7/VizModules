@@ -1,9 +1,20 @@
+/* Every row below is free to wrap: the widget is dropped into sidebars and
+   input grids of any width, and controls that cannot shrink past a fixed width
+   spill outside the panel instead of reflowing. */
 .multi-color-picker {
   border: 1px solid #dee2e6;
   border-radius: 6px;
   padding: 10px;
   background: #ffffff;
   font-size: 13px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.multi-color-picker *,
+.multi-color-picker *::before,
+.multi-color-picker *::after {
+  box-sizing: border-box;
 }
 
 .multi-color-picker .mc-top {
@@ -13,35 +24,63 @@
   gap: 6px;
 }
 
+.multi-color-picker .mc-top > .control-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+}
+
 .multi-color-picker .mc-actions {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 4px;
   margin-left: auto;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
+/* Grows into the space available and shrinks rather than pushing the buttons
+   out of the panel; the buttons wrap to their own line once it cannot. */
 .multi-color-picker .selectize-control.mc-palette-select {
-  width: 170px;
-  min-width: 150px;
+  flex: 1 1 130px;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
 }
 
 .multi-color-picker .selectize-control.mc-palette-select .selectize-input {
   min-height: 30px;
+  min-width: 0;
   padding: 3px 6px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
+/* Kept beside the palette selector while it fits and wrapped onto its own line
+   when it does not, rather than hanging off the edge of the panel. */
 .multi-color-picker .mc-button-group {
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
   gap: 4px;
 }
 
+.multi-color-picker .mc-button-group .mc-button {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .multi-color-picker .mc-palette-select {
-  width: 170px;
+  flex: 1 1 130px;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
   padding: 3px 6px;
   font-size: 12px;
 }
@@ -91,10 +130,14 @@
   gap: 6px;
 }
 
+/* Label, swatch and hex field on one line while they fit; the hex field drops
+   below them when the row gets tight, and the swatch follows if it gets
+   tighter still. */
 .multi-color-picker .mc-color-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px 8px;
   padding: 6px 8px;
   border: 1px solid #e9ecef;
   border-radius: 4px;
@@ -106,14 +149,18 @@
   box-shadow: 0 0 0 2px rgba(52, 144, 220, 0.18);
 }
 
+/* Group names come from the data and can be long, so they wrap rather than
+   run underneath the controls. */
 .multi-color-picker .mc-group-label {
-  flex: 1;
+  flex: 1 1 4.5em;
   min-width: 0;
   font-weight: 600;
   font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .multi-color-picker .mc-color-input {
+  flex: 0 0 auto;
   width: 42px;
   height: 28px;
   padding: 0;
@@ -121,8 +168,13 @@
   border-radius: 4px;
 }
 
+/* Shrinks (and eventually wraps) with the row, but does not grow, so roomy
+   layouts keep the size they had. */
 .multi-color-picker .mc-text-input {
-  width: 96px;
+  flex: 0 1 96px;
+  width: auto;
+  min-width: 5.5em;
+  max-width: 100%;
   font-size: 12px;
 }
 
@@ -132,6 +184,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  min-width: 0;
 }
 
 .multi-color-picker .mc-palette-name {
@@ -147,11 +200,14 @@
   pointer-events: none;
 }
 
+/* The selected palette's preview shrinks with the selector (its swatches are
+   clipped) instead of holding the whole control open at a fixed width. The
+   dropdown copy below is attached to <body> and keeps its comfortable size. */
 .multi-color-picker .mc-palette-bar {
   display: flex;
   gap: 1px;
-  flex: 1;
-  min-width: 140px;
+  flex: 1 1 0;
+  min-width: 0;
   align-items: center;
   height: 18px;
   border-radius: 3px;
@@ -250,8 +306,7 @@
 }
 
 .multi-color-picker.is-compact .selectize-control.mc-palette-select {
-  width: 140px;
-  min-width: 130px;
+  flex-basis: 110px;
 }
 
 .multi-color-picker.is-compact .selectize-control.mc-palette-select .selectize-input {
@@ -261,7 +316,7 @@
 }
 
 .multi-color-picker.is-compact .mc-palette-select {
-  width: 140px;
+  flex-basis: 110px;
   padding: 2px 5px;
 }
 
@@ -286,14 +341,17 @@
 }
 
 .multi-color-picker.is-compact .mc-text-input {
-  width: 70px;
+  flex-basis: 70px;
   height: 18px;
   padding: 2px 4px;
   font-size: 10px;
   line-height: 1.1;
 }
 
-.multi-color-picker.is-compact .mc-palette-bar,
+.multi-color-picker.is-compact .mc-palette-bar {
+  height: 14px;
+}
+
 .selectize-dropdown .is-compact .mc-palette-bar {
   min-width: 110px;
   height: 14px;

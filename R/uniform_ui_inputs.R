@@ -269,7 +269,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #'
 #' @return A `tagList` containing the axis input UI elements.
 #'
-#' @importFrom shiny numericInput checkboxInput selectInput tagList
+#' @importFrom shiny numericInput checkboxInput tagList
 #' @importFrom colourpicker colourInput
 #'
 #' @importFrom shinyWidgets materialSwitch
@@ -315,12 +315,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         rotate_input,
         flip_x,
         flip_y,
-        selectInput(ns("title.font.family"), "Title Font",
+        viz_select_input(ns("title.font.family"), "Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         colourInput(ns("title.font.color"), "Title Color",
             value = get_default(defaults, "title.font.color", "#000000")
@@ -342,12 +342,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("axis.title.font.color"), "Axis Title Color",
             value = get_default(defaults, "axis.title.font.color", "#000000")
         ),
-        selectInput(ns("axis.title.font.family"), "Axis Title Font",
+        viz_select_input(ns("axis.title.font.family"), "Axis Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "axis.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
             value = get_default(defaults, "axis.showline", TRUE, is.logical)
@@ -380,12 +380,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("axis.tickfont.color"), "Tick Label Color",
             value = get_default(defaults, "axis.tickfont.color", "black")
         ),
-        selectInput(ns("axis.tickfont.family"), "Tick Label Font",
+        viz_select_input(ns("axis.tickfont.family"), "Tick Label Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "axis.tickfont.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
             value = get_default(defaults, "axis.tickangle.x", 0, is.numeric),
@@ -399,12 +399,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             max = 180,
             step = 15
         ),
-        selectInput(ns("axis.ticks"), "Tick Position",
+        viz_select_input(ns("axis.ticks"), "Tick Position",
             choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
             selected = get_default(
                 defaults, "axis.ticks", "outside",
                 function(x) x %in% c("outside", "inside", "")
-            ), selectize = FALSE
+            )
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = get_default(defaults, "axis.tickcolor", "black")
@@ -427,12 +427,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("facet.title.font.color"), "Facet Title Color",
             value = get_default(defaults, "facet.title.font.color", "#000000")
         ),
-        selectInput(ns("facet.title.font.family"), "Facet Title Font",
+        viz_select_input(ns("facet.title.font.family"), "Facet Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "facet.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         )
     )
 }
@@ -448,7 +448,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @return A `tagList` containing the stats input UI elements.
 #'
-#' @importFrom shiny selectInput numericInput tagList
+#' @importFrom shiny numericInput tagList
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
@@ -468,14 +468,14 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.test"), "Test",
+            viz_select_input(ns("stat.test"), "Test",
                 choices = c(
                     "Wilcoxon" = "wilcox.test",
                     "t-test" = "t.test",
                     "Kruskal-Wallis" = "kruskal.test",
                     "ANOVA" = "anova"
                 ),
-                selected = get_default(defaults, "stat.test", "wilcox.test"), selectize = FALSE
+                selected = get_default(defaults, "stat.test", "wilcox.test")
             ),
             paste(
                 "Statistical test for comparisons.",
@@ -485,24 +485,24 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.p.adjust"), "P-value Adjustment",
+            viz_select_input(ns("stat.p.adjust"), "P-value Adjustment",
                 choices = c(
                     "holm", "hochberg", "hommel", "bonferroni",
                     "BH", "BY", "fdr", "none"
                 ),
-                selected = get_default(defaults, "stat.p.adjust", "holm"), selectize = FALSE
+                selected = get_default(defaults, "stat.p.adjust", "holm")
             ),
             "Method for multiple testing correction applied to all p-values",
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.display"), "Display",
+            viz_select_input(ns("stat.display"), "Display",
                 choices = c(
                     "Adjusted P-value" = "p.adj",
                     "P-value" = "p.value",
                     "Symbols" = "symbol"
                 ),
-                selected = get_default(defaults, "stat.display", "p.adj"), selectize = FALSE
+                selected = get_default(defaults, "stat.display", "p.adj")
             ),
             "What to display on brackets: adjusted p-values, raw p-values, or significance symbols (*, **, ***, ****)",
             placement = "top", options = tip_opts
@@ -536,8 +536,8 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.pairs"), "Comparisons",
-                choices = c(), multiple = TRUE, selectize = TRUE
+            viz_select_input(ns("stat.pairs"), "Comparisons",
+                choices = c(), multiple = TRUE
             ),
             "Select specific pairwise comparisons to display. If empty, all possible pairs are tested.",
             placement = "top", options = tip_opts
@@ -558,9 +558,9 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.bracket.style"), "Bracket Style",
+            viz_select_input(ns("stat.bracket.style"), "Bracket Style",
                 choices = c("Capped" = "capped", "Flat" = "flat"),
-                selected = get_default(defaults, "stat.bracket.style", "capped"), selectize = FALSE
+                selected = get_default(defaults, "stat.bracket.style", "capped")
             ),
             "Capped brackets have vertical ticks at each end; flat brackets are a single horizontal line",
             placement = "top", options = tip_opts
@@ -614,7 +614,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @return A `tagList` containing the Plotly input UI elements.
 #'
-#' @importFrom shiny downloadButton selectInput numericInput tagList br icon
+#' @importFrom shiny downloadButton numericInput tagList br icon
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
 #'
@@ -626,7 +626,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
-        selectInput(
+        viz_select_input(
             ns("download.format"),
             "Download Format",
             selected = get_default(
@@ -634,7 +634,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
                 function(x) x %in% c("svg", "png", "jpeg", "webp")
             ),
             choices = c("svg", "png", "jpeg", "webp"),
-            width = "100%", selectize = FALSE
+            width = "100%"
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
@@ -693,12 +693,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("shape.linetype"), "Shape Linetype",
+            viz_select_input(ns("shape.linetype"), "Shape Linetype",
                 choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"),
                 selected = get_default(
                     defaults, "shape.linetype", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
-                ), selectize = FALSE
+                )
             ),
             "Line dash style for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts

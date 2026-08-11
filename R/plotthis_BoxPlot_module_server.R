@@ -112,7 +112,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Pause readers until the client echoes the cleared selection, otherwise
             # the plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "stat.pairs")
-            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
         # Reset functionality
@@ -132,13 +132,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
             )
             updateMaterialSwitch(session, "show.outliers",
@@ -146,7 +146,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
             updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
@@ -177,10 +177,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -222,7 +222,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     # Pause readers until the client echoes the new scale, else the
                     # plot renders once now and again when that echo lands.
                     freezeReactiveValue(input, "facet.scale")
-                    updateSelectInput(session, "facet.scale", selected = "free_x")
+                    update_viz_select(session, "facet.scale", selected = "free_x")
                 }
             },
             ignoreInit = FALSE
@@ -242,7 +242,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Facet By Null option Upstream:
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
-                updateSelectInput(session, "sort_x", selected = "") # Makes sure order x is not active when facet by is active
+                update_viz_select(session, "sort_x", selected = "") # Makes sure order x is not active when facet by is active
                 facet.by <- isolate_fn(input$facet.by)
             }
 

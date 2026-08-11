@@ -77,29 +77,29 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             char.choices <- c("", names(data_reactive())[!vapply(data_reactive(), is.numeric, logical(1))])
 
             # Data
-            updateSelectInput(session, "labels",
+            update_viz_select(session, "labels",
                 selected = get_default(defaults, "labels", char.choices[2], function(x) x %in% char.choices))
-            updateSelectInput(session, "values",
+            update_viz_select(session, "values",
                 selected = get_default(defaults, "values", numeric.data[2], function(x) x %in% numeric.data))
 
             # Slice layout
             updateCheckboxInput(session, "sort.slices",
                 value = get_default(defaults, "sort.slices", TRUE, is.logical))
-            updateSelectInput(session, "direction",
+            update_viz_select(session, "direction",
                 selected = get_default(defaults, "direction", "counterclockwise"))
             updateSliderInput(session, "rotation", value = get_default(defaults, "rotation", 0, is.numeric))
             updateSliderInput(session, "hole", value = get_default(defaults, "hole", 0, is.numeric))
 
             # Text
-            updateSelectInput(session, "textinfo",
+            update_viz_select(session, "textinfo",
                 selected = get_default(defaults, "textinfo", c("label", "percent")))
-            updateSelectInput(session, "textposition",
+            update_viz_select(session, "textposition",
                 selected = get_default(defaults, "textposition", "auto"))
-            updateSelectInput(session, "insidetextorientation",
+            update_viz_select(session, "insidetextorientation",
                 selected = get_default(defaults, "insidetextorientation", "auto"))
             updateNumericInput(session, "text.font.size",
                 value = get_default(defaults, "text.font.size", 12, is.numeric))
-            updateSelectInput(session, "text.font.family",
+            update_viz_select(session, "text.font.family",
                 selected = get_default(defaults, "text.font.family", "Arial"))
             updateColourInput(session, "text.font.color",
                 value = get_default(defaults, "text.font.color", "#000000"))
@@ -108,7 +108,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 28, is.numeric))
-            updateSelectInput(session, "title.font.family",
+            update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
                 value = get_default(defaults, "title.font.color", "#000000"))
@@ -116,9 +116,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             # Legend
             updateCheckboxInput(session, "show.legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical))
-            updateSelectInput(session, "legend.orientation",
+            update_viz_select(session, "legend.orientation",
                 selected = get_default(defaults, "legend.orientation", "h"))
-            updateSelectInput(session, "legend.font.family",
+            update_viz_select(session, "legend.font.family",
                 selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric))

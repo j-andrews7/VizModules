@@ -131,6 +131,14 @@ reference:
       - plotthis_HistogramOutputUI
       - plotthis_HistogramServer
 
+  - title: "Heatmap Module"
+    desc: "ComplexHeatmap-based interactive heatmap module."
+    contents:
+      - ComplexHeatmap_HeatmapApp
+      - ComplexHeatmap_HeatmapInputsUI
+      - ComplexHeatmap_HeatmapOutputUI
+      - ComplexHeatmap_HeatmapServer
+
   - title: "dataFilter Module"
     desc: "Reusable data filtering module for use with plot modules."
     contents:
@@ -158,10 +166,15 @@ reference:
     contents:
       - createModuleApp
       - empty_plot
+      - hide_input
       - module_tack_ui
       - organize_inputs
       - setup_auto_update_logic
       - setup_reactive_defaults
+      - show_input
+      - toggle_input_cell
+      - viz_select_input
+      - update_viz_select
 
   - title: "Uniform UI Inputs"
     desc: "Standardised input builders and reset functions shared across modules."
@@ -262,6 +275,7 @@ reference:
       - example_demographics
       - example_iris
       - example_markers
+      - example_matrix_df
       - example_mtcars
       - example_population
       - example_rnaseq

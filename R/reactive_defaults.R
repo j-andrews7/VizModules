@@ -55,7 +55,7 @@
 #'     library(shiny)
 #'
 #'     ui <- fluidPage(
-#'         selectInput("sample", "Sample", c("S1", "S2", "S3")),
+#'         viz_select_input("sample", "Sample", c("S1", "S2", "S3")),
 #'         dittoViz_scatterPlotInputsUI("p", mtcars),
 #'         dittoViz_scatterPlotOutputUI("p")
 #'     )

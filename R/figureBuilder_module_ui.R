@@ -89,14 +89,14 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                 hr(),
                 h3("Canvas"),
                 splitLayout(
-                    selectInput(ns("pb_orientation"), "Page size:",
+                    viz_select_input(ns("pb_orientation"), "Page size:",
                         choices = c(
                             "A4 portrait" = "portrait",
                             "A4 landscape" = "landscape"
                         )
                     ),
-                    # selectize = FALSE keeps a plain <select> in the DOM so the
-                    # client-side SVG export can read the chosen value directly.
+                    # This one stays a plain <select>: the client-side SVG export
+                    # reads its value and listens for its native change event.
                     selectInput(ns("pb_label_case"), "Panel labels:",
                         choices = c(
                             "Uppercase (A, B, C)" = "upper",
@@ -115,7 +115,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                 ),
                 hr(),
                 h3("Plot Controls"),
-                selectInput(ns("pb_controls_select"), "Show controls for:",
+                viz_select_input(ns("pb_controls_select"), "Show controls for:",
                     choices = character(0)
                 ),
                 div(
@@ -144,7 +144,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                     "Specific numeric filters can be applied by entering a range like '1 ... 10'.",
                     style = "color: grey; font-size: 12px;"
                 ),
-                selectInput(ns("pb_table_select"), "Show table for:",
+                viz_select_input(ns("pb_table_select"), "Show table for:",
                     choices = character(0)
                 ),
                 div(

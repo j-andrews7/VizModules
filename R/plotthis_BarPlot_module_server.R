@@ -109,11 +109,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
                 palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
-                selectInput(
+                viz_select_input(
                     ns("palette.name"),
                     "Color Palette",
                     choices = palette_names,
-                    selected = "viridis", selectize = FALSE
+                    selected = "viridis"
                 )
             } else {
                 groups <- palette_groups()
@@ -156,25 +156,25 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
             )
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% char.choices)
             )
 
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -182,7 +182,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
@@ -274,7 +274,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         observeEvent(c(input$facet.by, input$x.data), {
         if (input$facet.by == input$x.data){
-            updateSelectInput(session, "facet.scale", selected = "free_x")
+            update_viz_select(session, "facet.scale", selected = "free_x")
         }
         }, ignoreInit = FALSE)
 

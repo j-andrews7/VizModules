@@ -620,8 +620,8 @@ clean_facet_dim <- function(val) {
 #' high-cardinality categoricals that would produce an unwieldy number of
 #' panels.
 #'
-#' Intended to populate the `choices` of a facet/split `selectInput()` via
-#' [shiny::updateSelectInput()] inside a module server, so that only sensible
+#' Intended to populate the `choices` of a facet/split `viz_select_input()` via
+#' [update_viz_select()] inside a module server, so that only sensible
 #' faceting variables are exposed to the user.
 #'
 #' @param data A data frame whose columns are evaluated.

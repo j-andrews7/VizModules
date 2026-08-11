@@ -101,8 +101,8 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         observeEvent(input$x.data, ignoreInit = TRUE, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             group_facet_choices <- setdiff(char.choices, input$x.data)
-            updateSelectInput(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
-            updateSelectInput(session, "facet.by", choices = c("", group_facet_choices), selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
+            update_viz_select(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
+            update_viz_select(session, "facet.by", choices = c("", group_facet_choices), selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
         })
 
         # Reset functionality
@@ -114,16 +114,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             group_facet_choices <- setdiff(char.choices, x_default)
 
             # Data
-            updateSelectInput(session, "x.data", selected = x_default)
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "x.data", selected = x_default)
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% group_facet_choices))
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))

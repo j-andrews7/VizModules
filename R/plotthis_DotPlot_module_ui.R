@@ -137,34 +137,34 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Values",
+            tipify(viz_select_input(ns("x.data"), "X Values",
                 selected = get_default(
                     defaults, "x.data", char.choices[2],
                     function(x) x %in% char.choices
                 ),
-                choices = char.choices, selectize = FALSE
+                choices = char.choices
             ), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.data"), "Y Values",
+            tipify(viz_select_input(ns("y.data"), "Y Values",
                 selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 ),
-                choices = char.choices, selectize = FALSE
+                choices = char.choices
             ), documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("size.by"), "Size By",
+            tipify(viz_select_input(ns("size.by"), "Size By",
                 selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices),
-                choices = num.choices, selectize = FALSE
+                choices = num.choices
             ), documentParameters$size_by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("fill.by"), "Fill By",
+            tipify(viz_select_input(ns("fill.by"), "Fill By",
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices),
-                choices = num.choices, selectize = FALSE
+                choices = num.choices
             ), documentParameters$fill_by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("fill.cutoff.direction"), "Fill Cutoff Direction",
+            tipify(viz_select_input(ns("fill.cutoff.direction"), "Fill Cutoff Direction",
                 selected = get_default(
                     defaults, "fill.cutoff.direction", "<",
                     function(x) x %in% c("<", "<=", ">", ">=")
                 ),
-                choices = c("<", "<=", ">", ">="), selectize = FALSE
+                choices = c("<", "<=", ">", ">=")
             ), paste(
                 "Direction of the fill cutoff. Values on the selected side of the",
                 "cutoff (e.g. '<' greys out values below it) are set to NA and drawn",
@@ -175,16 +175,16 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             ), documentParameters$fill_cutoff, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By",
+            tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c("", .facet_check(data)), selectize = FALSE
+                choices = c("", .facet_check(data))
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+            tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE
+                choices = c("fixed", "free", "free_x", "free_y")
             ), documentParameters$facet_scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.ncol"), "Columns",
                 value = get_default(defaults, "facet.ncol", NULL, is.numeric), min = 0, max = 20
@@ -202,12 +202,12 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("palette.name"), "Color Palette",
+            tipify(viz_select_input(ns("palette.name"), "Color Palette",
                 choices = palette_names,
                 selected = get_default(
                     defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names
-                ), selectize = FALSE
+                )
             ), documentParameters$palette, placement = "top", options = list(container = "body")),
             tipify(
                 materialSwitch(ns("palreverse"), "Reverse Palette",

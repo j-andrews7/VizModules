@@ -53,8 +53,8 @@ if (interactive()) {
     library(plotly)
 
     ui <- fluidPage(
-        selectInput("x_var", "X variable", choices = names(mtcars), selected = "wt"),
-        selectInput("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
+        viz_select_input("x_var", "X variable", choices = names(mtcars), selected = "wt"),
+        viz_select_input("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
         checkboxInput("auto.update", "Auto-update", value = TRUE),
         actionButton("update", "Update"),
         plotlyOutput("myPlot")

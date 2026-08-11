@@ -60,23 +60,23 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 )
             )
-            updateSelectInput(session, "size.by",
+            update_viz_select(session, "size.by",
                 selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
             )
             updateNumericInput(session, "fill.cutoff", value = get_default(defaults, "fill.cutoff", NA, is.numeric))
-            updateSelectInput(session, "fill.cutoff.direction",
+            update_viz_select(session, "fill.cutoff.direction",
                 selected = get_default(
                     defaults, "fill.cutoff.direction", "<",
                     function(x) x %in% c("<", "<=", ">", ">=")
@@ -84,10 +84,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -95,12 +95,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "palette.name",
+            update_viz_select(session, "palette.name",
                 selected = get_default(
                     defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names

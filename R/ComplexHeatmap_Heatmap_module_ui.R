@@ -109,7 +109,7 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
 
     inputs <- list(
         "Matrix" = tagList(
-            tipify(selectizeInput(ns("matrix.cols"), "Matrix Columns",
+            tipify(viz_select_input(ns("matrix.cols"), "Matrix Columns",
                 choices = num.cols,
                 selected = get_default(
                     defaults, "matrix.cols", num.cols,
@@ -117,12 +117,12 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                 ),
                 multiple = TRUE
             ), "Numeric columns that form the heatmap matrix", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("rowname.col"), "Row Name Column",
+            tipify(viz_select_input(ns("rowname.col"), "Row Name Column",
                 choices = id.choices,
                 selected = get_default(
                     defaults, "rowname.col", "",
                     function(x) x %in% id.choices
-                ), selectize = FALSE
+                )
             ), "Optional column whose values are used as row names", placement = "top", options = tip_opts),
             tipify(textInput(ns("name"), "Heatmap Name",
                 value = get_default(defaults, "name", "value")
@@ -132,12 +132,12 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             ), "Color used for NA cells", placement = "top", options = tip_opts)
         ),
         "Colors" = tagList(
-            tipify(selectInput(ns("palette"), "Color Scheme",
+            tipify(viz_select_input(ns("palette"), "Color Scheme",
                 choices = palette.choices,
                 selected = get_default(
                     defaults, "palette", "Blue-White-Red",
                     function(x) x %in% palette.choices
-                ), selectize = FALSE
+                )
             ), "Continuous color scheme for the matrix", placement = "top", options = tip_opts),
             tipify(checkboxInput(ns("reverse.palette"), "Reverse Palette",
                 value = get_default(defaults, "reverse.palette", FALSE, is.logical)
@@ -153,33 +153,33 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(checkboxInput(ns("cluster_columns"), "Cluster Columns",
                 value = get_default(defaults, "cluster_columns", TRUE, is.logical)
             ), "Perform hierarchical clustering on columns", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("clustering_distance_rows"), "Row Distance",
+            tipify(viz_select_input(ns("clustering_distance_rows"), "Row Distance",
                 choices = dist.choices,
                 selected = get_default(
                     defaults, "clustering_distance_rows", "euclidean",
                     function(x) x %in% dist.choices
-                ), selectize = FALSE
+                )
             ), "Distance metric for row clustering", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("clustering_distance_columns"), "Column Distance",
+            tipify(viz_select_input(ns("clustering_distance_columns"), "Column Distance",
                 choices = dist.choices,
                 selected = get_default(
                     defaults, "clustering_distance_columns", "euclidean",
                     function(x) x %in% dist.choices
-                ), selectize = FALSE
+                )
             ), "Distance metric for column clustering", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("clustering_method_rows"), "Row Method",
+            tipify(viz_select_input(ns("clustering_method_rows"), "Row Method",
                 choices = method.choices,
                 selected = get_default(
                     defaults, "clustering_method_rows", "complete",
                     function(x) x %in% method.choices
-                ), selectize = FALSE
+                )
             ), "Linkage method for row clustering", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("clustering_method_columns"), "Column Method",
+            tipify(viz_select_input(ns("clustering_method_columns"), "Column Method",
                 choices = method.choices,
                 selected = get_default(
                     defaults, "clustering_method_columns", "complete",
                     function(x) x %in% method.choices
-                ), selectize = FALSE
+                )
             ), "Linkage method for column clustering", placement = "top", options = tip_opts),
             tipify(checkboxInput(ns("show_row_dend"), "Show Row Dendrogram",
                 value = get_default(defaults, "show_row_dend", TRUE, is.logical)
@@ -209,19 +209,19 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(checkboxInput(ns("show_column_names"), "Show Column Names",
                 value = get_default(defaults, "show_column_names", TRUE, is.logical)
             ), "Show column names", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("row_names_side"), "Row Names Side",
+            tipify(viz_select_input(ns("row_names_side"), "Row Names Side",
                 choices = c("right", "left"),
                 selected = get_default(
                     defaults, "row_names_side", "right",
                     function(x) x %in% c("right", "left")
-                ), selectize = FALSE
+                )
             ), "Which side to place row names", placement = "top", options = tip_opts),
-            tipify(selectInput(ns("column_names_side"), "Column Names Side",
+            tipify(viz_select_input(ns("column_names_side"), "Column Names Side",
                 choices = c("bottom", "top"),
                 selected = get_default(
                     defaults, "column_names_side", "bottom",
                     function(x) x %in% c("bottom", "top")
-                ), selectize = FALSE
+                )
             ), "Which side to place column names", placement = "top", options = tip_opts),
             tipify(numericInput(ns("column_names_rot"), "Column Name Rotation",
                 step = 15,

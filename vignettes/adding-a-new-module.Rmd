@@ -347,6 +347,19 @@ Following a consistent style makes the package easier to read, maintain, and ext
 - **Avoid redundant words.** `"Color"` is better than `"Select a Color"`.
 - **Match plotthis/dittoViz parameter names loosely**, so users can cross-reference the upstream docs. E.g., label the `group_by` input `"Group By"`.
 
+### Select Inputs
+
+Use `viz_select_input()` rather than `shiny::selectInput()` or `shiny::selectizeInput()`, and `update_viz_select()` in place of their `update*()` counterparts. It takes the same `inputId`/`label`/`choices`/`selected`/`multiple` arguments, but renders a virtualised dropdown, so an input backed by a column with tens of thousands of distinct values stays usable. A search box appears automatically once there are more than ten choices.
+
+An empty-string choice still means "no selection"; it is displayed as `(none)` so users can see and pick it.
+
+```r
+viz_select_input(ns("group.by"), "Group By",
+    choices = cat.choices,
+    selected = get_default(defaults, "group.by", "", function(x) x %in% cat.choices)
+)
+```
+
 ### Tooltips with `tipify`
 
 Wrap any non-obvious input in `shinyBS::tipify()` to show a tooltip on hover. This keeps labels concise while still informing the user.

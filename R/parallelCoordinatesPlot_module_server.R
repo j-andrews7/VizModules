@@ -116,13 +116,13 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         observeEvent(input$reset, {
             d <- data_reactive()
             all.choices <- c("", names(d))
-            updateSelectInput(session, "dimensions",
+            update_viz_select(session, "dimensions",
                 selected = get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
             )
-            updateSelectInput(session, "color.by",
+            update_viz_select(session, "color.by",
                 selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
             )
-            updateSelectInput(session, "color.scale",
+            update_viz_select(session, "color.scale",
                 selected = get_default(defaults, "color.scale", "Viridis")
             )
             updateSliderInput(session, "line.opacity",
@@ -140,7 +140,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             updateColourInput(session, "label.font.color",
                 value = get_default(defaults, "label.font.color", "black")
             )
-            updateSelectInput(session, "label.font.family",
+            update_viz_select(session, "label.font.family",
                 selected = get_default(defaults, "label.font.family", "Arial")
             )
             updateNumericInput(session, "tick.font.size",
@@ -149,13 +149,13 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             updateColourInput(session, "tick.font.color",
                 value = get_default(defaults, "tick.font.color", "black")
             )
-            updateSelectInput(session, "tick.font.family",
+            update_viz_select(session, "tick.font.family",
                 selected = get_default(defaults, "tick.font.family", "Arial")
             )
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 16, is.numeric)
             )
-            updateSelectInput(session, "title.font.family",
+            update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial")
             )
             updateColourInput(session, "title.font.color",

@@ -87,20 +87,20 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             all.choices <- c("", names(data_reactive()))
 
             # Data
-            updateSelectInput(session, "theta",
+            update_viz_select(session, "theta",
                 selected = get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
-            updateSelectInput(session, "r",
+            update_viz_select(session, "r",
                 selected = get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
-            updateSelectInput(session, "group",
+            update_viz_select(session, "group",
                 selected = get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
 
             # Trace style
-            updateSelectInput(session, "fill", selected = get_default(defaults, "fill", "toself"))
+            update_viz_select(session, "fill", selected = get_default(defaults, "fill", "toself"))
             updateNumericInput(session, "line.width", value = get_default(defaults, "line.width", 2, is.numeric))
-            updateSelectInput(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
+            update_viz_select(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
             updateNumericInput(session, "marker.size",
                 value = get_default(defaults, "marker.size", 5, is.numeric))
-            updateSelectInput(session, "marker.symbol",
+            update_viz_select(session, "marker.symbol",
                 selected = get_default(defaults, "marker.symbol", "circle"))
             updateSliderInput(session, "opacity", value = get_default(defaults, "opacity", 0.6, is.numeric))
 
@@ -121,7 +121,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = get_default(defaults, "radial.gridcolor", "#EEEEEE"))
 
             # Angular axis
-            updateSelectInput(session, "angular.direction",
+            update_viz_select(session, "angular.direction",
                 selected = get_default(defaults, "angular.direction", "clockwise"))
             updateSliderInput(session, "angular.rotation",
                 value = get_default(defaults, "angular.rotation", 90, is.numeric))
@@ -132,7 +132,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 18, is.numeric))
-            updateSelectInput(session, "title.font.family",
+            update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
                 value = get_default(defaults, "title.font.color", "#000000"))
@@ -140,9 +140,9 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             # Legend
             updateCheckboxInput(session, "show.legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical))
-            updateSelectInput(session, "legend.orientation",
+            update_viz_select(session, "legend.orientation",
                 selected = get_default(defaults, "legend.orientation", "h"))
-            updateSelectInput(session, "legend.font.family",
+            update_viz_select(session, "legend.font.family",
                 selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric))
