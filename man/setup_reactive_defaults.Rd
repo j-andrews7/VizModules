@@ -15,7 +15,7 @@ may be a \code{reactive()}/\code{reactiveVal}.}
 \item{session}{The Shiny \code{session} object from inside \code{moduleServer()}.}
 }
 \value{
-\code{NULL} when \code{defaults} holds no reactive entries \u2014 in which case
+\code{NULL} when \code{defaults} holds no reactive entries, in which case
 modules behave exactly as they did before. Otherwise a list with two
 functions, \code{has(key)} and \code{get(key)}, for \code{\link[=setup_auto_update_logic]{setup_auto_update_logic()}} to
 read.
@@ -24,7 +24,7 @@ read.
 Plot module parameters normally travel through client-side inputs: the value
 is seeded into a control by \verb{*InputsUI()} and read back at render time as
 \verb{input$<key>}. That makes it impossible for a parent app to drive a parameter
-from app state without a visible double render \u2014 \code{update*Input()} is an
+from app state without a visible double render. \code{update*Input()} is an
 asynchronous client round-trip, so the plot renders once with the stale value
 and again when the new value arrives from the browser.
 }
