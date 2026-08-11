@@ -3,7 +3,7 @@
 #' Plot module parameters normally travel through client-side inputs: the value
 #' is seeded into a control by `*InputsUI()` and read back at render time as
 #' `input$<key>`. That makes it impossible for a parent app to drive a parameter
-#' from app state without a visible double render \u2014 `update*Input()` is an
+#' from app state without a visible double render. `update*Input()` is an
 #' asynchronous client round-trip, so the plot renders once with the stale value
 #' and again when the new value arrives from the browser.
 #'
@@ -39,7 +39,7 @@
 #' @param input The Shiny `input` object from inside `moduleServer()`.
 #' @param session The Shiny `session` object from inside `moduleServer()`.
 #'
-#' @return `NULL` when `defaults` holds no reactive entries \u2014 in which case
+#' @return `NULL` when `defaults` holds no reactive entries, in which case
 #'   modules behave exactly as they did before. Otherwise a list with two
 #'   functions, `has(key)` and `get(key)`, for [setup_auto_update_logic()] to
 #'   read.
