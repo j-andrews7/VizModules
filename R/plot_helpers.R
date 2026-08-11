@@ -637,8 +637,10 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 #' `group.by` or `fill.by` is numeric.
 #'
 #' @param df Data frame. The data containing the variables to range over.
-#' @param data_col_y Character string. Name of the numeric Y-axis data column.
-#'   Takes priority over `data_col_x` if both are provided.
+#' @param data_col_y Character vector. Name(s) of the numeric Y-axis data
+#'   column(s). Takes priority over `data_col_x` if both are provided. When
+#'   several columns are given (e.g. a multi-variable Y selection), the range
+#'   spans all of them so a single pair of limits fits every one.
 #' @param data_col_x Character string. Name of the X-axis data column. Required
 #'   when `grouping = TRUE` or `stack_by` is specified, as it defines
 #'   the groups over which Y values are summed.
@@ -658,8 +660,10 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 #'   column is missing, non-numeric, or otherwise invalid.
 #'
 #' @details
-#' The function resolves the primary data column from `data_col_y` or
-#' `data_col_x` and validates that it exists and is numeric in `df`.
+#' The function resolves the primary data column(s) from `data_col_y` or
+#' `data_col_x` and validates that they exist and are numeric in `df`. Blank
+#' and `NA` names are dropped first, and `NULL` is returned if nothing usable
+#' remains.
 #'
 #' Behaviour depends on whether bars are stacked:
 #'
@@ -680,35 +684,42 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 .calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL,
                              axis_scale_factor, grouping = FALSE,
                              stack_by = NULL) {
-    # Resolve primary data column
+    # Resolve primary data column(s); several may be given for a multi-variable
+    # selection, in which case the returned limits span all of them.
     data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
+    data_col <- data_col[!is.na(data_col) & nzchar(data_col)]
 
     # Basic guards
-    if (is.null(data_col) || !nzchar(data_col)) {
+    if (length(data_col) == 0) {
         return(NULL)
     }
-    if (!data_col %in% names(df)) {
+    if (!all(data_col %in% names(df))) {
         return(NULL)
     }
-    if (!is.numeric(df[[data_col]])) {
+    if (!all(vapply(df[, data_col, drop = FALSE], is.numeric, logical(1)))) {
         return(NULL)
     }
+
+    # Sum of the selected columns per row; identical to the column itself (with
+    # NAs zeroed) when only one is selected, so stacked heights are unchanged.
+    stacked_values <- function() rowSums(df[, data_col, drop = FALSE], na.rm = TRUE)
 
     if (!grouping) {
         # --- Non-stacked: bars are NOT stacked, just find the max single value ---
         # If stack_by is provided and numeric, bars ARE stacked → sum per x group
         if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
             # Numeric stack_by: stacked bars, sum y per x category
-            if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+            if (is.null(data_col_x) || length(data_col_x) != 1 || !data_col_x %in% names(df)) {
                 return(NULL)
             }
-            x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+            x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
             max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
             min_val <- 0
         } else {
             # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
-            max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-            min_val <- min(df[[data_col]], na.rm = TRUE)
+            raw_values <- unlist(df[, data_col, drop = FALSE], use.names = FALSE)
+            max_val <- max(raw_values, na.rm = TRUE) * axis_scale_factor
+            min_val <- min(raw_values, na.rm = TRUE)
         }
 
         if (!is.finite(min_val)) min_val <- 0
@@ -717,10 +728,10 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
         return(list(min = min_val, max = max_val))
     } else {
         # --- Stacked grouping: sum y values per x group ---
-        if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+        if (is.null(data_col_x) || length(data_col_x) != 1 || !data_col_x %in% names(df)) {
             return(NULL)
         }
-        x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+        x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
         max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
         min_val <- 0
 
@@ -728,6 +739,41 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 
         return(list(min = min_val, max = max_val))
     }
+}
+
+
+#' Stack several data columns into dittoViz's multi-variable long format
+#'
+#' Reproduces the reshape [dittoViz::yPlot()] performs internally when it is
+#' given more than one `var`: the data frame is repeated once per column, the
+#' column's values are gathered into `var.multi`, and the column's name is
+#' recorded in `var.which`. Downstream code (e.g. statistics computed per
+#' variable facet) can then work against the same rows the plot was built from.
+#'
+#' @param df Data frame. The data to reshape.
+#' @param vars Character vector. Names of the columns to stack.
+#'
+#' @return A data frame with `length(vars)` times as many rows as `df`, plus the
+#'   `var.multi` (values) and `var.which` (source column name) columns.
+#'
+#' @details No data adjustment is applied here; the raw column values are
+#'   carried over, matching how the module computes statistics from the
+#'   unadjusted data.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_multivar_long_df
+.multivar_long_df <- function(df, vars) {
+    stacked <- lapply(vars, function(this.var) {
+        out <- df
+        out[["var.multi"]] <- df[[this.var]]
+        out[["var.which"]] <- this.var
+        out
+    })
+
+    long <- do.call(rbind, stacked)
+    rownames(long) <- NULL
+    long
 }
 
 

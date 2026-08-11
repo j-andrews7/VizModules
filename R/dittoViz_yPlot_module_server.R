@@ -64,9 +64,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             default.var <- get_default(
                 defaults, "var",
                 if (length(num.cols)) num.cols[1] else "",
-                function(x) x %in% num.cols
+                function(x) all(x %in% num.cols)
             )
-            selected.var <- if (!is.null(current) && nzchar(current) && current %in% num.cols) {
+            # `var` is a multi-select, so every currently selected column must still
+            # be numeric for the selection to be worth preserving.
+            selected.var <- if (length(current) > 0 && all(nzchar(current)) && all(current %in% num.cols)) {
                 current
             } else {
                 default.var
@@ -74,9 +76,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             update_viz_select(session, "var", choices = num.cols, selected = selected.var)
         }, ignoreNULL = TRUE)
 
-        # Conditionally show/hide Stats tab based on plot type selection
-        observeEvent(input$plots, {
-            if (length(input$plots) == 1 && input$plots == "ridgeplot") {
+        # Conditionally show/hide Stats tab based on plot type and Y data selection
+        observeEvent(c(input$plots, input$var, input$multivar.aes, input$split.by), {
+            ridge.only <- length(input$plots) == 1 && input$plots == "ridgeplot"
+            # With several Y variables the comparisons offered here only describe what
+            # is drawn when the variables are the sole faceting dimension: the "group"
+            # and "color" aesthetics replace the x-axis groups with the variable names,
+            # and an additional split.by facets on two dimensions at once, which the
+            # significance brackets cannot be placed against.
+            multivar.reshaped <- length(input$var) > 1 &&
+                (!identical(input$multivar.aes, "split") ||
+                    (!is.null(input$split.by) && any(nzchar(input$split.by))))
+            if (ridge.only || multivar.reshaped) {
                 hideTab(inputId = "yPlotTabsetPanel", target = "Stats")
             } else {
                 showTab(inputId = "yPlotTabsetPanel", target = "Stats")
@@ -124,6 +135,14 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 return(character(0))
             }
 
+            # With several Y variables on the "color" aesthetic, dittoViz fills by its
+            # internal "var.which" column, so the palette is keyed by variable name
+            # rather than by any data column. Names that do not match the fill values
+            # leave every box grey.
+            if (length(input$var) > 1 && identical(input$multivar.aes, "color")) {
+                return(levels(as.factor(unique(input$var))))
+            }
+
             # Determine which column to use for palette groups
             color_col <- input$color.by
             group_col <- input$group.by
@@ -160,9 +179,20 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
 
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            resolved_palette(initial_colors)
+
             # The rebuilt picker reports its value on a client round-trip. Pause
             # readers until it does, so the plot renders once rather than twice.
-            freezeReactiveValue(input, "palette.colours")
+            # Only pause when it will actually report, though: the client drops an
+            # unchanged value, and Shiny thaws after the flush without invalidating,
+            # so a pause with no arrival to lift it stops every reader for good.
+            if (!identical(isolate(input$palette.colours), initial_colors)) {
+                freezeReactiveValue(input, "palette.colours")
+            }
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -175,26 +205,45 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             )
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the
+        # group set changes, and it is re-seeded from this same resolution, so the
+        # value it then reports usually resolves to the palette already in use -
+        # notably when the rebuild is deferred to whenever the user next opens the
+        # Data tab, where it would otherwise re-render the plot for a tab click.
+        # A reactiveVal only invalidates on a real change, so that costs nothing
+        # while a genuine colour choice still comes straight through.
+        resolved_palette <- reactiveVal(NULL)
+        observe({
+            groups <- tryCatch(palette_groups(), error = function(e) NULL)
+            if (is.null(groups)) {
+                return()
+            }
+            resolved_palette(
+                resolve_palette(groups, input$palette.colours, default_palette_values)
+            )
+        })
+
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             choices <- c("", names(data()))
 
+            # `var` may hold several columns; the reset limits must span all of them.
+            default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
+
             # Calculate y.max and y.min from the default selections
-            if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
-                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
-            } else {
-                max.y <- 1
-                min.y <- 0
-            }
+            y.range <- .calculate_range(
+                df = data(), data_col_y = default.var,
+                axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+            )
+            max.y <- if (!is.null(y.range)) y.range$max else 1
+            min.y <- if (!is.null(y.range)) y.range$min else 0
 
             # Data
             update_viz_select(session, "var",
                 choices = num.choices[nzchar(num.choices)],
-                selected = get_default(defaults, "var", num.choices[2], function(x) x %in% num.choices))
+                selected = default.var)
             update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices))
             update_viz_select(session, "color.by",
@@ -265,6 +314,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             update_viz_select(session, "split.adjust", selected = get_default(defaults, "split.adjust", "fixed"))
             updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
+            update_viz_select(session, "multivar.aes",
+                selected = get_default(defaults, "multivar.aes", "split",
+                    function(x) x %in% c("split", "group", "color")))
+            update_viz_select(session, "multivar.split.dir",
+                selected = get_default(defaults, "multivar.split.dir", "col",
+                    function(x) x %in% c("col", "row")))
 
             # Axes
             reset_axes_inputs(session, defaults)
@@ -309,12 +364,23 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         # Generate yPlot reactive
         generate_yPlot <- reactive({
+            req(input$var)
             isolate_fn <- setup_auto_update_logic(input, params)
 
             # Parse inputs that might need conversion
             split.by <- .na_to_null(isolate_fn(input$split.by))
             color.by <- .na_to_null(isolate_fn(input$color.by))
             shape.by <- .na_to_null(isolate_fn(input$shape.by))
+
+            # Several Y variables can be plotted at once; dittoViz then reshapes the
+            # data internally (into "var.multi"/"var.which") and maps the variables
+            # onto the aesthetic named by multivar.aes.
+            y.vars <- isolate_fn(input$var)
+            multivar <- length(y.vars) > 1
+            multivar.aes <- isolate_fn(input$multivar.aes)
+            if (is.null(multivar.aes) || !nzchar(multivar.aes)) {
+                multivar.aes <- "split"
+            }
 
             # Parse split dimensions
             split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
@@ -330,11 +396,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             ridgeplot.binwidth <- .na_to_null(isolate_fn(input$ridgeplot.binwidth))
 
             # Resolve color palette
-            palette_values <- resolve_palette(
-                isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
-            )
+            palette_values <- isolate_fn(resolved_palette())
 
             # Keep names so scale_fill_manual matches colors to groups by name,
             # making the mapping independent of positional order.
@@ -354,18 +416,39 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
 
+            # Columns the rendered plot is actually faceted by. dittoViz facets on its
+            # internal "var.which" column when several Y variables are split, so the
+            # plot can be faceted even with no split.by set.
+            facet.cols <- c(
+                if (!is.null(split.by) && any(nzchar(split.by))) split.by,
+                if (multivar && multivar.aes == "split") "var.which"
+            )
+            faceted <- length(facet.cols) > 0
+
             # Reflect any applied Y-axis data adjustment in the continuous-axis title so it
             # accurately describes the values displayed (e.g. "log2(z-score(units))").
             var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
             var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
-            y_axis_label <- adjusted_axis_label(
-                isolate_fn(input$var), var.adjustment, var.adj.fxn.name
-            )
 
             # The Y Axis Min/Max inputs are derived from the raw data range, so let the
             # continuous axis auto-scale whenever an adjustment rescales the values.
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
+
+            y_axis_label <- if (multivar) {
+                # No single column name describes an axis shared by several variables
+                # (they are named by the facet strips or the legend instead), so keep
+                # only the adjustment description, if any.
+                if (!adjustment.active) {
+                    NULL
+                } else if (!is.null(var.adjustment)) {
+                    adjusted_axis_label(var.adjustment, adj.fxn = var.adj.fxn.name)
+                } else {
+                    var.adj.fxn.name
+                }
+            } else {
+                adjusted_axis_label(y.vars, var.adjustment, var.adj.fxn.name)
+            }
 
             # When an adjustment is active the axis title is regenerated to reflect it, so
             # flag its side for finalize_manual_edits() to skip persisting the text. The
@@ -381,8 +464,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # title regenerates for the new variable. Runs before finalize_manual_edits()
             # in the same render pass, so the cleared store is what gets re-applied.
             axis_vars <- list(
-                var = isolate_fn(input$var),
+                var = y.vars,
                 group.by = isolate_fn(input$group.by),
+                multivar.aes = if (multivar) multivar.aes else NULL,
                 ridge = "ridgeplot" %in% isolate_fn(input$plots)
             )
             if (!identical(axis_vars, last_axis_vars())) {
@@ -405,7 +489,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # exist in the plotted data are ignored downstream by dittoViz.
             hover.data <- .na_to_null(isolate_fn(input$hover.data))
             if (is.null(hover.data)) {
-                var.name <- isolate_fn(input$var)
+                var.name <- y.vars
                 hover.data <- unique(c(
                     var.name,
                     paste0(var.name, ".adj"),
@@ -419,7 +503,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             p <- yPlot(
                 data_frame = data(),
-                var = isolate_fn(input$var),
+                var = y.vars,
+                multivar.aes = multivar.aes,
+                multivar.split.dir = isolate_fn(input$multivar.split.dir),
                 var.adjustment = var.adjustment,
                 var.adj.fxn = safe_resolve_adj_fxn(var.adj.fxn.name),
                 # Blank main title by default; dittoViz's "make" would otherwise
@@ -469,13 +555,21 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 theme = theme_style
             )
 
+            # Several Y variables mapped onto the group or color aesthetic are always
+            # drawn side by side, so the boxes must be dodged rather than overlaid.
+            boxmode <- if (multivar && multivar.aes != "split") {
+                "group"
+            } else {
+                ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay")
+            }
+
             fig <- p |>
                 layout(
-                    boxmode = ifelse(!color.by == isolate_fn(input$group.by), "group", "overlay"),
+                    boxmode = boxmode,
                     boxgap = isolate_fn(input$boxgap),
                     boxgroupgap = isolate_fn(input$boxgroupgap)
                 )
-            if (!is.null(split.by) && nzchar(split.by)) {
+            if (faceted) {
                 fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
@@ -490,7 +584,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
 
             # Fix boxplot positioning across faceted subplots
-            if (!is.null(split.by) && nzchar(split.by)) {
+            if (faceted) {
                 fig <- .fix_boxplot_facet_positions(fig)
             }
 
@@ -502,7 +596,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
 
             # Apply axis title font to shared facet annotation titles
-            if (!is.null(split.by) && nzchar(split.by)) {
+            if (faceted) {
                 fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
             }
 
@@ -526,36 +620,51 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 abline.opacities = isolate_fn(input$abline.opacities)
             )
 
-            # Statistical annotations
-            if (isolate_fn(input$stats.enabled)) {
+            # Statistical annotations. With several Y variables the tests are run per
+            # variable against dittoViz's reshaped data, which only lines up with what
+            # is drawn while the variables are the sole faceting dimension (the "split"
+            # aesthetic with no split.by) and the x-axis groups are left intact. The
+            # Stats tab is hidden for the other multi-variable layouts.
+            stats.supported <- !multivar || identical(facet.cols, "var.which")
+
+            if (isolate_fn(input$stats.enabled) && stats.supported) {
                 # yPlot uses group.by as the x-axis, color.by for nested grouping
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
 
+                # Mirror dittoViz's multi-variable reshape so each variable's facet is
+                # tested on its own values; a single variable keeps the raw data.
+                stats.data <- if (multivar) .multivar_long_df(data(), y.vars) else data()
+                yvar <- if (multivar) "var.multi" else y.vars
+                facet.var <- if (multivar) "var.which" else split.by
+                # Variables in separate facets are never pooled, whatever the Stats tab
+                # asks for, since their values are not comparable.
+                per.facet <- if (multivar) TRUE else isolate_fn(input$stat.per.facet)
+
                 stats_df <- compute_pairwise_stats(
-                    df = data(), x = xvar,
-                    y = isolate_fn(input$var), pairs = stat_pairs,
+                    df = stats.data, x = xvar,
+                    y = yvar, pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
                     p.adjust.method = isolate_fn(input$stat.p.adjust),
                     paired = isolate_fn(input$stat.paired),
-                    group.by = grp_var, facet.by = split.by,
-                    per.facet = isolate_fn(input$stat.per.facet),
+                    group.by = grp_var, facet.by = facet.var,
+                    per.facet = per.facet,
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
 
                 last_stats_df(stats_df)
 
                 stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = data(),
-                    x = xvar, y = isolate_fn(input$var),
+                    stats_df = stats_df, fig = fig, df = stats.data,
+                    x = xvar, y = yvar,
                     display = isolate_fn(input$stat.display),
                     hide.ns = isolate_fn(input$stat.hide.ns),
                     sig.threshold = isolate_fn(input$stat.sig.threshold),
                     line.color = isolate_fn(input$stat.line.color),
                     line.width = isolate_fn(input$stat.line.width),
                     bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = grp_var, facet.by = split.by,
+                    group.by = grp_var, facet.by = facet.var,
                     step.increase = isolate_fn(input$stat.step.increase),
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
@@ -567,7 +676,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
 
 
-            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = split.by)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.cols)
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 

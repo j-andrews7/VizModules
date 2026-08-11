@@ -751,6 +751,59 @@ test_that(".calculate_range works in grouping mode", {
     expect_equal(result$max, 60)
 })
 
+test_that(".calculate_range spans every column of a multi-column selection", {
+    df <- data.frame(a = c(2, 5, 10), b = c(-3, 0, 4))
+
+    result <- VizModules:::.calculate_range(df, data_col_y = c("a", "b"), axis_scale_factor = 1.1)
+
+    # Both columns share one axis, so the limits must fit the widest of them.
+    expect_equal(result$min, -3)
+    expect_equal(result$max, 10 * 1.1)
+})
+
+test_that(".calculate_range ignores blank names and rejects non-numeric ones in a selection", {
+    df <- data.frame(a = c(2, 5, 10), b = c("x", "y", "z"), stringsAsFactors = FALSE)
+
+    dropped <- VizModules:::.calculate_range(df, data_col_y = c("a", ""), axis_scale_factor = 1)
+    expect_equal(dropped$min, 2)
+    expect_equal(dropped$max, 10)
+
+    expect_null(VizModules:::.calculate_range(df, data_col_y = c("a", "b"), axis_scale_factor = 1))
+    expect_null(VizModules:::.calculate_range(df, data_col_y = character(0), axis_scale_factor = 1))
+    expect_null(VizModules:::.calculate_range(df, data_col_y = NA_character_, axis_scale_factor = 1))
+})
+
+test_that(".calculate_range sums a multi-column selection when stacked", {
+    df <- data.frame(
+        a = c(10, 20, 5, 2),
+        b = c(1, 2, 3, 4),
+        grp = c("A", "A", "B", "B")
+    )
+
+    result <- VizModules:::.calculate_range(df,
+        data_col_x = "grp", data_col_y = c("a", "b"),
+        axis_scale_factor = 1, grouping = TRUE
+    )
+
+    # Stacked bars total both columns within each x group: A = 10+20+1+2.
+    expect_equal(result$min, 0)
+    expect_equal(result$max, 33)
+})
+
+# ─── .multivar_long_df ───────────────────────────────────────────────────────
+
+test_that(".multivar_long_df stacks columns the way dittoViz does internally", {
+    df <- data.frame(grp = c("A", "B"), a = c(1, 2), b = c(3, 4), stringsAsFactors = FALSE)
+
+    long <- VizModules:::.multivar_long_df(df, c("a", "b"))
+
+    expect_equal(nrow(long), 4)
+    expect_equal(long$var.which, c("a", "a", "b", "b"))
+    expect_equal(long$var.multi, c(1, 2, 3, 4))
+    # The original columns ride along so grouping/faceting variables stay usable.
+    expect_equal(long$grp, c("A", "B", "A", "B"))
+})
+
 # ─── empty_plot ─────────────────────────────────────────────────────────────
 
 test_that(".empty_plot returns ggplot by default", {

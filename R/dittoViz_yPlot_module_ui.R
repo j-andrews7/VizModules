@@ -13,12 +13,23 @@
 #' Nearly all parameters for [dittoViz::yPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
+#' The "Y Data" input accepts several columns at once. "Multivar Aesthetic" (on the
+#' Facet tab) then decides how they are shown: `"split"` gives each variable its own
+#' facet (alongside any `split.by` facets), while `"group"` and `"color"` put the
+#' variables on the x-axis or the fill legend respectively. With several variables the
+#' Stats tab is only available for the `"split"` aesthetic with no `split.by` set, and
+#' comparisons are then run separately within each variable's facet. The other layouts
+#' either replace the x-axis groups being compared or facet on two dimensions at once,
+#' neither of which the significance brackets can be placed against.
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::yPlot()] parameters are not available via UI inputs:
 #'
 #' - `xlab` - X-axis label (plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing). With several
+#'   Y variables only the adjustment is shown, as the variables are named by the
+#'   facet strips or the legend instead
 #' - `main` - Plot title (plotly allows interactive editing)
 #' - `sub` - Plot subtitle (not supported in plotly)
 #' - `theme` - ggplot2 theme (not applicable to plotly)
@@ -28,8 +39,6 @@
 #' - `line.color` - Use `hline.colors` instead
 #' - `line.linewidth` - Use `hline.widths` instead
 #' - `line.opacity` - Use `hline.opacities` instead
-#' - `multivar.aes` - Aesthetic used for multiple `var` columns (not implemented; one var at a time)
-#' - `multivar.split.dir` - Facet direction for multiple `var` columns (not implemented)
 #' - `rows.use` - Row subset to plot (not implemented)
 #' - `colors` - Integer index/order into `color.panel` (managed via the palette UI)
 #' - `shape.panel` - Shapes used with `shape.by` (not implemented)
@@ -45,7 +54,12 @@
 #' @section Plot parameters and defaults:
 #' The following [dittoViz::yPlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
 #'
-#' - `var` - Y-axis variable (UI: "Y data (var)", default: 2nd numeric variable)
+#' - `var` - Y-axis variable(s) (UI: "Y Data", default: 2nd numeric variable). Several
+#'   may be selected; `multivar.aes` then controls how they are displayed
+#' - `multivar.aes` - Aesthetic used for multiple `var` columns (UI: "Multivar Aesthetic",
+#'   default: "split")
+#' - `multivar.split.dir` - Facet direction for multiple `var` columns (UI:
+#'   "Multivar Split Dir", default: "col")
 #' - `group.by` - Grouping variable for x-axis (UI: "Group by", default: 2nd categorical variable)
 #' - `color.by` - Coloring variable (UI: "Color by", default: "")
 #' - `shape.by` - Shape variable (UI: "Shape by", default: "")
@@ -161,24 +175,25 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
 
     # Recognized data adjustments for the (numeric) continuous variable.
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    if (length(num.choices) >= 2) {
-        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
-        min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
-    } else {
-        max.y <- 1
-        min.y <- 0
-    }
+    # `var` may hold several columns, in which case the limits span all of them.
+    default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
+    y.range <- .calculate_range(
+        df = data, data_col_y = default.var,
+        axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+    )
+    max.y <- if (!is.null(y.range)) y.range$max else 1
+    min.y <- if (!is.null(y.range)) y.range$min else 0
 
     selected <- list(
         "var", "group.by", "color.by", "shape.by",
         "plots", c("min", "max"), "var.adjustment", "var.adj.fxn",
         "split.by", c("split.nrow", "split.ncol"),
+        "multivar.aes", "multivar.split.dir",
         "split.adjust", "do.raster", "raster.dpi",
         "jitter.size", "jitter.width", "jitter.color",
         "jitter.shape.legend.size", "jitter.shape.legend.show",
@@ -200,10 +215,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             tipify(
                 viz_select_input(ns("var"), "Y Data",
                     choices = num.choices[nzchar(num.choices)],
-                    selected = get_default(
-                        defaults, "var", num.choices[2],
-                        function(x) x %in% num.choices
-                    )
+                    selected = default.var,
+                    multiple = TRUE
                 ),
                 documentParameters$var,
                 placement = "top", options = list(container = "body")
@@ -528,6 +541,28 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 step = 1, min = 0,
                 value = get_default(defaults, "split.nrow", NA, is.numeric)
             ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
+            tipify(
+                viz_select_input(ns("multivar.aes"), "Multivar Aesthetic",
+                    choices = c("split", "group", "color"),
+                    selected = get_default(
+                        defaults, "multivar.aes", "split",
+                        function(x) x %in% c("split", "group", "color")
+                    )
+                ),
+                documentParameters$multivar.aes,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                viz_select_input(ns("multivar.split.dir"), "Multivar Split Dir",
+                    choices = c("col", "row"),
+                    selected = get_default(
+                        defaults, "multivar.split.dir", "col",
+                        function(x) x %in% c("col", "row")
+                    )
+                ),
+                documentParameters$multivar.split.dir,
+                placement = "top", options = list(container = "body")
+            ),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),

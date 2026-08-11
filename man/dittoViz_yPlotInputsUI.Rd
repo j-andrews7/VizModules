@@ -36,6 +36,15 @@ with \code{columns} controlling the number of columns in the grid.
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
 Nearly all parameters for \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
+
+The "Y Data" input accepts several columns at once. "Multivar Aesthetic" (on the
+Facet tab) then decides how they are shown: \code{"split"} gives each variable its own
+facet (alongside any \code{split.by} facets), while \code{"group"} and \code{"color"} put the
+variables on the x-axis or the fill legend respectively. With several variables the
+Stats tab is only available for the \code{"split"} aesthetic with no \code{split.by} set, and
+comparisons are then run separately within each variable's facet. The other layouts
+either replace the x-axis groups being compared or facet on two dimensions at once,
+neither of which the significance brackets can be placed against.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
@@ -43,7 +52,9 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing). With several
+Y variables only the adjustment is shown, as the variables are named by the
+facet strips or the legend instead
 \item \code{main} - Plot title (plotly allows interactive editing)
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -53,8 +64,6 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{line.color} - Use \code{hline.colors} instead
 \item \code{line.linewidth} - Use \code{hline.widths} instead
 \item \code{line.opacity} - Use \code{hline.opacities} instead
-\item \code{multivar.aes} - Aesthetic used for multiple \code{var} columns (not implemented; one var at a time)
-\item \code{multivar.split.dir} - Facet direction for multiple \code{var} columns (not implemented)
 \item \code{rows.use} - Row subset to plot (not implemented)
 \item \code{colors} - Integer index/order into \code{color.panel} (managed via the palette UI)
 \item \code{shape.panel} - Shapes used with \code{shape.by} (not implemented)
@@ -73,7 +82,12 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 
 The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
-\item \code{var} - Y-axis variable (UI: "Y data (var)", default: 2nd numeric variable)
+\item \code{var} - Y-axis variable(s) (UI: "Y Data", default: 2nd numeric variable). Several
+may be selected; \code{multivar.aes} then controls how they are displayed
+\item \code{multivar.aes} - Aesthetic used for multiple \code{var} columns (UI: "Multivar Aesthetic",
+default: "split")
+\item \code{multivar.split.dir} - Facet direction for multiple \code{var} columns (UI:
+"Multivar Split Dir", default: "col")
 \item \code{group.by} - Grouping variable for x-axis (UI: "Group by", default: 2nd categorical variable)
 \item \code{color.by} - Coloring variable (UI: "Color by", default: "")
 \item \code{shape.by} - Shape variable (UI: "Shape by", default: "")
