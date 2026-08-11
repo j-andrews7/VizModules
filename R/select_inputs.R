@@ -29,6 +29,7 @@
 #' @return A `shiny.tag` object to be included in a UI definition.
 #'
 #' @import shiny
+#' @importFrom htmltools attachDependencies
 #' @importFrom stats setNames
 #' @importFrom utils modifyList
 #' @export
@@ -68,10 +69,40 @@ viz_select_input <- function(inputId, label, choices, selected = NULL, multiple 
         updateOn = if (multiple) "close" else "change",
         # Render the dropdown on <body> so it is not clipped by the input grid,
         # tabsets, or the figure builder's panels.
-        dropboxWrapper = "body"
+        dropboxWrapper = "body",
+        # Body-wrapped dropdowns must clear Bootstrap's modal stacking context
+        # (1050 in BS3, 1055 in BS5) or they render behind an open modal.
+        zIndex = 1060
     )
 
-    do.call(shinyWidgets::virtualSelectInput, modifyList(args, dots))
+    attachDependencies(
+        do.call(shinyWidgets::virtualSelectInput, modifyList(args, dots)),
+        .viz_select_dependency(),
+        append = TRUE
+    )
+}
+
+
+#' HTML dependency for viz_select_input
+#'
+#' Ships the small script that keeps Bootstrap's modal focus trap from stealing
+#' focus away from a body-rendered virtual-select dropdown.
+#'
+#' @return An `htmltools::htmlDependency` object.
+#'
+#' @importFrom htmltools htmlDependency
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_viz_select_dependency
+#' @keywords internal
+.viz_select_dependency <- function() {
+    htmlDependency(
+        name = "viz-select",
+        version = as.character(utils::packageVersion("VizModules")),
+        src = "src",
+        package = "VizModules",
+        script = "vizSelect.js"
+    )
 }
 
 

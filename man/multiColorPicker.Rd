@@ -51,6 +51,22 @@ Build a compact Shiny input that assigns colors to a set of groups using a
 palette or manual hex pickers. The value returned to \code{input[[inputId]]} is a
 named character vector of hex colors keyed by group.
 }
+\details{
+A group's color swatch is a native \verb{<input type="color">}, whose
+dialog reports a new value for every drag or click inside it. Rather than
+send each one - rebuilding a dependent plot dozens of times for a single
+color choice - the input reports once the dialog has closed, detected as the
+first pointer, key, or scroll event the page sees again (the dialog holds
+both while it is open) or the browser window regaining focus. Typing in a hex
+field is coalesced until the user pauses instead. One-shot actions - clicking
+a palette swatch, "Apply", "Reset", selecting another group, or committing a
+hex code with Enter or by clicking away - report immediately.
+
+The widget reflows to its container: the palette selector shrinks and the
+buttons wrap below it when narrow, and long group names wrap rather than
+running under their controls, so it can be dropped into a sidebar or an input
+grid cell without controls escaping the panel.
+}
 \examples{
 if (interactive()) {
     library(shiny)

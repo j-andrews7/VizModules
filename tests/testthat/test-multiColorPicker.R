@@ -48,6 +48,73 @@ test_that("multiColorPicker respects selected palette and manual overrides", {
     expect_identical(initial[["C"]], "#AABBCC")
 })
 
+test_that("the widget waits out the colour dialog but reports one-shot actions", {
+    js <- readLines(
+        system.file("src", "multiColorPicker.js", package = "VizModules"),
+        warn = FALSE
+    )
+
+    handler_body <- function(selector, events) {
+        start <- grep(
+            paste0("\\$el\\.on\\(\"", events, "[^\"]*\", \"", selector, "\""),
+            js
+        )
+        expect_length(start, 1)
+        paste(js[start:(start + 12)], collapse = "\n")
+    }
+
+    # The colour dialog gives no close event, so its stream is held until the
+    # page sees the user again rather than reported per drag step or on a timer.
+    colour_handler <- handler_body("\\.mc-color-input", "input")
+    expect_match(colour_handler, "watchForClose\\(\\)")
+    expect_false(grepl("callback\\(", colour_handler))
+    expect_true(any(grepl("pointerdown", js, fixed = TRUE)))
+
+    # Typing a hex code is coalesced on a timer instead: the page sees those.
+    expect_true(any(grepl("TYPING_DEBOUNCE_MS = \\d+", js)))
+    expect_match(handler_body("\\.mc-text-input", "input"), "queueReport\\(\\)")
+
+    # Deliberate one-shot actions still report straight away.
+    expect_match(handler_body("\\.mc-swatch", "click"), "reportNow\\(\\)")
+    expect_match(handler_body("\\.mc-apply-palette", "click"), "reportNow\\(\\)")
+    expect_match(handler_body("\\.mc-reset-palette", "click"), "reportNow\\(\\)")
+})
+
+test_that("the widget's controls are laid out to reflow in a narrow container", {
+    css <- paste(
+        readLines(
+            system.file("src", "multiColorPicker.css", package = "VizModules"),
+            warn = FALSE
+        ),
+        collapse = "\n"
+    )
+
+    rule <- function(selector) {
+        m <- regmatches(
+            css,
+            regexpr(paste0(selector, "\\s*\\{[^}]*\\}"), css)
+        )
+        expect_length(m, 1)
+        m
+    }
+
+    # Nothing in the header may hold the panel open at a fixed width: that is
+    # what pushed "Apply"/"Reset" outside it in narrow layouts.
+    expect_match(rule("\\.multi-color-picker \\.mc-actions"), "flex-wrap:\\s*wrap")
+    expect_match(
+        rule("\\.multi-color-picker \\.selectize-control\\.mc-palette-select"),
+        "min-width:\\s*0"
+    )
+
+    # Group rows wrap, and long group names wrap with them rather than running
+    # underneath the swatch.
+    expect_match(rule("\\.multi-color-picker \\.mc-color-row"), "flex-wrap:\\s*wrap")
+    expect_match(
+        rule("\\.multi-color-picker \\.mc-group-label"),
+        "overflow-wrap:\\s*anywhere"
+    )
+})
+
 test_that("input handler returns named vector and handles null", {
     .register_multi_color_picker_handler()
     registry <- getFromNamespace("inputHandlers", "shiny")
