@@ -50,6 +50,51 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             })
         }
 
+        # Keep the X/Y data selectors in step with the data. Only refresh when
+        # the set of columns actually changes (not on every row-filter), to
+        # preserve the user's current selection. Mirrors the analogous `var`
+        # refresh in dittoViz_yPlotServer(): the InputsUI is often built from a
+        # light placeholder frame (e.g. a handful of columns) while the true
+        # `data` reactive carries the full column set (e.g. a wide gene table),
+        # so choices/selections must be refreshed once real data flows in.
+        xy_choice_cache <- reactiveVal(NULL)
+        observeEvent(data(), {
+            df <- data()
+            req(df)
+            cols <- names(df)
+            if (identical(cols, xy_choice_cache())) {
+                return()
+            }
+            xy_choice_cache(cols)
+            choices <- c("", cols)
+
+            current.x <- isolate(input$x.by)
+            default.x <- get_default(
+                defaults, "x.by",
+                if (length(cols)) cols[1] else "",
+                function(x) x %in% choices
+            )
+            selected.x <- if (!is.null(current.x) && nzchar(current.x) && current.x %in% choices) {
+                current.x
+            } else {
+                default.x
+            }
+            update_viz_select(session, "x.by", choices = choices, selected = selected.x)
+
+            current.y <- isolate(input$y.by)
+            default.y <- get_default(
+                defaults, "y.by",
+                if (length(cols) > 1) cols[2] else "",
+                function(x) x %in% choices
+            )
+            selected.y <- if (!is.null(current.y) && nzchar(current.y) && current.y %in% choices) {
+                current.y
+            } else {
+                default.y
+            }
+            update_viz_select(session, "y.by", choices = choices, selected = selected.y)
+        }, ignoreNULL = TRUE)
+
         # Available color groups for the current color.by selection
         # NOTE: We intentionally don't use colLevels() here because it converts
         # to character then back to factor, which sorts levels alphabetically.
