@@ -11,7 +11,7 @@ reset_axis_title_text(store, keys = c("axis:x", "axis:y"))
 
 \item{keys}{Character vector of axis annotation keys to clear text for.
 Defaults to both axis titles, \code{c("axis:x", "axis:y")}. The
-\verb{#<occurrence>} suffix added by \code{\link[=.annotation_edit_keys]{.annotation_edit_keys()}} is ignored when
+\verb{#<occurrence>} suffix added by \code{.annotation_edit_keys()} is ignored when
 matching.}
 }
 \value{
