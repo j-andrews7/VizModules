@@ -521,8 +521,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 hover.data = hover.data,
                 hover.round.digits = isolate_fn(input$hover.round.digits),
                 color.panel = if (!is.null(color.panel.arg)) color.panel.arg else dittoViz::dittoColors(),
-                min = if (adjustment.active) NA else isolate_fn(input$y.min),
-                max = if (adjustment.active) NA else isolate_fn(input$y.max),
+                # A blank numeric input reports NULL (not NA) to Shiny, but
+                # dittoViz::yPlot()'s internal is.na(min)/is.na(max) checks
+                # require a scalar NA -- NULL crashes them ("missing value
+                # where TRUE/FALSE needed" from `is.na(NULL) || is.na(NULL)`).
+                min = if (adjustment.active) NA else isolate_fn(input$y.min) %__% NA,
+                max = if (adjustment.active) NA else isolate_fn(input$y.max) %__% NA,
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
