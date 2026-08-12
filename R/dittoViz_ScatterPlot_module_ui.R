@@ -80,7 +80,10 @@
 #' - `max.color` - Maximum color (UI: "Max Color", default: "#0072B2")
 #' - `contour.color` - Contour color (UI: "Contour Color", default: "black")
 #' - `contour.linetype` - Contour linetype (UI: "Contour Linetype", default: "solid")
-#' - `color.panel` - Custom color values (UI: color.panel.ui, derived from palette)
+#' - `color.panel` - Named character vector mapping `color.by` levels to colors, e.g.
+#'   `c(setosa = "#FF0000", virginica = "blue")` (UI: color.panel.ui). Seeds the picker; unnamed
+#'   groups fall back to the default palette and user edits take precedence.
+#' - `single.point.color` - Point color used when `color.by` is unset (UI: "Point color", default: "#000000")
 #' - `split.nrow` - Number of split rows (UI: "Rows", default: NA)
 #' - `split.ncol` - Number of split columns (UI: "Columns", default: NA)
 #' - `multivar.split.dir` - Multivar split direction (UI: "Multivar Split Dir", default: "col")

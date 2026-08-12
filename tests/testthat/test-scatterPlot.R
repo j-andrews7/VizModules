@@ -125,3 +125,49 @@ test_that("highlight styling matches points by value on a categorical x-axis", {
     coord_mask <- trace_map$coord_id %in% highlight_coords & value_mask
     expect_equal(sum(coord_mask), 0)
 })
+
+test_that("scatterPlot seeds group colors from defaults but yields to the picker", {
+    df <- data.frame(
+        x = 1:6, y = 6:1,
+        grp = rep(c("A", "B", "C"), each = 2),
+        stringsAsFactors = FALSE
+    )
+
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(
+            id = "scatter", data = shiny::reactive(df),
+            defaults = list(color.panel = c(A = "red", B = "#00FF00"))
+        ),
+        {
+            session$setInputs(color.by = "grp", auto.update = TRUE)
+
+            # C is unnamed by the defaults, so it falls back to the stock palette.
+            resolved <- color.panel()
+            expect_equal(resolved[["A"]], "#FF0000")
+            expect_equal(resolved[["B"]], "#00FF00")
+            expect_false(resolved[["C"]] %in% c("#FF0000", "#00FF00"))
+
+            # A user's pick wins; groups they leave alone keep the supplied color.
+            session$setInputs(color.panel = c(A = "#0000FF"))
+            expect_equal(color.panel()[["A"]], "#0000FF")
+            expect_equal(color.panel()[["B"]], "#00FF00")
+        }
+    )
+})
+
+test_that("scatterPlot uses the default single point color when nothing is grouped", {
+    df <- data.frame(x = 1:4, y = 4:1)
+
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(
+            id = "scatter", data = shiny::reactive(df),
+            defaults = list(single.point.color = "#ABCDEF")
+        ),
+        {
+            session$setInputs(color.by = "", auto.update = TRUE)
+            expect_equal(color.panel(), "#ABCDEF")
+        }
+    )
+})

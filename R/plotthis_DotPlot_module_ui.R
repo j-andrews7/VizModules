@@ -70,7 +70,7 @@
 #' - `facet_ncol` - Number of facet columns (UI: "Columns", default: NULL)
 #' - `facet_nrow` - Number of facet rows (UI: "Rows", default: NULL)
 #' - `facet_byrow` - Facet ordering direction (UI: "Facet by Row", default: TRUE)
-#' - `palette` - Continuous fill palette (UI: "Color Palette", default: "Spectral")
+#' - `palette.name` - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 #' - `palreverse` - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 #' - `alpha` - Dot fill transparency (UI: "Alpha", default: 1)
 #' - `border_color` - Dot border color; only constant colors are supported

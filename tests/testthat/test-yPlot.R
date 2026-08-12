@@ -308,3 +308,26 @@ test_that("hover.round.digits controls rounding of numeric hover values", {
     decimals <- ifelse(grepl("\\.", vals), nchar(sub(".*\\.", "", vals)), 0L)
     expect_true(all(decimals <= 2))
 })
+
+test_that("yPlot seeds its palette from defaults", {
+    skip_if_not_installed("dittoViz")
+
+    df <- data.frame(
+        grp = rep(c("A", "B"), each = 4),
+        val = as.numeric(1:8),
+        stringsAsFactors = FALSE
+    )
+
+    shiny::testServer(
+        dittoViz_yPlotServer,
+        args = list(
+            id = "yplot", data = shiny::reactive(df),
+            defaults = list(palette.colours = c(A = "red", B = "#00FF00"))
+        ),
+        {
+            session$setInputs(var = "val", group.by = "grp", color.by = "")
+            session$flushReact()
+            expect_equal(resolved_palette(), c(A = "#FF0000", B = "#00FF00"))
+        }
+    )
+})

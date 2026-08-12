@@ -122,6 +122,10 @@
 #' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
 #' - `abline.linetypes` - Line types for diagonal lines (UI: "Line types", default: "dashed")
 #' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
+#' - `gradient.palette` - Gradient palette used when `fill_by` is numeric (UI: "Color palette", default: "Spectral")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

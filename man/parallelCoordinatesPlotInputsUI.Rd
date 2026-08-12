@@ -74,6 +74,9 @@ and/or the \code{defaults} argument:
 \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
 \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
 \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
 }
 }
 

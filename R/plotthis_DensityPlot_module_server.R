@@ -80,7 +80,9 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 # No grouping - show single color picker for fill color
                 initial_color <- isolate(input$single.fill.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
-                    initial_color <- default_palette_values[1]
+                    initial_color <- get_default(
+                        defaults, "single.fill.color", default_palette_values[1], is.character
+                    )
                 }
                 return(colourInput(
                     ns("single.fill.color"),
@@ -89,7 +91,10 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
 
             # The rebuilt picker reports its value on a client round-trip. Pause
             # readers until it does, so the plot renders once rather than twice.
@@ -143,6 +148,9 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
             # Action Button
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
@@ -178,7 +186,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
-                default_palette_values
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
 
             palcolor_arg <- NULL

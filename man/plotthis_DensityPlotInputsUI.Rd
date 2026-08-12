@@ -142,6 +142,10 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
 \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line types", default: "dashed")
 \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
+\item \code{single.fill.color} - Fill color used when no grouping is set (UI: "Fill color")
 }
 }
 

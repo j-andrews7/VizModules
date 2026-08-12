@@ -114,7 +114,10 @@ a custom circle size legend is drawn since plotly cannot render a native size le
 \item \code{max.color} - Maximum color (UI: "Max Color", default: "#0072B2")
 \item \code{contour.color} - Contour color (UI: "Contour Color", default: "black")
 \item \code{contour.linetype} - Contour linetype (UI: "Contour Linetype", default: "solid")
-\item \code{color.panel} - Custom color values (UI: color.panel.ui, derived from palette)
+\item \code{color.panel} - Named character vector mapping \code{color.by} levels to colors, e.g.
+\code{c(setosa = "#FF0000", virginica = "blue")} (UI: color.panel.ui). Seeds the picker; unnamed
+groups fall back to the default palette and user edits take precedence.
+\item \code{single.point.color} - Point color used when \code{color.by} is unset (UI: "Point color", default: "#000000")
 \item \code{split.nrow} - Number of split rows (UI: "Rows", default: NA)
 \item \code{split.ncol} - Number of split columns (UI: "Columns", default: NA)
 \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")

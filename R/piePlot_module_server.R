@@ -48,25 +48,38 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
         }
         ns <- session$ns
 
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+
         # Persist manual legend/annotation/colorbar repositioning across rebuilds.
         plot_source <- session$ns("pie")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
-        output$color.picker <- renderUI({
+        slice_levels <- reactive({
             d <- data_reactive()
             lbl <- input$labels
-            req(!is.null(lbl), lbl %in% names(d))
+            if (is.null(d) || is.null(lbl) || !nzchar(lbl) || !lbl %in% names(d)) {
+                return(character(0))
+            }
+            unique(na.omit(as.character(d[[lbl]])))
+        })
 
-            groups <- unique(na.omit(as.character(d[[lbl]])))
+        output$color.picker <- renderUI({
+            groups <- slice_levels()
             if (length(groups) == 0) {
                 return(NULL)
             }
+
+            initial_colors <- isolate(resolve_palette(
+                groups, input$slice.colors, default_palette_values,
+                .default_group_colors(defaults, "slice.colors")
+            ))
 
             multiColorPicker(
                 ns("slice.colors"),
                 label = "Slice colors",
                 groups = groups,
                 selected_palette = "dittoColors",
+                colors = initial_colors,
                 compact = TRUE
             )
         })
@@ -132,7 +145,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 value = get_default(defaults, "slice.line.width", 0, is.numeric))
 
             # Slice colors
-            updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
+            .reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
         })
@@ -163,24 +176,14 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             }
 
             label_values <- as.character(d[[label_col]])
-            color_map <- isolate_fn(input$slice.colors)
-
-            if (is.null(color_map) || length(color_map) == 0) {
-                default_cols <- default_palettes()$choices$Defaults$dittoColors
-                color_map <- stats::setNames(rep_len(default_cols, length(unique(label_values))), unique(label_values))
-            }
-
-            colour_vector <- color_map
-            if (!is.null(names(color_map)) && any(nzchar(names(color_map)))) {
-                colour_vector <- color_map[match(label_values, names(color_map))]
-            } else {
-                colour_vector <- rep_len(color_map, length(label_values))
-            }
-
-            if (any(is.na(colour_vector))) {
-                fallback_cols <- default_palettes()$choices$Defaults$dittoColors
-                colour_vector[is.na(colour_vector)] <- rep_len(fallback_cols, sum(is.na(colour_vector)))
-            }
+            slice_levels <- unique(label_values)
+            color_map <- resolve_palette(
+                slice_levels,
+                isolate_fn(input$slice.colors),
+                default_palette_values,
+                .default_group_colors(defaults, "slice.colors")
+            )
+            colour_vector <- unname(color_map[match(label_values, names(color_map))])
 
             fig <- piePlot(
                 df = d,
