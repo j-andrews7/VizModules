@@ -339,7 +339,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             # Hover
             update_viz_select(session, "hover.data",
-                selected = get_default(defaults, "hover.data", "", function(x) x == "" || all(x %in% choices)))
+                selected = get_default(defaults, "hover.data", "", function(x) all(x == "") || all(x %in% choices)))
             updateNumericInput(session, "hover.round.digits",
                 value = get_default(defaults, "hover.round.digits", 5, is.numeric))
 
