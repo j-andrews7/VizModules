@@ -77,6 +77,9 @@ The following \code{\link[=piePlot]{piePlot()}} parameters can be accessed via U
 \item \code{legend.font.family} - Legend font (UI: "Legend font", default: "Arial")
 \item \code{legend.font.size} - Legend font size (UI: "Legend font size", default: 12)
 \item \code{legend.font.color} - Legend font color (UI: "Legend font color", default: "#000000")
+\item \code{slice.colors} - Named character vector mapping label levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Slice colors"). Seeds the picker; unnamed slices fall
+back to the default palette and user edits take precedence.
 }
 }
 

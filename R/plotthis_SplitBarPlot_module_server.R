@@ -132,7 +132,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = default_gradient_palette
+                    selected = get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
@@ -141,7 +141,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     return(NULL)
                 }
 
-                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+                initial_colors <- isolate(resolve_palette(
+                    groups, input$palette.colours, default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
+                ))
 
                 # The rebuilt picker reports its value on a client round-trip. Pause
                 # readers until it does, so the plot renders once rather than twice.
@@ -294,6 +297,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             )
 
             reset_axes_inputs(session, defaults)
+            # Colors
+            update_viz_select(session, "gradient.palette",
+                selected = get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
+            )
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
@@ -357,7 +366,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Determine palette/palcolor based on fill_by type
             palcolor_arg <- NULL
-            palette_arg <- default_gradient_palette
+            palette_arg <- get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
             if (isolate_fn(fill_by_is_numeric())) {
                 # Numeric fill_by: look up hex colors and pass via palcolor
                 sel_palette <- isolate_fn(input$gradient.palette)
@@ -372,7 +381,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
                     isolate_fn(input$palette.colours),
-                    default_palette_values
+                    default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
                 )
                 if (!is.null(palette_values) && length(palette_values) > 0) {
                     palcolor_arg <- as.list(palette_values)

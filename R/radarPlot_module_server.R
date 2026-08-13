@@ -49,33 +49,44 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
         }
         ns <- session$ns
 
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+
         # Persist manual legend/annotation/colorbar repositioning across rebuilds.
         plot_source <- session$ns("radar")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
-        output$color.picker <- renderUI({
+        trace_levels <- reactive({
             d <- data_reactive()
             grp <- input$group
+            if (is.null(d) || is.null(grp) || !nzchar(grp) || !grp %in% names(d)) {
+                return(character(0))
+            }
+            unique(na.omit(as.character(d[[grp]])))
+        })
 
-            # Only show color picker if group is selected
-            if (is.null(grp) || grp == "" || !grp %in% names(d)) {
+        output$color.picker <- renderUI({
+            groups <- trace_levels()
+
+            # Only show the multi-color picker if a grouping column is selected
+            if (length(groups) == 0) {
                 return(tagList(
                     colourInput(ns("single.color"), "Trace color:",
-                        value = "#1F77B4"
+                        value = get_default(defaults, "single.color", "#1F77B4", is.character)
                     )
                 ))
             }
 
-            groups <- unique(na.omit(as.character(d[[grp]])))
-            if (length(groups) == 0) {
-                return(NULL)
-            }
+            initial_colors <- isolate(resolve_palette(
+                groups, input$trace.colors, default_palette_values,
+                .default_group_colors(defaults, "trace.colors")
+            ))
 
             multiColorPicker(
                 ns("trace.colors"),
                 label = "Trace colors",
                 groups = groups,
                 selected_palette = "dittoColors",
+                colors = initial_colors,
                 compact = TRUE
             )
         })
@@ -103,6 +114,11 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             update_viz_select(session, "marker.symbol",
                 selected = get_default(defaults, "marker.symbol", "circle"))
             updateSliderInput(session, "opacity", value = get_default(defaults, "opacity", 0.6, is.numeric))
+
+            # Trace colors
+            updateColourInput(session, "single.color",
+                value = get_default(defaults, "single.color", "#1F77B4"))
+            .reset_group_colors(session, "trace.colors", defaults, trace_levels(), default_palette_values)
 
             # Radial axis
             updateCheckboxInput(session, "radial.visible",
@@ -178,20 +194,17 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             if (is.null(group_col) || !group_col %in% names(d)) {
                 # Single trace - use single color
                 color_map <- isolate_fn(input$single.color)
-                if (is.null(color_map)) {
-                    color_map <- "#1F77B4"
+                if (is.null(color_map) || !nzchar(color_map)) {
+                    color_map <- get_default(defaults, "single.color", "#1F77B4", is.character)
                 }
             } else {
                 # Multiple traces - use color map
-                color_map <- isolate_fn(input$trace.colors)
-                if (is.null(color_map) || length(color_map) == 0) {
-                    group_values <- unique(d[[group_col]])
-                    default_cols <- default_palettes()$choices$Defaults$dittoColors
-                    color_map <- stats::setNames(
-                        rep_len(default_cols, length(group_values)),
-                        group_values
-                    )
-                }
+                color_map <- resolve_palette(
+                    unique(na.omit(as.character(d[[group_col]]))),
+                    isolate_fn(input$trace.colors),
+                    default_palette_values,
+                    .default_group_colors(defaults, "trace.colors")
+                )
             }
 
             # Handle radial range

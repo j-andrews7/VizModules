@@ -57,6 +57,10 @@
 #' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
 #' - `bgcolor` - Plot background color (UI: "Plot background color", default: "#FFFFFF")
 #' - `polar.bgcolor` - Polar area background color (UI: "Polar area background", default: "#FFFFFF")
+#' - `trace.colors` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Trace colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
+#' - `single.color` - Trace color used when no grouping is set (UI: "Trace color:", default: "#1F77B4")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

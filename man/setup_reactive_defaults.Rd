@@ -51,9 +51,10 @@ kept as a literal default value.
 }
 
 Control sync is cosmetic and uses a generic \code{sendInputMessage()}, which covers
-the standard text, numeric, checkbox, select, colour and switch inputs. A
-composite widget that ignores that message will simply not re-display the new
-value; the plot is still correct, because the render reads the store.
+the standard text, numeric, checkbox, select, colour and switch inputs, plus
+\code{\link[=multiColorPicker]{multiColorPicker()}} when the value is a named vector of colors. A composite
+widget that ignores that message will simply not re-display the new value; the
+plot is still correct, because the render reads the store.
 }
 \examples{
 if (interactive()) {

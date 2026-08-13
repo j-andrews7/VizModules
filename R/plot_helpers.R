@@ -322,7 +322,7 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #'   be overwritten by a captured edit. Used for axis titles carrying an active
 #'   data adjustment (e.g. `"log2(units)"`), so the fresh label wins while any
 #'   captured position/font still persists. The `#<occurrence>` suffix added by
-#'   [.annotation_edit_keys()] is stripped before matching. Defaults to none.
+#'   `.annotation_edit_keys()` is stripped before matching. Defaults to none.
 #'
 #' @return The figure with manual edits re-applied.
 #'
@@ -588,7 +588,7 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 #' @param store The list returned by [setup_manual_edits()].
 #' @param keys Character vector of axis annotation keys to clear text for.
 #'   Defaults to both axis titles, `c("axis:x", "axis:y")`. The
-#'   `#<occurrence>` suffix added by [.annotation_edit_keys()] is ignored when
+#'   `#<occurrence>` suffix added by `.annotation_edit_keys()` is ignored when
 #'   matching.
 #'
 #' @return Invisibly, `TRUE` if any stored text was removed, otherwise `FALSE`.

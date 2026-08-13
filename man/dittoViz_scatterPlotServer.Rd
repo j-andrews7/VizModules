@@ -9,7 +9,6 @@ dittoViz_scatterPlotServer(
   data,
   hide.inputs = NULL,
   hide.tabs = NULL,
-  manual.colors = NULL,
   defaults = NULL
 )
 }
@@ -25,8 +24,6 @@ but the user will not be able to see/adjust them in the UI.}
 \item{hide.tabs}{A character vector of tab names to hide.
 Inputs in these tabs will still be initialized and their values passed to the plot function,
 but the user will not be able to see/adjust them in the UI.}
-
-\item{manual.colors}{A named character vector of colors or a reactive returning a named character vector of colors.}
 
 \item{defaults}{A named list of default values for the inputs. When the reset button is
 clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically

@@ -116,6 +116,9 @@ The following parameters controlling plotly-specific features and styling are al
 \item \code{shape.line.width} - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)
 \item \code{shape.linetype} - Line dash style for drawn shapes (UI: "Shape Linetype", default: "solid")
 \item \code{shape.opacity} - Opacity for drawn shapes (UI: "Shape Opacity", default: 1)
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
 }
 }
 

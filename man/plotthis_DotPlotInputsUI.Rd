@@ -98,7 +98,7 @@ default: "<"); combined with \code{fill_cutoff} into a \code{plotthis} expressio
 \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
 \item \code{facet_nrow} - Number of facet rows (UI: "Rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by Row", default: TRUE)
-\item \code{palette} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
+\item \code{palette.name} - Continuous fill palette (UI: "Color Palette", default: "Spectral")
 \item \code{palreverse} - Reverse the color palette (UI: "Reverse palette", default: FALSE)
 \item \code{alpha} - Dot fill transparency (UI: "Alpha", default: 1)
 \item \code{border_color} - Dot border color; only constant colors are supported

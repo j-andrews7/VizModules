@@ -8,7 +8,6 @@
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
 #'   the same list passed to the corresponding UI function. An entry may also be a
@@ -29,12 +28,13 @@
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL, defaults = NULL) {
+dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
 
     moduleServer(id, function(input, output, session) {
         params <- setup_reactive_defaults(defaults, input, session)
         ns <- session$ns
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
         # Unique source ID for plotly event_data, scoped to this module instance
         plot_source <- session$ns("scatter")
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -122,19 +122,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
-        # Resolve manual colors supplied to the module (reactive or static)
-        manual_color_values <- reactive({
-            if (is.null(manual.colors)) {
-                return(NULL)
-            }
-
-            if (is.reactive(manual.colors)) {
-                manual.colors()
-            } else {
-                manual.colors
-            }
-        })
-
         # Render the multiColorPicker for discrete color mappings or single colourInput
         output$color.panel.ui <- renderUI({
             groups <- color_levels()
@@ -143,7 +130,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 # No grouping - show single color picker for point color
                 initial_color <- isolate(input$single.point.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
-                    initial_color <- "#000000"
+                    initial_color <- get_default(defaults, "single.point.color", "#000000", is.character)
                 }
                 return(colourInput(
                     ns("single.point.color"),
@@ -152,10 +139,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(input$color.panel)
-            if (is.null(initial_colors) || length(initial_colors) == 0) {
-                initial_colors <- manual_color_values()
-            }
+            initial_colors <- isolate(resolve_palette(
+                groups, input$color.panel, default_palette_values,
+                .default_group_colors(defaults, "color.panel")
+            ))
 
             # The rebuilt picker reports its value on a client round-trip. Pause
             # readers until it does, so the plot renders once rather than twice.
@@ -184,42 +171,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 if (!is.null(single_color) && nzchar(single_color)) {
                     return(single_color)
                 } else {
-                    return(default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1])
+                    return(get_default(defaults, "single.point.color", default_palette_values[1], is.character))
                 }
             }
 
-            picker_values <- isolate_fn(input$color.panel)
-            manual_vals <- manual_color_values()
-
-            palette <- NULL
-
-            # Prioritize manual.colors when provided (e.g., from wrapper modules like volcanoPlot)
-            # This ensures wrapper-supplied colors override the internal color.panel picker
-            if (!is.null(manual_vals) && length(manual_vals) > 0) {
-                palette <- manual_vals
-            } else if (!is.null(picker_values) && length(picker_values) > 0) {
-                palette <- picker_values
-            }
-
-            if (is.null(palette) || length(palette) == 0) {
-                palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-            }
-
-            if (!is.null(names(palette)) && any(nzchar(names(palette)))) {
-                palette <- palette[match(levels, names(palette))]
-            }
-
-            if (any(is.na(palette))) {
-                fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                na_idx <- which(is.na(palette))
-                palette[na_idx] <- rep_len(fallback_palette, length(na_idx))
-            }
-
-            palette <- rep_len(palette, length(levels))
-            palette <- palette[seq_len(length(levels))]
-            palette <- setNames(palette, levels)
-
-            palette
+            resolve_palette(
+                levels,
+                isolate_fn(input$color.panel),
+                default_palette_values,
+                .default_group_colors(defaults, "color.panel")
+            )
         })
 
         # Store for manual layout edits (legend/annotation/axis-title/colorbar
@@ -324,8 +285,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = get_default(defaults, "single.point.color", "#000000")
             )
 
-            # Reset multiColorPicker to its initial palette
-            updateMultiColorPicker(session, "color.panel", reset = TRUE)
+            # Reset multiColorPicker to the supplied mapping, or its initial palette
+            .reset_group_colors(session, "color.panel", defaults, color_levels(), default_palette_values)
 
             # Facets
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))

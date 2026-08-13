@@ -40,6 +40,7 @@ test_that("figureBuilderUI can omit its header title", {
 })
 
 test_that("figureBuilderServer adds and removes panels within its namespace", {
+    seen_defaults <- NULL
     # A minimal fake module keeps the test independent of the plot modules.
     fake_reg <- list(
         demo = list(
@@ -50,12 +51,13 @@ test_that("figureBuilderServer adds and removes panels within its namespace", {
             output_ui = function(id, resizable = TRUE) {
                 shiny::tags$div(id = shiny::NS(id)("out"), "plot")
             },
-            server_fn = function(id, data) {
+            server_fn = function(id, data, defaults = NULL) {
+                seen_defaults <<- defaults
                 shiny::moduleServer(id, function(input, output, session) {
                     shiny::reactive(list(data = data()))
                 })
             },
-            defaults = list()
+            defaults = list(palette.colours = c(x = "#FF0000"))
         )
     )
     dl <- list(d1 = data.frame(a = 1:3, b = 4:6))
@@ -71,6 +73,7 @@ test_that("figureBuilderServer adds and removes panels within its namespace", {
 
             expect_equal(rv$panel_ids, "panel1")
             expect_equal(rv$labels[["panel1"]], "Demo #1 (d1)")
+            expect_equal(seen_defaults, list(palette.colours = c(x = "#FF0000")))
 
             session$setInputs(pb_controls_select = "panel1")
             session$setInputs(pb_table_select = "panel1")

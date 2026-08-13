@@ -81,7 +81,10 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 return(NULL)
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
 
             # The rebuilt picker reports its value on a client round-trip. Pause
             # readers until it does, so the plot renders once rather than twice.
@@ -167,6 +170,9 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
 
             click("reset_palette")
 
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
         })
 
@@ -190,7 +196,8 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(input$palette.colours),
-                default_palette_values
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
 
             palette_selection <- palette_values

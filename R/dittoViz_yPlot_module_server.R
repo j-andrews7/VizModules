@@ -177,7 +177,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 return(NULL)
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
 
             # The picker is seeded with this, so it is also what the plot should be
             # drawing with from now until the user changes something. Setting it here
@@ -219,7 +222,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 return()
             }
             resolved_palette(
-                resolve_palette(groups, input$palette.colours, default_palette_values)
+                resolve_palette(
+                    groups, input$palette.colours, default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
+                )
             )
         })
 
@@ -325,6 +331,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             reset_axes_inputs(session, defaults)
 
             # Plotly
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 

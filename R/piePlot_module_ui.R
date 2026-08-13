@@ -49,6 +49,9 @@
 #' - `legend.font.family` - Legend font (UI: "Legend font", default: "Arial")
 #' - `legend.font.size` - Legend font size (UI: "Legend font size", default: 12)
 #' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
+#' - `slice.colors` - Named character vector mapping label levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Slice colors"). Seeds the picker; unnamed slices fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation. Supply a summary table with one row per slice.

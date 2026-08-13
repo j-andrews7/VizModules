@@ -30,9 +30,10 @@
 #' }
 #'
 #' Control sync is cosmetic and uses a generic `sendInputMessage()`, which covers
-#' the standard text, numeric, checkbox, select, colour and switch inputs. A
-#' composite widget that ignores that message will simply not re-display the new
-#' value; the plot is still correct, because the render reads the store.
+#' the standard text, numeric, checkbox, select, colour and switch inputs, plus
+#' [multiColorPicker()] when the value is a named vector of colors. A composite
+#' widget that ignores that message will simply not re-display the new value; the
+#' plot is still correct, because the render reads the store.
 #'
 #' @param defaults A named list of default values, or `NULL`. Individual entries
 #'   may be a `reactive()`/`reactiveVal`.
@@ -92,7 +93,7 @@ setup_reactive_defaults <- function(defaults, input, session) {
                 if (!identical(store[[key]], value)) {
                     store[[key]] <- value
                 }
-                session$sendInputMessage(key, list(value = value))
+                session$sendInputMessage(key, .input_sync_message(value))
             },
             priority = 1000, ignoreNULL = FALSE
         )
@@ -112,6 +113,32 @@ setup_reactive_defaults <- function(defaults, input, session) {
         has = function(key) key %in% keys,
         get = function(key) store[[key]]
     )
+}
+
+
+#' Shape a store value into a `sendInputMessage()` payload
+#'
+#' Most bindings accept a bare `list(value = ...)`. [multiColorPicker()]'s
+#' binding instead expects one `{name, value}` object per group, so a named
+#' vector of colors is reshaped to match.
+#'
+#' @param value The value mirrored from a reactive `defaults` entry.
+#'
+#' @return A list suitable for `session$sendInputMessage()`.
+#'
+#' @author Jared Andrews
+#' @noRd
+.input_sync_message <- function(value) {
+    is_color_map <- is.character(value) && length(value) > 0 &&
+        !is.null(names(value)) && all(nzchar(names(value)))
+
+    if (!is_color_map) {
+        return(list(value = value))
+    }
+
+    list(value = lapply(names(value), function(nm) {
+        list(name = nm, value = unname(value[[nm]]))
+    }))
 }
 
 

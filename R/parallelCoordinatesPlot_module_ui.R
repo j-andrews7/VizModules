@@ -40,6 +40,9 @@
 #' - `tick.font.color` - Tick label font color (UI: "Tick font color", default: "black")
 #' - `tick.font.family` - Tick label font family (UI: "Tick font", default: "Arial")
 #' - `bgcolor` - Plot background color (UI: "Background color", default: "#FFFFFF")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

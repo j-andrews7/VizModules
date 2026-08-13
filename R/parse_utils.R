@@ -146,13 +146,21 @@ neg_log10 <- function(x) {
 #' named color vectors by matching to group names, fills in missing colors with
 #' fallback values, and ensures the output vector is named and matches group length.
 #'
+#' Colors are layered in order of increasing precedence: `default_palette`,
+#' then `manual_colors`, then `selected_colors`. A user's on-screen choice
+#' therefore always wins over a caller-supplied mapping, and a caller-supplied
+#' mapping wins over the module's stock palette.
+#'
 #' @param groups A character vector of group names to assign colors to.
 #' @param selected_colors A named or unnamed character vector of colors to use.
 #'   If named, colors are matched to groups by name. If NULL or empty, uses
-#'   `default_palette`.
+#'   `manual_colors` or `default_palette`.
 #' @param default_palette A character vector of fallback colors to use when
-#'   `selected_colors` is NULL/empty or when groups have missing colors.
+#'   no other source supplies a color for a group.
 #'   Defaults to "#000000" (black) if not provided.
+#' @param manual_colors An optional named character vector of caller-supplied
+#'   colors, typically taken from a module's `defaults`. Used for groups that
+#'   `selected_colors` does not name.
 #'
 #' @return A named character vector of colors with names corresponding to groups,
 #'   or NULL if groups is empty.
@@ -168,32 +176,118 @@ neg_log10 <- function(x) {
 #' # Using default palette
 #' resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
 #' # Returns: c(A = "#1B9E77", B = "#D95F02", C = "#7570B3")
-resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL) {
+#'
+#' # Caller-supplied mapping fills groups the user has not picked
+#' resolve_palette(groups, c(A = "#FF0000"), "#CCCCCC", c(B = "#00FF00", C = "#0000FF"))
+#' # Returns: c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL, manual_colors = NULL) {
     if (length(groups) == 0) {
         return(NULL)
     }
 
+    fallback <- if (!is.null(default_palette) && length(default_palette) > 0) default_palette else "#000000"
+
     colors <- selected_colors
     if (is.null(colors) || length(colors) == 0) {
-        colors <- default_palette
+        colors <- manual_colors
     }
-
     if (is.null(colors) || length(colors) == 0) {
-        colors <- "#000000"
+        colors <- fallback
     }
 
-    if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+    if (.has_group_names(colors)) {
         colors <- colors[match(groups, names(colors))]
+
+        if (.has_group_names(manual_colors) && any(is.na(colors))) {
+            gaps <- which(is.na(colors))
+            colors[gaps] <- manual_colors[match(groups[gaps], names(manual_colors))]
+        }
     }
 
     if (any(is.na(colors))) {
         na_idx <- which(is.na(colors))
-        fallback <- if (!is.null(default_palette) && length(default_palette) > 0) default_palette else "#000000"
         colors[na_idx] <- rep_len(fallback, length(na_idx))
     }
 
     colors <- rep_len(colors, length(groups))
     stats::setNames(colors[seq_along(groups)], groups)
+}
+
+#' Test whether a color vector names its groups
+#'
+#' @param x A character vector of colors, or NULL.
+#'
+#' @return `TRUE` when `x` is non-empty and carries at least one non-empty name.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_has_group_names
+#' @keywords internal
+.has_group_names <- function(x) {
+    !is.null(x) && length(x) > 0 && !is.null(names(x)) && any(nzchar(names(x)))
+}
+
+#' Extract a caller-supplied group color mapping from `defaults`
+#'
+#' Looks up `key` in a module's `defaults` and returns it as a named vector of
+#' hex colors suitable for [resolve_palette()] and [multiColorPicker()]. Values
+#' may be given as R color names (`"red"`) or hex codes; both are normalized to
+#' `#RRGGBB`. Anything that is not a fully named character vector is ignored,
+#' consistent with [get_default()]'s silent-fallback contract.
+#'
+#' @param defaults A named list of default values, or `NULL`.
+#' @param key Character string — the color input's id, e.g. `"palette.colours"`.
+#'
+#' @return A named character vector of hex colors, or `NULL` when `defaults`
+#'   supplies no usable mapping.
+#'
+#' @seealso [resolve_palette()], [get_default()]
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_default_group_colors
+#' @keywords internal
+.default_group_colors <- function(defaults, key) {
+    colors <- get_default(defaults, key, NULL, function(x) {
+        is.character(x) && length(x) > 0 && !is.null(names(x)) && all(nzchar(names(x)))
+    })
+
+    if (is.null(colors)) {
+        return(NULL)
+    }
+
+    colors <- .normalize_hex(colors)
+    colors <- colors[nzchar(colors)]
+
+    if (length(colors) == 0) NULL else colors
+}
+
+#' Restore a group color picker to its default mapping
+#'
+#' Used by module Reset buttons. When `defaults` supplies a mapping for `inputId`
+#' the picker is set back to it; otherwise the widget resets itself to the stock
+#' palette it was built with.
+#'
+#' @param session The Shiny `session` object from inside `moduleServer()`.
+#' @param inputId Character string — the picker's id, without namespacing.
+#' @param defaults A named list of default values, or `NULL`.
+#' @param groups A character vector of the group levels currently in play.
+#' @param default_palette A character vector of fallback colors.
+#'
+#' @return Invisibly `NULL`; called for its side effect.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_group_colors
+#' @keywords internal
+.reset_group_colors <- function(session, inputId, defaults, groups, default_palette = NULL) {
+    manual <- .default_group_colors(defaults, inputId)
+    colors <- if (is.null(manual)) NULL else resolve_palette(groups, NULL, default_palette, manual)
+
+    if (is.null(colors) || length(colors) == 0) {
+        updateMultiColorPicker(session, inputId, reset = TRUE)
+    } else {
+        updateMultiColorPicker(session, inputId, colors = colors)
+    }
+
+    invisible(NULL)
 }
 
 #' Set up auto-update/isolate logic for reactive contexts

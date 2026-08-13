@@ -4,18 +4,27 @@
 \alias{resolve_palette}
 \title{Resolve a color palette for plot groups}
 \usage{
-resolve_palette(groups, selected_colors = NULL, default_palette = NULL)
+resolve_palette(
+  groups,
+  selected_colors = NULL,
+  default_palette = NULL,
+  manual_colors = NULL
+)
 }
 \arguments{
 \item{groups}{A character vector of group names to assign colors to.}
 
 \item{selected_colors}{A named or unnamed character vector of colors to use.
 If named, colors are matched to groups by name. If NULL or empty, uses
-\code{default_palette}.}
+\code{manual_colors} or \code{default_palette}.}
 
 \item{default_palette}{A character vector of fallback colors to use when
-\code{selected_colors} is NULL/empty or when groups have missing colors.
+no other source supplies a color for a group.
 Defaults to "#000000" (black) if not provided.}
+
+\item{manual_colors}{An optional named character vector of caller-supplied
+colors, typically taken from a module's \code{defaults}. Used for groups that
+\code{selected_colors} does not name.}
 }
 \value{
 A named character vector of colors with names corresponding to groups,
@@ -26,6 +35,12 @@ Maps groups to colors using selected colors or a default palette. Handles
 named color vectors by matching to group names, fills in missing colors with
 fallback values, and ensures the output vector is named and matches group length.
 }
+\details{
+Colors are layered in order of increasing precedence: \code{default_palette},
+then \code{manual_colors}, then \code{selected_colors}. A user's on-screen choice
+therefore always wins over a caller-supplied mapping, and a caller-supplied
+mapping wins over the module's stock palette.
+}
 \examples{
 groups <- c("A", "B", "C")
 colors <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
@@ -35,6 +50,10 @@ resolve_palette(groups, colors)
 # Using default palette
 resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
 # Returns: c(A = "#1B9E77", B = "#D95F02", C = "#7570B3")
+
+# Caller-supplied mapping fills groups the user has not picked
+resolve_palette(groups, c(A = "#FF0000"), "#CCCCCC", c(B = "#00FF00", C = "#0000FF"))
+# Returns: c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
 }
 \author{
 Jared Andrews
