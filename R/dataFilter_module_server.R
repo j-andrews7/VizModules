@@ -95,7 +95,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             dt_ext <- character(0)
             if (isTRUE(col.visibility)) {
                 dt_ext <- "Buttons"
-                dt_opts$dom <- "Blfrtip"
+                dt_opts$dom <- "<'vizmodules-dt-toolbar'Blf>rtip"
                 dt_opts$buttons <- list(list(extend = "colvis", text = "Columns"))
             }
             hidden <- resolve_column_targets(d, hide.columns)
