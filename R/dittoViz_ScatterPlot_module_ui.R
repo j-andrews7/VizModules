@@ -275,7 +275,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     function(x) all(x %in% cat.choices)
                 ),
                 multiple = TRUE,
-                options = list(maxItems = 2)
+                maxValues = 2
             ), documentParameters$split.by, placement = "top", options = list(container = "body"))
         ),
         "Adjustments" = tagList(
