@@ -68,6 +68,15 @@ test_that("named and nested choices survive relabelling", {
     expect_identical(.label_empty_choice(grouped), grouped)
 })
 
+test_that("a repeated choice is only rendered once", {
+    # Several UIs prepend "" to a choice vector that already starts with one.
+    cfg <- config_of(viz_select_input("v", "L", choices = c("", "", "a")))
+
+    expect_equal(cfg$options$choices$value, c("", "a"))
+    expect_equal(cfg$options$choices$label, c("(none)", "a"))
+    expect_equal(.label_empty_choice(c("a", "b", "a")), c(a = "a", b = "b"))
+})
+
 test_that("update_viz_select sends an update without error", {
     mod <- function(id) {
         moduleServer(id, function(input, output, session) {

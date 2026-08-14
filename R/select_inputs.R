@@ -192,7 +192,8 @@ update_viz_select <- function(session, inputId, choices = NULL, selected = NULL,
 #'
 #' @param choices A vector or list of choices.
 #'
-#' @return The choices, with any `""` value given the name `"(none)"`.
+#' @return The choices, with any `""` value given the name `"(none)"` and any
+#'   repeated value dropped.
 #'
 #' @keywords internal
 #' @noRd
@@ -206,5 +207,9 @@ update_viz_select <- function(session, inputId, choices = NULL, selected = NULL,
     labels[!nzchar(labels)] <- values[!nzchar(labels)]
     labels[!nzchar(values)] <- "(none)"
 
-    setNames(values, labels)
+    # Callers often prepend "" to a vector that already carries one, which would
+    # otherwise render "(none)" twice.
+    keep <- !duplicated(values)
+
+    setNames(values[keep], labels[keep])
 }
