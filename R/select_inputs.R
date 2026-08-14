@@ -112,10 +112,18 @@ viz_select_input <- function(inputId, label, choices, selected = NULL, multiple 
 #' [shinyWidgets::updateVirtualSelect()] so the empty-string "no selection"
 #' choice is relabelled consistently with the UI side.
 #'
+#' Unlike [shinyWidgets::updateVirtualSelect()], supplying `choices` without a
+#' `selected` does not clear the widget: the current value is kept when it is
+#' still one of the new choices, and the first choice is selected otherwise.
+#' This mirrors [shiny::updateSelectInput()], which never leaves a single select
+#' with no value.
+#'
 #' @param session The `session` object passed to the module server function.
 #' @param inputId The id of the input to update.
 #' @param choices New choices for the input, or `NULL` to leave them unchanged.
-#' @param selected New value(s) to select, or `NULL` to leave the selection
+#' @param selected New value(s) to select. When `NULL` and `choices` is given,
+#'   the current value is kept if it is still valid, falling back to the first
+#'   choice. When `NULL` and `choices` is not given, the selection is left
 #'   unchanged.
 #' @param ... Further arguments passed to
 #'   [shinyWidgets::updateVirtualSelect()].
@@ -139,6 +147,11 @@ viz_select_input <- function(inputId, label, choices, selected = NULL, multiple 
 update_viz_select <- function(session, inputId, choices = NULL, selected = NULL, ...) {
     if (!is.null(choices)) {
         choices <- .label_empty_choice(choices)
+        if (is.null(selected)) {
+            # virtual-select's setOptions() blanks the value, so always send one.
+            current <- tryCatch(isolate(session$input[[inputId]]), error = function(e) NULL)
+            selected <- .keep_or_first_choice(current, choices)
+        }
     }
 
     shinyWidgets::updateVirtualSelect(
@@ -148,6 +161,26 @@ update_viz_select <- function(session, inputId, choices = NULL, selected = NULL,
         session = session,
         ...
     )
+}
+
+
+#' Carry a selection over to a new set of choices
+#'
+#' @param current The widget's current value, or `NULL`.
+#' @param choices The new choices, already passed through `.label_empty_choice()`.
+#'
+#' @return The still-valid part of `current`, or the first choice value.
+#'
+#' @keywords internal
+#' @noRd
+.keep_or_first_choice <- function(current, choices) {
+    values <- as.character(unlist(choices, use.names = FALSE))
+    if (length(values) == 0) {
+        return(character(0))
+    }
+
+    kept <- as.character(current)[as.character(current) %in% values]
+    if (length(kept) > 0) kept else values[1]
 }
 
 

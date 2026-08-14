@@ -7,6 +7,8 @@
 #'
 #' @param id `character` unique ID for the shiny namespace.
 #' @param data `reactive` A reactive expression returning a data frame to be plotted.
+#'   Values that are not data frames are coerced with [as.data.frame()]; a `NULL`
+#'   value is treated as "not ready yet" and the module waits for data.
 #' @param hide.inputs `character` vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs `character` vector of tab names to hide within the module. Default is NULL.
 #' @param defaults A named list of default values for the inputs. When the reset button is
@@ -29,6 +31,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
         params <- setup_reactive_defaults(defaults, input, session)

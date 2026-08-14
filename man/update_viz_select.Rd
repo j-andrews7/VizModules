@@ -13,7 +13,9 @@ update_viz_select(session, inputId, choices = NULL, selected = NULL, ...)
 
 \item{choices}{New choices for the input, or \code{NULL} to leave them unchanged.}
 
-\item{selected}{New value(s) to select, or \code{NULL} to leave the selection
+\item{selected}{New value(s) to select. When \code{NULL} and \code{choices} is given,
+the current value is kept if it is still valid, falling back to the first
+choice. When \code{NULL} and \code{choices} is not given, the selection is left
 unchanged.}
 
 \item{...}{Further arguments passed to
@@ -26,6 +28,13 @@ No return value, called for its side effect of updating the input.
 Companion to \code{\link[=viz_select_input]{viz_select_input()}}, wrapping
 \code{\link[shinyWidgets:updateVirtualSelect]{shinyWidgets::updateVirtualSelect()}} so the empty-string "no selection"
 choice is relabelled consistently with the UI side.
+}
+\details{
+Unlike \code{\link[shinyWidgets:updateVirtualSelect]{shinyWidgets::updateVirtualSelect()}}, supplying \code{choices} without a
+\code{selected} does not clear the widget: the current value is kept when it is
+still one of the new choices, and the first choice is selected otherwise.
+This mirrors \code{\link[shiny:updateSelectInput]{shiny::updateSelectInput()}}, which never leaves a single select
+with no value.
 }
 \examples{
 library(shiny)

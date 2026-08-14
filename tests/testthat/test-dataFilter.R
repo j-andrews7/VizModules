@@ -55,6 +55,38 @@ test_that("dataFilterServer rejects a non-name, non-position hide.columns", {
     )
 })
 
+test_that("dataFilterServer waits instead of erroring when data is NULL", {
+    # A parent app can emit NULL briefly while switching datasets; that must not
+    # take the table (and every downstream plot module) down with it.
+    data_val <- shiny::reactiveVal(NULL)
+
+    shiny::testServer(
+        dataFilterServer,
+        args = list(data = data_val),
+        {
+            session$setInputs(table_rows_all = 1:5)
+            expect_error(session$returned(), class = "shiny.silent.error")
+
+            data_val(iris)
+            expect_equal(nrow(session$returned()), 5)
+        }
+    )
+})
+
+test_that("dataFilterServer coerces data that is not already a data frame", {
+    m <- as.matrix(mtcars)
+
+    shiny::testServer(
+        dataFilterServer,
+        args = list(data = shiny::reactive(m)),
+        {
+            session$setInputs(table_rows_all = seq_len(nrow(m)))
+            expect_s3_class(session$returned(), "data.frame")
+            expect_equal(names(session$returned()), colnames(m))
+        }
+    )
+})
+
 test_that("dataFilterServer keeps hidden columns in the returned data", {
     shiny::testServer(
         dataFilterServer,

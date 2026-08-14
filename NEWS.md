@@ -31,6 +31,8 @@ Many of the changes with this release were aimed at improving initialization of 
 
 ## Bug Fixes
 
+
+* Every module server (and `dataFilterServer()`) now requires its `data` reactive to yield a data frame: values that are not data frames are coerced with `as.data.frame()`, and a `NULL` makes the module wait for data rather than error. A parent app that briefly emits `NULL` can no longer take a plot down with it.
 * Fixed modules rendering their plot two or three times for a single change (somewhat related to #325). Several modules compute a value on the server and push it into one of their own inputs with `update*Input()`, which is an asynchronous client round-trip: the plot rendered once with the stale value and again when the client echoed the new one. On load `dittoViz_yPlot` did this three times over (y-axis range, stat comparison pairs, and the rebuilt `multiColorPicker`). 
   * These inputs are now wrapped in `freezeReactiveValue()` so dependents pause until the new value lands, giving a single render. Applied to the y-axis range (`dittoViz_yPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_ViolinPlot`), `stat.pairs` (`dittoViz_yPlot`, `plotthis_BoxPlot`, `plotthis_ViolinPlot`), `facet.scale` (`plotthis_BoxPlot`), and the rebuilt colour picker in all modules with a palette selector. 
   * Added a section in the "Adding a New Module" vignette describing this pattern.

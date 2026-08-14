@@ -190,7 +190,10 @@ createModuleApp <- function(inputs_ui_fn,
             )
         })
 
-        active_data <- reactive(rv$datasets[[input$plot_select]])
+        active_data <- reactive({
+            req(input$plot_select)
+            req(rv$datasets[[input$plot_select]])
+        })
 
         filtered_data <- if (isTRUE(show.table)) {
             dataFilterServer("table", active_data)
@@ -199,11 +202,12 @@ createModuleApp <- function(inputs_ui_fn,
         }
 
         # Keep dataset selector in sync when new datasets are loaded
-        observe({
-            update_viz_select(session, "plot_select",
-                choices = names(rv$datasets)
-            )
-        })
+        observeEvent(names(rv$datasets),
+            {
+                update_viz_select(session, "plot_select", choices = names(rv$datasets))
+            },
+            ignoreInit = TRUE
+        )
 
         output$plot_inputs_ui <- renderUI({
             req(rv$datasets[[input$plot_select]])

@@ -140,6 +140,45 @@ neg_log10 <- function(x) {
     -log10(x)
 }
 
+#' Require a data frame from a module's data reactive
+#'
+#' Wraps the `data` reactive every module server receives so that downstream
+#' readers always see a data frame. A `NULL` value (which a parent app can emit
+#' briefly while switching datasets) becomes a silent [shiny::req()] skip rather
+#' than an error cascade through every observer, and anything else is coerced
+#' with [as.data.frame()] before use.
+#'
+#' @param data A `reactive` returning a data frame or an object coercible to one.
+#'
+#' @return A `reactive` returning a data frame with at least one column.
+#'
+#' @import shiny
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_require_data_frame
+#' @keywords internal
+.require_data_frame <- function(data) {
+    # Callers reassign onto `data`, so resolve the promise before it can recurse.
+    force(data)
+
+    reactive({
+        d <- data()
+        req(!is.null(d))
+
+        if (!is.data.frame(d)) {
+            coerced <- tryCatch(as.data.frame(d), error = function(e) NULL)
+            validate(need(
+                is.data.frame(coerced),
+                "'data' must be a data frame or an object coercible to one."
+            ))
+            d <- coerced
+        }
+
+        req(ncol(d) > 0)
+        d
+    })
+}
+
 #' Resolve a color palette for plot groups
 #'
 #' Maps groups to colors using selected colors or a default palette. Handles

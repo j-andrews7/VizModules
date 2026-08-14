@@ -1,7 +1,9 @@
 #' Server logic for BarPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -28,6 +30,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
 
     moduleServer(id, function(input, output, session) {
@@ -282,9 +285,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         }, ignoreInit = FALSE)
 
         observeEvent(c(input$facet.by, input$x.data), {
-        if (input$facet.by == input$x.data){
-            update_viz_select(session, "facet.scale", selected = "free_x")
-        }
+            req(!is.null(input$facet.by), !is.null(input$x.data))
+            if (input$facet.by == input$x.data) {
+                update_viz_select(session, "facet.scale", selected = "free_x")
+            }
         }, ignoreInit = FALSE)
 
         generate_BarPlot <- reactive({
@@ -374,6 +378,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
                 upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
+
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- apply_facet_subplot_spacing(
@@ -383,6 +388,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.nrow
                 )
             }
+
             fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)

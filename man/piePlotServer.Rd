@@ -10,7 +10,9 @@ piePlotServer(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL)
 \item{id}{The ID for the Shiny module.}
 
 \item{data}{A \code{reactive} containing the data frame to plot. Provide a
-summarized table with columns for labels and aggregated values.}
+summarized table with columns for labels and aggregated values. Values that
+are not data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL} value is
+treated as "not ready yet" and the module waits for data.}
 
 \item{hide.inputs}{A character vector of input IDs to hide.
 These will still be initialized and their values passed to the plot function,

@@ -80,6 +80,39 @@ test_that("update_viz_select sends an update without error", {
     expect_no_error(testServer(mod, session$setInputs(go = 1)))
 })
 
+# virtual-select's setOptions() blanks the widget value, so new choices must
+# always ship a value alongside them.
+update_message <- function(current, ...) {
+    captured <- NULL
+    session <- list(
+        input = if (is.null(current)) list() else list(v = current),
+        sendInputMessage = function(inputId, message) captured <<- message
+    )
+
+    update_viz_select(session, "v", ...)
+    captured
+}
+
+test_that("update_viz_select keeps the current value when it is still a choice", {
+    expect_equal(update_message("b", choices = c("a", "b", "c"))$value, "b")
+    expect_equal(update_message("", choices = c("", "a"))$value, "")
+})
+
+test_that("update_viz_select falls back to the first choice when the value is gone", {
+    expect_equal(update_message("b", choices = c("x", "y"))$value, "x")
+    # No value has ever been reported by the client.
+    expect_equal(update_message(NULL, choices = c("x", "y"))$value, "x")
+})
+
+test_that("update_viz_select leaves the value alone when choices are unchanged", {
+    expect_null(update_message("b")$value)
+    expect_equal(update_message("b", selected = "c")$value, "c")
+})
+
+test_that("update_viz_select respects an explicit selection over the current value", {
+    expect_equal(update_message("b", choices = c("a", "b"), selected = "a")$value, "a")
+})
+
 test_that("dataFilter caps the options rendered by factor filter dropdowns", {
     d <- data.frame(g = factor(paste0("lvl", 1:200)), v = seq_len(200))
     widget <- DT::datatable(

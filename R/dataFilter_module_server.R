@@ -8,6 +8,8 @@
 #' @param id The ID for the Shiny module. Must match the `id` used in
 #'   [dataFilterUI()].
 #' @param data A `reactive` containing the data frame to display and filter.
+#'   Values that are not data frames are coerced with [as.data.frame()]; a `NULL`
+#'   value is treated as "not ready yet" and the table waits for data.
 #' @param factor.char.cols Logical. When `TRUE`, all character columns in
 #'   `data` are converted to factors before the table is rendered. This
 #'   causes DT to display select-box filters for those columns instead of
@@ -68,6 +70,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
                              col.visibility = FALSE, hide.columns = NULL,
                              filter.max.options = 50) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
     if (!is.numeric(filter.max.options) || length(filter.max.options) != 1 || filter.max.options < 1) {
         stop("'filter.max.options' must be a single positive number.", call. = FALSE)
     }
@@ -98,6 +101,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
                 dt_opts$dom <- "<'vizmodules-dt-toolbar'Blf>rtip"
                 dt_opts$buttons <- list(list(extend = "colvis", text = "Columns"))
             }
+
             hidden <- resolve_column_targets(d, hide.columns)
             if (length(hidden) > 0) {
                 dt_opts$columnDefs <- list(list(visible = FALSE, targets = hidden))

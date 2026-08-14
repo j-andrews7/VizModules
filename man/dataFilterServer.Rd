@@ -18,7 +18,9 @@ dataFilterServer(
 \item{id}{The ID for the Shiny module. Must match the \code{id} used in
 \code{\link[=dataFilterUI]{dataFilterUI()}}.}
 
-\item{data}{A \code{reactive} containing the data frame to display and filter.}
+\item{data}{A \code{reactive} containing the data frame to display and filter.
+Values that are not data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL}
+value is treated as "not ready yet" and the table waits for data.}
 
 \item{factor.char.cols}{Logical. When \code{TRUE}, all character columns in
 \code{data} are converted to factors before the table is rendered. This

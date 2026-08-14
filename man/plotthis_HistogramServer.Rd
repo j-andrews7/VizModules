@@ -15,7 +15,9 @@ plotthis_HistogramServer(
 \arguments{
 \item{id}{\code{character} unique ID for the shiny namespace.}
 
-\item{data}{\code{reactive} A reactive expression returning a data frame to be plotted.}
+\item{data}{\code{reactive} A reactive expression returning a data frame to be plotted.
+Values that are not data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL}
+value is treated as "not ready yet" and the module waits for data.}
 
 \item{hide.inputs}{\code{character} vector of input IDs to hide in the UI. Default is NULL.}
 
