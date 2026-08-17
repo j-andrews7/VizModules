@@ -77,11 +77,15 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 
 ### Documentation Requirements
 - All exports need complete roxygen2 docs with `@param`, `@return`, `@export`, `@author`, `@examples`
-- Reference dittoViz parameters where applicable
+- Reference original plot parameters where applicable
 - Document missing/broken plotly functionality explicitly
+- Add self-contained, clear examples for functions wherever possible
+- Update vignettes when adding new modules, features, or changing existing functionality
+- Update `NEWS.md` with new features, bug fixes, etc.
 
 ### Code Style
 4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled.
+You do not need to specifically lint.
 
 ### Dependencies
 **Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (>= 0.12.1), R (>= 4.5) | **Imports**: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | **Suggests**: withr, knitr, rmarkdown, shinytest2, testthat (>= 3.0.0)
@@ -91,7 +95,6 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 | Issue | Solution |
 |-------|----------|
 | "object not exported by namespace" | Run `devtools::document()` to regenerate NAMESPACE |
-| Linting failures | Check .lintr: 120 char lines, 4-space indents |
 | "Non-standard file/directory" in check | Add to .Rbuildignore with regex pattern |
 | Module inputs not responding | Namespace issue - verify NS(id) pattern (see above) |
 | Vignette build errors | Install: `install.packages(c("knitr", "rmarkdown"))` |
@@ -102,7 +105,7 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 2. **ALWAYS run `devtools::document()`** after changing roxygen2 comments or signatures
 3. **Run `devtools::test()`** after changes to verify the testthat test suite passes; also test modules interactively via example apps
 4. **Follow namespace pattern strictly** for wrapper modules (see Coding Conventions)
-5. **All plots must use plotly** - this is a plotly-based package
+5. **All plots must use plotly unless specifically specified otherwise** - this is a plotly-based package
 6. **Document missing features** - clearly note functionality unavailable in plotly
 7. **Use organize_inputs()** helper for consistent UI layouts
 
