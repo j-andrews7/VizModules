@@ -82,7 +82,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             } else {
                 default.x
             }
-            update_viz_select(session, "x.by", choices = choices, selected = selected.x)
+            # x.by/y.by are required, so the refreshed choices omit the "(none)" option.
+            update_viz_select(session, "x.by", choices = cols, selected = selected.x)
 
             current.y <- isolate(input$y.by)
             default.y <- get_default(
@@ -95,7 +96,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             } else {
                 default.y
             }
-            update_viz_select(session, "y.by", choices = choices, selected = selected.y)
+            update_viz_select(session, "y.by", choices = cols, selected = selected.y)
         }, ignoreNULL = TRUE)
 
         # Available color groups for the current color.by selection

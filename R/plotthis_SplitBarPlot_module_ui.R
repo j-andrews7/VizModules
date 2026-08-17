@@ -179,7 +179,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                     defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(
                 viz_select_input(ns("y.data"), "Y Values",
@@ -187,7 +187,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                         defaults, "y.data", char.choices[2],
                         function(x) x %in% char.choices
                     ),
-                    choices = char.choices
+                    choices = char.choices[nzchar(char.choices)]
                 ), "Select the categorical column to use for the Y axis groupings",
                 placement = "top", options = list(container = "body")
             ),

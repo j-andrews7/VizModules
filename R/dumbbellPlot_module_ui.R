@@ -145,7 +145,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
                 ),
-                choices = num.choices, multiple = TRUE
+                choices = num.choices[nzchar(num.choices)], multiple = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.value"), "Y Value",
                 selected = get_default(
@@ -153,7 +153,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                     if (length(cat.choices) > 1) cat.choices[2] else "",
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices, multiple = FALSE
+                choices = cat.choices[nzchar(cat.choices)], multiple = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,

@@ -142,14 +142,14 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                     defaults, "x.data", char.choices[2],
                     function(x) x %in% char.choices
                 ),
-                choices = char.choices
+                choices = char.choices[nzchar(char.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.data"), "Y Values",
                 selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 ),
-                choices = char.choices
+                choices = char.choices[nzchar(char.choices)]
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("size.by"), "Size By",
                 selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices),

@@ -237,14 +237,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     inputs <- list(
         "Data" = tagList(
             tipify(viz_select_input(ns("x.by"), "X Data",
-                choices = choices,
+                choices = choices[nzchar(choices)],
                 selected = get_default(
                     defaults, "x.by", choices[2],
                     function(x) x %in% choices
                 )
             ), documentParameters$x.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.by"), "Y Data",
-                choices = choices,
+                choices = choices[nzchar(choices)],
                 selected = get_default(
                     defaults, "y.by", choices[3],
                     function(x) x %in% choices

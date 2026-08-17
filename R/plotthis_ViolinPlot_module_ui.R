@@ -236,7 +236,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
         "Data" = tagList(
             tipify(
                 viz_select_input(ns("x.data"), "X Data",
-                    choices = char.choices,
+                    choices = char.choices[nzchar(char.choices)],
                     selected = get_default(
                         defaults, "x.data", char.choices[2],
                         function(x) x %in% char.choices
@@ -247,7 +247,7 @@ plotthis_ViolinPlotInputsUI <- function(id, data, defaults = NULL, title = NULL,
             ),
             tipify(
                 viz_select_input(ns("y.data"), "Y Data",
-                    choices = num.choices,
+                    choices = num.choices[nzchar(num.choices)],
                     selected = get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices

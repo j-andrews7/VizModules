@@ -123,14 +123,14 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     defaults, "theta", cat.choices[2],
                     function(x) x %in% all.choices
                 ),
-                choices = all.choices
+                choices = all.choices[nzchar(all.choices)]
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("r"), "Values (r)",
                 selected = get_default(
                     defaults, "r", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$r, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group"), "Group",
                 selected = get_default(defaults, "group", ""),

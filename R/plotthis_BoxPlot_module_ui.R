@@ -239,7 +239,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Data" = tagList(
             tipify(
                 viz_select_input(ns("x.data"), "X Data",
-                    choices = cat.choices,
+                    choices = cat.choices[nzchar(cat.choices)],
                     selected = get_default(
                         defaults, "x.data", cat.choices[2],
                         function(x) x %in% cat.choices
@@ -250,7 +250,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             ),
             tipify(
                 viz_select_input(ns("y.data"), "Y Data",
-                    choices = num.choices,
+                    choices = num.choices[nzchar(num.choices)],
                     selected = get_default(
                         defaults, "y.data", num.choices[2],
                         function(x) x %in% num.choices

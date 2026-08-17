@@ -157,14 +157,14 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                     defaults, "x.data", cat.choices[2],
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices
+                choices = cat.choices[nzchar(cat.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.data"), "Y Values",
                 selected = get_default(
                     defaults, "y.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group.by"), "Group By",
                 selected = get_default(

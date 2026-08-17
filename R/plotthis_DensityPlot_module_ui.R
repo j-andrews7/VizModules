@@ -161,7 +161,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(
                 viz_select_input(ns("group.by"), "Group By",

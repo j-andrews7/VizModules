@@ -111,7 +111,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                         defaults, "labels", cat.choices[2],
                         function(x) x %in% cat.choices
                     ),
-                    choices = cat.choices
+                    choices = cat.choices[nzchar(cat.choices)]
                 ),
                 documentParameters$labels,
                 placement = "top", options = list(container = "body")
@@ -122,7 +122,7 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                         defaults, "values", num.choices[2],
                         function(x) x %in% num.choices
                     ),
-                    choices = num.choices
+                    choices = num.choices[nzchar(num.choices)]
                 ),
                 documentParameters$values,
                 placement = "top", options = list(container = "body")
