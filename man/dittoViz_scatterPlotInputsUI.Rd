@@ -46,6 +46,9 @@ for that function for an exhaustive list.
 Note that some of the parameters may have input types that differ from the actual function, e.g. \code{shape.panel}
 is a text input for comma-separated integers, while the function expects a vector of integers.
 The module will parse such inputs into the appropriate format for \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} automatically.
+
+\strong{Source data note:} When source data is downloaded with faceting applied and \code{split.show.all.others = TRUE},
+values will be duplicated due to them being shown in every panel.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
