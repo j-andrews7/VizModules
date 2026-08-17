@@ -16,6 +16,9 @@
 #' Note that some of the parameters may have input types that differ from the actual function, e.g. `shape.panel`
 #' is a text input for comma-separated integers, while the function expects a vector of integers.
 #' The module will parse such inputs into the appropriate format for [dittoViz::scatterPlot()] automatically.
+#' 
+#' **Source data note:** When source data is downloaded with faceting applied and `split.show.all.others = TRUE`,
+#' values will be duplicated due to them being shown in every panel.
 #'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:

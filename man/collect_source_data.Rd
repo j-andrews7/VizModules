@@ -26,7 +26,8 @@ input data is included.}
 A named list with elements:
 \describe{
 \item{plot}{The \code{plotly} plot object.}
-\item{plot_data}{A \code{data.frame} of the plot's underlying data.}
+\item{plot_data}{A \code{data.frame} of the plot's underlying data, limited to
+the columns and rows actually rendered (see Details).}
 \item{stats}{A \code{data.frame} of statistical test results, or \code{NULL}.}
 \item{inputs}{A \code{data.frame} of UI input names and values, or \code{NULL}.}
 }
@@ -35,6 +36,22 @@ A named list with elements:
 Collects the plot object, its underlying data, statistical testing details (if applied),
 and optional UI input values into a single list for downstream download
 generation.
+}
+\details{
+\code{plot_data} is scoped down from the plot's full source data.frame
+(as returned by \code{\link[plotly:plotly_data]{plotly::plotly_data()}}) in two ways:
+\itemize{
+\item{Columns are limited to those actually mapped in the plot (x, y,
+color/fill, shape, size, labels/values, facets, etc.), detected by
+inspecting the built \code{plotly} figure's trace attributes and, for
+columns that don't survive conversion to \code{plotly} (namely
+\code{split.by}/\code{facet.by}), the UI input values.}
+\item{Rows are limited to those with complete data across the detected
+columns, since rows with \code{NA} in a plotted aesthetic are dropped by
+the underlying plotting functions.}
+}
+If no plotted columns can be detected, the full source data.frame is
+returned unchanged.
 }
 \examples{
 \dontrun{
@@ -62,5 +79,5 @@ shinyApp(ui, server)
 }
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

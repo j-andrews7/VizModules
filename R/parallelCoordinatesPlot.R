@@ -192,6 +192,7 @@ parallelCoordinatesPlot <- function(
     }
 
     fig <- plot_ly(
+        data = df,
         type = "parcoords",
         line = line_spec,
         dimensions = dim_list,
