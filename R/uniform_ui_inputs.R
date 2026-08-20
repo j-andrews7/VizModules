@@ -803,3 +803,147 @@ uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
         )
     )
 }
+
+
+#' Generate uniform Annotation input UI
+#'
+#' Creates a standardized tagList of the point highlighting and annotation
+#' inputs shared by modules that draw individual data points. Points are
+#' identified by the values of the column chosen in "Annotate By", which are
+#' also used as the label text.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#' @param choices Character vector of column names offered by "Annotate By".
+#' @param annotate.note Character, or `NULL`. Extra sentence appended to the
+#'   "Annotate By" tooltip, for module-specific caveats.
+#'
+#' @return A `tagList` containing the annotation input UI elements.
+#'
+#' @importFrom shiny numericInput checkboxInput textAreaInput actionButton tagList
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot1")
+#' uniform_annotation_inputs_ui(ns, choices = c("", "Species", "Sepal.Length"))
+uniform_annotation_inputs_ui <- function(ns, defaults = NULL, choices = "", annotate.note = NULL) {
+    tip_opts <- list(container = "body")
+    annotate_tip <- paste(c(
+        "Select a column whose values will be used to identify points for highlighting and annotation",
+        annotate.note
+    ), collapse = ". ")
+
+    tagList(
+        tipify(
+            viz_select_input(ns("annotate.by"), "Annotate By",
+                choices = choices,
+                selected = get_default(
+                    defaults, "annotate.by", "",
+                    function(x) x %in% choices
+                )
+            ), annotate_tip,
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            textAreaInput(ns("highlight.points"), "Points to Highlight",
+                placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
+                value = get_default(defaults, "highlight.points", ""),
+                rows = 3
+            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("highlight.color"), "Highlight Fill",
+                value = get_default(defaults, "highlight.color", "#00FFF7"),
+                allowTransparent = TRUE
+            ), "Choose the fill color for highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("highlight.size"), "Highlight Size",
+                min = 0.1, step = 0.5,
+                value = get_default(defaults, "highlight.size", 7, is.numeric)
+            ), "Set the size of highlighted points on the plot",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("highlight.border.color"), "Highlight Border Color",
+                value = get_default(defaults, "highlight.border.color", "#000000")
+            ), "Choose the border color for highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("highlight.border.width"), "Highlight Border Width",
+                min = 0, step = 0.25,
+                value = get_default(defaults, "highlight.border.width", 1, is.numeric)
+            ), "Set the width of the border around highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
+                value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
+            ), "When enabled, automatically adds text labels to highlighted points using their 'Annotate By' values",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("annotation.color"), "Annotation Color",
+                value = get_default(defaults, "annotation.color", "black")
+            ), "Set the text color for annotation labels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.ax"), "Annotation X Offset",
+                step = 1,
+                value = get_default(defaults, "annotation.ax", 20, is.numeric)
+            ), "Horizontal pixel offset of annotation labels from their target points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.ay"), "Annotation Y Offset",
+                step = 1,
+                value = get_default(defaults, "annotation.ay", -20, is.numeric)
+            ), "Vertical pixel offset of annotation labels from their target points (negative values move up)",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.size"), "Annotation Size",
+                min = 1, step = 0.5,
+                value = get_default(defaults, "annotation.size", 10, is.numeric)
+            ), "Set the font size of annotation text labels in points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            checkboxInput(ns("annotation.showarrow"), "Show Arrow",
+                value = get_default(defaults, "annotation.showarrow", TRUE, is.logical)
+            ), "Toggle whether an arrow is drawn from the annotation label to the target point",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("annotation.arrowcolor"), "Arrow Color",
+                value = get_default(defaults, "annotation.arrowcolor", "black")
+            ), "Set the color of the annotation arrow connecting the label to the point",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
+                min = 0, step = 1, max = 7,
+                value = get_default(defaults, "annotation.arrowhead", 2, is.numeric)
+            ), "Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
+                min = 0.1, step = 0.25,
+                value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
+            ), "Set the line width of the annotation arrow",
+            placement = "top", options = tip_opts
+        ),
+        tipify(actionButton(ns("annotation.clear"), "Clear Annotations"),
+            "Remove all annotation labels and arrows from the current plot",
+            placement = "top", options = tip_opts
+        )
+    )
+}

@@ -176,6 +176,21 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
 \code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 back to the default palette and user edits take precedence.
+\item \code{annotate.by} - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
+\item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
+\item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
+\item \code{highlight.border.width} - Border width for highlighted points (UI: "Highlight Border Width", default: 1)
+\item \code{highlight.auto.annotate} - Label highlighted points automatically (UI: "Auto-annotate Highlights", default: TRUE)
+\item \code{annotation.color} - Annotation text color (UI: "Annotation Color", default: "black")
+\item \code{annotation.ax} - Horizontal label offset in pixels (UI: "Annotation X Offset", default: 20)
+\item \code{annotation.ay} - Vertical label offset in pixels (UI: "Annotation Y Offset", default: -20)
+\item \code{annotation.size} - Annotation font size (UI: "Annotation Size", default: 10)
+\item \code{annotation.showarrow} - Draw an arrow from label to point (UI: "Show Arrow", default: TRUE)
+\item \code{annotation.arrowcolor} - Annotation arrow color (UI: "Arrow Color", default: "black")
+\item \code{annotation.arrowhead} - Annotation arrowhead style (UI: "Arrowhead Style", default: 2)
+\item \code{annotation.arrowwidth} - Annotation arrow line width (UI: "Arrow Linewidth", default: 1.5)
 }
 }
 

@@ -401,6 +401,21 @@ Before writing custom inputs, check whether a uniform helper already covers your
 | `uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
 | `uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
+| `uniform_legend_inputs_ui()` | Legend title and entry label font sizes |
+| `uniform_annotation_inputs_ui()` | Highlighting and labelling of individual data points |
+
+Each UI helper has a matching `reset_*_inputs()` function to call from the module's
+`observeEvent(input$reset, ...)` block.
+
+Modules that draw individual points can adopt `uniform_annotation_inputs_ui()` to let users
+highlight and label points by the values of a chosen column. The server side needs the chosen
+column carried in the plot's hover text (that is where the values are read back from), then
+`.apply_highlight_styling()` to restyle matching markers and
+`.create_highlight_annotations()`/`.create_selected_annotations()` to build the labels.
+Set `require.markers = TRUE` when other scatter traces are drawn from the same data
+(box or violin outlines, say) so only the point markers are matched. Append the resulting
+annotations to `fig$x$layout$annotations` rather than replacing them, or facet strip labels
+and statistical brackets will be lost.
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*` arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE` for scatter plots, `include.rotate = TRUE` for bar plots).
 

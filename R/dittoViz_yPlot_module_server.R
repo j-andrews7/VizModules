@@ -125,6 +125,43 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         # Store last computed stats table for download
         last_stats_df <- reactiveVal(NULL)
+
+        # Points gathered from box/lasso selections, accumulated across selections
+        selected.data <- reactiveVal()
+
+        observeEvent(
+            event_data("plotly_selected", source = plot_source),
+            {
+                selected <- event_data("plotly_selected", source = plot_source)
+                selected.full <- rbind(selected.data(), selected)
+                keep <- selected.full[!duplicated(selected.full), ]
+
+                if (nrow(keep) == 0) {
+                    selected.data(NULL)
+                } else {
+                    selected.data(keep)
+                }
+            }
+        )
+
+        observeEvent(input$annotation.clear, {
+            selected.data(NULL)
+            edit_store$annotations <- list()
+        })
+
+        # Selections are held as trace/point indices, which only describe the layout
+        # they were made on, so they are dropped when that layout changes.
+        observeEvent(
+            c(
+                input$var, input$group.by, input$color.by, input$shape.by,
+                input$split.by, input$plots
+            ),
+            {
+                selected.data(NULL)
+            },
+            ignoreInit = TRUE
+        )
+
         default_palette_name <- "dittoColors"
         palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
@@ -346,6 +383,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             updateNumericInput(session, "hover.round.digits",
                 value = get_default(defaults, "hover.round.digits", 5, is.numeric))
 
+            # Annotations
+            reset_annotation_inputs(session, defaults, choices)
+            selected.data(NULL)
+
             # Lines
             reset_lines_inputs(session, defaults = defaults)
 
@@ -499,6 +540,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # reconstruct dittoViz::yPlot()'s internal default set so hover
             # content is unchanged from the package default. Columns that do not
             # exist in the plotted data are ignored downstream by dittoViz.
+            annotate.by <- .na_to_null(isolate_fn(input$annotate.by))
             hover.data <- .na_to_null(isolate_fn(input$hover.data))
             if (is.null(hover.data)) {
                 var.name <- y.vars
@@ -512,8 +554,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     split.by
                 ))
             }
+            # Point annotations are parsed back out of the hover text, so the
+            # annotation column has to be carried in it.
+            hover.data <- unique(c(hover.data, annotate.by))
 
-            p <- yPlot(
+            p <- .with_stable_seed(yPlot(
                 data_frame = data(),
                 var = y.vars,
                 multivar.aes = multivar.aes,
@@ -569,7 +614,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 ridgeplot.binwidth = ridgeplot.binwidth,
                 legend.show = TRUE,
                 theme = theme_style
-            )
+            ))
 
             # Several Y variables mapped onto the group or color aesthetic are always
             # drawn side by side, so the boxes must be dodged rather than overlaid.
@@ -691,6 +736,76 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 )
             }
 
+            # Highlight and label individual jitter points. Rasterized jitter is drawn
+            # as a single image, so there are no points left to match against.
+            jitter.drawn <- "jitter" %in% isolate_fn(input$plots) &&
+                !isTRUE(isolate_fn(input$do.raster))
+            annos <- NULL
+
+            if (jitter.drawn && !is.null(annotate.by)) {
+                highlight_points_raw <- isolate_fn(input$highlight.points)
+                highlight_vals <- character(0)
+                if (!is.null(highlight_points_raw) && highlight_points_raw != "") {
+                    highlight_vals <- .string_to_vector(highlight_points_raw)
+                    highlight_vals <- highlight_vals[highlight_vals != ""]
+                }
+
+                if (length(highlight_vals) > 0) {
+                    fig <- .apply_highlight_styling(
+                        fig,
+                        annotate.by = annotate.by,
+                        highlight_vals = highlight_vals,
+                        style = list(
+                            color = isolate_fn(input$highlight.color),
+                            size = isolate_fn(input$highlight.size),
+                            border.color = isolate_fn(input$highlight.border.color),
+                            border.width = isolate_fn(input$highlight.border.width)
+                        ),
+                        default.size = isolate_fn(input$jitter.size),
+                        require.markers = TRUE
+                    )
+                }
+
+                annotation_params <- list(
+                    ax = isolate_fn(input$annotation.ax),
+                    ay = isolate_fn(input$annotation.ay),
+                    showarrow = isolate_fn(input$annotation.showarrow),
+                    arrowcolor = isolate_fn(input$annotation.arrowcolor),
+                    arrowhead = isolate_fn(input$annotation.arrowhead),
+                    arrowwidth = isolate_fn(input$annotation.arrowwidth),
+                    size = isolate_fn(input$annotation.size),
+                    color = isolate_fn(input$annotation.color)
+                )
+
+                if (!is.null(selected.data())) {
+                    annos <- .create_selected_annotations(
+                        selected_data = selected.data(),
+                        fig = fig,
+                        annotate.by = annotate.by,
+                        annotation_params = annotation_params,
+                        require.markers = TRUE
+                    )
+                }
+
+                if (isTRUE(isolate_fn(input$highlight.auto.annotate)) && length(highlight_vals) > 0) {
+                    highlight_annos <- .create_highlight_annotations(
+                        plot_data = data(),
+                        fig = fig,
+                        annotate.by = annotate.by,
+                        highlight_vals = highlight_vals,
+                        x_col = isolate_fn(input$group.by),
+                        y_col = y.vars[1],
+                        annotation_params = annotation_params,
+                        require.markers = TRUE
+                    )
+                    annos <- .merge_annotation_sets(annos, highlight_annos)
+                }
+            }
+
+            # Appended rather than set, so facet strip labels and stat brackets survive
+            if (!is.null(annos) && length(annos) > 0) {
+                fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
+            }
 
             config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.cols)
             fig <- do.call(config, c(list(p = fig), config_list))
