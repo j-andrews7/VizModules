@@ -5,6 +5,10 @@
 #'
 #' @param trace A single trace object from a plotly figure's data list.
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
+#' @param require.markers Logical. When `TRUE`, only traces drawing markers are
+#'   included. Set this for plots where marker traces sit alongside other scatter
+#'   traces built from the same data (e.g. the jitter layer of a box/violin plot,
+#'   whose outlines are also scatter traces).
 #'
 #' @return Logical. TRUE if the trace should be included in annotation processing,
 #'   FALSE if it should be skipped.
@@ -17,13 +21,19 @@
 #' @author Jared Andrews
 #' @rdname INTERNAL_should_include_trace
 #' @keywords internal
-.should_include_trace <- function(trace, show.others = TRUE) {
+.should_include_trace <- function(trace, show.others = TRUE, require.markers = FALSE) {
     # Skip non-scatter traces or traces without proper data
     if (is.null(trace$x) || is.null(trace$y)) {
         return(FALSE)
     }
     if (!is.null(trace$type) && !trace$type %in% c("scatter", "scattergl")) {
         return(FALSE)
+    }
+
+    if (require.markers) {
+        if (is.null(trace$mode) || !any(grepl("markers", trace$mode, fixed = TRUE))) {
+            return(FALSE)
+        }
     }
 
     # Skip traces that are explicitly marked as background/show.others
@@ -178,6 +188,8 @@
 #' @param annotate.by Character. Name of the field to use for annotation text.
 #' @param annotation_params List of annotation styling parameters (ax, ay, showarrow, etc.).
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
+#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
+#'   matching to marker traces.
 #'
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
@@ -185,7 +197,8 @@
 #' @rdname INTERNAL_create_selected_annotations
 #' @keywords internal
 .create_selected_annotations <- function(selected_data, fig, annotate.by,
-                                         annotation_params, show.others = TRUE) {
+                                         annotation_params, show.others = TRUE,
+                                         require.markers = FALSE) {
     if (is.null(selected_data) || nrow(selected_data) == 0) {
         return(NULL)
     }
@@ -199,7 +212,7 @@
         trace <- fig$x$data[[i]]
         xaxis <- if (!is.null(trace$xaxis)) trace$xaxis else "x"
         yaxis <- if (!is.null(trace$yaxis)) trace$yaxis else "y"
-        should_include <- .should_include_trace(trace, show.others)
+        should_include <- .should_include_trace(trace, show.others, require.markers)
         list(xaxis = xaxis, yaxis = yaxis, include = should_include)
     })
 
@@ -237,13 +250,26 @@
             next
         }
 
-        # Match selected point to trace by coordinates
-        selected_coord <- .create_coord_id(
-            selected_data_filtered$x[i],
-            selected_data_filtered$y[i]
-        )
-        trace_coords <- .create_coord_id(trace$x, trace$y)
-        point_idx <- which(trace_coords == selected_coord)
+        # Prefer the point's index within its trace. Coordinates cannot be relied on
+        # for jittered points: the selection rebuilds the plot, which re-draws the
+        # jitter offsets, so the recorded coordinates no longer exist.
+        point_idx <- integer(0)
+        if ("pointNumber" %in% names(selected_data_filtered) &&
+            is.numeric(selected_data_filtered$pointNumber)) {
+            candidate <- selected_data_filtered$pointNumber[i] + 1
+            if (!is.na(candidate) && candidate >= 1 && candidate <= length(trace$x)) {
+                point_idx <- candidate
+            }
+        }
+
+        if (length(point_idx) == 0) {
+            selected_coord <- .create_coord_id(
+                selected_data_filtered$x[i],
+                selected_data_filtered$y[i]
+            )
+            trace_coords <- .create_coord_id(trace$x, trace$y)
+            point_idx <- which(trace_coords == selected_coord)
+        }
 
         if (length(point_idx) == 0) {
             next
@@ -259,10 +285,10 @@
             next
         }
 
-        # Create annotation object
+        # Position comes from the trace so the label follows the point if it moved
         annos[[length(annos) + 1]] <- list(
-            x = selected_data_filtered$x[i],
-            y = selected_data_filtered$y[i],
+            x = trace$x[point_idx[1]],
+            y = trace$y[point_idx[1]],
             text = anno_text,
             xref = xref,
             yref = yref,
@@ -301,6 +327,8 @@
 #' @param y_col Character. Name of the y-axis column.
 #' @param annotation_params List of annotation styling parameters.
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
+#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
+#'   matching to marker traces.
 #'
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
@@ -308,7 +336,8 @@
 #' @rdname INTERNAL_create_highlight_annotations
 #' @keywords internal
 .create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
-                                          x_col, y_col, annotation_params, show.others = TRUE) {
+                                          x_col, y_col, annotation_params, show.others = TRUE,
+                                          require.markers = FALSE) {
     if (is.null(plot_data) || is.null(highlight_vals) || length(highlight_vals) == 0) {
         return(NULL)
     }
@@ -345,7 +374,7 @@
         trace <- fig$x$data[[i]]
 
         # Skip traces that should not be included
-        if (!.should_include_trace(trace, show.others)) {
+        if (!.should_include_trace(trace, show.others, require.markers)) {
             next
         }
 
@@ -384,6 +413,138 @@
 
     if (length(annos) == 0) {
         return(NULL)
+    }
+
+    return(annos)
+}
+
+
+#' Restyle highlighted points in a plotly figure
+#'
+#' Applies highlight marker styling (fill, size, border) to the points of a
+#' plotly figure whose `annotate.by` value appears in `highlight_vals`. Points
+#' are matched on their annotation value parsed out of the hover text rather
+#' than on coordinates, because `ggplotly()` encodes categorical axes as numeric
+#' positions that will not match the raw data values.
+#'
+#' @param fig Plotly figure object.
+#' @param annotate.by Character. Name of the hover field holding the values to match.
+#' @param highlight_vals Character vector. Values identifying the points to highlight.
+#' @param style A named list of styling values with elements `color`, `size`,
+#'   `border.color` and `border.width`. Empty/`NA` elements are left unchanged.
+#' @param default.size Numeric, or `NULL`. Marker size to fall back on for traces
+#'   that carry no explicit size.
+#' @param show.others Logical. Whether "show.others" was enabled in the plot.
+#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
+#'   restyling to marker traces.
+#'
+#' @return The plotly figure with highlight styling applied.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_apply_highlight_styling
+#' @keywords internal
+.apply_highlight_styling <- function(fig, annotate.by, highlight_vals, style,
+                                     default.size = NULL, show.others = TRUE,
+                                     require.markers = FALSE) {
+    if (is.null(annotate.by) || is.null(highlight_vals) || length(highlight_vals) == 0) {
+        return(fig)
+    }
+    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$data) || length(fig$x$data) == 0) {
+        return(fig)
+    }
+
+    highlight_vals <- as.character(highlight_vals)
+
+    for (i in seq_along(fig$x$data)) {
+        trace <- fig$x$data[[i]]
+
+        if (!.should_include_trace(trace, show.others, require.markers)) {
+            next
+        }
+
+        trace_map <- .build_trace_anno_map(trace, annotate.by)
+        if (is.null(trace_map)) {
+            next
+        }
+
+        mask <- trace_map$anno_value %in% highlight_vals
+        if (!any(mask)) {
+            next
+        }
+
+        trace_n <- length(trace$x)
+
+        if (is.null(trace$marker)) {
+            fig$x$data[[i]]$marker <- list()
+        }
+
+        # Marker properties may be a single value or a per-point vector
+        cur_color <- trace$marker$color
+        cur_size <- if (!is.null(trace$marker$size)) trace$marker$size else default.size
+        cur_line_color <- if (!is.null(trace$marker$line$color)) trace$marker$line$color else "transparent"
+        cur_line_width <- if (!is.null(trace$marker$line$width)) trace$marker$line$width else 0
+
+        if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
+        if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
+        if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
+        if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
+
+        if (!is.null(style$color) && style$color != "" && style$color != "transparent") {
+            cur_color[mask] <- style$color
+        }
+        if (!is.null(style$size) && !is.na(style$size)) {
+            cur_size[mask] <- style$size
+        }
+        if (!is.null(style$border.color) && style$border.color != "") {
+            cur_line_color[mask] <- style$border.color
+        }
+        if (!is.null(style$border.width) && !is.na(style$border.width)) {
+            cur_line_width[mask] <- style$border.width
+        }
+
+        fig$x$data[[i]]$marker$color <- cur_color
+        fig$x$data[[i]]$marker$size <- cur_size
+        fig$x$data[[i]]$marker$line <- list(
+            color = cur_line_color,
+            width = cur_line_width
+        )
+    }
+
+    return(fig)
+}
+
+
+#' Merge two sets of plotly point annotations
+#'
+#' Appends `extra` annotations to `annos`, skipping any that already describe the
+#' same point and text so a point selected by hand and also matched by a
+#' highlight value is only labelled once.
+#'
+#' @param annos List of plotly annotation objects, or NULL.
+#' @param extra List of plotly annotation objects to append, or NULL.
+#'
+#' @return The combined list of annotation objects, or NULL when both are empty.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_merge_annotation_sets
+#' @keywords internal
+.merge_annotation_sets <- function(annos, extra) {
+    if (is.null(extra) || length(extra) == 0) {
+        return(annos)
+    }
+    if (is.null(annos) || length(annos) == 0) {
+        return(extra)
+    }
+
+    anno_key <- function(a) paste0(.create_coord_id(a$x, a$y), "_", a$text)
+    existing_keys <- vapply(annos, anno_key, character(1))
+
+    for (e in extra) {
+        e_key <- anno_key(e)
+        if (!e_key %in% existing_keys) {
+            annos <- c(annos, list(e))
+            existing_keys <- c(existing_keys, e_key)
+        }
     }
 
     return(annos)

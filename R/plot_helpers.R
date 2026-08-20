@@ -60,6 +60,35 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
+#' Evaluate a plot expression under a fixed random seed
+#'
+#' Builds a plot with a reproducible random stream so randomised layers (jitter,
+#' most notably) land in the same place on every rebuild. Without this, any input
+#' change re-draws the jitter offsets, which makes points appear to jump around
+#' and leaves anything anchored to a point's position pointing at stale coordinates.
+#' The caller's random stream is restored afterwards.
+#'
+#' @param expr Expression producing the plot. Evaluated lazily, after the seed is set.
+#' @param seed Integer. Seed to build under.
+#'
+#' @return The value of `expr`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_with_stable_seed
+#' @keywords internal
+.with_stable_seed <- function(expr, seed = 42L) {
+    if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+        old_seed <- get(".Random.seed", envir = globalenv(), inherits = FALSE)
+        on.exit(assign(".Random.seed", old_seed, envir = globalenv()), add = TRUE)
+    } else {
+        on.exit(suppressWarnings(rm(".Random.seed", envir = globalenv())), add = TRUE)
+    }
+
+    set.seed(seed)
+    expr
+}
+
+
 #' Create default Plotly configuration
 #'
 #' Constructs a configuration list for Plotly plots, enabling interactive

@@ -145,6 +145,21 @@
 #' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
 #'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 #'   back to the default palette and user edits take precedence.
+#' - `annotate.by` - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.color` - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
+#' - `highlight.size` - Size of highlighted points (UI: "Highlight Size", default: 7)
+#' - `highlight.border.color` - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
+#' - `highlight.border.width` - Border width for highlighted points (UI: "Highlight Border Width", default: 1)
+#' - `highlight.auto.annotate` - Label highlighted points automatically (UI: "Auto-annotate Highlights", default: TRUE)
+#' - `annotation.color` - Annotation text color (UI: "Annotation Color", default: "black")
+#' - `annotation.ax` - Horizontal label offset in pixels (UI: "Annotation X Offset", default: 20)
+#' - `annotation.ay` - Vertical label offset in pixels (UI: "Annotation Y Offset", default: -20)
+#' - `annotation.size` - Annotation font size (UI: "Annotation Size", default: 10)
+#' - `annotation.showarrow` - Draw an arrow from label to point (UI: "Show Arrow", default: TRUE)
+#' - `annotation.arrowcolor` - Annotation arrow color (UI: "Arrow Color", default: "black")
+#' - `annotation.arrowhead` - Annotation arrowhead style (UI: "Arrowhead Style", default: 2)
+#' - `annotation.arrowwidth` - Annotation arrow line width (UI: "Arrow Linewidth", default: 1.5)
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -567,6 +582,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             ),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
+        ),
+        "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices,
+            annotate.note = paste(
+                "Highlighting and labelling apply to jitter points, so include 'jitter'",
+                "in the Plot Types and leave 'Rasterize Jitter' off"
+            )
         ),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),

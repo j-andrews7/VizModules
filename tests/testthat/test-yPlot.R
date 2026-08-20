@@ -331,3 +331,195 @@ test_that("yPlot seeds its palette from defaults", {
         }
     )
 })
+
+# Helper: a small frame plus the box+jitter figure the annotation helpers run on.
+.yplot_jitter_fixture <- function(plots = c("boxplot", "jitter")) {
+    set.seed(1)
+    df <- data.frame(
+        grp = rep(c("A", "B"), each = 5),
+        val = round(rnorm(10), 3),
+        lab = paste0("cell", seq_len(10)),
+        stringsAsFactors = FALSE
+    )
+    list(
+        df = df,
+        fig = dittoViz::yPlot(
+            df, var = "val", group.by = "grp", plots = plots,
+            do.hover = TRUE, hover.data = c("val", "grp", "lab")
+        )
+    )
+}
+
+test_that("yPlot UI exposes the point annotation inputs", {
+    df <- data.frame(
+        val = c(1, 2, 3),
+        grp = c("a", "b", "c"),
+        stringsAsFactors = FALSE
+    )
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df))
+
+    expect_true(grepl("yplot-annotate.by", html, fixed = TRUE))
+    expect_true(grepl("yplot-highlight.points", html, fixed = TRUE))
+    expect_true(grepl("yplot-highlight.auto.annotate", html, fixed = TRUE))
+    expect_true(grepl("yplot-annotation.clear", html, fixed = TRUE))
+})
+
+test_that("highlighting restyles only the jitter points that match", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    fixture <- .yplot_jitter_fixture()
+    fig <- fixture$fig
+    before <- fig$x$data
+
+    out <- .apply_highlight_styling(
+        fig,
+        annotate.by = "lab",
+        highlight_vals = c("cell1", "cell7"),
+        style = list(
+            color = "#00FFF7", size = 9,
+            border.color = "#FF0000", border.width = 2
+        ),
+        default.size = 1,
+        require.markers = TRUE
+    )
+
+    # The box traces carry the same data, so they must come through untouched.
+    box_idx <- which(vapply(before, function(tr) identical(tr$type, "box"), logical(1)))
+    expect_gt(length(box_idx), 0)
+    for (i in box_idx) {
+        expect_identical(out$x$data[[i]], before[[i]])
+    }
+
+    marker_idx <- setdiff(seq_along(out$x$data), box_idx)
+    colors <- unlist(lapply(out$x$data[marker_idx], function(tr) tr$marker$color))
+    sizes <- unlist(lapply(out$x$data[marker_idx], function(tr) tr$marker$size))
+    expect_equal(sum(colors == "#00FFF7"), 2)
+    expect_equal(sum(sizes == 9), 2)
+    # Every other point keeps its original styling.
+    expect_equal(sum(sizes != 9), 8)
+})
+
+test_that("auto-annotations label each highlighted jitter point where it is drawn", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    fixture <- .yplot_jitter_fixture()
+
+    annos <- .create_highlight_annotations(
+        plot_data = fixture$df,
+        fig = fixture$fig,
+        annotate.by = "lab",
+        highlight_vals = c("cell1", "cell7"),
+        x_col = "grp", y_col = "val",
+        annotation_params = list(
+            ax = 20, ay = -20, showarrow = TRUE, arrowcolor = "black",
+            arrowhead = 2, arrowwidth = 1.5, size = 10, color = "black"
+        ),
+        require.markers = TRUE
+    )
+
+    expect_length(annos, 2)
+    expect_setequal(vapply(annos, function(a) a$text, character(1)), c("cell1", "cell7"))
+    # Positions are read off the traces, so they land on the plotted values.
+    expect_setequal(
+        vapply(annos, function(a) a$y, numeric(1)),
+        fixture$df$val[fixture$df$lab %in% c("cell1", "cell7")]
+    )
+})
+
+test_that("only jitter marker traces are matched when violins are drawn", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    fig <- .yplot_jitter_fixture(plots = c("vlnplot", "jitter"))$fig
+
+    included <- vapply(
+        fig$x$data, function(tr) .should_include_trace(tr, require.markers = TRUE), logical(1)
+    )
+    expect_true(any(included))
+    # Violin outlines are scatter traces too, so the mode check is what excludes them.
+    expect_true(all(vapply(
+        fig$x$data[included], function(tr) any(grepl("markers", tr$mode)), logical(1)
+    )))
+    expect_true(all(vapply(
+        fig$x$data[included], function(tr) length(tr$text) == length(tr$x), logical(1)
+    )))
+})
+
+test_that("hand-selected and highlighted labels for the same point merge into one", {
+    a <- list(x = 1, y = 2, text = "cell1")
+    b <- list(x = 3, y = 4, text = "cell2")
+
+    expect_equal(.merge_annotation_sets(list(a), list(a)), list(a))
+    expect_equal(.merge_annotation_sets(list(a), list(b)), list(a, b))
+    expect_equal(.merge_annotation_sets(NULL, list(b)), list(b))
+    expect_equal(.merge_annotation_sets(list(a), NULL), list(a))
+})
+
+test_that("selected points are labelled even after the jitter has been re-drawn", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    fig <- .yplot_jitter_fixture()$fig
+    marker_idx <- which(vapply(
+        fig$x$data, function(tr) .should_include_trace(tr, require.markers = TRUE), logical(1)
+    ))
+    expect_gt(length(marker_idx), 0)
+
+    curve <- marker_idx[1]
+    trace <- fig$x$data[[curve]]
+
+    # Selecting rebuilds the plot, which re-jitters the points, so the coordinates
+    # the browser reported no longer match anything in the figure being annotated.
+    selected <- data.frame(
+        curveNumber = curve - 1,
+        pointNumber = c(0, 2),
+        x = trace$x[c(1, 3)] + 0.137,
+        y = trace$y[c(1, 3)]
+    )
+
+    annos <- .create_selected_annotations(
+        selected_data = selected,
+        fig = fig,
+        annotate.by = "lab",
+        annotation_params = list(
+            ax = 20, ay = -20, showarrow = TRUE, arrowcolor = "black",
+            arrowhead = 2, arrowwidth = 1.5, size = 10, color = "black"
+        ),
+        require.markers = TRUE
+    )
+
+    expect_length(annos, 2)
+    expect_equal(
+        vapply(annos, function(a) a$text, character(1)),
+        vapply(trace$text[c(1, 3)], function(t) .extract_annotation_from_text(t, "lab"), character(1),
+            USE.NAMES = FALSE
+        )
+    )
+    # Labels sit on the points as currently drawn, not on the stale coordinates.
+    expect_equal(vapply(annos, function(a) a$x, numeric(1)), trace$x[c(1, 3)])
+})
+
+test_that("a fixed seed keeps jitter positions stable across rebuilds", {
+    skip_if_not_installed("dittoViz")
+    skip_if_not_installed("plotly")
+
+    build <- function() {
+        .with_stable_seed(dittoViz::yPlot(
+            data.frame(
+                grp = rep(c("A", "B"), each = 5),
+                val = as.numeric(1:10),
+                stringsAsFactors = FALSE
+            ),
+            var = "val", group.by = "grp", plots = c("boxplot", "jitter"), do.hover = TRUE
+        ))
+    }
+
+    jitter_x <- function(fig) {
+        idx <- vapply(fig$x$data, function(tr) .should_include_trace(tr, require.markers = TRUE), logical(1))
+        unlist(lapply(fig$x$data[idx], function(tr) tr$x))
+    }
+
+    expect_equal(jitter_x(build()), jitter_x(build()))
+})

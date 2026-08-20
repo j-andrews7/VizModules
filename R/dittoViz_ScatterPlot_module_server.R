@@ -303,51 +303,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
 
             # Annotations
-            update_viz_select(session, "annotate.by",
-                selected = get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices)
-            )
-            updateTextAreaInput(session, "highlight.points",
-                value = get_default(defaults, "highlight.points", "")
-            )
-            updateColourInput(session, "highlight.color",
-                value = get_default(defaults, "highlight.color", "#00FFF7")
-            )
-            updateNumericInput(session, "highlight.size",
-                value = get_default(defaults, "highlight.size", 7, is.numeric)
-            )
-            updateColourInput(session, "highlight.border.color",
-                value = get_default(defaults, "highlight.border.color", "#000000")
-            )
-            updateNumericInput(session, "highlight.border.width",
-                value = get_default(defaults, "highlight.border.width", 1, is.numeric)
-            )
-            updateCheckboxInput(session, "highlight.auto.annotate",
-                value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
-            )
-            updateColourInput(session, "annotation.color",
-                value = get_default(defaults, "annotation.color", "black")
-            )
-            updateNumericInput(session, "annotation.ax",
-                value = get_default(defaults, "annotation.ax", 20, is.numeric)
-            )
-            updateNumericInput(session, "annotation.ay",
-                value = get_default(defaults, "annotation.ay", -20, is.numeric)
-            )
-            updateNumericInput(session, "annotation.size",
-                value = get_default(defaults, "annotation.size", 10, is.numeric)
-            )
-            updateCheckboxInput(session, "annotation.showarrow",
-                value = get_default(defaults, "annotation.showarrow", TRUE, is.logical)
-            )
-            updateColourInput(session, "annotation.arrowcolor",
-                value = get_default(defaults, "annotation.arrowcolor", "black")
-            )
-            updateNumericInput(session, "annotation.arrowhead",
-                value = get_default(defaults, "annotation.arrowhead", 2, is.numeric)
-            )
-            updateNumericInput(session, "annotation.arrowwidth",
-                value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
-            )
+            reset_annotation_inputs(session, defaults, choices)
 
             # Legend
             updateCheckboxInput(session, "legend.show",
@@ -661,98 +617,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 highlight_vals <- highlight_vals[highlight_vals != ""]
 
                 if (length(highlight_vals) > 0) {
-                    # Get styling parameters
-                    hl_color <- isolate_fn(input$highlight.color)
-                    hl_size <- isolate_fn(input$highlight.size)
-                    hl_border_color <- isolate_fn(input$highlight.border.color)
-                    hl_border_width <- isolate_fn(input$highlight.border.width)
-
-                    # Find indices of points to highlight in plot_data
-                    annotate_col <- null.na.inputs$annotate.by
-                    if (annotate_col %in% names(plot_data)) {
-                        highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
-
-                        if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
-                            # Iterate through traces and modify marker properties
-                            for (i in seq_along(fig$x$data)) {
-                                trace <- fig$x$data[[i]]
-
-                                # Skip traces that should not be included
-                                if (!.should_include_trace(trace, isolate_fn(input$show.others))) {
-                                    next
-                                }
-
-                                trace_n <- length(trace$x)
-
-                                # Initialize marker properties if not present
-                                if (is.null(trace$marker)) {
-                                    fig$x$data[[i]]$marker <- list()
-                                }
-
-                                # Get current marker properties (may be single value or vector)
-                                cur_color <- trace$marker$color
-                                cur_size <- if (!is.null(trace$marker$size)) {
-                                    trace$marker$size
-                                } else {
-                                    isolate_fn(input$size)
-                                }
-                                cur_line_color <- if (!is.null(trace$marker$line$color)) {
-                                    trace$marker$line$color
-                                } else {
-                                    "transparent"
-                                }
-                                cur_line_width <- if (!is.null(trace$marker$line$width)) {
-                                    trace$marker$line$width
-                                } else {
-                                    0
-                                }
-
-                                # Expand to vectors if single values
-                                if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
-                                if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
-                                if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
-                                if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
-
-                                # Build trace annotation mapping
-                                trace_map <- .build_trace_anno_map(trace, isolate_fn(input$annotate.by))
-                                if (is.null(trace_map)) {
-                                    next
-                                }
-
-                                # Find which points in this trace should be highlighted.
-                                # Match on the annotation value alone rather than on
-                                # coordinates: ggplotly encodes categorical (factor) axes
-                                # as numeric positions that will not match the raw data
-                                # values in plot_data, which would otherwise drop the
-                                # highlight styling for categorical x/y axes.
-                                trace_highlight_mask <- trace_map$anno_value %in% highlight_vals
-
-                                if (any(trace_highlight_mask)) {
-                                    # Apply highlight styling
-                                    if (!is.null(hl_color) && hl_color != "" && hl_color != "transparent") {
-                                        cur_color[trace_highlight_mask] <- hl_color
-                                    }
-                                    if (!is.null(hl_size) && !is.na(hl_size)) {
-                                        cur_size[trace_highlight_mask] <- hl_size
-                                    }
-                                    if (!is.null(hl_border_color) && hl_border_color != "") {
-                                        cur_line_color[trace_highlight_mask] <- hl_border_color
-                                    }
-                                    if (!is.null(hl_border_width) && !is.na(hl_border_width)) {
-                                        cur_line_width[trace_highlight_mask] <- hl_border_width
-                                    }
-
-                                    # Update trace marker properties
-                                    fig$x$data[[i]]$marker$color <- cur_color
-                                    fig$x$data[[i]]$marker$size <- cur_size
-                                    fig$x$data[[i]]$marker$line <- list(
-                                        color = cur_line_color,
-                                        width = cur_line_width
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    fig <- .apply_highlight_styling(
+                        fig,
+                        annotate.by = null.na.inputs$annotate.by,
+                        highlight_vals = highlight_vals,
+                        style = list(
+                            color = isolate_fn(input$highlight.color),
+                            size = isolate_fn(input$highlight.size),
+                            border.color = isolate_fn(input$highlight.border.color),
+                            border.width = isolate_fn(input$highlight.border.width)
+                        ),
+                        default.size = isolate_fn(input$size),
+                        show.others = isolate_fn(input$show.others)
+                    )
                 }
             }
 
@@ -803,27 +680,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     )
 
                     # Combine with existing annotations (avoiding duplicates)
-                    if (!is.null(highlight_annos)) {
-                        if (is.null(annos)) {
-                            annos <- highlight_annos
-                        } else {
-                            # Helper to create unique key for an annotation
-                            get_anno_key <- function(a) {
-                                paste0(.create_coord_id(a$x, a$y), "_", a$text)
-                            }
-
-                            existing_keys <- vapply(annos, get_anno_key, character(1))
-
-                            # Add only highlight annotations that don't already exist
-                            for (ha in highlight_annos) {
-                                ha_key <- get_anno_key(ha)
-                                if (!ha_key %in% existing_keys) {
-                                    annos <- c(annos, list(ha))
-                                    existing_keys <- c(existing_keys, ha_key)
-                                }
-                            }
-                        }
-                    }
+                    annos <- .merge_annotation_sets(annos, highlight_annos)
                 }
             }
 

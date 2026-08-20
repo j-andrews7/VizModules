@@ -219,3 +219,62 @@ reset_legend_inputs <- function(session, defaults = NULL) {
         value = get_default(defaults, "legend.text.size", 12, is.numeric))
     invisible(NULL)
 }
+
+
+#' Reset uniform Annotation inputs to defaults
+#'
+#' Resets the point highlighting and annotation inputs created by
+#' [uniform_annotation_inputs_ui()] back to their default values.
+#'
+#' @param session The Shiny session object.
+#' @param defaults A named list of default values. When provided, inputs reset
+#'   to these values rather than hardcoded fallbacks. Typically the same list
+#'   passed to the UI function.
+#' @param choices Character vector of valid "Annotate By" column names, used to
+#'   validate the supplied default.
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateNumericInput updateCheckboxInput updateTextAreaInput
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_annotation_inputs(session, defaults, choices = c("", names(data())))
+#' }
+reset_annotation_inputs <- function(session, defaults = NULL, choices = "") {
+    update_viz_select(session, "annotate.by",
+        selected = get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices))
+    updateTextAreaInput(session, "highlight.points",
+        value = get_default(defaults, "highlight.points", ""))
+    updateColourInput(session, "highlight.color",
+        value = get_default(defaults, "highlight.color", "#00FFF7"))
+    updateNumericInput(session, "highlight.size",
+        value = get_default(defaults, "highlight.size", 7, is.numeric))
+    updateColourInput(session, "highlight.border.color",
+        value = get_default(defaults, "highlight.border.color", "#000000"))
+    updateNumericInput(session, "highlight.border.width",
+        value = get_default(defaults, "highlight.border.width", 1, is.numeric))
+    updateCheckboxInput(session, "highlight.auto.annotate",
+        value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical))
+    updateColourInput(session, "annotation.color",
+        value = get_default(defaults, "annotation.color", "black"))
+    updateNumericInput(session, "annotation.ax",
+        value = get_default(defaults, "annotation.ax", 20, is.numeric))
+    updateNumericInput(session, "annotation.ay",
+        value = get_default(defaults, "annotation.ay", -20, is.numeric))
+    updateNumericInput(session, "annotation.size",
+        value = get_default(defaults, "annotation.size", 10, is.numeric))
+    updateCheckboxInput(session, "annotation.showarrow",
+        value = get_default(defaults, "annotation.showarrow", TRUE, is.logical))
+    updateColourInput(session, "annotation.arrowcolor",
+        value = get_default(defaults, "annotation.arrowcolor", "black"))
+    updateNumericInput(session, "annotation.arrowhead",
+        value = get_default(defaults, "annotation.arrowhead", 2, is.numeric))
+    updateNumericInput(session, "annotation.arrowwidth",
+        value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric))
+    invisible(NULL)
+}

@@ -183,6 +183,8 @@ reference:
       - uniform_legend_inputs_ui
       - uniform_lines_inputs_ui
       - uniform_plotly_inputs_ui
+      - uniform_annotation_inputs_ui
+      - reset_annotation_inputs
       - reset_axes_inputs
       - reset_legend_inputs
       - reset_lines_inputs
