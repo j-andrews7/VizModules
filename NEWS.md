@@ -8,7 +8,7 @@ Many of the changes with this release were aimed at improving initialization of 
 
 ## Improved/New Functionality
 
-* The `dittoViz_yPlot` module gains an "Annotations" tab that highlights and labels individual jitter points, matching the `dittoViz_scatterPlot` module (#340). 
+* The `dittoViz_yPlot` module gained an "Annotations" tab that highlights and labels individual jitter points, matching the `dittoViz_scatterPlot` module (#340). 
   * The annotation controls are now the exported helpers `uniform_annotation_inputs_ui()` and `reset_annotation_inputs()`, so other modules that draw individual points can pick them up, and `dittoViz_scatterPlot` now uses them rather than its own copy.
   * `dittoViz_yPlot`'s jitter positions are now drawn from a fixed seed, so they no longer reshuffle on every rebuild. Selections and annotations therefore stay attached to the points they were made on, and a plot redrawn with the same settings is reproducible.
   * Box/lasso selections are now matched to their points by index rather than by coordinates, so a label survives the rebuild that the selection itself triggers. Selections are cleared when the plot's structure changes (Y data, grouping, color, shape, facet or plot types), since the indices only describe the layout they were captured on.
