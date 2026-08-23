@@ -151,12 +151,12 @@ test_that("a rebuilt colour picker reporting the same palette does not rebuild t
 
             # The palette the picker is seeded with is settled server-side, so the
             # first draw is on the right colours rather than a fallback.
-            settled <- resolved_palette()
+            settled <- palette_store()
             expect_equal(settled, c(v1 = "#E69F00", v2 = "#56B4E9"))
 
             # The client reporting that same seed back changes nothing.
             session$setInputs(palette.colours = settled)
-            expect_identical(resolved_palette(), settled)
+            expect_identical(palette_store(), settled)
 
             # The picker is rebuilt whenever the group set changes and is re-seeded
             # from this same resolution, so what it reports afterwards - on opening
@@ -166,11 +166,11 @@ test_that("a rebuilt colour picker reporting the same palette does not rebuild t
                 palette.colours = c(v1 = "#E69F00", v2 = "#56B4E9", Sales = "#000000")
             )
             expect_false(identical(input$palette.colours, settled))
-            expect_identical(resolved_palette(), settled)
+            expect_identical(palette_store(), settled)
 
             # A colour the user actually picked still comes through.
             session$setInputs(palette.colours = c(v1 = "#123456", v2 = "#56B4E9"))
-            expect_identical(resolved_palette(), c(v1 = "#123456", v2 = "#56B4E9"))
+            expect_identical(palette_store(), c(v1 = "#123456", v2 = "#56B4E9"))
         }
     )
 })
@@ -327,7 +327,7 @@ test_that("yPlot seeds its palette from defaults", {
         {
             session$setInputs(var = "val", group.by = "grp", color.by = "")
             session$flushReact()
-            expect_equal(resolved_palette(), c(A = "#FF0000", B = "#00FF00"))
+            expect_equal(palette_store(), c(A = "#FF0000", B = "#00FF00"))
         }
     )
 })

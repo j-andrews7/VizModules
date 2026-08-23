@@ -187,9 +187,19 @@ compute_pairwise_stats <- function(df, x, y,
     }
 }
 
-#' Compute pairwise tests (Wilcoxon or t-test) for a data subset
-#' @noRd
-.compute_pairwise <- function(sub_df, x, y, test, paired, pairs, group.by, facet_level) {
+
+#' Enumerate the comparisons a pairwise run will produce
+#'
+#' The comparison set depends only on the grouping columns and the user's pair
+#' selection, never on the data values, so it can be worked out without running
+#' a single test. `.compute_pairwise()` fills these rows in with p-values, and
+#' [stat_bracket_y_max()] uses them to work out how much room the brackets need.
+#'
+#' @return A data frame with `group1`, `group2`, `x_level` and `facet_level`, or
+#'   `NULL` when there is nothing to compare.
+#' @rdname INTERNAL_pairwise_layout
+#' @keywords internal
+.pairwise_layout <- function(sub_df, x, pairs, group.by, facet_level = NA_character_) {
     if (!is.null(group.by) && nzchar(group.by)) {
         x_levels <- unique(as.character(sub_df[[x]]))
         grp_levels <- unique(as.character(sub_df[[group.by]]))
@@ -203,21 +213,16 @@ compute_pairwise_stats <- function(df, x, y,
             combn(grp_levels, 2, simplify = FALSE)
         }
 
-        results <- lapply(x_levels, function(xlev) {
-            x_sub <- sub_df[as.character(sub_df[[x]]) == xlev, ]
-            pair_results <- lapply(grp_pairs, function(pr) {
-                vals1 <- x_sub[as.character(x_sub[[group.by]]) == pr[1], y]
-                vals2 <- x_sub[as.character(x_sub[[group.by]]) == pr[2], y]
-                p_val <- .run_pairwise_test(vals1, vals2, test, paired)
+        rows <- lapply(x_levels, function(xlev) {
+            do.call(rbind, lapply(grp_pairs, function(pr) {
                 data.frame(
-                    group1 = pr[1], group2 = pr[2], p.value = p_val,
-                    test = test, facet_level = facet_level, x_level = xlev,
+                    group1 = pr[1], group2 = pr[2],
+                    x_level = xlev, facet_level = facet_level,
                     stringsAsFactors = FALSE
                 )
-            })
-            do.call(rbind, pair_results)
+            }))
         })
-        do.call(rbind, results)
+        do.call(rbind, rows)
     } else {
         x_levels <- unique(as.character(sub_df[[x]]))
         if (length(x_levels) < 2) {
@@ -230,18 +235,41 @@ compute_pairwise_stats <- function(df, x, y,
             combn(x_levels, 2, simplify = FALSE)
         }
 
-        results <- lapply(test_pairs, function(pr) {
-            vals1 <- sub_df[as.character(sub_df[[x]]) == pr[1], y]
-            vals2 <- sub_df[as.character(sub_df[[x]]) == pr[2], y]
-            p_val <- .run_pairwise_test(vals1, vals2, test, paired)
+        do.call(rbind, lapply(test_pairs, function(pr) {
             data.frame(
-                group1 = pr[1], group2 = pr[2], p.value = p_val,
-                test = test, facet_level = facet_level, x_level = NA_character_,
+                group1 = pr[1], group2 = pr[2],
+                x_level = NA_character_, facet_level = facet_level,
                 stringsAsFactors = FALSE
             )
-        })
-        do.call(rbind, results)
+        }))
     }
+}
+
+.compute_pairwise <- function(sub_df, x, y, test, paired, pairs, group.by, facet_level) {
+    layout <- .pairwise_layout(sub_df, x, pairs, group.by, facet_level)
+    if (is.null(layout) || nrow(layout) == 0) {
+        return(NULL)
+    }
+
+    nested <- !is.null(group.by) && nzchar(group.by)
+
+    p_vals <- vapply(seq_len(nrow(layout)), function(i) {
+        if (nested) {
+            x_sub <- sub_df[as.character(sub_df[[x]]) == layout$x_level[i], ]
+            vals1 <- x_sub[as.character(x_sub[[group.by]]) == layout$group1[i], y]
+            vals2 <- x_sub[as.character(x_sub[[group.by]]) == layout$group2[i], y]
+        } else {
+            vals1 <- sub_df[as.character(sub_df[[x]]) == layout$group1[i], y]
+            vals2 <- sub_df[as.character(sub_df[[x]]) == layout$group2[i], y]
+        }
+        .run_pairwise_test(vals1, vals2, test, paired)
+    }, numeric(1))
+
+    data.frame(
+        group1 = layout$group1, group2 = layout$group2, p.value = p_vals,
+        test = test, facet_level = layout$facet_level, x_level = layout$x_level,
+        stringsAsFactors = FALSE
+    )
 }
 
 
@@ -402,26 +430,10 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 
         if (nrow(facet_rows) == 0) next
 
-        # Compute x-positions and sort by gap
-        facet_rows$x0_pos <- mapply(
-            .get_x_pos, facet_rows$group1, facet_rows$x_level,
-            MoreArgs = list(x.order = x.order, group.by = group.by, df = df)
+        # Position, sort, inset and pack the brackets into non-overlapping levels
+        facet_rows <- .assign_bracket_levels(
+            facet_rows, x.order, group.by, df, bracket.inset
         )
-        facet_rows$x1_pos <- mapply(
-            .get_x_pos, facet_rows$group2, facet_rows$x_level,
-            MoreArgs = list(x.order = x.order, group.by = group.by, df = df)
-        )
-        facet_rows$gap <- abs(facet_rows$x1_pos - facet_rows$x0_pos)
-        facet_rows <- facet_rows[order(facet_rows$gap), ]
-
-        # Compute inset endpoints
-        facet_rows$x0_raw <- pmin(facet_rows$x0_pos, facet_rows$x1_pos)
-        facet_rows$x1_raw <- pmax(facet_rows$x0_pos, facet_rows$x1_pos)
-        facet_rows$x0_draw <- facet_rows$x0_raw + bracket.inset
-        facet_rows$x1_draw <- facet_rows$x1_raw - bracket.inset
-
-        # Pack brackets into y-levels
-        facet_rows$y_level <- .pack_bracket_levels(facet_rows)
 
         # Generate bracket shapes and annotations
         bracket_result <- .create_bracket_shapes(
@@ -576,6 +588,38 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
     facet_axis_map
 }
 
+#' Place one facet's comparisons on the x-axis and stack them into levels
+#'
+#' Shared by the drawing code and by [stat_bracket_y_max()], so the height the
+#' brackets are reserved room for is the height they are actually drawn at.
+#'
+#' @return `facet_rows` sorted by span, with `x0_draw`/`x1_draw` endpoints and a
+#'   `y_level` column.
+#' @noRd
+.assign_bracket_levels <- function(facet_rows, x.order, group.by, df, bracket.inset) {
+    # Compute x-positions and sort by gap
+    facet_rows$x0_pos <- mapply(
+        .get_x_pos, facet_rows$group1, facet_rows$x_level,
+        MoreArgs = list(x.order = x.order, group.by = group.by, df = df)
+    )
+    facet_rows$x1_pos <- mapply(
+        .get_x_pos, facet_rows$group2, facet_rows$x_level,
+        MoreArgs = list(x.order = x.order, group.by = group.by, df = df)
+    )
+    facet_rows$gap <- abs(facet_rows$x1_pos - facet_rows$x0_pos)
+    facet_rows <- facet_rows[order(facet_rows$gap), ]
+
+    # Compute inset endpoints
+    facet_rows$x0_raw <- pmin(facet_rows$x0_pos, facet_rows$x1_pos)
+    facet_rows$x1_raw <- pmax(facet_rows$x0_pos, facet_rows$x1_pos)
+    facet_rows$x0_draw <- facet_rows$x0_raw + bracket.inset
+    facet_rows$x1_draw <- facet_rows$x1_raw - bracket.inset
+
+    # Pack brackets into y-levels
+    facet_rows$y_level <- .pack_bracket_levels(facet_rows)
+    facet_rows
+}
+
 #' Pack brackets into non-overlapping y-levels using interval packing
 #' @noRd
 .pack_bracket_levels <- function(facet_rows) {
@@ -710,17 +754,262 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 }
 
 
+#' Y-axis top needed to draw statistical annotation brackets in full
+#'
+#' Works out how high the significance brackets from [create_stat_annotations()]
+#' will reach, so an axis range can reserve room for them up front rather than
+#' having the plot drawn with the brackets clipped or pushed outside the panel.
+#'
+#' @details
+#' The brackets are stacked above the data: each packing level sits
+#' `step.increase` of the data range above the last, the label sits `text.bump`
+#' above its bracket, and a final `step.increase` of clearance is left at the
+#' top. Which comparisons land on which level is decided by
+#' `.assign_bracket_levels()`, shared with the drawing code, so the two agree
+#' exactly.
+#'
+#' Which comparisons there are to place depends only on the grouping columns and
+#' the user's pair selection, so no test needs to be run — except under
+#' `hide.ns = TRUE`, where the non-significant brackets are dropped before
+#' packing and the tests have to be run to know which those are. That case
+#' repeats the work [compute_pairwise_stats()] does at render time; it is
+#' skipped for several `y` columns at once, where the comparisons no longer map
+#' one-to-one onto a single test run, and the result is then an upper bound.
+#'
+#' [apply_stat_annotations()] still has the last word on the drawn range, so a
+#' bracket is never clipped even where this over- or under-estimates.
+#'
+#' @param df Data frame the statistics are computed on. For a module that
+#'   reshapes its data for testing (e.g. a multi-variable Y selection), pass the
+#'   reshaped frame, not the raw one.
+#' @param x Character; x-axis column name.
+#' @param y Character; y-axis column name(s). Several may be given, in which
+#'   case the data range spans all of them.
+#' @param pairs List of length-2 character vectors, or `NULL` for all pairwise
+#'   combinations.
+#' @param group.by Character or `NULL`; nested grouping column.
+#' @param facet.by Character or `NULL`; faceting column.
+#' @param per.facet Logical; whether tests are run within each facet.
+#' @param step.increase Numeric; fraction of the y-range between successive
+#'   bracket levels. Default 0.06.
+#' @param text.bump Numeric; fraction of the y-range between a bracket and its
+#'   label. Default 0.04.
+#' @param bracket.inset Numeric; endpoint inset, which affects how tightly
+#'   brackets pack onto a level. Default 0.025.
+#' @param hide.ns Logical; whether non-significant brackets are dropped before
+#'   drawing. When `TRUE` the tests are run so only the surviving comparisons
+#'   are counted. Default `FALSE`.
+#' @param sig.threshold Numeric; significance cutoff used with `hide.ns`.
+#' @param test,p.adjust.method,paired Passed to [compute_pairwise_stats()], and
+#'   used only when `hide.ns` is `TRUE`. Match them to the render's settings, or
+#'   the wrong comparisons are counted.
+#'
+#' @return A single number giving the y-axis maximum the brackets need, or
+#'   `NULL` when nothing would be drawn.
+#'
+#' @seealso [create_stat_annotations()], [apply_stat_annotations()]
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' # Three species means three comparisons, which stack onto two levels.
+#' stat_bracket_y_max(example_iris, x = "Species", y = "Sepal.Length")
+#'
+#' # Compare against the raw data maximum.
+#' max(example_iris$Sepal.Length)
+stat_bracket_y_max <- function(df, x, y, pairs = NULL, group.by = NULL,
+                               facet.by = NULL, per.facet = TRUE,
+                               step.increase = 0.06, text.bump = 0.04,
+                               bracket.inset = 0.025,
+                               hide.ns = FALSE, sig.threshold = 0.05,
+                               test = "wilcox.test", p.adjust.method = "holm",
+                               paired = FALSE) {
+    if (is.null(df) || !is.data.frame(df) || nrow(df) == 0) {
+        return(NULL)
+    }
+    if (is.null(x) || length(x) != 1 || is.na(x) || !nzchar(x) || !x %in% names(df)) {
+        return(NULL)
+    }
+    # Omnibus tests produce a single caption, not brackets.
+    if (length(test) == 1 && test %in% c("kruskal.test", "anova")) {
+        return(NULL)
+    }
+
+    y <- y[!is.na(y) & nzchar(y)]
+    if (length(y) == 0 || !all(y %in% names(df))) {
+        return(NULL)
+    }
+    vals <- unlist(df[, y, drop = FALSE], use.names = FALSE)
+    vals <- vals[is.finite(vals)]
+    if (length(vals) == 0) {
+        return(NULL)
+    }
+
+    # Under hide.ns only the significant comparisons are drawn, and there is no
+    # way to know which those are without running the tests.
+    rows <- NULL
+    if (isTRUE(hide.ns) && length(y) == 1) {
+        stats_df <- tryCatch(
+            compute_pairwise_stats(
+                df = df, x = x, y = y, pairs = pairs, test = test,
+                p.adjust.method = p.adjust.method, paired = paired,
+                group.by = group.by, facet.by = facet.by, per.facet = per.facet,
+                sig.threshold = sig.threshold
+            ),
+            error = function(e) NULL
+        )
+        if (is.null(stats_df) || nrow(stats_df) == 0) {
+            return(NULL)
+        }
+        keep <- !is.na(stats_df$p.adj) & stats_df$p.adj <= sig.threshold &
+            stats_df$group1 != "all"
+        rows <- stats_df[keep, c("group1", "group2", "x_level", "facet_level"), drop = FALSE]
+        if (nrow(rows) == 0) {
+            return(NULL)
+        }
+    }
+
+    levels_used <- .bracket_level_count(
+        df, x, pairs, group.by, facet.by, per.facet, bracket.inset, rows
+    )
+    if (levels_used < 1) {
+        return(NULL)
+    }
+
+    v_max <- max(vals)
+    v_range <- v_max - min(vals)
+
+    # Mirrors create_stat_annotations(): top bracket at v_max + v_unit * level,
+    # its label bump above that, then one more v_unit of clearance.
+    v_max + v_range * (step.increase * (levels_used + 1) + text.bump)
+}
+
+#' Highest bracket level any facet needs
+#'
+#' @param rows Optional pre-filtered comparison rows (used under `hide.ns`).
+#'   When `NULL`, every comparison that would be run is counted.
+#' @return An integer; 0 when nothing would be drawn.
+#' @noRd
+.bracket_level_count <- function(df, x, pairs, group.by, facet.by, per.facet,
+                                 bracket.inset, rows = NULL) {
+    if (is.null(rows)) {
+        faceted <- !is.null(facet.by) && length(facet.by) == 1 && !is.na(facet.by) &&
+            nzchar(facet.by) && facet.by %in% names(df) && isTRUE(per.facet)
+
+        rows <- if (faceted) {
+            facet_levels <- unique(as.character(df[[facet.by]]))
+            per_level <- lapply(facet_levels, function(flev) {
+                .pairwise_layout(
+                    df[as.character(df[[facet.by]]) == flev, ], x, pairs, group.by, flev
+                )
+            })
+            do.call(rbind, Filter(Negate(is.null), per_level))
+        } else {
+            .pairwise_layout(df, x, pairs, group.by, NA_character_)
+        }
+    }
+
+    if (is.null(rows) || nrow(rows) == 0) {
+        return(0L)
+    }
+
+    col_data <- df[[x]]
+    x.order <- if (is.factor(col_data)) levels(col_data) else unique(as.character(col_data))
+
+    max_level <- 0L
+    for (flev in unique(rows$facet_level)) {
+        facet_rows <- if (is.na(flev)) {
+            rows[is.na(rows$facet_level), ]
+        } else {
+            rows[!is.na(rows$facet_level) & rows$facet_level == flev, ]
+        }
+        if (nrow(facet_rows) == 0) next
+
+        packed <- .assign_bracket_levels(
+            facet_rows, x.order, group.by, df, bracket.inset
+        )
+        levels_here <- suppressWarnings(max(packed$y_level, na.rm = TRUE))
+        if (is.finite(levels_here) && levels_here > max_level) {
+            max_level <- as.integer(levels_here)
+        }
+    }
+
+    max_level
+}
+
+
+#' Bracket headroom for a module, read straight off its Stats tab
+#'
+#' Wraps [stat_bracket_y_max()] with the geometry inputs every module's Stats
+#' tab carries, so the three modules that draw significance brackets share one
+#' call rather than three copies of the same argument list. Missing inputs fall
+#' back to the tab's own defaults, which matters while the tab has yet to be
+#' rendered.
+#'
+#' @param df,x,y,group.by,facet.by,per.facet Passed to [stat_bracket_y_max()].
+#' @param input The Shiny `input` object from inside `moduleServer()`.
+#'
+#' @return A single number, or `NULL` when no brackets would be drawn.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_stat_bracket_headroom
+#' @keywords internal
+.stat_bracket_headroom <- function(df, x, y, group.by = NULL, facet.by = NULL,
+                                   per.facet = TRUE, input) {
+    num_or <- function(value, fallback) {
+        if (is.null(value) || length(value) != 1 || is.na(value) || !is.numeric(value)) {
+            fallback
+        } else {
+            value
+        }
+    }
+
+    chr_or <- function(value, fallback) {
+        if (is.null(value) || length(value) != 1 || is.na(value) || !nzchar(value)) {
+            fallback
+        } else {
+            value
+        }
+    }
+
+    stat_bracket_y_max(
+        df = df, x = x, y = y,
+        pairs = parse_pair_strings(input$stat.pairs),
+        group.by = group.by, facet.by = facet.by, per.facet = per.facet,
+        step.increase = num_or(input$stat.step.increase, 0.06),
+        text.bump = num_or(input$stat.text.bump, 0.04),
+        bracket.inset = num_or(input$stat.bracket.inset, 0.025),
+        # The render drops non-significant brackets by default, so counting them
+        # here would reserve room for brackets that never appear.
+        hide.ns = isTRUE(input$stat.hide.ns),
+        sig.threshold = num_or(input$stat.sig.threshold, 0.05),
+        test = chr_or(input$stat.test, "wilcox.test"),
+        p.adjust.method = chr_or(input$stat.p.adjust, "holm"),
+        paired = isTRUE(input$stat.paired)
+    )
+}
+
+
 #' Apply statistical annotation shapes and annotations to a plotly figure
 #'
 #' Appends the shapes and annotations from [create_stat_annotations()] to
-#' an existing plotly figure's layout. Adjusts the y-axis range to accommodate
-#' the annotation brackets.
+#' an existing plotly figure's layout, raising the y-axis top when the brackets
+#' need more room than the requested range gives them.
+#'
+#' @details
+#' The axis is only ever raised, never lowered: a top asked for through `y.max`
+#' (or already on the figure) is kept when it is above the brackets, so turning
+#' statistics on cannot silently undo a y-axis maximum the user chose. Reserve
+#' the room up front with [stat_bracket_y_max()] and this becomes a no-op.
 #'
 #' @param fig A plotly figure object.
 #' @param stat_result List with `annotations`, `shapes`, and `y.max` as returned
 #'   by [create_stat_annotations()].
 #' @param y.min Numeric or NULL; minimum y-axis value. If NULL, the existing
 #'   y-axis range is preserved.
+#' @param y.max Numeric or NULL; the maximum the caller asked for. The drawn top
+#'   is the larger of this and the height the brackets need. If NULL, the
+#'   figure's existing top is used for that comparison.
 #'
 #' @return The modified plotly figure.
 #'
@@ -746,7 +1035,7 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 #'
 #' @author Jared Andrews
 #' @export
-apply_stat_annotations <- function(fig, stat_result, y.min = NULL) {
+apply_stat_annotations <- function(fig, stat_result, y.min = NULL, y.max = NULL) {
     if (length(stat_result$annotations) == 0 && length(stat_result$shapes) == 0) {
         return(fig)
     }
@@ -774,11 +1063,25 @@ apply_stat_annotations <- function(fig, stat_result, y.min = NULL) {
             if (is.null(y_lo) && !is.null(existing_yaxis$range)) {
                 y_lo <- existing_yaxis$range[1]
             }
+
+            # Raise the top to fit the brackets, but never pull it back down: a
+            # maximum the caller asked for is theirs to keep when it already
+            # clears them.
+            y_hi <- y.max
+            if (is.null(y_hi) && !is.null(existing_yaxis$range)) {
+                y_hi <- existing_yaxis$range[2]
+            }
+            y_hi <- if (is.null(y_hi) || !is.finite(y_hi)) {
+                stat_result$y.max
+            } else {
+                max(y_hi, stat_result$y.max)
+            }
+
             if (!is.null(y_lo)) {
-                y_span <- stat_result$y.max - y_lo
+                y_span <- y_hi - y_lo
                 y_lo <- y_lo - y_span * 0.02
             }
-            existing_yaxis$range <- c(y_lo, stat_result$y.max)
+            existing_yaxis$range <- c(y_lo, y_hi)
             fig$x$layout[[yax_name]] <- existing_yaxis
         }
     }

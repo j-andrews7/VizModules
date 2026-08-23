@@ -211,6 +211,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use - notably when the
+        # rebuild is deferred to whenever the user next opens the Data tab, where it
+        # would otherwise re-render the plot for a tab click. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
@@ -226,16 +238,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # drawing with from now until the user changes something. Setting it here
             # rather than waiting for the client to report back keeps the first draw
             # on the right palette.
-            resolved_palette(initial_colors)
-
-            # The rebuilt picker reports its value on a client round-trip. Pause
-            # readers until it does, so the plot renders once rather than twice.
-            # Only pause when it will actually report, though: the client drops an
-            # unchanged value, and Shiny thaws after the flush without invalidating,
-            # so a pause with no arrival to lift it stops every reader for good.
-            if (!identical(isolate(input$palette.colours), initial_colors)) {
-                freezeReactiveValue(input, "palette.colours")
-            }
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -245,27 +248,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 selected_palette = default_palette_name,
                 colors = initial_colors,
                 compact = TRUE
-            )
-        })
-
-        # What the plot actually colours by. The picker is rebuilt whenever the
-        # group set changes, and it is re-seeded from this same resolution, so the
-        # value it then reports usually resolves to the palette already in use -
-        # notably when the rebuild is deferred to whenever the user next opens the
-        # Data tab, where it would otherwise re-render the plot for a tab click.
-        # A reactiveVal only invalidates on a real change, so that costs nothing
-        # while a genuine colour choice still comes straight through.
-        resolved_palette <- reactiveVal(NULL)
-        observe({
-            groups <- tryCatch(palette_groups(), error = function(e) NULL)
-            if (is.null(groups)) {
-                return()
-            }
-            resolved_palette(
-                resolve_palette(
-                    groups, input$palette.colours, default_palette_values,
-                    .default_group_colors(defaults, "palette.colours")
-                )
             )
         })
 
@@ -307,8 +289,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 selected = get_default(defaults, "var.adjustment", ""))
             update_viz_select(session, "var.adj.fxn",
                 selected = get_default(defaults, "var.adj.fxn", ""))
-            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
+            reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
+            reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
+            y_range_store(list(min = reset.y.min, max = reset.y.max))
+            updateNumericInput(session, "y.min", value = reset.y.min)
+            updateNumericInput(session, "y.max", value = reset.y.max)
             updateMaterialSwitch(session, "do.raster", value = get_default(defaults, "do.raster", FALSE, is.logical))
             updateNumericInput(session, "raster.dpi", value = get_default(defaults, "raster.dpi", 600, is.numeric))
 
@@ -394,14 +379,60 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             .reset_stats_inputs(session, defaults)
         })
 
+        # How high the significance brackets will reach, so the y-axis can reserve
+        # room for them rather than have the plot drawn with them clipped. Mirrors the
+        # render's stats context: group.by is the x-axis, color.by the nested grouping,
+        # and several Y variables are tested against dittoViz's reshaped frame.
+        stat_headroom <- function() {
+            if (!isTRUE(input$stats.enabled)) {
+                return(NULL)
+            }
+
+            y.vars <- input$var
+            if (is.null(y.vars) || length(y.vars) == 0) {
+                return(NULL)
+            }
+            xvar <- .blank_to_null(input$group.by)
+            if (is.null(xvar)) {
+                return(NULL)
+            }
+
+            color.by <- .blank_to_null(input$color.by)
+            grp_var <- if (!is.null(color.by) && !identical(color.by, xvar)) color.by else NULL
+
+            multivar <- length(y.vars) > 1
+            if (multivar) {
+                stats.data <- .multivar_long_df(data(), y.vars)
+                yvar <- "var.multi"
+                facet.var <- "var.which"
+                per.facet <- TRUE
+            } else {
+                stats.data <- data()
+                yvar <- y.vars
+                facet.var <- .blank_to_null(input$split.by)
+                per.facet <- isTRUE(input$stat.per.facet)
+            }
+
+            .stat_bracket_headroom(
+                df = stats.data, x = xvar, y = yvar,
+                group.by = grp_var, facet.by = facet.var,
+                per.facet = per.facet, input = input
+            )
+        }
+
+        # What the plot actually draws with. The limits are pushed into the y.min and
+        # y.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the echo of a limit just set costs no rebuild.
+        y_range_store <- setup_axis_range(
+            input, session,
+            headroom = stat_headroom, params = params
+        )
+
         # Update y-axis range when var (y data) column is changed
         observeEvent(input$var, {
             y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
-                # Pause readers until the new limits arrive from the client, else the
-                # plot renders once with the stale limits and again on their echo.
-                freezeReactiveValue(input, "y.max")
-                freezeReactiveValue(input, "y.min")
+                y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -419,6 +450,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         generate_yPlot <- reactive({
             req(input$var)
             isolate_fn <- setup_auto_update_logic(input, params)
+
+            # Resolved server-side, so they already clear any significance brackets.
+            y.limits <- isolate_fn(y_range_store())
 
             # Parse inputs that might need conversion
             split.by <- .na_to_null(isolate_fn(input$split.by))
@@ -449,7 +483,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             ridgeplot.binwidth <- .na_to_null(isolate_fn(input$ridgeplot.binwidth))
 
             # Resolve color palette
-            palette_values <- isolate_fn(resolved_palette())
+            palette_values <- isolate_fn(palette_store())
 
             # Keep names so scale_fill_manual matches colors to groups by name,
             # making the mapping independent of positional order.
@@ -582,8 +616,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 # dittoViz::yPlot()'s internal is.na(min)/is.na(max) checks
                 # require a scalar NA -- NULL crashes them ("missing value
                 # where TRUE/FALSE needed" from `is.na(NULL) || is.na(NULL)`).
-                min = if (adjustment.active) NA else isolate_fn(input$y.min) %__% NA,
-                max = if (adjustment.active) NA else isolate_fn(input$y.max) %__% NA,
+                min = if (adjustment.active) NA else y.limits$min %__% NA,
+                max = if (adjustment.active) NA else y.limits$max %__% NA,
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
@@ -731,8 +765,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
 
+                # An active adjustment lets the axis auto-scale, so there are no
+                # limits of ours for the brackets to be measured against.
                 fig <- apply_stat_annotations(fig, stat_result,
-                    y.min = isolate_fn(input$y.min)
+                    y.min = if (adjustment.active) NULL else y.limits$min,
+                    y.max = if (adjustment.active) NULL else y.limits$max
                 )
             }
 

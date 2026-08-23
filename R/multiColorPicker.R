@@ -129,8 +129,11 @@ multiColorPicker <- function(inputId,
     initial_json <- toJSON(as.list(initial_colors), auto_unbox = TRUE)
     groups_json <- toJSON(groups, auto_unbox = TRUE)
 
+    # Deliberately id-less: Shiny's select binding claims every `<select>` that
+    # carries an id, which would register a stray `input[["<inputId>-palette"]]`
+    # alongside the picker's own value. The widget's JavaScript and CSS both find
+    # this element by class, so nothing needs the id.
     palette_select <- tags$select(
-        id = paste0(inputId, "-palette"),
         class = "mc-palette-select form-control input-sm",
         `aria-label` = "Palette",
         .build_palette_options(palette_source, selected_palette)

@@ -133,9 +133,12 @@ export(resolve_palette)
 export(safe_eval_filter)
 export(safe_resolve_adj_fxn)
 export(setup_auto_update_logic)
+export(setup_axis_range)
+export(setup_group_colors)
 export(setup_manual_edits)
 export(setup_reactive_defaults)
 export(show_input)
+export(stat_bracket_y_max)
 export(string_to_linetypes)
 export(toggle_input_cell)
 export(uniform_annotation_inputs_ui)
@@ -150,106 +153,138 @@ export(validate_expression)
 export(viz_select_input)
 import(plotly)
 import(shiny)
-importFrom(colourpicker,colourInput)
-importFrom(colourpicker,updateColourInput)
-importFrom(dittoViz,colLevels)
-importFrom(dittoViz,dittoColors)
-importFrom(dittoViz,scatterPlot)
-importFrom(dittoViz,yPlot)
-importFrom(dplyr,across)
-importFrom(dplyr,all_of)
-importFrom(dplyr,group_by)
-importFrom(dplyr,mutate)
-importFrom(dplyr,summarise)
-importFrom(ggplot2,.data)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,element_line)
-importFrom(ggplot2,element_rect)
-importFrom(ggplot2,element_text)
-importFrom(ggplot2,geom_boxplot)
-importFrom(ggplot2,geom_text)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,margin)
-importFrom(ggplot2,sym)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_bw)
-importFrom(ggplot2,theme_void)
-importFrom(ggplot2,unit)
-importFrom(ggplot2,waiver)
-importFrom(htmltools,attachDependencies)
-importFrom(htmltools,htmlDependency)
-importFrom(htmlwidgets,JS)
-importFrom(htmlwidgets,onRender)
-importFrom(htmlwidgets,saveWidget)
+importFrom(colourpicker,
+  colourInput,
+  updateColourInput
+)
+importFrom(dittoViz,
+  colLevels,
+  dittoColors,
+  scatterPlot,
+  yPlot
+)
+importFrom(dplyr,
+  across,
+  all_of,
+  group_by,
+  mutate,
+  summarise
+)
+importFrom(ggplot2,
+  .data,
+  aes,
+  element_blank,
+  element_line,
+  element_rect,
+  element_text,
+  geom_boxplot,
+  geom_text,
+  ggplot,
+  margin,
+  sym,
+  theme,
+  theme_bw,
+  theme_void,
+  unit,
+  waiver
+)
+importFrom(htmltools,
+  attachDependencies,
+  htmlDependency
+)
+importFrom(htmlwidgets,
+  JS,
+  onRender,
+  saveWidget
+)
 importFrom(jsonlite,toJSON)
 importFrom(methods,is)
-importFrom(plotly,ggplotly)
-importFrom(plotly,layout)
-importFrom(plotly,plotly_build)
-importFrom(plotthis,AreaPlot)
-importFrom(plotthis,BarPlot)
-importFrom(plotthis,BoxPlot)
-importFrom(plotthis,DensityPlot)
-importFrom(plotthis,DotPlot)
-importFrom(plotthis,Histogram)
-importFrom(plotthis,SplitBarPlot)
-importFrom(plotthis,ViolinPlot)
+importFrom(plotly,
+  ggplotly,
+  layout,
+  plotly_build
+)
+importFrom(plotthis,
+  AreaPlot,
+  BarPlot,
+  BoxPlot,
+  DensityPlot,
+  DotPlot,
+  Histogram,
+  SplitBarPlot,
+  ViolinPlot
+)
 importFrom(readxl,read_excel)
 importFrom(roclang,extract_roc_text)
-importFrom(scales,brewer_pal)
-importFrom(scales,hue_pal)
-importFrom(scales,viridis_pal)
-importFrom(shiny,actionButton)
-importFrom(shiny,br)
-importFrom(shiny,checkboxInput)
-importFrom(shiny,downloadButton)
-importFrom(shiny,downloadHandler)
-importFrom(shiny,icon)
-importFrom(shiny,is.reactive)
-importFrom(shiny,isolate)
-importFrom(shiny,numericInput)
-importFrom(shiny,observeEvent)
-importFrom(shiny,reactiveValues)
-importFrom(shiny,registerInputHandler)
-importFrom(shiny,tagList)
-importFrom(shiny,textAreaInput)
-importFrom(shiny,textInput)
-importFrom(shiny,updateCheckboxInput)
-importFrom(shiny,updateNumericInput)
-importFrom(shiny,updateTextAreaInput)
-importFrom(shiny,updateTextInput)
+importFrom(scales,
+  brewer_pal,
+  hue_pal,
+  viridis_pal
+)
+importFrom(shiny,
+  actionButton,
+  br,
+  checkboxInput,
+  downloadButton,
+  downloadHandler,
+  icon,
+  is.reactive,
+  isolate,
+  numericInput,
+  observe,
+  observeEvent,
+  reactiveVal,
+  reactiveValues,
+  registerInputHandler,
+  tagList,
+  textAreaInput,
+  textInput,
+  updateCheckboxInput,
+  updateNumericInput,
+  updateTextAreaInput,
+  updateTextInput
+)
 importFrom(shinyBS,tipify)
-importFrom(shinyWidgets,materialSwitch)
-importFrom(shinyWidgets,updateMaterialSwitch)
+importFrom(shinyWidgets,
+  materialSwitch,
+  updateMaterialSwitch
+)
 importFrom(shinyjqui,jqui_resizable)
-importFrom(shinyjs,click)
-importFrom(shinyjs,delay)
-importFrom(shinyjs,hide)
-importFrom(shinyjs,runjs)
-importFrom(shinyjs,show)
-importFrom(shinyjs,useShinyjs)
-importFrom(stats,aggregate)
-importFrom(stats,aov)
-importFrom(stats,approx)
-importFrom(stats,as.formula)
-importFrom(stats,coef)
-importFrom(stats,kruskal.test)
-importFrom(stats,lm)
-importFrom(stats,loess)
-importFrom(stats,median)
-importFrom(stats,na.omit)
-importFrom(stats,p.adjust)
-importFrom(stats,predict)
-importFrom(stats,reformulate)
-importFrom(stats,setNames)
-importFrom(stats,t.test)
-importFrom(stats,wilcox.test)
-importFrom(tools,file_ext)
-importFrom(tools,file_path_sans_ext)
-importFrom(utils,combn)
-importFrom(utils,modifyList)
-importFrom(utils,read.csv)
-importFrom(utils,read.delim)
-importFrom(utils,write.csv)
+importFrom(shinyjs,
+  click,
+  delay,
+  hide,
+  runjs,
+  show,
+  useShinyjs
+)
+importFrom(stats,
+  aggregate,
+  aov,
+  approx,
+  as.formula,
+  coef,
+  kruskal.test,
+  lm,
+  loess,
+  median,
+  na.omit,
+  p.adjust,
+  predict,
+  reformulate,
+  setNames,
+  t.test,
+  wilcox.test
+)
+importFrom(tools,
+  file_ext,
+  file_path_sans_ext
+)
+importFrom(utils,
+  combn,
+  modifyList,
+  read.csv,
+  read.delim,
+  write.csv
+)
 importFrom(zip,zip)

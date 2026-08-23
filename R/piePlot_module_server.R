@@ -66,6 +66,16 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             unique(na.omit(as.character(d[[lbl]])))
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the slice
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "slice.colors", slice_levels,
+            default_palette_values, defaults, params
+        )
+
         output$color.picker <- renderUI({
             groups <- slice_levels()
             if (length(groups) == 0) {
@@ -76,6 +86,12 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 groups, input$slice.colors, default_palette_values,
                 .default_group_colors(defaults, "slice.colors")
             ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("slice.colors"),
@@ -182,7 +198,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             slice_levels <- unique(label_values)
             color_map <- resolve_palette(
                 slice_levels,
-                isolate_fn(input$slice.colors),
+                isolate_fn(palette_store()),
                 default_palette_values,
                 .default_group_colors(defaults, "slice.colors")
             )

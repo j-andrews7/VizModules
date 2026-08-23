@@ -109,6 +109,16 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
                 palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
@@ -129,9 +139,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     .default_group_colors(defaults, "palette.colours")
                 ))
 
-                # The rebuilt picker reports its value on a client round-trip. Pause
-                # readers until it does, so the plot renders once rather than twice.
-                freezeReactiveValue(input, "palette.colours")
+                # The picker is seeded with this, so it is also what the plot should be
+                # drawing with from now until the user changes something. Setting it here
+                # rather than waiting for the client to report back keeps the first draw
+                # on the right palette.
+                palette_store(initial_colors)
 
                 multiColorPicker(
                     ns("palette.colours"),
@@ -208,8 +220,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
-            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
+            reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
+            reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
+            y_range_store(list(min = reset.y.min, max = reset.y.max))
+            updateNumericInput(session, "y.max", value = reset.y.max)
+            updateNumericInput(session, "y.min", value = reset.y.min)
             updateNumericInput(session, "axis.title.font.size",
                 value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
@@ -231,6 +246,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Lines
             reset_lines_inputs(session, defaults = defaults)
         })
+
+        # What the plot actually draws with. The limits are pushed into the y.min and
+        # y.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the echo of a limit just set costs no rebuild.
+        y_range_store <- setup_axis_range(input, session, params = params)
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
         observeEvent(list(input$y.data, input$group.by, input$fill.by), {
@@ -255,10 +275,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             if (!is.null(y_range)) {
-                # Pause readers until the new limits arrive from the client, else the
-                # plot renders once with the stale limits and again on their echo.
-                freezeReactiveValue(input, "y.max")
-                freezeReactiveValue(input, "y.min")
+                y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -293,6 +310,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         generate_BarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
+
+            # Resolved server-side, so the echo of a limit just set costs no rebuild.
+            y.limits <- isolate_fn(y_range_store())
 
             # Null Values:
             facet.by <- NULL
@@ -337,7 +357,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palette_arg <- NULL
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
-                    isolate_fn(input$palette.colours),
+                    isolate_fn(palette_store()),
                     default_palette_values,
                     .default_group_colors(defaults, "palette.colours")
                 )
@@ -364,8 +384,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palette = palette_arg,
                 palcolor = palcolor_arg,
                 palreverse = isolate_fn(input$palreverse),
-                y_min = isolate_fn(input$y.min),
-                y_max = isolate_fn(input$y.max),
+                y_min = y.limits$min,
+                y_max = y.limits$max,
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),

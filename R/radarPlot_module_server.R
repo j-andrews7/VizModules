@@ -67,6 +67,16 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             unique(na.omit(as.character(d[[grp]])))
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the trace
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "trace.colors", trace_levels,
+            default_palette_values, defaults, params
+        )
+
         output$color.picker <- renderUI({
             groups <- trace_levels()
 
@@ -83,6 +93,12 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 groups, input$trace.colors, default_palette_values,
                 .default_group_colors(defaults, "trace.colors")
             ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("trace.colors"),
@@ -204,7 +220,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 # Multiple traces - use color map
                 color_map <- resolve_palette(
                     unique(na.omit(as.character(d[[group_col]]))),
-                    isolate_fn(input$trace.colors),
+                    isolate_fn(palette_store()),
                     default_palette_values,
                     .default_group_colors(defaults, "trace.colors")
                 )

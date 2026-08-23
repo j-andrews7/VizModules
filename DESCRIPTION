@@ -58,5 +58,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 URL: https://j-andrews7.github.io/VizModules/, https://github.com/j-andrews7/VizModules
-Config/roxygen2/version: 8.0.0
-RoxygenNote: 8.0.0
+Config/roxygen2/version: 8.1.0

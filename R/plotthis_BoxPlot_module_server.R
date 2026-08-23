@@ -85,6 +85,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
@@ -96,9 +106,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 .default_group_colors(defaults, "palette.colours")
             ))
 
-            # The rebuilt picker reports its value on a client round-trip. Pause
-            # readers until it does, so the plot renders once rather than twice.
-            freezeReactiveValue(input, "palette.colours")
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -154,8 +166,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Adjustments
             update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
+            reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
+            reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
+            y_range_store(list(min = reset.y.min, max = reset.y.max))
+            updateNumericInput(session, "y.min", value = reset.y.min)
+            updateNumericInput(session, "y.max", value = reset.y.max)
 
             # Points
             updateMaterialSwitch(session, "add.points", value = get_default(defaults, "add.points", FALSE, is.logical))
@@ -212,14 +227,37 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             .reset_stats_inputs(session, defaults)
         })
 
+        # How high the significance brackets will reach, so the y-axis can reserve
+        # room for them rather than have the plot drawn with them clipped.
+        stat_headroom <- function() {
+            if (!isTRUE(input$stats.enabled)) {
+                return(NULL)
+            }
+
+            .stat_bracket_headroom(
+                df = data(), x = input$x.data, y = input$y.data,
+                # A numeric group.by is a fill gradient, not a nested grouping,
+                # exactly as the render treats it.
+                group.by = .blank_to_null(input$group.by, data(), numeric_is_null = TRUE),
+                facet.by = .blank_to_null(input$facet.by),
+                per.facet = isTRUE(input$stat.per.facet),
+                input = input
+            )
+        }
+
+        # What the plot actually draws with. The limits are pushed into the y.min and
+        # y.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the echo of a limit just set costs no rebuild.
+        y_range_store <- setup_axis_range(
+            input, session,
+            headroom = stat_headroom, params = params
+        )
+
         # Update y-axis range when y data column is changed
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
-                # Pause readers until the new limits arrive from the client, else the
-                # plot renders once with the stale limits and again on their echo.
-                freezeReactiveValue(input, "y.max")
-                freezeReactiveValue(input, "y.min")
+                y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -249,6 +287,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         generate_BoxPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
 
+            # Resolved server-side, so they already clear any significance brackets.
+            y.limits <- isolate_fn(y_range_store())
+
             # Facet By Null option Upstream:
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
@@ -272,7 +313,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
+                isolate_fn(palette_store()),
                 default_palette_values,
                 .default_group_colors(defaults, "palette.colours")
             )
@@ -300,8 +341,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 sort_x = sort.x,
                 theme = "theme_this",
                 theme_args = theme_args,
-                y_max = isolate_fn(input$y.max),
-                y_min = isolate_fn(input$y.min),
+                y_max = y.limits$max,
+                y_min = y.limits$min,
                 add_point = isolate_fn(input$add.points),
                 pt_size = isolate_fn(input$pt.size),
                 pt_alpha = isolate_fn(input$pt.alpha),
@@ -384,7 +425,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fig <- apply_stat_annotations(
                     fig,
                     stat_result,
-                    y.min = isolate_fn(input$y.min)
+                    y.min = y.limits$min,
+                    y.max = y.limits$max
                 )
             }
 
