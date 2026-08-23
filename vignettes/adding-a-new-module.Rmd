@@ -207,13 +207,11 @@ the stale value, then again when the client echoes the new one. This is annoying
 - [ ] Call `freezeReactiveValue()` on the input immediately before you update it:
 
     ```r
-    observeEvent(input$y.data, {
-        y_range <- .calculate_range(df = data(), data_col_y = input$y.data, grouping = FALSE)
-        if (!is.null(y_range)) {
-            freezeReactiveValue(input, "y.max")
-            freezeReactiveValue(input, "y.min")
-            updateNumericInput(session, "y.max", value = y_range$max)
-            updateNumericInput(session, "y.min", value = y_range$min)
+    observeEvent(input$stat.x, {
+        pairs <- generate_pair_strings(data(), input$stat.x)
+        if (length(pairs) > 0) {
+            freezeReactiveValue(input, "stat.pairs")
+            update_viz_select(session, "stat.pairs", choices = c("", pairs), selected = "")
         }
     })
     ```
@@ -224,15 +222,113 @@ so the intermediate render never happens. Three rules:
 - **Freeze only when you are definitely going to update.** A frozen input that
   never receives a value leaves the plot suspended. Keep the freeze inside the
   same `if` branch as the `update*Input()` call.
-- **For a widget rebuilt by `renderUI()`, freeze inside the render function**,
-  after reading the old value and before returning the widget. Putting it in an
-  observer instead would freeze even when the output is suspended (hidden tab),
-  and nothing would ever thaw it.
 - **Do not add a catch-all `tryCatch()` to your `renderPlotly()`.** The pause is
   delivered as a silent condition; swallowing it turns a clean pause into a blank
   plot. Guard with `req()` and explicit `if` branches instead.
 
 This does not apply to the reset observer, where a burst of updates is expected.
+
+### Inputs Rebuilt by `renderUI()`
+
+Freezing does **not** cover an input your module rebuilds with `renderUI()`, such
+as a [multiColorPicker()] whose groups follow the data. A freeze pauses only the
+readers that run *after* it in that flush, and at startup the plot output runs
+first. The freeze lands too late to pause anything, and the value the freshly
+built input reports then rebuilds the plot for a mapping it was already drawing.
+
+In short, this results in the plot being re-rendered one or more times in a way 
+that can be annoying, particularly for large data sets.
+
+Give the plot a server-side value to read instead, so the client's echo is
+compared against what is already in use rather than against `NULL`. For a colour
+picker, `setup_group_colors()` does this for you — it resolves the mapping as
+soon as the group set is known and holds it in a `reactiveVal()`, which only
+invalidates on a real change:
+
+- [ ] Create the store beside your group-levels reactive:
+
+    ```r
+    palette_store <- setup_group_colors(
+        input, "palette.colours", palette_groups,
+        default_palette_values, defaults, params
+    )
+    ```
+
+- [ ] Seed it inside the picker's `renderUI()`, with the same colours the input
+  itself is built from, so the mapping is right even when the render was
+  deferred (a picker on a hidden tab is suspended until that tab is opened):
+
+    ```r
+    initial_colors <- isolate(resolve_palette(
+        groups, input$palette.colours, default_palette_values,
+        .default_group_colors(defaults, "palette.colours")
+    ))
+    palette_store(initial_colors)
+    ```
+
+- [ ] Read the store in the plot reactive, in place of the raw input:
+
+    ```r
+    palette_values <- isolate_fn(palette_store())   # not isolate_fn(input$palette.colours)
+    ```
+
+The same shape works for any `renderUI()`-rebuilt input: resolve the value on
+the server, hold it in a `reactiveVal()`, and have the plot read that.
+
+### Axis Limits
+
+Limits behave the same way, and for the same reason: the module derives them on
+the server, pushes them into the `y.min`/`y.max` controls, and the echo of that
+push rebuilds the plot. `setup_axis_range()` is the store for them.
+
+- [ ] Create the store, then seed it beside every `update*Input()` that sets the
+  limits — the y-data observer and the Reset button:
+
+    ```r
+    y_range_store <- setup_axis_range(input, session, params = params)
+
+    observeEvent(input$y.data, {
+        y_range <- .calculate_range(df = data(), data_col_y = input$y.data,
+                                    axis_scale_factor = .y_axis_scale_factor)
+        if (!is.null(y_range)) {
+            y_range_store(list(min = y_range$min, max = y_range$max))
+            updateNumericInput(session, "y.min", value = y_range$min)
+            updateNumericInput(session, "y.max", value = y_range$max)
+        }
+    })
+    ```
+
+- [ ] Read `isolate_fn(y_range_store())` in the plot reactive, in place of
+  `isolate_fn(input$y.min)` and `isolate_fn(input$y.max)`.
+
+If your module draws significance brackets, pass `headroom` as well. The
+brackets are stacked above the data, so the limits have to clear them or they
+are drawn clipped; `stat_bracket_y_max()` works out how high they will reach,
+and the store raises the maximum to meet it and updates the control to match.
+It only ever raises, so a larger limit the user chose is left alone:
+
+```r
+y_range_store <- setup_axis_range(
+    input, session, params = params,
+    headroom = function() {
+        if (!isTRUE(input$stats.enabled)) {
+            return(NULL)
+        }
+        .stat_bracket_headroom(
+            df = data(), x = input$x.data, y = input$y.data,
+            group.by = .blank_to_null(input$group.by),
+            facet.by = .blank_to_null(input$facet.by),
+            per.facet = isTRUE(input$stat.per.facet),
+            input = input
+        )
+    }
+)
+```
+
+Pass the resolved limits on to `apply_stat_annotations()` too, as `y.min` and
+`y.max`. It has the last word on the drawn range, and knowing what you asked for
+is what lets it leave a large maximum alone rather than shrinking the axis onto
+the brackets.
 
 ## Persisting Manual Layout Edits
 
