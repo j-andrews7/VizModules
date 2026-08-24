@@ -41,6 +41,14 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
+      # build_site_github_pages() does not do this itself (pkgdown 2.2.1). It writes
+      # docs/llms.txt plus a .md alongside each built page, so agents pointed at the
+      # docs site can navigate it without parsing HTML. Must run after the site build
+      # and before the deploy, since it writes into docs/.
+      - name: Build llms.txt for LLM consumers
+        run: pkgdown::build_llm_docs()
+        shell: Rscript {0}
+
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
         uses: JamesIves/github-pages-deploy-action@v4.5.0
