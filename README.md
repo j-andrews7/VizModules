@@ -334,6 +334,25 @@ Any inaccuracies, bugs, or issues are attributable to us, and we welcome contrib
 
 Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend prefixing prompts with the below to aid LLM usage (or adding it to a file and attaching it directly).
 
+### Agent Skills (Claude Code and compatible tools)
+
+The package ships three [Agent Skills](https://agentskills.io) that give an agent the
+package's conventions without it having to read the vignettes first. Install them into a
+project with:
+
+```r
+VizModules::use_vizmodules_skills(".")
+```
+
+That writes `vizmodules-app`, `vizmodules-custom-module`, and `vizmodules-new-module`
+into `.claude/skills/`, where Claude Code discovers them automatically. `vizmodules-app`
+in particular carries a generated inventory of every module's column-mapping keys
+(`x.data` vs `x.by` vs `x.value` vs `var`), colour key, tab names, and stats keys, which
+is what an agent otherwise spends its budget grepping for.
+
+For tools that cannot read local skill files, the prompt below does the same job less
+efficiently.
+
 ### LLM Instructions
 
 Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) before asking it to build a Shiny app with **VizModules**. It points the model to the authoritative, locally-installed sources of truth so it can use the package correctly.

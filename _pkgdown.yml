@@ -177,6 +177,7 @@ reference:
       - setup_reactive_defaults
       - show_input
       - toggle_input_cell
+      - use_vizmodules_skills
       - viz_select_input
       - update_viz_select
 

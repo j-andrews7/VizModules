@@ -8,6 +8,10 @@ Many of the changes with this release were aimed at improving initialization of 
 
 ## Improved/New Functionality
 
+* The package now ships three agent skills under `inst/skills/`, installable into a project with the new exported `use_vizmodules_skills()`: `vizmodules-app` (wiring modules into an app), `vizmodules-custom-module` (building wrapper modules), and `vizmodules-new-module` (authoring a module in this package). They follow the [Agent Skills](https://agentskills.io) `SKILL.md` convention, so Claude Code and compatible tools discover them from `.claude/skills/`.
+  * Benchmarked against the README's LLM-instruction prompt over 18 paired runs (#341). Building an app was the clear win: half the tokens (66k vs 123k) and 40% of the wall time, with identical correctness. Wrapping a module was inconclusive, and authoring a module was cost-neutral. Every run in both arms passed every assertion, so the skills' measured value is efficiency on lookup-heavy work rather than improved output.
+  * Each skill carries the traps that cost benchmark runs real time: `useShinyjs()` being required in a hand-built app for `hide.inputs`/`hide.tabs` to work, pandoc being required by `create_source_download_handler()`, `stat.hide.ns` defaulting to `TRUE` so an enabled Stats tab can draw nothing, and `shiny::testServer()` being unable to drive a plotly output.
+
 * The `dittoViz_yPlot` module gained an "Annotations" tab that highlights and labels individual jitter points, matching the `dittoViz_scatterPlot` module (#340). 
   * The annotation controls are now the exported helpers `uniform_annotation_inputs_ui()` and `reset_annotation_inputs()`, so other modules that draw individual points can pick them up, and `dittoViz_scatterPlot` now uses them rather than its own copy.
   * `dittoViz_yPlot`'s jitter positions are now drawn from a fixed seed, so they no longer reshuffle on every rebuild. Selections and annotations therefore stay attached to the points they were made on, and a plot redrawn with the same settings is reproducible.
@@ -35,6 +39,8 @@ Many of the changes with this release were aimed at improving initialization of 
 
 
 ## Bug Fixes
+
+* Corrected two documentation errors that would mislead anyone following the vignettes. `quick-start`, `defaults-and-hiding`, and `custom-modules` all used `defaults = list(main = ...)` as the worked example for reactive defaults, but no module exposes a plot title: every server passes `main = NULL` and none reads `input$main`, so the example was a silent no-op. The examples now use `color.by`, which modules do read, and the reactive-defaults sections note that an unrecognised key is silently ignored by `get_default()`. Separately, `custom-modules`' "Hiding Base Module Inputs" example passed `hide.inputs` to `*InputsUI()`; that argument belongs to `*Server()`, and since no `*InputsUI()` accepts `...` the example failed with an unused-argument error. Found while benchmarking agent skills against the docs (#341).
 
 
 * Every module server (and `dataFilterServer()`) now requires its `data` reactive to yield a data frame: values that are not data frames are coerced with `as.data.frame()`, and a `NULL` makes the module wait for data rather than error. A parent app that briefly emits `NULL` can no longer take a plot down with it.
