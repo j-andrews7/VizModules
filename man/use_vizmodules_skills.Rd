@@ -4,11 +4,24 @@
 \alias{use_vizmodules_skills}
 \title{Install the bundled VizModules agent skills into a project}
 \usage{
-use_vizmodules_skills(path = ".", overwrite = FALSE)
+use_vizmodules_skills(
+  path = ".",
+  client = c("agents", "github", "claude"),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{path}{Directory of the project to install into. The skills are written to
-\code{file.path(path, ".claude", "skills")}, which is created if needed.}
+\code{file.path(path, client_dir)}, which is created if needed.}
+
+\item{client}{Which client convention to install the skills for. \code{"agents"}
+(the default) writes to \code{.agents/skills}, discovered by OpenAI Codex and by
+GitHub Copilot's project skill locations. \code{"github"} writes to
+\code{.github/skills}, GitHub Copilot's repository-native location. \code{"claude"}
+writes to \code{.claude/skills}, discovered by Claude Code. All three are
+equivalent copies of the same skills; choose whichever your tooling expects,
+or call this function more than once with different \code{client} values to
+install into several locations at once.}
 
 \item{overwrite}{Logical; if \code{FALSE} (the default) a skill whose directory
 already exists is skipped rather than replaced.}
@@ -17,8 +30,8 @@ already exists is skipped rather than replaced.}
 Invisibly, a character vector of the skill directories written.
 }
 \description{
-Copies the skills that ship with VizModules into a project's \verb{.claude/skills/}
-directory, where Claude Code and other tools following the
+Copies the skills that ship with VizModules into a project's skills directory,
+where GitHub Copilot, OpenAI Codex, Claude Code, and other tools following the
 \href{https://agentskills.io}{Agent Skills} convention will discover them.
 }
 \details{
@@ -44,6 +57,9 @@ use_vizmodules_skills(tempdir())
 \dontrun{
 # Install into the current project, refreshing any that already exist:
 use_vizmodules_skills(".", overwrite = TRUE)
+
+# Install for Claude Code specifically:
+use_vizmodules_skills(".", client = "claude")
 }
 }
 \author{

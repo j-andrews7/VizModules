@@ -334,7 +334,7 @@ Any inaccuracies, bugs, or issues are attributable to us, and we welcome contrib
 
 Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend prefixing prompts with the below to aid LLM usage (or adding it to a file and attaching it directly).
 
-### Agent Skills (Claude Code and compatible tools)
+### Agent Skills (GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools)
 
 The package ships three [Agent Skills](https://agentskills.io) that give an agent the
 package's conventions without it having to read the vignettes first. Install them into a
@@ -345,10 +345,13 @@ VizModules::use_vizmodules_skills(".")
 ```
 
 That writes `vizmodules-app`, `vizmodules-custom-module`, and `vizmodules-new-module`
-into `.claude/skills/`, where Claude Code discovers them automatically. `vizmodules-app`
-in particular carries a generated inventory of every module's column-mapping keys
-(`x.data` vs `x.by` vs `x.value` vs `var`), colour key, tab names, and stats keys, which
-is what an agent otherwise spends its budget grepping for.
+into `.agents/skills/` by default, where GitHub Copilot and OpenAI Codex discover them
+automatically. Pass `client = "github"` for `.github/skills/` (also read by GitHub
+Copilot) or `client = "claude"` for `.claude/skills/` (Claude Code); call the function
+more than once with different `client` values to install into several locations at once.
+`vizmodules-app` in particular carries a generated inventory of every module's
+column-mapping keys (`x.data` vs `x.by` vs `x.value` vs `var`), colour key, tab names,
+and stats keys, which is what an agent otherwise spends its budget grepping for.
 
 For tools that cannot read local skill files, the prompt below does the same job less
 efficiently.

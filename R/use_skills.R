@@ -1,7 +1,7 @@
 #' Install the bundled VizModules agent skills into a project
 #'
-#' Copies the skills that ship with VizModules into a project's `.claude/skills/`
-#' directory, where Claude Code and other tools following the
+#' Copies the skills that ship with VizModules into a project's skills directory,
+#' where GitHub Copilot, OpenAI Codex, Claude Code, and other tools following the
 #' [Agent Skills](https://agentskills.io) convention will discover them.
 #'
 #' Three skills are provided:
@@ -20,7 +20,15 @@
 #' }
 #'
 #' @param path Directory of the project to install into. The skills are written to
-#'   `file.path(path, ".claude", "skills")`, which is created if needed.
+#'   `file.path(path, client_dir)`, which is created if needed.
+#' @param client Which client convention to install the skills for. `"agents"`
+#'   (the default) writes to `.agents/skills`, discovered by OpenAI Codex and by
+#'   GitHub Copilot's project skill locations. `"github"` writes to
+#'   `.github/skills`, GitHub Copilot's repository-native location. `"claude"`
+#'   writes to `.claude/skills`, discovered by Claude Code. All three are
+#'   equivalent copies of the same skills; choose whichever your tooling expects,
+#'   or call this function more than once with different `client` values to
+#'   install into several locations at once.
 #' @param overwrite Logical; if `FALSE` (the default) a skill whose directory
 #'   already exists is skipped rather than replaced.
 #' @return Invisibly, a character vector of the skill directories written.
@@ -34,11 +42,16 @@
 #' \dontrun{
 #' # Install into the current project, refreshing any that already exist:
 #' use_vizmodules_skills(".", overwrite = TRUE)
+#'
+#' # Install for Claude Code specifically:
+#' use_vizmodules_skills(".", client = "claude")
 #' }
-use_vizmodules_skills <- function(path = ".", overwrite = FALSE) {
+use_vizmodules_skills <- function(path = ".", client = c("agents", "github", "claude"),
+    overwrite = FALSE) {
     if (!is.character(path) || length(path) != 1L || is.na(path)) {
         stop("'path' must be a single directory path.", call. = FALSE)
     }
+    client <- match.arg(client)
     if (!is.logical(overwrite) || length(overwrite) != 1L || is.na(overwrite)) {
         stop("'overwrite' must be TRUE or FALSE.", call. = FALSE)
     }
@@ -53,7 +66,12 @@ use_vizmodules_skills <- function(path = ".", overwrite = FALSE) {
         stop("No skills are bundled with this installation.", call. = FALSE)
     }
 
-    dest_root <- file.path(path, ".claude", "skills")
+    client_dir <- switch(client,
+        agents = c(".agents", "skills"),
+        github = c(".github", "skills"),
+        claude = c(".claude", "skills")
+    )
+    dest_root <- file.path(path, client_dir[1], client_dir[2])
     dir.create(dest_root, recursive = TRUE, showWarnings = FALSE)
     if (!dir.exists(dest_root)) {
         stop("Could not create '", dest_root, "'.", call. = FALSE)
