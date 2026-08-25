@@ -11,8 +11,9 @@ use_vizmodules_skills(
 )
 }
 \arguments{
-\item{path}{Directory of the project to install into. The skills are written to
-\code{file.path(path, client_dir)}, which is created if needed.}
+\item{path}{Directory of the project to install into. The skills are written
+under this directory, in the subdirectory determined by \code{client} (for
+example \code{.agents/skills}), which is created if needed.}
 
 \item{client}{Which client convention to install the skills for. \code{"agents"}
 (the default) writes to \code{.agents/skills}, discovered by OpenAI Codex and by

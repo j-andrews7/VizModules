@@ -19,8 +19,9 @@
 #'     file templates to copy.}
 #' }
 #'
-#' @param path Directory of the project to install into. The skills are written to
-#'   `file.path(path, client_dir)`, which is created if needed.
+#' @param path Directory of the project to install into. The skills are written
+#'   under this directory, in the subdirectory determined by `client` (for
+#'   example `.agents/skills`), which is created if needed.
 #' @param client Which client convention to install the skills for. `"agents"`
 #'   (the default) writes to `.agents/skills`, discovered by OpenAI Codex and by
 #'   GitHub Copilot's project skill locations. `"github"` writes to
@@ -46,8 +47,8 @@
 #' # Install for Claude Code specifically:
 #' use_vizmodules_skills(".", client = "claude")
 #' }
-use_vizmodules_skills <- function(path = ".", client = c("agents", "github", "claude"),
-    overwrite = FALSE) {
+use_vizmodules_skills <- function(
+    path = ".", client = c("agents", "github", "claude"), overwrite = FALSE) {
     if (!is.character(path) || length(path) != 1L || is.na(path)) {
         stop("'path' must be a single directory path.", call. = FALSE)
     }
@@ -67,11 +68,11 @@ use_vizmodules_skills <- function(path = ".", client = c("agents", "github", "cl
     }
 
     client_dir <- switch(client,
-        agents = c(".agents", "skills"),
-        github = c(".github", "skills"),
-        claude = c(".claude", "skills")
+        agents = file.path(".agents", "skills"),
+        github = file.path(".github", "skills"),
+        claude = file.path(".claude", "skills")
     )
-    dest_root <- file.path(path, client_dir[1], client_dir[2])
+    dest_root <- file.path(path, client_dir)
     dir.create(dest_root, recursive = TRUE, showWarnings = FALSE)
     if (!dir.exists(dest_root)) {
         stop("Could not create '", dest_root, "'.", call. = FALSE)
