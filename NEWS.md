@@ -1,6 +1,11 @@
 # VizModules 0.4.0.9000
 
-Many of the changes with this release were aimed at improving initialization of specific module states and reducing unnecessary re-rendering of plots for more seamless and performant use. Many of these changes are invisible. Reactive values can now be used in the `defaults` argument, so a parent app can drive a module parameter from its own state without triggering a double render. Several new parameters for the `dittoViz_yPlot` module were added, including the ability to select several Y variables at once and control how they are displayed. The `ComplexHeatmap` module was added, which wraps [ComplexHeatmap::Heatmap()] and uses the `InteractiveComplexHeatmap` package for interactive output.
+Many of the changes with this release were aimed at improving initialization of specific module states and reducing unnecessary re-rendering of plots for more seamless and performant use. 
+Several of these changes are invisible to end users.
+Reactive values can now be used in the `defaults` argument, so a parent app can drive a module parameter from its own state without triggering a double render.
+Several new parameters for the `dittoViz_yPlot` module were added, including the ability to select several Y variables at once and control how they are displayed.
+The `ComplexHeatmap` module was added, which wraps [ComplexHeatmap::Heatmap()] and uses the `InteractiveComplexHeatmap` package for interactive output.
+A new set of agent skills was added to the package, which can be installed into a project with the new exported `use_vizmodules_skills()` function.
 
 ## New Modules
 
@@ -8,8 +13,8 @@ Many of the changes with this release were aimed at improving initialization of 
 
 ## Improved/New Functionality
 
-* The package now ships three agent skills under `inst/skills/`, installable into a project with the new exported `use_vizmodules_skills()`: `vizmodules-app` (wiring modules into an app), `vizmodules-custom-module` (building wrapper modules), and `vizmodules-new-module` (authoring a module in this package). They follow the [Agent Skills](https://agentskills.io) `SKILL.md` convention, so GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools can discover them. `use_vizmodules_skills()` gains a `client` argument (`"agents"` by default, or `"github"`/`"claude"`) to install into `.agents/skills/`, `.github/skills/`, or `.claude/skills/` as needed.
-  * Benchmarked against the README's LLM-instruction prompt over 18 paired runs (#341). Building an app was the clear win: half the tokens (66k vs 123k) and 40% of the wall time, with identical correctness. Wrapping a module was inconclusive, and authoring a module was cost-neutral. Every run in both arms passed every assertion, so the skills' measured value is efficiency on lookup-heavy work rather than improved output.
+* The package now contains three agent skills under `inst/skills/`, installable into a project with the new exported `use_vizmodules_skills()`: `vizmodules-app` (wiring modules into an app), `vizmodules-custom-module` (building wrapper modules), and `vizmodules-new-module` (authoring a module in this package). They follow the [Agent Skills](https://agentskills.io) `SKILL.md` convention, so GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools can discover them. `use_vizmodules_skills()` gains a `client` argument (`"agents"` by default, or `"github"`/`"claude"`) to install into `.agents/skills/`, `.github/skills/`, or `.claude/skills/` as needed.
+  * Benchmarked against the README's LLM-instruction prompt over 18 paired runs (#341). Building an app  the clear win - half the tokens (66k vs 123k) and 40% of the wall time, with identical correctness. Wrapping a module was inconclusive, and authoring a module was cost-neutral. Every run in both arms passed every assertion, so the skills' measured value is efficiency on lookup-heavy work rather than improved output.
   * Each skill carries the traps that cost benchmark runs real time: `useShinyjs()` being required in a hand-built app for `hide.inputs`/`hide.tabs` to work, pandoc being required by `create_source_download_handler()`, `stat.hide.ns` defaulting to `TRUE` so an enabled Stats tab can draw nothing, and `shiny::testServer()` being unable to drive a plotly output.
 
 * The `dittoViz_yPlot` module gained an "Annotations" tab that highlights and labels individual jitter points, matching the `dittoViz_scatterPlot` module (#340). 
