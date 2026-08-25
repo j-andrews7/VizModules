@@ -24,7 +24,7 @@
 #'   example `.agents/skills`), which is created if needed.
 #' @param client Which client convention to install the skills for. `"agents"`
 #'   (the default) writes to `.agents/skills`, discovered by OpenAI Codex and by
-#'   GitHub Copilot's project skill locations. `"github"` writes to
+#'   GitHub Copilot's project skill locations. `"copilot"` writes to
 #'   `.github/skills`, GitHub Copilot's repository-native location. `"claude"`
 #'   writes to `.claude/skills`, discovered by Claude Code. All three are
 #'   equivalent copies of the same skills; choose whichever your tooling expects,
@@ -48,7 +48,7 @@
 #' use_vizmodules_skills(".", client = "claude")
 #' }
 use_vizmodules_skills <- function(
-    path = ".", client = c("agents", "github", "claude"), overwrite = FALSE) {
+    path = ".", client = c("agents", "copilot", "claude"), overwrite = FALSE) {
     if (!is.character(path) || length(path) != 1L || is.na(path)) {
         stop("'path' must be a single directory path.", call. = FALSE)
     }
@@ -69,7 +69,7 @@ use_vizmodules_skills <- function(
 
     client_dir <- switch(client,
         agents = file.path(".agents", "skills"),
-        github = file.path(".github", "skills"),
+        copilot = file.path(".github", "skills"),
         claude = file.path(".claude", "skills")
     )
     dest_root <- file.path(path, client_dir)
