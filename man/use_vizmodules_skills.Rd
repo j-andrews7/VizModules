@@ -6,7 +6,7 @@
 \usage{
 use_vizmodules_skills(
   path = ".",
-  client = c("agents", "github", "claude"),
+  client = c("agents", "copilot", "claude"),
   overwrite = FALSE
 )
 }
@@ -17,7 +17,7 @@ example \code{.agents/skills}), which is created if needed.}
 
 \item{client}{Which client convention to install the skills for. \code{"agents"}
 (the default) writes to \code{.agents/skills}, discovered by OpenAI Codex and by
-GitHub Copilot's project skill locations. \code{"github"} writes to
+GitHub Copilot's project skill locations. \code{"copilot"} writes to
 \code{.github/skills}, GitHub Copilot's repository-native location. \code{"claude"}
 writes to \code{.claude/skills}, discovered by Claude Code. All three are
 equivalent copies of the same skills; choose whichever your tooling expects,
