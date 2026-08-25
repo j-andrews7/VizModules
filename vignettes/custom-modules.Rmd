@@ -130,10 +130,15 @@ focusedModuleUI <- function(id) {
     ns <- NS(id)
     tagList(
         h4("Simplified Scatter Plot"),
-        # Hide a few parameters
-        dittoViz_scatterPlotInputsUI(id, iris,
-            hide.inputs = c("shape.by", "color.by")
-        )
+        # The UI takes no hide.* arguments -- see the server below.
+        dittoViz_scatterPlotInputsUI(id, iris)
+    )
+}
+
+focusedModuleServer <- function(id, data_reactive) {
+    # hide.inputs and hide.tabs are arguments of the *Server*, not the *InputsUI.
+    dittoViz_scatterPlotServer(id, data_reactive,
+        hide.inputs = c("shape.by", "color.by")
     )
 }
 ```
@@ -142,18 +147,21 @@ focusedModuleUI <- function(id) {
 
 Hiding an input fixes it to one value. When a base module parameter instead needs
 to *follow* something your wrapper computes, pass a `reactive()` as that entry of
-`defaults` rather than reaching for `updateTextInput()`:
+`defaults` rather than reaching for `update*Input()`. The key must name an input the
+module actually reads -- `get_default()` falls back silently, so a `defaults` entry for
+an unexposed key does nothing at all. (`main` is the one to watch: no module exposes a
+plot title, so `defaults = list(main = ...)` has no effect.)
 
 ```{r reactive-defaults}
-labelledModuleServer <- function(id, data_reactive) {
-    subset_label <- moduleServer(id, function(input, output, session) {
-        reactive(if (isTRUE(input$filter_setosa)) "Setosa only" else "All species")
+colouredModuleServer <- function(id, data_reactive) {
+    colour_col <- moduleServer(id, function(input, output, session) {
+        reactive(if (isTRUE(input$filter_setosa)) "" else "Species")
     })
 
-    # The title tracks the checkbox, but the user can still type over it.
+    # The colour mapping tracks the checkbox, but the user can still change it.
     dittoViz_scatterPlotServer(
         id, data_reactive,
-        defaults = list(main = subset_label)
+        defaults = list(color.by = colour_col)
     )
 }
 ```

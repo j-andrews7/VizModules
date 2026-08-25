@@ -61,13 +61,13 @@ For inputs that come from the uniform tab helpers (Axes, Legend, Lines, Plotly),
 
 ### Reactive defaults: driving inputs from app state
 
-Sometimes a parameter needs to *follow* your app rather than be fixed once. A common case is a plot title that should track whichever sample the user has selected. For this, any individual entry in `defaults` may be a `reactive()` or a `reactiveVal()` instead of a plain value:
+Sometimes a parameter needs to *follow* your app rather than be fixed once. A common case is a colour mapping that should track a column the user has selected elsewhere in the app. For this, any individual entry in `defaults` may be a `reactive()` or a `reactiveVal()` instead of a plain value:
 
 ```{r defaults-reactive}
 library(VizModules)
 
 ui <- fluidPage(
-    selectInput("sample", "Sample", choices = c("SampleA", "SampleB", "SampleC")),
+    selectInput("colour_col", "Colour by", choices = c("cyl", "gear", "carb")),
     sidebarLayout(
         sidebarPanel(uiOutput("controls")),
         mainPanel(dittoViz_scatterPlotOutputUI("p"))
@@ -78,7 +78,7 @@ server <- function(input, output, session) {
     plot_defaults <- list(
         x.by = "wt",
         y.by = "mpg",
-        main = reactive(input$sample)
+        color.by = reactive(input$colour_col)
     )
 
     output$controls <- renderUI({
@@ -96,12 +96,12 @@ Pass the same list to both `*InputsUI()` and `*Server()`, as you would for stati
 You get three guarantees:
 
 - **The parameter tracks the reactive.** Every change flows through to the plot.
-- **The control stays correct and editable.** The Plot Title box shows the current sample, and the user can still type over it.
+- **The control stays correct and editable.** The Color By selector shows the current column, and the user can still change it.
 - **The plot renders once per change.** The value is resolved server-side, in the same reactive flush as the data, so there is no flicker.
 
 Semantics worth knowing:
 
-- **An external change always wins.** If the user has typed a custom title and then picks a different sample, the new sample's value replaces what they typed.
+- **An external change always wins.** If the user has picked a different colour column in the module and then changes the app-level selector, the selector's value replaces their choice.
 - **Reset restores the reactive's *current* value**, not the value it held at startup.
 - **Only `reactive()` and `reactiveVal()` are recognised.** A plain function is treated as a literal default value, not as something to call.
 - **Composite widgets sync cosmetically only.** The plot always uses the current value, but a compound control that does not accept a generic value message — `custom.models` in the scatter module is the one to watch — will not re-display it. Reactive defaults are not supported for that input.
