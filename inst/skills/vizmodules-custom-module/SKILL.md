@@ -107,6 +107,44 @@ observeEvent(input$stat.x, {
 - **Runtime show/hide** — `hide_input(session, ids)` / `show_input(session, ids)`, not `shinyjs::hide()`; the VizModules helpers reflow the grid.
 - **User-typed expressions** — `safe_eval_filter()`, `validate_expression()`, `safe_resolve_adj_fxn()`. Never `eval(parse())` on user input.
 
+## Where the vignettes will mislead you
+
+`vignette("custom-modules")` is right about the namespace rule and wrong about two
+things next to it. Both were corrected in the package after agents hit them, but older
+installs still carry them:
+
+- **`hide.inputs`/`hide.tabs` are `*Server()` arguments, not `*InputsUI()` arguments.** Every `*InputsUI()` has the signature `(id, data, defaults = NULL, title = NULL, columns = 2)` and none takes `...`, so passing `hide.inputs` to the UI is an unused-argument **error**, not a no-op.
+- **`main` is not exposed by any module**, so a `defaults = list(main = ...)` example cannot work. See the trap note above.
+
+When wrapping, forward `hide.tabs` rather than replacing it, so a caller can hide more
+without un-hiding what you enforce:
+
+```r
+dittoViz_scatterPlotServer(id, filtered,
+    defaults  = defaults,
+    hide.tabs = union(hide.tabs, "Plotly"))
+```
+
+## Driving a plotly figure directly
+
+If you must reach the figure itself (a title, say, which no module exposes), send **one**
+`plotlyProxy()` message per real change — not one per input change. Re-asserting on every
+control change desynchronises Shiny's output pipeline and leaves the plot rendering one
+change behind. Shiny's re-render also purges plotly's client-side event listeners, so a
+one-time `gd.on(...)` hook dies after the first redraw; re-register on `shiny:value`.
+
+## Verifying your work
+
+`shiny::testServer()` covers namespacing, filtering, and what reaches the base server —
+which is the whole substance of a wrapper. It cannot drive the plot: the mock session
+never renders the `renderUI()`-built colour picker and never registers plotly events, so
+the render dead-ends in a silent `req()`. Confirm that by running the stock base server
+as a control; it fails identically.
+
+Booting a real browser costs several times what `testServer()` does and, for a wrapper,
+usually tells you nothing new. Reserve it for behaviour that genuinely only exists in the
+client, such as a `plotlyProxy()` interaction.
+
 ## Practices
 
 1. Keep each wrapper to one cohesive concern; design so it could itself be wrapped.

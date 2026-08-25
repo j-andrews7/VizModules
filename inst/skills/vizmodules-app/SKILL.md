@@ -72,6 +72,28 @@ reactive-defaults setup (the UI must be built inside `renderUI()`) and its seman
 - **Stats tab** — `dittoViz_yPlot`, `plotthis_BoxPlot`, and `plotthis_ViolinPlot` only. Pre-fill it through `defaults` with the `stats.enabled` / `stat.*` keys; see `references/stats-tab.md`.
 - **Source-data download** — `collect_source_data()` + `create_source_download_handler()`. Do not hand-roll `write.csv()`/`zip()`; see `references/source-data-export.md`.
 
+## Traps that cost real time
+
+Every one of these was hit by an agent building an app against this package. None of
+them errors loudly; each looks like the module misbehaving.
+
+- **A hand-built app needs `shinyjs::useShinyjs()` in its UI.** `hide.inputs`/`hide.tabs` go through `runjs()`. Without it the app renders fine and the hiding silently does nothing. `createModuleApp()` includes it for you; your own `fluidPage()` does not.
+- **`create_source_download_handler()` needs pandoc.** It calls `saveWidget(selfcontained = TRUE)`; with no pandoc on `PATH` the download returns HTTP 500. This is package-wide — the modules' own Source Download button fails identically. RStudio bundles pandoc; a bare server does not.
+- **`stats.enabled = TRUE` can still draw nothing.** `stat.hide.ns` defaults to `TRUE`, so if every comparison is non-significant the tests run and no brackets appear. That looks broken. Set `stat.hide.ns = FALSE` while checking your wiring.
+- **`main` is not a real key.** No module exposes a plot title. `defaults = list(main = ...)` is silently ignored — see `references/defaults-and-hiding.md`.
+- **An unknown `defaults` key never errors.** `get_default()` falls back. If a default "doesn't work", suspect the key name first.
+
+## Verifying your work
+
+`shiny::testServer()` cannot drive a plotly output: the mock session never renders
+`renderUI()`-built inputs (the colour picker) and never registers plotly events, so the
+plot reactive dead-ends in a silent `req()`. That is a limit of the harness, not your
+app — the package's own tests assert on internal reactives for the same reason.
+
+So: use `testServer()` for data and input wiring, and check the rest by building the UI
+and inspecting the markup. Booting a real browser is rarely worth it for an app whose
+plot comes from a base module that already has its own tests.
+
 ## Rules
 
 1. `data` reaches `*Server()` as a `reactive()`. Passing a bare data frame is an error.
