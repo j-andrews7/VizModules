@@ -162,7 +162,10 @@ reference:
       - updateMultiDynamicInput
 
   - title: "UI Helpers"
-    desc: "Utility functions for building and organising module UIs."
+    desc: >
+      Utility functions for building and organising module UIs, and the
+      server-side stores that keep a module's own controls from costing an
+      extra render.
     contents:
       - createModuleApp
       - empty_plot
@@ -170,9 +173,11 @@ reference:
       - module_tack_ui
       - organize_inputs
       - setup_auto_update_logic
+      - setup_axis_range
       - setup_reactive_defaults
       - show_input
       - toggle_input_cell
+      - use_vizmodules_skills
       - viz_select_input
       - update_viz_select
 
@@ -246,12 +251,14 @@ reference:
       - create_stat_annotations
       - generate_pair_strings
       - parse_pair_strings
+      - stat_bracket_y_max
 
   - title: "Palette & Color Utilities"
     desc: "Functions for managing color palettes."
     contents:
       - default_palettes
       - resolve_palette
+      - setup_group_colors
 
   - title: "Data Download Utilities"
     desc: "Functions for preparing plot and source data for download."
