@@ -231,7 +231,7 @@ if (heatmap_available) {
             inputs_ui = ComplexHeatmap_HeatmapInputsUI,
             output_ui = ComplexHeatmap_HeatmapOutputUI,
             server_fn = ComplexHeatmap_HeatmapServer,
-            defaults  = list()
+            defaults  = list("rowname.col" = "sample")
         )
     ))
 }

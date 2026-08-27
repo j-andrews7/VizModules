@@ -208,14 +208,7 @@ example_markers <- data.frame(
     pct_expressed = pct_expressed
 )
 
-usethis::use_data(
-    example_iris, example_mtcars,
-    example_bar, example_school_earnings,
-    example_skills,
-    example_sales, example_population, example_demographics,
-    example_markers, example_rnaseq,
-    internal = TRUE, overwrite = TRUE
-)
+
 
 
 # Single-cell-style composition data for the freqPlot module.
@@ -224,8 +217,6 @@ usethis::use_data(
 # samples nested inside each group (each sample mapping to exactly one value of
 # every grouping column). No other bundled dataset has that shape.
 # 12 donors x 150 cells = 1800 rows.
-set.seed(11)
-
 comp_cell_types <- c("CD4 T", "CD8 T", "B", "NK", "Monocyte", "Dendritic")
 comp_samples <- sprintf("P%02d", 1:12)
 comp_conditions <- rep(c("Healthy", "Disease"), each = 6)
@@ -281,4 +272,12 @@ example_composition <- data.frame(
     stringsAsFactors = FALSE
 )
 
-usethis::use_data(example_composition, overwrite = TRUE)
+usethis::use_data(
+    example_iris, example_mtcars,
+    example_bar, example_school_earnings,
+    example_skills,
+    example_sales, example_population, example_demographics,
+    example_markers, example_rnaseq,
+    example_composition,
+    internal = TRUE, overwrite = TRUE
+)
