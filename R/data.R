@@ -243,3 +243,36 @@
 #' @author Jacob Martin
 #' @keywords datasets
 "example_matrix_df"
+
+#' Example single-cell-style composition data for the freqPlot module
+#'
+#' A per-cell record table from a simulated 12-donor immune profiling
+#' experiment, shaped for [dittoViz::freqPlot()]. Each donor (`sample`)
+#' contributes 150 cells and maps to exactly one `condition` and one `batch`,
+#' which is the nesting `freqPlot()` requires to compare per-sample
+#' cell-type frequencies across groups. `batch` is crossed with `condition`
+#' (three donors each), so it works as a `color.by` without confounding the
+#' comparison.
+#'
+#' Composition differs between the two conditions: the Disease donors show an
+#' expanded monocyte compartment and depleted CD4 T cells relative to Healthy.
+#'
+#' @format A data frame with 1800 rows and 7 columns:
+#' \describe{
+#'   \item{cell_id}{Unique cell identifier (character)}
+#'   \item{sample}{Donor identifier, `P01`-`P12` (factor); 150 cells each}
+#'   \item{condition}{Disease state, `Healthy` or `Disease` (factor); six donors each}
+#'   \item{batch}{Processing batch, `B1` or `B2` (factor); crossed with `condition`}
+#'   \item{cell_type}{Annotated cell type (factor), the variable whose
+#'     per-sample frequency `freqPlot()` tabulates}
+#'   \item{n_genes}{Number of genes detected in the cell (integer)}
+#'   \item{percent_mito}{Percentage of mitochondrial reads (numeric)}
+#' }
+#'
+#' @source Simulated. Per-donor compositions are Dirichlet draws around
+#'   condition-specific means, with cell counts drawn multinomially.
+#'   See `data-raw/generate_example_data.R`.
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"example_composition"

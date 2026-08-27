@@ -61,6 +61,7 @@ module_data <- list(
     density  = example_demographics,
     dotplot  = example_markers,
     dumbbell = example_school_earnings,
+    freq     = example_composition,
     heatmap  = example_matrix_df,
     histogram = example_demographics,
     line     = example_sales,
@@ -134,6 +135,15 @@ module_registry <- list(
         server_fn = plotthis_DotPlotServer,
         defaults  = list("x.data" = "gene", "y.data" = "cell_type",
                          "size.by" = "pct_expressed", "fill.by" = "avg_expression")
+    ),
+    list(
+        label     = "Frequency",
+        id        = "freq",
+        inputs_ui = dittoViz_freqPlotInputsUI,
+        output_ui = dittoViz_freqPlotOutputUI,
+        server_fn = dittoViz_freqPlotServer,
+        defaults  = list("var" = "cell_type", "sample.by" = "sample",
+                         "group.by" = "condition")
     ),
     list(
         label     = "Histogram",
