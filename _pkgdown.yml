@@ -22,6 +22,14 @@ reference:
       - dittoViz_yPlotOutputUI
       - dittoViz_yPlotServer
 
+  - title: "freqPlot Module"
+    desc: "dittoViz-based composition/frequency plot module (per-sample frequencies by group)."
+    contents:
+      - dittoViz_freqPlotApp
+      - dittoViz_freqPlotInputsUI
+      - dittoViz_freqPlotOutputUI
+      - dittoViz_freqPlotServer
+
   - title: "linePlot Module"
     desc: "Interactive line plot module."
     contents:
@@ -281,6 +289,7 @@ reference:
     desc: "Built-in datasets for demos and testing."
     contents:
       - example_bar
+      - example_composition
       - example_demographics
       - example_iris
       - example_markers

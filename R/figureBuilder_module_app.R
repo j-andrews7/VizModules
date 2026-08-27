@@ -100,6 +100,7 @@ figureBuilderApp <- function(data_list = NULL,
         "example_iris"            = example_iris,
         "example_mtcars"          = example_mtcars,
         "example_population"      = example_population,
+        "example_composition"     = example_composition,
         "sales_by_product"        = sales_by_product
     )
 }
@@ -160,6 +161,16 @@ figureBuilderApp <- function(data_list = NULL,
             output_ui = dumbbellPlotOutputUI,
             server_fn = dumbbellPlotServer,
             defaults = list()
+        ),
+        freq = list(
+            label = "Frequency Plot", dataset = "example_composition",
+            inputs_ui = dittoViz_freqPlotInputsUI,
+            output_ui = dittoViz_freqPlotOutputUI,
+            server_fn = dittoViz_freqPlotServer,
+            defaults = list(
+                "var" = "cell_type", "sample.by" = "sample",
+                "group.by" = "condition"
+            )
         ),
         histogram = list(
             label = "Histogram", dataset = "example_demographics",

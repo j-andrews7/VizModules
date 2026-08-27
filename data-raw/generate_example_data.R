@@ -208,11 +208,76 @@ example_markers <- data.frame(
     pct_expressed = pct_expressed
 )
 
+
+
+
+# Single-cell-style composition data for the freqPlot module.
+# dittoViz::freqPlot() tabulates the frequency of `var` within each sample and
+# compares those per-sample frequencies across groups, so it needs several
+# samples nested inside each group (each sample mapping to exactly one value of
+# every grouping column). No other bundled dataset has that shape.
+# 12 donors x 150 cells = 1800 rows.
+comp_cell_types <- c("CD4 T", "CD8 T", "B", "NK", "Monocyte", "Dendritic")
+comp_samples <- sprintf("P%02d", 1:12)
+comp_conditions <- rep(c("Healthy", "Disease"), each = 6)
+# Batch is crossed with condition so it is a valid, non-confounded `color.by`.
+comp_batches <- rep(c("B1", "B2", "B2", "B1", "B1", "B2"), times = 2)
+comp_cells_per_sample <- 150
+
+# Disease expands the monocyte compartment and depletes CD4 T cells.
+comp_base_props <- list(
+    Healthy = c("CD4 T" = 0.30, "CD8 T" = 0.20, "B" = 0.15, "NK" = 0.10,
+                "Monocyte" = 0.18, "Dendritic" = 0.07),
+    Disease = c("CD4 T" = 0.18, "CD8 T" = 0.17, "B" = 0.12, "NK" = 0.08,
+                "Monocyte" = 0.35, "Dendritic" = 0.10)
+)
+
+# Per-cell-type transcriptome complexity, so the numeric QC columns are not noise.
+comp_gene_means <- c("CD4 T" = 1800, "CD8 T" = 1900, "B" = 2100, "NK" = 2000,
+                     "Monocyte" = 2600, "Dendritic" = 2400)
+
+comp_rows <- lapply(seq_along(comp_samples), function(i) {
+    condition <- comp_conditions[i]
+    # Dirichlet draw (gamma-normalised) gives each donor its own composition
+    # around the condition mean, so the per-group boxplots have real spread.
+    alpha <- comp_base_props[[condition]] * 60
+    props <- stats::rgamma(length(alpha), shape = alpha, rate = 1)
+    props <- props / sum(props)
+
+    counts <- as.vector(stats::rmultinom(1, comp_cells_per_sample, props))
+    types <- rep(comp_cell_types, times = counts)
+
+    data.frame(
+        sample = comp_samples[i],
+        condition = condition,
+        batch = comp_batches[i],
+        cell_type = types,
+        n_genes = round(stats::rnorm(length(types), comp_gene_means[types], 350)),
+        percent_mito = round(stats::rgamma(length(types), shape = 2, scale = 1.9), 2),
+        stringsAsFactors = FALSE
+    )
+})
+
+example_composition <- do.call(rbind, comp_rows)
+example_composition$n_genes <- pmax(example_composition$n_genes, 200L)
+example_composition$percent_mito <- pmin(example_composition$percent_mito, 25)
+example_composition <- data.frame(
+    cell_id = sprintf("cell_%04d", seq_len(nrow(example_composition))),
+    sample = factor(example_composition$sample, levels = comp_samples),
+    condition = factor(example_composition$condition, levels = c("Healthy", "Disease")),
+    batch = factor(example_composition$batch, levels = c("B1", "B2")),
+    cell_type = factor(example_composition$cell_type, levels = comp_cell_types),
+    n_genes = as.integer(example_composition$n_genes),
+    percent_mito = example_composition$percent_mito,
+    stringsAsFactors = FALSE
+)
+
 usethis::use_data(
     example_iris, example_mtcars,
     example_bar, example_school_earnings,
     example_skills,
     example_sales, example_population, example_demographics,
     example_markers, example_rnaseq,
+    example_composition,
     internal = TRUE, overwrite = TRUE
 )
