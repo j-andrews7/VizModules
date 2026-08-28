@@ -9,7 +9,7 @@ through unchanged.
 ## Usage
 
 ``` r
-setup_auto_update_logic(input)
+setup_auto_update_logic(input, params = NULL)
 ```
 
 ## Arguments
@@ -19,11 +19,22 @@ setup_auto_update_logic(input)
   The Shiny input object from the module server, should have both
   `auto.update` (boolean) and `update` (button) inputs.
 
+- params:
+
+  Optional reactive-defaults store from
+  [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.md),
+  or `NULL`. When supplied, an `input$<key>` read whose `key` is backed
+  by the store resolves from the store instead of the client input, so a
+  parameter driven by the parent app updates in a single render.
+
 ## Value
 
-A function that wraps reactive expressions. Returns `identity` if
-auto-update is enabled (expressions will be reactive), or `isolate` if
-auto-update is disabled (expressions will not trigger reactivity).
+A function that wraps reactive expressions. With `params = NULL` this is
+`identity` if auto-update is enabled (expressions will be reactive), or
+`isolate` if auto-update is disabled (expressions will not trigger
+reactivity). With a store supplied it is a wrapper with the same
+isolation semantics that additionally redirects store-backed
+`input$<key>` reads.
 
 ## Details
 
@@ -43,6 +54,10 @@ Usage in a reactive context:
         x_val <- isolate_fn(input$x.value)
     })
 
+## See also
+
+[`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.md)
+
 ## Author
 
 Jared Andrews
@@ -55,8 +70,8 @@ if (interactive()) {
     library(plotly)
 
     ui <- fluidPage(
-        selectInput("x_var", "X variable", choices = names(mtcars), selected = "wt"),
-        selectInput("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
+        viz_select_input("x_var", "X variable", choices = names(mtcars), selected = "wt"),
+        viz_select_input("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
         checkboxInput("auto.update", "Auto-update", value = TRUE),
         actionButton("update", "Update"),
         plotlyOutput("myPlot")

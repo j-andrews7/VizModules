@@ -15,7 +15,7 @@ rotated Y-axis title (left centre)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@ rotated Y-axis title (left centre)."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -53,7 +54,7 @@ rotated Y-axis title (left centre)."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Build facet subplot annotations</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/plot_facets.R" class="external-link"><code>R/plot_facets.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_facets.R" class="external-link"><code>R/plot_facets.R</code></a></small>
       <div class="d-none name"><code>build_facet_annotations.Rd</code></div>
     </div>
 
@@ -249,6 +250,9 @@ subplot title above the top of its panel. Default: <code>0.02</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]$yanchor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "top"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]$annotationType</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "axis"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]$font</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]$font$size</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 14</span>
@@ -282,6 +286,9 @@ subplot title above the top of its panel. Default: <code>0.02</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]$textangle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]$annotationType</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "axis"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]$font</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]$font$size</span>

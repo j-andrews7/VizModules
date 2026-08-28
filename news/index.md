@@ -1,6 +1,440 @@
 # Changelog
 
+## VizModules 0.4.0
+
+### New Modules
+
+- Added a `freqPlot` module
+  ([`dittoViz_freqPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotInputsUI.md),
+  [`dittoViz_freqPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotOutputUI.md),
+  [`dittoViz_freqPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotServer.md),
+  [`dittoViz_freqPlotApp()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotApp.md))
+  wrapping \[dittoViz::freqPlot()\], for comparing the per-sample
+  composition of a categorical variable across groups. Unlike the other
+  modules it does not plot columns of the incoming data, it tabulates
+  how often each level of the chosen variable occurs within each sample
+  and plots those frequencies, one facet per level. The axis limits,
+  statistics, point annotations and source download therefore all
+  describe that summarised frequency table rather than the input rows.
+  - Comes with a new `example_composition` demo dataset containing 1800
+    simulated single-cell records over twelve donors nested inside two
+    conditions (and crossed with two batches).
+- Added a `ComplexHeatmap` module
+  ([`ComplexHeatmap_HeatmapInputsUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapInputsUI.md),
+  [`ComplexHeatmap_HeatmapOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapOutputUI.md),
+  [`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md),
+  [`ComplexHeatmap_HeatmapApp()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapApp.md))
+  wrapping \[ComplexHeatmap::Heatmap()\]. Unlike the other plotly-based
+  modules, its interactive output is delivered via the
+  `InteractiveComplexHeatmap` package (sub-heatmap zoom, cell
+  hover/click/select). The incoming data frame is converted to a numeric
+  matrix (user-selected columns, with an optional row-name column), and
+  a curated subset of
+  [`Heatmap()`](https://pwwang.github.io/plotthis/reference/Heatmap.html)
+  parameters is exposed via UI inputs.
+  - Row and column annotation tracks can be added on the “Annotations”
+    tab dynamically. Row annotations come from extra columns in the
+    input data frame; column annotations need a companion per-sample
+    metadata table, supplied via
+    `data = list(matrix = <data.frame>, column_annotations = <data.frame>)`
+    instead of a plain data frame.
+  - The interactive output can be split into independently-placed pieces
+    —
+    [`ComplexHeatmap_HeatmapMainOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapMainOutputUI.md),
+    [`ComplexHeatmap_HeatmapSubOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapSubOutputUI.md),
+    [`ComplexHeatmap_HeatmapInfoOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapInfoOutputUI.md)
+    — for apps that want the main heatmap, sub-heatmap, and click/brush
+    info panel in separate layout locations.
+    [`ComplexHeatmap_HeatmapOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapOutputUI.md)
+    also has a `...` passthrough for
+    `InteractiveComplexHeatmapOutput()`’s `layout`, `compact` (a
+    smaller-footprint mode that drops the sub-heatmap panel and floats
+    the click/brush info near the cursor), and other arguments.
+  - Comes with a new `example_heatmap_matrix` (30 genes x 12 samples,
+    with row-annotation columns) and `example_heatmap_column_data`
+    (companion per-sample metadata, for column annotations) demo
+    datasets.
+
+### Improved/New Functionality
+
+- The package now contains three agent skills under `inst/skills/`,
+  installable into a project with the new exported
+  [`use_vizmodules_skills()`](https://j-andrews7.github.io/VizModules/reference/use_vizmodules_skills.md):
+  `vizmodules-app` (wiring modules into an app),
+  `vizmodules-custom-module` (building wrapper modules), and
+  `vizmodules-new-module` (authoring a module in this package). They
+  follow the [Agent Skills](https://agentskills.io) `SKILL.md`
+  convention, so GitHub Copilot, OpenAI Codex, Claude Code, and
+  compatible tools can discover them.
+  [`use_vizmodules_skills()`](https://j-andrews7.github.io/VizModules/reference/use_vizmodules_skills.md)
+  gains a `client` argument (`"agents"` by default, or
+  `"github"`/`"claude"`) to install into `.agents/skills/`,
+  `.github/skills/`, or `.claude/skills/` as needed.
+  - Benchmarked against the README’s LLM-instruction prompt over 18
+    paired runs
+    ([\#341](https://github.com/j-andrews7/VizModules/issues/341)).
+    Building an app the clear win - half the tokens (66k vs 123k) and
+    40% of the wall time, with identical correctness. Wrapping a module
+    was inconclusive, and authoring a module was cost-neutral. Every run
+    in both arms passed every assertion, so the skills’ measured value
+    is efficiency on lookup-heavy work rather than improved output.
+  - Each skill carries the traps that cost benchmark runs real time:
+    [`useShinyjs()`](https://rdrr.io/pkg/shinyjs/man/useShinyjs.html)
+    being required in a hand-built app for `hide.inputs`/`hide.tabs` to
+    work, pandoc being required by
+    [`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md),
+    `stat.hide.ns` defaulting to `TRUE` so an enabled Stats tab can draw
+    nothing, and
+    [`shiny::testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html)
+    being unable to drive a plotly output.
+- The `dittoViz_yPlot` module gained an “Annotations” tab that
+  highlights and labels individual jitter points, matching the
+  `dittoViz_scatterPlot` module
+  ([\#340](https://github.com/j-andrews7/VizModules/issues/340)).
+  - The annotation controls are now the exported helpers
+    [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.md)
+    and
+    [`reset_annotation_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_annotation_inputs.md),
+    so other modules that draw individual points can pick them up, and
+    `dittoViz_scatterPlot` now uses them rather than its own copy.
+  - `dittoViz_yPlot`’s jitter positions are now drawn from a fixed seed,
+    so they no longer reshuffle on every rebuild. Selections and
+    annotations therefore stay attached to the points they were made on,
+    and a plot redrawn with the same settings is reproducible.
+  - Box/lasso selections are now matched to their points by index rather
+    than by coordinates, so a label survives the rebuild that the
+    selection itself triggers. Selections are cleared when the plot’s
+    structure changes (Y data, grouping, color, shape, facet or plot
+    types), since the indices only describe the layout they were
+    captured on.
+- Every module can now be initialized with an explicit group-to-color
+  mapping via `defaults`
+  ([\#334](https://github.com/j-andrews7/VizModules/issues/334)). Pass a
+  named character vector under the module’s color input key,
+  e.g. `defaults = list(palette.colours = c(setosa = "red", virginica = "#0072B2"))`,
+  and the color picker is seeded with it.
+  - Precedence runs picker \> `defaults` \> the module’s stock palette,
+    so a plot can open on a specific palette while every color stays
+    editable, and groups the mapping does not name still get a sensible
+    default. Reset restores the supplied mapping rather than the stock
+    palette.
+  - Keys are `palette.colours` for most modules, `color.panel` for
+    `dittoViz_scatterPlot`, `slice.colors` for `piePlot`, and
+    `trace.colors` for `radarPlot`; the ungrouped single-color controls
+    (`single.point.color`, `single.fill.color`, `single.color`) and the
+    continuous palette selectors (`palette.name`, `gradient.palette`)
+    are now seeded from `defaults` too. Since individual `defaults`
+    entries may be reactive, a parent app can also drive the palette
+    from its own state.
+    [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
+    gains a `manual_colors` argument implementing the layering.
+- The figure builder now passes each panel’s `defaults` to the module
+  server as well as to its inputs UI, so registry defaults can seed
+  server-rendered controls such as the color picker.
+- Source data downloads are now more robust and now limit to the data
+  actually shown on the plot rather than the entire input dataframe.
+  This makes download snappier and keeps plot source data contained,
+  which is important for publication. The switch to `viz_select_input`
+  (described below) also required some changes to handle empty
+  vectors/`NULL` values appropriately.
+- Individual `defaults` entries can now be a
+  [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or
+  [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html),
+  letting a parent app drive a module parameter from its own state
+  ([\#325](https://github.com/j-andrews7/VizModules/issues/325)).
+  Previously the only route was `update*Input()` from the parent, which
+  is an asynchronous client round-trip and so re-rendered the plot twice
+  per change (a visible flicker). Reactive defaults are resolved
+  server-side in the same reactive flush as the data, so the plot
+  renders once, while the on-screen control stays populated and
+  user-editable. An external change takes precedence over a value the
+  user has typed, and Reset restores the reactive’s current value. Adds
+  the exported helper
+  [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.md);
+  [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
+  gains an optional `params` argument to consume its store, and
+  [`get_default()`](https://j-andrews7.github.io/VizModules/reference/get_default.md)
+  now resolves reactive entries with
+  [`isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html). Modules
+  with purely static `defaults` are unaffected. Not supported for the
+  scatter module’s compound `custom.models` input.
+- Wired up `hover.data` and `hover.round.digits` in the `dittoViz_yPlot`
+  module ([\#317](https://github.com/j-andrews7/VizModules/issues/317)).
+  When no columns are selected, the module reproduces
+  [`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)’s
+  default hover content, so existing plots are unchanged.
+- The `dittoViz_yPlot` module’s “Y Data” input can now take several
+  columns at once (selecting more than one previously errored while
+  computing the y-axis range).
+  - New “Multivar Aesthetic” and “Multivar Split Dir” controls on the
+    Facet tab expose
+    [`dittoViz::yPlot()`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)’s
+    `multivar.aes`/`multivar.split.dir`, so the selected variables can
+    each get their own facet (the default), sit side by side on the
+    x-axis, or be mapped to the fill legend (in which case the colour
+    picker keys off the variable names, since they are what is being
+    coloured). The y-axis limits span every selected variable, the axis
+    title drops the column name once it no longer describes the shared
+    axis (keeping any adjustment, e.g. `log2(z-score)`), and the
+    facet-specific handling (subplot spacing, boxplot dodging, shared
+    axis titles) now also applies to variable facets.
+  - Statistics are computed separately within each variable’s facet; the
+    Stats tab is hidden for the “group” and “color” aesthetics, and when
+    a `split.by` facet is combined with several variables, as
+    significance brackets cannot be placed against those layouts without
+    stuff getting hella complicated in ways the current stats
+    implementation cannot yet handle. Ideally, this will be supported in
+    the future but will take some thoughtful work to implement in a
+    robust way.
+- Every module select input is now a virtualised, searchable dropdown
+  built on
+  [`shinyWidgets::virtualSelectInput()`](https://dreamrs.github.io/shinyWidgets/reference/virtualSelectInput.html)
+  ([\#330](https://github.com/j-andrews7/VizModules/issues/330)).
+  Previously a select fed by a high-cardinality column (e.g. `var` in
+  `dittoViz_yPlot` on a genome-wide table) rendered every option,
+  producing a dropdown that was both slow and impossible to pick from
+  even with max options set. Only the visible slice is rendered now, so
+  tens of thousands of options stay usable, and long lists gain a search
+  box automatically. Adds the exported helpers
+  [`viz_select_input()`](https://j-andrews7.github.io/VizModules/reference/viz_select_input.md)
+  and
+  [`update_viz_select()`](https://j-andrews7.github.io/VizModules/reference/update_viz_select.md)
+  for use in custom modules. Three widgets deliberately stay native
+  because client-side JavaScript reads them directly: the figure
+  builder’s “Panel labels” menu,
+  [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)’s
+  palette picker, and
+  [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)’s
+  select rows.
+- [`dataFilterServer()`](https://j-andrews7.github.io/VizModules/reference/dataFilterServer.md)
+  gains `filter.max.options` (default `50`), capping how many options a
+  factor column’s DataTables filter dropdown renders at once. Typing
+  still searches the full set. Note that DT serialises every level of a
+  factor column into the page regardless, so `factor.char.cols = TRUE`
+  remains a poor fit for columns with very many distinct values.
+- The `dataFilter` table’s controls now sit on a single row for better
+  use of space. With `col.visibility = TRUE` the module used DataTables’
+  `Blfrtip` layout, which stacks the “Columns” button, the page-length
+  select and the search box in three full-width blocks, wasting three
+  rows of vertical space above the table. They now share one flex row
+  with the search box aligned to the far end, styled by CSS the module
+  ships itself.
+- Tweaked
+  [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+  layout slightly for easier tetrising into compact UIs. Elements should
+  now reflow more appropriately to prevent label/control overlaps in
+  narrow contexts.
+- [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+  no longer reports a value for every step of a colour choice, so a
+  dependent plot is rebuilt once per colour rather than dozens of times.
+  A group’s swatch is a native `<input type="color">`, and the browser’s
+  colour dialog previousl fired an event for each drag or click inside
+  it (Chrome fires `change` just as often as `input`, rather than only
+  on close). Now, the value is only reported when the input loses focus
+  or the user moves the mouse outside it, preventing most unnecessary
+  re-renders. Typing in a hex field is coalesced until the user pauses
+  instead, while one-shot actions, i.e. palette swatches, “Apply”,
+  “Reset”, selecting another group, and a hex code committed with Enter
+  or by clicking away, still report immediately.
+- Added ability to show/hide columns in the `dataFilter` module with
+  DataTables’ built-in column visibility controls. This is useful for
+  hiding columns that are not relevant to the user, or for hiding
+  columns that are used for internal logic but not meant to be
+  displayed. The `hide.columns` argument can be used to specify which
+  columns to hide by default (by name or position), which also removes
+  their filter boxes for a simpler interface, and
+  `col.visibility = TRUE` adds a “Columns” button so users can toggle
+  visibility via the DataTables UI. Hiding is display-only: hidden
+  columns are still present in the returned filtered data, so downstream
+  plotting modules can use them. The name/position lookup behind
+  `hide.columns` is exposed as the new exported helper
+  [`resolve_column_targets()`](https://j-andrews7.github.io/VizModules/reference/resolve_column_targets.md),
+  which turns column names into the zero-based `targets` indices any
+  hand-rolled \[DT::datatable()\] `columnDefs` entry needs.
+
+### Deprecations and Removals
+
+- Removed the `manual.colors` argument from
+  [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md).
+  It was the only module with such an argument, and it hard-overrode the
+  color picker, so the colors it supplied could not be edited. Pass the
+  same named vector as `defaults = list(color.panel = ...)` instead,
+  which every module now understands and which leaves the colors
+  editable.
+
+### Bug Fixes
+
+- Corrected two documentation errors that would mislead anyone following
+  the vignettes. `quick-start`, `defaults-and-hiding`, and
+  `custom-modules` all used `defaults = list(main = ...)` as the worked
+  example for reactive defaults, but no module exposes a plot title:
+  every server passes `main = NULL` and none reads `input$main`, so the
+  example was a silent no-op. The examples now use `color.by`, which
+  modules do read, and the reactive-defaults sections note that an
+  unrecognised key is silently ignored by
+  [`get_default()`](https://j-andrews7.github.io/VizModules/reference/get_default.md).
+  Separately, `custom-modules`’ “Hiding Base Module Inputs” example
+  passed `hide.inputs` to `*InputsUI()`; that argument belongs to
+  `*Server()`, and since no `*InputsUI()` accepts `...` the example
+  failed with an unused-argument error. Found while benchmarking agent
+  skills against the docs
+  ([\#341](https://github.com/j-andrews7/VizModules/issues/341)).
+
+- Every module server (and
+  [`dataFilterServer()`](https://j-andrews7.github.io/VizModules/reference/dataFilterServer.md))
+  now requires its `data` reactive to yield a data frame: values that
+  are not data frames are coerced with
+  [`as.data.frame()`](https://rdrr.io/r/base/as.data.frame.html), and a
+  `NULL` makes the module wait for data rather than error. A parent app
+  that briefly emits `NULL` can no longer take a plot down with it.
+
+- Fixed modules rendering their plot two or three times for a single
+  change (somewhat related to
+  [\#325](https://github.com/j-andrews7/VizModules/issues/325)). Several
+  modules compute a value on the server and push it into one of their
+  own inputs with `update*Input()`, which is an asynchronous client
+  round-trip: the plot rendered once with the stale value and again when
+  the client echoed the new one. On load `dittoViz_yPlot` did this three
+  times over (y-axis range, stat comparison pairs, and the rebuilt
+  `multiColorPicker`).
+
+  - These inputs are now wrapped in
+    [`freezeReactiveValue()`](https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html)
+    so dependents pause until the new value lands, giving a single
+    render. This still applies to `stat.pairs` (`dittoViz_yPlot`,
+    `plotthis_BoxPlot`, `plotthis_ViolinPlot`) and `facet.scale`
+    (`plotthis_BoxPlot`). The colour picker and the y-axis range were
+    handled this way too at first; both have since moved to a
+    server-side store, for the reasons in the
+    [\#338](https://github.com/j-andrews7/VizModules/issues/338) entry
+    below.
+  - Added a section in the “Adding a New Module” vignette describing
+    this pattern.
+
+- Fixed an initialization bug in
+  [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+  due to string indexing rather than position, leading to out of bounds
+  errors when a group label was an empty string.
+
+- Fixed the `dittoViz_yPlot` module re-rendering its plot when the user
+  merely switched to the Data tab. The colour picker is built by a
+  [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html) on that
+  tab, and Shiny suspends an output whose tab is hidden, so a change to
+  the palette’s groups (setting “Multivar Aesthetic” to “color”, say,
+  which keys the palette by variable name) could not rebuild the picker
+  when it happened. The rebuild waited for the tab to be opened, and the
+  value it reported then re-rendered the plot for what was only a tab
+  click. The plot now depends on the *resolved* palette, the
+  group-to-colour mapping it actually draws with (held in a
+  [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)),
+  rather than on the picker’s raw value. A rebuilt picker re-seeded from
+  that same resolution therefore changes nothing to re-render for, while
+  a colour the user actually picks comes straight through.
+
+- Fixed every module that uses
+  [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+  rendering its plot an extra time on initialization, and again the
+  first time the user opened the tab the picker lives on
+  ([\#338](https://github.com/j-andrews7/VizModules/issues/338)). The
+  plot depended on the picker’s raw `input$<key>`, which is `NULL` until
+  the browser binds the widget and reports back — so the echo of a
+  mapping the server had just seeded the picker with still counted as a
+  change and rebuilt the plot. An attempt utilizing
+  [`freezeReactiveValue()`](https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html)
+  to guard didn’t work: inside a
+  [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html) it pauses
+  only the readers that run after it in the same flush, and at startup
+  the plot output runs first, so the freeze landed too late to pause
+  anything.
+
+  - Every module now reads a server-resolved palette instead. The new
+    exported helper
+    [`setup_group_colors()`](https://j-andrews7.github.io/VizModules/reference/setup_group_colors.md)
+    resolves the group-to-colour mapping as soon as the group set is
+    known and holds it in a
+    [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html),
+    which only invalidates on a real change. A rebuilt picker echoing
+    the palette already in use costs nothing, while a colour the user
+    picks comes straight through. `piePlot` and `radarPlot`, which had
+    no guard at all, are covered for the first time.
+  - The picker’s palette dropdown no longer carries an HTML `id`.
+    Shiny’s select binding claims every `<select>` with one, so each
+    picker was quietly registering a stray
+    `input[["<inputId>-palette"]]` alongside its own value. The widget’s
+    JavaScript and CSS both find that element by class, so nothing
+    needed the id.
+  - The “Adding a New Module” vignette’s “Updating Your Own Inputs From
+    the Server” section now documents this pattern for
+    [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html)-rebuilt
+    widgets.
+
+- The y-axis limits now leave more room for significance brackets, and
+  no longer cost an extra render on the way in. The plot read the raw
+  `input$y.min`/`input$y.max`, which the module had just pushed to the
+  browser, so their echo rebuilt it — the same
+  [`freezeReactiveValue()`](https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html)
+  that could not cover the colour picker was covering these no better.
+
+  - `dittoViz_yPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot` and
+    `plotthis_ViolinPlot` now read a server-side store, the new exported
+    [`setup_axis_range()`](https://j-andrews7.github.io/VizModules/reference/setup_axis_range.md),
+    so the echo of a limit the module itself set changes nothing while a
+    limit the user types comes straight through. Startup drops a render
+    in each.
+  - Brackets are stacked above the data, and nothing had reserved room
+    for them: the axis was silently rescaled at draw time to whatever
+    they needed. Worse, that rescale was applied as an assignment rather
+    than a maximum, so enabling statistics *shrank* a y-axis maximum the
+    user had deliberately set — a plot limited to 0-20 was pulled back
+    to the top of the brackets.
+    [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md)
+    gains a `y.max` argument and now only ever raises the top, never
+    lowers it.
+  - The new exported
+    [`stat_bracket_y_max()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_y_max.md)
+    works out how high the brackets will reach, and the three modules
+    that draw them reserve that room up front, so the `y.max` control
+    shows the limit actually in use. It shares the bracket packing with
+    the drawing code, so the two agree exactly, and it honours `hide.ns`
+    (on by default) rather than reserving room for brackets that are
+    never drawn.
+
+- Fixed the `dittoViz_yPlot` reset button calling
+  [`updateCheckboxGroupInput()`](https://rdrr.io/pkg/shiny/man/updateCheckboxGroupInput.html)
+  on its “Plots” select, so resetting left the plot type selection
+  untouched.
+
+- Fixed axis titles not reflecting applied data adjustments in the
+  `dittoViz_yPlot`, `dittoViz_scatterPlot`, and `linePlot` modules
+  ([\#321](https://github.com/j-andrews7/VizModules/issues/321)). The
+  annotation-persistence feature added in 0.3.0 was re-applying the
+  previously captured title text on every rebuild, clobbering the
+  freshly generated adjustment-aware label (e.g. `log2(units)`). Axis
+  titles carrying an active adjustment are now always regenerated, while
+  a manually edited title with no adjustment still persists and the
+  dragged title position persists in all cases.
+  [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md)
+  gains a `regen_keys` argument to drive this. Axis titles are also
+  regenerated (rather than persisted) when the plotted variable for that
+  axis changes, via the new exported helper
+  [`reset_axis_title_text()`](https://j-andrews7.github.io/VizModules/reference/reset_axis_title_text.md),
+  since a manual title only makes sense for the variable it was written
+  for. Shared axis titles in faceted `linePlot`/`dumbbellPlot` figures
+  (built via
+  [`build_facet_annotations()`](https://j-andrews7.github.io/VizModules/reference/build_facet_annotations.md))
+  are now tagged as axis annotations so their dragged position survives
+  label changes; as a result they now pick up the axis-title font
+  settings rather than the facet-title font settings.
+
+- The main plot title is now blank by default in the `dittoViz_yPlot`
+  and `dittoViz_scatterPlot` modules (previously dittoViz’s
+  `main = "make"` auto-generated a title from the variable name and
+  regenerated it on every re-render). Users can still add a title
+  interactively by editing it on the plot.
+
 ## VizModules 0.3.0
+
+CRAN release: 2026-07-27
 
 ### New Modules
 

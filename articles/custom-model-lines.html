@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -73,7 +74,7 @@
       <h1>Custom Model Lines in Scatter Plots</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/vignettes/custom-model-lines.Rmd" class="external-link"><code>vignettes/custom-model-lines.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/vignettes/custom-model-lines.Rmd" class="external-link"><code>vignettes/custom-model-lines.Rmd</code></a></small>
       <div class="d-none name"><code>custom-model-lines.Rmd</code></div>
     </div>
 
@@ -160,6 +161,11 @@ settings.</p>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>These rows appear pre-filled when the app loads.</p>
+<p>Unlike most <code>defaults</code> entries, <code>custom.models</code>
+cannot be supplied as a <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code>. It is backed by a
+compound <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code> widget that the generic
+control-sync used by reactive defaults cannot drive; pass a plain
+list.</p>
 </div>
 <div class="section level2">
 <h2 id="adding-a-custom-model-backend">Adding a Custom Model Backend<a class="anchor" aria-label="anchor" href="#adding-a-custom-model-backend"></a>

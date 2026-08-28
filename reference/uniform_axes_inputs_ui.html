@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -45,7 +46,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate uniform Axes input UI</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/uniform_ui_inputs.R" class="external-link"><code>R/uniform_ui_inputs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/uniform_ui_inputs.R" class="external-link"><code>R/uniform_ui_inputs.R</code></a></small>
       <div class="d-none name"><code>uniform_axes_inputs_ui.Rd</code></div>
     </div>
 
@@ -98,26 +99,10 @@ the axis. Default is FALSE.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">uniform_axes_inputs_ui</span><span class="op">(</span><span class="va">ns</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-title.font.family-label" for="plot-title.font.family"&gt;Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
@@ -140,26 +125,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-axis.title.font.color"&gt;Axis Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.title.font.family-label" for="plot-axis.title.font.family"&gt;Axis Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -214,26 +183,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-axis.tickfont.color"&gt;Tick Label Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.tickfont.family-label" for="plot-axis.tickfont.family"&gt;Tick Label Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.tickfont.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.tickfont.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -244,12 +197,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.tickangle.y-label" for="plot-axis.tickangle.y"&gt;Y Tick Label Angle&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.ticks-label" for="plot-axis.ticks"&gt;Tick Position&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.ticks"&gt;&lt;option value="outside" selected&gt;Outside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inside"&gt;Inside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value=""&gt;None&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.ticks"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Outside","Inside","(none)"],"value":["outside","inside",""]}},"config":{"multiple":false,"search":false,"selectedValue":"outside","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
@@ -272,26 +223,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-facet.title.font.color"&gt;Facet Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-facet.title.font.family-label" for="plot-facet.title.font.family"&gt;Facet Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-facet.title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-facet.title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-in"><span><span class="fu">uniform_axes_inputs_ui</span><span class="op">(</span><span class="va">ns</span>, include.rotate <span class="op">=</span> <span class="cn">TRUE</span>, include.flip <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -316,26 +251,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;label class="switch label-success bg-success" for="plot-flip.y"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-title.font.family-label" for="plot-title.font.family"&gt;Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
@@ -358,26 +277,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-axis.title.font.color"&gt;Axis Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.title.font.family-label" for="plot-axis.title.font.family"&gt;Axis Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -432,26 +335,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-axis.tickfont.color"&gt;Tick Label Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.tickfont.family-label" for="plot-axis.tickfont.family"&gt;Tick Label Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.tickfont.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.tickfont.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -462,12 +349,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.tickangle.y-label" for="plot-axis.tickangle.y"&gt;Y Tick Label Angle&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-axis.ticks-label" for="plot-axis.ticks"&gt;Tick Position&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-axis.ticks"&gt;&lt;option value="outside" selected&gt;Outside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="inside"&gt;Inside&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value=""&gt;None&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-axis.ticks"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Outside","Inside","(none)"],"value":["outside","inside",""]}},"config":{"multiple":false,"search":false,"selectedValue":"outside","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
@@ -490,26 +375,10 @@ the axis. Default is FALSE.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-facet.title.font.color"&gt;Facet Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-facet.title.font.family-label" for="plot-facet.title.font.family"&gt;Facet Title Font&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-facet.title.font.family"&gt;&lt;option value="Arial" selected&gt;Arial&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Balto"&gt;Balto&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Courier New"&gt;Courier New&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans"&gt;Droid Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Serif"&gt;Droid Serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Droid Sans Mono"&gt;Droid Sans Mono&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Gravitas One"&gt;Gravitas One&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Old Standard TT"&gt;Old Standard TT&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Open Sans"&gt;Open Sans&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Overpass"&gt;Overpass&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="PT Sans Narrow"&gt;PT Sans Narrow&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Raleway"&gt;Raleway&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Times New Roman"&gt;Times New Roman&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="Verdana"&gt;Verdana&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="sans-serif"&gt;sans-serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="serif"&gt;serif&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="monospace"&gt;monospace&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-facet.title.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 </code></pre></div>

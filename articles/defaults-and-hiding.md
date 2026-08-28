@@ -67,6 +67,92 @@ its built-in default rather than erroring. This means a typo in a key is
 silent; double-check key names against the help page if a default
 appears to have no effect.
 
+### Reactive defaults: driving inputs from app state
+
+Sometimes a parameter needs to *follow* your app rather than be fixed
+once. A common case is a colour mapping that should track a column the
+user has selected elsewhere in the app. For this, any individual entry
+in `defaults` may be a
+[`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or a
+[`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)
+instead of a plain value:
+
+``` r
+
+library(VizModules)
+
+ui <- fluidPage(
+    selectInput("colour_col", "Colour by", choices = c("cyl", "gear", "carb")),
+    sidebarLayout(
+        sidebarPanel(uiOutput("controls")),
+        mainPanel(dittoViz_scatterPlotOutputUI("p"))
+    )
+)
+
+server <- function(input, output, session) {
+    plot_defaults <- list(
+        x.by = "wt",
+        y.by = "mpg",
+        color.by = reactive(input$colour_col)
+    )
+
+    output$controls <- renderUI({
+        dittoViz_scatterPlotInputsUI("p", mtcars, defaults = plot_defaults)
+    })
+
+    dittoViz_scatterPlotServer("p", data = reactive(mtcars), defaults = plot_defaults)
+}
+
+shinyApp(ui, server)
+```
+
+Pass the same list to both `*InputsUI()` and `*Server()`, as you would
+for static defaults. Because the UI needs access to the reactive, build
+it inside [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html)
+(the UI seed is taken with
+[`isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html), so this does
+not cause the controls to re-render whenever the reactive changes).
+
+You get three guarantees:
+
+- **The parameter tracks the reactive.** Every change flows through to
+  the plot.
+- **The control stays correct and editable.** The Color By selector
+  shows the current column, and the user can still change it.
+- **The plot renders once per change.** The value is resolved
+  server-side, in the same reactive flush as the data, so there is no
+  flicker.
+
+Semantics worth knowing:
+
+- **An external change always wins.** If the user has picked a different
+  colour column in the module and then changes the app-level selector,
+  the selector’s value replaces their choice.
+- **Reset restores the reactive’s *current* value**, not the value it
+  held at startup.
+- **Only [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) and
+  [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html) are
+  recognised.** A plain function is treated as a literal default value,
+  not as something to call.
+- **Composite widgets sync cosmetically only.** The plot always uses the
+  current value, but a compound control that does not accept a generic
+  value message — `custom.models` in the scatter module is the one to
+  watch — will not re-display it. Reactive defaults are not supported
+  for that input.
+
+#### Why not `update*Input()` from the parent?
+
+The obvious alternative is an
+[`observeEvent()`](https://rdrr.io/pkg/shiny/man/observeEvent.html) in
+the parent calling `updateTextInput(session, "p-main", ...)`. That
+works, but `update*Input()` is an asynchronous round-trip to the
+browser, so each change renders the plot **twice**: once with the stale
+value, then again when the new value arrives back from the client.
+Reactive defaults exist to avoid that second render.
+`dev-notes/reactive-defaults-repro.R` in the package source runs both
+approaches side by side with render counters if you want to see the
+difference.
+
 ### Passing defaults through `createModuleApp()` and `*App()`
 
 `defaults` is forwarded all the way through the app factory:
@@ -143,6 +229,12 @@ server <- function(input, output, session) {
 
 The colour mapping is always `cyl`, and the control for it never
 appears.
+
+This composes with reactive defaults: a hidden control whose default is
+a [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) still
+drives the plot, because the value is resolved server-side rather than
+read back from the (now invisible) input. That is the cleanest way to
+lock a parameter to app state entirely.
 
 ------------------------------------------------------------------------
 
@@ -278,8 +370,11 @@ Note that
 /
 [`shinyjs::show()`](https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html)
 act on the input element itself. For the reflow behaviour (no empty
-gap), use the internal `.hide_input()` / `.show_input()` helpers
-instead, which target the wrapping cell in the flexbox grid:
+gap), use the
+[`hide_input()`](https://j-andrews7.github.io/VizModules/reference/hide_input.md)
+/
+[`show_input()`](https://j-andrews7.github.io/VizModules/reference/show_input.md)
+helpers instead, which target the wrapping cell in the flexbox grid:
 
 ``` r
 
@@ -287,9 +382,9 @@ myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
         observe({
             if (nzchar(input$size.by)) {
-                VizModules:::.hide_input(session, "size")
+                VizModules::hide_input(session, "size")
             } else {
-                VizModules:::.show_input(session, "size")
+                VizModules::show_input(session, "size")
             }
         })
     })

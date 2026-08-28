@@ -11,7 +11,7 @@ they can be adjusted consistently regardless of plot type."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ they can be adjusted consistently regardless of plot type."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -49,7 +50,7 @@ they can be adjusted consistently regardless of plot type."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate uniform Legend input UI</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/uniform_ui_inputs.R" class="external-link"><code>R/uniform_ui_inputs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/uniform_ui_inputs.R" class="external-link"><code>R/uniform_ui_inputs.R</code></a></small>
       <div class="d-none name"><code>uniform_legend_inputs_ui.Rd</code></div>
     </div>
 
@@ -89,27 +90,27 @@ they can be adjusted consistently regardless of plot type.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="st">"plot1"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">uniform_legend_inputs_ui</span><span class="op">(</span><span class="va">ns</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify6229228"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify8150232"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size"&gt;Legend Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6229228', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify4607475"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8150232', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify3038334"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size"&gt;Legend Text Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4607475', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3038334', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-in"><span><span class="fu">uniform_legend_inputs_ui</span><span class="op">(</span><span class="va">ns</span>, defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>legend.title.size <span class="op">=</span> <span class="fl">16</span>, legend.text.size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify1634123"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify9317958"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size"&gt;Legend Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1634123', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify5138669"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9317958', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify5404310"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size"&gt;Legend Text Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5138669', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5404310', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

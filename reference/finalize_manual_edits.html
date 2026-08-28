@@ -11,7 +11,7 @@ figure, immediately before returning it."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ figure, immediately before returning it."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -49,7 +50,7 @@ figure, immediately before returning it."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Render persistent manual plot layout edits across re-renders</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/plot_helpers.R" class="external-link"><code>R/plot_helpers.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_helpers.R" class="external-link"><code>R/plot_helpers.R</code></a></small>
       <div class="d-none name"><code>finalize_manual_edits.Rd</code></div>
     </div>
 
@@ -61,7 +62,13 @@ figure, immediately before returning it.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">finalize_manual_edits</span><span class="op">(</span><span class="va">fig</span>, <span class="va">plot_source</span>, <span class="va">store</span>, <span class="va">session</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">finalize_manual_edits</span><span class="op">(</span></span>
+<span>  <span class="va">fig</span>,</span>
+<span>  <span class="va">plot_source</span>,</span>
+<span>  <span class="va">store</span>,</span>
+<span>  <span class="va">session</span>,</span>
+<span>  regen_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -86,6 +93,15 @@ passed to <code><a href="setup_manual_edits.html">setup_manual_edits()</a></code
 <dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
 <dd><p>The module's <code>session</code> object, used to namespace the
 colorbar drag input.</p></dd>
+
+
+<dt id="arg-regen-keys">regen_keys<a class="anchor" aria-label="anchor" href="#arg-regen-keys"></a></dt>
+<dd><p>Character vector of annotation keys (e.g. <code>"axis:y"</code>) whose
+<code>text</code> is regenerated on every rebuild and must not be overwritten by a
+captured edit. Pass the axis side(s) carrying an active data adjustment so
+the freshly built label (e.g. <code>"log2(units)"</code>) always wins, while the
+captured position still persists. Defaults to none (all captured props are
+restored, the pre-existing behaviour).</p></dd>
 
 </dl></div>
     <div class="section level2">

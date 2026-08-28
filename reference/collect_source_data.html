@@ -11,7 +11,7 @@ generation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ generation."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -49,7 +50,7 @@ generation."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Collect plot and source data for download</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/plot_source_data.R" class="external-link"><code>R/plot_source_data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_source_data.R" class="external-link"><code>R/plot_source_data.R</code></a></small>
       <div class="d-none name"><code>collect_source_data.Rd</code></div>
     </div>
 
@@ -95,7 +96,8 @@ input data is included.</p></dd>
 <dd><p>The <code>plotly</code> plot object.</p></dd>
 
 <dt>plot_data</dt>
-<dd><p>A <code>data.frame</code> of the plot's underlying data.</p></dd>
+<dd><p>A <code>data.frame</code> of the plot's underlying data, limited to
+the columns and rows actually rendered (see Details).</p></dd>
 
 <dt>stats</dt>
 <dd><p>A <code>data.frame</code> of statistical test results, or <code>NULL</code>.</p></dd>
@@ -106,8 +108,22 @@ input data is included.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>plot_data</code> is scoped down from the plot's full source data.frame
+(as returned by <code><a href="https://rdrr.io/pkg/plotly/man/plotly_data.html" class="external-link">plotly::plotly_data()</a></code>) in two ways:</p><ul><li><p>Columns are limited to those actually mapped in the plot (x, y,
+color/fill, shape, size, labels/values, facets, etc.), detected by
+inspecting the built <code>plotly</code> figure's trace attributes and, for
+columns that don't survive conversion to <code>plotly</code> (namely
+<code>split.by</code>/<code>facet.by</code>), the UI input values.</p></li>
+<li><p>Rows are limited to those with complete data across the detected
+columns, since rows with <code>NA</code> in a plotted aesthetic are dropped by
+the underlying plotting functions.</p></li>
+</ul><p>If no plotted columns can be detected, the full source data.frame is
+returned unchanged.</p>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p>Jacob Martin</p>
+    <p>Jacob Martin, Jared Andrews</p>
     </div>
 
     <div class="section level2">

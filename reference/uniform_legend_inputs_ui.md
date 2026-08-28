@@ -33,25 +33,25 @@ Jared Andrews
 ``` r
 ns <- shiny::NS("plot1")
 uniform_legend_inputs_ui(ns)
-#> <div class="form-group shiny-input-container" id="tipify6229228">
+#> <div class="form-group shiny-input-container" id="tipify8150232">
 #>   <label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size">Legend Title Size</label>
 #>   <input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6229228', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify4607475">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8150232', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify3038334">
 #>   <label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size">Legend Text Size</label>
 #>   <input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4607475', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3038334', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
-#> <div class="form-group shiny-input-container" id="tipify1634123">
+#> <div class="form-group shiny-input-container" id="tipify9317958">
 #>   <label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size">Legend Title Size</label>
 #>   <input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1634123', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify5138669">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9317958', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify5404310">
 #>   <label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size">Legend Text Size</label>
 #>   <input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5138669', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5404310', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 ```

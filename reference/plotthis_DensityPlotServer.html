@@ -11,7 +11,7 @@ and the rendering of interactive Plotly density plots."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ and the rendering of interactive Plotly density plots."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -49,7 +50,7 @@ and the rendering of interactive Plotly density plots."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Density Plot Server Module</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/plotthis_DensityPlot_module_server.R" class="external-link"><code>R/plotthis_DensityPlot_module_server.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plotthis_DensityPlot_module_server.R" class="external-link"><code>R/plotthis_DensityPlot_module_server.R</code></a></small>
       <div class="d-none name"><code>plotthis_DensityPlotServer.Rd</code></div>
     </div>
 
@@ -79,7 +80,9 @@ and the rendering of interactive Plotly density plots.</p>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p><code>reactive</code> A reactive expression returning a data frame to be plotted.</p></dd>
+<dd><p><code>reactive</code> A reactive expression returning a data frame to be plotted.
+Values that are not data frames are coerced with <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>; a <code>NULL</code>
+value is treated as "not ready yet" and the module waits for data.</p></dd>
 
 
 <dt id="arg-hide-inputs">hide.inputs<a class="anchor" aria-label="anchor" href="#arg-hide-inputs"></a></dt>
@@ -93,7 +96,9 @@ and the rendering of interactive Plotly density plots.</p>
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
 <dd><p>A named list of default values for the inputs. When the reset button is
 clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-the same list passed to the corresponding UI function.</p></dd>
+the same list passed to the corresponding UI function. An entry may also be a
+<code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">shiny::reactive()</a></code> or <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">shiny::reactiveVal()</a></code>, in which case the input tracks it as the
+parent app's state changes; see <code><a href="setup_reactive_defaults.html">setup_reactive_defaults()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

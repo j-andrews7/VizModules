@@ -43,7 +43,8 @@ A named list with elements:
 
 - plot_data:
 
-  A `data.frame` of the plot's underlying data.
+  A `data.frame` of the plot's underlying data, limited to the columns
+  and rows actually rendered (see Details).
 
 - stats:
 
@@ -53,9 +54,29 @@ A named list with elements:
 
   A `data.frame` of UI input names and values, or `NULL`.
 
+## Details
+
+`plot_data` is scoped down from the plot's full source data.frame (as
+returned by
+[`plotly::plotly_data()`](https://rdrr.io/pkg/plotly/man/plotly_data.html))
+in two ways:
+
+- Columns are limited to those actually mapped in the plot (x, y,
+  color/fill, shape, size, labels/values, facets, etc.), detected by
+  inspecting the built `plotly` figure's trace attributes and, for
+  columns that don't survive conversion to `plotly` (namely
+  `split.by`/`facet.by`), the UI input values.
+
+- Rows are limited to those with complete data across the detected
+  columns, since rows with `NA` in a plotted aesthetic are dropped by
+  the underlying plotting functions.
+
+If no plotted columns can be detected, the full source data.frame is
+returned unchanged.
+
 ## Author
 
-Jacob Martin
+Jacob Martin, Jared Andrews
 
 ## Examples
 

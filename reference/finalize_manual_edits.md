@@ -9,7 +9,13 @@ on the freshly rebuilt figure, immediately before returning it.
 ## Usage
 
 ``` r
-finalize_manual_edits(fig, plot_source, store, session)
+finalize_manual_edits(
+  fig,
+  plot_source,
+  store,
+  session,
+  regen_keys = character(0)
+)
 ```
 
 ## Arguments
@@ -34,6 +40,15 @@ finalize_manual_edits(fig, plot_source, store, session)
 
   The module's `session` object, used to namespace the colorbar drag
   input.
+
+- regen_keys:
+
+  Character vector of annotation keys (e.g. `"axis:y"`) whose `text` is
+  regenerated on every rebuild and must not be overwritten by a captured
+  edit. Pass the axis side(s) carrying an active data adjustment so the
+  freshly built label (e.g. `"log2(units)"`) always wins, while the
+  captured position still persists. Defaults to none (all captured props
+  are restored, the pre-existing behaviour).
 
 ## Value
 

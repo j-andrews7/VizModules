@@ -13,7 +13,7 @@ for configuring and displaying an interactive dot plot."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ for configuring and displaying an interactive dot plot."></head><body>
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -51,7 +52,7 @@ for configuring and displaying an interactive dot plot."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create an example Modular DotPlot Shiny Application</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.3.0/R/plotthis_DotPlot_module_app.R" class="external-link"><code>R/plotthis_DotPlot_module_app.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plotthis_DotPlot_module_app.R" class="external-link"><code>R/plotthis_DotPlot_module_app.R</code></a></small>
       <div class="d-none name"><code>plotthis_DotPlotApp.Rd</code></div>
     </div>
 
@@ -82,7 +83,9 @@ for configuring and displaying an interactive dot plot.</p>
 
 
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
-<dd><p>A named list of input IDs and their default values to apply on startup.</p></dd>
+<dd><p>A named list of input IDs and their default values to apply on startup.
+An entry may also be a <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">shiny::reactive()</a></code> or <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">shiny::reactiveVal()</a></code> to have the input
+follow the parent app's state; see <code><a href="setup_reactive_defaults.html">setup_reactive_defaults()</a></code>.</p></dd>
 
 
 <dt id="arg-hide-inputs">hide.inputs<a class="anchor" aria-label="anchor" href="#arg-hide-inputs"></a></dt>
