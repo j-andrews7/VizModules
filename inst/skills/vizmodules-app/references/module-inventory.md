@@ -27,10 +27,16 @@ uniform across modules** — check the row before writing a key.
 | `piePlot` | native (`piePlot()`) | `labels` `values` | `slice.colors` | — |
 | `radarPlot` | native (`radarPlot()`) | `r` `theta` `group` | `trace.colors` | — |
 | `parallelCoordinatesPlot` | native | `dimensions` `color.by` | `palette.colours` | — |
-| `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `name` | `palette` (name) | — |
+| `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `row_annotations` `column_annotations` `column_key` | `low_color`/`mid_color`/`high_color` | — |
+| `dittoViz_freqPlot` | `dittoViz::freqPlot` | `var` `sample.by` `group.by` `color.by` | `palette.colours` | **yes** |
 
 `ComplexHeatmap_Heatmap` is the odd one out: its output is **not** plotly. It renders
-through `InteractiveComplexHeatmap`, so plotly-specific advice does not apply to it.
+through `InteractiveComplexHeatmap`, so plotly-specific advice does not apply to it. It's
+also the odd one out on colour — `low_color`/`mid_color`/`high_color` are plain scalar
+colour inputs for the value scale, not a `defaults` group-colour key like every other row's
+"Colour key" column means. `row_annotations`/`column_annotations` are `multiDynamicInput()`
+row lists (`column` + `side` per row), not simple vectors, and each row's own colour
+widget(s) are keyed dynamically off its row name rather than one stable `defaults` key.
 
 The colour key takes a **named character vector** mapping group level to colour, e.g.
 `defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red"))`. Unnamed
@@ -90,6 +96,4 @@ split bar → `example_bar`; dot → `example_markers`; radar → `example_skill
 
 ## Not yet wrapped
 
-`dittoViz::freqPlot`, `dittoViz::barPlot`, `dittoViz::ridgePlot`, and
-`dittoViz::scatterHexPlot` have no module. If a user asks for one, say so rather than
-inventing a function name.
+`dittoViz::barPlot`, and `dittoViz::scatterHexPlot` have no module. If a user asks for one, say so rather than inventing a function name.

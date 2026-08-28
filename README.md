@@ -181,6 +181,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 * `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, `nls`), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26]. 
 * `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps `dittoViz::yPlot`).
+* `dittoViz_freqPlot` - Box/jitter plots for discrete observation frequencies per sample/group (wraps `dittoViz::freqPlot`).
 
 ### `plotthis`
 
@@ -237,7 +238,6 @@ When using paired tests (Wilcoxon signed-rank or paired t-test), each group must
 
 * **scatterHex** - hexbin plots encoding density/frequency information along x/y coordinates.
 * **barPlot** - compositional barplots.
-* **freqPlot** - box/jitter plots for discrete observation frequencies per sample/group.
 
 [dittoViz](https://github.com/dtm2451/dittoViz) is under active development, so additional modules may be added as more visualization functions are added.
 
@@ -322,6 +322,10 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/DotPlot.png)
 
+[dittoViz_freqPlot:][31]
+
+[(Source Plotting Function)][22]
+
 [figureBuilder:][30]
 
 ![](man/figures/Figure_builder.png)
@@ -378,7 +382,7 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
 > - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
 >
-> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
+> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
 >
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
@@ -420,3 +424,4 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [29]: https://j-andrews7.github.io/VizModules/articles/statistical-testing.html
 
 [30]: https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html
+[31]: https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotApp.html

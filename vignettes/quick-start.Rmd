@@ -169,4 +169,4 @@ Modules wrap plotting functions from **dittoViz**, **plotthis**, and native plot
 1. Open the module input help page, e.g., `?dittoViz_scatterPlotInputsUI` or `?plotthis_AreaPlotInputsUI`. The **Details** section notes which arguments from the underlying plot function are wired through and any that are intentionally omitted.
 2. Cross-reference the base plot documentation (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.). Input names in `defaults` line up with those function arguments when they are supported.
 
-If an argument is listed as missing or non-functional in the module docs, it has been intentionally hidden because it does not round-trip well in the interactive Plotly output.
+If an argument is listed as missing or non-functional in the module docs, it has been intentionally hidden because it does not round-trip well in the interactive Plotly output or is simply unnecessary due to plotly functionality.
