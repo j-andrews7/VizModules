@@ -6,6 +6,7 @@
 \usage{
 ComplexHeatmap_HeatmapApp(
   data_list = NULL,
+  column_data = NULL,
   defaults = NULL,
   hide.inputs = NULL,
   hide.tabs = NULL
@@ -13,7 +14,17 @@ ComplexHeatmap_HeatmapApp(
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the
-default), \code{list("matrix" = example_matrix_df)} is used as example data.}
+default), \code{list("matrix" = example_heatmap_matrix)} is used as example data.
+Ignored (only its first element is used, as the matrix) when \code{column_data}
+is supplied — that path has no dataset picker/upload/filter UI.}
+
+\item{column_data}{An optional data frame of per-sample metadata, enabling
+column annotations (see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data}
+parameter for the expected shape — a key column matching the matrix's
+column names, plus arbitrary annotation columns). When supplied, the app
+is a minimal single-dataset \code{shinyApp()} (no Data Import/Data Table
+sections) wiring \verb{data = list(matrix = <first element of data_list, or example_heatmap_matrix>, column_annotations = column_data)} directly into
+the module.}
 
 \item{defaults}{A named list of input IDs and their default values to apply on startup.
 An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to have the input
@@ -37,7 +48,8 @@ uploading data, a \strong{Data Table} for filtering the active dataset, and a
 }
 \details{
 When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_matrix_df} (a column-scaled \code{mtcars}) as an example dataset. Uploaded
+\code{example_heatmap_matrix} (a simulated gene x sample expression matrix) as an
+example dataset. Uploaded
 data files are added to the available datasets and can be selected for
 plotting. If an uploaded file shares a name with an existing dataset, the
 existing one is overwritten with a warning.
@@ -46,13 +58,21 @@ Unlike the other modules, this one depends on the Bioconductor packages
 \pkg{ComplexHeatmap}, \pkg{InteractiveComplexHeatmap}, and \pkg{circlize},
 which must be installed (e.g. via \code{BiocManager::install()}).
 
-This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}} — \emph{except} when
+\code{column_data} is supplied (see below), which needs a small bespoke app
+instead, since \code{\link[=createModuleApp]{createModuleApp()}} always hands the module server a single
+data frame and can't carry the two-table \code{list(matrix = , column_annotations = )} shape the module's column-annotation feature needs
+(see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data} parameter).
 }
 \examples{
 library(VizModules)
-# Launch with default example data:
+# Launch with default example data (row annotations only):
 app <- ComplexHeatmap_HeatmapApp()
 if (interactive()) shiny::runApp(app)
+
+# Launch with column annotations too:
+app2 <- ComplexHeatmap_HeatmapApp(column_data = example_heatmap_column_data)
+if (interactive()) shiny::runApp(app2)
 }
 \seealso{
 \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}}, \code{\link[=ComplexHeatmap_HeatmapInputsUI]{ComplexHeatmap_HeatmapInputsUI()}},

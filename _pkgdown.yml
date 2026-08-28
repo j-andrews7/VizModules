@@ -293,7 +293,8 @@ reference:
       - example_demographics
       - example_iris
       - example_markers
-      - example_matrix_df
+      - example_heatmap_matrix
+      - example_heatmap_column_data
       - example_mtcars
       - example_population
       - example_rnaseq

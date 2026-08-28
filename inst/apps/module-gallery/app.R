@@ -62,7 +62,7 @@ module_data <- list(
     dotplot  = example_markers,
     dumbbell = example_school_earnings,
     freq     = example_composition,
-    heatmap  = example_matrix_df,
+    heatmap  = example_heatmap_matrix,
     histogram = example_demographics,
     line     = example_sales,
     parallel = example_sales,
@@ -231,7 +231,11 @@ if (heatmap_available) {
             inputs_ui = ComplexHeatmap_HeatmapInputsUI,
             output_ui = ComplexHeatmap_HeatmapOutputUI,
             server_fn = ComplexHeatmap_HeatmapServer,
-            defaults  = list("rowname.col" = "sample")
+            defaults  = list(
+                "rowname.col" = "gene",
+                "matrix.cols" = setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression"))
+            ),
+            column_data = example_heatmap_column_data
         )
     ))
 }
@@ -435,19 +439,34 @@ server <- function(input, output, session) {
             active_data
         )
 
+        # Modules that carry a `column_data` table (currently just the
+        # ComplexHeatmap module) get their (still-filtered) data wrapped into
+        # list(matrix = , column_annotations = ) so column annotations can be
+        # demonstrated; every other module is unaffected.
+        server_data <- if (!is.null(m$column_data)) {
+            reactive(list(matrix = filtered_data(), column_annotations = m$column_data))
+        } else {
+            filtered_data
+        }
+
         # Inputs UI rendered once on load with pre-selected data columns.
         # Only data-column defaults are passed; all other inputs use their
         # built-in defaults.
         output[[paste0(m$id, "_inputs_ui")]] <- renderUI({
+            ui_data <- if (!is.null(m$column_data)) {
+                list(matrix = active_data(), column_annotations = m$column_data)
+            } else {
+                active_data()
+            }
             m$inputs_ui(
                 m$id,
-                active_data(),
+                ui_data,
                 defaults = m$defaults,
                 title    = h3(paste(m$label, "Settings"))
             )
         })
 
-        m$server_fn(m$id, data = filtered_data)
+        m$server_fn(m$id, data = server_data)
     })
 
     # Figure Builder: uses its own bundled dataset catalogue and module

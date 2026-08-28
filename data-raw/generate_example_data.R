@@ -272,6 +272,76 @@ example_composition <- data.frame(
     stringsAsFactors = FALSE
 )
 
+# Gene-expression-style data for the ComplexHeatmap module: an observations
+# (genes, rows) x samples (columns) matrix, shaped the way heatmap input
+# typically is, with unscaled log2-CPM-like values (not pre-z-scored, since the
+# module's own row/column scaling control needs real signal to demonstrate on).
+# `example_heatmap_matrix` carries two row-annotation columns (`pathway`
+# categorical, `mean_expression` numeric); the companion
+# `example_heatmap_column_data` is a per-sample metadata table (keyed by
+# `sample`) for demonstrating column annotations.
+# 3 pathways x 10 genes = 30 genes; 2 conditions x 2 batches x 3 reps = 12 samples.
+heatmap_pathways <- list(
+    "Immune" = c("CD3D", "CD3E", "CD8A", "IL7R", "CD4", "GZMB", "PRF1", "IFNG", "TNF", "IL2RA"),
+    "Metabolic" = c("PCK1", "G6PC", "PFKL", "ALDOA", "LDHA", "HK2", "PGK1", "ENO1", "GAPDH", "PKM"),
+    "Cell Cycle" = c("MKI67", "CCNB1", "CCNE1", "CDK1", "CDK2", "PCNA", "TOP2A", "BUB1", "AURKA", "PLK1")
+)
+heatmap_genes <- unlist(heatmap_pathways, use.names = FALSE)
+heatmap_gene_pathway <- rep(names(heatmap_pathways), each = 10)
+n_heatmap_genes <- length(heatmap_genes)
+
+heatmap_samples <- c(paste0("Healthy_", 1:6), paste0("Disease_", 1:6))
+heatmap_condition <- rep(c("Healthy", "Disease"), each = 6)
+heatmap_batch <- rep(rep(c("B1", "B2"), each = 3), times = 2)
+
+# Metabolic (housekeeping-like) genes run broadly high in every sample; Immune
+# and Cell Cycle genes start lower so the Disease boost below is visible
+# against them.
+heatmap_baseline <- ifelse(heatmap_gene_pathway == "Metabolic",
+    stats::runif(n_heatmap_genes, 6, 8),
+    stats::runif(n_heatmap_genes, 2, 4)
+)
+
+# Disease boosts Immune genes (activation) and Cell Cycle genes (proliferation);
+# Metabolic genes are left flat, so the three pathways move independently
+# rather than as one block, giving clustering/splitting/scaling something real
+# to recover.
+heatmap_expr <- vapply(seq_along(heatmap_samples), function(j) {
+    boost <- if (heatmap_condition[j] == "Disease") {
+        ifelse(heatmap_gene_pathway == "Immune", stats::rnorm(n_heatmap_genes, 1.6, 0.3),
+            ifelse(heatmap_gene_pathway == "Cell Cycle", stats::rnorm(n_heatmap_genes, 1.1, 0.3), 0)
+        )
+    } else {
+        0
+    }
+    noise <- stats::rnorm(n_heatmap_genes, 0, 0.4)
+    pmax(heatmap_baseline + boost + noise, 0)
+}, numeric(n_heatmap_genes))
+colnames(heatmap_expr) <- heatmap_samples
+heatmap_expr <- round(heatmap_expr, 2)
+
+example_heatmap_matrix <- data.frame(
+    gene = heatmap_genes,
+    pathway = factor(heatmap_gene_pathway, levels = names(heatmap_pathways)),
+    mean_expression = round(rowMeans(heatmap_expr), 2),
+    heatmap_expr,
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+)
+
+example_heatmap_column_data <- data.frame(
+    sample = factor(heatmap_samples, levels = heatmap_samples),
+    condition = factor(heatmap_condition, levels = c("Healthy", "Disease")),
+    batch = factor(heatmap_batch, levels = c("B1", "B2")),
+    library_size = round(stats::rnorm(length(heatmap_samples), mean = 5e6, sd = 6e5)),
+    stringsAsFactors = FALSE
+)
+
+# internal = FALSE (the default) saves one .rda per object under data/, which
+# is what every example_* dataset actually ships as (LazyData: true in
+# DESCRIPTION makes them directly accessible, no NAMESPACE export needed).
+# internal = TRUE would instead bundle everything into a single R/sysdata.rda
+# and stop these from being public datasets at all -- do not set it.
 usethis::use_data(
     example_iris, example_mtcars,
     example_bar, example_school_earnings,
@@ -279,5 +349,6 @@ usethis::use_data(
     example_sales, example_population, example_demographics,
     example_markers, example_rnaseq,
     example_composition,
-    internal = TRUE, overwrite = TRUE
+    example_heatmap_matrix, example_heatmap_column_data,
+    overwrite = TRUE
 )

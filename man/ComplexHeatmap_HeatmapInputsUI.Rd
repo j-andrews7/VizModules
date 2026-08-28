@@ -15,7 +15,12 @@ ComplexHeatmap_HeatmapInputsUI(
 \arguments{
 \item{id}{The ID for the Shiny module.}
 
-\item{data}{The data frame used for plot generation.}
+\item{data}{The data frame used for plot generation, \emph{or} a list with a
+\code{matrix} data frame (required) and a \code{column_annotations} data frame
+(optional) — see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data} parameter for
+details. Row-annotation choices come from \code{matrix}'s columns;
+column-annotation choices (and the "Column Annotations" tab controls) only
+appear when \code{column_annotations} is supplied.}
 
 \item{defaults}{A named list of default values for the inputs. An entry may also be a
 \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
@@ -54,9 +59,18 @@ default: all numeric columns)
 \item \code{rowname.col} - Column used as row names (UI: "Row Name Column", default: "")
 \item \code{name} - Heatmap / legend title (UI: "Heatmap Name", default: "value")
 \item \code{na_col} - Color for \code{NA} cells (UI: "NA Color", default: "grey")
-\item \code{palette} - Continuous color scheme (UI: "Color Scheme", default: "Blue-White-Red")
+\item \code{scale} - Z-score the matrix by row, column, or not at all (UI: "Scale", default:
+"None"). Applied before plotting only — row/column annotation values and the
+source-data download always use the unscaled matrix.
 \item \code{reverse.palette} - Reverse the palette (UI: "Reverse Palette", default: FALSE)
+\item \code{low_color}, \code{mid_color}, \code{high_color} - Colors for the low/mid/high end of the value
+scale, i.e. what \code{col} in \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}} is built from via
+\code{\link[circlize:colorRamp2]{circlize::colorRamp2()}} (UI: "Low/Mid/High Color", default: blue/white/red)
+\item \code{min_value}, \code{mid_value}, \code{max_value} - Values mapped to \code{low_color}/\code{mid_color}/\code{high_color}
+(UI: "Min/Mid/Max Value", default: NA = derived from the matrix: min, \code{mean(range(mat))},
+and max respectively)
 \item \code{show_heatmap_legend} - Show the heatmap legend (UI: "Show Legend", default: TRUE)
+\item \code{border} - Draw heatmap border (UI: "Border", default: FALSE)
 \item \code{cluster_rows} - Cluster rows (UI: "Cluster Rows", default: TRUE)
 \item \code{cluster_columns} - Cluster columns (UI: "Cluster Columns", default: TRUE)
 \item \code{clustering_distance_rows} - Row distance metric (UI: "Row Distance", default: "euclidean")
@@ -65,8 +79,18 @@ default: all numeric columns)
 \item \code{clustering_method_columns} - Column linkage method (UI: "Column Method", default: "complete")
 \item \code{show_row_dend} - Show row dendrogram (UI: "Show Row Dendrogram", default: TRUE)
 \item \code{show_column_dend} - Show column dendrogram (UI: "Show Column Dendrogram", default: TRUE)
-\item \code{row_km} - k-means row split (UI: "Row k-means", default: 1)
-\item \code{column_km} - k-means column split (UI: "Column k-means", default: 1)
+\item \code{row_split_by} - Row split method: "None", "K-means", or "Hierarchical" (UI: "Row Split
+Method", default: "None"). Only one split mechanism is ever active per axis, which avoids the
+error \code{ComplexHeatmap::Heatmap()} raises when both a k-means and a hierarchical split are
+requested at once.
+\item \code{row_split_n} - Number of row groups, used when \code{row_split_by} is not "None" (UI: "Row
+Groups", default: NA; clamped to the number of matrix rows)
+\item \code{column_split_by} - Column split method: "None", "K-means", or "Hierarchical" (UI: "Column
+Split Method", default: "None")
+\item \code{column_split_n} - Number of column groups, used when \code{column_split_by} is not "None" (UI:
+"Column Groups", default: NA; clamped to the number of matrix columns)
+\item \code{row_gap} - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
+\item \code{column_gap} - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 \item \code{row_title} - Row title (UI: "Row Title", default: "")
 \item \code{column_title} - Column title (UI: "Column Title", default: "")
 \item \code{show_row_names} - Show row names (UI: "Show Row Names", default: TRUE)
@@ -77,11 +101,20 @@ default: all numeric columns)
 \item \code{row_names_fontsize} - Row name font size (UI: "Row Name Size", default: 12)
 \item \code{column_names_fontsize} - Column name font size (UI: "Column Name Size", default: 12)
 \item \code{title_fontsize} - Row/column title font size (UI: "Title Size", default: 13.2)
-\item \code{border} - Draw heatmap border (UI: "Border", default: FALSE)
-\item \code{row_split} - Number of row slices (UI: "Row Split", default: NA)
-\item \code{column_split} - Number of column slices (UI: "Column Split", default: NA)
-\item \code{row_gap} - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
-\item \code{column_gap} - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
+\item \code{row_annotations} - Row annotation tracks, built as \code{\link[ComplexHeatmap:rowAnnotation]{ComplexHeatmap::rowAnnotation()}} and
+passed as \code{left_annotation}/\code{right_annotation} per row (UI: "Annotations" tab, "Row
+Annotations" \code{\link[=multiDynamicInput]{multiDynamicInput()}} — each row picks a \code{matrix} column and a side, Left or
+Right; default: none). Each row's color control appears just below the list once a column is
+picked: numeric columns get Low/Mid/High color pickers, everything else gets a
+\code{\link[=multiColorPicker]{multiColorPicker()}} with one color per level.
+\item \code{column_key} - Column in \code{column_annotations} matched against the matrix's selected
+column names (UI: "Annotations" tab, "Column Key"; only shown when \code{data} supplies a
+\code{column_annotations} table)
+\item \code{column_annotations} - Column annotation tracks, built as
+\code{\link[ComplexHeatmap:columnAnnotation]{ComplexHeatmap::columnAnnotation()}} and passed as \code{top_annotation}/\code{bottom_annotation} per
+row (UI: "Annotations" tab, "Column Annotations" \code{\link[=multiDynamicInput]{multiDynamicInput()}} — each row picks a
+column and a side, Top or Bottom, with the same per-row color controls as row annotations;
+only shown when \code{data} supplies a \code{column_annotations} table; default: none)
 }
 }
 
@@ -90,16 +123,14 @@ default: all numeric columns)
 The following \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}} parameters are not exposed because
 they require R code, objects, or annotations that do not map cleanly to UI
 inputs: \code{cell_fun}, \code{layer_fun}, \code{post_fun}, \code{rect_gp}, \code{border_gp},
-\code{top_annotation}, \code{bottom_annotation}, \code{left_annotation}, \code{right_annotation},
-custom \code{col} mapping functions (beyond the palette selector), \code{row_order} /
-\code{column_order}, \code{row_labels} / \code{column_labels}, \code{jitter}, and all
-rasterization parameters (\code{use_raster}, \verb{raster_*}). Annotation support may be
-added in a future release.
+custom \code{col} mapping functions for the annotation tracks (beyond the Low/Mid/High colors and
+\code{multiColorPicker}), \code{row_order} / \code{column_order}, \code{row_labels} / \code{column_labels},
+\code{jitter}, and all rasterization parameters (\code{use_raster}, \verb{raster_*}).
 }
 
 \examples{
 library(VizModules)
-ComplexHeatmap_HeatmapInputsUI("heatmap", example_matrix_df)
+ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 }
 \seealso{
 \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}}, \code{\link[=organize_inputs]{organize_inputs()}},

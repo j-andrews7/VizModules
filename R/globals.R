@@ -9,6 +9,7 @@ utils::globalVariables(c(
     "example_mtcars",
     "example_population",
     "example_rnaseq",
-    "example_matrix_df",
+    "example_heatmap_matrix",
+    "example_heatmap_column_data",
     "example_composition"
 ))

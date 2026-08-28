@@ -15,9 +15,13 @@ ComplexHeatmap_HeatmapServer(
 \arguments{
 \item{id}{The ID for the Shiny module.}
 
-\item{data}{A \code{reactive} containing the data frame to plot. Values that are not
-data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL} value is treated as
-"not ready yet" and the module waits for data.}
+\item{data}{A \code{reactive} yielding either a data frame (the matrix's columns
+plus any row-annotation columns, all together — the original, single-table
+behavior) or \verb{list(matrix = <data.frame>, column_annotations = <data.frame>)} to additionally enable column annotations, where
+\code{column_annotations} is a per-sample metadata table keyed by a column
+matching the matrix's selected column names (see the "Column Key" input).
+A \code{NULL} value (or a list missing \code{matrix}) is treated as "not ready yet"
+and the module waits for data.}
 
 \item{hide.inputs}{A character vector of input IDs to hide. These will still
 be initialized and their values used, but the user will not be able to
@@ -41,7 +45,11 @@ Server logic for the ComplexHeatmap module
 }
 \details{
 The incoming data frame is converted to a numeric matrix using the
-selected matrix columns (and optional row-name column). The heatmap is built
+selected matrix columns (and optional row-name column). Row/column
+annotation tracks configured on the "Annotations" tab are built as
+\code{\link[ComplexHeatmap:rowAnnotation]{ComplexHeatmap::rowAnnotation()}}/\code{\link[ComplexHeatmap:columnAnnotation]{ComplexHeatmap::columnAnnotation()}} (one
+per side) and passed as \code{left_annotation}/\code{right_annotation}/
+\code{top_annotation}/\code{bottom_annotation}. The heatmap is built
 with \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}} and registered for interactivity with
 \code{\link[InteractiveComplexHeatmap:makeInteractiveComplexHeatmap]{InteractiveComplexHeatmap::makeInteractiveComplexHeatmap()}}, which draws it
 onto its own device to capture the interactive widget.

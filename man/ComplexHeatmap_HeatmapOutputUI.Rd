@@ -4,7 +4,7 @@
 \alias{ComplexHeatmap_HeatmapOutputUI}
 \title{Output UI components for the ComplexHeatmap module}
 \usage{
-ComplexHeatmap_HeatmapOutputUI(id, resizable = TRUE)
+ComplexHeatmap_HeatmapOutputUI(id, resizable = TRUE, ...)
 }
 \arguments{
 \item{id}{The ID for the Shiny module.}
@@ -12,6 +12,10 @@ ComplexHeatmap_HeatmapOutputUI(id, resizable = TRUE)
 \item{resizable}{Logical; accepted for signature parity with the other module
 output functions but ignored, since the InteractiveComplexHeatmap widget
 manages its own sizing.}
+
+\item{...}{Additional arguments passed to
+\code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}}, e.g.
+\code{layout}, \code{compact}, \code{width1}/\code{height1}, \code{title1}/\code{title2}/\code{title3}.}
 }
 \value{
 A Shiny UI object for the interactive heatmap.
@@ -22,8 +26,28 @@ plotly modules, the interactive output is provided by
 \code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}}, which supplies
 its own resize and export controls.
 }
+\details{
+This renders the original heatmap, the selected sub-heatmap, and the
+click/brush info panel together as one widget, arranged per \code{layout} (see
+\code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}} for the
+available layout strings, e.g. \code{"(1-2)|3"}, \code{"1|(2-3)"}, \code{"1-2-3"}). To place
+the three components independently anywhere in a custom UI (separate tabs,
+cards, columns, etc.), use \code{\link[=ComplexHeatmap_HeatmapMainOutputUI]{ComplexHeatmap_HeatmapMainOutputUI()}},
+\code{\link[=ComplexHeatmap_HeatmapSubOutputUI]{ComplexHeatmap_HeatmapSubOutputUI()}}, and \code{\link[=ComplexHeatmap_HeatmapInfoOutputUI]{ComplexHeatmap_HeatmapInfoOutputUI()}}
+instead of this function — use one approach or the other, not both, for the
+same module \code{id}.
+}
+\examples{
+library(VizModules)
+# Default combined widget:
+ComplexHeatmap_HeatmapOutputUI("heatmap")
+# Same widget, main heatmap on its own row above sub-heatmap + info:
+ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
+}
 \seealso{
-\code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}}
+\code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}},
+\code{\link[=ComplexHeatmap_HeatmapMainOutputUI]{ComplexHeatmap_HeatmapMainOutputUI()}}, \code{\link[=ComplexHeatmap_HeatmapSubOutputUI]{ComplexHeatmap_HeatmapSubOutputUI()}},
+\code{\link[=ComplexHeatmap_HeatmapInfoOutputUI]{ComplexHeatmap_HeatmapInfoOutputUI()}}
 }
 \author{
 Jacob Martin

@@ -1,20 +1,14 @@
 # VizModules 0.4.0.9000
 
-Many of the changes with this release were aimed at improving initialization of specific module states and reducing unnecessary re-rendering of plots for more seamless and performant use. 
-Several of these changes are invisible to end users.
-Reactive values can now be used in the `defaults` argument, so a parent app can drive a module parameter from its own state without triggering a double render.
-Several new parameters for the `dittoViz_yPlot` module were added, including the ability to select several Y variables at once and control how they are displayed.
-The `ComplexHeatmap` module was added, which wraps [ComplexHeatmap::Heatmap()] and uses the `InteractiveComplexHeatmap` package for interactive output.
-A new set of agent skills was added to the package, which can be installed into a project with the new exported `use_vizmodules_skills()` function.
-
 ## New Modules
 
 * Added a `freqPlot` module (`dittoViz_freqPlotInputsUI()`, `dittoViz_freqPlotOutputUI()`, `dittoViz_freqPlotServer()`, `dittoViz_freqPlotApp()`) wrapping [dittoViz::freqPlot()], for comparing the per-sample composition of a categorical variable across groups. Unlike the other modules it does not plot columns of the incoming data, it tabulates how often each level of the chosen variable occurs within each sample and plots those frequencies, one facet per level. The axis limits, statistics, point annotations and source download therefore all describe that summarised frequency table rather than the input rows.
-  * The frequencies are per-sample, so the sample column has to nest inside the grouping (each sample carrying exactly one group and color value) or `freqPlot()` errors. "Group By" and "Color By" are chosen freely and "Sample" is narrowed to the columns that nest inside them, making an erroring combination unselectable.
-  * The Stats tab compares the per-sample frequencies between x-axis groups. Tests always run within a facet, since the frequencies of two different levels are not comparable quantities, so the "Per Facet Panel" control is hidden and forced on.
   * Comes with a new `example_composition` demo dataset containing 1800 simulated single-cell records over twelve donors nested inside two conditions (and crossed with two batches).
 
-* Added a `ComplexHeatmap` module (`ComplexHeatmap_HeatmapInputsUI()`, `ComplexHeatmap_HeatmapOutputUI()`, `ComplexHeatmap_HeatmapServer()`, `ComplexHeatmap_HeatmapApp()`) wrapping [ComplexHeatmap::Heatmap()]. Unlike the other plotly-based modules, its interactive output is delivered via the `InteractiveComplexHeatmap` package (sub-heatmap zoom, cell hover/click/select). The incoming data frame is converted to a numeric matrix (user-selected columns, with an optional row-name column), and a curated subset of `Heatmap()` parameters (colors, clustering, labels, splitting) is exposed via UI inputs. Ships a new `example_matrix_df` demo dataset (column-scaled `mtcars`).
+* Added a `ComplexHeatmap` module (`ComplexHeatmap_HeatmapInputsUI()`, `ComplexHeatmap_HeatmapOutputUI()`, `ComplexHeatmap_HeatmapServer()`, `ComplexHeatmap_HeatmapApp()`) wrapping [ComplexHeatmap::Heatmap()]. Unlike the other plotly-based modules, its interactive output is delivered via the `InteractiveComplexHeatmap` package (sub-heatmap zoom, cell hover/click/select). The incoming data frame is converted to a numeric matrix (user-selected columns, with an optional row-name column), and a curated subset of `Heatmap()` parameters is exposed via UI inputs.
+  * Row and column annotation tracks can be added on the "Annotations" tab dynamically. Row annotations come from extra columns in the input data frame; column annotations need a companion per-sample metadata table, supplied via `data = list(matrix = <data.frame>, column_annotations = <data.frame>)` instead of a plain data frame.
+  * The interactive output can be split into independently-placed pieces — `ComplexHeatmap_HeatmapMainOutputUI()`, `ComplexHeatmap_HeatmapSubOutputUI()`, `ComplexHeatmap_HeatmapInfoOutputUI()` — for apps that want the main heatmap, sub-heatmap, and click/brush info panel in separate layout locations. `ComplexHeatmap_HeatmapOutputUI()` also has a `...` passthrough for `InteractiveComplexHeatmapOutput()`'s `layout` and other arguments.
+  * Comes with a new `example_heatmap_matrix` (30 genes x 12 samples, with row-annotation columns) and `example_heatmap_column_data` (companion per-sample metadata, for column annotations) demo datasets.
 
 ## Improved/New Functionality
 

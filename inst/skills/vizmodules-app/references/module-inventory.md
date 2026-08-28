@@ -49,7 +49,7 @@ groups fall back to the stock palette; the user can still edit every colour.
 | `piePlot` | Data, Aesthetics, Labels, Plotly |
 | `parallelCoordinatesPlot` | Data, Aesthetics, Labels, Title, Plotly |
 | `radarPlot` | Data, Aesthetics, Axes, Plotly (plus per-trace styling tabs) |
-| `ComplexHeatmap_Heatmap` | Matrix, Colors, Clustering, Labels, Body |
+| `ComplexHeatmap_Heatmap` | Matrix, Colors, Clustering, Labels, Annotations |
 
 ## Shared tab input keys
 
@@ -65,19 +65,28 @@ the same keys in every module. Full lists are on their help pages —
 
 ## Bundled example datasets
 
-`example_bar`, `example_demographics`, `example_iris`, `example_markers`,
-`example_matrix_df`, `example_mtcars`, `example_population`, `example_rnaseq`,
-`example_sales`, `example_school_earnings`, `example_skills`.
+`example_bar`, `example_demographics`, `example_heatmap_column_data`,
+`example_heatmap_matrix`, `example_iris`, `example_markers`, `example_mtcars`,
+`example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`,
+`example_skills`.
 
 `example_rnaseq` (288 x 7) is the richest for grouped comparisons:
 `cell_type` (factor: CD4 T, CD8 T, B Cell, NK Cell, Monocyte, pDC), `gene` (factor),
 `condition` (factor: Healthy, Disease), `replicate` (factor: Rep1-3), `log2_cpm`
 (numeric), `avg_expression` (numeric), `neg_log10_pval` (numeric).
 
+`example_heatmap_matrix` (30 x 15) is genes (rows) x samples (columns), shaped for
+`ComplexHeatmap_Heatmap`: `gene` (id), `pathway` (factor row annotation), `mean_expression`
+(numeric row annotation), plus 12 sample columns (`Healthy_1..6`, `Disease_1..6`).
+`example_heatmap_column_data` (12 x 4) is its companion sample-metadata table
+(`sample`, `condition`, `batch`, `library_size`) for demonstrating column annotations —
+pass both together as `data = list(matrix = example_heatmap_matrix, column_annotations =
+example_heatmap_column_data)`.
+
 Each `*App()` opens on a dataset chosen to suit it: scatter/line/area/pie/parallel →
 `example_sales`; yPlot/box/violin/density/histogram → `example_demographics`; bar and
 split bar → `example_bar`; dot → `example_markers`; radar → `example_skills`; dumbbell →
-`example_school_earnings`; heatmap → `example_matrix_df`.
+`example_school_earnings`; heatmap → `example_heatmap_matrix`.
 
 ## Not yet wrapped
 
