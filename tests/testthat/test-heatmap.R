@@ -284,3 +284,14 @@ test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes", {
     expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", df))
     expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", list(matrix = df, column_annotations = col_df)))
 })
+
+test_that("ComplexHeatmap_HeatmapOutputUI passes compact through to the underlying widget", {
+    skip_if_not_installed("InteractiveComplexHeatmap")
+
+    expect_no_error(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE))
+    expect_no_error(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE, layout = "1|(2-3)"))
+
+    html <- as.character(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE))
+    # Compact mode floats the info panel rather than giving it a static area.
+    expect_true(grepl("float", html, ignore.case = TRUE))
+})

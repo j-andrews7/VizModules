@@ -79,5 +79,5 @@ if (interactive()) shiny::runApp(app2)
 \code{\link[=ComplexHeatmap_HeatmapOutputUI]{ComplexHeatmap_HeatmapOutputUI()}}, \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

@@ -30,12 +30,25 @@ its own resize and export controls.
 This renders the original heatmap, the selected sub-heatmap, and the
 click/brush info panel together as one widget, arranged per \code{layout} (see
 \code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}} for the
-available layout strings, e.g. \code{"(1-2)|3"}, \code{"1|(2-3)"}, \code{"1-2-3"}). To place
-the three components independently anywhere in a custom UI (separate tabs,
-cards, columns, etc.), use \code{\link[=ComplexHeatmap_HeatmapMainOutputUI]{ComplexHeatmap_HeatmapMainOutputUI()}},
+available layout strings, e.g. \code{"(1-2)|3"}, \code{"1|(2-3)"}, \code{"1-2-3"}).
+
+Pass \code{compact = TRUE} for a smaller footprint (see the
+\href{https://jokergoo.github.io/InteractiveComplexHeatmap/articles/shiny_dev.html#compact-mode}{"Compact
+mode" article section}): the sub-heatmap panel is dropped entirely and the
+click/brush info floats near the cursor instead of occupying its own static
+area — equivalent to \verb{response = c(action, "brush-output"), output_ui_float = TRUE}, per \code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}}'s
+own docs. \code{layout} has nothing left to arrange in compact mode, since only
+one static panel remains. No server-side change is needed to turn compact
+mode on or off.
+
+To place the three components independently anywhere in a custom UI
+(separate tabs, cards, columns, etc.), use \code{\link[=ComplexHeatmap_HeatmapMainOutputUI]{ComplexHeatmap_HeatmapMainOutputUI()}},
 \code{\link[=ComplexHeatmap_HeatmapSubOutputUI]{ComplexHeatmap_HeatmapSubOutputUI()}}, and \code{\link[=ComplexHeatmap_HeatmapInfoOutputUI]{ComplexHeatmap_HeatmapInfoOutputUI()}}
-instead of this function — use one approach or the other, not both, for the
-same module \code{id}.
+instead of this function. Use one approach or the other, not both, for the
+same module \code{id}. Compact mode is specific to this combined widget: the
+separated pieces (\code{originalHeatmapOutput()}, \code{subHeatmapOutput()},
+\code{HeatmapInfoOutput()}, which back the three functions above) don't accept a
+\code{compact} argument at all.
 }
 \examples{
 library(VizModules)
@@ -43,6 +56,8 @@ library(VizModules)
 ComplexHeatmap_HeatmapOutputUI("heatmap")
 # Same widget, main heatmap on its own row above sub-heatmap + info:
 ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
+# Compact: no sub-heatmap panel, click/brush info floats near the cursor
+ComplexHeatmap_HeatmapOutputUI("heatmap", compact = TRUE)
 }
 \seealso{
 \code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}},
@@ -50,5 +65,5 @@ ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
 \code{\link[=ComplexHeatmap_HeatmapInfoOutputUI]{ComplexHeatmap_HeatmapInfoOutputUI()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

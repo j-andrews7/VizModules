@@ -138,5 +138,5 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}, \code{\link[=ComplexHeatmap_HeatmapApp]{ComplexHeatmap_HeatmapApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }

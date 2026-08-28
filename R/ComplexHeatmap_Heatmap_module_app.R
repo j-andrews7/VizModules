@@ -110,7 +110,7 @@ ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defa
                     )
                 ),
                 mainPanel(
-                    ComplexHeatmap_HeatmapOutputUI("active_plot")
+                    ComplexHeatmap_HeatmapOutputUI("active_plot", compact = TRUE)
                 )
             )
         )

@@ -202,27 +202,27 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             ), "Z-score the matrix by row or column before plotting (a constant row/column becomes 0)", placement = "top", options = tip_opts)
         ),
         "Colors" = tagList(
-            tipify(checkboxInput(ns("reverse.palette"), "Reverse Palette",
-                value = get_default(defaults, "reverse.palette", FALSE, is.logical)
-            ), "Reverse the direction of the color scheme", placement = "top", options = tip_opts),
             tipify(colourInput(ns("low_color"), "Low Color",
                 value = get_default(defaults, "low_color", .heatmap_default_colors()[1])
             ), "Color for the lowest (or Min Value) end of the scale", placement = "top", options = tip_opts),
-            tipify(colourInput(ns("mid_color"), "Mid Color",
-                value = get_default(defaults, "mid_color", .heatmap_default_colors()[2])
-            ), "Color for the midpoint of the scale", placement = "top", options = tip_opts),
-            tipify(colourInput(ns("high_color"), "High Color",
-                value = get_default(defaults, "high_color", .heatmap_default_colors()[3])
-            ), "Color for the highest (or Max Value) end of the scale", placement = "top", options = tip_opts),
             tipify(numericInput(ns("min_value"), "Min Value",
                 value = get_default(defaults, "min_value", NA, is.numeric)
             ), "Value mapped to the Low Color (blank = the matrix minimum)", placement = "top", options = tip_opts),
+            tipify(colourInput(ns("mid_color"), "Mid Color",
+                value = get_default(defaults, "mid_color", .heatmap_default_colors()[2])
+            ), "Color for the midpoint of the scale", placement = "top", options = tip_opts),
             tipify(numericInput(ns("mid_value"), "Mid Value",
                 value = get_default(defaults, "mid_value", NA, is.numeric)
             ), "Value mapped to the Mid Color (blank = the midpoint between Min and Max Value; set to 0 to center a z-scored matrix)", placement = "top", options = tip_opts),
+            tipify(colourInput(ns("high_color"), "High Color",
+                value = get_default(defaults, "high_color", .heatmap_default_colors()[3])
+            ), "Color for the highest (or Max Value) end of the scale", placement = "top", options = tip_opts),
             tipify(numericInput(ns("max_value"), "Max Value",
                 value = get_default(defaults, "max_value", NA, is.numeric)
             ), "Value mapped to the High Color (blank = the matrix maximum)", placement = "top", options = tip_opts),
+            tipify(checkboxInput(ns("reverse.palette"), "Reverse Palette",
+                value = get_default(defaults, "reverse.palette", FALSE, is.logical)
+            ), "Reverse the direction of the color scheme", placement = "top", options = tip_opts),
             tipify(checkboxInput(ns("show_heatmap_legend"), "Show Legend",
                 value = get_default(defaults, "show_heatmap_legend", TRUE, is.logical)
             ), "Show the heatmap color legend", placement = "top", options = tip_opts),
@@ -417,12 +417,26 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
 #' This renders the original heatmap, the selected sub-heatmap, and the
 #' click/brush info panel together as one widget, arranged per `layout` (see
 #' [InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()] for the
-#' available layout strings, e.g. `"(1-2)|3"`, `"1|(2-3)"`, `"1-2-3"`). To place
-#' the three components independently anywhere in a custom UI (separate tabs,
-#' cards, columns, etc.), use [ComplexHeatmap_HeatmapMainOutputUI()],
+#' available layout strings, e.g. `"(1-2)|3"`, `"1|(2-3)"`, `"1-2-3"`).
+#'
+#' Pass `compact = TRUE` for a smaller footprint (see the
+#' \href{https://jokergoo.github.io/InteractiveComplexHeatmap/articles/shiny_dev.html#compact-mode}{"Compact
+#' mode" article section}): the sub-heatmap panel is dropped entirely and the
+#' click/brush info floats near the cursor instead of occupying its own static
+#' area — equivalent to `response = c(action, "brush-output"), output_ui_float
+#' = TRUE`, per [InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()]'s
+#' own docs. `layout` has nothing left to arrange in compact mode, since only
+#' one static panel remains. No server-side change is needed to turn compact
+#' mode on or off.
+#'
+#' To place the three components independently anywhere in a custom UI
+#' (separate tabs, cards, columns, etc.), use [ComplexHeatmap_HeatmapMainOutputUI()],
 #' [ComplexHeatmap_HeatmapSubOutputUI()], and [ComplexHeatmap_HeatmapInfoOutputUI()]
-#' instead of this function — use one approach or the other, not both, for the
-#' same module `id`.
+#' instead of this function. Use one approach or the other, not both, for the
+#' same module `id`. Compact mode is specific to this combined widget: the
+#' separated pieces (`originalHeatmapOutput()`, `subHeatmapOutput()`,
+#' `HeatmapInfoOutput()`, which back the three functions above) don't accept a
+#' `compact` argument at all.
 #'
 #' @param id The ID for the Shiny module.
 #' @param resizable Logical; accepted for signature parity with the other module
@@ -447,6 +461,8 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
 #' ComplexHeatmap_HeatmapOutputUI("heatmap")
 #' # Same widget, main heatmap on its own row above sub-heatmap + info:
 #' ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
+#' # Compact: no sub-heatmap panel, click/brush info floats near the cursor
+#' ComplexHeatmap_HeatmapOutputUI("heatmap", compact = TRUE)
 ComplexHeatmap_HeatmapOutputUI <- function(id, resizable = TRUE, ...) {
     ns <- NS(id)
     if (!requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {

@@ -63,5 +63,5 @@ are guarded with \code{\link[=requireNamespace]{requireNamespace()}}.
 \code{\link[=ComplexHeatmap_HeatmapOutputUI]{ComplexHeatmap_HeatmapOutputUI()}}, \code{\link[=ComplexHeatmap_HeatmapApp]{ComplexHeatmap_HeatmapApp()}}
 }
 \author{
-Jacob Martin
+Jacob Martin, Jared Andrews
 }
