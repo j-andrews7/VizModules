@@ -113,13 +113,17 @@ UI functions.
 
 - All exports need complete roxygen2 docs with `@param`, `@return`,
   `@export`, `@author`, `@examples`
-- Reference dittoViz parameters where applicable
+- Reference original plot parameters where applicable
 - Document missing/broken plotly functionality explicitly
+- Add self-contained, clear examples for functions wherever possible
+- Update vignettes when adding new modules, features, or changing
+  existing functionality
+- Update `NEWS.md` with new features, bug fixes, etc.
 
 ### Code Style
 
 4-space indent, 120 char max line, tidyverse style guide, roxygen
-markdown enabled.
+markdown enabled. You do not need to specifically lint.
 
 ### Dependencies
 
@@ -134,7 +138,6 @@ shinytest2, testthat (\>= 3.0.0)
 | Issue | Solution |
 |----|----|
 | “object not exported by namespace” | Run `devtools::document()` to regenerate NAMESPACE |
-| Linting failures | Check .lintr: 120 char lines, 4-space indents |
 | “Non-standard file/directory” in check | Add to .Rbuildignore with regex pattern |
 | Module inputs not responding | Namespace issue - verify NS(id) pattern (see above) |
 | Vignette build errors | Install: `install.packages(c("knitr", "rmarkdown"))` |
@@ -149,10 +152,14 @@ shinytest2, testthat (\>= 3.0.0)
     suite passes; also test modules interactively via example apps
 4.  **Follow namespace pattern strictly** for wrapper modules (see
     Coding Conventions)
-5.  **All plots must use plotly** - this is a plotly-based package
+5.  **All plots must use plotly unless specifically specified
+    otherwise** - this is a plotly-based package
 6.  **Document missing features** - clearly note functionality
     unavailable in plotly
 7.  **Use organize_inputs()** helper for consistent UI layouts
+8.  **Ask user to validate** - rather than trying to run apps yourself
+    continually, just ask user to validate specific changes to save time
+    and tokens
 
 ## Best Practices
 

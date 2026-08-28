@@ -90,7 +90,9 @@ and the actual plot wherever you’d like.
 
 Use `defaults` to pre-fill inputs, and `hide.inputs`/`hide.tabs` to hide
 controls while keeping their values so you can enforce app-level
-defaults without exposing them.
+defaults without exposing them. A `defaults` entry can also be a
+[`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html), so an input
+follows your app’s state without an extra re-render.
 
 Modules built on plotting functions from other packages expose most of
 the underlying arguments. The module input help pages (e.g.,
@@ -320,6 +322,9 @@ following visualization functions:
 - `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter,
   violinplots - wraps
   [`dittoViz::yPlot`](https://rdrr.io/pkg/dittoViz/man/yPlot.html)).
+- `dittoViz_freqPlot` - Box/jitter plots for discrete observation
+  frequencies per sample/group (wraps
+  [`dittoViz::freqPlot`](https://rdrr.io/pkg/dittoViz/man/freqPlot.html)).
 
 ### `plotthis`
 
@@ -412,8 +417,6 @@ within each group.
 - **scatterHex** - hexbin plots encoding density/frequency information
   along x/y coordinates.
 - **barPlot** - compositional barplots.
-- **freqPlot** - box/jitter plots for discrete observation frequencies
-  per sample/group.
 
 [dittoViz](https://github.com/dtm2451/dittoViz) is under active
 development, so additional modules may be added as more visualization
@@ -510,6 +513,11 @@ Function)](https://pwwang.github.io/plotthis/reference/dotplot.html)
 
 ![](reference/figures/DotPlot.png)
 
+[dittoViz_freqPlot:](https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotApp.html)
+
+[(Source Plotting
+Function)](https://cran.r-project.org/package=dittoViz)
+
 [figureBuilder:](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html)
 
 ![](reference/figures/Figure_builder.png)
@@ -527,9 +535,42 @@ welcome contributions to help improve the package.
 
 Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor,
 etc.) are **explicitly welcome** for building Shiny apps with these
-modules in addition to creating new modules. To do so, we recommend
-prefixing prompts with the below to aid LLM usage (or adding it to a
-file and attaching it directly).
+modules in addition to creating new modules. To do so, we recommend the
+use of the skills provided by the package or prefixing prompts with the
+below to aid LLM usage.
+
+### Agent Skills (GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools)
+
+The package ships three [Agent Skills](https://agentskills.io) that give
+an agent the package’s conventions without it having to read the
+vignettes first. Install them into a project with:
+
+``` r
+
+VizModules::use_vizmodules_skills(".")
+```
+
+That writes `vizmodules-app`, `vizmodules-custom-module`, and
+`vizmodules-new-module` into `.agents/skills/` by default, where GitHub
+Copilot and OpenAI Codex discover them automatically. Pass
+`client = "copilot"` for `.github/skills/` (also read by GitHub Copilot)
+or `client = "claude"` for `.claude/skills/` (Claude Code); call the
+function more than once with different `client` values to install into
+several locations at once. `vizmodules-app` in particular carries a
+generated inventory of every module’s column-mapping keys (`x.data` vs
+`x.by` vs `x.value` vs `var`), colour key, tab names, and stats keys,
+which is what an agent otherwise spends its budget grepping for.
+
+In rough benchmarking, `vizmodules-app` saves 40-60% of token usage
+versus just chucking an agent at the docs/repo/prompt below and
+generates a functional app in about half the time. The other skills show
+more variable and modest savings (~10-20% fewer tokens), but they tend
+to avoid common pitfalls and better utilize some of the more advanced
+features. Skills are difficult to benchmark, as the benefits are
+context-dependent and vary with the request.
+
+For tools that cannot read local skill files, the prompt below does the
+same job less efficiently.
 
 ### LLM Instructions
 
@@ -606,10 +647,10 @@ locally-installed sources of truth so it can use the package correctly.
 > (`news(package = "VizModules")`) — newest features and changes.
 >
 > **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`,
-> `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`,
-> `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`,
-> `plotthis_DotPlot`, `plotthis_Histogram`, plus the
-> natively-implemented `linePlot`, `piePlot`, `radarPlot`,
+> `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`,
+> `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`,
+> `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus
+> the natively-implemented `linePlot`, `piePlot`, `radarPlot`,
 > `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching
 > `*App()` function
 > (e.g. [`plotthis_BarPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_BarPlotApp.md))

@@ -74,6 +74,13 @@ dittoViz_scatterPlotApp(
 
 These rows appear pre-filled when the app loads.
 
+Unlike most `defaults` entries, `custom.models` cannot be supplied as a
+[`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html). It is
+backed by a compound
+[`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.md)
+widget that the generic control-sync used by reactive defaults cannot
+drive; pass a plain list.
+
 ## Adding a Custom Model Backend
 
 The built-in types (`lm`, `glm`, `loess`, `nls`) are registered

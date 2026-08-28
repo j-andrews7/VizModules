@@ -15,7 +15,7 @@ controls live in each module's &quot;Facet&quot; tab via
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,7 @@ controls live in each module's &quot;Facet&quot; tab via
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -97,65 +98,57 @@ controls live in each module's "Facet" tab via
 <span class="r-in"><span><span class="fu">uniform_plotly_inputs_ui</span><span class="op">(</span><span class="va">ns</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-download.format-label" for="plot-download.format"&gt;Download Format&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-download.format"&gt;&lt;option value="svg" selected&gt;svg&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="png"&gt;png&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="jpeg"&gt;jpeg&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="webp"&gt;webp&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-download.format" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-download.format"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["svg","png","jpeg","webp"],"value":["svg","png","jpeg","webp"]}},"config":{"multiple":false,"search":false,"selectedValue":"svg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify1681325"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify2415937"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-margin.t-label" for="plot-margin.t"&gt;Margin Top&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1681325', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify2264814"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2415937', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify1143787"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-margin.b-label" for="plot-margin.b"&gt;Margin Bottom&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2264814', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify8455400"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1143787', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify2983447"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-margin.l-label" for="plot-margin.l"&gt;Margin Left&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8455400', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify3458536"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2983447', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify4841195"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-margin.r-label" for="plot-margin.r"&gt;Margin Right&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3458536', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify673199"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4841195', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5674063"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-shape.fill"&gt;Shape Fill&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify673199', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify270195"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5674063', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7539531"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" for="plot-shape.line.color"&gt;Shape Line Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify270195', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify1180446"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7539531', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify5454252"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-shape.line.width-label" for="plot-shape.line.width"&gt;Shape Line Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1180446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify136954"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5454252', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify7596779"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-shape.linetype-label" for="plot-shape.linetype"&gt;Shape Linetype&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;select class="shiny-input-select form-control" id="plot-shape.linetype"&gt;&lt;option value="solid" selected&gt;solid&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dot"&gt;dot&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dash"&gt;dash&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="longdash"&gt;longdash&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="dashdot"&gt;dashdot&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="longdashdot"&gt;longdashdot&lt;/option&gt;&lt;/select&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="plot-shape.linetype" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script type="application/json" data-for="plot-shape.linetype"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["solid","dot","dash","longdash","dashdot","longdashdot"],"value":["solid","dot","dash","longdash","dashdot","longdashdot"]}},"config":{"multiple":false,"search":false,"selectedValue":"solid","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify136954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify7357293"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7596779', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify2129675"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;label class="control-label" id="plot-shape.opacity-label" for="plot-shape.opacity"&gt;Shape Opacity&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;input id="plot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7357293', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2129675', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -25,7 +25,13 @@ plotthis_AreaPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 - defaults:
 
-  A named list of default values for the inputs.
+  A named list of default values for the inputs. An entry may also be a
+  [`shiny::reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or
+  [`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html);
+  it is resolved with
+  [`shiny::isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html) to
+  seed the control, and the module then keeps it live (see
+  [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md)).
 
 - title:
 
@@ -266,6 +272,11 @@ plotly-specific features are also available:
 - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities
   (0-1)", default: "1")
 
+- `palette.colours` - Named character vector mapping group levels to
+  colors, e.g. `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds
+  the picker; unnamed groups fall back to the default palette and user
+  edits take precedence.
+
 ## See also
 
 [`plotthis::AreaPlot()`](https://pwwang.github.io/plotthis/reference/AreaPlot.html),
@@ -287,288 +298,247 @@ mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="6320">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="areaPlot-AreaPlotTabsetPanel" data-tabsetid="3370">
 #>     <li class="active">
-#>       <a href="#tab-6320-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3370-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-3370-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3370-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-3370-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3370-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-3370-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-6320-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-3370-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="6320">
-#>     <div class="tab-pane active" data-value="Data" id="tab-6320-1">
+#>   <div class="tab-content" data-tabsetid="3370">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3370-1">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify2611861">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6021448">
 #>             <label class="control-label" id="areaPlot-x.data-label" for="areaPlot-x.data">X Values</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-x.data"><option value=""></option>
-#> <option value="cyl" selected>cyl</option>
-#> <option value="gear">gear</option></select>
+#>             <div id="areaPlot-x.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-x.data">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["cyl","gear"],"value":["cyl","gear"]}},"config":{"multiple":false,"search":false,"selectedValue":"cyl","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2611861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6021448', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify2884170">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify4689590">
 #>             <label class="control-label" id="areaPlot-y.data-label" for="areaPlot-y.data">Y Values</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-y.data"><option value=""></option>
-#> <option value="mpg" selected>mpg</option>
-#> <option value="disp">disp</option>
-#> <option value="hp">hp</option>
-#> <option value="drat">drat</option>
-#> <option value="wt">wt</option>
-#> <option value="qsec">qsec</option>
-#> <option value="vs">vs</option>
-#> <option value="am">am</option>
-#> <option value="carb">carb</option></select>
+#>             <div id="areaPlot-y.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-y.data">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["mpg","disp","hp","drat","wt","qsec","vs","am","carb"],"value":["mpg","disp","hp","drat","wt","qsec","vs","am","carb"]}},"config":{"multiple":false,"search":false,"selectedValue":"mpg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2884170', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4689590', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify147691">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8863742">
 #>             <label class="control-label" id="areaPlot-group.by-label" for="areaPlot-group.by">Group By</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-group.by"><option value=""></option>
-#> <option value=""></option>
-#> <option value="gear" selected>gear</option></select>
+#>             <div id="areaPlot-group.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-group.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)","gear"],"value":["","gear"]}},"config":{"multiple":false,"search":false,"selectedValue":"gear","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147691', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8863742', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify8537237">
+#>           <div class="form-group shiny-input-container" id="tipify6705485">
 #>             <div class="material-switch">
 #>               <label for="areaPlot-scale.y" style="padding-right: 10px;">Scale Y-Axis by Total</label>
 #>               <input id="areaPlot-scale.y" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="areaPlot-scale.y"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8537237', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value.  When `TRUE`, y-values are scaled to proportions within each (`x`, `facet_by`) group so that each x position stacks to 1.0.  The y-axis labels switch from numeric to percent format automatically.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6705485', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value.  When `TRUE`, y-values are scaled to proportions within each (`x`, `facet_by`) group so that each x position stacks to 1.0.  The y-axis labels switch from numeric to percent format automatically.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-6320-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-3370-2">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify4140478">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3937777">
 #>             <label class="control-label" id="areaPlot-facet.by-label" for="areaPlot-facet.by">Facet By</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-facet.by"><option value="gear">gear</option>
-#> <option value="" selected></option></select>
+#>             <div id="areaPlot-facet.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-facet.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["gear","(none)"],"value":["gear",""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4140478', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3937777', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7510138">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5512907">
 #>             <label class="control-label" id="areaPlot-facet.scale-label" for="areaPlot-facet.scale">Facet Scale</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-facet.scale"><option value="fixed" selected>fixed</option>
-#> <option value="free">free</option>
-#> <option value="free_x">free_x</option>
-#> <option value="free_y">free_y</option></select>
+#>             <div id="areaPlot-facet.scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-facet.scale">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["fixed","free","free_x","free_y"],"value":["fixed","free","free_x","free_y"]}},"config":{"multiple":false,"search":false,"selectedValue":"fixed","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7510138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5512907', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7190139">
+#>           <div class="form-group shiny-input-container" id="tipify2424927">
 #>             <label class="control-label" id="areaPlot-facet.ncol-label" for="areaPlot-facet.ncol">Columns</label>
 #>             <input id="areaPlot-facet.ncol" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7190139', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2424927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify5153553">
+#>           <div class="form-group shiny-input-container" id="tipify2032089">
 #>             <label class="control-label" id="areaPlot-facet.nrow-label" for="areaPlot-facet.nrow">Rows</label>
 #>             <input id="areaPlot-facet.nrow" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5153553', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2032089', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify9748362">
+#>           <div class="form-group shiny-input-container" id="tipify683417">
 #>             <div class="material-switch">
 #>               <label for="areaPlot-facet.by.row" style="padding-right: 10px;">Facet By Row</label>
 #>               <input id="areaPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="areaPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9748362', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify683417', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify3607776">
+#>           <div class="form-group shiny-input-container" id="tipify3072738">
 #>             <label class="control-label" id="areaPlot-subplot.margin.x-label" for="areaPlot-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>             <input id="areaPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3607776', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3072738', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1703955">
+#>           <div class="form-group shiny-input-container" id="tipify9931180">
 #>             <label class="control-label" id="areaPlot-subplot.margin.y-label" for="areaPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
 #>             <input id="areaPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1703955', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9931180', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6320-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3370-3">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div id="areaPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7831406">
+#>           <div class="form-group shiny-input-container" id="tipify1163092">
 #>             <label class="control-label" id="areaPlot-alpha-label" for="areaPlot-alpha">Alpha</label>
 #>             <input id="areaPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7831406', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1163092', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-6320-4">
+#>     <div class="tab-pane" data-value="Legend" id="tab-3370-4">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify309239">
+#>           <div class="form-group shiny-input-container" id="tipify7154231">
 #>             <label class="control-label" id="areaPlot-legend.title.size-label" for="areaPlot-legend.title.size">Legend Title Size</label>
 #>             <input id="areaPlot-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify309239', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7154231', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7894203">
+#>           <div class="form-group shiny-input-container" id="tipify2261088">
 #>             <label class="control-label" id="areaPlot-legend.text.size-label" for="areaPlot-legend.text.size">Legend Text Size</label>
 #>             <input id="areaPlot-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7894203', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2261088', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-6320-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3370-5">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-download.format-label" for="areaPlot-download.format">Download Format</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-download.format"><option value="svg" selected>svg</option>
-#> <option value="png">png</option>
-#> <option value="jpeg">jpeg</option>
-#> <option value="webp">webp</option></select>
+#>             <div id="areaPlot-download.format" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-download.format">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["svg","png","jpeg","webp"],"value":["svg","png","jpeg","webp"]}},"config":{"multiple":false,"search":false,"selectedValue":"svg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1666037">
+#>           <div class="form-group shiny-input-container" id="tipify1333486">
 #>             <label class="control-label" id="areaPlot-margin.t-label" for="areaPlot-margin.t">Margin Top</label>
 #>             <input id="areaPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1666037', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1333486', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify287126">
+#>           <div class="form-group shiny-input-container" id="tipify9272817">
 #>             <label class="control-label" id="areaPlot-margin.b-label" for="areaPlot-margin.b">Margin Bottom</label>
 #>             <input id="areaPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify287126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7859511">
+#>           <div class="form-group shiny-input-container" id="tipify8941226">
 #>             <label class="control-label" id="areaPlot-margin.l-label" for="areaPlot-margin.l">Margin Left</label>
 #>             <input id="areaPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7859511', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify8253078">
+#>           <div class="form-group shiny-input-container" id="tipify2036644">
 #>             <label class="control-label" id="areaPlot-margin.r-label" for="areaPlot-margin.r">Margin Right</label>
 #>             <input id="areaPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8253078', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9652404">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2569829">
 #>             <label class="control-label" for="areaPlot-shape.fill">Shape Fill</label>
 #>             <input id="areaPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9652404', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify3786412">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6140056">
 #>             <label class="control-label" for="areaPlot-shape.line.color">Shape Line Color</label>
 #>             <input id="areaPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3786412', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1743864">
+#>           <div class="form-group shiny-input-container" id="tipify4414992">
 #>             <label class="control-label" id="areaPlot-shape.line.width-label" for="areaPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="areaPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1743864', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify6037504">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3155947">
 #>             <label class="control-label" id="areaPlot-shape.linetype-label" for="areaPlot-shape.linetype">Shape Linetype</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-shape.linetype"><option value="solid" selected>solid</option>
-#> <option value="dot">dot</option>
-#> <option value="dash">dash</option>
-#> <option value="longdash">longdash</option>
-#> <option value="dashdot">dashdot</option>
-#> <option value="longdashdot">longdashdot</option></select>
+#>             <div id="areaPlot-shape.linetype" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-shape.linetype">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["solid","dot","dash","longdash","dashdot","longdashdot"],"value":["solid","dot","dash","longdash","dashdot","longdashdot"]}},"config":{"multiple":false,"search":false,"selectedValue":"solid","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6037504', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify8054637">
+#>           <div class="form-group shiny-input-container" id="tipify1013138">
 #>             <label class="control-label" id="areaPlot-shape.opacity-label" for="areaPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="areaPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8054637', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-6320-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-3370-6">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-title.font.family-label" for="areaPlot-title.font.family">Title Font</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>             <div id="areaPlot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -603,26 +573,10 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-axis.title.font.family-label" for="areaPlot-axis.title.font.family">Axis Title Font</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-axis.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>             <div id="areaPlot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-axis.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -697,26 +651,10 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-axis.tickfont.family-label" for="areaPlot-axis.tickfont.family">Tick Label Font</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-axis.tickfont.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>             <div id="areaPlot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-axis.tickfont.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -733,12 +671,10 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-axis.ticks-label" for="areaPlot-axis.ticks">Tick Position</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-axis.ticks"><option value="outside" selected>Outside</option>
-#> <option value="inside">Inside</option>
-#> <option value="">None</option></select>
+#>             <div id="areaPlot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-axis.ticks">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Outside","Inside","(none)"],"value":["outside","inside",""]}},"config":{"multiple":false,"search":false,"selectedValue":"outside","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -773,151 +709,135 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="areaPlot-facet.title.font.family-label" for="areaPlot-facet.title.font.family">Facet Title Font</label>
-#>             <div>
-#>               <select class="shiny-input-select form-control" id="areaPlot-facet.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>             <div id="areaPlot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="areaPlot-facet.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-6320-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-3370-7">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify366795">
+#>           <div class="form-group shiny-input-container" id="tipify2726462">
 #>             <label class="control-label" id="areaPlot-hline.intercepts-label" for="areaPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="areaPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify366795', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7329106">
+#>           <div class="form-group shiny-input-container" id="tipify6536994">
 #>             <label class="control-label" id="areaPlot-hline.colors-label" for="areaPlot-hline.colors">Y Colors</label>
 #>             <input id="areaPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7329106', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify2152727">
+#>           <div class="form-group shiny-input-container" id="tipify9278701">
 #>             <label class="control-label" id="areaPlot-hline.widths-label" for="areaPlot-hline.widths">Y Widths</label>
 #>             <input id="areaPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2152727', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify160032">
+#>           <div class="form-group shiny-input-container" id="tipify266247">
 #>             <label class="control-label" id="areaPlot-hline.linetypes-label" for="areaPlot-hline.linetypes">Y Line Types</label>
 #>             <input id="areaPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify160032', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1286026">
+#>           <div class="form-group shiny-input-container" id="tipify5594912">
 #>             <label class="control-label" id="areaPlot-hline.opacities-label" for="areaPlot-hline.opacities">Y Opacities (0-1)</label>
 #>             <input id="areaPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1286026', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify6860631">
+#>           <div class="form-group shiny-input-container" id="tipify8541736">
 #>             <label class="control-label" id="areaPlot-vline.intercepts-label" for="areaPlot-vline.intercepts">X-intercepts</label>
 #>             <input id="areaPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6860631', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify6419413">
+#>           <div class="form-group shiny-input-container" id="tipify758831">
 #>             <label class="control-label" id="areaPlot-vline.colors-label" for="areaPlot-vline.colors">X Colors</label>
 #>             <input id="areaPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6419413', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify3273385">
+#>           <div class="form-group shiny-input-container" id="tipify2058289">
 #>             <label class="control-label" id="areaPlot-vline.widths-label" for="areaPlot-vline.widths">X Widths</label>
 #>             <input id="areaPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3273385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify3874820">
+#>           <div class="form-group shiny-input-container" id="tipify4958896">
 #>             <label class="control-label" id="areaPlot-vline.linetypes-label" for="areaPlot-vline.linetypes">X Line Types</label>
 #>             <input id="areaPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3874820', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify7075004">
+#>           <div class="form-group shiny-input-container" id="tipify2618570">
 #>             <label class="control-label" id="areaPlot-vline.opacities-label" for="areaPlot-vline.opacities">X Opacities (0-1)</label>
 #>             <input id="areaPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7075004', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify6976554">
+#>           <div class="form-group shiny-input-container" id="tipify4159615">
 #>             <label class="control-label" id="areaPlot-abline.slopes-label" for="areaPlot-abline.slopes">Ab Slopes</label>
 #>             <input id="areaPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6976554', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify9256567">
+#>           <div class="form-group shiny-input-container" id="tipify4391500">
 #>             <label class="control-label" id="areaPlot-abline.intercepts-label" for="areaPlot-abline.intercepts">Ab Y-intercepts</label>
 #>             <input id="areaPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9256567', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify4590177">
+#>           <div class="form-group shiny-input-container" id="tipify1823780">
 #>             <label class="control-label" id="areaPlot-abline.colors-label" for="areaPlot-abline.colors">Ab Colors</label>
 #>             <input id="areaPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4590177', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify5959542">
+#>           <div class="form-group shiny-input-container" id="tipify783283">
 #>             <label class="control-label" id="areaPlot-abline.widths-label" for="areaPlot-abline.widths">Ab Widths</label>
 #>             <input id="areaPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5959542', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1650110">
+#>           <div class="form-group shiny-input-container" id="tipify177700">
 #>             <label class="control-label" id="areaPlot-abline.linetypes-label" for="areaPlot-abline.linetypes">Ab Line Types</label>
 #>             <input id="areaPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1650110', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify5669098">
+#>           <div class="form-group shiny-input-container" id="tipify7281800">
 #>             <label class="control-label" id="areaPlot-abline.opacities-label" for="areaPlot-abline.opacities">Ab Opacities (0-1)</label>
 #>             <input id="areaPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5669098', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
 #>   </div>
 #> </div>
-#> <div class="row">
-#>   <div class="col-sm-2" style="margin-top: 25px;">
+#> <div class="module-tack" style="margin-top: 12px;">
+#>   <div class="module-tack-switch" style="margin-bottom: 4px;">
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="areaPlot-auto.update" style="padding-right: 10px;">Auto Update</label>
@@ -926,14 +846,10 @@ plotthis_AreaPlotInputsUI("areaPlot", mtcars)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
-#>     <button id="areaPlot-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
-#>   </div>
-#>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button class="btn btn-default action-button btn-secondary" id="areaPlot-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
-#>   </div>
-#>   <div class="col-sm-5" style="margin-top: 25px;">
-#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="areaPlot-download.source" tabindex="-1" target="_blank" width="100%">
+#>   <div class="module-tack-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
+#>     <button class="btn btn-default action-button btn-primary" id="areaPlot-update" style="flex: 1 1 45%;" type="button"><span class="action-label">Update</span></button>
+#>     <button class="btn btn-default action-button btn-secondary" id="areaPlot-reset" style="flex: 1 1 45%;" type="button"><span class="action-label">Reset</span></button>
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="areaPlot-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
 #>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
 #>       Source Download
 #>     </a>

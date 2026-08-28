@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@
     <li><a class="dropdown-item" href="articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="articles/statistical-testing.html">Statistical Testing</a></li>
@@ -141,12 +142,15 @@
 <h3 id="documentation-requirements">Documentation Requirements<a class="anchor" aria-label="anchor" href="#documentation-requirements"></a></h3>
 <ul><li>All exports need complete roxygen2 docs with <code>@param</code>, <code>@return</code>, <code>@export</code>, <code>@author</code>, <code>@examples</code>
 </li>
-<li>Reference dittoViz parameters where applicable</li>
+<li>Reference original plot parameters where applicable</li>
 <li>Document missing/broken plotly functionality explicitly</li>
+<li>Add self-contained, clear examples for functions wherever possible</li>
+<li>Update vignettes when adding new modules, features, or changing existing functionality</li>
+<li>Update <code>NEWS.md</code> with new features, bug fixes, etc.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="code-style">Code Style<a class="anchor" aria-label="anchor" href="#code-style"></a></h3>
-<p>4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled.</p>
+<p>4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled. You do not need to specifically lint.</p>
 </div>
 <div class="section level3">
 <h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a></h3>
@@ -159,8 +163,6 @@
 <th>Solution</th>
 </tr></thead><tbody><tr><td>“object not exported by namespace”</td>
 <td>Run <code>devtools::document()</code> to regenerate NAMESPACE</td>
-</tr><tr><td>Linting failures</td>
-<td>Check .lintr: 120 char lines, 4-space indents</td>
 </tr><tr><td>“Non-standard file/directory” in check</td>
 <td>Add to .Rbuildignore with regex pattern</td>
 </tr><tr><td>Module inputs not responding</td>
@@ -181,11 +183,13 @@
 <li>
 <strong>Follow namespace pattern strictly</strong> for wrapper modules (see Coding Conventions)</li>
 <li>
-<strong>All plots must use plotly</strong> - this is a plotly-based package</li>
+<strong>All plots must use plotly unless specifically specified otherwise</strong> - this is a plotly-based package</li>
 <li>
 <strong>Document missing features</strong> - clearly note functionality unavailable in plotly</li>
 <li>
 <strong>Use organize_inputs()</strong> helper for consistent UI layouts</li>
+<li>
+<strong>Ask user to validate</strong> - rather than trying to run apps yourself continually, just ask user to validate specific changes to save time and tokens</li>
 </ol></div>
 <div class="section level2">
 <h2 id="best-practices">Best Practices<a class="anchor" aria-label="anchor" href="#best-practices"></a></h2>

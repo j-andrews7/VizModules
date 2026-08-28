@@ -36,7 +36,9 @@ figureBuilderServer(id, data_list = NULL, module_registry = NULL)
   picker), `dataset` (character, the dataset name its `defaults` were
   written for), `inputs_ui`, `output_ui`, and `server_fn` (the module's
   three functions), and `defaults` (a named list of input defaults
-  applied only when `dataset` is the chosen dataset).
+  applied only when `dataset` is the chosen dataset). `defaults` is
+  passed to both `inputs_ui` and `server_fn`, so it can seed
+  server-rendered controls such as the group color picker.
 
 ## Value
 

@@ -52,6 +52,11 @@ shinyApp(ui, server)
   `*InputsUI()` to pre-fill inputs. Names match the underlying plot
   function arguments (e.g.,
   `defaults = list(fill.color = "steelblue")`).
+- **Reactive defaults**: An entry may be a
+  [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) instead of
+  a fixed value, so an input follows your app’s state
+  (e.g. `defaults = list(color.by = reactive(input$colour_col))`). See
+  [`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/defaults-and-hiding.md).
 - **Hide inputs**: Use `hide.inputs` in the server call to remove
   controls while still initializing their values. This is useful when
   your app sets certain parameters itself or wants to hide control of
@@ -191,4 +196,5 @@ module:
 
 If an argument is listed as missing or non-functional in the module
 docs, it has been intentionally hidden because it does not round-trip
-well in the interactive Plotly output.
+well in the interactive Plotly output or is simply unnecessary due to
+plotly functionality.

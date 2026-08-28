@@ -6,10 +6,11 @@ articles:
   custom-model-lines: custom-model-lines.html
   custom-modules: custom-modules.html
   custom-shiny-inputs: custom-shiny-inputs.html
+  data-filtering: data-filtering.html
   defaults-and-hiding: defaults-and-hiding.html
   quick-start: quick-start.html
   statistical-testing: statistical-testing.html
-last_built: 2026-07-27T15:02Z
+last_built: 2026-08-28T20:56Z
 urls:
   reference: https://j-andrews7.github.io/VizModules/reference
   article: https://j-andrews7.github.io/VizModules/articles

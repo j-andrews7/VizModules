@@ -13,7 +13,7 @@ passed to figureBuilderServer()."><meta name="robots" content="noindex"></head><
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ passed to figureBuilderServer()."><meta name="robots" content="noindex"></head><
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -165,12 +166,10 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;h3&gt;Canvas&lt;/h3&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-split-layout"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div style="width: 50.000%;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="figure_builder-pb_orientation-label" for="figure_builder-pb_orientation"&gt;Page size:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select id="figure_builder-pb_orientation" class="shiny-input-select"&gt;&lt;option value="portrait" selected&gt;A4 portrait&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="landscape"&gt;A4 landscape&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="figure_builder-pb_orientation" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="figure_builder-pb_orientation" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="figure_builder-pb_orientation"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["A4 portrait","A4 landscape"],"value":["portrait","landscape"]}},"config":{"multiple":false,"search":false,"selectedValue":"portrait","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
@@ -178,8 +177,8 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container pb-label-case"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="figure_builder-pb_label_case-label" for="figure_builder-pb_label_case"&gt;Panel labels:&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="figure_builder-pb_label_case"&gt;&lt;option value="none" selected&gt;None&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="upper"&gt;Uppercase (A, B, C)&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;select class="shiny-input-select form-control" id="figure_builder-pb_label_case"&gt;&lt;option value="upper" selected&gt;Uppercase (A, B, C)&lt;/option&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="none"&gt;None&lt;/option&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="lower"&gt;Lowercase (a, b, c)&lt;/option&gt;&lt;/select&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
@@ -188,11 +187,10 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;button id="figure_builder-pb_download" type="button" class="btn btn-success btn-block pb-download-svg"&gt;Download Full Figure (SVG)&lt;/button&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;hr/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;h3&gt;Plot Controls&lt;/h3&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;label class="control-label" id="figure_builder-pb_controls_select-label" for="figure_builder-pb_controls_select"&gt;Show controls for:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;select id="figure_builder-pb_controls_select" class="shiny-input-select"&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script type="application/json" data-for="figure_builder-pb_controls_select" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div id="figure_builder-pb_controls_select" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script type="application/json" data-for="figure_builder-pb_controls_select"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div id="figure_builder-pb_controls_container"&gt;</span>
@@ -212,11 +210,10 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Filtering a plot's table subsets only that plot's data. </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Specific numeric filters can be applied by entering a range like '1 ... 10'.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;label class="control-label" id="figure_builder-pb_table_select-label" for="figure_builder-pb_table_select"&gt;Show table for:&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;select id="figure_builder-pb_table_select" class="shiny-input-select"&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="figure_builder-pb_table_select" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div id="figure_builder-pb_table_select" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;script type="application/json" data-for="figure_builder-pb_table_select"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="figure_builder-pb_table_container"&gt;</span>

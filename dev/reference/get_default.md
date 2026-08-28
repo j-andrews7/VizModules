@@ -16,7 +16,8 @@ get_default(defaults, key, fallback, validator = NULL)
 
 - defaults:
 
-  A named list of default values, or NULL.
+  A named list of default values, or NULL. Individual entries may be a
+  [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html)/`reactiveVal`.
 
 - key:
 
@@ -30,11 +31,23 @@ get_default(defaults, key, fallback, validator = NULL)
 
   An optional single-argument predicate function (e.g., `is.numeric`,
   `is.logical`). When supplied, the stored value is returned only if
-  `validator(value)` is `TRUE`.
+  `validator(value)` is `TRUE`. Reactive entries are validated on their
+  resolved value.
 
 ## Value
 
 The resolved default value or `fallback`.
+
+## Details
+
+Entries that are a
+[`shiny::reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or
+[`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)
+are resolved with
+[`shiny::isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html) before
+validation, so this returns the reactive's *current* value. See
+[`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md)
+for how modules keep such entries live at render time.
 
 ## Author
 
@@ -49,4 +62,6 @@ get_default(list(), "missing", 10)
 #> [1] 10
 get_default(list(n = "x"), "n", 5, is.numeric)
 #> [1] 5
+get_default(list(color = shiny::reactiveVal("blue")), "color", "black")
+#> [1] "blue"
 ```

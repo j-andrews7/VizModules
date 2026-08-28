@@ -10,6 +10,8 @@
   Modules](https://j-andrews7.github.io/VizModules/dev/articles/custom-modules.md):
 - [VizModules Custom Shiny
   Inputs](https://j-andrews7.github.io/VizModules/dev/articles/custom-shiny-inputs.md):
+- [Filtering Data with the dataFilter
+  Module](https://j-andrews7.github.io/VizModules/dev/articles/data-filtering.md):
 - [Defaults and Hiding
   Controls](https://j-andrews7.github.io/VizModules/dev/articles/defaults-and-hiding.md):
 - [Quick Start with

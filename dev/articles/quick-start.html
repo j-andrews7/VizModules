@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -130,6 +131,13 @@ example using the <code>dittoViz_scatterPlot</code> module:</p>
 <code>defaults</code> argument of <code>*InputsUI()</code> to pre-fill
 inputs. Names match the underlying plot function arguments (e.g.,
 <code>defaults = list(fill.color = "steelblue")</code>).</li>
+<li>
+<strong>Reactive defaults</strong>: An entry may be a
+<code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code> instead of a fixed value, so an input follows
+your app’s state
+(e.g. <code>defaults = list(color.by = reactive(input$colour_col))</code>).
+See
+<code><a href="../articles/defaults-and-hiding.html">vignette("defaults-and-hiding", package = "VizModules")</a></code>.</li>
 <li>
 <strong>Hide inputs</strong>: Use <code>hide.inputs</code> in the
 server call to remove controls while still initializing their values.
@@ -257,7 +265,8 @@ arguments when they are supported.</li>
 </ol>
 <p>If an argument is listed as missing or non-functional in the module
 docs, it has been intentionally hidden because it does not round-trip
-well in the interactive Plotly output.</p>
+well in the interactive Plotly output or is simply unnecessary due to
+plotly functionality.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

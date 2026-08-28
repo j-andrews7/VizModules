@@ -11,7 +11,7 @@ named character vector of hex colors keyed by group."><meta name="robots" conten
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +26,7 @@ named character vector of hex colors keyed by group."><meta name="robots" conten
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -127,6 +128,22 @@ spacing, smaller controls, and narrower palette selector.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A UI element that produces a named character vector of colors.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>A group's color swatch is a native <code>&lt;input type="color"&gt;</code>, whose
+dialog reports a new value for every drag or click inside it. Rather than
+send each one - rebuilding a dependent plot dozens of times for a single
+color choice - the input reports once the dialog has closed, detected as the
+first pointer, key, or scroll event the page sees again (the dialog holds
+both while it is open) or the browser window regaining focus. Typing in a hex
+field is coalesced until the user pauses instead. One-shot actions - clicking
+a palette swatch, "Apply", "Reset", selecting another group, or committing a
+hex code with Enter or by clicking away - report immediately.</p>
+<p>The widget reflows to its container: the palette selector shrinks and the
+buttons wrap below it when narrow, and long group names wrap rather than
+running under their controls, so it can be dropped into a sidebar or an input
+grid cell without controls escaping the panel.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

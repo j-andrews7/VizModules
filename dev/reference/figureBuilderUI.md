@@ -114,12 +114,10 @@ figureBuilderUI("figure_builder")
 #>       <h3>Canvas</h3>
 #>       <div class="shiny-split-layout">
 #>         <div style="width: 50.000%;">
-#>           <div class="form-group shiny-input-container">
+#>           <div class="form-group shiny-input-container" style="width:100%;">
 #>             <label class="control-label" id="figure_builder-pb_orientation-label" for="figure_builder-pb_orientation">Page size:</label>
-#>             <div>
-#>               <select id="figure_builder-pb_orientation" class="shiny-input-select"><option value="portrait" selected>A4 portrait</option>
-#> <option value="landscape">A4 landscape</option></select>
-#>               <script type="application/json" data-for="figure_builder-pb_orientation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>             <div id="figure_builder-pb_orientation" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>               <script type="application/json" data-for="figure_builder-pb_orientation">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["A4 portrait","A4 landscape"],"value":["portrait","landscape"]}},"config":{"multiple":false,"search":false,"selectedValue":"portrait","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
 #>         </div>
@@ -127,8 +125,8 @@ figureBuilderUI("figure_builder")
 #>           <div class="form-group shiny-input-container pb-label-case">
 #>             <label class="control-label" id="figure_builder-pb_label_case-label" for="figure_builder-pb_label_case">Panel labels:</label>
 #>             <div>
-#>               <select class="shiny-input-select form-control" id="figure_builder-pb_label_case"><option value="none" selected>None</option>
-#> <option value="upper">Uppercase (A, B, C)</option>
+#>               <select class="shiny-input-select form-control" id="figure_builder-pb_label_case"><option value="upper" selected>Uppercase (A, B, C)</option>
+#> <option value="none">None</option>
 #> <option value="lower">Lowercase (a, b, c)</option></select>
 #>             </div>
 #>           </div>
@@ -137,11 +135,10 @@ figureBuilderUI("figure_builder")
 #>       <button id="figure_builder-pb_download" type="button" class="btn btn-success btn-block pb-download-svg">Download Full Figure (SVG)</button>
 #>       <hr/>
 #>       <h3>Plot Controls</h3>
-#>       <div class="form-group shiny-input-container">
+#>       <div class="form-group shiny-input-container" style="width:100%;">
 #>         <label class="control-label" id="figure_builder-pb_controls_select-label" for="figure_builder-pb_controls_select">Show controls for:</label>
-#>         <div>
-#>           <select id="figure_builder-pb_controls_select" class="shiny-input-select"></select>
-#>           <script type="application/json" data-for="figure_builder-pb_controls_select" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>         <div id="figure_builder-pb_controls_select" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>           <script type="application/json" data-for="figure_builder-pb_controls_select">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>         </div>
 #>       </div>
 #>       <div id="figure_builder-pb_controls_container">
@@ -161,11 +158,10 @@ figureBuilderUI("figure_builder")
 #>       Filtering a plot's table subsets only that plot's data. 
 #>       Specific numeric filters can be applied by entering a range like '1 ... 10'.
 #>     </p>
-#>     <div class="form-group shiny-input-container">
+#>     <div class="form-group shiny-input-container" style="width:100%;">
 #>       <label class="control-label" id="figure_builder-pb_table_select-label" for="figure_builder-pb_table_select">Show table for:</label>
-#>       <div>
-#>         <select id="figure_builder-pb_table_select" class="shiny-input-select"></select>
-#>         <script type="application/json" data-for="figure_builder-pb_table_select" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+#>       <div id="figure_builder-pb_table_select" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>         <script type="application/json" data-for="figure_builder-pb_table_select">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>       </div>
 #>     </div>
 #>     <div id="figure_builder-pb_table_container">

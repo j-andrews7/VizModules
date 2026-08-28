@@ -47,26 +47,10 @@ Jared Andrews Jacob Martin
 ``` r
 ns <- shiny::NS("plot")
 uniform_axes_inputs_ui(ns)
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-title.font.family-label" for="plot-title.font.family">Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -89,26 +73,10 @@ uniform_axes_inputs_ui(ns)
 #>   <label class="control-label" for="plot-axis.title.font.color">Axis Title Color</label>
 #>   <input id="plot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.title.font.family-label" for="plot-axis.title.font.family">Axis Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container">
@@ -163,26 +131,10 @@ uniform_axes_inputs_ui(ns)
 #>   <label class="control-label" for="plot-axis.tickfont.color">Tick Label Color</label>
 #>   <input id="plot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.tickfont.family-label" for="plot-axis.tickfont.family">Tick Label Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.tickfont.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.tickfont.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container">
@@ -193,12 +145,10 @@ uniform_axes_inputs_ui(ns)
 #>   <label class="control-label" id="plot-axis.tickangle.y-label" for="plot-axis.tickangle.y">Y Tick Label Angle</label>
 #>   <input id="plot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.ticks-label" for="plot-axis.ticks">Tick Position</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.ticks"><option value="outside" selected>Outside</option>
-#> <option value="inside">Inside</option>
-#> <option value="">None</option></select>
+#>   <div id="plot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.ticks">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Outside","Inside","(none)"],"value":["outside","inside",""]}},"config":{"multiple":false,"search":false,"selectedValue":"outside","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -221,26 +171,10 @@ uniform_axes_inputs_ui(ns)
 #>   <label class="control-label" for="plot-facet.title.font.color">Facet Title Color</label>
 #>   <input id="plot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-facet.title.font.family-label" for="plot-facet.title.font.family">Facet Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-facet.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-facet.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
@@ -265,26 +199,10 @@ uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 #>     <label class="switch label-success bg-success" for="plot-flip.y"></label>
 #>   </div>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-title.font.family-label" for="plot-title.font.family">Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -307,26 +225,10 @@ uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 #>   <label class="control-label" for="plot-axis.title.font.color">Axis Title Color</label>
 #>   <input id="plot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.title.font.family-label" for="plot-axis.title.font.family">Axis Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container">
@@ -381,26 +283,10 @@ uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 #>   <label class="control-label" for="plot-axis.tickfont.color">Tick Label Color</label>
 #>   <input id="plot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.tickfont.family-label" for="plot-axis.tickfont.family">Tick Label Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.tickfont.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.tickfont.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container">
@@ -411,12 +297,10 @@ uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 #>   <label class="control-label" id="plot-axis.tickangle.y-label" for="plot-axis.tickangle.y">Y Tick Label Angle</label>
 #>   <input id="plot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-axis.ticks-label" for="plot-axis.ticks">Tick Position</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-axis.ticks"><option value="outside" selected>Outside</option>
-#> <option value="inside">Inside</option>
-#> <option value="">None</option></select>
+#>   <div id="plot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-axis.ticks">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Outside","Inside","(none)"],"value":["outside","inside",""]}},"config":{"multiple":false,"search":false,"selectedValue":"outside","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 #> <div class="form-group shiny-input-container" data-shiny-input-type="colour">
@@ -439,26 +323,10 @@ uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 #>   <label class="control-label" for="plot-facet.title.font.color">Facet Title Color</label>
 #>   <input id="plot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <div class="form-group shiny-input-container">
+#> <div class="form-group shiny-input-container" style="width:100%;">
 #>   <label class="control-label" id="plot-facet.title.font.family-label" for="plot-facet.title.font.family">Facet Title Font</label>
-#>   <div>
-#>     <select class="shiny-input-select form-control" id="plot-facet.title.font.family"><option value="Arial" selected>Arial</option>
-#> <option value="Balto">Balto</option>
-#> <option value="Courier New">Courier New</option>
-#> <option value="Droid Sans">Droid Sans</option>
-#> <option value="Droid Serif">Droid Serif</option>
-#> <option value="Droid Sans Mono">Droid Sans Mono</option>
-#> <option value="Gravitas One">Gravitas One</option>
-#> <option value="Old Standard TT">Old Standard TT</option>
-#> <option value="Open Sans">Open Sans</option>
-#> <option value="Overpass">Overpass</option>
-#> <option value="PT Sans Narrow">PT Sans Narrow</option>
-#> <option value="Raleway">Raleway</option>
-#> <option value="Times New Roman">Times New Roman</option>
-#> <option value="Verdana">Verdana</option>
-#> <option value="sans-serif">sans-serif</option>
-#> <option value="serif">serif</option>
-#> <option value="monospace">monospace</option></select>
+#>   <div id="plot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
+#>     <script type="application/json" data-for="plot-facet.title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
 ```

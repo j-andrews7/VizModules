@@ -49,7 +49,11 @@ createModuleApp(
 - defaults:
 
   A named list of ui ids and their default values that can change the ui
-  default settings on startup.
+  default settings on startup. An entry may also be a
+  [`shiny::reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or
+  [`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)
+  to have the input follow app state; see
+  [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md).
 
 - hide.inputs:
 

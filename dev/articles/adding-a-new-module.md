@@ -4,6 +4,14 @@ This checklist walks through how to add a new plotting module to
 **VizModules** so it matches the package’s organization, documentation,
 and testing standards.
 
+**VizModules** modules are designed to be a joy to use, which requires
+some discipline to implement in a consistent way. This checklist may
+seem daunting at first glance, but most of the items already have
+helpers to implement them.
+
+And a fair few are to keep you from shooting yourself in the foot and
+avoiding most of the common module pitfalls.
+
 ## Quick Checklist
 
 Pick the plot function you are wrapping and name your module
@@ -40,12 +48,20 @@ In the UI function docstring, add **three required sections**:
 Add an example app that uses the module twice to prove multi-instance
 behavior.
 
+Wire up reactive `defaults` support so parent apps can drive parameters
+from app state (see [Supporting Reactive
+Defaults](#supporting-reactive-defaults)).
+
+Freeze any input you update from the server so the plot does not render
+twice (see [Updating Your Own Inputs From the
+Server](#updating-your-own-inputs-from-the-server)).
+
 Wire up manual layout-edit persistence so user-dragged titles, legends,
 annotations, and colorbars survive re-renders (see [Persisting Manual
 Layout Edits](#persisting-manual-layout-edits)).
 
 Cover the base plotting function with `testthat`; cover the module/app
-with `shinytest2`.
+with `testServer` where feasible.
 
 Note any `ggplotly` conversion quirks that change or drop functionality.
 
@@ -195,8 +211,7 @@ placing it in its own tab alongside the other modules.
 `testthat`: cover the base plotting function’s core behavior and
 arguments (data handling, grouping, palette handling, etc.).
 
-`shinytest2`: cover the module/app (rendering inputs, updating outputs,
-download buttons if present).
+`testServer`: cover the module/app where feasible.
 
 Place tests under `tests/testthat/` with clear file names
 (`test-<plot>.R`, `test-<plot>-app.R`).
@@ -225,12 +240,224 @@ inputs).
 Only after the plotting function is stable, build the module
 UI/server/app wrappers around it.
 
+## Supporting Reactive Defaults
+
+An entry in `defaults` may be a
+[`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) rather than
+a fixed value, so a parent app can make an input follow its state
+without the double render that `update*Input()` causes (see
+[`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/defaults-and-hiding.md)).
+Two lines wire this up, and they are required in every new module.
+
+Make the first statement of your
+[`moduleServer()`](https://rdrr.io/pkg/shiny/man/moduleServer.html) body
+build the parameter store:
+
+``` r
+
+params <- setup_reactive_defaults(defaults, input, session)
+```
+
+Pass that store to
+[`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_auto_update_logic.md)
+inside your generate reactive:
+
+``` r
+
+generate_myPlot <- reactive({
+    isolate_fn <- setup_auto_update_logic(input, params)
+    ...
+    main = isolate_fn(input$main)
+})
+```
+
+Easy.
+[`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md)
+returns `NULL` when no entry is reactive, in which case `isolate_fn` is
+the plain
+[`identity()`](https://rdrr.io/r/base/identity.html)/[`isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html)
+it has always been. When a store is present, `isolate_fn` recognises
+direct `input$<key>` reads and resolves them from the store instead, so
+your existing read sites need no edits, as long as they stay in the
+`isolate_fn(input$<key>)` form. A wrapped read such as
+`isolate_fn(as.numeric(input$size))` cannot be recognised and will not
+support a reactive default; do the conversion outside the call instead.
+
+Your `*InputsUI()` and reset observer need no special handling: both go
+through
+[`get_default()`](https://j-andrews7.github.io/VizModules/dev/reference/get_default.md),
+which resolves reactive entries on its own. Reset therefore restores the
+reactive’s current value.
+
+## Updating Your Own Inputs From the Server
+
+Modules often derive a value on the server and push it back into one of
+their own controls, e.g. an auto-calculated y-axis range, a regenerated
+list of stat comparison pairs, a rebuilt colour picker. `update*Input()`
+is an asynchronous round-trip to the browser, so the plot renders
+**twice**: once immediately with the stale value, then again when the
+client echoes the new one. This is annoying as hell and can be avoided
+by freezing the input before you update it:
+
+Call
+[`freezeReactiveValue()`](https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html)
+on the input immediately before you update it:
+
+``` r
+
+observeEvent(input$stat.x, {
+    pairs <- generate_pair_strings(data(), input$stat.x)
+    if (length(pairs) > 0) {
+        freezeReactiveValue(input, "stat.pairs")
+        update_viz_select(session, "stat.pairs", choices = c("", pairs), selected = "")
+    }
+})
+```
+
+Freezing pauses everything that reads that input until the real value
+arrives, so the intermediate render never happens. Three rules:
+
+- **Freeze only when you are definitely going to update.** A frozen
+  input that never receives a value leaves the plot suspended. Keep the
+  freeze inside the same `if` branch as the `update*Input()` call.
+- **Do not add a catch-all
+  [`tryCatch()`](https://rdrr.io/r/base/conditions.html) to your
+  [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html).**
+  The pause is delivered as a silent condition; swallowing it turns a
+  clean pause into a blank plot. Guard with
+  [`req()`](https://rdrr.io/pkg/shiny/man/req.html) and explicit `if`
+  branches instead.
+
+This does not apply to the reset observer, where a burst of updates is
+expected.
+
+### Inputs Rebuilt by `renderUI()`
+
+Freezing does **not** cover an input your module rebuilds with
+[`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html), such as a
+\[multiColorPicker()\] whose groups follow the data. A freeze pauses
+only the readers that run *after* it in that flush, and at startup the
+plot output runs first. The freeze lands too late to pause anything, and
+the value the freshly built input reports then rebuilds the plot for a
+mapping it was already drawing.
+
+In short, this results in the plot being re-rendered one or more times
+in a way that can be annoying, particularly for large data sets.
+
+Give the plot a server-side value to read instead, so the client’s echo
+is compared against what is already in use rather than against `NULL`.
+For a colour picker,
+[`setup_group_colors()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_group_colors.md)
+does this for you — it resolves the mapping as soon as the group set is
+known and holds it in a
+[`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html), which
+only invalidates on a real change:
+
+Create the store beside your group-levels reactive:
+
+``` r
+
+palette_store <- setup_group_colors(
+    input, "palette.colours", palette_groups,
+    default_palette_values, defaults, params
+)
+```
+
+Seed it inside the picker’s
+[`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html), with the
+same colours the input itself is built from, so the mapping is right
+even when the render was deferred (a picker on a hidden tab is suspended
+until that tab is opened):
+
+``` r
+
+initial_colors <- isolate(resolve_palette(
+    groups, input$palette.colours, default_palette_values,
+    .default_group_colors(defaults, "palette.colours")
+))
+palette_store(initial_colors)
+```
+
+Read the store in the plot reactive, in place of the raw input:
+
+``` r
+
+palette_values <- isolate_fn(palette_store())   # not isolate_fn(input$palette.colours)
+```
+
+The same shape works for any
+[`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html)-rebuilt
+input: resolve the value on the server, hold it in a
+[`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html), and
+have the plot read that.
+
+### Axis Limits
+
+Limits behave the same way, and for the same reason: the module derives
+them on the server, pushes them into the `y.min`/`y.max` controls, and
+the echo of that push rebuilds the plot.
+[`setup_axis_range()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_axis_range.md)
+is the store for them.
+
+Create the store, then seed it beside every `update*Input()` that sets
+the limits — the y-data observer and the Reset button:
+
+``` r
+
+y_range_store <- setup_axis_range(input, session, params = params)
+
+observeEvent(input$y.data, {
+    y_range <- .calculate_range(df = data(), data_col_y = input$y.data,
+                                axis_scale_factor = .y_axis_scale_factor)
+    if (!is.null(y_range)) {
+        y_range_store(list(min = y_range$min, max = y_range$max))
+        updateNumericInput(session, "y.min", value = y_range$min)
+        updateNumericInput(session, "y.max", value = y_range$max)
+    }
+})
+```
+
+Read `isolate_fn(y_range_store())` in the plot reactive, in place of
+`isolate_fn(input$y.min)` and `isolate_fn(input$y.max)`.
+
+If your module draws significance brackets, pass `headroom` as well. The
+brackets are stacked above the data, so the limits have to clear them or
+they are drawn clipped;
+[`stat_bracket_y_max()`](https://j-andrews7.github.io/VizModules/dev/reference/stat_bracket_y_max.md)
+works out how high they will reach, and the store raises the maximum to
+meet it and updates the control to match. It only ever raises, so a
+larger limit the user chose is left alone:
+
+``` r
+
+y_range_store <- setup_axis_range(
+    input, session, params = params,
+    headroom = function() {
+        if (!isTRUE(input$stats.enabled)) {
+            return(NULL)
+        }
+        .stat_bracket_headroom(
+            df = data(), x = input$x.data, y = input$y.data,
+            group.by = .blank_to_null(input$group.by),
+            facet.by = .blank_to_null(input$facet.by),
+            per.facet = isTRUE(input$stat.per.facet),
+            input = input
+        )
+    }
+)
+```
+
+Pass the resolved limits on to
+[`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/apply_stat_annotations.md)
+too, as `y.min` and `y.max`. It has the last word on the drawn range,
+and knowing what you asked for is what lets it leave a large maximum
+alone rather than shrinking the axis onto the brackets.
+
 ## Persisting Manual Layout Edits
 
 Every VizModules plot is interactively editable: users can drag the
 legend, reposition or re-text annotations, drag the (draggable) axis
-titles, and slide a continuous-colour legend (colorbar) to their heart’s
-content.
+titles to their heart’s content.
 
 Because each module rebuilds its figure from scratch on every input
 change, those hand-made tweaks would be lost on the next re-render
@@ -388,6 +615,33 @@ and extend. Apply these conventions to every new module.
   cross-reference the upstream docs. E.g., label the `group_by` input
   `"Group By"`.
 
+### Select Inputs
+
+Use
+[`viz_select_input()`](https://j-andrews7.github.io/VizModules/dev/reference/viz_select_input.md)
+rather than
+[`shiny::selectInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html)
+or
+[`shiny::selectizeInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html),
+and
+[`update_viz_select()`](https://j-andrews7.github.io/VizModules/dev/reference/update_viz_select.md)
+in place of their `update*()` counterparts. It takes the same
+`inputId`/`label`/`choices`/`selected`/`multiple` arguments, but renders
+a virtualised dropdown, so an input backed by a column with tens of
+thousands of distinct values stays usable. A search box appears
+automatically once there are more than ten choices.
+
+An empty-string choice still means “no selection”; it is displayed as
+`(none)` so users can see and pick it.
+
+``` r
+
+viz_select_input(ns("group.by"), "Group By",
+    choices = cat.choices,
+    selected = get_default(defaults, "group.by", "", function(x) x %in% cat.choices)
+)
+```
+
 ### Tooltips with `tipify`
 
 Wrap any non-obvious input in
@@ -439,6 +693,24 @@ covers your needs:
 | [`uniform_axes_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_axes_inputs_ui.md) | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
 | [`uniform_plotly_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_plotly_inputs_ui.md) | Download buttons, margins, subplot spacing, and draw-shape styling |
+| [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_legend_inputs_ui.md) | Legend title and entry label font sizes |
+| [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_annotation_inputs_ui.md) | Highlighting and labelling of individual data points |
+
+Each UI helper has a matching `reset_*_inputs()` function to call from
+the module’s `observeEvent(input$reset, ...)` block.
+
+Modules that draw individual points can adopt
+[`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_annotation_inputs_ui.md)
+to let users highlight and label points by the values of a chosen
+column. The server side needs the chosen column carried in the plot’s
+hover text (that is where the values are read back from), then
+`.apply_highlight_styling()` to restyle matching markers and
+`.create_highlight_annotations()`/`.create_selected_annotations()` to
+build the labels. Set `require.markers = TRUE` when other scatter traces
+are drawn from the same data (box or violin outlines, say) so only the
+point markers are matched. Append the resulting annotations to
+`fig$x$layout$annotations` rather than replacing them, or facet strip
+labels and statistical brackets will be lost.
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*`
 arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE`

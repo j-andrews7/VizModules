@@ -27,7 +27,11 @@ linePlotApp(
 - defaults:
 
   A named list of input IDs and their default values to apply on
-  startup.
+  startup. An entry may also be a
+  [`shiny::reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) or
+  [`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)
+  to have the input follow the parent app's state; see
+  [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md).
 
 - hide.inputs:
 

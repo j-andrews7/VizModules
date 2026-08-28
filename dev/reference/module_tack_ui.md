@@ -36,8 +36,8 @@ library(VizModules)
 library(shiny)
 ns <- NS("myModule")
 module_tack_ui(ns)
-#> <div class="row">
-#>   <div class="col-sm-2" style="margin-top: 25px;">
+#> <div class="module-tack" style="margin-top: 12px;">
+#>   <div class="module-tack-switch" style="margin-bottom: 4px;">
 #>     <div class="form-group shiny-input-container">
 #>       <div class="material-switch">
 #>         <label for="myModule-auto.update" style="padding-right: 10px;">Auto Update</label>
@@ -46,14 +46,10 @@ module_tack_ui(ns)
 #>       </div>
 #>     </div>
 #>   </div>
-#>   <div class="col-sm-3" style="margin-top: 25px;">
-#>     <button id="myModule-update" style="width:100%;" type="button" class="btn btn-default action-button"><span class="action-label">Update</span></button>
-#>   </div>
-#>   <div class="col-sm-2" style="margin-top: 25px;">
-#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="width:100%;" type="button"><span class="action-label">Reset</span></button>
-#>   </div>
-#>   <div class="col-sm-5" style="margin-top: 25px;">
-#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.source" tabindex="-1" target="_blank" width="100%">
+#>   <div class="module-tack-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
+#>     <button class="btn btn-default action-button btn-primary" id="myModule-update" style="flex: 1 1 45%;" type="button"><span class="action-label">Update</span></button>
+#>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="flex: 1 1 45%;" type="button"><span class="action-label">Reset</span></button>
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
 #>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
 #>       Source Download
 #>     </a>

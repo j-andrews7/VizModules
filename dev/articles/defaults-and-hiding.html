@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -144,12 +145,100 @@ erroring. This means a typo in a key is silent; double-check key names
 against the help page if a default appears to have no effect.</p>
 </div>
 <div class="section level3">
+<h3 id="reactive-defaults-driving-inputs-from-app-state">Reactive defaults: driving inputs from app state<a class="anchor" aria-label="anchor" href="#reactive-defaults-driving-inputs-from-app-state"></a>
+</h3>
+<p>Sometimes a parameter needs to <em>follow</em> your app rather than
+be fixed once. A common case is a colour mapping that should track a
+column the user has selected elsewhere in the app. For this, any
+individual entry in <code>defaults</code> may be a
+<code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code> or a <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal()</a></code> instead of a
+plain value:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput</a></span><span class="op">(</span><span class="st">"colour_col"</span>, <span class="st">"Colour by"</span>, choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"gear"</span>, <span class="st">"carb"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/htmlOutput.html" class="external-link">uiOutput</a></span><span class="op">(</span><span class="st">"controls"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="../reference/dittoViz_scatterPlotOutputUI.html">dittoViz_scatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">plot_defaults</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        x.by <span class="op">=</span> <span class="st">"wt"</span>,</span>
+<span>        y.by <span class="op">=</span> <span class="st">"mpg"</span>,</span>
+<span>        color.by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">colour_col</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">output</span><span class="op">$</span><span class="va">controls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>        <span class="fu"><a href="../reference/dittoViz_scatterPlotInputsUI.html">dittoViz_scatterPlotInputsUI</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="va">mtcars</span>, defaults <span class="op">=</span> <span class="va">plot_defaults</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="st">"p"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, defaults <span class="op">=</span> <span class="va">plot_defaults</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<p>Pass the same list to both <code>*InputsUI()</code> and
+<code>*Server()</code>, as you would for static defaults. Because the UI
+needs access to the reactive, build it inside <code><a href="https://rdrr.io/pkg/shiny/man/renderUI.html" class="external-link">renderUI()</a></code>
+(the UI seed is taken with <code><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate()</a></code>, so this does not
+cause the controls to re-render whenever the reactive changes).</p>
+<p>You get three guarantees:</p>
+<ul>
+<li>
+<strong>The parameter tracks the reactive.</strong> Every change
+flows through to the plot.</li>
+<li>
+<strong>The control stays correct and editable.</strong> The Color
+By selector shows the current column, and the user can still change
+it.</li>
+<li>
+<strong>The plot renders once per change.</strong> The value is
+resolved server-side, in the same reactive flush as the data, so there
+is no flicker.</li>
+</ul>
+<p>Semantics worth knowing:</p>
+<ul>
+<li>
+<strong>An external change always wins.</strong> If the user has
+picked a different colour column in the module and then changes the
+app-level selector, the selector’s value replaces their choice.</li>
+<li>
+<strong>Reset restores the reactive’s <em>current</em>
+value</strong>, not the value it held at startup.</li>
+<li>
+<strong>Only <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal()</a></code>
+are recognised.</strong> A plain function is treated as a literal
+default value, not as something to call.</li>
+<li>
+<strong>Composite widgets sync cosmetically only.</strong> The plot
+always uses the current value, but a compound control that does not
+accept a generic value message — <code>custom.models</code> in the
+scatter module is the one to watch — will not re-display it. Reactive
+defaults are not supported for that input.</li>
+</ul>
+<div class="section level4">
+<h4 id="why-not-updateinput-from-the-parent">Why not <code>update*Input()</code> from the parent?<a class="anchor" aria-label="anchor" href="#why-not-updateinput-from-the-parent"></a>
+</h4>
+<p>The obvious alternative is an <code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent()</a></code> in the
+parent calling <code>updateTextInput(session, "p-main", ...)</code>.
+That works, but <code>update*Input()</code> is an asynchronous
+round-trip to the browser, so each change renders the plot
+<strong>twice</strong>: once with the stale value, then again when the
+new value arrives back from the client. Reactive defaults exist to avoid
+that second render. <code>dev-notes/reactive-defaults-repro.R</code> in
+the package source runs both approaches side by side with render
+counters if you want to see the difference.</p>
+</div>
+</div>
+<div class="section level3">
 <h3 id="passing-defaults-through-createmoduleapp-and-app">Passing defaults through <code>createModuleApp()</code> and
 <code>*App()</code><a class="anchor" aria-label="anchor" href="#passing-defaults-through-createmoduleapp-and-app"></a>
 </h3>
 <p><code>defaults</code> is forwarded all the way through the app
 factory:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_BoxPlotApp.html">plotthis_BoxPlotApp</a></span><span class="op">(</span></span>
 <span>    defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        x.by     <span class="op">=</span> <span class="st">"Species"</span>,</span>
@@ -159,7 +248,7 @@ factory:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The same <code>defaults</code> list is accepted by
 <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> directly:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/createModuleApp.html">createModuleApp</a></span><span class="op">(</span></span>
 <span>    inputs_ui_fn <span class="op">=</span> <span class="va">plotthis_BoxPlotInputsUI</span>,</span>
 <span>    output_ui_fn <span class="op">=</span> <span class="va">plotthis_BoxPlotOutputUI</span>,</span>
@@ -180,7 +269,7 @@ the <strong>server</strong> function. Those controls are hidden from the
 UI while their values are still initialised (from <code>defaults</code>
 if supplied, otherwise the built-in default) and passed to the plot on
 every render.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span></span>
 <span>        <span class="st">"p"</span>,</span>
@@ -196,7 +285,7 @@ flexbox grid that <code><a href="../reference/organize_inputs.html">organize_inp
 </h3>
 <p>A common pattern is to fix a column mapping or aesthetic so that app
 users cannot change it, while still applying it to every plot:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span></span>
 <span>        <span class="st">"p"</span>,</span>
@@ -207,6 +296,11 @@ users cannot change it, while still applying it to every plot:</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>The colour mapping is always <code>cyl</code>, and the control for it
 never appears.</p>
+<p>This composes with reactive defaults: a hidden control whose default
+is a <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive()</a></code> still drives the plot, because the value is
+resolved server-side rather than read back from the (now invisible)
+input. That is the cleanest way to lock a parameter to app state
+entirely.</p>
 <hr>
 </div>
 </div>
@@ -219,7 +313,7 @@ never appears.</p>
 <code>"Axes"</code>, <code>"Legend"</code>, <code>"Plotly"</code>). Pass
 a character vector of tab names to <code>hide.tabs</code> to remove
 whole groups at once.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span></span>
 <span>        <span class="st">"p"</span>,</span>
@@ -281,7 +375,7 @@ described there. Common tabs across most modules include:</p>
 to set defaults for everything the user shouldn’t touch, hide the
 individual controls that need fine-grained locking, and hide any whole
 tabs that are irrelevant for your use case:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
@@ -319,7 +413,7 @@ are removed because they aren’t relevant to this app.</p>
 </h2>
 <p>Both accept <code>hide.inputs</code> and <code>hide.tabs</code>,
 forwarding them to the server if it supports those arguments:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_ViolinPlotApp.html">plotthis_ViolinPlotApp</a></span><span class="op">(</span></span>
 <span>    defaults    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x.by <span class="op">=</span> <span class="st">"Species"</span>, y.by <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span>,</span>
 <span>    hide.inputs <span class="op">=</span> <span class="st">"color.by"</span>,</span>
@@ -334,7 +428,7 @@ forwarding them to the server if it supports those arguments:</p>
 <code><a href="../articles/custom-modules.html">vignette("custom-modules", package = "VizModules")</a></code>), you
 can hide and show inputs at runtime in response to other inputs using
 <code>shinyjs</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://deanattali.com/shinyjs/" class="external-link">shinyjs</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">myModuleServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
@@ -353,17 +447,16 @@ can hide and show inputs at runtime in response to other inputs using
 <span><span class="op">}</span></span></code></pre></div>
 <p>Note that <code><a href="https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html" class="external-link">shinyjs::hide()</a></code> / <code><a href="https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html" class="external-link">shinyjs::show()</a></code>
 act on the input element itself. For the reflow behaviour (no empty
-gap), use the internal <code>.hide_input()</code> /
-<code>.show_input()</code> helpers instead, which target the wrapping
-cell in the flexbox grid:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+gap), use the <code><a href="../reference/hide_input.html">hide_input()</a></code> / <code><a href="../reference/show_input.html">show_input()</a></code>
+helpers instead, which target the wrapping cell in the flexbox grid:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">myModuleServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html" class="external-link">observe</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">size.by</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>                <span class="fu">VizModules</span><span class="fu">:::</span><span class="fu">.hide_input</span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
+<span>                <span class="fu">VizModules</span><span class="fu">::</span><span class="fu"><a href="../reference/hide_input.html">hide_input</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
 <span>            <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>                <span class="fu">VizModules</span><span class="fu">:::</span><span class="fu">.show_input</span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
+<span>                <span class="fu">VizModules</span><span class="fu">::</span><span class="fu"><a href="../reference/show_input.html">show_input</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
 <span>            <span class="op">}</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span></span>

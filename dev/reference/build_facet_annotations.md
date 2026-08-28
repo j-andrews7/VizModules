@@ -189,6 +189,9 @@ build_facet_annotations(c("A", "B", "C"), x.title = "X", y.title = "Y")
 #> [[4]]$yanchor
 #> [1] "top"
 #> 
+#> [[4]]$annotationType
+#> [1] "axis"
+#> 
 #> [[4]]$font
 #> [[4]]$font$size
 #> [1] 14
@@ -222,6 +225,9 @@ build_facet_annotations(c("A", "B", "C"), x.title = "X", y.title = "Y")
 #> 
 #> [[5]]$textangle
 #> [1] -90
+#> 
+#> [[5]]$annotationType
+#> [1] "axis"
 #> 
 #> [[5]]$font
 #> [[5]]$font$size

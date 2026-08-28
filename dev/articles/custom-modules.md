@@ -144,13 +144,51 @@ focusedModuleUI <- function(id) {
     ns <- NS(id)
     tagList(
         h4("Simplified Scatter Plot"),
-        # Hide a few parameters
-        dittoViz_scatterPlotInputsUI(id, iris,
-            hide.inputs = c("shape.by", "color.by")
-        )
+        # The UI takes no hide.* arguments -- see the server below.
+        dittoViz_scatterPlotInputsUI(id, iris)
+    )
+}
+
+focusedModuleServer <- function(id, data_reactive) {
+    # hide.inputs and hide.tabs are arguments of the *Server*, not the *InputsUI.
+    dittoViz_scatterPlotServer(id, data_reactive,
+        hide.inputs = c("shape.by", "color.by")
     )
 }
 ```
+
+## Driving Base Module Inputs From Your Wrapper
+
+Hiding an input fixes it to one value. When a base module parameter
+instead needs to *follow* something your wrapper computes, pass a
+[`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) as that
+entry of `defaults` rather than reaching for `update*Input()`. The key
+must name an input the module actually reads –
+[`get_default()`](https://j-andrews7.github.io/VizModules/dev/reference/get_default.md)
+falls back silently, so a `defaults` entry for an unexposed key does
+nothing at all. (`main` is the one to watch: no module exposes a plot
+title, so `defaults = list(main = ...)` has no effect.)
+
+``` r
+
+colouredModuleServer <- function(id, data_reactive) {
+    colour_col <- moduleServer(id, function(input, output, session) {
+        reactive(if (isTRUE(input$filter_setosa)) "" else "Species")
+    })
+
+    # The colour mapping tracks the checkbox, but the user can still change it.
+    dittoViz_scatterPlotServer(
+        id, data_reactive,
+        defaults = list(color.by = colour_col)
+    )
+}
+```
+
+This is the recommended parent-to-child channel for parameter values. It
+resolves server-side, so the plot renders once per change instead of
+twice, and the control stays user-editable. See
+[`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/defaults-and-hiding.md)
+for the full semantics.
 
 ## Automatically Preserving Manual Title/Legend/Annotation Edits
 
@@ -202,5 +240,23 @@ helpers, but this is pretty much all you need to do.
 
 5.  **Consider composability**: Design your wrappers so they could
     potentially be wrapped by even higher-level modules.
+
+6.  **Prefer reactive `defaults` over `update*Input()`**: To drive a
+    base module parameter from your wrapper’s state, pass a
+    [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) in
+    `defaults`. Pushing values with `update*Input()` costs an extra
+    render on every change. When you must update one of your *own*
+    inputs from the server, call
+    [`freezeReactiveValue()`](https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html)
+    on it first so readers pause instead of rendering with the stale
+    value. Freezing does not cover an input you rebuild with
+    [`renderUI()`](https://rdrr.io/pkg/shiny/man/renderUI.html), though.
+    In those cases, resolve the value server-side and have the plot read
+    that instead, as
+    [`setup_group_colors()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_group_colors.md)
+    does for a colour picker (see the “Updating Your Own Inputs From the
+    Server” section in
+    [`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/dev/articles/adding-a-new-module.md)
+    for more info).
 
 See any of the existing modules for clear reference examples.

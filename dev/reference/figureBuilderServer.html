@@ -17,7 +17,7 @@ SVG (or bundle every plot's source data, HTML plot, and statistics into one
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,7 @@ SVG (or bundle every plot's source data, HTML plot, and statistics into one
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -96,7 +97,9 @@ Each entry is itself a list with components: <code>label</code> (character, show
 picker), <code>dataset</code> (character, the dataset name its <code>defaults</code> were written
 for), <code>inputs_ui</code>, <code>output_ui</code>, and <code>server_fn</code> (the module's three
 functions), and <code>defaults</code> (a named list of input defaults applied only when
-<code>dataset</code> is the chosen dataset).</p></dd>
+<code>dataset</code> is the chosen dataset). <code>defaults</code> is passed to both <code>inputs_ui</code>
+and <code>server_fn</code>, so it can seed server-rendered controls such as the group
+color picker.</p></dd>
 
 </dl></div>
     <div class="section level2">

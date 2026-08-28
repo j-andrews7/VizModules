@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.3.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.5.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@
     <li><a class="dropdown-item" href="../articles/custom-model-lines.html">Custom Model Lines in Scatter Plots</a></li>
     <li><a class="dropdown-item" href="../articles/custom-modules.html">Building Custom Modules</a></li>
     <li><a class="dropdown-item" href="../articles/custom-shiny-inputs.html">VizModules Custom Shiny Inputs</a></li>
+    <li><a class="dropdown-item" href="../articles/data-filtering.html">Filtering Data with the dataFilter Module</a></li>
     <li><a class="dropdown-item" href="../articles/defaults-and-hiding.html">Defaults and Hiding Controls</a></li>
     <li><a class="dropdown-item" href="../articles/quick-start.html">Quick Start with VizModules</a></li>
     <li><a class="dropdown-item" href="../articles/statistical-testing.html">Statistical Testing</a></li>
@@ -121,6 +122,43 @@
 
         </dt>
         <dd>Server logic for yPlot module</dd>
+      </dl></div><div class="section level2">
+      <h2 id="freqplot-module">freqPlot Module<a class="anchor" aria-label="anchor" href="#freqplot-module"></a></h2>
+
+      <div class="section-desc"><p>dittoViz-based composition/frequency plot module (per-sample frequencies by group).</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="dittoViz_freqPlotApp.html">dittoViz_freqPlotApp()</a></code>
+
+        </dt>
+        <dd>Create an example Modular freqPlot Shiny Application</dd>
+
+        <dt>
+
+          <code><a href="dittoViz_freqPlotInputsUI.html">dittoViz_freqPlotInputsUI()</a></code>
+
+        </dt>
+        <dd>Input UI components for the freqPlot module</dd>
+
+        <dt>
+
+          <code><a href="dittoViz_freqPlotOutputUI.html">dittoViz_freqPlotOutputUI()</a></code>
+
+        </dt>
+        <dd>Output UI components for the freqPlot module</dd>
+
+        <dt>
+
+          <code><a href="dittoViz_freqPlotServer.html">dittoViz_freqPlotServer()</a></code>
+
+        </dt>
+        <dd>Server logic for freqPlot module</dd>
       </dl></div><div class="section level2">
       <h2 id="lineplot-module">linePlot Module<a class="anchor" aria-label="anchor" href="#lineplot-module"></a></h2>
 
@@ -638,6 +676,64 @@
         </dt>
         <dd>Histogram Plot Server Module</dd>
       </dl></div><div class="section level2">
+      <h2 id="heatmap-module">Heatmap Module<a class="anchor" aria-label="anchor" href="#heatmap-module"></a></h2>
+
+      <div class="section-desc"><p>ComplexHeatmap-based interactive heatmap module.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code>
+
+        </dt>
+        <dd>Create an example Modular ComplexHeatmap Shiny Application</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapInputsUI.html">ComplexHeatmap_HeatmapInputsUI()</a></code>
+
+        </dt>
+        <dd>Input UI components for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapOutputUI.html">ComplexHeatmap_HeatmapOutputUI()</a></code>
+
+        </dt>
+        <dd>Output UI components for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>
+
+        </dt>
+        <dd>Server logic for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapMainOutputUI.html">ComplexHeatmap_HeatmapMainOutputUI()</a></code>
+
+        </dt>
+        <dd>Main heatmap output UI component for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapSubOutputUI.html">ComplexHeatmap_HeatmapSubOutputUI()</a></code>
+
+        </dt>
+        <dd>Sub-heatmap output UI component for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="ComplexHeatmap_HeatmapInfoOutputUI.html">ComplexHeatmap_HeatmapInfoOutputUI()</a></code>
+
+        </dt>
+        <dd>Click/brush info output UI component for the ComplexHeatmap module</dd>
+      </dl></div><div class="section level2">
       <h2 id="datafilter-module">dataFilter Module<a class="anchor" aria-label="anchor" href="#datafilter-module"></a></h2>
 
       <div class="section-desc"><p>Reusable data filtering module for use with plot modules.</p></div>
@@ -660,6 +756,13 @@
 
         </dt>
         <dd>UI component for the dataFilter module</dd>
+
+        <dt>
+
+          <code><a href="resolve_column_targets.html">resolve_column_targets()</a></code>
+
+        </dt>
+        <dd>Translate column names or positions into DT column targets</dd>
       </dl></div><div class="section level2">
       <h2 id="figure-builder-module">Figure Builder Module<a class="anchor" aria-label="anchor" href="#figure-builder-module"></a></h2>
 
@@ -730,7 +833,7 @@
       </dl></div><div class="section level2">
       <h2 id="ui-helpers">UI Helpers<a class="anchor" aria-label="anchor" href="#ui-helpers"></a></h2>
 
-      <div class="section-desc"><p>Utility functions for building and organising module UIs.</p></div>
+      <div class="section-desc"><p>Utility functions for building and organising module UIs, and the server-side stores that keep a module’s own controls from costing an extra render.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -753,6 +856,13 @@
 
         <dt>
 
+          <code><a href="hide_input.html">hide_input()</a></code>
+
+        </dt>
+        <dd>Hide the grid cells wrapping module inputs</dd>
+
+        <dt>
+
           <code><a href="module_tack_ui.html">module_tack_ui()</a></code>
 
         </dt>
@@ -771,6 +881,55 @@
 
         </dt>
         <dd>Set up auto-update/isolate logic for reactive contexts</dd>
+
+        <dt>
+
+          <code><a href="setup_axis_range.html">setup_axis_range()</a></code>
+
+        </dt>
+        <dd>Track the axis limits a plot should draw with</dd>
+
+        <dt>
+
+          <code><a href="setup_reactive_defaults.html">setup_reactive_defaults()</a></code>
+
+        </dt>
+        <dd>Resolve reactive <code>defaults</code> entries into a server-side parameter store</dd>
+
+        <dt>
+
+          <code><a href="show_input.html">show_input()</a></code>
+
+        </dt>
+        <dd>Show the grid cells wrapping module inputs</dd>
+
+        <dt>
+
+          <code><a href="toggle_input_cell.html">toggle_input_cell()</a></code>
+
+        </dt>
+        <dd>Hide or show the grid cell wrapping a module input</dd>
+
+        <dt>
+
+          <code><a href="use_vizmodules_skills.html">use_vizmodules_skills()</a></code>
+
+        </dt>
+        <dd>Install the bundled VizModules agent skills into a project</dd>
+
+        <dt>
+
+          <code><a href="viz_select_input.html">viz_select_input()</a></code>
+
+        </dt>
+        <dd>Create a select input that scales to very large choice sets</dd>
+
+        <dt>
+
+          <code><a href="update_viz_select.html">update_viz_select()</a></code>
+
+        </dt>
+        <dd>Update a select input created by viz_select_input</dd>
       </dl></div><div class="section level2">
       <h2 id="uniform-ui-inputs">Uniform UI Inputs<a class="anchor" aria-label="anchor" href="#uniform-ui-inputs"></a></h2>
 
@@ -808,6 +967,20 @@
 
         </dt>
         <dd>Generate uniform Plotly input UI</dd>
+
+        <dt>
+
+          <code><a href="uniform_annotation_inputs_ui.html">uniform_annotation_inputs_ui()</a></code>
+
+        </dt>
+        <dd>Generate uniform Annotation input UI</dd>
+
+        <dt>
+
+          <code><a href="reset_annotation_inputs.html">reset_annotation_inputs()</a></code>
+
+        </dt>
+        <dd>Reset uniform Annotation inputs to defaults</dd>
 
         <dt>
 
@@ -952,6 +1125,13 @@
 
         </dt>
         <dd>Apply axis title font styling to shared facet axis annotations</dd>
+
+        <dt>
+
+          <code><a href="reset_axis_title_text.html">reset_axis_title_text()</a></code>
+
+        </dt>
+        <dd>Drop persisted axis-title text edits</dd>
 
         <dt>
 
@@ -1133,6 +1313,13 @@
 
         </dt>
         <dd>Parse pair strings from UI into list of length-2 vectors</dd>
+
+        <dt>
+
+          <code><a href="stat_bracket_y_max.html">stat_bracket_y_max()</a></code>
+
+        </dt>
+        <dd>Y-axis top needed to draw statistical annotation brackets in full</dd>
       </dl></div><div class="section level2">
       <h2 id="palette-color-utilities">Palette &amp; Color Utilities<a class="anchor" aria-label="anchor" href="#palette-color-utilities"></a></h2>
 
@@ -1156,6 +1343,13 @@
 
         </dt>
         <dd>Resolve a color palette for plot groups</dd>
+
+        <dt>
+
+          <code><a href="setup_group_colors.html">setup_group_colors()</a></code>
+
+        </dt>
+        <dd>Track the group-to-color mapping a plot should draw with</dd>
       </dl></div><div class="section level2">
       <h2 id="data-download-utilities">Data Download Utilities<a class="anchor" aria-label="anchor" href="#data-download-utilities"></a></h2>
 
@@ -1256,6 +1450,13 @@
 
         <dt>
 
+          <code><a href="example_composition.html">example_composition</a></code>
+
+        </dt>
+        <dd>Example single-cell-style composition data for the freqPlot module</dd>
+
+        <dt>
+
           <code><a href="example_demographics.html">example_demographics</a></code>
 
         </dt>
@@ -1274,6 +1475,20 @@
 
         </dt>
         <dd>Example single-cell marker gene dataset for dot plots</dd>
+
+        <dt>
+
+          <code><a href="example_heatmap_matrix.html">example_heatmap_matrix</a></code>
+
+        </dt>
+        <dd>Example gene-expression-style matrix for the ComplexHeatmap module</dd>
+
+        <dt>
+
+          <code><a href="example_heatmap_column_data.html">example_heatmap_column_data</a></code>
+
+        </dt>
+        <dd>Example sample-metadata table for the ComplexHeatmap module</dd>
 
         <dt>
 

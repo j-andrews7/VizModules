@@ -26,6 +26,20 @@ dittoViz-based Y-axis plot module (box, violin, ridgeplot, etc.).
 - [`dittoViz_yPlotServer()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_yPlotServer.md)
   : Server logic for yPlot module
 
+## freqPlot Module
+
+dittoViz-based composition/frequency plot module (per-sample frequencies
+by group).
+
+- [`dittoViz_freqPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_freqPlotApp.md)
+  : Create an example Modular freqPlot Shiny Application
+- [`dittoViz_freqPlotInputsUI()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_freqPlotInputsUI.md)
+  : Input UI components for the freqPlot module
+- [`dittoViz_freqPlotOutputUI()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_freqPlotOutputUI.md)
+  : Output UI components for the freqPlot module
+- [`dittoViz_freqPlotServer()`](https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_freqPlotServer.md)
+  : Server logic for freqPlot module
+
 ## linePlot Module
 
 Interactive line plot module.
@@ -205,6 +219,25 @@ plotthis-based interactive histogram module.
 - [`plotthis_HistogramServer()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_HistogramServer.md)
   : Histogram Plot Server Module
 
+## Heatmap Module
+
+ComplexHeatmap-based interactive heatmap module.
+
+- [`ComplexHeatmap_HeatmapApp()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapApp.md)
+  : Create an example Modular ComplexHeatmap Shiny Application
+- [`ComplexHeatmap_HeatmapInputsUI()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapInputsUI.md)
+  : Input UI components for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapOutputUI()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapOutputUI.md)
+  : Output UI components for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapServer.md)
+  : Server logic for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapMainOutputUI()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapMainOutputUI.md)
+  : Main heatmap output UI component for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapSubOutputUI()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapSubOutputUI.md)
+  : Sub-heatmap output UI component for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapInfoOutputUI()`](https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapInfoOutputUI.md)
+  : Click/brush info output UI component for the ComplexHeatmap module
+
 ## dataFilter Module
 
 Reusable data filtering module for use with plot modules.
@@ -213,6 +246,8 @@ Reusable data filtering module for use with plot modules.
   : Server logic for the dataFilter module
 - [`dataFilterUI()`](https://j-andrews7.github.io/VizModules/dev/reference/dataFilterUI.md)
   : UI component for the dataFilter module
+- [`resolve_column_targets()`](https://j-andrews7.github.io/VizModules/dev/reference/resolve_column_targets.md)
+  : Translate column names or positions into DT column targets
 
 ## Figure Builder Module
 
@@ -240,18 +275,50 @@ Reusable custom Shiny inputs for use in module UIs.
 
 ## UI Helpers
 
-Utility functions for building and organising module UIs.
+Utility functions for building and organising module UIs, and the
+server-side stores that keep a module’s own controls from costing an
+extra render.
 
 - [`createModuleApp()`](https://j-andrews7.github.io/VizModules/dev/reference/createModuleApp.md)
   : Create an Example Module App from Any Module Trio
+
 - [`empty_plot()`](https://j-andrews7.github.io/VizModules/dev/reference/empty_plot.md)
   : Create an empty ggplot2 plot or plotly plot with input text
+
+- [`hide_input()`](https://j-andrews7.github.io/VizModules/dev/reference/hide_input.md)
+  : Hide the grid cells wrapping module inputs
+
 - [`module_tack_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/module_tack_ui.md)
   : Create standard tack UI for module inputs
+
 - [`organize_inputs()`](https://j-andrews7.github.io/VizModules/dev/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
+
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
+
+- [`setup_axis_range()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_axis_range.md)
+  : Track the axis limits a plot should draw with
+
+- [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_reactive_defaults.md)
+  :
+
+  Resolve reactive `defaults` entries into a server-side parameter store
+
+- [`show_input()`](https://j-andrews7.github.io/VizModules/dev/reference/show_input.md)
+  : Show the grid cells wrapping module inputs
+
+- [`toggle_input_cell()`](https://j-andrews7.github.io/VizModules/dev/reference/toggle_input_cell.md)
+  : Hide or show the grid cell wrapping a module input
+
+- [`use_vizmodules_skills()`](https://j-andrews7.github.io/VizModules/dev/reference/use_vizmodules_skills.md)
+  : Install the bundled VizModules agent skills into a project
+
+- [`viz_select_input()`](https://j-andrews7.github.io/VizModules/dev/reference/viz_select_input.md)
+  : Create a select input that scales to very large choice sets
+
+- [`update_viz_select()`](https://j-andrews7.github.io/VizModules/dev/reference/update_viz_select.md)
+  : Update a select input created by viz_select_input
 
 ## Uniform UI Inputs
 
@@ -265,6 +332,10 @@ Standardised input builders and reset functions shared across modules.
   : Generate uniform Lines input UI
 - [`uniform_plotly_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_plotly_inputs_ui.md)
   : Generate uniform Plotly input UI
+- [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/dev/reference/uniform_annotation_inputs_ui.md)
+  : Generate uniform Annotation input UI
+- [`reset_annotation_inputs()`](https://j-andrews7.github.io/VizModules/dev/reference/reset_annotation_inputs.md)
+  : Reset uniform Annotation inputs to defaults
 - [`reset_axes_inputs()`](https://j-andrews7.github.io/VizModules/dev/reference/reset_axes_inputs.md)
   : Reset uniform axes inputs to defaults
 - [`reset_legend_inputs()`](https://j-andrews7.github.io/VizModules/dev/reference/reset_legend_inputs.md)
@@ -312,6 +383,8 @@ configuration.
   : Build an adjustment-aware axis label
 - [`apply_axis_title_to_annotations()`](https://j-andrews7.github.io/VizModules/dev/reference/apply_axis_title_to_annotations.md)
   : Apply axis title font styling to shared facet axis annotations
+- [`reset_axis_title_text()`](https://j-andrews7.github.io/VizModules/dev/reference/reset_axis_title_text.md)
+  : Drop persisted axis-title text edits
 - [`apply_legend_styling()`](https://j-andrews7.github.io/VizModules/dev/reference/apply_legend_styling.md)
   : Apply uniform legend font styling to a plotly figure
 - [`apply_plotly_newshape()`](https://j-andrews7.github.io/VizModules/dev/reference/apply_plotly_newshape.md)
@@ -376,6 +449,8 @@ annotations.
   : Generate comparison pair strings from data columns
 - [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/dev/reference/parse_pair_strings.md)
   : Parse pair strings from UI into list of length-2 vectors
+- [`stat_bracket_y_max()`](https://j-andrews7.github.io/VizModules/dev/reference/stat_bracket_y_max.md)
+  : Y-axis top needed to draw statistical annotation brackets in full
 
 ## Palette & Color Utilities
 
@@ -385,6 +460,8 @@ Functions for managing color palettes.
   : Color palette options for palettePicker
 - [`resolve_palette()`](https://j-andrews7.github.io/VizModules/dev/reference/resolve_palette.md)
   : Resolve a color palette for plot groups
+- [`setup_group_colors()`](https://j-andrews7.github.io/VizModules/dev/reference/setup_group_colors.md)
+  : Track the group-to-color mapping a plot should draw with
 
 ## Data Download Utilities
 
@@ -422,12 +499,18 @@ Built-in datasets for demos and testing.
 
 - [`example_bar`](https://j-andrews7.github.io/VizModules/dev/reference/example_bar.md)
   : Bar dataset for bar and split bar plot examples
+- [`example_composition`](https://j-andrews7.github.io/VizModules/dev/reference/example_composition.md)
+  : Example single-cell-style composition data for the freqPlot module
 - [`example_demographics`](https://j-andrews7.github.io/VizModules/dev/reference/example_demographics.md)
   : Example demographics dataset
 - [`example_iris`](https://j-andrews7.github.io/VizModules/dev/reference/example_iris.md)
   : Example grouped iris dataset
 - [`example_markers`](https://j-andrews7.github.io/VizModules/dev/reference/example_markers.md)
   : Example single-cell marker gene dataset for dot plots
+- [`example_heatmap_matrix`](https://j-andrews7.github.io/VizModules/dev/reference/example_heatmap_matrix.md)
+  : Example gene-expression-style matrix for the ComplexHeatmap module
+- [`example_heatmap_column_data`](https://j-andrews7.github.io/VizModules/dev/reference/example_heatmap_column_data.md)
+  : Example sample-metadata table for the ComplexHeatmap module
 - [`example_mtcars`](https://j-andrews7.github.io/VizModules/dev/reference/example_mtcars.md)
   : Example mtcars dataset with factors
 - [`example_population`](https://j-andrews7.github.io/VizModules/dev/reference/example_population.md)
