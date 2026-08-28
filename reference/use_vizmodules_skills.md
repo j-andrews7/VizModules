@@ -81,7 +81,7 @@ use_vizmodules_skills(tempdir())
 #> Installed 'vizmodules-custom-module'.
 #> Installed 'vizmodules-new-module'.
 #> 
-#> 3 skill(s) written to '/tmp/RtmpgjAsHS/.agents/skills'.
+#> 3 skill(s) written to '/tmp/RtmpvGHPdS/.agents/skills'.
 #> Restart your agent session if it was already running, so the new directory is picked up.
 
 if (FALSE) { # \dontrun{

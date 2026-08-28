@@ -244,25 +244,25 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="heatmap-HeatmapTabsetPanel" data-tabsetid="9213">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="heatmap-HeatmapTabsetPanel" data-tabsetid="8169">
 #>     <li class="active">
-#>       <a href="#tab-9213-1" data-toggle="tab" data-bs-toggle="tab" data-value="Matrix">Matrix</a>
+#>       <a href="#tab-8169-1" data-toggle="tab" data-bs-toggle="tab" data-value="Matrix">Matrix</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9213-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-8169-2" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9213-3" data-toggle="tab" data-bs-toggle="tab" data-value="Clustering">Clustering</a>
+#>       <a href="#tab-8169-3" data-toggle="tab" data-bs-toggle="tab" data-value="Clustering">Clustering</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9213-4" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-8169-4" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9213-5" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-8169-5" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9213">
-#>     <div class="tab-pane active" data-value="Matrix" id="tab-9213-1">
+#>   <div class="tab-content" data-tabsetid="8169">
+#>     <div class="tab-pane active" data-value="Matrix" id="tab-8169-1">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2168999">
@@ -307,7 +307,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-9213-2">
+#>     <div class="tab-pane" data-value="Colors" id="tab-8169-2">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify960242">
@@ -386,7 +386,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Clustering" id="tab-9213-3">
+#>     <div class="tab-pane" data-value="Clustering" id="tab-8169-3">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify5315735">
@@ -516,7 +516,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-9213-4">
+#>     <div class="tab-pane" data-value="Labels" id="tab-8169-4">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="form-group shiny-input-container" id="tipify5424804">
@@ -602,7 +602,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-9213-5">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-8169-5">
 #>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
 #>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
 #>           <div class="multi-dynamic-input shiny-input-container form-group " id="heatmap-row_annotations" data-keys="[&quot;column&quot;,&quot;side&quot;]" data-initial="[]" data-input-id="heatmap-row_annotations" data-row-prefix="row annotations">
