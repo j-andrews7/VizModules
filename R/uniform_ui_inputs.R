@@ -5,14 +5,23 @@
 #' Uses standard `if`/`else` instead of vectorized `ifelse()` to avoid
 #' silent truncation of multi-valued defaults.
 #'
-#' @param defaults A named list of default values, or NULL.
+#' Entries that are a [shiny::reactive()] or [shiny::reactiveVal()] are resolved
+#' with [shiny::isolate()] before validation, so this returns the reactive's
+#' *current* value. See [setup_reactive_defaults()] for how modules keep such
+#' entries live at render time.
+#'
+#' @param defaults A named list of default values, or NULL. Individual entries
+#'   may be a `reactive()`/`reactiveVal`.
 #' @param key Character string — the name to look up.
 #' @param fallback The value to return when `key` is absent or fails validation.
 #' @param validator An optional single-argument predicate function (e.g.,
 #'   `is.numeric`, `is.logical`). When supplied, the stored value is returned
-#'   only if `validator(value)` is `TRUE`.
+#'   only if `validator(value)` is `TRUE`. Reactive entries are validated on
+#'   their resolved value.
 #'
 #' @return The resolved default value or `fallback`.
+#'
+#' @importFrom shiny is.reactive isolate
 #'
 #' @author Jared Andrews
 #' @export
@@ -20,9 +29,13 @@
 #' get_default(list(color = "red"), "color", "black")
 #' get_default(list(), "missing", 10)
 #' get_default(list(n = "x"), "n", 5, is.numeric)
+#' get_default(list(color = shiny::reactiveVal("blue")), "color", "black")
 get_default <- function(defaults, key, fallback, validator = NULL) {
     if (!is.null(defaults) && key %in% names(defaults)) {
         value <- defaults[[key]]
+        if (is.reactive(value)) {
+            value <- isolate(value())
+        }
         if (is.null(validator) || isTRUE(validator(value))) {
             return(value)
         }
@@ -256,7 +269,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #'
 #' @return A `tagList` containing the axis input UI elements.
 #'
-#' @importFrom shiny numericInput checkboxInput selectInput tagList
+#' @importFrom shiny numericInput checkboxInput tagList
 #' @importFrom colourpicker colourInput
 #'
 #' @importFrom shinyWidgets materialSwitch
@@ -302,12 +315,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         rotate_input,
         flip_x,
         flip_y,
-        selectInput(ns("title.font.family"), "Title Font",
+        viz_select_input(ns("title.font.family"), "Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         colourInput(ns("title.font.color"), "Title Color",
             value = get_default(defaults, "title.font.color", "#000000")
@@ -329,12 +342,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("axis.title.font.color"), "Axis Title Color",
             value = get_default(defaults, "axis.title.font.color", "#000000")
         ),
-        selectInput(ns("axis.title.font.family"), "Axis Title Font",
+        viz_select_input(ns("axis.title.font.family"), "Axis Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "axis.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         checkboxInput(ns("axis.showline"), "Show Axis Borders",
             value = get_default(defaults, "axis.showline", TRUE, is.logical)
@@ -367,12 +380,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("axis.tickfont.color"), "Tick Label Color",
             value = get_default(defaults, "axis.tickfont.color", "black")
         ),
-        selectInput(ns("axis.tickfont.family"), "Tick Label Font",
+        viz_select_input(ns("axis.tickfont.family"), "Tick Label Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "axis.tickfont.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         ),
         numericInput(ns("axis.tickangle.x"), "X Tick Label Angle",
             value = get_default(defaults, "axis.tickangle.x", 0, is.numeric),
@@ -386,12 +399,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             max = 180,
             step = 15
         ),
-        selectInput(ns("axis.ticks"), "Tick Position",
+        viz_select_input(ns("axis.ticks"), "Tick Position",
             choices = c("Outside" = "outside", "Inside" = "inside", "None" = ""),
             selected = get_default(
                 defaults, "axis.ticks", "outside",
                 function(x) x %in% c("outside", "inside", "")
-            ), selectize = FALSE
+            )
         ),
         colourInput(ns("axis.tickcolor"), "Tick Mark Color",
             value = get_default(defaults, "axis.tickcolor", "black")
@@ -414,12 +427,12 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
         colourInput(ns("facet.title.font.color"), "Facet Title Color",
             value = get_default(defaults, "facet.title.font.color", "#000000")
         ),
-        selectInput(ns("facet.title.font.family"), "Facet Title Font",
+        viz_select_input(ns("facet.title.font.family"), "Facet Title Font",
             choices = font_choices,
             selected = get_default(
                 defaults, "facet.title.font.family", "Arial",
                 function(x) x %in% font_choices
-            ), selectize = FALSE
+            )
         )
     )
 }
@@ -435,7 +448,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @return A `tagList` containing the stats input UI elements.
 #'
-#' @importFrom shiny selectInput numericInput tagList
+#' @importFrom shiny numericInput tagList
 #' @importFrom shinyWidgets materialSwitch
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
@@ -455,14 +468,14 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.test"), "Test",
+            viz_select_input(ns("stat.test"), "Test",
                 choices = c(
                     "Wilcoxon" = "wilcox.test",
                     "t-test" = "t.test",
                     "Kruskal-Wallis" = "kruskal.test",
                     "ANOVA" = "anova"
                 ),
-                selected = get_default(defaults, "stat.test", "wilcox.test"), selectize = FALSE
+                selected = get_default(defaults, "stat.test", "wilcox.test")
             ),
             paste(
                 "Statistical test for comparisons.",
@@ -472,24 +485,24 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.p.adjust"), "P-value Adjustment",
+            viz_select_input(ns("stat.p.adjust"), "P-value Adjustment",
                 choices = c(
                     "holm", "hochberg", "hommel", "bonferroni",
                     "BH", "BY", "fdr", "none"
                 ),
-                selected = get_default(defaults, "stat.p.adjust", "holm"), selectize = FALSE
+                selected = get_default(defaults, "stat.p.adjust", "holm")
             ),
             "Method for multiple testing correction applied to all p-values",
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.display"), "Display",
+            viz_select_input(ns("stat.display"), "Display",
                 choices = c(
                     "Adjusted P-value" = "p.adj",
                     "P-value" = "p.value",
                     "Symbols" = "symbol"
                 ),
-                selected = get_default(defaults, "stat.display", "p.adj"), selectize = FALSE
+                selected = get_default(defaults, "stat.display", "p.adj")
             ),
             "What to display on brackets: adjusted p-values, raw p-values, or significance symbols (*, **, ***, ****)",
             placement = "top", options = tip_opts
@@ -523,8 +536,8 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.pairs"), "Comparisons",
-                choices = c(), multiple = TRUE, selectize = TRUE
+            viz_select_input(ns("stat.pairs"), "Comparisons",
+                choices = c(), multiple = TRUE
             ),
             "Select specific pairwise comparisons to display. If empty, all possible pairs are tested.",
             placement = "top", options = tip_opts
@@ -545,9 +558,9 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("stat.bracket.style"), "Bracket Style",
+            viz_select_input(ns("stat.bracket.style"), "Bracket Style",
                 choices = c("Capped" = "capped", "Flat" = "flat"),
-                selected = get_default(defaults, "stat.bracket.style", "capped"), selectize = FALSE
+                selected = get_default(defaults, "stat.bracket.style", "capped")
             ),
             "Capped brackets have vertical ticks at each end; flat brackets are a single horizontal line",
             placement = "top", options = tip_opts
@@ -601,7 +614,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @return A `tagList` containing the Plotly input UI elements.
 #'
-#' @importFrom shiny downloadButton selectInput numericInput tagList br icon
+#' @importFrom shiny downloadButton numericInput tagList br icon
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
 #'
@@ -613,7 +626,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
-        selectInput(
+        viz_select_input(
             ns("download.format"),
             "Download Format",
             selected = get_default(
@@ -621,7 +634,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
                 function(x) x %in% c("svg", "png", "jpeg", "webp")
             ),
             choices = c("svg", "png", "jpeg", "webp"),
-            width = "100%", selectize = FALSE
+            width = "100%"
         ),
         tipify(
             numericInput(ns("margin.t"), "Margin Top",
@@ -680,12 +693,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             placement = "top", options = tip_opts
         ),
         tipify(
-            selectInput(ns("shape.linetype"), "Shape Linetype",
+            viz_select_input(ns("shape.linetype"), "Shape Linetype",
                 choices = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"),
                 selected = get_default(
                     defaults, "shape.linetype", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
-                ), selectize = FALSE
+                )
             ),
             "Line dash style for shapes drawn on the plot using Plotly's drawing tools",
             placement = "top", options = tip_opts
@@ -786,6 +799,150 @@ uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
                 min = 0, step = 1
             ),
             "Font size of the legend entry labels.",
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
+#' Generate uniform Annotation input UI
+#'
+#' Creates a standardized tagList of the point highlighting and annotation
+#' inputs shared by modules that draw individual data points. Points are
+#' identified by the values of the column chosen in "Annotate By", which are
+#' also used as the label text.
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#' @param choices Character vector of column names offered by "Annotate By".
+#' @param annotate.note Character, or `NULL`. Extra sentence appended to the
+#'   "Annotate By" tooltip, for module-specific caveats.
+#'
+#' @return A `tagList` containing the annotation input UI elements.
+#'
+#' @importFrom shiny numericInput checkboxInput textAreaInput actionButton tagList
+#' @importFrom colourpicker colourInput
+#' @importFrom shinyBS tipify
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot1")
+#' uniform_annotation_inputs_ui(ns, choices = c("", "Species", "Sepal.Length"))
+uniform_annotation_inputs_ui <- function(ns, defaults = NULL, choices = "", annotate.note = NULL) {
+    tip_opts <- list(container = "body")
+    annotate_tip <- paste(c(
+        "Select a column whose values will be used to identify points for highlighting and annotation",
+        annotate.note
+    ), collapse = ". ")
+
+    tagList(
+        tipify(
+            viz_select_input(ns("annotate.by"), "Annotate By",
+                choices = choices,
+                selected = get_default(
+                    defaults, "annotate.by", "",
+                    function(x) x %in% choices
+                )
+            ), annotate_tip,
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            textAreaInput(ns("highlight.points"), "Points to Highlight",
+                placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
+                value = get_default(defaults, "highlight.points", ""),
+                rows = 3
+            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("highlight.color"), "Highlight Fill",
+                value = get_default(defaults, "highlight.color", "#00FFF7"),
+                allowTransparent = TRUE
+            ), "Choose the fill color for highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("highlight.size"), "Highlight Size",
+                min = 0.1, step = 0.5,
+                value = get_default(defaults, "highlight.size", 7, is.numeric)
+            ), "Set the size of highlighted points on the plot",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("highlight.border.color"), "Highlight Border Color",
+                value = get_default(defaults, "highlight.border.color", "#000000")
+            ), "Choose the border color for highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("highlight.border.width"), "Highlight Border Width",
+                min = 0, step = 0.25,
+                value = get_default(defaults, "highlight.border.width", 1, is.numeric)
+            ), "Set the width of the border around highlighted points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            checkboxInput(ns("highlight.auto.annotate"), "Auto-annotate Highlights",
+                value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
+            ), "When enabled, automatically adds text labels to highlighted points using their 'Annotate By' values",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("annotation.color"), "Annotation Color",
+                value = get_default(defaults, "annotation.color", "black")
+            ), "Set the text color for annotation labels",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.ax"), "Annotation X Offset",
+                step = 1,
+                value = get_default(defaults, "annotation.ax", 20, is.numeric)
+            ), "Horizontal pixel offset of annotation labels from their target points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.ay"), "Annotation Y Offset",
+                step = 1,
+                value = get_default(defaults, "annotation.ay", -20, is.numeric)
+            ), "Vertical pixel offset of annotation labels from their target points (negative values move up)",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.size"), "Annotation Size",
+                min = 1, step = 0.5,
+                value = get_default(defaults, "annotation.size", 10, is.numeric)
+            ), "Set the font size of annotation text labels in points",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            checkboxInput(ns("annotation.showarrow"), "Show Arrow",
+                value = get_default(defaults, "annotation.showarrow", TRUE, is.logical)
+            ), "Toggle whether an arrow is drawn from the annotation label to the target point",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("annotation.arrowcolor"), "Arrow Color",
+                value = get_default(defaults, "annotation.arrowcolor", "black")
+            ), "Set the color of the annotation arrow connecting the label to the point",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.arrowhead"), "Arrowhead Style",
+                min = 0, step = 1, max = 7,
+                value = get_default(defaults, "annotation.arrowhead", 2, is.numeric)
+            ), "Choose the arrowhead style (0-7) for annotation arrows, where 0 is no arrowhead",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            numericInput(ns("annotation.arrowwidth"), "Arrow Linewidth",
+                min = 0.1, step = 0.25,
+                value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
+            ), "Set the line width of the annotation arrow",
+            placement = "top", options = tip_opts
+        ),
+        tipify(actionButton(ns("annotation.clear"), "Clear Annotations"),
+            "Remove all annotation labels and arrows from the current plot",
             placement = "top", options = tip_opts
         )
     )

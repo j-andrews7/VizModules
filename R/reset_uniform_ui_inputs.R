@@ -10,7 +10,7 @@
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
-#' @importFrom shiny updateSelectInput updateNumericInput updateCheckboxInput
+#' @importFrom shiny updateNumericInput updateCheckboxInput
 #' @importFrom colourpicker updateColourInput
 #' @importFrom shinyWidgets updateMaterialSwitch
 #'
@@ -28,13 +28,13 @@ reset_axes_inputs <- function(session, defaults = NULL) {
     updateMaterialSwitch(session, "flip.y", value = get_default(defaults, "flip.y", FALSE, is.logical))
     updateNumericInput(session, "facet.title.font.size", value = get_default(defaults, "facet.title.font.size", 18, is.numeric))
     updateColourInput(session, "facet.title.font.color", value = get_default(defaults, "facet.title.font.color", "#000000"))
-    updateSelectInput(session, "facet.title.font.family", selected = get_default(defaults, "facet.title.font.family", "Arial"))
-    updateSelectInput(session, "title.font.family", selected = get_default(defaults, "title.font.family", "Arial"))
+    update_viz_select(session, "facet.title.font.family", selected = get_default(defaults, "facet.title.font.family", "Arial"))
+    update_viz_select(session, "title.font.family", selected = get_default(defaults, "title.font.family", "Arial"))
     updateColourInput(session, "title.font.color", value = get_default(defaults, "title.font.color", "#000000"))
     updateNumericInput(session, "title.font.size", value = get_default(defaults, "title.font.size", 26, is.numeric))
     updateNumericInput(session, "axis.title.horizontal.position", value = get_default(defaults, "axis.title.horizontal.position", 0.5, is.numeric))
     updateColourInput(session, "axis.title.font.color", value = get_default(defaults, "axis.title.font.color", "#000000"))
-    updateSelectInput(session, "axis.title.font.family", selected = get_default(defaults, "axis.title.font.family", "Arial"))
+    update_viz_select(session, "axis.title.font.family", selected = get_default(defaults, "axis.title.font.family", "Arial"))
     updateCheckboxInput(session, "axis.showline", value = get_default(defaults, "axis.showline", TRUE, is.logical))
     updateCheckboxInput(session, "axis.mirror", value = get_default(defaults, "axis.mirror", TRUE, is.logical))
     updateCheckboxInput(session, "show.grid.x", value = get_default(defaults, "show.grid.x", TRUE, is.logical))
@@ -44,10 +44,10 @@ reset_axes_inputs <- function(session, defaults = NULL) {
     updateNumericInput(session, "axis.linewidth", value = get_default(defaults, "axis.linewidth", 0.5, is.numeric))
     updateNumericInput(session, "axis.tickfont.size", value = get_default(defaults, "axis.tickfont.size", 12, is.numeric))
     updateColourInput(session, "axis.tickfont.color", value = get_default(defaults, "axis.tickfont.color", "black"))
-    updateSelectInput(session, "axis.tickfont.family", selected = get_default(defaults, "axis.tickfont.family", "Arial"))
+    update_viz_select(session, "axis.tickfont.family", selected = get_default(defaults, "axis.tickfont.family", "Arial"))
     updateNumericInput(session, "axis.tickangle.x", value = get_default(defaults, "axis.tickangle.x", 0, is.numeric))
     updateNumericInput(session, "axis.tickangle.y", value = get_default(defaults, "axis.tickangle.y", 0, is.numeric))
-    updateSelectInput(session, "axis.ticks", selected = get_default(defaults, "axis.ticks", "outside"))
+    update_viz_select(session, "axis.ticks", selected = get_default(defaults, "axis.ticks", "outside"))
     updateColourInput(session, "axis.tickcolor", value = get_default(defaults, "axis.tickcolor", "black"))
     updateNumericInput(session, "axis.ticklen", value = get_default(defaults, "axis.ticklen", 5, is.numeric))
     updateNumericInput(session, "axis.tickwidth", value = get_default(defaults, "axis.tickwidth", 1, is.numeric))
@@ -70,7 +70,7 @@ reset_axes_inputs <- function(session, defaults = NULL) {
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
-#' @importFrom shiny updateTextInput updateNumericInput updateSelectInput
+#' @importFrom shiny updateTextInput updateNumericInput
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom colourpicker updateColourInput
 #'
@@ -122,7 +122,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
-#' @importFrom shiny updateSelectInput updateNumericInput
+#' @importFrom shiny updateNumericInput
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom colourpicker updateColourInput
 #'
@@ -131,16 +131,16 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' @keywords internal
 .reset_stats_inputs <- function(session, defaults = NULL) {
     updateMaterialSwitch(session, "stats.enabled", value = get_default(defaults, "stats.enabled", FALSE, is.logical))
-    updateSelectInput(session, "stat.test", selected = get_default(defaults, "stat.test", "wilcox.test"))
-    updateSelectInput(session, "stat.p.adjust", selected = get_default(defaults, "stat.p.adjust", "holm"))
-    updateSelectInput(session, "stat.display", selected = get_default(defaults, "stat.display", "p.adj"))
+    update_viz_select(session, "stat.test", selected = get_default(defaults, "stat.test", "wilcox.test"))
+    update_viz_select(session, "stat.p.adjust", selected = get_default(defaults, "stat.p.adjust", "holm"))
+    update_viz_select(session, "stat.display", selected = get_default(defaults, "stat.display", "p.adj"))
     updateNumericInput(session, "stat.sig.threshold", value = get_default(defaults, "stat.sig.threshold", 0.05, is.numeric))
     updateMaterialSwitch(session, "stat.hide.ns", value = get_default(defaults, "stat.hide.ns", FALSE, is.logical))
     updateMaterialSwitch(session, "stat.paired", value = get_default(defaults, "stat.paired", FALSE, is.logical))
-    updateSelectInput(session, "stat.pairs", selected = character(0))
+    update_viz_select(session, "stat.pairs", selected = character(0))
     updateColourInput(session, "stat.line.color", value = get_default(defaults, "stat.line.color", "#000000"))
     updateNumericInput(session, "stat.line.width", value = get_default(defaults, "stat.line.width", 1, is.numeric))
-    updateSelectInput(session, "stat.bracket.style", selected = get_default(defaults, "stat.bracket.style", "capped"))
+    update_viz_select(session, "stat.bracket.style", selected = get_default(defaults, "stat.bracket.style", "capped"))
     updateNumericInput(session, "stat.step.increase", value = get_default(defaults, "stat.step.increase", 0.06, is.numeric))
     updateNumericInput(session, "stat.text.bump", value = get_default(defaults, "stat.text.bump", 0.04, is.numeric))
     updateNumericInput(session, "stat.bracket.inset", value = get_default(defaults, "stat.bracket.inset", 0.025, is.numeric))
@@ -161,7 +161,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
-#' @importFrom shiny updateNumericInput updateSelectInput
+#' @importFrom shiny updateNumericInput
 #' @importFrom colourpicker updateColourInput
 #'
 #' @author Jared Andrews
@@ -172,7 +172,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' reset_plotly_inputs(session, defaults)
 #' }
 reset_plotly_inputs <- function(session, defaults = NULL) {
-    updateSelectInput(session, "download.format", selected = get_default(defaults, "download.format", "svg"))
+    update_viz_select(session, "download.format", selected = get_default(defaults, "download.format", "svg"))
     updateNumericInput(session, "margin.t", value = get_default(defaults, "margin.t", 100, is.numeric))
     updateNumericInput(session, "margin.b", value = get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = get_default(defaults, "margin.l", 70, is.numeric))
@@ -185,7 +185,7 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
     updateColourInput(session, "shape.fill", value = get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))
     updateColourInput(session, "shape.line.color", value = get_default(defaults, "shape.line.color", "black"))
     updateNumericInput(session, "shape.line.width", value = get_default(defaults, "shape.line.width", 4, is.numeric))
-    updateSelectInput(session, "shape.linetype", selected = get_default(defaults, "shape.linetype", "solid"))
+    update_viz_select(session, "shape.linetype", selected = get_default(defaults, "shape.linetype", "solid"))
     updateNumericInput(session, "shape.opacity", value = get_default(defaults, "shape.opacity", 1, is.numeric))
     invisible(NULL)
 }
@@ -217,5 +217,64 @@ reset_legend_inputs <- function(session, defaults = NULL) {
         value = get_default(defaults, "legend.title.size", 14, is.numeric))
     updateNumericInput(session, "legend.text.size",
         value = get_default(defaults, "legend.text.size", 12, is.numeric))
+    invisible(NULL)
+}
+
+
+#' Reset uniform Annotation inputs to defaults
+#'
+#' Resets the point highlighting and annotation inputs created by
+#' [uniform_annotation_inputs_ui()] back to their default values.
+#'
+#' @param session The Shiny session object.
+#' @param defaults A named list of default values. When provided, inputs reset
+#'   to these values rather than hardcoded fallbacks. Typically the same list
+#'   passed to the UI function.
+#' @param choices Character vector of valid "Annotate By" column names, used to
+#'   validate the supplied default.
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateNumericInput updateCheckboxInput updateTextAreaInput
+#' @importFrom colourpicker updateColourInput
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_annotation_inputs(session, defaults, choices = c("", names(data())))
+#' }
+reset_annotation_inputs <- function(session, defaults = NULL, choices = "") {
+    update_viz_select(session, "annotate.by",
+        selected = get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices))
+    updateTextAreaInput(session, "highlight.points",
+        value = get_default(defaults, "highlight.points", ""))
+    updateColourInput(session, "highlight.color",
+        value = get_default(defaults, "highlight.color", "#00FFF7"))
+    updateNumericInput(session, "highlight.size",
+        value = get_default(defaults, "highlight.size", 7, is.numeric))
+    updateColourInput(session, "highlight.border.color",
+        value = get_default(defaults, "highlight.border.color", "#000000"))
+    updateNumericInput(session, "highlight.border.width",
+        value = get_default(defaults, "highlight.border.width", 1, is.numeric))
+    updateCheckboxInput(session, "highlight.auto.annotate",
+        value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical))
+    updateColourInput(session, "annotation.color",
+        value = get_default(defaults, "annotation.color", "black"))
+    updateNumericInput(session, "annotation.ax",
+        value = get_default(defaults, "annotation.ax", 20, is.numeric))
+    updateNumericInput(session, "annotation.ay",
+        value = get_default(defaults, "annotation.ay", -20, is.numeric))
+    updateNumericInput(session, "annotation.size",
+        value = get_default(defaults, "annotation.size", 10, is.numeric))
+    updateCheckboxInput(session, "annotation.showarrow",
+        value = get_default(defaults, "annotation.showarrow", TRUE, is.logical))
+    updateColourInput(session, "annotation.arrowcolor",
+        value = get_default(defaults, "annotation.arrowcolor", "black"))
+    updateNumericInput(session, "annotation.arrowhead",
+        value = get_default(defaults, "annotation.arrowhead", 2, is.numeric))
+    updateNumericInput(session, "annotation.arrowwidth",
+        value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric))
     invisible(NULL)
 }

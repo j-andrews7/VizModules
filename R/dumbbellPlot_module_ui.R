@@ -85,10 +85,15 @@
 #' - `shape.line.width` - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)
 #' - `shape.linetype` - Line dash style for drawn shapes (UI: "Shape Linetype", default: "solid")
 #' - `shape.opacity` - Opacity for drawn shapes (UI: "Shape Opacity", default: 1)
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -134,51 +139,51 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.value"), "X Values (max 2)",
+            tipify(viz_select_input(ns("x.value"), "X Values (max 2)",
                 selected = get_default(
                     defaults, "x.value",
                     if (length(num.choices) >= 3) num.choices[2:3] else num.choices[2],
                     function(x) all(x %in% num.choices)
                 ),
-                choices = num.choices, multiple = TRUE, selectize = TRUE
+                choices = num.choices[nzchar(num.choices)], multiple = TRUE
             ), documentParameters$x, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.value"), "Y Value",
+            tipify(viz_select_input(ns("y.value"), "Y Value",
                 selected = get_default(
                     defaults, "y.value",
                     if (length(cat.choices) > 1) cat.choices[2] else "",
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices, multiple = FALSE, selectize = FALSE
+                choices = cat.choices[nzchar(cat.choices)], multiple = FALSE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
+            tipify(viz_select_input(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("colour.by"), "Colour By",
+            tipify(viz_select_input(ns("colour.by"), "Colour By",
                 choices = c("X variables", "Y variables"),
                 selected = get_default(
                     defaults, "colour.by", "X variables",
                     function(x) x %in% c("X variables", "Y variables")
-                ), selectize = FALSE
+                )
             ), documentParameters$colour.by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By",
+            tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = c("", .facet_check(data)), selectize = FALSE
+                choices = c("", .facet_check(data))
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scales"), "Facet Scales",
+            tipify(viz_select_input(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = get_default(
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
-                ), selectize = FALSE
+                )
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),

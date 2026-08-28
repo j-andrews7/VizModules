@@ -49,10 +49,15 @@
 #' - `legend.font.family` - Legend font (UI: "Legend font", default: "Arial")
 #' - `legend.font.size` - Legend font size (UI: "Legend font size", default: 12)
 #' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
+#' - `slice.colors` - Named character vector mapping label levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Slice colors"). Seeds the picker; unnamed slices fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation. Supply a summary table with one row per slice.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -101,23 +106,23 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
     inputs <- list(
         "Data" = tagList(
             tipify(
-                selectInput(ns("labels"), "Label Column",
+                viz_select_input(ns("labels"), "Label Column",
                     selected = get_default(
                         defaults, "labels", cat.choices[2],
                         function(x) x %in% cat.choices
                     ),
-                    choices = cat.choices, selectize = FALSE
+                    choices = cat.choices[nzchar(cat.choices)]
                 ),
                 documentParameters$labels,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("values"), "Aggregated Value Column",
+                viz_select_input(ns("values"), "Aggregated Value Column",
                     selected = get_default(
                         defaults, "values", num.choices[2],
                         function(x) x %in% num.choices
                     ),
-                    choices = num.choices, selectize = FALSE
+                    choices = num.choices[nzchar(num.choices)]
                 ),
                 documentParameters$values,
                 placement = "top", options = list(container = "body")
@@ -125,9 +130,9 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             tipify(checkboxInput(ns("sort.slices"), "Sort Slices by Value",
                 value = get_default(defaults, "sort.slices", TRUE, is.logical)
             ), documentParameters$sort, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("direction"), "Slice Direction",
+            tipify(viz_select_input(ns("direction"), "Slice Direction",
                 choices = c("Counterclockwise" = "counterclockwise", "Clockwise" = "clockwise"),
-                selected = get_default(defaults, "direction", "counterclockwise"), selectize = FALSE
+                selected = get_default(defaults, "direction", "counterclockwise")
             ), documentParameters$direction, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("rotation"), "Start Angle (Degrees)",
                 min = 0, max = 360,
@@ -152,30 +157,30 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             ), documentParameters$hole, placement = "top", options = list(container = "body"))
         ),
         "Labels" = tagList(
-            tipify(selectInput(ns("textinfo"), "Slice Label",
+            tipify(viz_select_input(ns("textinfo"), "Slice Label",
                 selected = get_default(defaults, "textinfo", c("label", "value", "percent")),
                 choices = c("label", "value", "percent", "none"),
-                multiple = TRUE, selectize = TRUE
+                multiple = TRUE
             ), documentParameters$textinfo, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("textposition"), "Text Position",
+            tipify(viz_select_input(ns("textposition"), "Text Position",
                 choices = c("Auto" = "auto", "Inside" = "inside", "Outside" = "outside", "Hide text" = "none"),
-                selected = get_default(defaults, "textposition", "auto"), selectize = FALSE
+                selected = get_default(defaults, "textposition", "auto")
             ), documentParameters$textposition, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("insidetextorientation"), "Inside Text Orientation",
+            tipify(viz_select_input(ns("insidetextorientation"), "Inside Text Orientation",
                 choices = c("auto", "horizontal", "radial", "tangential"),
-                selected = get_default(defaults, "insidetextorientation", "auto"), selectize = FALSE
+                selected = get_default(defaults, "insidetextorientation", "auto")
             ), documentParameters$insidetextorientation, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("text.font.size"), "Slice Text Size",
                 value = get_default(defaults, "text.font.size", 12, is.numeric),
                 min = 6,
                 step = 1
             ), documentParameters$text.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("text.font.family"), "Slice Text Font",
+            tipify(viz_select_input(ns("text.font.family"), "Slice Text Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "text.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$text.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("text.font.color"), "Slice Text Color",
                 value = get_default(defaults, "text.font.color", "#000000")
@@ -191,12 +196,12 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
                 value = get_default(defaults, "title.font.size", 28, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("title.font.family"), "Title Font",
+            tipify(viz_select_input(ns("title.font.family"), "Title Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = get_default(defaults, "title.font.color", "#000000")
@@ -204,16 +209,16 @@ piePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2
             tipify(checkboxInput(ns("show.legend"), "Show Legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
+            tipify(viz_select_input(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = get_default(defaults, "legend.orientation", "h"), selectize = FALSE
+                selected = get_default(defaults, "legend.orientation", "h")
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.font.family"), "Legend Font",
+            tipify(viz_select_input(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric),

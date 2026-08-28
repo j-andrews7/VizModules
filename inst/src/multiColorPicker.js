@@ -1,5 +1,37 @@
 (function () {
 
+  // A native <input type="color"> streams its value while the browser's colour
+  // dialog is open - every drag or click inside it fires `input`, and Chrome
+  // fires `change` just as often rather than only on close - and reporting each
+  // one to Shiny rebuilds the dependent plot over and over.
+  //
+  // No event says the dialog has closed, and a timer cannot stand in for one:
+  // someone clicking a few points slowly looks exactly like someone who has
+  // finished. The dialog is a browser/OS window though, so while it is open it
+  // owns the pointer and keyboard and the page sees nothing from the user at
+  // all. The first event that does reach the document (or the window regaining
+  // focus, for platforms where the dialog takes it) therefore means the dialog
+  // has closed, and that is when the chosen colour is reported.
+  const DIALOG_CLOSED_EVENTS = [
+    "pointerdown",
+    "mousedown",
+    "touchstart",
+    "keydown",
+    "wheel",
+    "pointermove",
+    "mousemove"
+  ];
+
+  // Should some platform draw the picker inside the page instead, its own drag
+  // would reach the document and be mistaken for the dialog closing. Activity
+  // arriving hot on the heels of a value change is treated as part of the
+  // choosing rather than the end of it.
+  const DIALOG_ACTIVITY_GUARD_MS = 150;
+
+  // Typing a hex code happens in the page, so it needs no such trickery: the
+  // part-finished values are simply coalesced until the user pauses.
+  const TYPING_DEBOUNCE_MS = 400;
+
   const parseJSON = (value, fallback) => {
     try {
       return JSON.parse(value);
@@ -323,7 +355,11 @@
       } else if (data && data.value) {
         this.setValue(el, data.value);
       }
-      // Notify Shiny of the updated value
+      // Notify Shiny of the updated value. This is the newest value there is, so
+      // drop any report the user's last interaction left waiting.
+      clearTimeout(el._mcReportTimer);
+      el._mcReportTimer = null;
+      if (el._mcStopWatching) el._mcStopWatching();
       Shiny.setInputValue(
         el.id + ":VizModules.multiColorPicker",
         readValue(el)
@@ -332,25 +368,120 @@
     subscribe: function (el, callback) {
       const $el = $(el);
 
+      // Reporting the value to Shiny is what rebuilds the plot, so it is held
+      // back until the user has finished choosing. The callback reads the rows
+      // when it fires rather than when it was queued, so the value that lands is
+      // always the one currently shown.
+      let reportPending = false;
+      let lastChangeAt = 0;
+
+      // A press or keystroke landing on the widget itself is left to the
+      // widget's own handlers, which report as part of whatever they change;
+      // flushing here as well would report twice for the one gesture. Moves and
+      // scrolls change nothing, so they are always safe to act on.
+      const isOwnGesture = (evt) =>
+        evt &&
+        evt.target &&
+        evt.type !== "focus" &&
+        evt.type !== "pointermove" &&
+        evt.type !== "mousemove" &&
+        el.contains(evt.target);
+
+      const onPageActivity = (evt) => {
+        if (isOwnGesture(evt)) return;
+        if (
+          evt &&
+          evt.type !== "focus" &&
+          Date.now() - lastChangeAt < DIALOG_ACTIVITY_GUARD_MS
+        ) {
+          return;
+        }
+        if (reportPending) reportNow();
+        else stopWatchingForClose();
+      };
+
+      const watchForClose = () => {
+        if (el._mcClosingWatch) return;
+        el._mcClosingWatch = true;
+        DIALOG_CLOSED_EVENTS.forEach(function (evt) {
+          document.addEventListener(evt, onPageActivity, true);
+        });
+        window.addEventListener("focus", onPageActivity, true);
+      };
+
+      const stopWatchingForClose = () => {
+        if (!el._mcClosingWatch) return;
+        el._mcClosingWatch = false;
+        DIALOG_CLOSED_EVENTS.forEach(function (evt) {
+          document.removeEventListener(evt, onPageActivity, true);
+        });
+        window.removeEventListener("focus", onPageActivity, true);
+      };
+
+      // Coalesce a stream of values into one report once the user pauses.
+      const queueReport = () => {
+        reportPending = true;
+        clearTimeout(el._mcReportTimer);
+        el._mcReportTimer = setTimeout(reportNow, TYPING_DEBOUNCE_MS);
+      };
+
+      // Drop anything still waiting first: it would otherwise land afterwards
+      // and undo whatever this report just set.
+      const reportNow = () => {
+        clearTimeout(el._mcReportTimer);
+        el._mcReportTimer = null;
+        stopWatchingForClose();
+        reportPending = false;
+        callback(false);
+      };
+
+      // Let unsubscribe() tear the document-level listeners down with the rest.
+      el._mcStopWatching = stopWatchingForClose;
+
+      // Picking a different row changes nothing on its own, but it does mean the
+      // user is done with the colour they were choosing.
       $el.on("click.multiColorPicker", ".mc-color-row", function () {
         markActiveRow(this, el);
+        if (reportPending) reportNow();
       });
 
+      // The row swatch and hex field track the dialog live so the widget still
+      // looks responsive; only the report to Shiny waits for it to close.
       $el.on("input.multiColorPicker change.multiColorPicker", ".mc-color-input", function (evt) {
         const row = evt.currentTarget.closest(".mc-color-row");
         if (!row) return;
         row.dataset.value = (evt.currentTarget.value || "").toUpperCase();
         syncTextFromColor(row);
-        callback();
+        lastChangeAt = Date.now();
+        reportPending = true;
+        watchForClose();
       });
 
-      $el.on("input.multiColorPicker change.multiColorPicker", ".mc-text-input", function (evt) {
+      // Focus sits on the input while its dialog is open, so losing it means the
+      // user has moved on for certain.
+      $el.on("focusout.multiColorPicker", ".mc-color-input", function () {
+        if (reportPending) reportNow();
+      });
+
+      // Typing a hex code is its own stream of part-finished values, so it waits
+      // for a pause; committing the field (blur or Enter) reports straight away.
+      $el.on("input.multiColorPicker", ".mc-text-input", function (evt) {
         const row = evt.currentTarget.closest(".mc-color-row");
         if (!row) return;
         const normalized = normalizeHex(evt.currentTarget.value);
         if (normalized) {
           setRowColor(row, normalized, false);
-          callback();
+          queueReport();
+        }
+      });
+
+      $el.on("change.multiColorPicker", ".mc-text-input", function (evt) {
+        const row = evt.currentTarget.closest(".mc-color-row");
+        if (!row) return;
+        const normalized = normalizeHex(evt.currentTarget.value);
+        if (normalized) {
+          setRowColor(row, normalized, false);
+          reportNow();
         }
       });
 
@@ -365,23 +496,26 @@
         const color = evt.currentTarget.dataset.color;
         if (color) {
           setRowColor(active, color, false);
-          callback();
+          reportNow();
         }
       });
 
       $el.on("click.multiColorPicker", ".mc-apply-palette", function (evt) {
         evt.preventDefault();
         applyPalette(el, getSelectedPalette(el));
-        callback();
+        reportNow();
       });
 
       $el.on("click.multiColorPicker", ".mc-reset-palette", function (evt) {
         evt.preventDefault();
         resetColors(el);
-        callback();
+        reportNow();
       });
     },
     unsubscribe: function (el) {
+      clearTimeout(el._mcReportTimer);
+      el._mcReportTimer = null;
+      if (el._mcStopWatching) el._mcStopWatching();
       $(el).off(".multiColorPicker");
     },
     getType: function () {

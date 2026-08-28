@@ -17,7 +17,9 @@ radarPlotServer(
 
 \item{data}{A \code{reactive} containing the data frame to plot. Provide data with
 columns for categories (theta) and values (r). For multiple traces, include
-a grouping column.}
+a grouping column. Values that are not data frames are coerced with
+\code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL} value is treated as "not ready yet" and the
+module waits for data.}
 
 \item{hide.inputs}{A character vector of input IDs to hide.
 These will still be initialized and their values passed to the plot function,
@@ -29,7 +31,9 @@ but the user will not be able to see/adjust them in the UI.}
 
 \item{defaults}{A named list of default values for the inputs. When the reset button is
 clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-the same list passed to the corresponding UI function.}
+the same list passed to the corresponding UI function. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}, in which case the input tracks it as the
+parent app's state changes; see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}.}
 }
 \value{
 The \code{moduleServer} function for the radarPlot module.

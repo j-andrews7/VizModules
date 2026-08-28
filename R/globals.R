@@ -8,5 +8,8 @@ utils::globalVariables(c(
     "example_iris",
     "example_mtcars",
     "example_population",
-    "example_rnaseq"
+    "example_rnaseq",
+    "example_heatmap_matrix",
+    "example_heatmap_column_data",
+    "example_composition"
 ))

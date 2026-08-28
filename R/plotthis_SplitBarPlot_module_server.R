@@ -1,7 +1,9 @@
 #' Server logic for SplitBarPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #'
 #' @return The `moduleServer` function for the SplitBarPlot module.
 #'
@@ -30,8 +34,11 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
 
         axis_scale <- reactive({
@@ -56,7 +63,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "SplitBarPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -65,9 +72,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Toggle text.position slider visibility based on label.on.y.axis switch
         observeEvent(input$label.on.y.axis, {
             if (isTRUE(input$label.on.y.axis)) {
-                .hide_input(session, "text.position")
+                hide_input(session, "text.position")
             } else {
-                .show_input(session, "text.position")
+                show_input(session, "text.position")
             }
         })
 
@@ -116,6 +123,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Track initialization
         initialized <- reactiveVal(FALSE)
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             if (fill_by_is_numeric()) {
                 # Numeric fill_by: show palette selector for gradient
@@ -124,11 +141,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palette_choices <- lapply(raw_choices, function(group) {
                     setNames(names(group), names(group))
                 })
-                selectInput(
+                viz_select_input(
                     ns("gradient.palette"),
                     "Color palette",
                     choices = palette_choices,
-                    selected = default_gradient_palette, selectize = FALSE
+                    selected = get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
                 )
             } else {
                 # Categorical fill_by: show multi-color picker
@@ -137,7 +154,16 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     return(NULL)
                 }
 
-                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+                initial_colors <- isolate(resolve_palette(
+                    groups, input$palette.colours, default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
+                ))
+
+                # The picker is seeded with this, so it is also what the plot should be
+                # drawing with from now until the user changes something. Setting it here
+                # rather than waiting for the client to report back keeps the first draw
+                # on the right palette.
+                palette_store(initial_colors)
 
                 multiColorPicker(
                     ns("palette.colours"),
@@ -218,21 +244,21 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Data
             # Data Section
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", num.choices[2], function(x) x %in% num.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", char.choices[2], function(x) x %in% char.choices)
             )
 
             # Facet Section
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "free_y")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -240,13 +266,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "alpha.by",
+            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            update_viz_select(session, "alpha.by",
                 selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
             )
             updateMaterialSwitch(session, "alpha.reverse",
@@ -286,6 +312,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             )
 
             reset_axes_inputs(session, defaults)
+            # Colors
+            update_viz_select(session, "gradient.palette",
+                selected = get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
+            )
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
@@ -308,9 +340,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -319,14 +351,14 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         observeEvent(list(input$fill.by, data()), {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
             if (fill_by_is_numeric()) {
-                .show_input(session, fill.scale.inputs)
+                show_input(session, fill.scale.inputs)
             } else {
-                .hide_input(session, fill.scale.inputs)
+                hide_input(session, fill.scale.inputs)
             }
         }, ignoreInit = FALSE)
 
         generate_SplitBarPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Null Values:
             facet.by <- NULL
@@ -349,7 +381,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Determine palette/palcolor based on fill_by type
             palcolor_arg <- NULL
-            palette_arg <- default_gradient_palette
+            palette_arg <- get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
             if (isolate_fn(fill_by_is_numeric())) {
                 # Numeric fill_by: look up hex colors and pass via palcolor
                 sel_palette <- isolate_fn(input$gradient.palette)
@@ -363,8 +395,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 # Categorical fill_by: use individual color pickers
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
-                    isolate_fn(input$palette.colours),
-                    default_palette_values
+                    isolate_fn(palette_store()),
+                    default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
                 )
                 if (!is.null(palette_values) && length(palette_values) > 0) {
                     palcolor_arg <- as.list(palette_values)

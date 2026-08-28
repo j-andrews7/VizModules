@@ -4,7 +4,7 @@
 \alias{apply_stat_annotations}
 \title{Apply statistical annotation shapes and annotations to a plotly figure}
 \usage{
-apply_stat_annotations(fig, stat_result, y.min = NULL)
+apply_stat_annotations(fig, stat_result, y.min = NULL, y.max = NULL)
 }
 \arguments{
 \item{fig}{A plotly figure object.}
@@ -14,14 +14,24 @@ by \code{\link[=create_stat_annotations]{create_stat_annotations()}}.}
 
 \item{y.min}{Numeric or NULL; minimum y-axis value. If NULL, the existing
 y-axis range is preserved.}
+
+\item{y.max}{Numeric or NULL; the maximum the caller asked for. The drawn top
+is the larger of this and the height the brackets need. If NULL, the
+figure's existing top is used for that comparison.}
 }
 \value{
 The modified plotly figure.
 }
 \description{
 Appends the shapes and annotations from \code{\link[=create_stat_annotations]{create_stat_annotations()}} to
-an existing plotly figure's layout. Adjusts the y-axis range to accommodate
-the annotation brackets.
+an existing plotly figure's layout, raising the y-axis top when the brackets
+need more room than the requested range gives them.
+}
+\details{
+The axis is only ever raised, never lowered: a top asked for through \code{y.max}
+(or already on the figure) is kept when it is above the brackets, so turning
+statistics on cannot silently undo a y-axis maximum the user chose. Reserve
+the room up front with \code{\link[=stat_bracket_y_max]{stat_bracket_y_max()}} and this becomes a no-op.
 }
 \examples{
 stats_df <- compute_pairwise_stats(

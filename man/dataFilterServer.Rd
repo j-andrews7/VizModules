@@ -4,27 +4,57 @@
 \alias{dataFilterServer}
 \title{Server logic for the dataFilter module}
 \usage{
-dataFilterServer(id, data, factor.char.cols = TRUE, page.length = 10)
+dataFilterServer(
+  id,
+  data,
+  factor.char.cols = TRUE,
+  page.length = 10,
+  col.visibility = FALSE,
+  hide.columns = NULL,
+  filter.max.options = 50
+)
 }
 \arguments{
 \item{id}{The ID for the Shiny module. Must match the \code{id} used in
 \code{\link[=dataFilterUI]{dataFilterUI()}}.}
 
-\item{data}{A \code{reactive} containing the data frame to display and filter.}
+\item{data}{A \code{reactive} containing the data frame to display and filter.
+Values that are not data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL}
+value is treated as "not ready yet" and the table waits for data.}
 
 \item{factor.char.cols}{Logical. When \code{TRUE}, all character columns in
 \code{data} are converted to factors before the table is rendered. This
 causes DT to display select-box filters for those columns instead of
-free-text search boxes. Defaults to \code{TRUE}.}
+free-text search boxes. Note that DT serialises every level of a factor
+column into the page, so this is best avoided for columns with very many
+distinct values. Defaults to \code{TRUE}.}
 
 \item{page.length}{Integer. The default number of rows shown per page.
 Defaults to \code{10}.}
+
+\item{col.visibility}{Logical. When \code{TRUE}, adds a DT "Columns" button
+(Buttons extension \code{colvis}) so users can show/hide individual columns.
+Defaults to \code{FALSE}.}
+
+\item{hide.columns}{Character vector of column names (or a numeric vector of
+column positions) to hide when the table is first drawn. Hidden columns get
+no filter box, which keeps the interface focused on the columns that matter.
+They are still present in the returned data, so plotting modules can use
+them. Set \code{col.visibility = TRUE} if users should be able to bring them
+back; otherwise they stay hidden. Names that do not occur in \code{data} are
+ignored with a warning. Defaults to \code{NULL} (show every column).}
+
+\item{filter.max.options}{Integer. The maximum number of options a factor
+column's filter dropdown renders at once. Typing in the box narrows the
+list, so a low cap keeps high-cardinality columns usable. Defaults to
+\code{50}.}
 }
 \value{
 A \code{reactive} expression that evaluates to the filtered subset of
-\code{data} based on the current DT selection/filter state. Pass this
-reactive to a plotting module's \code{data} argument to keep the plot in
-sync with the table filters.
+\code{data} based on the current DT selection/filter state. All columns are
+retained, including any hidden via \code{hide.columns}. Pass this reactive to a
+plotting module's \code{data} argument to keep the plot in sync with the table
+filters.
 }
 \description{
 Renders an interactive DT table with column-level filters and returns a
@@ -43,14 +73,20 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
     data <- reactive(iris)
-    filtered <- dataFilterServer("filter", data, factor.char.cols = TRUE)
+    # Petal columns are hidden on load, but the "Columns" button lets users
+    # bring them back, and they remain in the returned data either way.
+    filtered <- dataFilterServer("filter", data,
+        factor.char.cols = TRUE,
+        hide.columns = c("Petal.Length", "Petal.Width"),
+        col.visibility = TRUE
+    )
     output$rows <- renderPrint(nrow(filtered()))
 }
 
 if (interactive()) shinyApp(ui, server)
 }
 \seealso{
-\code{\link[=dataFilterUI]{dataFilterUI()}}
+\code{\link[=dataFilterUI]{dataFilterUI()}}, \code{\link[=resolve_column_targets]{resolve_column_targets()}}
 }
 \author{
 Jacob Martin

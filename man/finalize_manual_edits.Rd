@@ -4,7 +4,13 @@
 \alias{finalize_manual_edits}
 \title{Render persistent manual plot layout edits across re-renders}
 \usage{
-finalize_manual_edits(fig, plot_source, store, session)
+finalize_manual_edits(
+  fig,
+  plot_source,
+  store,
+  session,
+  regen_keys = character(0)
+)
 }
 \arguments{
 \item{fig}{A plotly figure object, typically the result of your
@@ -18,6 +24,13 @@ passed to \code{\link[=setup_manual_edits]{setup_manual_edits()}}; assigned to \
 
 \item{session}{The module's \code{session} object, used to namespace the
 colorbar drag input.}
+
+\item{regen_keys}{Character vector of annotation keys (e.g. \code{"axis:y"}) whose
+\code{text} is regenerated on every rebuild and must not be overwritten by a
+captured edit. Pass the axis side(s) carrying an active data adjustment so
+the freshly built label (e.g. \code{"log2(units)"}) always wins, while the
+captured position still persists. Defaults to none (all captured props are
+restored, the pre-existing behaviour).}
 }
 \value{
 The finalized plotly figure, ready to be returned from

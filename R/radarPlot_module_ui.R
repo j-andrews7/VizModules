@@ -57,10 +57,16 @@
 #' - `legend.font.color` - Legend font color (UI: "Legend font color", default: "#000000")
 #' - `bgcolor` - Plot background color (UI: "Plot background color", default: "#FFFFFF")
 #' - `polar.bgcolor` - Polar area background color (UI: "Polar area background", default: "#FFFFFF")
+#' - `trace.colors` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Trace colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
+#' - `single.color` - Trace color used when no grouping is set (UI: "Trace color:", default: "#1F77B4")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -112,39 +118,39 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("theta"), "Category (theta)",
+            tipify(viz_select_input(ns("theta"), "Category (theta)",
                 selected = get_default(
                     defaults, "theta", cat.choices[2],
                     function(x) x %in% all.choices
                 ),
-                choices = all.choices, selectize = FALSE
+                choices = all.choices[nzchar(all.choices)]
             ), documentParameters$theta, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("r"), "Values (r)",
+            tipify(viz_select_input(ns("r"), "Values (r)",
                 selected = get_default(
                     defaults, "r", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices, selectize = FALSE
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$r, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group"), "Group",
+            tipify(viz_select_input(ns("group"), "Group",
                 selected = get_default(defaults, "group", ""),
-                choices = all.choices, selectize = FALSE
+                choices = all.choices
             ), documentParameters$group, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("fill"), "Fill Area",
+            tipify(viz_select_input(ns("fill"), "Fill Area",
                 choices = c(
                     "Fill" = "toself",
                     "No fill" = "none"
                 ),
-                selected = get_default(defaults, "fill", "toself"), selectize = FALSE
+                selected = get_default(defaults, "fill", "toself")
             ), documentParameters$fill, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("line.width"), "Line Width",
                 value = get_default(defaults, "line.width", 2, is.numeric),
                 min = 0,
                 step = 0.5
             ), documentParameters$line.width, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("line.dash"), "Line Style",
+            tipify(viz_select_input(ns("line.dash"), "Line Style",
                 choices = c(
                     "Solid" = "solid",
                     "Dot" = "dot",
@@ -153,14 +159,14 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     "Dash-dot" = "dashdot",
                     "Long dash-dot" = "longdashdot"
                 ),
-                selected = get_default(defaults, "line.dash", "solid"), selectize = FALSE
+                selected = get_default(defaults, "line.dash", "solid")
             ), documentParameters$line.dash, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("marker.size"), "Marker Size",
                 value = get_default(defaults, "marker.size", 5, is.numeric),
                 min = 0,
                 step = 1
             ), documentParameters$marker.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("marker.symbol"), "Marker Symbol",
+            tipify(viz_select_input(ns("marker.symbol"), "Marker Symbol",
                 choices = c(
                     "Circle" = "circle",
                     "Square" = "square",
@@ -170,7 +176,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                     "Triangle up" = "triangle-up",
                     "Triangle down" = "triangle-down"
                 ),
-                selected = get_default(defaults, "marker.symbol", "circle"), selectize = FALSE
+                selected = get_default(defaults, "marker.symbol", "circle")
             ), documentParameters$marker.symbol, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("opacity"), "Opacity",
                 min = 0, max = 1,
@@ -208,9 +214,9 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             tipify(colourInput(ns("radial.gridcolor"), "Radial Grid Color",
                 value = get_default(defaults, "radial.gridcolor", "#EEEEEE")
             ), documentParameters$radial.gridcolor, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("angular.direction"), "Angular Direction",
+            tipify(viz_select_input(ns("angular.direction"), "Angular Direction",
                 choices = c("Clockwise" = "clockwise", "Counterclockwise" = "counterclockwise"),
-                selected = get_default(defaults, "angular.direction", "clockwise"), selectize = FALSE
+                selected = get_default(defaults, "angular.direction", "clockwise")
             ), documentParameters$angular.direction, placement = "top", options = list(container = "body")),
             tipify(sliderInput(ns("angular.rotation"), "Angular Rotation (degrees)",
                 min = 0, max = 360,
@@ -231,12 +237,12 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 value = get_default(defaults, "title.font.size", 18, is.numeric),
                 min = 0
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("title.font.family"), "Title Font",
+            tipify(viz_select_input(ns("title.font.family"), "Title Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = get_default(defaults, "title.font.color", "#000000")
@@ -244,16 +250,16 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
             tipify(checkboxInput(ns("show.legend"), "Show Legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical)
             ), documentParameters$show.legend, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.orientation"), "Legend Orientation",
+            tipify(viz_select_input(ns("legend.orientation"), "Legend Orientation",
                 choices = c("Horizontal" = "h", "Vertical" = "v"),
-                selected = get_default(defaults, "legend.orientation", "h"), selectize = FALSE
+                selected = get_default(defaults, "legend.orientation", "h")
             ), documentParameters$legend.orientation, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("legend.font.family"), "Legend Font",
+            tipify(viz_select_input(ns("legend.font.family"), "Legend Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "legend.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$legend.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("legend.font.size"), "Legend Font Size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric),

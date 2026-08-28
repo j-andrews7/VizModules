@@ -339,3 +339,83 @@ test_that("apply_stat_annotations is a no-op for empty results", {
     expect_equal(result$x$layout$yaxis$range, c(0, 10))
 })
 
+
+test_that("apply_stat_annotations never lowers a requested y-axis maximum", {
+    fig <- list(x = list(layout = list(yaxis = list(range = c(0, 20)))))
+    class(fig) <- "plotly"
+    stat_result <- list(annotations = list(), shapes = list(list(type = "line")), y.max = 8.7)
+
+    # Turning statistics on must not undo a maximum the user chose.
+    kept <- apply_stat_annotations(fig, stat_result, y.min = 0, y.max = 20)
+    expect_equal(kept$x$layout$yaxis$range[2], 20)
+
+    # ... but a maximum that would clip the brackets is raised to fit them.
+    raised <- apply_stat_annotations(fig, stat_result, y.min = 0, y.max = 5)
+    expect_equal(raised$x$layout$yaxis$range[2], 8.7)
+
+    # With no maximum supplied, the figure's own top is what gets compared.
+    from_fig <- apply_stat_annotations(fig, stat_result, y.min = 0)
+    expect_equal(from_fig$x$layout$yaxis$range[2], 20)
+})
+
+test_that("stat_bracket_y_max reserves exactly the room the brackets are drawn in", {
+    df <- example_iris
+    x <- "Species"
+    y <- "Sepal.Length"
+
+    drawn_top <- function(hide.ns = FALSE, ...) {
+        stats_df <- compute_pairwise_stats(df = df, x = x, y = y, test = "wilcox.test")
+        fig <- plotly::plotly_build(
+            plotly::plot_ly(data = df, x = df[[x]], y = df[[y]], type = "box")
+        )
+        create_stat_annotations(
+            stats_df = stats_df, fig = fig, df = df, x = x, y = y,
+            display = "symbol", hide.ns = hide.ns, ...
+        )$y.max
+    }
+
+    expect_equal(
+        stat_bracket_y_max(df, x = x, y = y),
+        drawn_top()
+    )
+    # Geometry settings feed through the same formula the drawing code uses.
+    expect_equal(
+        stat_bracket_y_max(df, x = x, y = y, step.increase = 0.3, text.bump = 0.1),
+        drawn_top(step.increase = 0.3, text.bump = 0.1)
+    )
+    # Hiding non-significant brackets must not leave room for ones never drawn.
+    expect_equal(
+        stat_bracket_y_max(df, x = x, y = y, hide.ns = TRUE),
+        drawn_top(hide.ns = TRUE)
+    )
+    # A single explicit pair needs one level rather than two.
+    expect_lt(
+        stat_bracket_y_max(df, x = x, y = y, pairs = list(c("setosa", "virginica"))),
+        stat_bracket_y_max(df, x = x, y = y)
+    )
+    expect_gt(stat_bracket_y_max(df, x = x, y = y), max(df[[y]]))
+})
+
+test_that("stat_bracket_y_max returns NULL when no brackets would be drawn", {
+    df <- example_iris
+
+    expect_null(stat_bracket_y_max(df[0, ], "Species", "Sepal.Length"))
+    expect_null(stat_bracket_y_max(df, "nope", "Sepal.Length"))
+    expect_null(stat_bracket_y_max(df, "Species", "nope"))
+    expect_null(stat_bracket_y_max(df, "Species", ""))
+    # One group leaves nothing to compare.
+    expect_null(stat_bracket_y_max(df[df$Species == "setosa", ], "Species", "Sepal.Length"))
+    # Omnibus tests produce a caption, not brackets.
+    expect_null(stat_bracket_y_max(df, "Species", "Sepal.Length", test = "kruskal.test"))
+})
+
+test_that("the comparison layout matches what compute_pairwise_stats runs", {
+    df <- example_iris
+
+    stats_df <- compute_pairwise_stats(df = df, x = "Species", y = "Sepal.Length")
+    layout <- .pairwise_layout(df, "Species", NULL, NULL)
+
+    expect_equal(nrow(layout), nrow(stats_df))
+    expect_equal(layout$group1, stats_df$group1)
+    expect_equal(layout$group2, stats_df$group2)
+})

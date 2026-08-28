@@ -1,17 +1,20 @@
 #' Server logic for scatterPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param hide.tabs A character vector of tab names to hide.
 #'   Inputs in these tabs will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
-#' @param manual.colors A named character vector of colors or a reactive returning a named character vector of colors.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny
@@ -27,11 +30,14 @@
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, manual.colors = NULL, defaults = NULL) {
+dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
         ns <- session$ns
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
         # Unique source ID for plotly event_data, scoped to this module instance
         plot_source <- session$ns("scatter")
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -41,11 +47,57 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "scatterPlotTabsetPanel", target = tab.name)
                 })
             })
         }
+
+        # Keep the X/Y data selectors in step with the data. Only refresh when
+        # the set of columns actually changes (not on every row-filter), to
+        # preserve the user's current selection. Mirrors the analogous `var`
+        # refresh in dittoViz_yPlotServer(): the InputsUI is often built from a
+        # light placeholder frame (e.g. a handful of columns) while the true
+        # `data` reactive carries the full column set (e.g. a wide gene table),
+        # so choices/selections must be refreshed once real data flows in.
+        xy_choice_cache <- reactiveVal(NULL)
+        observeEvent(data(), {
+            df <- data()
+            req(df)
+            cols <- names(df)
+            if (identical(cols, xy_choice_cache())) {
+                return()
+            }
+            xy_choice_cache(cols)
+            choices <- c("", cols)
+
+            current.x <- isolate(input$x.by)
+            default.x <- get_default(
+                defaults, "x.by",
+                if (length(cols)) cols[1] else "",
+                function(x) x %in% choices
+            )
+            selected.x <- if (!is.null(current.x) && nzchar(current.x) && current.x %in% choices) {
+                current.x
+            } else {
+                default.x
+            }
+            # x.by/y.by are required, so the refreshed choices omit the "(none)" option.
+            update_viz_select(session, "x.by", choices = cols, selected = selected.x)
+
+            current.y <- isolate(input$y.by)
+            default.y <- get_default(
+                defaults, "y.by",
+                if (length(cols) > 1) cols[2] else "",
+                function(x) x %in% choices
+            )
+            selected.y <- if (!is.null(current.y) && nzchar(current.y) && current.y %in% choices) {
+                current.y
+            } else {
+                default.y
+            }
+            update_viz_select(session, "y.by", choices = cols, selected = selected.y)
+        }, ignoreNULL = TRUE)
 
         # Available color groups for the current color.by selection
         # NOTE: We intentionally don't use colLevels() here because it converts
@@ -74,18 +126,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
-        # Resolve manual colors supplied to the module (reactive or static)
-        manual_color_values <- reactive({
-            if (is.null(manual.colors)) {
-                return(NULL)
-            }
-
-            if (is.reactive(manual.colors)) {
-                manual.colors()
-            } else {
-                manual.colors
-            }
-        })
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "color.panel", color_levels,
+            default_palette_values, defaults, params
+        )
 
         # Render the multiColorPicker for discrete color mappings or single colourInput
         output$color.panel.ui <- renderUI({
@@ -95,7 +144,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 # No grouping - show single color picker for point color
                 initial_color <- isolate(input$single.point.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
-                    initial_color <- "#000000"
+                    initial_color <- get_default(defaults, "single.point.color", "#000000", is.character)
                 }
                 return(colourInput(
                     ns("single.point.color"),
@@ -104,10 +153,16 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(input$color.panel)
-            if (is.null(initial_colors) || length(initial_colors) == 0) {
-                initial_colors <- manual_color_values()
-            }
+            initial_colors <- isolate(resolve_palette(
+                groups, input$color.panel, default_palette_values,
+                .default_group_colors(defaults, "color.panel")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("color.panel"),
@@ -122,7 +177,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         # Get color panel aligned to the current groups
         color.panel <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             levels <- color_levels()
 
@@ -132,47 +187,29 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 if (!is.null(single_color) && nzchar(single_color)) {
                     return(single_color)
                 } else {
-                    return(default_palettes()[["choices"]][["Defaults"]][["dittoColors"]][1])
+                    return(get_default(defaults, "single.point.color", default_palette_values[1], is.character))
                 }
             }
 
-            picker_values <- isolate_fn(input$color.panel)
-            manual_vals <- manual_color_values()
-
-            palette <- NULL
-
-            # Prioritize manual.colors when provided (e.g., from wrapper modules like volcanoPlot)
-            # This ensures wrapper-supplied colors override the internal color.panel picker
-            if (!is.null(manual_vals) && length(manual_vals) > 0) {
-                palette <- manual_vals
-            } else if (!is.null(picker_values) && length(picker_values) > 0) {
-                palette <- picker_values
-            }
-
-            if (is.null(palette) || length(palette) == 0) {
-                palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-            }
-
-            if (!is.null(names(palette)) && any(nzchar(names(palette)))) {
-                palette <- palette[match(levels, names(palette))]
-            }
-
-            if (any(is.na(palette))) {
-                fallback_palette <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
-                na_idx <- which(is.na(palette))
-                palette[na_idx] <- rep_len(fallback_palette, length(na_idx))
-            }
-
-            palette <- rep_len(palette, length(levels))
-            palette <- palette[seq_len(length(levels))]
-            palette <- setNames(palette, levels)
-
-            palette
+            resolve_palette(
+                levels,
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "color.panel")
+            )
         })
 
         # Store for manual layout edits (legend/annotation/axis-title/colorbar
         # moves) so they persist across re-renders. See setup_manual_edits().
         edit_store <- setup_manual_edits(input, session, plot_source)
+
+        # Axis side(s) whose title is regenerated (not persisted) because a data
+        # adjustment is active; set inside generate_scatterPlot() and read at render.
+        regen_keys_rv <- reactiveVal(character(0))
+
+        # x/y variables at the last build; when one changes we drop any persisted
+        # manual title text for that axis so it regenerates for the new variable.
+        last_axis_by <- reactiveVal(NULL)
 
         # dataframe of selected data, which is added to with multiple selections
         selected.data <- reactiveVal()
@@ -208,32 +245,32 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             cat.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
 
             # Data
-            updateSelectInput(session, "x.by",
+            update_viz_select(session, "x.by",
                 selected = get_default(defaults, "x.by", choices[2], function(x) x %in% choices)
             )
-            updateSelectInput(session, "y.by",
+            update_viz_select(session, "y.by",
                 selected = get_default(defaults, "y.by", choices[3], function(x) x %in% choices)
             )
-            updateSelectInput(session, "color.by",
+            update_viz_select(session, "color.by",
                 selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% choices)
             )
-            updateSelectInput(session, "shape.by",
+            update_viz_select(session, "shape.by",
                 selected = get_default(defaults, "shape.by", "", function(x) x == "" || x %in% choices)
             )
-            updateSelectizeInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% choices)
             )
 
             # Adjustments
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
-            updateSelectInput(session, "color.adjustment", selected = get_default(defaults, "color.adjustment", ""))
-            updateSelectInput(session, "x.adj.fxn", selected = get_default(defaults, "x.adj.fxn", ""))
-            updateSelectInput(session, "y.adj.fxn", selected = get_default(defaults, "y.adj.fxn", ""))
-            updateSelectInput(session, "color.adj.fxn", selected = get_default(defaults, "color.adj.fxn", ""))
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
+            update_viz_select(session, "color.adjustment", selected = get_default(defaults, "color.adjustment", ""))
+            update_viz_select(session, "x.adj.fxn", selected = get_default(defaults, "x.adj.fxn", ""))
+            update_viz_select(session, "y.adj.fxn", selected = get_default(defaults, "y.adj.fxn", ""))
+            update_viz_select(session, "color.adj.fxn", selected = get_default(defaults, "color.adj.fxn", ""))
 
             # Points
-            updateSelectInput(session, "size.by", selected = get_default(defaults, "size.by", ""))
+            update_viz_select(session, "size.by", selected = get_default(defaults, "size.by", ""))
             updateNumericInput(session, "size", value = get_default(defaults, "size", 1, is.numeric))
             updateNumericInput(session, "opacity", value = get_default(defaults, "opacity", 1, is.numeric))
             updateCheckboxInput(session, "show.others",
@@ -242,7 +279,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "split.show.all.others",
                 value = get_default(defaults, "split.show.all.others", TRUE, is.logical)
             )
-            updateSelectInput(session, "plot.order", selected = get_default(defaults, "plot.order", "unordered"))
+            update_viz_select(session, "plot.order", selected = get_default(defaults, "plot.order", "unordered"))
             updateTextInput(session, "shape.panel",
                 value = get_default(defaults, "shape.panel", "16, 15, 17, 23, 25, 8")
             )
@@ -257,72 +294,28 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateColourInput(session, "contour.color",
                 value = get_default(defaults, "contour.color", "black")
             )
-            updateSelectInput(session, "contour.linetype",
+            update_viz_select(session, "contour.linetype",
                 selected = get_default(defaults, "contour.linetype", "solid")
             )
             updateColourInput(session, "single.point.color",
                 value = get_default(defaults, "single.point.color", "#000000")
             )
 
-            # Reset multiColorPicker to its initial palette
-            updateMultiColorPicker(session, "color.panel", reset = TRUE)
+            # Reset multiColorPicker to the supplied mapping, or its initial palette
+            .reset_group_colors(session, "color.panel", defaults, color_levels(), default_palette_values)
 
             # Facets
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
             updateNumericInput(session, "split.ncol", value = get_default(defaults, "split.ncol", NA, is.numeric))
-            updateSelectInput(session, "multivar.split.dir",
+            update_viz_select(session, "multivar.split.dir",
                 selected = get_default(defaults, "multivar.split.dir", "col")
             )
-            updateSelectInput(session, "split.adjust.scales",
+            update_viz_select(session, "split.adjust.scales",
                 selected = get_default(defaults, "split.adjust.scales", "fixed")
             )
 
             # Annotations
-            updateSelectInput(session, "annotate.by",
-                selected = get_default(defaults, "annotate.by", "", function(x) x == "" || x %in% choices)
-            )
-            updateTextAreaInput(session, "highlight.points",
-                value = get_default(defaults, "highlight.points", "")
-            )
-            updateColourInput(session, "highlight.color",
-                value = get_default(defaults, "highlight.color", "#00FFF7")
-            )
-            updateNumericInput(session, "highlight.size",
-                value = get_default(defaults, "highlight.size", 7, is.numeric)
-            )
-            updateColourInput(session, "highlight.border.color",
-                value = get_default(defaults, "highlight.border.color", "#000000")
-            )
-            updateNumericInput(session, "highlight.border.width",
-                value = get_default(defaults, "highlight.border.width", 1, is.numeric)
-            )
-            updateCheckboxInput(session, "highlight.auto.annotate",
-                value = get_default(defaults, "highlight.auto.annotate", TRUE, is.logical)
-            )
-            updateColourInput(session, "annotation.color",
-                value = get_default(defaults, "annotation.color", "black")
-            )
-            updateNumericInput(session, "annotation.ax",
-                value = get_default(defaults, "annotation.ax", 20, is.numeric)
-            )
-            updateNumericInput(session, "annotation.ay",
-                value = get_default(defaults, "annotation.ay", -20, is.numeric)
-            )
-            updateNumericInput(session, "annotation.size",
-                value = get_default(defaults, "annotation.size", 10, is.numeric)
-            )
-            updateCheckboxInput(session, "annotation.showarrow",
-                value = get_default(defaults, "annotation.showarrow", TRUE, is.logical)
-            )
-            updateColourInput(session, "annotation.arrowcolor",
-                value = get_default(defaults, "annotation.arrowcolor", "black")
-            )
-            updateNumericInput(session, "annotation.arrowhead",
-                value = get_default(defaults, "annotation.arrowhead", 2, is.numeric)
-            )
-            updateNumericInput(session, "annotation.arrowwidth",
-                value = get_default(defaults, "annotation.arrowwidth", 1.5, is.numeric)
-            )
+            reset_annotation_inputs(session, defaults, choices)
 
             # Legend
             updateCheckboxInput(session, "legend.show",
@@ -338,7 +331,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "max.value", value = get_default(defaults, "max.value", NA, is.numeric))
 
             # Trajectory
-            updateSelectInput(session, "trajectory.group.by",
+            update_viz_select(session, "trajectory.group.by",
                 selected = get_default(defaults, "trajectory.group.by", "", function(x) x == "" || x %in% choices)
             )
             updateTextInput(session, "add.trajectory.by.groups",
@@ -364,7 +357,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateCheckboxInput(session, "do.contour",
                 value = get_default(defaults, "do.contour", FALSE, is.logical)
             )
-            updateSelectizeInput(session, "hover.data",
+            update_viz_select(session, "hover.data",
                 selected = get_default(defaults, "hover.data", "", function(x) x == "" || x %in% choices)
             )
             updateNumericInput(session, "hover.round.digits",
@@ -383,15 +376,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         observeEvent(input$split.by, {
             if (!is.null(input$split.by) && any(nzchar(input$split.by))) {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
@@ -466,6 +459,29 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 isolate_fn(input$y.by), null.na.inputs$y.adjustment, isolate_fn(input$y.adj.fxn)
             )
 
+            # Flag axis sides whose title is adjustment-derived so finalize_manual_edits()
+            # regenerates rather than persists their text. adjusted_axis_label() returns the
+            # base unchanged when no adjustment, so a difference means an adjustment is active.
+            regen_keys_rv(c(
+                if (!identical(x_axis_label, isolate_fn(input$x.by))) "axis:x",
+                if (!identical(y_axis_label, isolate_fn(input$y.by))) "axis:y"
+            ))
+
+            # When the x or y variable changes, drop any persisted manual title text for
+            # that side so it regenerates for the new variable (position still persists).
+            # Runs before finalize_manual_edits() in the same render pass.
+            cur_by <- list(x = isolate_fn(input$x.by), y = isolate_fn(input$y.by))
+            prev_by <- last_axis_by()
+            if (!identical(cur_by, prev_by)) {
+                if (is.null(prev_by) || !identical(cur_by$x, prev_by$x)) {
+                    reset_axis_title_text(edit_store, "axis:x")
+                }
+                if (is.null(prev_by) || !identical(cur_by$y, prev_by$y)) {
+                    reset_axis_title_text(edit_store, "axis:y")
+                }
+                last_axis_by(cur_by)
+            }
+
             # Reflect any applied color data adjustments in the color.by legend title so it
             # accurately describes the values displayed (e.g. "log2(z-score(units))"). Only
             # the auto-generated title ("make") is rewritten so user-supplied titles are kept.
@@ -483,6 +499,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 data(),
                 x.by = isolate_fn(input$x.by),
                 y.by = isolate_fn(input$y.by),
+                # Blank main title by default; dittoViz's "make" would otherwise
+                # auto-generate one and re-render it every rebuild.
+                main = NULL,
                 xlab = x_axis_label,
                 ylab = y_axis_label,
                 color.by = null.na.inputs$color.by,
@@ -536,8 +555,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
             
             plot_data <- p$Target_data
-            # Colour mapping for fit lines — palette_values from color.panel() is already
-            # fully resolved (match → fallback → rep_len → setNames), so reuse it directly.
+            # Colour mapping for fit lines â€” palette_values from color.panel() is already
+            # fully resolved (match â†’ fallback â†’ rep_len â†’ setNames), so reuse it directly.
             color_mapping <- if (!is.null(null.na.inputs$color.by) && length(current_color_levels) > 0) {
                 palette_values
             } else {
@@ -610,98 +629,19 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 highlight_vals <- highlight_vals[highlight_vals != ""]
 
                 if (length(highlight_vals) > 0) {
-                    # Get styling parameters
-                    hl_color <- isolate_fn(input$highlight.color)
-                    hl_size <- isolate_fn(input$highlight.size)
-                    hl_border_color <- isolate_fn(input$highlight.border.color)
-                    hl_border_width <- isolate_fn(input$highlight.border.width)
-
-                    # Find indices of points to highlight in plot_data
-                    annotate_col <- null.na.inputs$annotate.by
-                    if (annotate_col %in% names(plot_data)) {
-                        highlight_idx <- which(as.character(plot_data[[annotate_col]]) %in% highlight_vals)
-
-                        if (length(highlight_idx) > 0 && !is.null(fig$x$data)) {
-                            # Iterate through traces and modify marker properties
-                            for (i in seq_along(fig$x$data)) {
-                                trace <- fig$x$data[[i]]
-
-                                # Skip traces that should not be included
-                                if (!.should_include_trace(trace, isolate_fn(input$show.others))) {
-                                    next
-                                }
-
-                                trace_n <- length(trace$x)
-
-                                # Initialize marker properties if not present
-                                if (is.null(trace$marker)) {
-                                    fig$x$data[[i]]$marker <- list()
-                                }
-
-                                # Get current marker properties (may be single value or vector)
-                                cur_color <- trace$marker$color
-                                cur_size <- if (!is.null(trace$marker$size)) {
-                                    trace$marker$size
-                                } else {
-                                    isolate_fn(input$size)
-                                }
-                                cur_line_color <- if (!is.null(trace$marker$line$color)) {
-                                    trace$marker$line$color
-                                } else {
-                                    "transparent"
-                                }
-                                cur_line_width <- if (!is.null(trace$marker$line$width)) {
-                                    trace$marker$line$width
-                                } else {
-                                    0
-                                }
-
-                                # Expand to vectors if single values
-                                if (length(cur_color) == 1) cur_color <- rep(cur_color, trace_n)
-                                if (length(cur_size) == 1) cur_size <- rep(cur_size, trace_n)
-                                if (length(cur_line_color) == 1) cur_line_color <- rep(cur_line_color, trace_n)
-                                if (length(cur_line_width) == 1) cur_line_width <- rep(cur_line_width, trace_n)
-
-                                # Build trace annotation mapping
-                                trace_map <- .build_trace_anno_map(trace, isolate_fn(input$annotate.by))
-                                if (is.null(trace_map)) {
-                                    next
-                                }
-
-                                # Find which points in this trace should be highlighted.
-                                # Match on the annotation value alone rather than on
-                                # coordinates: ggplotly encodes categorical (factor) axes
-                                # as numeric positions that will not match the raw data
-                                # values in plot_data, which would otherwise drop the
-                                # highlight styling for categorical x/y axes.
-                                trace_highlight_mask <- trace_map$anno_value %in% highlight_vals
-
-                                if (any(trace_highlight_mask)) {
-                                    # Apply highlight styling
-                                    if (!is.null(hl_color) && hl_color != "" && hl_color != "transparent") {
-                                        cur_color[trace_highlight_mask] <- hl_color
-                                    }
-                                    if (!is.null(hl_size) && !is.na(hl_size)) {
-                                        cur_size[trace_highlight_mask] <- hl_size
-                                    }
-                                    if (!is.null(hl_border_color) && hl_border_color != "") {
-                                        cur_line_color[trace_highlight_mask] <- hl_border_color
-                                    }
-                                    if (!is.null(hl_border_width) && !is.na(hl_border_width)) {
-                                        cur_line_width[trace_highlight_mask] <- hl_border_width
-                                    }
-
-                                    # Update trace marker properties
-                                    fig$x$data[[i]]$marker$color <- cur_color
-                                    fig$x$data[[i]]$marker$size <- cur_size
-                                    fig$x$data[[i]]$marker$line <- list(
-                                        color = cur_line_color,
-                                        width = cur_line_width
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    fig <- .apply_highlight_styling(
+                        fig,
+                        annotate.by = null.na.inputs$annotate.by,
+                        highlight_vals = highlight_vals,
+                        style = list(
+                            color = isolate_fn(input$highlight.color),
+                            size = isolate_fn(input$highlight.size),
+                            border.color = isolate_fn(input$highlight.border.color),
+                            border.width = isolate_fn(input$highlight.border.width)
+                        ),
+                        default.size = isolate_fn(input$size),
+                        show.others = isolate_fn(input$show.others)
+                    )
                 }
             }
 
@@ -752,27 +692,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     )
 
                     # Combine with existing annotations (avoiding duplicates)
-                    if (!is.null(highlight_annos)) {
-                        if (is.null(annos)) {
-                            annos <- highlight_annos
-                        } else {
-                            # Helper to create unique key for an annotation
-                            get_anno_key <- function(a) {
-                                paste0(.create_coord_id(a$x, a$y), "_", a$text)
-                            }
-
-                            existing_keys <- vapply(annos, get_anno_key, character(1))
-
-                            # Add only highlight annotations that don't already exist
-                            for (ha in highlight_annos) {
-                                ha_key <- get_anno_key(ha)
-                                if (!ha_key %in% existing_keys) {
-                                    annos <- c(annos, list(ha))
-                                    existing_keys <- c(existing_keys, ha_key)
-                                }
-                            }
-                        }
-                    }
+                    annos <- .merge_annotation_sets(annos, highlight_annos)
                 }
             }
 
@@ -933,7 +853,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- apply_render_margins(generate_scatterPlot(), input)
             # Restore manually repositioned legend/annotations/axis titles/colorbar
             # so they survive rebuilds, and wire up edit capture for this figure.
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+            fig <- finalize_manual_edits(
+                fig, plot_source, edit_store, session,
+                regen_keys = isolate(regen_keys_rv())
+            )
             fig
         })
 

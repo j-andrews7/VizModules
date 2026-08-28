@@ -224,3 +224,91 @@
 #'
 #' @author Jacob Martin
 "example_rnaseq"
+
+#' Example gene-expression-style matrix for the ComplexHeatmap module
+#'
+#' A tidy data frame shaped as observations (genes, rows) by samples
+#' (columns) — the layout [ComplexHeatmap::Heatmap()] expects. 30 genes drawn
+#' from three functional pathways (10 genes each), profiled across 12 samples
+#' (6 "Healthy", 6 "Disease"). Values are simulated, *unscaled* log2-CPM-like
+#' expression: Immune and Cell Cycle pathway genes are elevated in Disease
+#' samples, Metabolic pathway genes are flat, so the module's row/column
+#' scaling, clustering, splitting, and row-annotation controls all have real
+#' signal to demonstrate on. Pairs with [example_heatmap_column_data] to
+#' additionally demonstrate column annotations (see
+#' [ComplexHeatmap_HeatmapApp()]'s `column_data` argument).
+#'
+#' @format A data frame with 30 rows and 15 columns:
+#' \describe{
+#'   \item{gene}{Gene symbol (character), used as row identifier}
+#'   \item{pathway}{Functional pathway the gene belongs to (factor: Immune,
+#'     Metabolic, Cell Cycle) — a categorical row-annotation column}
+#'   \item{mean_expression}{Mean log2-CPM-like expression across the 12
+#'     samples — a numeric row-annotation column}
+#'   \item{Healthy_1, Healthy_2, Healthy_3, Healthy_4, Healthy_5,
+#'     Healthy_6, Disease_1, Disease_2, Disease_3, Disease_4, Disease_5, 
+#'     Disease_6}{Simulated
+#'     log2-CPM-like expression values forming the heatmap matrix}
+#' }
+#'
+#' @source Simulated in data-raw/generate_example_data.R.
+#'
+#' @author Jacob Martin
+#' @keywords datasets
+"example_heatmap_matrix"
+
+#' Example sample-metadata table for the ComplexHeatmap module
+#'
+#' Per-sample metadata for the 12 samples in [example_heatmap_matrix],
+#' keyed by `sample`. Supplying this alongside the matrix (as
+#' `list(matrix = example_heatmap_matrix, column_annotations =
+#' example_heatmap_column_data)`) enables column annotations in the
+#' ComplexHeatmap module.
+#'
+#' @format A data frame with 12 rows and 4 columns:
+#' \describe{
+#'   \item{sample}{Sample identifier (factor), matching the sample column
+#'     names in [example_heatmap_matrix]}
+#'   \item{condition}{Experimental condition (factor: Healthy, Disease)}
+#'   \item{batch}{Processing batch (factor: B1, B2), crossed with `condition`}
+#'   \item{library_size}{Simulated sequencing library size (numeric)}
+#' }
+#'
+#' @source Simulated in data-raw/generate_example_data.R.
+#'
+#' @author Jacob Martin
+#' @keywords datasets
+"example_heatmap_column_data"
+
+#' Example single-cell-style composition data for the freqPlot module
+#'
+#' A per-cell record table from a simulated 12-donor immune profiling
+#' experiment, shaped for [dittoViz::freqPlot()]. Each donor (`sample`)
+#' contributes 150 cells and maps to exactly one `condition` and one `batch`,
+#' which is the nesting `freqPlot()` requires to compare per-sample
+#' cell-type frequencies across groups. `batch` is crossed with `condition`
+#' (three donors each), so it works as a `color.by` without confounding the
+#' comparison.
+#'
+#' Composition differs between the two conditions: the Disease donors show an
+#' expanded monocyte compartment and depleted CD4 T cells relative to Healthy.
+#'
+#' @format A data frame with 1800 rows and 7 columns:
+#' \describe{
+#'   \item{cell_id}{Unique cell identifier (character)}
+#'   \item{sample}{Donor identifier, `P01`-`P12` (factor); 150 cells each}
+#'   \item{condition}{Disease state, `Healthy` or `Disease` (factor); six donors each}
+#'   \item{batch}{Processing batch, `B1` or `B2` (factor); crossed with `condition`}
+#'   \item{cell_type}{Annotated cell type (factor), the variable whose
+#'     per-sample frequency `freqPlot()` tabulates}
+#'   \item{n_genes}{Number of genes detected in the cell (integer)}
+#'   \item{percent_mito}{Percentage of mitochondrial reads (numeric)}
+#' }
+#'
+#' @source Simulated. Per-donor compositions are Dirichlet draws around
+#'   condition-specific means, with cell counts drawn multinomially.
+#'   See `data-raw/generate_example_data.R`.
+#'
+#' @author Jared Andrews
+#' @keywords datasets
+"example_composition"

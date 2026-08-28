@@ -1,7 +1,9 @@
 #' Server logic for BarPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the BarPlot module.
 #'
 #' @import shiny
@@ -26,9 +30,12 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Constant for y-axis scaling to ensure highest bar reaches ~85% of chart height
         y_axis_scale_factor <- 1.18
 
@@ -40,7 +47,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "BarPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -102,14 +109,24 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
                 palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
-                selectInput(
+                viz_select_input(
                     ns("palette.name"),
                     "Color Palette",
                     choices = palette_names,
-                    selected = "viridis", selectize = FALSE
+                    selected = get_default(defaults, "palette.name", "viridis", function(x) x %in% palette_names)
                 )
             } else {
                 groups <- palette_groups()
@@ -117,7 +134,16 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     return(NULL)
                 }
 
-                initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+                initial_colors <- isolate(resolve_palette(
+                    groups, input$palette.colours, default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
+                ))
+
+                # The picker is seeded with this, so it is also what the plot should be
+                # drawing with from now until the user changes something. Setting it here
+                # rather than waiting for the client to report back keeps the first draw
+                # on the right palette.
+                palette_store(initial_colors)
 
                 multiColorPicker(
                     ns("palette.colours"),
@@ -148,25 +174,25 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
             )
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% char.choices)
             )
 
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -174,7 +200,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
@@ -194,8 +220,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
-            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
+            reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
+            reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
+            y_range_store(list(min = reset.y.min, max = reset.y.max))
+            updateNumericInput(session, "y.max", value = reset.y.max)
+            updateNumericInput(session, "y.min", value = reset.y.min)
             updateNumericInput(session, "axis.title.font.size",
                 value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
@@ -205,12 +234,23 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             reset_axes_inputs(session, defaults)
 
             # Plotly
+            # Colors
+            update_viz_select(session, "palette.name",
+                selected = get_default(defaults, "palette.name", "viridis", is.character)
+            )
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
             # Lines
             reset_lines_inputs(session, defaults = defaults)
         })
+
+        # What the plot actually draws with. The limits are pushed into the y.min and
+        # y.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the echo of a limit just set costs no rebuild.
+        y_range_store <- setup_axis_range(input, session, params = params)
 
         # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
         observeEvent(list(input$y.data, input$group.by, input$fill.by), {
@@ -235,6 +275,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             if (!is.null(y_range)) {
+                y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -243,9 +284,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -254,20 +295,24 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(list(input$fill.by, data()), {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
             if (fill_numeric()) {
-                .show_input(session, fill.scale.inputs)
+                show_input(session, fill.scale.inputs)
             } else {
-                .hide_input(session, fill.scale.inputs)
+                hide_input(session, fill.scale.inputs)
             }
         }, ignoreInit = FALSE)
 
         observeEvent(c(input$facet.by, input$x.data), {
-        if (input$facet.by == input$x.data){
-            updateSelectInput(session, "facet.scale", selected = "free_x")
-        }
+            req(!is.null(input$facet.by), !is.null(input$x.data))
+            if (input$facet.by == input$x.data) {
+                update_viz_select(session, "facet.scale", selected = "free_x")
+            }
         }, ignoreInit = FALSE)
 
         generate_BarPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
+
+            # Resolved server-side, so the echo of a limit just set costs no rebuild.
+            y.limits <- isolate_fn(y_range_store())
 
             # Null Values:
             facet.by <- NULL
@@ -304,14 +349,17 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             if (isolate_fn(fill_numeric())) {
                 palette_arg <- isolate_fn(input$palette.name)
-                if (is.null(palette_arg) || !nzchar(palette_arg)) palette_arg <- "viridis"
+                if (is.null(palette_arg) || !nzchar(palette_arg)) {
+                    palette_arg <- get_default(defaults, "palette.name", "viridis", is.character)
+                }
                 palcolor_arg <- NULL
             } else {
                 palette_arg <- NULL
                 palette_values <- resolve_palette(
                     isolate_fn(palette_groups()),
-                    isolate_fn(input$palette.colours),
-                    default_palette_values
+                    isolate_fn(palette_store()),
+                    default_palette_values,
+                    .default_group_colors(defaults, "palette.colours")
                 )
                 palcolor_arg <- as.list(palette_values)
             }
@@ -336,8 +384,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 palette = palette_arg,
                 palcolor = palcolor_arg,
                 palreverse = isolate_fn(input$palreverse),
-                y_min = isolate_fn(input$y.min),
-                y_max = isolate_fn(input$y.max),
+                y_min = y.limits$min,
+                y_max = y.limits$max,
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha = isolate_fn(input$alpha),
@@ -350,6 +398,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
                 upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
             )
+
             fig <- ggplotly(p)
             if (!is.null(facet.by) && nzchar(facet.by)) {
                 fig <- apply_facet_subplot_spacing(
@@ -359,6 +408,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     nrow = facet.nrow
                 )
             }
+
             fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
 
             # Apply axis styling to all subplot axes (handles faceting/split_by)

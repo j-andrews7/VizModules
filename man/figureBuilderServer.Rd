@@ -21,7 +21,9 @@ Each entry is itself a list with components: \code{label} (character, shown in t
 picker), \code{dataset} (character, the dataset name its \code{defaults} were written
 for), \code{inputs_ui}, \code{output_ui}, and \code{server_fn} (the module's three
 functions), and \code{defaults} (a named list of input defaults applied only when
-\code{dataset} is the chosen dataset).}
+\code{dataset} is the chosen dataset). \code{defaults} is passed to both \code{inputs_ui}
+and \code{server_fn}, so it can seed server-rendered controls such as the group
+color picker.}
 }
 \value{
 Invisibly returns \code{NULL}; called for its side effects (wiring up the

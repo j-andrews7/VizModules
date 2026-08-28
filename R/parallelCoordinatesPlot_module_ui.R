@@ -40,10 +40,15 @@
 #' - `tick.font.color` - Tick label font color (UI: "Tick font color", default: "black")
 #' - `tick.font.family` - Tick label font family (UI: "Tick font", default: "Arial")
 #' - `bgcolor` - Plot background color (UI: "Background color", default: "#FFFFFF")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -102,23 +107,23 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("dimensions"), "Dimensions",
+            tipify(viz_select_input(ns("dimensions"), "Dimensions",
                 choices = all.choices,
                 selected = default_dims,
-                multiple = TRUE, selectize = TRUE
+                multiple = TRUE
             ), documentParameters$dimensions, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("color.by"), "Color By",
+            tipify(viz_select_input(ns("color.by"), "Color By",
                 choices = all.with.empty,
-                selected = get_default(defaults, "color.by", ""), selectize = FALSE
+                selected = get_default(defaults, "color.by", "")
             ), documentParameters$color.by, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("color.scale"), "Color Scale",
+            tipify(viz_select_input(ns("color.scale"), "Color Scale",
                 choices = colorscale.choices,
                 selected = get_default(
                     defaults, "color.scale", "Viridis",
                     function(x) x %in% colorscale.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
             tipify(sliderInput(ns("line.opacity"), "Line Opacity",
@@ -146,12 +151,12 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             tipify(colourInput(ns("label.font.color"), "Label Color",
                 value = get_default(defaults, "label.font.color", "black")
             ), documentParameters$label.font.color, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("label.font.family"), "Label Font",
+            tipify(viz_select_input(ns("label.font.family"), "Label Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "label.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$label.font.family, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("tick.font.size"), "Tick Font Size",
                 value = get_default(defaults, "tick.font.size", 10, is.numeric),
@@ -160,12 +165,12 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
             tipify(colourInput(ns("tick.font.color"), "Tick Font Color",
                 value = get_default(defaults, "tick.font.color", "black")
             ), documentParameters$tick.font.color, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("tick.font.family"), "Tick Font",
+            tipify(viz_select_input(ns("tick.font.family"), "Tick Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "tick.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$tick.font.family, placement = "top", options = list(container = "body"))
         ),
         "Title" = tagList(
@@ -173,12 +178,12 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 value = get_default(defaults, "title.font.size", 26, is.numeric),
                 min = 1, step = 1
             ), documentParameters$title.font.size, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("title.font.family"), "Title Font",
+            tipify(viz_select_input(ns("title.font.family"), "Title Font",
                 choices = font.choices,
                 selected = get_default(
                     defaults, "title.font.family", "Arial",
                     function(x) x %in% font.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$title.font.family, placement = "top", options = list(container = "body")),
             tipify(colourInput(ns("title.font.color"), "Title Color",
                 value = get_default(defaults, "title.font.color", "black")

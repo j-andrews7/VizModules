@@ -61,6 +61,8 @@ module_data <- list(
     density  = example_demographics,
     dotplot  = example_markers,
     dumbbell = example_school_earnings,
+    freq     = example_composition,
+    heatmap  = example_heatmap_matrix,
     histogram = example_demographics,
     line     = example_sales,
     parallel = example_sales,
@@ -72,6 +74,14 @@ module_data <- list(
     violin   = example_demographics,
     yplot    = example_demographics
 )
+
+# The ComplexHeatmap module depends on Bioconductor packages that may not be
+# installed. Only register its tab when they are available so the gallery
+# still runs without them.
+heatmap_available <- all(vapply(
+    c("ComplexHeatmap", "InteractiveComplexHeatmap", "circlize"),
+    requireNamespace, logical(1), quietly = TRUE
+))
 
 # Module registry – each entry defines one plot module for the gallery.
 module_registry <- list(
@@ -125,6 +135,15 @@ module_registry <- list(
         server_fn = plotthis_DotPlotServer,
         defaults  = list("x.data" = "gene", "y.data" = "cell_type",
                          "size.by" = "pct_expressed", "fill.by" = "avg_expression")
+    ),
+    list(
+        label     = "Frequency",
+        id        = "freq",
+        inputs_ui = dittoViz_freqPlotInputsUI,
+        output_ui = dittoViz_freqPlotOutputUI,
+        server_fn = dittoViz_freqPlotServer,
+        defaults  = list("var" = "cell_type", "sample.by" = "sample",
+                         "group.by" = "condition")
     ),
     list(
         label     = "Histogram",
@@ -201,6 +220,25 @@ module_registry <- list(
         defaults  = list("var" = "salary", "group.by" = "department")
     )
 )
+
+# Append the ComplexHeatmap module only when its Bioconductor dependencies are
+# installed (see heatmap_available above).
+if (heatmap_available) {
+    module_registry <- c(module_registry, list(
+        list(
+            label     = "Heatmap",
+            id        = "heatmap",
+            inputs_ui = ComplexHeatmap_HeatmapInputsUI,
+            output_ui = ComplexHeatmap_HeatmapOutputUI,
+            server_fn = ComplexHeatmap_HeatmapServer,
+            defaults  = list(
+                "rowname.col" = "gene",
+                "matrix.cols" = setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression"))
+            ),
+            column_data = example_heatmap_column_data
+        )
+    ))
+}
 
 
 # Figure Builder tab – embeds the self-contained figureBuilder module, seeded
@@ -401,19 +439,34 @@ server <- function(input, output, session) {
             active_data
         )
 
+        # Modules that carry a `column_data` table (currently just the
+        # ComplexHeatmap module) get their (still-filtered) data wrapped into
+        # list(matrix = , column_annotations = ) so column annotations can be
+        # demonstrated; every other module is unaffected.
+        server_data <- if (!is.null(m$column_data)) {
+            reactive(list(matrix = filtered_data(), column_annotations = m$column_data))
+        } else {
+            filtered_data
+        }
+
         # Inputs UI rendered once on load with pre-selected data columns.
         # Only data-column defaults are passed; all other inputs use their
         # built-in defaults.
         output[[paste0(m$id, "_inputs_ui")]] <- renderUI({
+            ui_data <- if (!is.null(m$column_data)) {
+                list(matrix = active_data(), column_annotations = m$column_data)
+            } else {
+                active_data()
+            }
             m$inputs_ui(
                 m$id,
-                active_data(),
+                ui_data,
                 defaults = m$defaults,
                 title    = h3(paste(m$label, "Settings"))
             )
         })
 
-        m$server_fn(m$id, data = filtered_data)
+        m$server_fn(m$id, data = server_data)
     })
 
     # Figure Builder: uses its own bundled dataset catalogue and module

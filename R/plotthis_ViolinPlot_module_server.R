@@ -1,7 +1,9 @@
 #' Server logic for ViolinPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the ViolinPlot module.
 #'
 #' @import shiny
@@ -25,8 +29,11 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -34,7 +41,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "ViolinPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -74,13 +81,32 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
                 return(NULL)
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -110,17 +136,20 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices))
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             # Adjustments
-            updateSelectInput(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "y.min", value = get_default(defaults, "y.min", min.y, is.numeric))
-            updateNumericInput(session, "y.max", value = get_default(defaults, "y.max", max.y, is.numeric))
+            reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
+            reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
+            y_range_store(list(min = reset.y.min, max = reset.y.max))
+            updateNumericInput(session, "y.min", value = reset.y.min)
+            updateNumericInput(session, "y.max", value = reset.y.max)
 
             # Points
             updateMaterialSwitch(session, "add.points", value = get_default(defaults, "add.points", FALSE, is.logical))
@@ -150,15 +179,18 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 value = get_default(defaults, "highlight.alpha", 1, is.numeric))
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices))
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
 
+
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
 
@@ -173,13 +205,41 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
             pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
-            updateSelectInput(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            # Pause readers until the client echoes the cleared selection, otherwise
+            # the plot renders once now and again when that echo lands.
+            freezeReactiveValue(input, "stat.pairs")
+            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
         })
 
         # Update y-axis range when y data column is changed
+        # How high the significance brackets will reach, so the y-axis can reserve
+        # room for them rather than have the plot drawn with them clipped.
+        stat_headroom <- function() {
+            if (!isTRUE(input$stats.enabled)) {
+                return(NULL)
+            }
+
+            .stat_bracket_headroom(
+                df = data(), x = input$x.data, y = input$y.data,
+                group.by = .blank_to_null(input$group.by),
+                facet.by = .blank_to_null(input$facet.by),
+                per.facet = isTRUE(input$stat.per.facet),
+                input = input
+            )
+        }
+
+        # What the plot actually draws with. The limits are pushed into the y.min and
+        # y.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the echo of a limit just set costs no rebuild.
+        y_range_store <- setup_axis_range(
+            input, session,
+            headroom = stat_headroom, params = params
+        )
+
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
             if (!is.null(y_range)) {
+                y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
@@ -187,20 +247,24 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
         observeEvent(c(input$facet.by, input$x.data), {
-            if (input$facet.by == input$x.data){
-                updateSelectInput(session, "facet.scale", selected = "free_x")
+            req(!is.null(input$facet.by), !is.null(input$x.data))
+            if (input$facet.by == input$x.data) {
+                update_viz_select(session, "facet.scale", selected = "free_x")
             }
         }, ignoreInit = FALSE)
 
         generate_ViolinPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
+
+            # Resolved server-side, so they already clear any significance brackets.
+            y.limits <- isolate_fn(y_range_store())
 
             # Facet By Null option Upstream:
             facet.by <- NULL
@@ -219,8 +283,9 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
@@ -242,8 +307,8 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                 group_by = group.by,
                 flip = isolate_fn(input$rotate),
                 sort_x = sort.x,
-                y_max = isolate_fn(input$y.max),
-                y_min = isolate_fn(input$y.min),
+                y_max = y.limits$max,
+                y_min = y.limits$min,
                 add_point = isolate_fn(input$add.points),
                 pt_size = isolate_fn(input$pt.size),
                 pt_alpha = isolate_fn(input$pt.alpha),
@@ -349,7 +414,7 @@ plotthis_ViolinPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = 
                     bracket.inset = isolate_fn(input$stat.bracket.inset)
                 )
                 fig <- apply_stat_annotations(fig, stat_result,
-                    y.min = isolate_fn(input$y.min)
+                    y.min = y.limits$min, y.max = y.limits$max
                 )
             }
 

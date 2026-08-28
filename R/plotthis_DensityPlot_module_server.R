@@ -7,11 +7,15 @@
 #'
 #' @param id `character` unique ID for the shiny namespace.
 #' @param data `reactive` A reactive expression returning a data frame to be plotted.
+#'   Values that are not data frames are coerced with [as.data.frame()]; a `NULL`
+#'   value is treated as "not ready yet" and the module waits for data.
 #' @param hide.inputs `character` vector of input IDs to hide in the UI. Default is NULL.
 #' @param hide.tabs `character` vector of tab names to hide within the module. Default is NULL.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #'
 #' @return The `moduleServer` function for the DensityPlot module.
 #'
@@ -25,8 +29,11 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -34,7 +41,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "DensityPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -70,13 +77,25 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
                 # No grouping - show single color picker for fill color
                 initial_color <- isolate(input$single.fill.color)
                 if (is.null(initial_color) || !nzchar(initial_color)) {
-                    initial_color <- default_palette_values[1]
+                    initial_color <- get_default(
+                        defaults, "single.fill.color", default_palette_values[1], is.character
+                    )
                 }
                 return(colourInput(
                     ns("single.fill.color"),
@@ -85,7 +104,16 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 ))
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -107,19 +135,19 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Reset numeric inputs to defaults derived from data
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% all.choices))
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% all.choices))
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed"))
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateMaterialSwitch(session, "add.bars",
@@ -129,12 +157,15 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
             updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
             updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 0.5, is.numeric))
-            updateSelectInput(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
-            updateSelectInput(session, "position", selected = get_default(defaults, "position", "identity"))
+            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
+            update_viz_select(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
 
             # Action Button
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
@@ -148,14 +179,14 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
         generate_DensityPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
@@ -169,8 +200,9 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
 
             palcolor_arg <- NULL

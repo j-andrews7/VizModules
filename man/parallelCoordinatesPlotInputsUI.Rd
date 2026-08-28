@@ -17,7 +17,9 @@ parallelCoordinatesPlotInputsUI(
 
 \item{data}{The data frame used for plot generation.}
 
-\item{defaults}{A named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
+seed the control, and the module then keeps it live (see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}).}
 
 \item{title}{An optional title for the UI grid.}
 
@@ -72,6 +74,9 @@ and/or the \code{defaults} argument:
 \item \code{tick.font.color} - Tick label font color (UI: "Tick font color", default: "black")
 \item \code{tick.font.family} - Tick label font family (UI: "Tick font", default: "Arial")
 \item \code{bgcolor} - Plot background color (UI: "Background color", default: "#FFFFFF")
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
 }
 }
 

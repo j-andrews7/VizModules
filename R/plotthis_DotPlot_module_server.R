@@ -1,7 +1,9 @@
 #' Server logic for DotPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the DotPlot module.
 #'
 #' @import shiny
@@ -25,9 +29,12 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
 
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -35,7 +42,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "DotPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -56,23 +63,23 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
 
             # Data
-            updateSelectInput(session, "x.data",
+            update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            updateSelectInput(session, "y.data",
+            update_viz_select(session, "y.data",
                 selected = get_default(
                     defaults, "y.data", char.choices[min(3, length(char.choices))],
                     function(x) x %in% char.choices
                 )
             )
-            updateSelectInput(session, "size.by",
+            update_viz_select(session, "size.by",
                 selected = get_default(defaults, "size.by", "", function(x) x == "" || x %in% num.choices)
             )
-            updateSelectInput(session, "fill.by",
+            update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% num.choices)
             )
             updateNumericInput(session, "fill.cutoff", value = get_default(defaults, "fill.cutoff", NA, is.numeric))
-            updateSelectInput(session, "fill.cutoff.direction",
+            update_viz_select(session, "fill.cutoff.direction",
                 selected = get_default(
                     defaults, "fill.cutoff.direction", "<",
                     function(x) x %in% c("<", "<=", ">", ">=")
@@ -80,10 +87,10 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Facet
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
-            updateSelectInput(session, "facet.scale",
+            update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
@@ -91,12 +98,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            updateSelectInput(session, "split.by",
+            update_viz_select(session, "split.by",
                 selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
-            updateSelectInput(session, "palette.name",
+            update_viz_select(session, "palette.name",
                 selected = get_default(
                     defaults, "palette.name", "Spectral",
                     function(x) x %in% palette_names
@@ -147,9 +154,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
@@ -158,14 +165,14 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(input$fill.by, {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
             if (nzchar(input$fill.by)) {
-                .show_input(session, fill.scale.inputs)
+                show_input(session, fill.scale.inputs)
             } else {
-                .hide_input(session, fill.scale.inputs)
+                hide_input(session, fill.scale.inputs)
             }
         }, ignoreInit = FALSE)
 
         generate_DotPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             # Null Values:
             facet.by <- NULL

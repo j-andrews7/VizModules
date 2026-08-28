@@ -22,6 +22,14 @@ reference:
       - dittoViz_yPlotOutputUI
       - dittoViz_yPlotServer
 
+  - title: "freqPlot Module"
+    desc: "dittoViz-based composition/frequency plot module (per-sample frequencies by group)."
+    contents:
+      - dittoViz_freqPlotApp
+      - dittoViz_freqPlotInputsUI
+      - dittoViz_freqPlotOutputUI
+      - dittoViz_freqPlotServer
+
   - title: "linePlot Module"
     desc: "Interactive line plot module."
     contents:
@@ -131,11 +139,23 @@ reference:
       - plotthis_HistogramOutputUI
       - plotthis_HistogramServer
 
+  - title: "Heatmap Module"
+    desc: "ComplexHeatmap-based interactive heatmap module."
+    contents:
+      - ComplexHeatmap_HeatmapApp
+      - ComplexHeatmap_HeatmapInputsUI
+      - ComplexHeatmap_HeatmapOutputUI
+      - ComplexHeatmap_HeatmapServer
+      - ComplexHeatmap_HeatmapMainOutputUI
+      - ComplexHeatmap_HeatmapSubOutputUI
+      - ComplexHeatmap_HeatmapInfoOutputUI
+
   - title: "dataFilter Module"
     desc: "Reusable data filtering module for use with plot modules."
     contents:
       - dataFilterServer
       - dataFilterUI
+      - resolve_column_targets
 
   - title: "Figure Builder Module"
     desc: "Multi-panel figure builder module."
@@ -153,13 +173,24 @@ reference:
       - updateMultiDynamicInput
 
   - title: "UI Helpers"
-    desc: "Utility functions for building and organising module UIs."
+    desc: >
+      Utility functions for building and organising module UIs, and the
+      server-side stores that keep a module's own controls from costing an
+      extra render.
     contents:
       - createModuleApp
       - empty_plot
+      - hide_input
       - module_tack_ui
       - organize_inputs
       - setup_auto_update_logic
+      - setup_axis_range
+      - setup_reactive_defaults
+      - show_input
+      - toggle_input_cell
+      - use_vizmodules_skills
+      - viz_select_input
+      - update_viz_select
 
   - title: "Uniform UI Inputs"
     desc: "Standardised input builders and reset functions shared across modules."
@@ -168,6 +199,8 @@ reference:
       - uniform_legend_inputs_ui
       - uniform_lines_inputs_ui
       - uniform_plotly_inputs_ui
+      - uniform_annotation_inputs_ui
+      - reset_annotation_inputs
       - reset_axes_inputs
       - reset_legend_inputs
       - reset_lines_inputs
@@ -194,6 +227,7 @@ reference:
       - add_vlines
       - adjusted_axis_label
       - apply_axis_title_to_annotations
+      - reset_axis_title_text
       - apply_legend_styling
       - apply_plotly_newshape
       - apply_render_margins
@@ -228,12 +262,14 @@ reference:
       - create_stat_annotations
       - generate_pair_strings
       - parse_pair_strings
+      - stat_bracket_y_max
 
   - title: "Palette & Color Utilities"
     desc: "Functions for managing color palettes."
     contents:
       - default_palettes
       - resolve_palette
+      - setup_group_colors
 
   - title: "Data Download Utilities"
     desc: "Functions for preparing plot and source data for download."
@@ -256,9 +292,12 @@ reference:
     desc: "Built-in datasets for demos and testing."
     contents:
       - example_bar
+      - example_composition
       - example_demographics
       - example_iris
       - example_markers
+      - example_heatmap_matrix
+      - example_heatmap_column_data
       - example_mtcars
       - example_population
       - example_rnaseq

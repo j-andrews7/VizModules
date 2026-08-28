@@ -1,7 +1,9 @@
 #' Server logic for linePlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the linePlot module.
 #'
 #' @import shiny
@@ -26,6 +30,7 @@
 #' @author Jacob Martin
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
     data_reactive <- data
 
     # linePlot-specific default for subplot spacing (tighter than the global 0.1),
@@ -35,18 +40,28 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
     }
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs if specified
 
         # Persist manual legend/annotation/colorbar repositioning across rebuilds.
         plot_source <- session$ns("line")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
+        # Axis side(s) whose title is regenerated (not persisted) because a data
+        # adjustment is active; set inside generate_linePlot() and read at render.
+        regen_keys_rv <- reactiveVal(character(0))
+
+        # x/y variables at the last build; when one changes we drop any persisted
+        # manual title text for that axis so it regenerates for the new variable.
+        last_axis_val <- reactiveVal(NULL)
+
         observeEvent(input$x.value, {
             req(input$x.value)
             if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                .hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
+                hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
             } else {
-                .show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
+                show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
             }
         })
 
@@ -57,7 +72,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "linePlotTabsetPanel", target = tab.name)
                 })
             })
@@ -105,6 +120,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             character(0)
         })
 
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
+        )
+
         output$palette.selection <- renderUI({
             ns <- session$ns
             groups <- palette_groups()
@@ -112,7 +137,16 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 return(NULL)
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -129,30 +163,30 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         observeEvent(input$reset, {
             choices <- c("", names(data()))
             # Reset Data columns to default. First and second index of data named list
-            updateSelectInput(session, "x.value",
+            update_viz_select(session, "x.value",
                 selected = get_default(defaults, "x.value", names(data())[1], function(x) all(x %in% choices)))
-            updateSelectInput(session, "y.value",
+            update_viz_select(session, "y.value",
                 selected = get_default(defaults, "y.value", names(data())[2], function(x) all(x %in% choices)))
-            updateSelectInput(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
-            updateSelectInput(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
+            update_viz_select(session, "plot.mode", selected = get_default(defaults, "plot.mode", "lines"))
+            update_viz_select(session, "line.type", selected = get_default(defaults, "line.type", "solid"))
             updateMaterialSwitch(session, "order.by",
                 value = get_default(defaults, "order.by", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.x",
                 value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
                 value = get_default(defaults, "flip.y", FALSE, is.logical))
-            updateSelectInput(session, "group.by",
+            update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
-            updateSelectInput(session, "facet.scales",
+            update_viz_select(session, "facet.scales",
                 selected = get_default(defaults, "facet.scales", "fixed"))
             updateNumericInput(session, "facet.nrow",
                 value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateNumericInput(session, "facet.ncol",
                 value = get_default(defaults, "facet.ncol", NA, is.numeric))
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
                 value = get_default(defaults, "error.bar", TRUE, is.logical))
             updateNumericInput(session, "error.bar.width",
@@ -163,6 +197,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             reset_axes_inputs(session, defaults)
 
             # Plotly
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
@@ -173,12 +210,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c(
+                show_input(session, c(
                     "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
                     "facet.nrow", "facet.ncol"
                 ))
             } else {
-                .hide_input(session, c(
+                hide_input(session, c(
                     "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
                     "facet.nrow", "facet.ncol"
                 ))
@@ -187,7 +224,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_linePlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             d <- data_reactive()
 
@@ -197,8 +234,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             # Sets the colouring to the first item in the selected palette unless group.by is selected
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
 
             palette_selection <- palette_values
@@ -259,11 +297,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Checking that all columns are numeric for x and y adjustment to be available
             if (!all(vapply(d[x_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "x.adjustment", selected = "")
+                update_viz_select(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
             if (!all(vapply(d[y_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "y.adjustment", selected = "")
+                update_viz_select(session, "y.adjustment", selected = "")
                 y.adjustment <- NULL
             }
 
@@ -271,6 +309,27 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             # describe the values displayed (e.g. "log2(units)"), matching other modules.
             x_title <- adjusted_axis_label(x_title, NULL, x.adjustment)
             y_title <- adjusted_axis_label(y_title, NULL, y.adjustment)
+
+            # Flag adjustment-derived axis titles so finalize_manual_edits() regenerates
+            # rather than persists their text on rebuild.
+            regen_keys_rv(c(
+                if (!is.null(x.adjustment)) "axis:x",
+                if (!is.null(y.adjustment)) "axis:y"
+            ))
+
+            # When the x or y variable changes, drop any persisted manual title text for
+            # that side so it regenerates for the new variable (position still persists).
+            cur_val <- list(x = x_input, y = y_input)
+            prev_val <- last_axis_val()
+            if (!identical(cur_val, prev_val)) {
+                if (is.null(prev_val) || !identical(cur_val$x, prev_val$x)) {
+                    reset_axis_title_text(edit_store, "axis:x")
+                }
+                if (is.null(prev_val) || !identical(cur_val$y, prev_val$y)) {
+                    reset_axis_title_text(edit_store, "axis:y")
+                }
+                last_axis_val(cur_val)
+            }
 
             facet.by <- NULL
             if (!isolate_fn(input$facet.by) == "") {
@@ -406,7 +465,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 fig <- apply_render_margins(generate_linePlot(), input)
             }
 
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
+            fig <- finalize_manual_edits(
+                fig, plot_source, edit_store, session,
+                regen_keys = isolate(regen_keys_rv())
+            )
 
             return(fig)
         })

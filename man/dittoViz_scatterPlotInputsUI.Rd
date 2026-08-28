@@ -17,7 +17,9 @@ dittoViz_scatterPlotInputsUI(
 
 \item{data}{The data frame used for plot generation.}
 
-\item{defaults}{A named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
+seed the control, and the module then keeps it live (see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}).}
 
 \item{title}{An optional title for the UI grid.}
 
@@ -44,6 +46,9 @@ for that function for an exhaustive list.
 Note that some of the parameters may have input types that differ from the actual function, e.g. \code{shape.panel}
 is a text input for comma-separated integers, while the function expects a vector of integers.
 The module will parse such inputs into the appropriate format for \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} automatically.
+
+\strong{Source data note:} When source data is downloaded with faceting applied and \code{split.show.all.others = TRUE},
+values will be duplicated due to them being shown in every panel.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
@@ -112,7 +117,10 @@ a custom circle size legend is drawn since plotly cannot render a native size le
 \item \code{max.color} - Maximum color (UI: "Max Color", default: "#0072B2")
 \item \code{contour.color} - Contour color (UI: "Contour Color", default: "black")
 \item \code{contour.linetype} - Contour linetype (UI: "Contour Linetype", default: "solid")
-\item \code{color.panel} - Custom color values (UI: color.panel.ui, derived from palette)
+\item \code{color.panel} - Named character vector mapping \code{color.by} levels to colors, e.g.
+\code{c(setosa = "#FF0000", virginica = "blue")} (UI: color.panel.ui). Seeds the picker; unnamed
+groups fall back to the default palette and user edits take precedence.
+\item \code{single.point.color} - Point color used when \code{color.by} is unset (UI: "Point color", default: "#000000")
 \item \code{split.nrow} - Number of split rows (UI: "Rows", default: NA)
 \item \code{split.ncol} - Number of split columns (UI: "Columns", default: NA)
 \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")

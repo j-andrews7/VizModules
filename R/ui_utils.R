@@ -105,7 +105,7 @@ organize_inputs <- function(
 
         # Lay the inputs out in a single wrapping flex container rather than a set
         # of fixed Bootstrap rows. Each input lives in its own `.vizmodules-input-cell`
-        # so that hiding a cell (see `.hide_input()`) lets the remaining inputs
+        # so that hiding a cell (see `hide_input()`) lets the remaining inputs
         # reflow and pack together with no empty gaps.
         cell.style <- sprintf(
             paste0(
@@ -151,9 +151,15 @@ organize_inputs <- function(
 #' @return Invisibly `NULL`, called for the side effect of running client-side JS.
 #'
 #' @importFrom shinyjs runjs
-#' @keywords internal
-#' @noRd
-.toggle_input_cell <- function(session, ids, show) {
+#' @export
+#' @author Jared Andrews
+#' @seealso [hide_input()], [show_input()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server, e.g. from an observeEvent():
+#' toggle_input_cell(session, "size", show = input$show.size)
+#' }
+toggle_input_cell <- function(session, ids, show) {
     if (length(ids) == 0) {
         return(invisible(NULL))
     }
@@ -174,22 +180,34 @@ organize_inputs <- function(
 
 #' Hide the grid cells wrapping module inputs
 #'
-#' @inheritParams .toggle_input_cell
-#' @return Invisibly `NULL`.
-#' @keywords internal
-#' @noRd
-.hide_input <- function(session, ids) {
-    .toggle_input_cell(session, ids, show = FALSE)
+#' @inheritParams toggle_input_cell
+#' @inherit toggle_input_cell description return
+#' @export
+#' @author Jared Andrews
+#' @seealso [show_input()], [toggle_input_cell()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server:
+#' hide_input(session, c("size", "opacity"))
+#' }
+hide_input <- function(session, ids) {
+    toggle_input_cell(session, ids, show = FALSE)
 }
 
 #' Show the grid cells wrapping module inputs
 #'
-#' @inheritParams .toggle_input_cell
-#' @return Invisibly `NULL`.
-#' @keywords internal
-#' @noRd
-.show_input <- function(session, ids) {
-    .toggle_input_cell(session, ids, show = TRUE)
+#' @inheritParams toggle_input_cell
+#' @inherit toggle_input_cell description return
+#' @export
+#' @author Jared Andrews
+#' @seealso [hide_input()], [toggle_input_cell()], [organize_inputs()]
+#' @examples
+#' \dontrun{
+#' # Call inside a module server:
+#' show_input(session, c("size", "opacity"))
+#' }
+show_input <- function(session, ids) {
+    toggle_input_cell(session, ids, show = TRUE)
 }
 
 
@@ -298,46 +316,38 @@ default_palettes <- function() {
 #' ns <- NS("myModule")
 #' module_tack_ui(ns)
 module_tack_ui <- function(ns, defaults = NULL) {
+    # Auto-update toggle on its own line, then a wrapping button row. Buttons
+    # size to content (no fixed-width columns) so nothing truncates in a narrow
+    # sidebar; Update/Reset share a row and the wider Source Download wraps to
+    # its own full-width line.
     tagList(
-        fluidRow(
-            column(
-                2,
+        div(
+            class = "module-tack",
+            style = "margin-top: 12px;",
+            div(
+                class = "module-tack-switch",
+                style = "margin-bottom: 4px;",
                 materialSwitch(
                     ns("auto.update"),
                     "Auto Update",
                     value = TRUE,
                     status = "success"
-                ),
-                style = "margin-top: 25px;"
+                )
             ),
-            column(
-                3,
-                actionButton(
-                    ns("update"),
-                    "Update",
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                2,
-                actionButton(
-                    ns("reset"),
-                    "Reset",
-                    class = "btn-secondary",
-                    width = "100%"
-                ),
-                style = "margin-top: 25px;"
-            ),
-            column(
-                5,
+            div(
+                class = "module-tack-buttons",
+                style = "display: flex; flex-wrap: wrap; gap: 8px;",
+                actionButton(ns("update"), "Update",
+                    class = "btn-primary", style = "flex: 1 1 45%;"),
+                actionButton(ns("reset"), "Reset",
+                    class = "btn-secondary", style = "flex: 1 1 45%;"),
                 tipify(
                     downloadButton(
                         ns("download.source"),
                         "Source Download",
                         class = "btn-secondary",
                         icon = icon("file-code"),
-                        width = "100%"
+                        style = "flex: 1 1 100%;"
                     ),
                     title = paste(
                         "Download the plot as a self-contained HTML file,",
@@ -345,8 +355,7 @@ module_tack_ui <- function(ns, defaults = NULL) {
                     ),
                     placement = "top",
                     options = list(container = "body")
-                ),
-                style = "margin-top: 25px;"
+                )
             )
         )
     )

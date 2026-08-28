@@ -140,19 +140,66 @@ neg_log10 <- function(x) {
     -log10(x)
 }
 
+#' Require a data frame from a module's data reactive
+#'
+#' Wraps the `data` reactive every module server receives so that downstream
+#' readers always see a data frame. A `NULL` value (which a parent app can emit
+#' briefly while switching datasets) becomes a silent [shiny::req()] skip rather
+#' than an error cascade through every observer, and anything else is coerced
+#' with [as.data.frame()] before use.
+#'
+#' @param data A `reactive` returning a data frame or an object coercible to one.
+#'
+#' @return A `reactive` returning a data frame with at least one column.
+#'
+#' @import shiny
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_require_data_frame
+#' @keywords internal
+.require_data_frame <- function(data) {
+    # Callers reassign onto `data`, so resolve the promise before it can recurse.
+    force(data)
+
+    reactive({
+        d <- data()
+        req(!is.null(d))
+
+        if (!is.data.frame(d)) {
+            coerced <- tryCatch(as.data.frame(d), error = function(e) NULL)
+            validate(need(
+                is.data.frame(coerced),
+                "'data' must be a data frame or an object coercible to one."
+            ))
+            d <- coerced
+        }
+
+        req(ncol(d) > 0)
+        d
+    })
+}
+
 #' Resolve a color palette for plot groups
 #'
 #' Maps groups to colors using selected colors or a default palette. Handles
 #' named color vectors by matching to group names, fills in missing colors with
 #' fallback values, and ensures the output vector is named and matches group length.
 #'
+#' Colors are layered in order of increasing precedence: `default_palette`,
+#' then `manual_colors`, then `selected_colors`. A user's on-screen choice
+#' therefore always wins over a caller-supplied mapping, and a caller-supplied
+#' mapping wins over the module's stock palette.
+#'
 #' @param groups A character vector of group names to assign colors to.
 #' @param selected_colors A named or unnamed character vector of colors to use.
 #'   If named, colors are matched to groups by name. If NULL or empty, uses
-#'   `default_palette`.
+#'   `manual_colors` or `default_palette`.
 #' @param default_palette A character vector of fallback colors to use when
-#'   `selected_colors` is NULL/empty or when groups have missing colors.
+#'   no other source supplies a color for a group.
 #'   Defaults to "#000000" (black) if not provided.
+#' @param manual_colors An optional named character vector of caller-supplied
+#'   colors, typically taken from a module's `defaults`. Used for groups that
+#'   `selected_colors` does not name.
 #'
 #' @return A named character vector of colors with names corresponding to groups,
 #'   or NULL if groups is empty.
@@ -168,32 +215,382 @@ neg_log10 <- function(x) {
 #' # Using default palette
 #' resolve_palette(groups, NULL, c("#1B9E77", "#D95F02", "#7570B3"))
 #' # Returns: c(A = "#1B9E77", B = "#D95F02", C = "#7570B3")
-resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL) {
+#'
+#' # Caller-supplied mapping fills groups the user has not picked
+#' resolve_palette(groups, c(A = "#FF0000"), "#CCCCCC", c(B = "#00FF00", C = "#0000FF"))
+#' # Returns: c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+resolve_palette <- function(groups, selected_colors = NULL, default_palette = NULL, manual_colors = NULL) {
     if (length(groups) == 0) {
         return(NULL)
     }
 
+    fallback <- if (!is.null(default_palette) && length(default_palette) > 0) default_palette else "#000000"
+
     colors <- selected_colors
     if (is.null(colors) || length(colors) == 0) {
-        colors <- default_palette
+        colors <- manual_colors
     }
-
     if (is.null(colors) || length(colors) == 0) {
-        colors <- "#000000"
+        colors <- fallback
     }
 
-    if (!is.null(names(colors)) && any(nzchar(names(colors)))) {
+    if (.has_group_names(colors)) {
         colors <- colors[match(groups, names(colors))]
+
+        if (.has_group_names(manual_colors) && any(is.na(colors))) {
+            gaps <- which(is.na(colors))
+            colors[gaps] <- manual_colors[match(groups[gaps], names(manual_colors))]
+        }
     }
 
     if (any(is.na(colors))) {
         na_idx <- which(is.na(colors))
-        fallback <- if (!is.null(default_palette) && length(default_palette) > 0) default_palette else "#000000"
         colors[na_idx] <- rep_len(fallback, length(na_idx))
     }
 
     colors <- rep_len(colors, length(groups))
     stats::setNames(colors[seq_along(groups)], groups)
+}
+
+#' Test whether a color vector names its groups
+#'
+#' @param x A character vector of colors, or NULL.
+#'
+#' @return `TRUE` when `x` is non-empty and carries at least one non-empty name.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_has_group_names
+#' @keywords internal
+.has_group_names <- function(x) {
+    !is.null(x) && length(x) > 0 && !is.null(names(x)) && any(nzchar(names(x)))
+}
+
+#' Extract a caller-supplied group color mapping from `defaults`
+#'
+#' Looks up `key` in a module's `defaults` and returns it as a named vector of
+#' hex colors suitable for [resolve_palette()] and [multiColorPicker()]. Values
+#' may be given as R color names (`"red"`) or hex codes; both are normalized to
+#' `#RRGGBB`. Anything that is not a fully named character vector is ignored,
+#' consistent with [get_default()]'s silent-fallback contract.
+#'
+#' @param defaults A named list of default values, or `NULL`.
+#' @param key Character string — the color input's id, e.g. `"palette.colours"`.
+#'
+#' @return A named character vector of hex colors, or `NULL` when `defaults`
+#'   supplies no usable mapping.
+#'
+#' @seealso [resolve_palette()], [get_default()]
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_default_group_colors
+#' @keywords internal
+.default_group_colors <- function(defaults, key) {
+    colors <- get_default(defaults, key, NULL, function(x) {
+        is.character(x) && length(x) > 0 && !is.null(names(x)) && all(nzchar(names(x)))
+    })
+
+    if (is.null(colors)) {
+        return(NULL)
+    }
+
+    colors <- .normalize_hex(colors)
+    colors <- colors[nzchar(colors)]
+
+    if (length(colors) == 0) NULL else colors
+}
+
+#' Restore a group color picker to its default mapping
+#'
+#' Used by module Reset buttons. When `defaults` supplies a mapping for `inputId`
+#' the picker is set back to it; otherwise the widget resets itself to the stock
+#' palette it was built with.
+#'
+#' @param session The Shiny `session` object from inside `moduleServer()`.
+#' @param inputId Character string — the picker's id, without namespacing.
+#' @param defaults A named list of default values, or `NULL`.
+#' @param groups A character vector of the group levels currently in play.
+#' @param default_palette A character vector of fallback colors.
+#'
+#' @return Invisibly `NULL`; called for its side effect.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_group_colors
+#' @keywords internal
+.reset_group_colors <- function(session, inputId, defaults, groups, default_palette = NULL) {
+    manual <- .default_group_colors(defaults, inputId)
+    colors <- if (is.null(manual)) NULL else resolve_palette(groups, NULL, default_palette, manual)
+
+    if (is.null(colors) || length(colors) == 0) {
+        updateMultiColorPicker(session, inputId, reset = TRUE)
+    } else {
+        updateMultiColorPicker(session, inputId, colors = colors)
+    }
+
+    invisible(NULL)
+}
+
+#' Track the group-to-color mapping a plot should draw with
+#'
+#' A [multiColorPicker()] is rebuilt by `renderUI()` whenever the group set
+#' changes, and the freshly built widget reports its value back on a client
+#' round-trip. A plot that depends on the picker's raw `input$<key>` therefore
+#' rebuilds when that value lands, even at startup where the reported value is
+#' exactly what the server had already seeded the picker with.
+#'
+#' `setup_group_colors()` gives the module a server-side channel for the mapping
+#' instead. It resolves the palette itself (via [resolve_palette()]) as soon as
+#' the group set is known, and holds the result in a [shiny::reactiveVal()],
+#' which only invalidates on a *changed* value. A rebuilt picker echoing the
+#' mapping already in use therefore costs nothing, while a color the user
+#' actually picks comes straight through.
+#'
+#' @details
+#' Use it in three places:
+#' \itemize{
+#'   \item Create the store next to the module's group-levels reactive.
+#'   \item Seed it inside the picker's `renderUI()` with the same
+#'     `initial_colors` the widget is built from, so the mapping is right even
+#'     when the render was deferred (a picker on a hidden tab is suspended).
+#'   \item Read `isolate_fn(store())` in the plot reactive, in place of
+#'     `isolate_fn(input$<key>)`.
+#' }
+#'
+#' Note that [freezeReactiveValue()] does not cover this case: inside a
+#' `renderUI()` it pauses only the readers that run after it in that flush, and
+#' at startup the plot output runs first.
+#'
+#' @param input The Shiny `input` object from inside `moduleServer()`.
+#' @param key Character string — the picker's input id, without namespacing,
+#'   e.g. `"palette.colours"`.
+#' @param groups A `reactive()` yielding the character vector of group levels
+#'   currently in play.
+#' @param default_palette A character vector of fallback colors.
+#' @param defaults A named list of default values, or `NULL`. A named color
+#'   mapping stored under `key` seeds groups the user has not picked.
+#' @param params Optional reactive-defaults store from
+#'   [setup_reactive_defaults()], or `NULL`. When `key` is backed by the store,
+#'   the mapping follows it rather than the client input, matching what
+#'   [setup_auto_update_logic()] would have done for a direct `input$<key>` read.
+#'
+#' @return A [shiny::reactiveVal()] holding a named character vector of colors
+#'   aligned to the current groups, or `NULL` before any groups exist. Call it
+#'   with no arguments to read, and with a value to seed.
+#'
+#' @seealso [resolve_palette()], [multiColorPicker()], [setup_auto_update_logic()]
+#'
+#' @importFrom shiny reactiveVal observe
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' if (interactive()) {
+#'     library(shiny)
+#'
+#'     server <- function(input, output, session) {
+#'         groups <- reactive(levels(as.factor(iris$Species)))
+#'         palette_store <- setup_group_colors(
+#'             input, "palette.colours", groups,
+#'             default_palette = dittoViz::dittoColors()
+#'         )
+#'
+#'         output$palette.selection <- renderUI({
+#'             initial_colors <- isolate(palette_store())
+#'             multiColorPicker(
+#'                 session$ns("palette.colours"),
+#'                 groups = groups(), colors = initial_colors
+#'             )
+#'         })
+#'
+#'         output$plot <- renderPlot(barplot(1:3, col = palette_store()))
+#'     }
+#' }
+setup_group_colors <- function(input, key, groups, default_palette = NULL,
+                               defaults = NULL, params = NULL) {
+    store <- reactiveVal(NULL)
+
+    observe({
+        levels <- tryCatch(groups(), error = function(e) NULL)
+        if (length(levels) == 0) {
+            return()
+        }
+
+        # A store-backed key is driven by the parent app, not the client input.
+        selected <- if (!is.null(params) && params$has(key)) {
+            params$get(key)
+        } else {
+            input[[key]]
+        }
+
+        store(resolve_palette(
+            levels, selected, default_palette,
+            .default_group_colors(defaults, key)
+        ))
+    })
+
+    store
+}
+
+#' Track the axis limits a plot should draw with
+#'
+#' Modules derive an axis range on the server and push it into their own
+#' `y.min`/`y.max` controls with `updateNumericInput()`, which is a client
+#' round-trip: the plot renders once with the stale limits and again when the
+#' browser echoes the new ones. `setup_axis_range()` gives the plot a
+#' server-side value to read instead, held in a [shiny::reactiveVal()] that only
+#' invalidates on a real change, so the echo costs nothing while a limit the
+#' user types comes straight through.
+#'
+#' @details
+#' Pass `headroom` when something is drawn above the data that the limits have
+#' to clear — significance brackets, for instance, via [stat_bracket_y_max()].
+#' It is evaluated reactively, and the maximum is raised to meet it whenever the
+#' requested one falls short; the control is updated to match, so the number on
+#' screen is the limit actually in use rather than one the plot has quietly
+#' overridden. The maximum is only ever raised this way, so a larger limit the
+#' user chose is left alone.
+#'
+#' Seed the store alongside any `update*Input()` call that sets the limits (the
+#' y-data observer, the Reset button) so the echo arrives as a no-op:
+#'
+#' ```r
+#' y_range_store(list(min = y_range$min, max = y_range$max))
+#' updateNumericInput(session, "y.min", value = y_range$min)
+#' updateNumericInput(session, "y.max", value = y_range$max)
+#' ```
+#'
+#' @param input The Shiny `input` object from inside `moduleServer()`.
+#' @param session The Shiny `session` object from inside `moduleServer()`.
+#' @param min_key,max_key Character strings — the limit controls' input ids,
+#'   without namespacing.
+#' @param headroom Optional function of no arguments returning the smallest
+#'   acceptable maximum, or `NULL` for none. Returning `NULL` or a non-finite
+#'   value leaves the requested maximum alone.
+#' @param params Optional reactive-defaults store from
+#'   [setup_reactive_defaults()], or `NULL`. A limit backed by the store follows
+#'   it rather than the client input.
+#'
+#' @return A [shiny::reactiveVal()] holding `list(min = , max = )`. Call it with
+#'   no arguments to read, and with a value to seed.
+#'
+#' @seealso [stat_bracket_y_max()], [setup_group_colors()]
+#'
+#' @importFrom shiny reactiveVal observe updateNumericInput
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' if (interactive()) {
+#'     library(shiny)
+#'
+#'     server <- function(input, output, session) {
+#'         y_range_store <- setup_axis_range(
+#'             input, session,
+#'             headroom = function() {
+#'                 if (!isTRUE(input$stats.enabled)) {
+#'                     return(NULL)
+#'                 }
+#'                 stat_bracket_y_max(iris, x = "Species", y = "Sepal.Length")
+#'             }
+#'         )
+#'
+#'         output$plot <- renderPlot({
+#'             lims <- y_range_store()
+#'             plot(iris$Sepal.Length, ylim = c(lims$min, lims$max))
+#'         })
+#'     }
+#' }
+setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max",
+                             headroom = NULL, params = NULL) {
+    store <- reactiveVal(NULL)
+
+    observe({
+        pick <- function(key) {
+            if (!is.null(params) && params$has(key)) params$get(key) else input[[key]]
+        }
+        lo <- pick(min_key)
+        hi <- pick(max_key)
+
+        floor_hi <- if (is.null(headroom)) NULL else tryCatch(headroom(), error = function(e) NULL)
+        if (!is.null(floor_hi) && length(floor_hi) == 1 && is.finite(floor_hi) &&
+            !.axis_limit_clears(hi, floor_hi)) {
+            hi <- floor_hi
+            # Keep the control honest about the limit actually in use.
+            updateNumericInput(session, max_key, value = hi)
+        }
+
+        new <- list(min = lo, max = hi)
+        if (!.same_axis_range(isolate(store()), new)) {
+            store(new)
+        }
+    })
+
+    store
+}
+
+#' Normalize a module's "no selection" column input to `NULL`
+#'
+#' Module selects use `""` for "none". Statistics helpers expect `NULL`, and a
+#' grouping column that is numeric is a gradient rather than a nesting, which
+#' the renders already treat as no grouping.
+#'
+#' @param value The input value.
+#' @param df Optional data frame, needed only for `numeric_is_null`.
+#' @param numeric_is_null Logical; when `TRUE`, a numeric column in `df` also
+#'   yields `NULL`.
+#'
+#' @return `value`, or `NULL`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_blank_to_null
+#' @keywords internal
+.blank_to_null <- function(value, df = NULL, numeric_is_null = FALSE) {
+    if (is.null(value) || length(value) != 1 || is.na(value) || !nzchar(value)) {
+        return(NULL)
+    }
+    if (numeric_is_null && !is.null(df) && value %in% names(df) && is.numeric(df[[value]])) {
+        return(NULL)
+    }
+    value
+}
+
+#' Is an axis limit present and already at or above a required minimum?
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_axis_limit_clears
+#' @keywords internal
+.axis_limit_clears <- function(limit, required) {
+    !is.null(limit) && length(limit) == 1 && !is.na(limit) &&
+        is.numeric(limit) && limit >= required
+}
+
+#' Compare two axis-range values for practical equality
+#'
+#' The limits make a round-trip through the browser as JSON, so the value that
+#' comes back can differ from the one sent in the last bits of a double. An
+#' exact comparison would treat that echo as a change and rebuild the plot.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_same_axis_range
+#' @keywords internal
+.same_axis_range <- function(a, b) {
+    if (is.null(a) || is.null(b)) {
+        return(FALSE)
+    }
+
+    same <- function(p, q) {
+        if (is.null(p) || is.null(q)) {
+            return(is.null(p) && is.null(q))
+        }
+        if (length(p) != 1 || length(q) != 1) {
+            return(identical(p, q))
+        }
+        if (is.na(p) || is.na(q)) {
+            return(is.na(p) && is.na(q))
+        }
+        isTRUE(all.equal(p, q))
+    }
+
+    same(a$min, b$min) && same(a$max, b$max)
 }
 
 #' Set up auto-update/isolate logic for reactive contexts
@@ -205,9 +602,17 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #' @param input The Shiny input object from the module server,
 #'   should have both `auto.update` (boolean) and `update` (button) inputs.
-#' @return A function that wraps reactive expressions. Returns `identity` if auto-update
-#'   is enabled (expressions will be reactive), or `isolate` if auto-update is disabled
-#'   (expressions will not trigger reactivity).
+#' @param params Optional reactive-defaults store from [setup_reactive_defaults()],
+#'   or `NULL`. When supplied, an `input$<key>` read whose `key` is backed by the
+#'   store resolves from the store instead of the client input, so a parameter
+#'   driven by the parent app updates in a single render.
+#' @return A function that wraps reactive expressions. With `params = NULL` this is
+#'   `identity` if auto-update is enabled (expressions will be reactive), or `isolate`
+#'   if auto-update is disabled (expressions will not trigger reactivity). With a
+#'   store supplied it is a wrapper with the same isolation semantics that additionally
+#'   redirects store-backed `input$<key>` reads.
+#'
+#' @seealso [setup_reactive_defaults()]
 #'
 #' @details
 #' This function consolidates the following common pattern:
@@ -238,8 +643,8 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'     library(plotly)
 #'
 #'     ui <- fluidPage(
-#'         selectInput("x_var", "X variable", choices = names(mtcars), selected = "wt"),
-#'         selectInput("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
+#'         viz_select_input("x_var", "X variable", choices = names(mtcars), selected = "wt"),
+#'         viz_select_input("y_var", "Y variable", choices = names(mtcars), selected = "mpg"),
 #'         checkboxInput("auto.update", "Auto-update", value = TRUE),
 #'         actionButton("update", "Update"),
 #'         plotlyOutput("myPlot")
@@ -257,7 +662,7 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #'     shinyApp(ui, server)
 #' }
-setup_auto_update_logic <- function(input) {
+setup_auto_update_logic <- function(input, params = NULL) {
     auto_update <- input$auto.update
     req(!is.null(auto_update))
 
@@ -266,7 +671,21 @@ setup_auto_update_logic <- function(input) {
         input$update
     }
 
-    if (auto_update) identity else isolate
+    if (is.null(params)) {
+        return(if (auto_update) identity else isolate)
+    }
+
+    function(x) {
+        key <- .input_key(substitute(x))
+
+        if (!is.null(key) && params$has(key)) {
+            if (auto_update) params$get(key) else isolate(params$get(key))
+        } else if (auto_update) {
+            x
+        } else {
+            isolate(x)
+        }
+    }
 }
 
 

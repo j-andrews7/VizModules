@@ -1,7 +1,9 @@
 #' Server logic for dumbbellPlot module
 #'
 #' @param id The ID for the Shiny module.
-#' @param data A `reactive` containing the data frame to plot.
+#' @param data A `reactive` containing the data frame to plot. Values that are not
+#'   data frames are coerced with [as.data.frame()]; a `NULL` value is treated as
+#'   "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -10,7 +12,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the dumbbellPlot module.
 #'
 #' @import shiny
@@ -26,9 +30,12 @@
 #' @author Jacob Martin
 dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -36,7 +43,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "dumbbellPlotTabsetPanel", target = tab.name)
                 })
             })
@@ -89,10 +96,20 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         observeEvent(input$x.value,
             {
                 if (!is.null(input$x.value) && length(input$x.value) > 2) {
-                    updateSelectInput(session, "x.value", selected = input$x.value[1:2])
+                    update_viz_select(session, "x.value", selected = input$x.value[1:2])
                 }
             },
             ignoreNULL = FALSE
+        )
+
+        # What the plot actually colours by. The picker is rebuilt whenever the group
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "palette.colours", palette_groups,
+            default_palette_values, defaults, params
         )
 
         output$palette.selection <- renderUI({
@@ -101,7 +118,16 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 return(NULL)
             }
 
-            initial_colors <- isolate(resolve_palette(groups, input$palette.colours, default_palette_values))
+            initial_colors <- isolate(resolve_palette(
+                groups, input$palette.colours, default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("palette.colours"),
@@ -125,23 +151,23 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             # Reset Data columns to default. First and second index of data named list
 
             # Data tab
-            updateSelectInput(session, "x.value",
+            update_viz_select(session, "x.value",
                 selected = get_default(defaults, "x.value", num.choices[2], function(x) all(x %in% num.choices))
             )
-            updateSelectInput(session, "y.value",
+            update_viz_select(session, "y.value",
                 selected = get_default(defaults, "y.value", cat.choices[2], function(x) all(x %in% cat.choices))
             )
 
-            updateSelectInput(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
-            updateSelectInput(session, "colour.by",
+            update_viz_select(session, "x.adjustment", selected = get_default(defaults, "x.adjustment", ""))
+            update_viz_select(session, "colour.by",
                 selected = get_default(defaults, "colour.by", "X variables")
             )
 
             # Facet tab
-            updateSelectInput(session, "facet.by",
+            update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices)
             )
-            updateSelectInput(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
+            update_viz_select(session, "facet.scales", selected = get_default(defaults, "facet.scales", "fixed"))
 
             # Aesthetics tab
             updateColourInput(session, "line.colour",
@@ -155,6 +181,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             reset_axes_inputs(session, defaults)
 
             # Plotly
+            # Group colors
+            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
 
@@ -164,15 +193,15 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
         observeEvent(input$facet.by, {
             if (!input$facet.by == "") {
-                .show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             } else {
-                .hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
             }
         })
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_dumbbellPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             d <- data_reactive()
 
@@ -187,8 +216,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             # Sets the colouring based on colour.by selection
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
-                isolate_fn(input$palette.colours),
-                default_palette_values
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "palette.colours")
             )
 
             palette_selection <- unname(palette_values)
@@ -209,7 +239,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
 
             # Checking that all columns are numeric for x adjustment to be available
             if (!is.null(x_input) && length(x_input) > 0 && !all(vapply(d[x_input], is.numeric, logical(1)))) {
-                updateSelectInput(session, "x.adjustment", selected = "")
+                update_viz_select(session, "x.adjustment", selected = "")
                 x.adjustment <- NULL
             }
 

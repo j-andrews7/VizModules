@@ -3,7 +3,9 @@
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot. Provide data with
 #'   columns for categories (theta) and values (r). For multiple traces, include
-#'   a grouping column.
+#'   a grouping column. Values that are not data frames are coerced with
+#'   [as.data.frame()]; a `NULL` value is treated as "not ready yet" and the
+#'   module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -12,7 +14,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the radarPlot module.
 #'
 #' @import shiny
@@ -28,9 +32,12 @@
 #' @author Jacob Martin
 radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -38,40 +45,67 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "radarPlotTabsetPanel", target = tab.name)
                 })
             })
         }
         ns <- session$ns
 
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+
         # Persist manual legend/annotation/colorbar repositioning across rebuilds.
         plot_source <- session$ns("radar")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
-        output$color.picker <- renderUI({
+        trace_levels <- reactive({
             d <- data_reactive()
             grp <- input$group
+            if (is.null(d) || is.null(grp) || !nzchar(grp) || !grp %in% names(d)) {
+                return(character(0))
+            }
+            unique(na.omit(as.character(d[[grp]])))
+        })
 
-            # Only show color picker if group is selected
-            if (is.null(grp) || grp == "" || !grp %in% names(d)) {
+        # What the plot actually colours by. The picker is rebuilt whenever the trace
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "trace.colors", trace_levels,
+            default_palette_values, defaults, params
+        )
+
+        output$color.picker <- renderUI({
+            groups <- trace_levels()
+
+            # Only show the multi-color picker if a grouping column is selected
+            if (length(groups) == 0) {
                 return(tagList(
                     colourInput(ns("single.color"), "Trace color:",
-                        value = "#1F77B4"
+                        value = get_default(defaults, "single.color", "#1F77B4", is.character)
                     )
                 ))
             }
 
-            groups <- unique(na.omit(as.character(d[[grp]])))
-            if (length(groups) == 0) {
-                return(NULL)
-            }
+            initial_colors <- isolate(resolve_palette(
+                groups, input$trace.colors, default_palette_values,
+                .default_group_colors(defaults, "trace.colors")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("trace.colors"),
                 label = "Trace colors",
                 groups = groups,
                 selected_palette = "dittoColors",
+                colors = initial_colors,
                 compact = TRUE
             )
         })
@@ -83,22 +117,27 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             all.choices <- c("", names(data_reactive()))
 
             # Data
-            updateSelectInput(session, "theta",
+            update_viz_select(session, "theta",
                 selected = get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
-            updateSelectInput(session, "r",
+            update_viz_select(session, "r",
                 selected = get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
-            updateSelectInput(session, "group",
+            update_viz_select(session, "group",
                 selected = get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
 
             # Trace style
-            updateSelectInput(session, "fill", selected = get_default(defaults, "fill", "toself"))
+            update_viz_select(session, "fill", selected = get_default(defaults, "fill", "toself"))
             updateNumericInput(session, "line.width", value = get_default(defaults, "line.width", 2, is.numeric))
-            updateSelectInput(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
+            update_viz_select(session, "line.dash", selected = get_default(defaults, "line.dash", "solid"))
             updateNumericInput(session, "marker.size",
                 value = get_default(defaults, "marker.size", 5, is.numeric))
-            updateSelectInput(session, "marker.symbol",
+            update_viz_select(session, "marker.symbol",
                 selected = get_default(defaults, "marker.symbol", "circle"))
             updateSliderInput(session, "opacity", value = get_default(defaults, "opacity", 0.6, is.numeric))
+
+            # Trace colors
+            updateColourInput(session, "single.color",
+                value = get_default(defaults, "single.color", "#1F77B4"))
+            .reset_group_colors(session, "trace.colors", defaults, trace_levels(), default_palette_values)
 
             # Radial axis
             updateCheckboxInput(session, "radial.visible",
@@ -117,7 +156,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = get_default(defaults, "radial.gridcolor", "#EEEEEE"))
 
             # Angular axis
-            updateSelectInput(session, "angular.direction",
+            update_viz_select(session, "angular.direction",
                 selected = get_default(defaults, "angular.direction", "clockwise"))
             updateSliderInput(session, "angular.rotation",
                 value = get_default(defaults, "angular.rotation", 90, is.numeric))
@@ -128,7 +167,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 18, is.numeric))
-            updateSelectInput(session, "title.font.family",
+            update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
                 value = get_default(defaults, "title.font.color", "#000000"))
@@ -136,9 +175,9 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             # Legend
             updateCheckboxInput(session, "show.legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical))
-            updateSelectInput(session, "legend.orientation",
+            update_viz_select(session, "legend.orientation",
                 selected = get_default(defaults, "legend.orientation", "h"))
-            updateSelectInput(session, "legend.font.family",
+            update_viz_select(session, "legend.font.family",
                 selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric))
@@ -156,7 +195,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_radarPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             d <- data_reactive()
 
@@ -174,20 +213,17 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             if (is.null(group_col) || !group_col %in% names(d)) {
                 # Single trace - use single color
                 color_map <- isolate_fn(input$single.color)
-                if (is.null(color_map)) {
-                    color_map <- "#1F77B4"
+                if (is.null(color_map) || !nzchar(color_map)) {
+                    color_map <- get_default(defaults, "single.color", "#1F77B4", is.character)
                 }
             } else {
                 # Multiple traces - use color map
-                color_map <- isolate_fn(input$trace.colors)
-                if (is.null(color_map) || length(color_map) == 0) {
-                    group_values <- unique(d[[group_col]])
-                    default_cols <- default_palettes()$choices$Defaults$dittoColors
-                    color_map <- stats::setNames(
-                        rep_len(default_cols, length(group_values)),
-                        group_values
-                    )
-                }
+                color_map <- resolve_palette(
+                    unique(na.omit(as.character(d[[group_col]]))),
+                    isolate_fn(palette_store()),
+                    default_palette_values,
+                    .default_group_colors(defaults, "trace.colors")
+                )
             }
 
             # Handle radial range

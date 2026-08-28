@@ -11,7 +11,9 @@ linePlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 \item{data}{The data frame used for plot generation.}
 
-\item{defaults}{A named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
+seed the control, and the module then keeps it live (see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}).}
 
 \item{title}{An optional title for the UI grid.}
 
@@ -107,6 +109,9 @@ The following parameters implementing plotly-specific features are also availabl
 \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
 \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line Types", default: "dashed")
 \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
 }
 }
 

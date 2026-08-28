@@ -13,12 +13,23 @@
 #' Nearly all parameters for [dittoViz::yPlot()] can be set via these inputs, so see the help
 #' for that function for an exhaustive list.
 #'
+#' The "Y Data" input accepts several columns at once. "Multivar Aesthetic" (on the
+#' Facet tab) then decides how they are shown: `"split"` gives each variable its own
+#' facet (alongside any `split.by` facets), while `"group"` and `"color"` put the
+#' variables on the x-axis or the fill legend respectively. With several variables the
+#' Stats tab is only available for the `"split"` aesthetic with no `split.by` set, and
+#' comparisons are then run separately within each variable's facet. The other layouts
+#' either replace the x-axis groups being compared or facet on two dimensions at once,
+#' neither of which the significance brackets can be placed against.
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::yPlot()] parameters are not available via UI inputs:
 #'
 #' - `xlab` - X-axis label (plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing). With several
+#'   Y variables only the adjustment is shown, as the variables are named by the
+#'   facet strips or the legend instead
 #' - `main` - Plot title (plotly allows interactive editing)
 #' - `sub` - Plot subtitle (not supported in plotly)
 #' - `theme` - ggplot2 theme (not applicable to plotly)
@@ -28,8 +39,6 @@
 #' - `line.color` - Use `hline.colors` instead
 #' - `line.linewidth` - Use `hline.widths` instead
 #' - `line.opacity` - Use `hline.opacities` instead
-#' - `multivar.aes` - Aesthetic used for multiple `var` columns (not implemented; one var at a time)
-#' - `multivar.split.dir` - Facet direction for multiple `var` columns (not implemented)
 #' - `rows.use` - Row subset to plot (not implemented)
 #' - `colors` - Integer index/order into `color.panel` (managed via the palette UI)
 #' - `shape.panel` - Shapes used with `shape.by` (not implemented)
@@ -40,14 +49,17 @@
 #' - `boxplot.width` - Boxplot width (controlled via `boxgap` and `boxgroupgap`)
 #' - `boxplot.outlier.size` - Outlier point size (not implemented)
 #' - `boxplot.position.dodge` - Boxplot dodge (controlled via `boxgap`)
-#' - `hover.data` - Columns shown on hover (not implemented; a default set is used)
-#' - `hover.round.digits` - Hover value rounding (not implemented)
 #' - `vlnplot.quantiles` - Violin quantiles (doesn't translate to plotly)
 #'
 #' @section Plot parameters and defaults:
 #' The following [dittoViz::yPlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
 #'
-#' - `var` - Y-axis variable (UI: "Y data (var)", default: 2nd numeric variable)
+#' - `var` - Y-axis variable(s) (UI: "Y Data", default: 2nd numeric variable). Several
+#'   may be selected; `multivar.aes` then controls how they are displayed
+#' - `multivar.aes` - Aesthetic used for multiple `var` columns (UI: "Multivar Aesthetic",
+#'   default: "split")
+#' - `multivar.split.dir` - Facet direction for multiple `var` columns (UI:
+#'   "Multivar Split Dir", default: "col")
 #' - `group.by` - Grouping variable for x-axis (UI: "Group by", default: 2nd categorical variable)
 #' - `color.by` - Coloring variable (UI: "Color by", default: "")
 #' - `shape.by` - Shape variable (UI: "Shape by", default: "")
@@ -82,6 +94,9 @@
 #' - `ridgeplot.shape` - Ridge shape (UI: "Ridge Shape", default: "smooth")
 #' - `ridgeplot.bins` - Ridge bins (UI: "Ridge Bins", default: 30)
 #' - `ridgeplot.binwidth` - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)
+#' - `hover.data` - Columns shown on hover (UI: "Hover Data", default: "";
+#'   empty uses a sensible default set of columns)
+#' - `hover.round.digits` - Hover value rounding (UI: "Hover Round Digits", default: 5)
 #' - `legend.show` - Show legend (always `TRUE`; not directly settable)
 #'
 #' @section Parameters controlling additional functionality:
@@ -127,10 +142,30 @@
 #' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
 #' - `abline.linetypes` - Line types for diagonal lines (UI: "Line Types", default: "dashed")
 #' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
+#' - `annotate.by` - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.color` - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
+#' - `highlight.size` - Size of highlighted points (UI: "Highlight Size", default: 7)
+#' - `highlight.border.color` - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
+#' - `highlight.border.width` - Border width for highlighted points (UI: "Highlight Border Width", default: 1)
+#' - `highlight.auto.annotate` - Label highlighted points automatically (UI: "Auto-annotate Highlights", default: TRUE)
+#' - `annotation.color` - Annotation text color (UI: "Annotation Color", default: "black")
+#' - `annotation.ax` - Horizontal label offset in pixels (UI: "Annotation X Offset", default: 20)
+#' - `annotation.ay` - Vertical label offset in pixels (UI: "Annotation Y Offset", default: -20)
+#' - `annotation.size` - Annotation font size (UI: "Annotation Size", default: 10)
+#' - `annotation.showarrow` - Draw an arrow from label to point (UI: "Show Arrow", default: TRUE)
+#' - `annotation.arrowcolor` - Annotation arrow color (UI: "Arrow Color", default: "black")
+#' - `annotation.arrowhead` - Annotation arrowhead style (UI: "Arrowhead Style", default: 2)
+#' - `annotation.arrowwidth` - Annotation arrow line width (UI: "Arrow Linewidth", default: 1.5)
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -158,24 +193,25 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
 
     # Recognized data adjustments for the (numeric) continuous variable.
     adj.choices <- c("", "z-score", "relative.to.max")
     adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
-    if (length(num.choices) >= 2) {
-        max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
-        min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
-    } else {
-        max.y <- 1
-        min.y <- 0
-    }
+    # `var` may hold several columns, in which case the limits span all of them.
+    default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
+    y.range <- .calculate_range(
+        df = data, data_col_y = default.var,
+        axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+    )
+    max.y <- if (!is.null(y.range)) y.range$max else 1
+    min.y <- if (!is.null(y.range)) y.range$min else 0
 
     selected <- list(
         "var", "group.by", "color.by", "shape.by",
         "plots", c("min", "max"), "var.adjustment", "var.adj.fxn",
         "split.by", c("split.nrow", "split.ncol"),
+        "multivar.aes", "multivar.split.dir",
         "split.adjust", "do.raster", "raster.dpi",
         "jitter.size", "jitter.width", "jitter.color",
         "jitter.shape.legend.size", "jitter.shape.legend.show",
@@ -184,7 +220,8 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "vlnplot.lineweight", "vlnplot.scaling",
         "ridgeplot.lineweight", "ridgeplot.scale",
         "ridgeplot.ymax.expansion", "ridgeplot.shape",
-        "ridgeplot.bins", "ridgeplot.binwidth"
+        "ridgeplot.bins", "ridgeplot.binwidth",
+        "hover.data", "hover.round.digits"
     )
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
@@ -194,50 +231,48 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     inputs <- list(
         "Data" = tagList(
             tipify(
-                selectInput(ns("var"), "Y Data",
-                    choices = num.choices,
-                    selected = get_default(
-                        defaults, "var", num.choices[2],
-                        function(x) x %in% num.choices
-                    ), selectize = FALSE
+                viz_select_input(ns("var"), "Y Data",
+                    choices = num.choices[nzchar(num.choices)],
+                    selected = default.var,
+                    multiple = TRUE
                 ),
                 documentParameters$var,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("group.by"), "Group By",
+                viz_select_input(ns("group.by"), "Group By",
                     choices = cat.choices,
                     selected = get_default(
                         defaults, "group.by", cat.choices[2],
                         function(x) x %in% cat.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$group.by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("color.by"), "Color By",
+                viz_select_input(ns("color.by"), "Color By",
                     choices = cat.choices,
                     selected = get_default(
                         defaults, "color.by", "",
                         function(x) x %in% cat.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$color.by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("shape.by"), "Shape By",
+                viz_select_input(ns("shape.by"), "Shape By",
                     choices = cat.choices,
                     selected = get_default(
                         defaults, "shape.by", "",
                         function(x) x %in% cat.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$shape.by,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(selectInput(
+            tipify(viz_select_input(
                 ns("plots"),
                 "Plots",
                 choices = c("Violin" = "vlnplot", "Box" = "boxplot", "Jitter" = "jitter", "Ridge" = "ridgeplot"),
@@ -245,30 +280,30 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     defaults, "plots", c("boxplot", "jitter"),
                     function(x) all(x %in% c("vlnplot", "boxplot", "jitter", "ridgeplot"))
                 ),
-                multiple = TRUE, selectize = TRUE
+                multiple = TRUE
             ), documentParameters$plots, placement = "top", options = list(container = "body")),
             helpText("Order not currently respected"),
             uiOutput(ns("palette.selection"))
         ),
         "Adjustments" = tagList(
             tipify(
-                selectInput(ns("var.adjustment"), "Y Adjustment",
+                viz_select_input(ns("var.adjustment"), "Y Adjustment",
                     choices = adj.choices,
                     selected = get_default(
                         defaults, "var.adjustment", "",
                         function(x) x %in% adj.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$var.adjustment,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("var.adj.fxn"), "Y Adjustment Function",
+                viz_select_input(ns("var.adj.fxn"), "Y Adjustment Function",
                     choices = adj.fxn.choices,
                     selected = get_default(
                         defaults, "var.adj.fxn", "",
                         function(x) x %in% adj.fxn.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$var.adj.fxn,
                 placement = "top", options = list(container = "body")
@@ -312,6 +347,22 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                     value = get_default(defaults, "jitter.color", "#000000")
                 ),
                 documentParameters$jitter.color,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(viz_select_input(ns("hover.data"), "Hover Data",
+                choices = choices,
+                multiple = TRUE,
+                selected = get_default(
+                    defaults, "hover.data", "",
+                    function(x) all(x %in% choices)
+                )
+            ), documentParameters$hover.data, placement = "top", options = list(container = "body")),
+            tipify(
+                numericInput(ns("hover.round.digits"), "Hover Round Digits",
+                    value = get_default(defaults, "hover.round.digits", 5, is.numeric),
+                    step = 1,
+                    min = 1
+                ), documentParameters$hover.round.digits,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
@@ -406,12 +457,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("vlnplot.scaling"), "Violin Scaling",
+                viz_select_input(ns("vlnplot.scaling"), "Violin Scaling",
                     selected = get_default(
                         defaults, "vlnplot.scaling", "area",
                         function(x) x %in% c("area", "count", "width")
                     ),
-                    choices = c("area", "count", "width"), selectize = FALSE
+                    choices = c("area", "count", "width")
                 ),
                 documentParameters$vlnplot.scaling,
                 placement = "top", options = list(container = "body")
@@ -446,12 +497,12 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("ridgeplot.shape"), "Ridge Shape",
+                viz_select_input(ns("ridgeplot.shape"), "Ridge Shape",
                     selected = get_default(
                         defaults, "ridgeplot.shape", "smooth",
                         function(x) x %in% c("smooth", "hist")
                     ),
-                    choices = c("smooth", "hist"), selectize = FALSE
+                    choices = c("smooth", "hist")
                 ),
                 documentParameters$ridgeplot.shape,
                 placement = "top", options = list(container = "body")
@@ -479,23 +530,23 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
         "Stats" = .uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
             tipify(
-                selectInput(ns("split.by"), "Split by (facet)",
+                viz_select_input(ns("split.by"), "Split by (facet)",
                     choices = c("", .facet_check(data)),
                     selected = get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices
-                    ), selectize = FALSE
+                    )
                 ),
                 documentParameters$split.by,
                 placement = "top", options = list(container = "body")
             ),
             tipify(
-                selectInput(ns("split.adjust"), "Facet Scaling",
+                viz_select_input(ns("split.adjust"), "Facet Scaling",
                     selected = get_default(
                         defaults, "split.adjust", "fixed",
                         function(x) x %in% c("fixed", "free", "free_y", "free_x")
                     ),
-                    choices = c("fixed", "free", "free_y", "free_x"), selectize = FALSE
+                    choices = c("fixed", "free", "free_y", "free_x")
                 ),
                 documentParameters$split.adjust,
                 placement = "top", options = list(container = "body")
@@ -508,7 +559,35 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 step = 1, min = 0,
                 value = get_default(defaults, "split.nrow", NA, is.numeric)
             ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
+            tipify(
+                viz_select_input(ns("multivar.aes"), "Multivar Aesthetic",
+                    choices = c("split", "group", "color"),
+                    selected = get_default(
+                        defaults, "multivar.aes", "split",
+                        function(x) x %in% c("split", "group", "color")
+                    )
+                ),
+                documentParameters$multivar.aes,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(
+                viz_select_input(ns("multivar.split.dir"), "Multivar Split Dir",
+                    choices = c("col", "row"),
+                    selected = get_default(
+                        defaults, "multivar.split.dir", "col",
+                        function(x) x %in% c("col", "row")
+                    )
+                ),
+                documentParameters$multivar.split.dir,
+                placement = "top", options = list(container = "body")
+            ),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
+        ),
+        "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices,
+            annotate.note = paste(
+                "Highlighting and labelling apply to jitter points, so include 'jitter'",
+                "in the Plot Types and leave 'Rasterize Jitter' off"
+            )
         ),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),

@@ -11,7 +11,9 @@ dittoViz_yPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 \item{data}{The data frame used for plot generation.}
 
-\item{defaults}{A named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
+seed the control, and the module then keeps it live (see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}).}
 
 \item{title}{An optional title for the UI grid.}
 
@@ -34,6 +36,15 @@ with \code{columns} controlling the number of columns in the grid.
 Defaults can be set for each input by providing a named list of values to the \code{defaults} argument.
 Nearly all parameters for \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} can be set via these inputs, so see the help
 for that function for an exhaustive list.
+
+The "Y Data" input accepts several columns at once. "Multivar Aesthetic" (on the
+Facet tab) then decides how they are shown: \code{"split"} gives each variable its own
+facet (alongside any \code{split.by} facets), while \code{"group"} and \code{"color"} put the
+variables on the x-axis or the fill legend respectively. With several variables the
+Stats tab is only available for the \code{"split"} aesthetic with no \code{split.by} set, and
+comparisons are then run separately within each variable's facet. The other layouts
+either replace the x-axis groups being compared or facet on two dimensions at once,
+neither of which the significance brackets can be placed against.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
@@ -41,7 +52,9 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing). With several
+Y variables only the adjustment is shown, as the variables are named by the
+facet strips or the legend instead
 \item \code{main} - Plot title (plotly allows interactive editing)
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -51,8 +64,6 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{line.color} - Use \code{hline.colors} instead
 \item \code{line.linewidth} - Use \code{hline.widths} instead
 \item \code{line.opacity} - Use \code{hline.opacities} instead
-\item \code{multivar.aes} - Aesthetic used for multiple \code{var} columns (not implemented; one var at a time)
-\item \code{multivar.split.dir} - Facet direction for multiple \code{var} columns (not implemented)
 \item \code{rows.use} - Row subset to plot (not implemented)
 \item \code{colors} - Integer index/order into \code{color.panel} (managed via the palette UI)
 \item \code{shape.panel} - Shapes used with \code{shape.by} (not implemented)
@@ -63,8 +74,6 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 \item \code{boxplot.width} - Boxplot width (controlled via \code{boxgap} and \code{boxgroupgap})
 \item \code{boxplot.outlier.size} - Outlier point size (not implemented)
 \item \code{boxplot.position.dodge} - Boxplot dodge (controlled via \code{boxgap})
-\item \code{hover.data} - Columns shown on hover (not implemented; a default set is used)
-\item \code{hover.round.digits} - Hover value rounding (not implemented)
 \item \code{vlnplot.quantiles} - Violin quantiles (doesn't translate to plotly)
 }
 }
@@ -73,7 +82,12 @@ e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
 
 The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be accessed via UI inputs and/or the \code{defaults} argument:
 \itemize{
-\item \code{var} - Y-axis variable (UI: "Y data (var)", default: 2nd numeric variable)
+\item \code{var} - Y-axis variable(s) (UI: "Y Data", default: 2nd numeric variable). Several
+may be selected; \code{multivar.aes} then controls how they are displayed
+\item \code{multivar.aes} - Aesthetic used for multiple \code{var} columns (UI: "Multivar Aesthetic",
+default: "split")
+\item \code{multivar.split.dir} - Facet direction for multiple \code{var} columns (UI:
+"Multivar Split Dir", default: "col")
 \item \code{group.by} - Grouping variable for x-axis (UI: "Group by", default: 2nd categorical variable)
 \item \code{color.by} - Coloring variable (UI: "Color by", default: "")
 \item \code{shape.by} - Shape variable (UI: "Shape by", default: "")
@@ -108,6 +122,9 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters can be 
 \item \code{ridgeplot.shape} - Ridge shape (UI: "Ridge Shape", default: "smooth")
 \item \code{ridgeplot.bins} - Ridge bins (UI: "Ridge Bins", default: 30)
 \item \code{ridgeplot.binwidth} - Ridge binwidth (UI: "Ridge Binwidth", default: NULL)
+\item \code{hover.data} - Columns shown on hover (UI: "Hover Data", default: "";
+empty uses a sensible default set of columns)
+\item \code{hover.round.digits} - Hover value rounding (UI: "Hover Round Digits", default: 5)
 \item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
 }
 }
@@ -156,6 +173,24 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{abline.widths} - Widths for diagonal lines (UI: "Widths", default: "1")
 \item \code{abline.linetypes} - Line types for diagonal lines (UI: "Line Types", default: "dashed")
 \item \code{abline.opacities} - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
+\item \code{annotate.by} - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
+\item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
+\item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
+\item \code{highlight.border.width} - Border width for highlighted points (UI: "Highlight Border Width", default: 1)
+\item \code{highlight.auto.annotate} - Label highlighted points automatically (UI: "Auto-annotate Highlights", default: TRUE)
+\item \code{annotation.color} - Annotation text color (UI: "Annotation Color", default: "black")
+\item \code{annotation.ax} - Horizontal label offset in pixels (UI: "Annotation X Offset", default: 20)
+\item \code{annotation.ay} - Vertical label offset in pixels (UI: "Annotation Y Offset", default: -20)
+\item \code{annotation.size} - Annotation font size (UI: "Annotation Size", default: 10)
+\item \code{annotation.showarrow} - Draw an arrow from label to point (UI: "Show Arrow", default: TRUE)
+\item \code{annotation.arrowcolor} - Annotation arrow color (UI: "Arrow Color", default: "black")
+\item \code{annotation.arrowhead} - Annotation arrowhead style (UI: "Arrowhead Style", default: 2)
+\item \code{annotation.arrowwidth} - Annotation arrow line width (UI: "Arrow Linewidth", default: 1.5)
 }
 }
 

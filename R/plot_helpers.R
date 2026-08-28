@@ -60,6 +60,35 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 }
 
 
+#' Evaluate a plot expression under a fixed random seed
+#'
+#' Builds a plot with a reproducible random stream so randomised layers (jitter,
+#' most notably) land in the same place on every rebuild. Without this, any input
+#' change re-draws the jitter offsets, which makes points appear to jump around
+#' and leaves anything anchored to a point's position pointing at stale coordinates.
+#' The caller's random stream is restored afterwards.
+#'
+#' @param expr Expression producing the plot. Evaluated lazily, after the seed is set.
+#' @param seed Integer. Seed to build under.
+#'
+#' @return The value of `expr`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_with_stable_seed
+#' @keywords internal
+.with_stable_seed <- function(expr, seed = 42L) {
+    if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+        old_seed <- get(".Random.seed", envir = globalenv(), inherits = FALSE)
+        on.exit(assign(".Random.seed", old_seed, envir = globalenv()), add = TRUE)
+    } else {
+        on.exit(suppressWarnings(rm(".Random.seed", envir = globalenv())), add = TRUE)
+    }
+
+    set.seed(seed)
+    expr
+}
+
+
 #' Create default Plotly configuration
 #'
 #' Constructs a configuration list for Plotly plots, enabling interactive
@@ -317,13 +346,19 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #'
 #' @param fig A plotly figure object.
 #' @param edits A list with components `legend` and `annotations`.
+#' @param regen_keys Character vector of annotation keys (e.g. `"axis:y"`) whose
+#'   `text` is regenerated from scratch on every rebuild and must therefore not
+#'   be overwritten by a captured edit. Used for axis titles carrying an active
+#'   data adjustment (e.g. `"log2(units)"`), so the fresh label wins while any
+#'   captured position/font still persists. The `#<occurrence>` suffix added by
+#'   `.annotation_edit_keys()` is stripped before matching. Defaults to none.
 #'
 #' @return The figure with manual edits re-applied.
 #'
 #' @author Jared Andrews
 #' @keywords internal
 #' @rdname INTERNAL_reapply_manual_edits
-.reapply_manual_edits <- function(fig, edits) {
+.reapply_manual_edits <- function(fig, edits, regen_keys = character(0)) {
     if (is.null(fig) || is.null(edits)) {
         return(fig)
     }
@@ -363,7 +398,12 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
             if (is.na(ann_key)) next
             e <- edits$annotations[[ann_key]]
             if (is.null(e)) next
+            # Axis titles with an active data adjustment are regenerated every
+            # rebuild (e.g. "log2(units)"), so never re-apply a captured `text`
+            # for those sides; their position/font still persists.
+            regen <- sub("#[0-9]+$", "", ann_key) %in% regen_keys
             for (prop in names(e)) {
+                if (regen && identical(prop, "text")) next
                 anns[[i]][[prop]] <- e[[prop]]
             }
         }
@@ -532,6 +572,12 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' @param store The list returned by [setup_manual_edits()].
 #' @param session The module's `session` object, used to namespace the
 #'   colorbar drag input.
+#' @param regen_keys Character vector of annotation keys (e.g. `"axis:y"`) whose
+#'   `text` is regenerated on every rebuild and must not be overwritten by a
+#'   captured edit. Pass the axis side(s) carrying an active data adjustment so
+#'   the freshly built label (e.g. `"log2(units)"`) always wins, while the
+#'   captured position still persists. Defaults to none (all captured props are
+#'   restored, the pre-existing behaviour).
 #'
 #' @return The finalized plotly figure, ready to be returned from
 #'   [plotly::renderPlotly()].
@@ -545,15 +591,70 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
 #' fig
 #' }
-finalize_manual_edits <- function(fig, plot_source, store, session) {
+finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys = character(0)) {
     if (is.null(fig)) {
         return(fig)
     }
 
     fig$x$source <- plot_source
-    fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)))
+    fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)), regen_keys)
     store$rendered_fig(fig)
     .add_colorbar_listener(fig, session$ns("colorbar.move"))
+}
+
+
+#' Drop persisted axis-title text edits
+#'
+#' Removes any captured `text` edit for the given axis-title annotation keys from
+#' an edit store, so the axis title is regenerated from its (possibly adjusted)
+#' data-derived label on the next rebuild rather than restoring a stale manual
+#' edit. Any captured position for those titles is left intact, so a dragged
+#' title keeps its place. Intended to be called when the plotted variable for an
+#' axis changes (e.g. from an `observeEvent()` or inside the plot-building
+#' reactive), matching the convention that a manual title only makes sense for
+#' the variable it was written for.
+#'
+#' @param store The list returned by [setup_manual_edits()].
+#' @param keys Character vector of axis annotation keys to clear text for.
+#'   Defaults to both axis titles, `c("axis:x", "axis:y")`. The
+#'   `#<occurrence>` suffix added by `.annotation_edit_keys()` is ignored when
+#'   matching.
+#'
+#' @return Invisibly, `TRUE` if any stored text was removed, otherwise `FALSE`.
+#'
+#' @seealso [setup_manual_edits()], [finalize_manual_edits()].
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Regenerate the y-axis title whenever the plotted variable changes:
+#' observeEvent(input$var, reset_axis_title_text(edit_store, "axis:y"),
+#'     ignoreInit = TRUE)
+#' }
+reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
+    anns <- isolate(store$edits$annotations)
+    if (is.null(anns) || length(anns) == 0) {
+        return(invisible(FALSE))
+    }
+
+    changed <- FALSE
+    for (nm in names(anns)) {
+        base_key <- sub("#[0-9]+$", "", nm)
+        if (base_key %in% keys && !is.null(anns[[nm]][["text"]])) {
+            anns[[nm]][["text"]] <- NULL
+            # Drop the whole entry if only the (now removed) text was stored.
+            if (length(anns[[nm]]) == 0) {
+                anns[[nm]] <- NULL
+            }
+            changed <- TRUE
+        }
+    }
+
+    if (changed) {
+        store$edits$annotations <- anns
+    }
+
+    invisible(changed)
 }
 
 
@@ -565,8 +666,10 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 #' `group.by` or `fill.by` is numeric.
 #'
 #' @param df Data frame. The data containing the variables to range over.
-#' @param data_col_y Character string. Name of the numeric Y-axis data column.
-#'   Takes priority over `data_col_x` if both are provided.
+#' @param data_col_y Character vector. Name(s) of the numeric Y-axis data
+#'   column(s). Takes priority over `data_col_x` if both are provided. When
+#'   several columns are given (e.g. a multi-variable Y selection), the range
+#'   spans all of them so a single pair of limits fits every one.
 #' @param data_col_x Character string. Name of the X-axis data column. Required
 #'   when `grouping = TRUE` or `stack_by` is specified, as it defines
 #'   the groups over which Y values are summed.
@@ -586,8 +689,10 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 #'   column is missing, non-numeric, or otherwise invalid.
 #'
 #' @details
-#' The function resolves the primary data column from `data_col_y` or
-#' `data_col_x` and validates that it exists and is numeric in `df`.
+#' The function resolves the primary data column(s) from `data_col_y` or
+#' `data_col_x` and validates that they exist and are numeric in `df`. Blank
+#' and `NA` names are dropped first, and `NULL` is returned if nothing usable
+#' remains.
 #'
 #' Behaviour depends on whether bars are stacked:
 #'
@@ -608,35 +713,42 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 .calculate_range <- function(df, data_col_x = NULL, data_col_y = NULL,
                              axis_scale_factor, grouping = FALSE,
                              stack_by = NULL) {
-    # Resolve primary data column
+    # Resolve primary data column(s); several may be given for a multi-variable
+    # selection, in which case the returned limits span all of them.
     data_col <- if (!is.null(data_col_y)) data_col_y else data_col_x
+    data_col <- data_col[!is.na(data_col) & nzchar(data_col)]
 
     # Basic guards
-    if (is.null(data_col) || !nzchar(data_col)) {
+    if (length(data_col) == 0) {
         return(NULL)
     }
-    if (!data_col %in% names(df)) {
+    if (!all(data_col %in% names(df))) {
         return(NULL)
     }
-    if (!is.numeric(df[[data_col]])) {
+    if (!all(vapply(df[, data_col, drop = FALSE], is.numeric, logical(1)))) {
         return(NULL)
     }
+
+    # Sum of the selected columns per row; identical to the column itself (with
+    # NAs zeroed) when only one is selected, so stacked heights are unchanged.
+    stacked_values <- function() rowSums(df[, data_col, drop = FALSE], na.rm = TRUE)
 
     if (!grouping) {
         # --- Non-stacked: bars are NOT stacked, just find the max single value ---
         # If stack_by is provided and numeric, bars ARE stacked → sum per x group
         if (!is.null(stack_by) && stack_by %in% names(df) && is.numeric(df[[stack_by]])) {
             # Numeric stack_by: stacked bars, sum y per x category
-            if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+            if (is.null(data_col_x) || length(data_col_x) != 1 || !data_col_x %in% names(df)) {
                 return(NULL)
             }
-            x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+            x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
             max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
             min_val <- 0
         } else {
             # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
-            max_val <- max(df[[data_col]], na.rm = TRUE) * axis_scale_factor
-            min_val <- min(df[[data_col]], na.rm = TRUE)
+            raw_values <- unlist(df[, data_col, drop = FALSE], use.names = FALSE)
+            max_val <- max(raw_values, na.rm = TRUE) * axis_scale_factor
+            min_val <- min(raw_values, na.rm = TRUE)
         }
 
         if (!is.finite(min_val)) min_val <- 0
@@ -645,10 +757,10 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
         return(list(min = min_val, max = max_val))
     } else {
         # --- Stacked grouping: sum y values per x group ---
-        if (is.null(data_col_x) || !data_col_x %in% names(df)) {
+        if (is.null(data_col_x) || length(data_col_x) != 1 || !data_col_x %in% names(df)) {
             return(NULL)
         }
-        x_sums <- tapply(df[[data_col]], df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
+        x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
         max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
         min_val <- 0
 
@@ -656,6 +768,41 @@ finalize_manual_edits <- function(fig, plot_source, store, session) {
 
         return(list(min = min_val, max = max_val))
     }
+}
+
+
+#' Stack several data columns into dittoViz's multi-variable long format
+#'
+#' Reproduces the reshape [dittoViz::yPlot()] performs internally when it is
+#' given more than one `var`: the data frame is repeated once per column, the
+#' column's values are gathered into `var.multi`, and the column's name is
+#' recorded in `var.which`. Downstream code (e.g. statistics computed per
+#' variable facet) can then work against the same rows the plot was built from.
+#'
+#' @param df Data frame. The data to reshape.
+#' @param vars Character vector. Names of the columns to stack.
+#'
+#' @return A data frame with `length(vars)` times as many rows as `df`, plus the
+#'   `var.multi` (values) and `var.which` (source column name) columns.
+#'
+#' @details No data adjustment is applied here; the raw column values are
+#'   carried over, matching how the module computes statistics from the
+#'   unadjusted data.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_multivar_long_df
+.multivar_long_df <- function(df, vars) {
+    stacked <- lapply(vars, function(this.var) {
+        out <- df
+        out[["var.multi"]] <- df[[this.var]]
+        out[["var.which"]] <- this.var
+        out
+    })
+
+    long <- do.call(rbind, stacked)
+    rownames(long) <- NULL
+    long
 }
 
 

@@ -11,7 +11,9 @@ dumbbellPlotInputsUI(id, data, defaults = NULL, title = NULL, columns = 2)
 
 \item{data}{The data frame used for plot generation.}
 
-\item{defaults}{A named list of default values for the inputs.}
+\item{defaults}{A named list of default values for the inputs. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}; it is resolved with \code{\link[shiny:isolate]{shiny::isolate()}} to
+seed the control, and the module then keeps it live (see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}).}
 
 \item{title}{An optional title for the UI grid.}
 
@@ -114,6 +116,9 @@ The following parameters controlling plotly-specific features and styling are al
 \item \code{shape.line.width} - Outline width for drawn shapes (UI: "Shape Line Width", default: 4)
 \item \code{shape.linetype} - Line dash style for drawn shapes (UI: "Shape Linetype", default: "solid")
 \item \code{shape.opacity} - Opacity for drawn shapes (UI: "Shape Opacity", default: 1)
+\item \code{palette.colours} - Named character vector mapping group levels to colors, e.g.
+\code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+back to the default palette and user edits take precedence.
 }
 }
 

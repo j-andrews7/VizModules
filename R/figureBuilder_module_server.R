@@ -23,7 +23,9 @@
 #'   picker), `dataset` (character, the dataset name its `defaults` were written
 #'   for), `inputs_ui`, `output_ui`, and `server_fn` (the module's three
 #'   functions), and `defaults` (a named list of input defaults applied only when
-#'   `dataset` is the chosen dataset).
+#'   `dataset` is the chosen dataset). `defaults` is passed to both `inputs_ui`
+#'   and `server_fn`, so it can seed server-rendered controls such as the group
+#'   color picker.
 #'
 #' @return Invisibly returns `NULL`; called for its side effects (wiring up the
 #'   Figure Builder module's reactive logic).
@@ -186,11 +188,11 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
         observeEvent(input$pb_add, {
             showModal(modalDialog(
                 title = "Add a Plot",
-                selectInput(ns("pb_new_module"), "Plot type:",
-                    choices = module_choices, selectize = FALSE
+                viz_select_input(ns("pb_new_module"), "Plot type:",
+                    choices = module_choices
                 ),
-                selectInput(ns("pb_new_dataset"), "Dataset:",
-                    choices = names(dataset_store()), selectize = FALSE
+                viz_select_input(ns("pb_new_dataset"), "Dataset:",
+                    choices = names(dataset_store())
                 ),
                 footer = tagList(
                     modalButton("Cancel"),
@@ -206,7 +208,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
         observeEvent(input$pb_new_module, {
             mod <- module_registry[[input$pb_new_module]]
             if (!is.null(mod) && mod$dataset %in% names(dataset_store())) {
-                updateSelectInput(session, "pb_new_dataset",
+                update_viz_select(session, "pb_new_dataset",
                     selected = mod$dataset
                 )
             }
@@ -315,7 +317,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 
             # The module server returns a reactive yielding its interactive source
             # (plot + data + inputs); keep it so we can bundle every panel together.
-            panel_sources[[pid]] <- mod$server_fn(pid, data = filtered)
+            panel_sources[[pid]] <- mod$server_fn(pid, data = filtered, defaults = defaults)
 
             # 5) Per-panel remove handler (tracked so it can be destroyed on remove).
             panel_observers[[pid]] <- observeEvent(
@@ -381,10 +383,10 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                 }
                 if (length(rv$panel_ids)) rv$panel_ids[[1]] else NULL
             }
-            updateSelectInput(session, "pb_controls_select",
+            update_viz_select(session, "pb_controls_select",
                 choices = choices, selected = pick(isolate(input$pb_controls_select))
             )
-            updateSelectInput(session, "pb_table_select",
+            update_viz_select(session, "pb_table_select",
                 choices = choices, selected = pick(isolate(input$pb_table_select))
             )
         }

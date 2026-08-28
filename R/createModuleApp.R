@@ -30,8 +30,9 @@
 #'   At least one element is required.
 #' @param title A character string used as the page title
 #'   (default: `"VizModules App"`).
-#' @param defaults A named list of ui ids and their default values that can change the ui default 
-#'    settings on startup. 
+#' @param defaults A named list of ui ids and their default values that can change the ui default
+#'    settings on startup. An entry may also be a [shiny::reactive()] or [shiny::reactiveVal()] to
+#'    have the input follow app state; see [setup_reactive_defaults()].
 #' @param hide.inputs A character vector of input IDs to hide. These inputs are still
 #'   initialized and their values passed to the plot, but are not shown in the UI.
 #'   Passed through to `server_fn` when it accepts a `hide.inputs` argument.
@@ -108,8 +109,8 @@ createModuleApp <- function(inputs_ui_fn,
                 ),
                 hr(),
                 h4("Plot Settings"),
-                selectInput("plot_select", "Select Dataset:",
-                    choices = names(data_list), selectize = FALSE
+                viz_select_input("plot_select", "Select Dataset:",
+                    choices = names(data_list)
                 ),
                 helpText("Plot settings reset when switching datasets."),
                 uiOutput("plot_inputs_ui")
@@ -189,7 +190,10 @@ createModuleApp <- function(inputs_ui_fn,
             )
         })
 
-        active_data <- reactive(rv$datasets[[input$plot_select]])
+        active_data <- reactive({
+            req(input$plot_select)
+            req(rv$datasets[[input$plot_select]])
+        })
 
         filtered_data <- if (isTRUE(show.table)) {
             dataFilterServer("table", active_data)
@@ -198,11 +202,12 @@ createModuleApp <- function(inputs_ui_fn,
         }
 
         # Keep dataset selector in sync when new datasets are loaded
-        observe({
-            updateSelectInput(session, "plot_select",
-                choices = names(rv$datasets)
-            )
-        })
+        observeEvent(names(rv$datasets),
+            {
+                update_viz_select(session, "plot_select", choices = names(rv$datasets))
+            },
+            ignoreInit = TRUE
+        )
 
         output$plot_inputs_ui <- renderUI({
             req(rv$datasets[[input$plot_select]])

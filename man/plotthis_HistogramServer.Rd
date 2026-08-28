@@ -15,7 +15,9 @@ plotthis_HistogramServer(
 \arguments{
 \item{id}{\code{character} unique ID for the shiny namespace.}
 
-\item{data}{\code{reactive} A reactive expression returning a data frame to be plotted.}
+\item{data}{\code{reactive} A reactive expression returning a data frame to be plotted.
+Values that are not data frames are coerced with \code{\link[=as.data.frame]{as.data.frame()}}; a \code{NULL}
+value is treated as "not ready yet" and the module waits for data.}
 
 \item{hide.inputs}{\code{character} vector of input IDs to hide in the UI. Default is NULL.}
 
@@ -23,7 +25,9 @@ plotthis_HistogramServer(
 
 \item{defaults}{A named list of default values for the inputs. When the reset button is
 clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-the same list passed to the corresponding UI function.}
+the same list passed to the corresponding UI function. An entry may also be a
+\code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}, in which case the input tracks it as the
+parent app's state changes; see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}.}
 }
 \value{
 The \code{moduleServer} function for the Histogram module.

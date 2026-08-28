@@ -1,3 +1,112 @@
+#' Find columns referenced by a plotly figure's trace attributes
+#'
+#' Walks a `plotly` object's `x$attrs` (the per-trace arguments captured at
+#' trace-construction time, e.g. `~mpg` formulas or literal vectors/lists such
+#' as parcoords `dimensions`) to determine which columns of the plot's source
+#' data.frame are actually rendered. This works generically across both
+#' `ggplotly()`-converted figures (which encode mappings as `.data[["col"]]`
+#' formulas) and figures built directly with `plot_ly()`/`add_trace()` (which
+#' may use `~col` formulas, literal `label = "col"` entries, or, as a last
+#' resort, raw data vectors matched back to `full_data` by value).
+#'
+#' @param plot A `plotly` object.
+#' @param full_data The `data.frame` returned by `plotly_data(plot)`.
+#'
+#' @return A character vector of column names in `full_data` referenced by
+#'   `plot`.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_plotted_vars_from_attrs
+.plotted_vars_from_attrs <- function(plot, full_data) {
+    cols <- names(full_data)
+    attrs <- tryCatch(plot$x$attrs, error = function(e) NULL)
+    if (is.null(attrs) || length(cols) == 0) {
+        return(character(0))
+    }
+
+    tokens <- character(0)
+    literal_vecs <- list()
+
+    # Recurse through formulas/calls/lists, collecting every symbol and string
+    # literal encountered (candidate column names) plus any literal data
+    # vectors (fallback for values passed with no accompanying name).
+    walk <- function(e) {
+        if (inherits(e, "formula")) {
+            # Quosures are formulas but deprecate `[[` subsetting; strip the
+            # class so plain language-object indexing is used instead.
+            class(e) <- setdiff(class(e), "quosure")
+            walk(e[[length(e)]])
+        } else if (is.call(e)) {
+            for (a in as.list(e)) walk(a)
+        } else if (is.symbol(e)) {
+            tokens <<- c(tokens, as.character(e))
+        } else if (is.character(e)) {
+            tokens <<- c(tokens, e)
+        } else if (is.list(e)) {
+            for (el in e) walk(el)
+        } else if (is.atomic(e) && length(e) > 1) {
+            literal_vecs[[length(literal_vecs) + 1]] <<- e
+        }
+    }
+    for (trace_attrs in attrs) {
+        for (v in trace_attrs) walk(v)
+    }
+
+    found <- intersect(cols, unique(tokens))
+
+    remaining <- setdiff(cols, found)
+    if (length(remaining) && length(literal_vecs) && nrow(full_data) > 0) {
+        for (vec in literal_vecs) {
+            if (length(remaining) == 0) break
+            if (length(vec) != nrow(full_data)) next
+            for (col in remaining) {
+                same <- tryCatch(
+                    isTRUE(all.equal(unname(vec), unname(full_data[[col]]), check.attributes = FALSE)),
+                    error = function(e) FALSE
+                )
+                if (same) {
+                    found <- c(found, col)
+                    remaining <- setdiff(remaining, col)
+                }
+            }
+        }
+    }
+    unique(found)
+}
+
+#' Find columns referenced by module UI inputs
+#'
+#' Complements [.plotted_vars_from_attrs()] for columns that never make it
+#' into the built `plotly` figure, most notably `split.by`/`facet.by`
+#' variables (faceting is resolved before the `ggplot`-to-`plotly` conversion,
+#' so the facet column name is lost from the figure entirely). All plot
+#' modules name their column-selecting inputs with a consistent convention
+#' (e.g. `x.by`, `color.by`, `x.value`, `x.data`, `labels`, `theta`, `group`,
+#' `dimensions`), so inputs matching that convention are checked against the
+#' plot's source columns.
+#'
+#' @param ui_inputs A named list of UI input values (see `inputs_reactive` in
+#'   [collect_source_data()]).
+#' @param cols A character vector of the plot's source data.frame column
+#'   names.
+#'
+#' @return A character vector of column names in `cols` referenced by
+#'   `ui_inputs`.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_plotted_vars_from_inputs
+.plotted_vars_from_inputs <- function(ui_inputs, cols) {
+    if (is.null(ui_inputs) || length(ui_inputs) == 0 || length(cols) == 0) {
+        return(character(0))
+    }
+    selector_names <- c("labels", "values", "theta", "r", "group", "dimensions", "var")
+    is_selector <- grepl("\\.(by|value|data)$", names(ui_inputs)) | names(ui_inputs) %in% selector_names
+    char_inputs <- Filter(function(v) is.character(v) && length(v) > 0, ui_inputs[is_selector])
+    intersect(unique(unlist(char_inputs, use.names = FALSE)), cols)
+}
+
 #' Collect plot and source data for download
 #'
 #' Collects the plot object, its underlying data, statistical testing details (if applied),
@@ -16,12 +125,28 @@
 #' @return A named list with elements:
 #' \describe{
 #'   \item{plot}{The `plotly` plot object.}
-#'   \item{plot_data}{A `data.frame` of the plot's underlying data.}
+#'   \item{plot_data}{A `data.frame` of the plot's underlying data, limited to
+#'     the columns and rows actually rendered (see Details).}
 #'   \item{stats}{A `data.frame` of statistical test results, or `NULL`.}
 #'   \item{inputs}{A `data.frame` of UI input names and values, or `NULL`.}
 #' }
 #'
-#' @author Jacob Martin
+#' @details `plot_data` is scoped down from the plot's full source data.frame
+#'   (as returned by [plotly::plotly_data()]) in two ways:
+#'   \itemize{
+#'     \item{Columns are limited to those actually mapped in the plot (x, y,
+#'       color/fill, shape, size, labels/values, facets, etc.), detected by
+#'       inspecting the built `plotly` figure's trace attributes and, for
+#'       columns that don't survive conversion to `plotly` (namely
+#'       `split.by`/`facet.by`), the UI input values.}
+#'     \item{Rows are limited to those with complete data across the detected
+#'       columns, since rows with `NA` in a plotted aesthetic are dropped by
+#'       the underlying plotting functions.}
+#'   }
+#'   If no plotted columns can be detected, the full source data.frame is
+#'   returned unchanged.
+#'
+#' @author Jacob Martin, Jared Andrews
 #' @export
 #' @examples
 #' \dontrun{
@@ -50,32 +175,49 @@
 collect_source_data <- function(plot_reactive,
                                 stats_reactive = NULL,
                                 inputs_reactive = NULL) {
-    
-            plot <- plot_reactive()
-            plot_data <- as.data.frame(plotly_data(plot))
-            stats <- NULL
-    
-            if (!is.null(stats_reactive)) {
-                stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
-                if (!is.null(stats_df)) {
-                    stats <- as.data.frame(stats_df) 
-                }
-            }
-    
-            ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
-                message("ERROR: ", e$message)
-                NULL
-            })    
-    
-            inp <- data.frame(
-                names  = names(ui_inputs),
-                values = unlist(lapply(ui_inputs, function(x) {
-                    if (is.null(x)) "NULL"
-                    else if (length(x) > 1) paste(x, collapse = ", ")
-                    else as.character(x)
-            })))
-            data_list <- list("plot" = plot, "plot_data" = plot_data, "stats" = stats, "inputs" = inp)
-            return(data_list)
+
+    plot <- plot_reactive()
+    full_data <- as.data.frame(plotly_data(plot))
+    stats <- NULL
+
+    if (!is.null(stats_reactive)) {
+        stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
+        if (!is.null(stats_df)) {
+            stats <- as.data.frame(stats_df) 
+        }
+    }
+
+    ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
+        message("ERROR: ", e$message)
+        NULL
+    })
+
+    plotted_vars <- intersect(
+        names(full_data),
+        unique(c(
+            .plotted_vars_from_attrs(plot, full_data),
+            .plotted_vars_from_inputs(ui_inputs, names(full_data))
+        ))
+    )
+
+    if (length(plotted_vars) > 0) {
+        keep_rows <- stats::complete.cases(full_data[, plotted_vars, drop = FALSE])
+        plot_data <- full_data[keep_rows, plotted_vars, drop = FALSE]
+    } else {
+        plot_data <- full_data
+    }
+
+    inp <- data.frame(
+        names  = names(ui_inputs),
+        values = vapply(ui_inputs, function(x) {
+            if (is.null(x) || length(x) == 0) ""
+            else if (length(x) > 1) paste(x, collapse = ", ")
+            else as.character(x)
+        }, character(1))
+    )
+
+    data_list <- list("plot" = plot, "plot_data" = plot_data, "stats" = stats, "inputs" = inp)
+    data_list
 }
 
 
@@ -102,7 +244,7 @@ collect_source_data <- function(plot_reactive,
 #' @importFrom shinyjqui jqui_resizable
 #' @importFrom zip zip
 #' @importFrom utils write.csv
-#' 
+#'
 #' @author Jacob Martin
 #' @export
 #' @examples
@@ -192,5 +334,3 @@ create_source_download_handler <- function(data_list, filename_base = "source_da
         }
     )
 }
-
-

@@ -18,6 +18,8 @@
 #'   `list("school_earnings" = example_school_earnings)`
 #'   is used as example data.
 #' @param defaults A named list of input IDs and their default values to apply on startup.
+#'   An entry may also be a [shiny::reactive()] or [shiny::reactiveVal()] to have the input
+#'   follow the parent app's state; see [setup_reactive_defaults()].
 #' @param hide.inputs A character vector of input IDs to hide. Their values are still
 #'   initialized and used, but the controls are not shown in the UI.
 #' @param hide.tabs A character vector of tab names to hide. Inputs in these tabs are

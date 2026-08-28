@@ -2,7 +2,9 @@
 #'
 #' @param id The ID for the Shiny module.
 #' @param data A `reactive` containing the data frame to plot. Provide a
-#'   summarized table with columns for labels and aggregated values.
+#'   summarized table with columns for labels and aggregated values. Values that
+#'   are not data frames are coerced with [as.data.frame()]; a `NULL` value is
+#'   treated as "not ready yet" and the module waits for data.
 #' @param hide.inputs A character vector of input IDs to hide.
 #'   These will still be initialized and their values passed to the plot function,
 #'   but the user will not be able to see/adjust them in the UI.
@@ -11,7 +13,9 @@
 #'   but the user will not be able to see/adjust them in the UI.
 #' @param defaults A named list of default values for the inputs. When the reset button is
 #'   clicked, inputs are reset to these values rather than hardcoded fallbacks. Typically
-#'   the same list passed to the corresponding UI function.
+#'   the same list passed to the corresponding UI function. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
+#'   parent app's state changes; see [setup_reactive_defaults()].
 #' @return The `moduleServer` function for the piePlot module.
 #'
 #' @import shiny
@@ -27,9 +31,12 @@
 #' @author Jacob Martin, Jared Andrews
 piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
+    data <- .require_data_frame(data)
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
         # hiding must be (re)applied after the controls exist in the DOM rather than
@@ -37,32 +44,61 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
         if (!is.null(hide.inputs) || !is.null(hide.tabs)) {
             observeEvent(data(), {
                 delay(100, {
-                    .hide_input(session, hide.inputs)
+                    hide_input(session, hide.inputs)
                     for (tab.name in hide.tabs) hideTab(inputId = "piePlotTabsetPanel", target = tab.name)
                 })
             })
         }
         ns <- session$ns
 
+        default_palette_values <- default_palettes()[["choices"]][["Defaults"]][["dittoColors"]]
+
         # Persist manual legend/annotation/colorbar repositioning across rebuilds.
         plot_source <- session$ns("pie")
         edit_store <- setup_manual_edits(input, session, plot_source)
 
-        output$color.picker <- renderUI({
+        slice_levels <- reactive({
             d <- data_reactive()
             lbl <- input$labels
-            req(!is.null(lbl), lbl %in% names(d))
+            if (is.null(d) || is.null(lbl) || !nzchar(lbl) || !lbl %in% names(d)) {
+                return(character(0))
+            }
+            unique(na.omit(as.character(d[[lbl]])))
+        })
 
-            groups <- unique(na.omit(as.character(d[[lbl]])))
+        # What the plot actually colours by. The picker is rebuilt whenever the slice
+        # set changes and is re-seeded from this same resolution, so the value it
+        # then reports resolves to the palette already in use. A reactiveVal only
+        # invalidates on a real change, so that costs nothing, while a colour the
+        # user actually picks comes straight through.
+        palette_store <- setup_group_colors(
+            input, "slice.colors", slice_levels,
+            default_palette_values, defaults, params
+        )
+
+        output$color.picker <- renderUI({
+            groups <- slice_levels()
             if (length(groups) == 0) {
                 return(NULL)
             }
+
+            initial_colors <- isolate(resolve_palette(
+                groups, input$slice.colors, default_palette_values,
+                .default_group_colors(defaults, "slice.colors")
+            ))
+
+            # The picker is seeded with this, so it is also what the plot should be
+            # drawing with from now until the user changes something. Setting it here
+            # rather than waiting for the client to report back keeps the first draw
+            # on the right palette.
+            palette_store(initial_colors)
 
             multiColorPicker(
                 ns("slice.colors"),
                 label = "Slice colors",
                 groups = groups,
                 selected_palette = "dittoColors",
+                colors = initial_colors,
                 compact = TRUE
             )
         })
@@ -73,29 +109,29 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             char.choices <- c("", names(data_reactive())[!vapply(data_reactive(), is.numeric, logical(1))])
 
             # Data
-            updateSelectInput(session, "labels",
+            update_viz_select(session, "labels",
                 selected = get_default(defaults, "labels", char.choices[2], function(x) x %in% char.choices))
-            updateSelectInput(session, "values",
+            update_viz_select(session, "values",
                 selected = get_default(defaults, "values", numeric.data[2], function(x) x %in% numeric.data))
 
             # Slice layout
             updateCheckboxInput(session, "sort.slices",
                 value = get_default(defaults, "sort.slices", TRUE, is.logical))
-            updateSelectInput(session, "direction",
+            update_viz_select(session, "direction",
                 selected = get_default(defaults, "direction", "counterclockwise"))
             updateSliderInput(session, "rotation", value = get_default(defaults, "rotation", 0, is.numeric))
             updateSliderInput(session, "hole", value = get_default(defaults, "hole", 0, is.numeric))
 
             # Text
-            updateSelectInput(session, "textinfo",
+            update_viz_select(session, "textinfo",
                 selected = get_default(defaults, "textinfo", c("label", "percent")))
-            updateSelectInput(session, "textposition",
+            update_viz_select(session, "textposition",
                 selected = get_default(defaults, "textposition", "auto"))
-            updateSelectInput(session, "insidetextorientation",
+            update_viz_select(session, "insidetextorientation",
                 selected = get_default(defaults, "insidetextorientation", "auto"))
             updateNumericInput(session, "text.font.size",
                 value = get_default(defaults, "text.font.size", 12, is.numeric))
-            updateSelectInput(session, "text.font.family",
+            update_viz_select(session, "text.font.family",
                 selected = get_default(defaults, "text.font.family", "Arial"))
             updateColourInput(session, "text.font.color",
                 value = get_default(defaults, "text.font.color", "#000000"))
@@ -104,7 +140,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             updateSliderInput(session, "title.x", value = get_default(defaults, "title.x", 0.5, is.numeric))
             updateNumericInput(session, "title.font.size",
                 value = get_default(defaults, "title.font.size", 28, is.numeric))
-            updateSelectInput(session, "title.font.family",
+            update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial"))
             updateColourInput(session, "title.font.color",
                 value = get_default(defaults, "title.font.color", "#000000"))
@@ -112,9 +148,9 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             # Legend
             updateCheckboxInput(session, "show.legend",
                 value = get_default(defaults, "show.legend", TRUE, is.logical))
-            updateSelectInput(session, "legend.orientation",
+            update_viz_select(session, "legend.orientation",
                 selected = get_default(defaults, "legend.orientation", "h"))
-            updateSelectInput(session, "legend.font.family",
+            update_viz_select(session, "legend.font.family",
                 selected = get_default(defaults, "legend.font.family", "Arial"))
             updateNumericInput(session, "legend.font.size",
                 value = get_default(defaults, "legend.font.size", 12, is.numeric))
@@ -128,7 +164,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 value = get_default(defaults, "slice.line.width", 0, is.numeric))
 
             # Slice colors
-            updateMultiColorPicker(session, "slice.colors", palette = "dittoColors")
+            .reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
         })
@@ -145,7 +181,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_piePlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input)
+            isolate_fn <- setup_auto_update_logic(input, params)
 
             d <- data_reactive()
 
@@ -159,24 +195,14 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             }
 
             label_values <- as.character(d[[label_col]])
-            color_map <- isolate_fn(input$slice.colors)
-
-            if (is.null(color_map) || length(color_map) == 0) {
-                default_cols <- default_palettes()$choices$Defaults$dittoColors
-                color_map <- stats::setNames(rep_len(default_cols, length(unique(label_values))), unique(label_values))
-            }
-
-            colour_vector <- color_map
-            if (!is.null(names(color_map)) && any(nzchar(names(color_map)))) {
-                colour_vector <- color_map[match(label_values, names(color_map))]
-            } else {
-                colour_vector <- rep_len(color_map, length(label_values))
-            }
-
-            if (any(is.na(colour_vector))) {
-                fallback_cols <- default_palettes()$choices$Defaults$dittoColors
-                colour_vector[is.na(colour_vector)] <- rep_len(fallback_cols, sum(is.na(colour_vector)))
-            }
+            slice_levels <- unique(label_values)
+            color_map <- resolve_palette(
+                slice_levels,
+                isolate_fn(palette_store()),
+                default_palette_values,
+                .default_group_colors(defaults, "slice.colors")
+            )
+            colour_vector <- unname(color_map[match(label_values, names(color_map))])
 
             fig <- piePlot(
                 df = d,

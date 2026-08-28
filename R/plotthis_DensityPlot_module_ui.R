@@ -105,10 +105,16 @@
 #' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
 #' - `abline.linetypes` - Line types for diagonal lines (UI: "Line types", default: "dashed")
 #' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
+#' - `single.fill.color` - Fill color used when no grouping is set (UI: "Fill color")
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -150,38 +156,38 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.data"), "X Data",
+            tipify(viz_select_input(ns("x.data"), "X Data",
                 selected = get_default(
                     defaults, "x.data", num.choices[2],
                     function(x) x %in% num.choices
                 ),
-                choices = num.choices, selectize = FALSE
+                choices = num.choices[nzchar(num.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(
-                selectInput(ns("group.by"), "Group By",
+                viz_select_input(ns("group.by"), "Group By",
                     selected = get_default(
                         defaults, "group.by", "",
                         function(x) x %in% c("", cat.choices)
                     ),
-                    choices = c("", cat.choices), selectize = FALSE
+                    choices = c("", cat.choices)
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")
             )
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By",
+            tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
-                choices = c("", .facet_check(data)), selectize = FALSE),
+                choices = c("", .facet_check(data))),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(selectInput(ns("facet.scale"), "Facet Scale",
+            tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
                     defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
-                choices = c("fixed", "free", "free_x", "free_y"), selectize = FALSE),
+                choices = c("fixed", "free", "free_x", "free_y")),
                 documentParameters$facet_scales,
                 placement = "top", options = list(container = "body")
             ),
@@ -209,12 +215,12 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 placement = "top", options = list(container = "body")
             ),
             uiOutput(ns("palette.selection")),
-            tipify(selectInput(ns("position"), "Position",
+            tipify(viz_select_input(ns("position"), "Position",
                 selected = get_default(
                     defaults, "position", "identity",
                     function(x) x %in% c("identity", "stack", "dodge", "fill")
                 ),
-                choices = c("identity", "stack", "dodge", "fill"), selectize = FALSE
+                choices = c("identity", "stack", "dodge", "fill")
             ), documentParameters$position, placement = "top", options = list(container = "body"))
         ),
         "Rug" = tagList(

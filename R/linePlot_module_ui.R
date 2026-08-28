@@ -81,10 +81,15 @@
 #' - `abline.widths` - Widths for diagonal lines (UI: "Widths", default: "1")
 #' - `abline.linetypes` - Line types for diagonal lines (UI: "Line Types", default: "dashed")
 #' - `abline.opacities` - Opacities for diagonal lines (UI: "Opacities (0-1)", default: "1")
+#' - `palette.colours` - Named character vector mapping group levels to colors, e.g.
+#'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
+#'   back to the default palette and user edits take precedence.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
-#' @param defaults A named list of default values for the inputs.
+#' @param defaults A named list of default values for the inputs. An entry may also be a
+#'   [shiny::reactive()] or [shiny::reactiveVal()]; it is resolved with [shiny::isolate()] to
+#'   seed the control, and the module then keeps it live (see [setup_reactive_defaults()]).
 #' @param title An optional title for the UI grid.
 #' @param columns Number of columns for the UI grid.
 #' @return A Shiny tagList containing the UI elements
@@ -133,26 +138,26 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
 
     inputs <- list(
         "Data" = tagList(
-            tipify(selectInput(ns("x.value"), "X Values",
+            tipify(viz_select_input(ns("x.value"), "X Values",
                 selected = get_default(
                     defaults, "x.value", names(data)[1],
                     function(x) all(x %in% names(data))
                 ),
-                choices = names(data), multiple = TRUE, selectize = TRUE
+                choices = names(data), multiple = TRUE
             ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.value"), "Y Values",
+            tipify(viz_select_input(ns("y.value"), "Y Values",
                 selected = get_default(
                     defaults, "y.value", names(data)[2],
                     function(x) all(x %in% names(data))
                 ),
-                choices = names(data), multiple = TRUE, selectize = TRUE
+                choices = names(data), multiple = TRUE
             ), documentParameters$y, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("group.by"), "Group By",
+            tipify(viz_select_input(ns("group.by"), "Group By",
                 selected = get_default(
                     defaults, "group.by", cat.choices[1],
                     function(x) x %in% cat.choices
                 ),
-                choices = cat.choices, selectize = FALSE
+                choices = cat.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("error.bar"), "Error Bars",
                 value = get_default(defaults, "error.bar", TRUE, is.logical)),
@@ -163,35 +168,35 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                 value = get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"
             ), documentParameters$order.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("x.adjustment"), "X Adjustment",
+            tipify(viz_select_input(ns("x.adjustment"), "X Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "x.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$x.adjustment, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("y.adjustment"), "Y Adjustment",
+            tipify(viz_select_input(ns("y.adjustment"), "Y Adjustment",
                 choices = adj.choices,
                 selected = get_default(
                     defaults, "y.adjustment", "",
                     function(x) x %in% adj.choices
-                ), selectize = FALSE
+                )
             ), documentParameters$y.adjustment, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
-            tipify(selectInput(ns("facet.by"), "Facet By",
+            tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = c("", .facet_check(data)), selectize = FALSE
+                choices = c("", .facet_check(data))
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("facet.scales"), "Facet Scales",
+            tipify(viz_select_input(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
                 selected = get_default(
                     defaults, "facet.scales", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
-                ), selectize = FALSE
+                )
             ), documentParameters$facet.scales, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("facet.nrow"), "Rows",
                 value = get_default(defaults, "facet.nrow", NULL, is.numeric), min = 1),
@@ -208,19 +213,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
-            tipify(selectInput(ns("plot.mode"), "Plot Type",
+            tipify(viz_select_input(ns("plot.mode"), "Plot Type",
                 selected = get_default(
                     defaults, "plot.mode", "lines",
                     function(x) x %in% c("lines", "markers", "lines+markers")
                 ),
-                choices  = c("lines", "markers", "lines+markers"), selectize = FALSE
+                choices  = c("lines", "markers", "lines+markers")
             ), documentParameters$plot.mode, placement = "top", options = list(container = "body")),
-            tipify(selectInput(ns("line.type"), "Line Type",
+            tipify(viz_select_input(ns("line.type"), "Line Type",
                 selected = get_default(
                     defaults, "line.type", "solid",
                     function(x) x %in% c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
                 ),
-                choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot"), selectize = FALSE
+                choices  = c("solid", "dot", "dash", "longdash", "dashdot", "longdashdot")
             ), documentParameters$line.type, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
             tipify(colourpicker::colourInput(ns("error.bar.colour"), "Error Bar Colour",
