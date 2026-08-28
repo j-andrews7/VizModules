@@ -1,4 +1,4 @@
-# VizModules 0.4.0.9000
+# VizModules 0.4.0
 
 ## New Modules
 

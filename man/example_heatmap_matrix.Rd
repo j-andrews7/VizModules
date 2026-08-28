@@ -12,7 +12,9 @@ A data frame with 30 rows and 15 columns:
 Metabolic, Cell Cycle) — a categorical row-annotation column}
 \item{mean_expression}{Mean log2-CPM-like expression across the 12
 samples — a numeric row-annotation column}
-\item{Healthy_1, ..., Healthy_6, Disease_1, ..., Disease_6}{Simulated
+\item{Healthy_1, Healthy_2, Healthy_3, Healthy_4, Healthy_5,
+Healthy_6, Disease_1, Disease_2, Disease_3, Disease_4, Disease_5,
+Disease_6}{Simulated
 log2-CPM-like expression values forming the heatmap matrix}
 }
 }

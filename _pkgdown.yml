@@ -146,6 +146,9 @@ reference:
       - ComplexHeatmap_HeatmapInputsUI
       - ComplexHeatmap_HeatmapOutputUI
       - ComplexHeatmap_HeatmapServer
+      - ComplexHeatmap_HeatmapMainOutputUI
+      - ComplexHeatmap_HeatmapSubOutputUI
+      - ComplexHeatmap_HeatmapInfoOutputUI
 
   - title: "dataFilter Module"
     desc: "Reusable data filtering module for use with plot modules."
