@@ -2,6 +2,8 @@
 
 ## VizModules 0.4.0
 
+CRAN release: 2026-08-28
+
 ### New Modules
 
 - Added a `freqPlot` module

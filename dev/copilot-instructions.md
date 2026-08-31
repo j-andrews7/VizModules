@@ -118,7 +118,8 @@ UI functions.
 - Add self-contained, clear examples for functions wherever possible
 - Update vignettes when adding new modules, features, or changing
   existing functionality
-- Update `NEWS.md` with new features, bug fixes, etc.
+- Update `NEWS.md` with new features, bug fixes, etc - be succinct and
+  only list critical details.
 
 ### Code Style
 
