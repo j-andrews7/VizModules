@@ -81,7 +81,7 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 - Document missing/broken plotly functionality explicitly
 - Add self-contained, clear examples for functions wherever possible
 - Update vignettes when adding new modules, features, or changing existing functionality
-- Update `NEWS.md` with new features, bug fixes, etc.
+- Update `NEWS.md` with new features, bug fixes, etc - be succinct and only list critical details.
 
 ### Code Style
 4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled.
