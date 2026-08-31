@@ -1,3 +1,13 @@
+# VizModules 0.5.0
+
+## Documentation
+
+* The README now covers the `ComplexHeatmap_Heatmap` module, which was missing from it entirely (#348). It gets its own "Modules Provided" entry noting the three things that make it unlike every other module - its output is `InteractiveComplexHeatmap` rather than plotly, its `data` may be `list(matrix = , column_annotations = )` rather than a plain data frame, and its Bioconductor dependencies are `Suggests` that need installing first - plus an "Available Modules" gallery entry and a mention in the intro and the LLM-instruction prompt.
+* The `dittoViz_freqPlot` gallery entry gained its image, and the Statistical Testing section now lists **freqPlot** alongside BoxPlot, ViolinPlot, and yPlot, noting that its tests are always run per-facet (#348).
+* Refreshed the `vizmodules-app` skill for the 0.4.0 changes it had not picked up (#348): seeding a palette with a named colour vector through `defaults` (and the removal of `dittoViz_scatterPlotServer()`'s `manual.colors`), `dittoViz_freqPlot`'s Stats tab and its always-per-facet testing, both new modules' tab lists and mapping keys, the `example_composition` dataset, and a section on the two modules that break the standard pattern. Also dropped a note in the `vizmodules-app` and `vizmodules-custom-module` skills that claimed three vignettes still used `defaults = list(main = ...)` as their worked example; that was corrected in 0.4.0.
+* The `quick-start`, `custom-modules`, and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material and at `use_vizmodules_skills()` (#347). Previously the skills were documented only in the README, so a reader of the vignettes had no idea one existed for what they were doing.
+
+
 # VizModules 0.4.0
 
 ## New Modules

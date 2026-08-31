@@ -5,7 +5,7 @@
 [![pkgdown](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/j-andrews7/VizModules/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
-This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz) and [plotthis](https://github.com/pwwang/plotthis) along with native plotting functions) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
+This package utilizes various viz packages (currently [dittoViz](https://github.com/dtm2451/dittoViz), [plotthis](https://github.com/pwwang/plotthis), and [ComplexHeatmap](https://bioconductor.org/packages/ComplexHeatmap/) along with native plotting functions) to create interactivity-first Shiny modules for common plot types, designed to serve as building blocks for Shiny apps and as the basis for more complex/specialized modules.
 
 These modules contain all possible functionality for each plot with some additional parameters that make use of the interactive features of plotly, e.g. interactive text annotations, arbitrary shape annotations, multiple download formats, etc.
 
@@ -194,6 +194,11 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 * `plotthis_DotPlot` - Dot plots (wraps `plotthis::DotPlot`).
 * `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
 
+### `ComplexHeatmap`
+
+* `ComplexHeatmap_Heatmap` - Interactive heatmaps with row/column annotation tracks, clustering, and sub-heatmap zoom (wraps `ComplexHeatmap::Heatmap`). This is the one module whose output is **not** plotly - it renders through [InteractiveComplexHeatmap](https://bioconductor.org/packages/InteractiveComplexHeatmap/), so the plotly-specific controls (the Plotly tab, download formats, draggable annotations) do not apply. It is also the one module whose `data` may be a list rather than a data frame: pass `data = list(matrix = <data.frame>, column_annotations = <data.frame>)` when you want column annotation tracks, where the companion table carries one row per sample column. `ComplexHeatmap`, `InteractiveComplexHeatmap`, and `circlize` are `Suggests` rather than hard dependencies, so install them with `BiocManager::install(c("ComplexHeatmap", "InteractiveComplexHeatmap", "circlize"))` before using this module.
+  * The interactive output can also be split across `ComplexHeatmap_HeatmapMainOutputUI()`, `ComplexHeatmap_HeatmapSubOutputUI()`, and `ComplexHeatmap_HeatmapInfoOutputUI()` if you want the main heatmap, the sub-heatmap, and the click/brush info panel in separate places in your layout.
+
 ### Plotting Functions Defined in VizModules
 
 Via direct implementation with plotly.
@@ -206,7 +211,7 @@ Via direct implementation with plotly.
 
 ## Statistical Testing
 
-The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure. The underlying helpers (`compute_pairwise_stats()`, `create_stat_annotations()`, `apply_stat_annotations()`, `generate_pair_strings()`, `parse_pair_strings()`) are exported so you can add the same bracket annotations to any custom plotly figure. See [`vignette("statistical-testing", package = "VizModules")`][29].
+The **BoxPlot**, **ViolinPlot**, **yPlot**, and **freqPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure. On **freqPlot** the tests are always run within each facet (the `stat.per.facet` control is hidden), since each facet is a different level of the frequency variable and pooling across them would compare non-comparable quantities. The underlying helpers (`compute_pairwise_stats()`, `create_stat_annotations()`, `apply_stat_annotations()`, `generate_pair_strings()`, `parse_pair_strings()`) are exported so you can add the same bracket annotations to any custom plotly figure. See [`vignette("statistical-testing", package = "VizModules")`][29].
 
 ### Export Summary Data
 
@@ -326,6 +331,14 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 [(Source Plotting Function)][22]
 
+![](man/figures/FreqPlot.png)
+
+[ComplexHeatmap_Heatmap:][32]
+
+[(Source Plotting Function)][33]
+
+![](man/figures/Heatmap.png)
+
 [figureBuilder:][30]
 
 ![](man/figures/Figure_builder.png)
@@ -382,15 +395,15 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 > - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
 > - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
 >
-> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
+> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, `ComplexHeatmap_Heatmap`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
 >
 > **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
 > - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
-> - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, and yPlot modules.
+> - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, yPlot, and freqPlot modules.
 > - Summary-data export — `?collect_source_data` and `?create_source_download_handler`.
 > - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
 >
-> **Rules:** All plots are plotly-based; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
+> **Rules:** All plots are plotly-based except `ComplexHeatmap_Heatmap`, which renders through `InteractiveComplexHeatmap` and needs its Bioconductor dependencies installed; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
 
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
@@ -425,3 +438,5 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 
 [30]: https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.html
 [31]: https://j-andrews7.github.io/VizModules/reference/dittoViz_freqPlotApp.html
+[32]: https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapApp.html
+[33]: https://jokergoo.github.io/ComplexHeatmap-reference/book/

@@ -28,7 +28,7 @@ uniform across modules** — check the row before writing a key.
 | `radarPlot` | native (`radarPlot()`) | `r` `theta` `group` | `trace.colors` | — |
 | `parallelCoordinatesPlot` | native | `dimensions` `color.by` | `palette.colours` | — |
 | `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `row_annotations` `column_annotations` `column_key` | `low_color`/`mid_color`/`high_color` | — |
-| `dittoViz_freqPlot` | `dittoViz::freqPlot` | `var` `sample.by` `group.by` `color.by` | `palette.colours` | **yes** |
+| `dittoViz_freqPlot` | `dittoViz::freqPlot` | `var` `sample.by` `group.by` `color.by` `vars.use` `plots` `scale` `max.normalize` `y.min` `y.max` | `palette.colours` | **yes** |
 
 `ComplexHeatmap_Heatmap` is the odd one out: its output is **not** plotly. It renders
 through `InteractiveComplexHeatmap`, so plotly-specific advice does not apply to it. It's
@@ -37,6 +37,12 @@ colour inputs for the value scale, not a `defaults` group-colour key like every 
 "Colour key" column means. `row_annotations`/`column_annotations` are `multiDynamicInput()`
 row lists (`column` + `side` per row), not simple vectors, and each row's own colour
 widget(s) are keyed dynamically off its row name rather than one stable `defaults` key.
+
+`dittoViz_freqPlot` is the other odd one out: it does **not** plot columns of the incoming
+data. It tabulates how often each level of `var` occurs within each `sample.by` value and
+plots those per-sample frequencies, one facet per level. So `y.min`/`y.max`, the statistics,
+the point annotations (points are *samples*), and the source download all describe that
+summarised frequency table, not the input rows. `scale` picks percent vs count.
 
 The colour key takes a **named character vector** mapping group level to colour, e.g.
 `defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red"))`. Unnamed
@@ -55,6 +61,7 @@ groups fall back to the stock palette; the user can still edit every colour.
 | `piePlot` | Data, Aesthetics, Labels, Plotly |
 | `parallelCoordinatesPlot` | Data, Aesthetics, Labels, Title, Plotly |
 | `radarPlot` | Data, Aesthetics, Axes, Plotly (plus per-trace styling tabs) |
+| `dittoViz_freqPlot` | Data, Scale, Jitter, Box, Violin, Ridge, Stats, Facet, Annotations, Legend, Plotly, Axes, Lines |
 | `ComplexHeatmap_Heatmap` | Matrix, Colors, Clustering, Labels, Annotations |
 
 ## Shared tab input keys
@@ -71,10 +78,10 @@ the same keys in every module. Full lists are on their help pages —
 
 ## Bundled example datasets
 
-`example_bar`, `example_demographics`, `example_heatmap_column_data`,
-`example_heatmap_matrix`, `example_iris`, `example_markers`, `example_mtcars`,
-`example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`,
-`example_skills`.
+`example_bar`, `example_composition`, `example_demographics`,
+`example_heatmap_column_data`, `example_heatmap_matrix`, `example_iris`, `example_markers`,
+`example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`,
+`example_school_earnings`, `example_skills`.
 
 `example_rnaseq` (288 x 7) is the richest for grouped comparisons:
 `cell_type` (factor: CD4 T, CD8 T, B Cell, NK Cell, Monocyte, pDC), `gene` (factor),
@@ -89,11 +96,24 @@ the same keys in every module. Full lists are on their help pages —
 pass both together as `data = list(matrix = example_heatmap_matrix, column_annotations =
 example_heatmap_column_data)`.
 
+`example_composition` (1800 x 7) is the dataset shaped for `dittoViz_freqPlot`:
+`cell_id`, `sample` (factor: twelve donors `P01`-`P12`, 150 cells each), `condition`
+(factor: Healthy/Disease, six donors each), `batch` (factor: B1/B2, crossed with
+`condition` so it works as `color.by` without confounding), `cell_type` (factor, the
+frequency variable), `n_genes`, `percent_mito`. The nesting of samples inside groups is
+what `freqPlot()` needs — on a table without it every group collapses to a single point
+and the underlying function warns.
+
 Each `*App()` opens on a dataset chosen to suit it: scatter/line/area/pie/parallel →
 `example_sales`; yPlot/box/violin/density/histogram → `example_demographics`; bar and
 split bar → `example_bar`; dot → `example_markers`; radar → `example_skills`; dumbbell →
-`example_school_earnings`; heatmap → `example_heatmap_matrix`.
+`example_school_earnings`; heatmap → `example_heatmap_matrix`; freqPlot →
+`example_composition`.
+
+`dittoViz_freqPlotApp()` additionally seeds `defaults = list(var = "cell_type",
+sample.by = "sample", group.by = "condition")`, but **only** when it falls back to the
+bundled dataset — pass your own `data_list` and it opens on columns chosen from that.
 
 ## Not yet wrapped
 
-`dittoViz::barPlot`, and `dittoViz::scatterHexPlot` have no module. If a user asks for one, say so rather than inventing a function name.
+`dittoViz::barPlot` and `dittoViz::scatterHexPlot` have no module. If a user asks for one, say so rather than inventing a function name.

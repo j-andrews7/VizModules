@@ -23,6 +23,14 @@ or additional UI controls while reusing the full functionality of the base modul
 
 This vignette demonstrates how to create a custom module by building on top of the `scatterPlot` module.
 
+If you are working with an AI coding agent, the package ships an
+[Agent Skill](https://agentskills.io) covering exactly this material -
+**`vizmodules-custom-module`** - along with the namespace contract, reactive `defaults`,
+avoiding double renders, manual-edit persistence, and model-line backends. Install it (and
+its two siblings) into your project with `VizModules::use_vizmodules_skills(".")`, or pass
+`client = "copilot"` / `client = "claude"` to write to `.github/skills/` or `.claude/skills/`
+instead of the default `.agents/skills/`. See the README for details.
+
 ## The Pattern
 
 When building a custom module, you need to handle Shiny's namespacing correctly. The key insight is:

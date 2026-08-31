@@ -21,6 +21,16 @@ This checklist walks through how to add a new plotting module to **VizModules** 
 
 And a fair few are to keep you from shooting yourself in the foot and avoiding most of the common module pitfalls.
 
+If you are working with an AI coding agent, the package ships an
+[Agent Skill](https://agentskills.io) covering exactly this checklist -
+**`vizmodules-new-module`** - along with the required roxygen sections, the uniform input
+helpers, the traps that have cost real time here, and file templates to copy. Install it
+(and its two siblings) into your project with `VizModules::use_vizmodules_skills(".")`, or
+pass `client = "copilot"` / `client = "claude"` to write to `.github/skills/` or
+`.claude/skills/` instead of the default `.agents/skills/`. The skills live in
+`inst/skills/` in this repository, so **keep them in step with this vignette** when you
+change a convention it documents.
+
 ## Quick Checklist
 
 - [ ] Pick the plot function you are wrapping and name your module accordingly:

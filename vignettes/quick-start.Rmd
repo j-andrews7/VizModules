@@ -27,6 +27,31 @@ library(shiny)
 shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
 ```
 
+## Working with an AI coding agent
+
+**VizModules** ships three [Agent Skills](https://agentskills.io) that hand an agent the
+package's conventions up front, rather than having it grep the docs for them. Install them
+into your project with:
+
+```{r install-skills}
+VizModules::use_vizmodules_skills(".")                      # .agents/skills/ (OpenAI Codex, GitHub Copilot)
+VizModules::use_vizmodules_skills(".", client = "copilot")  # .github/skills/ (GitHub Copilot)
+VizModules::use_vizmodules_skills(".", client = "claude")   # .claude/skills/ (Claude Code)
+```
+
+- **`vizmodules-app`** covers what this vignette does: wiring modules into an app,
+  `defaults`, `hide.inputs`/`hide.tabs`, the Stats tab, `createModuleApp()`, the data filter
+  table, the figure builder, and source-data export. It carries a generated inventory of
+  every module's column-mapping keys, colour key, and tab names, which is otherwise the
+  most expensive thing for an agent to look up.
+- **`vizmodules-custom-module`** covers building a wrapper module on top of a base module;
+  see `vignette("custom-modules", package = "VizModules")`.
+- **`vizmodules-new-module`** covers authoring a module inside this package; see
+  `vignette("adding-a-new-module", package = "VizModules")`.
+
+Restart your agent session after installing so the new directory is picked up. The README
+has a plain-text prompt for tools that cannot read local skill files.
+
 ## Drop a module into your app
 
 All modules follow the same pattern: `*InputsUI()` for controls, `*OutputUI()` for the plot, and `*Server()` for the logic.

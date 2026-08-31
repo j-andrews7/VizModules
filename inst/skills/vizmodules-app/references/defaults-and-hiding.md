@@ -27,6 +27,34 @@ plotthis_ViolinPlotApp(
 )
 ```
 
+## Seeding colours
+
+A `defaults` entry under the module's **colour key** takes a *named* character vector
+mapping group level to colour, so a plot can open on a specific palette while every colour
+stays editable:
+
+```r
+plotthis_ViolinPlotServer("v", data = reactive(example_rnaseq),
+    defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red")))
+```
+
+- Precedence is **picker > `defaults` > stock palette**. A group the mapping does not name
+  still gets a sensible stock colour.
+- **Reset restores the supplied mapping**, not the stock palette.
+- The key differs per module — `palette.colours` on most, `color.panel` on
+  `dittoViz_scatterPlot`, `slice.colors` on `piePlot`, `trace.colors` on `radarPlot`. Check
+  `module-inventory.md`.
+- The ungrouped single-colour controls (`single.point.color`, `single.fill.color`,
+  `single.color`) and the continuous palette selectors (`palette.name`,
+  `gradient.palette`) are seedable from `defaults` too; those take a single value, not a
+  named vector.
+- Like any other entry, the mapping may be a `reactive()`, so a parent app can drive the
+  palette from its own state.
+
+`dittoViz_scatterPlotServer()` used to take a `manual.colors` argument for this. It was
+**removed** — it hard-overrode the picker, so the colours it supplied could not be edited.
+Use `defaults = list(color.panel = ...)` instead.
+
 ## Reactive defaults — the parent-to-child channel
 
 Any single entry may be a `reactive()` or `reactiveVal()`, so the control follows app
@@ -66,9 +94,9 @@ so a `defaults` entry for an unexposed key does nothing at all — no error, no 
 
 > Known trap: `main` (plot title) is **not** exposed by any module. Every module server
 > passes `main = NULL` and none reads `input$main`, and no module UI builds a title
-> control. The `quick-start`, `defaults-and-hiding`, and `custom-modules` vignettes all
-> use `defaults = list(main = reactive(...))` as their reactive-defaults example anyway;
-> that example is a no-op. Drive a title through the plotly figure instead.
+> control, so `defaults = list(main = ...)` is a silent no-op. Drive a title through the
+> plotly figure instead, or let the user edit it on the plot — the modules persist manual
+> title edits across re-renders.
 
 ## Hiding
 

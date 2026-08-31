@@ -75,11 +75,11 @@ key against `references/../module-inventory.md` or the module's own
 **Plot parameters and defaults** roxygen section before relying on it.
 
 > Known trap: `main` (plot title) is **not** exposed by any module — every server passes
-> `main = NULL` and none reads `input$main`. Three vignettes (`quick-start`,
-> `defaults-and-hiding`, `custom-modules`) nonetheless use
-> `defaults = list(main = reactive(...))` as their worked example. That example does not
-> work. To drive a title, act on the plotly figure directly (e.g. `plotlyProxy()` against
-> the base module's output id, or `layout(title = ...)` in a hand-built figure).
+> `main = NULL` and none reads `input$main`, so `defaults = list(main = ...)` is a silent
+> no-op. To drive a title, act on the plotly figure directly (e.g. `plotlyProxy()` against
+> the base module's output id, or `layout(title = ...)` in a hand-built figure). Older
+> installs' vignettes used `main` as their reactive-defaults worked example; that was
+> corrected to `color.by`, but the example is still wrong wherever it survives.
 
 ## Updating your *own* inputs from the server
 
