@@ -17,13 +17,26 @@
 #' hierarchical `row_split` count, by contrast, tolerates being equal to (or
 #' even greater than) the dimension without erroring.
 #'
-#' @param method One of `"None"`, `"K-means"`, or `"Hierarchical"` (case-sensitive,
-#'   matching the UI's `viz_select_input` choices). Anything else is treated as
-#'   `"None"`.
+#' A third method, `"Annotation"`, splits on the values of one or more
+#' annotation columns instead of on a derived grouping, letting rows or columns
+#' be grouped by what they *are* (pathway, condition) rather than by how they
+#' cluster. It also makes drawing cheap when no clustering is wanted: the
+#' grouping needs no distance matrix. Several columns give nested slices, one
+#' per observed combination. It routes through `row_split` like the
+#' hierarchical method, so the never-both invariant above still holds.
+#'
+#' @param method One of `"None"`, `"K-means"`, `"Hierarchical"`, or
+#'   `"Annotation"` (case-sensitive, matching the UI's `viz_select_input`
+#'   choices). Anything else is treated as `"None"`.
 #' @param n The requested number of groups. `NA`/`NULL`/non-numeric or `< 2` is
-#'   treated as "no split" regardless of `method`.
+#'   treated as "no split" regardless of `method`. Ignored for `"Annotation"`,
+#'   whose group count comes from the data.
 #' @param dim_n The size of the dimension being split (`nrow(mat)` or
 #'   `ncol(mat)`), used to clamp `n`.
+#' @param split_values For `method = "Annotation"`, a data frame of annotation
+#'   values with `dim_n` rows (one column per split column). Ignored otherwise.
+#'   A grouping that puts every row in its own slice conveys nothing and costs
+#'   a slice label per row, so it falls back to no split.
 #'
 #' @return A list with `km` (integer, `1L` when unused) and `split` (integer or
 #'   `NULL`), suitable for `Heatmap(row_km = res$km, row_split = res$split, ...)`.
@@ -31,18 +44,41 @@
 #' @author Jared Andrews
 #' @rdname INTERNAL_heatmap_resolve_split
 #' @keywords internal
-.heatmap_resolve_split <- function(method, n, dim_n) {
+.heatmap_resolve_split <- function(method, n, dim_n, split_values = NULL) {
+    dim_n <- as.integer(dim_n)
+    no_split <- list(km = 1L, split = NULL)
+
+    if (identical(method, "Annotation")) {
+        if (is.null(split_values)) {
+            return(no_split)
+        }
+        sv <- as.data.frame(split_values, stringsAsFactors = FALSE, check.names = FALSE)
+        if (ncol(sv) == 0 || nrow(sv) != dim_n || dim_n < 2) {
+            return(no_split)
+        }
+        # An NA would otherwise drop out of the slice labelling entirely; make
+        # it an explicit group so those rows stay visible and accounted for.
+        sv[] <- lapply(sv, function(x) {
+            x <- as.character(x)
+            x[is.na(x)] <- "NA"
+            x
+        })
+        n_groups <- nrow(unique(sv))
+        if (n_groups < 2 || n_groups >= dim_n) {
+            return(no_split)
+        }
+        return(list(km = 1L, split = sv))
+    }
+
     n <- suppressWarnings(as.integer(n))
     if (is.null(method) || is.na(method) || !method %in% c("K-means", "Hierarchical") ||
         length(n) == 0 || is.na(n) || n < 2) {
-        return(list(km = 1L, split = NULL))
+        return(no_split)
     }
-
-    dim_n <- as.integer(dim_n)
 
     if (method == "K-means") {
         n <- min(n, dim_n - 1L)
-        if (n < 2) return(list(km = 1L, split = NULL))
+        if (n < 2) return(no_split)
         list(km = n, split = NULL)
     } else {
         list(km = 1L, split = min(n, dim_n))
@@ -215,6 +251,143 @@
 }
 
 
+#' Extract one annotation column, aligned to a matrix axis
+#'
+#' Row and column annotations reach their values by different routes, and the
+#' difference is easy to get subtly wrong: row-annotation values sit in the
+#' matrix data frame itself and line up **positionally** with the matrix rows,
+#' while column-annotation values live in a separate per-sample table and are
+#' matched **by value** through a key column. Both
+#' [.heatmap_build_annotation()] and the "Annotation" split method need the
+#' same vector, so they share this rather than each re-deriving it.
+#'
+#' @param source_df The data frame holding the annotation column: the matrix
+#'   data frame for rows, the `column_annotations` table for columns.
+#' @param col Name of the column to extract.
+#' @param key_values `rownames(mat)` / `colnames(mat)`, in matrix order.
+#' @param key_col `NULL` for row annotations (positional alignment); the name
+#'   of the key column in `source_df` for column annotations (matched against
+#'   `key_values`).
+#'
+#' @return A vector of `length(key_values)` aligned to the matrix axis, or
+#'   `NULL` when the column is unusable or does not line up.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_annotation_values
+#' @keywords internal
+.heatmap_annotation_values <- function(source_df, col, key_values, key_col = NULL) {
+    if (is.null(source_df) || is.null(col) || !nzchar(col) || !col %in% names(source_df)) {
+        return(NULL)
+    }
+    if (is.null(key_col)) {
+        values <- source_df[[col]]
+    } else {
+        if (!nzchar(key_col) || !key_col %in% names(source_df)) {
+            return(NULL)
+        }
+        values <- source_df[[col]][match(key_values, source_df[[key_col]])]
+    }
+    if (length(values) != length(key_values)) {
+        return(NULL)
+    }
+    values
+}
+
+
+#' Build the frame a column filter expression is evaluated against
+#'
+#' Matrix columns are sample *names*, not rows of a data frame, so a column
+#' filter has nothing to evaluate against on its own. This assembles one: a row
+#' per selected matrix column, in matrix order, carrying a synthetic `column`
+#' field with the matrix column name plus every field of the per-sample
+#' metadata table joined through `key_col`.
+#'
+#' That means `column %in% c("Healthy_1", "Healthy_2")` works with no metadata
+#' at all, while `condition == "Disease" & batch == "B1"` works as soon as a
+#' `column_annotations` table is supplied. If the metadata already has a field
+#' literally named `column`, the real one wins and no synthetic is added —
+#' shadowing a user's own column would be the more surprising behaviour.
+#'
+#' @param column_data The `column_annotations` data frame, or `NULL`.
+#' @param key_col Name of the field in `column_data` holding the matrix column
+#'   names. Ignored when `column_data` is `NULL` or the name is not present.
+#' @param matrix_cols Character vector of the currently selected matrix columns.
+#'
+#' @return A data frame with one row per entry of `matrix_cols`, in the same
+#'   order. Never `NULL`; a zero-column `matrix_cols` gives a zero-row frame.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_column_meta
+#' @keywords internal
+.heatmap_column_meta <- function(column_data, key_col, matrix_cols) {
+    matrix_cols <- as.character(matrix_cols %||% character(0))
+
+    usable <- !is.null(column_data) && is.data.frame(column_data) &&
+        !is.null(key_col) && length(key_col) == 1L && !is.na(key_col) &&
+        nzchar(key_col) && key_col %in% names(column_data)
+
+    if (!usable) {
+        return(data.frame(column = matrix_cols, stringsAsFactors = FALSE))
+    }
+
+    idx <- match(matrix_cols, as.character(column_data[[key_col]]))
+    meta <- column_data[idx, , drop = FALSE]
+    rownames(meta) <- NULL
+
+    # Only synthesise `column` when the metadata has not claimed the name.
+    if (!"column" %in% names(meta)) {
+        meta <- cbind(data.frame(column = matrix_cols, stringsAsFactors = FALSE), meta)
+    }
+    meta
+}
+
+
+#' Resolve a user filter expression into a keep-mask
+#'
+#' Thin wrapper over [safe_eval_filter()] that turns its result into something
+#' a caller can act on without guessing. `safe_eval_filter()` returns `NULL`
+#' both for "you typed nothing" and for "you typed something disallowed", which
+#' must not collapse into the same outcome: the first should keep every row,
+#' the second should surface an error rather than silently plotting unfiltered
+#' data.
+#'
+#' `NA` in the result counts as `FALSE` — a row whose filter value is unknown is
+#' not a row the user asked to see.
+#'
+#' @param expr_text The user-typed expression. `NULL`/blank means "no filter".
+#' @param df The data frame to evaluate against.
+#' @param n_expected Expected length of the result, i.e. `nrow(df)`.
+#'
+#' @return A list with `keep` (a logical vector of length `n_expected`, or
+#'   `NULL` when the expression was invalid) and `status`, one of `"empty"`,
+#'   `"ok"`, or `"invalid"`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_apply_filter
+#' @keywords internal
+.heatmap_apply_filter <- function(expr_text, df, n_expected) {
+    keep_all <- list(keep = rep(TRUE, n_expected), status = "empty")
+    if (is.null(expr_text) || length(expr_text) != 1L || is.na(expr_text) ||
+        !nzchar(trimws(expr_text))) {
+        return(keep_all)
+    }
+
+    # safe_eval_filter() warns on a rejected expression; the status carries
+    # that outcome to the caller, so the warning itself is noise here.
+    res <- withCallingHandlers(
+        safe_eval_filter(expr_text, df),
+        warning = function(w) invokeRestart("muffleWarning")
+    )
+
+    if (is.null(res) || !is.logical(res) || length(res) != n_expected) {
+        return(list(keep = NULL, status = "invalid"))
+    }
+
+    res[is.na(res)] <- FALSE
+    list(keep = res, status = "ok")
+}
+
+
 #' Build one annotation track's color mapping
 #'
 #' Numeric values get a continuous gradient from `low_color`/`mid_color`/
@@ -311,12 +484,8 @@
             next
         }
 
-        values <- if (is.null(key_col)) {
-            source_df[[col]]
-        } else {
-            source_df[[col]][match(key_values, source_df[[key_col]])]
-        }
-        if (length(values) != length(key_values)) {
+        values <- .heatmap_annotation_values(source_df, col, key_values, key_col)
+        if (is.null(values)) {
             next
         }
 

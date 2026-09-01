@@ -275,6 +275,215 @@ test_that("a row without `side` (predating the feature) defaults to Left/Top", {
     expect_length(right_rows, 0)
 })
 
+# ---- .heatmap_resolve_split(), "Annotation" method ----------------------------------------------
+
+test_that(".heatmap_resolve_split splits on a single annotation column", {
+    sv <- data.frame(pathway = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
+    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
+
+    expect_equal(res$km, 1L)
+    expect_s3_class(res$split, "data.frame")
+    expect_equal(res$split$pathway, c("A", "A", "B", "B"))
+})
+
+test_that(".heatmap_resolve_split nests several annotation columns", {
+    sv <- data.frame(
+        condition = c("H", "H", "D", "D"),
+        batch = c("B1", "B2", "B1", "B2"),
+        stringsAsFactors = FALSE
+    )
+    # Four rows over four distinct combinations is one slice per row, which the
+    # degenerate guard rejects.
+    expect_equal(.heatmap_resolve_split("Annotation", NA, 4, sv), list(km = 1L, split = NULL))
+
+    # Six rows over the same four combinations is a real grouping.
+    sv6 <- sv[c(1, 1, 2, 2, 3, 4), , drop = FALSE]
+    res6 <- .heatmap_resolve_split("Annotation", NA, 6, sv6)
+    expect_equal(ncol(res6$split), 2L)
+    expect_equal(nrow(res6$split), 6L)
+})
+
+test_that(".heatmap_resolve_split never returns both km and split for the annotation method", {
+    sv <- data.frame(g = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
+    # A stale row_split_n left over from a previous K-means selection must not leak through.
+    res <- .heatmap_resolve_split("Annotation", 5, 4, sv)
+
+    expect_equal(res$km, 1L)
+    expect_false(is.null(res$split))
+})
+
+test_that(".heatmap_resolve_split makes NA an explicit annotation slice", {
+    sv <- data.frame(g = c("A", NA, "B", NA), stringsAsFactors = FALSE)
+    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
+
+    expect_equal(res$split$g, c("A", "NA", "B", "NA"))
+})
+
+test_that(".heatmap_resolve_split falls back to no split for unusable annotation values", {
+    no_split <- list(km = 1L, split = NULL)
+
+    expect_equal(.heatmap_resolve_split("Annotation", NA, 4, NULL), no_split)
+    # Wrong number of rows for the axis.
+    expect_equal(.heatmap_resolve_split("Annotation", NA, 4, data.frame(g = c("A", "B"))), no_split)
+    # A single group splits nothing.
+    expect_equal(
+        .heatmap_resolve_split("Annotation", NA, 3, data.frame(g = c("A", "A", "A"))),
+        no_split
+    )
+    # Every row its own slice conveys nothing.
+    expect_equal(
+        .heatmap_resolve_split("Annotation", NA, 3, data.frame(g = c("A", "B", "C"))),
+        no_split
+    )
+})
+
+test_that(".heatmap_resolve_split leaves the numeric methods untouched", {
+    sv <- data.frame(g = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
+
+    # split_values is ignored unless the method is "Annotation".
+    expect_equal(.heatmap_resolve_split("K-means", 2, 10, sv), list(km = 2L, split = NULL))
+    expect_equal(.heatmap_resolve_split("Hierarchical", 2, 10, sv), list(km = 1L, split = 2L))
+    expect_equal(.heatmap_resolve_split("None", 2, 10, sv), list(km = 1L, split = NULL))
+})
+
+# ---- .heatmap_annotation_values() ---------------------------------------------------------------
+
+test_that(".heatmap_annotation_values reads row values positionally", {
+    df <- data.frame(
+        gene = c("a", "b", "c"), pathway = c("P1", "P2", "P1"),
+        stringsAsFactors = FALSE
+    )
+
+    expect_equal(
+        .heatmap_annotation_values(df, "pathway", c("a", "b", "c"), key_col = NULL),
+        c("P1", "P2", "P1")
+    )
+})
+
+test_that(".heatmap_annotation_values matches column values through the key, and reorders", {
+    meta <- data.frame(sample = c("S2", "S1"), condition = c("D", "H"), stringsAsFactors = FALSE)
+
+    # key_values are in matrix order, which need not be the metadata's order.
+    expect_equal(
+        .heatmap_annotation_values(meta, "condition", c("S1", "S2"), key_col = "sample"),
+        c("H", "D")
+    )
+})
+
+test_that(".heatmap_annotation_values returns NULL rather than a misaligned vector", {
+    df <- data.frame(g = c("A", "B", "C"), stringsAsFactors = FALSE)
+
+    expect_null(.heatmap_annotation_values(NULL, "g", c("a"), NULL))
+    expect_null(.heatmap_annotation_values(df, "missing", c("a", "b", "c"), NULL))
+    expect_null(.heatmap_annotation_values(df, "", c("a", "b", "c"), NULL))
+    # Row count does not match the axis.
+    expect_null(.heatmap_annotation_values(df, "g", c("a", "b"), NULL))
+    # Key column absent.
+    expect_null(.heatmap_annotation_values(df, "g", c("a", "b", "c"), key_col = "nope"))
+})
+
+# ---- .heatmap_column_meta() ---------------------------------------------------------------------
+
+test_that(".heatmap_column_meta synthesises `column` when there is no metadata", {
+    meta <- .heatmap_column_meta(NULL, NULL, c("S1", "S2"))
+
+    expect_equal(names(meta), "column")
+    expect_equal(meta$column, c("S1", "S2"))
+})
+
+test_that(".heatmap_column_meta joins metadata in matrix column order", {
+    col_df <- data.frame(
+        sample = c("S3", "S1", "S2"),
+        condition = c("D", "H", "H"),
+        stringsAsFactors = FALSE
+    )
+    meta <- .heatmap_column_meta(col_df, "sample", c("S1", "S2", "S3"))
+
+    expect_equal(meta$column, c("S1", "S2", "S3"))
+    expect_equal(meta$condition, c("H", "H", "D"))
+})
+
+test_that(".heatmap_column_meta lets a real `column` field win over the synthetic one", {
+    col_df <- data.frame(
+        sample = c("S1", "S2"),
+        column = c("mine", "also mine"),
+        stringsAsFactors = FALSE
+    )
+    meta <- .heatmap_column_meta(col_df, "sample", c("S1", "S2"))
+
+    expect_equal(meta$column, c("mine", "also mine"))
+    expect_equal(sum(names(meta) == "column"), 1L)
+})
+
+test_that(".heatmap_column_meta falls back to names alone when the key is unusable", {
+    col_df <- data.frame(sample = c("S1", "S2"), condition = c("H", "D"), stringsAsFactors = FALSE)
+
+    expect_equal(names(.heatmap_column_meta(col_df, "nope", c("S1", "S2"))), "column")
+    expect_equal(names(.heatmap_column_meta(col_df, "", c("S1", "S2"))), "column")
+    expect_equal(names(.heatmap_column_meta(col_df, NULL, c("S1", "S2"))), "column")
+})
+
+test_that(".heatmap_column_meta handles no selected columns", {
+    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, character(0))), 0L)
+    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, NULL)), 0L)
+})
+
+# ---- .heatmap_apply_filter() --------------------------------------------------------------------
+
+test_that(".heatmap_apply_filter keeps everything for a blank expression", {
+    df <- data.frame(v = 1:3)
+
+    for (blank in list(NULL, "", "   ", NA_character_)) {
+        res <- .heatmap_apply_filter(blank, df, 3)
+        expect_equal(res$status, "empty")
+        expect_equal(res$keep, rep(TRUE, 3))
+    }
+})
+
+test_that(".heatmap_apply_filter evaluates a valid expression", {
+    df <- data.frame(v = c(1, 5, 9), g = c("a", "b", "a"), stringsAsFactors = FALSE)
+
+    res <- .heatmap_apply_filter("v > 4", df, 3)
+    expect_equal(res$status, "ok")
+    expect_equal(res$keep, c(FALSE, TRUE, TRUE))
+
+    expect_equal(.heatmap_apply_filter('g == "a"', df, 3)$keep, c(TRUE, FALSE, TRUE))
+})
+
+test_that(".heatmap_apply_filter treats NA as drop, not keep", {
+    df <- data.frame(v = c(1, NA, 9))
+
+    res <- .heatmap_apply_filter("v > 4", df, 3)
+    expect_equal(res$status, "ok")
+    expect_equal(res$keep, c(FALSE, FALSE, TRUE))
+})
+
+test_that(".heatmap_apply_filter reports invalid separately from empty", {
+    df <- data.frame(v = 1:3)
+
+    # A blocked call, an unknown symbol, and an unparseable string.
+    for (bad in c('system("id")', "nope > 1", "v >")) {
+        res <- .heatmap_apply_filter(bad, df, 3)
+        expect_equal(res$status, "invalid")
+        expect_null(res$keep)
+    }
+})
+
+test_that(".heatmap_apply_filter rejects a non-logical or wrong-length result", {
+    df <- data.frame(v = 1:3)
+
+    # Scalar rather than one value per row.
+    expect_equal(.heatmap_apply_filter("is.null(v)", df, 3)$status, "invalid")
+    # Numeric rather than logical.
+    expect_equal(.heatmap_apply_filter("v + 1", df, 3)$status, "invalid")
+})
+
+test_that(".heatmap_apply_filter does not leak safe_eval_filter's warning", {
+    df <- data.frame(v = 1:3)
+
+    expect_no_warning(.heatmap_apply_filter('system("id")', df, 3))
+})
+
 # ---- End-to-end module smoke test --------------------------------------------------------------
 
 test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes", {

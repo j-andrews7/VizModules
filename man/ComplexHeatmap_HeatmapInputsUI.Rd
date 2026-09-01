@@ -61,7 +61,8 @@ default: all numeric columns)
 \item \code{na_col} - Color for \code{NA} cells (UI: "NA Color", default: "grey")
 \item \code{scale} - Z-score the matrix by row, column, or not at all (UI: "Scale", default:
 "None"). Applied before plotting only — row/column annotation values and the
-source-data download always use the unscaled matrix.
+source-data download always use the unscaled matrix. Scaling happens \emph{after} the Filter
+tab's row/column filters, so a Z-score describes only the rows and columns on screen.
 \item \code{reverse.palette} - Reverse the palette (UI: "Reverse Palette", default: FALSE)
 \item \code{low_color}, \code{mid_color}, \code{high_color} - Colors for the low/mid/high end of the value
 scale, i.e. what \code{col} in \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}} is built from via
@@ -79,16 +80,23 @@ and max respectively)
 \item \code{clustering_method_columns} - Column linkage method (UI: "Column Method", default: "complete")
 \item \code{show_row_dend} - Show row dendrogram (UI: "Show Row Dendrogram", default: TRUE)
 \item \code{show_column_dend} - Show column dendrogram (UI: "Show Column Dendrogram", default: TRUE)
-\item \code{row_split_by} - Row split method: "None", "K-means", or "Hierarchical" (UI: "Row Split
-Method", default: "None"). Only one split mechanism is ever active per axis, which avoids the
-error \code{ComplexHeatmap::Heatmap()} raises when both a k-means and a hierarchical split are
-requested at once.
-\item \code{row_split_n} - Number of row groups, used when \code{row_split_by} is not "None" (UI: "Row
-Groups", default: NA; clamped to the number of matrix rows)
-\item \code{column_split_by} - Column split method: "None", "K-means", or "Hierarchical" (UI: "Column
-Split Method", default: "None")
-\item \code{column_split_n} - Number of column groups, used when \code{column_split_by} is not "None" (UI:
-"Column Groups", default: NA; clamped to the number of matrix columns)
+\item \code{row_split_by} - Row split method: "None", "K-means", "Hierarchical", or "Annotation" (UI:
+"Row Split Method", default: "None"). Only one split mechanism is ever active per axis, which
+avoids the error \code{ComplexHeatmap::Heatmap()} raises when both a k-means and a hierarchical
+split are requested at once.
+\item \code{row_split_n} - Number of row groups, used when \code{row_split_by} is "K-means" or "Hierarchical"
+(UI: "Row Groups", default: NA; clamped to the number of matrix rows)
+\item \code{row_split_cols} - Columns whose values group the rows, used when \code{row_split_by} is
+"Annotation" (UI: "Row Split Columns", default: none). Several columns give nested slices,
+one per observed combination. Values come from the same place row annotation tracks read, so
+a split and a track on one column always agree.
+\item \code{column_split_by} - Column split method: "None", "K-means", "Hierarchical", or "Annotation"
+(UI: "Column Split Method", default: "None")
+\item \code{column_split_n} - Number of column groups, used when \code{column_split_by} is "K-means" or
+"Hierarchical" (UI: "Column Groups", default: NA; clamped to the number of matrix columns)
+\item \code{column_split_cols} - Columns of the \code{column_annotations} table whose values group the
+heatmap columns, used when \code{column_split_by} is "Annotation" (UI: "Column Split Columns";
+only shown when \code{data} supplies a \code{column_annotations} table; default: none)
 \item \code{row_gap} - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
 \item \code{column_gap} - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 \item \code{row_title} - Row title (UI: "Row Title", default: "")
@@ -116,6 +124,35 @@ row (UI: "Annotations" tab, "Column Annotations" \code{\link[=multiDynamicInput]
 column and a side, Top or Bottom, with the same per-row color controls as row annotations;
 only shown when \code{data} supplies a \code{column_annotations} table; default: none)
 }
+}
+
+\section{Plot parameters implementing new functionality}{
+
+The "Filter" tab's two inputs have no \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}} equivalent — they
+narrow the matrix before it is built, so a specific set of genes or samples can be
+plotted without wiring up the separate \code{dataFilter} module:
+\itemize{
+\item \code{row_filter} - Expression keeping only the matching rows (UI: "Row Filter", default: "").
+Evaluated against the \code{matrix} data frame, so every one of its columns is in scope —
+annotation columns, the row-name column, and the matrix columns themselves.
+\item \code{column_filter} - Expression keeping only the matching matrix columns (UI: "Column Filter",
+default: ""). Matrix columns are sample names rather than rows of a data frame, so the
+expression is evaluated against a frame built with one row per selected matrix column: a
+synthetic \code{column} field holding the column name, plus every field of \code{column_annotations}
+joined via \code{column_key}. \code{column \%in\% c("Healthy_1", "Healthy_2")} therefore works with no
+metadata table at all, while \code{condition == "Disease"} works as soon as one is supplied. If
+\code{column_annotations} already has a field named \code{column}, the real one wins and no synthetic
+is added.
+}
+
+Both are evaluated with \code{\link[=safe_eval_filter]{safe_eval_filter()}}, which permits comparisons, \code{&}/\code{|}/\code{!},
+\code{\%in\%}, \code{is.na()}, arithmetic, and the string helpers \code{grepl}, \code{startsWith}, \code{endsWith},
+\code{substr}, \code{nchar}, \code{toupper}, \code{tolower}, and \code{trimws}. Anything else — a function call
+outside that list, or a symbol that is not a column — is rejected and reported in the UI
+rather than evaluated. An expression yielding \code{NA} for a row drops that row.
+
+Filtering runs before everything else: \code{scale}, the annotation tracks, the split methods,
+and the source download all describe the filtered matrix.
 }
 
 \section{Plot parameters not implemented}{

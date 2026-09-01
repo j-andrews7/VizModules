@@ -27,7 +27,7 @@ uniform across modules** — check the row before writing a key.
 | `piePlot` | native (`piePlot()`) | `labels` `values` | `slice.colors` | — |
 | `radarPlot` | native (`radarPlot()`) | `r` `theta` `group` | `trace.colors` | — |
 | `parallelCoordinatesPlot` | native | `dimensions` `color.by` | `palette.colours` | — |
-| `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `row_annotations` `column_annotations` `column_key` | `low_color`/`mid_color`/`high_color` | — |
+| `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `row_filter` `column_filter` `row_annotations` `column_annotations` `column_key` `row_split_by` `row_split_cols` `column_split_by` `column_split_cols` | `low_color`/`mid_color`/`high_color` | — |
 | `dittoViz_freqPlot` | `dittoViz::freqPlot` | `var` `sample.by` `group.by` `color.by` `vars.use` `plots` `scale` `max.normalize` `y.min` `y.max` | `palette.colours` | **yes** |
 
 `ComplexHeatmap_Heatmap` is the odd one out: its output is **not** plotly. It renders
@@ -37,6 +37,22 @@ colour inputs for the value scale, not a `defaults` group-colour key like every 
 "Colour key" column means. `row_annotations`/`column_annotations` are `multiDynamicInput()`
 row lists (`column` + `side` per row), not simple vectors, and each row's own colour
 widget(s) are keyed dynamically off its row name rather than one stable `defaults` key.
+
+`ComplexHeatmap_Heatmap` is also the only module with a built-in row/column filter, on its
+**Filter** tab. `row_filter` is an expression over the matrix data frame's columns;
+`column_filter` is an expression over one row per matrix column, carrying a synthetic
+`column` field (the column name) plus every `column_annotations` field joined via
+`column_key` — so `column %in% c("S1", "S2")` works with no metadata table and
+`condition == "Disease"` works once one is supplied. Both go through `safe_eval_filter()`,
+which permits comparisons, `&`/`|`/`!`, `%in%`, `is.na()`, arithmetic, and the string
+helpers `grepl`/`startsWith`/`endsWith`/`substr`/`nchar`/`toupper`/`tolower`/`trimws`.
+Filtering runs before everything else, so `scale`, the annotation tracks, the splits, and
+the source download all describe the filtered matrix.
+
+Its `*_split_by` inputs take a fourth method, `"Annotation"`, which groups rows/columns by
+the values of `row_split_cols`/`column_split_cols` rather than by a derived clustering.
+Several columns give nested slices. This is also the cheap path: with `cluster_rows = FALSE`
+it groups without computing a distance matrix at all.
 
 `dittoViz_freqPlot` is the other odd one out: it does **not** plot columns of the incoming
 data. It tabulates how often each level of `var` occurs within each `sample.by` value and
@@ -62,7 +78,7 @@ groups fall back to the stock palette; the user can still edit every colour.
 | `parallelCoordinatesPlot` | Data, Aesthetics, Labels, Title, Plotly |
 | `radarPlot` | Data, Aesthetics, Axes, Plotly (plus per-trace styling tabs) |
 | `dittoViz_freqPlot` | Data, Scale, Jitter, Box, Violin, Ridge, Stats, Facet, Annotations, Legend, Plotly, Axes, Lines |
-| `ComplexHeatmap_Heatmap` | Matrix, Colors, Clustering, Labels, Annotations |
+| `ComplexHeatmap_Heatmap` | Matrix, Filter, Colors, Clustering, Labels, Annotations |
 
 ## Shared tab input keys
 

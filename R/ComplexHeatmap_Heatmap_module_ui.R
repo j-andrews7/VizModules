@@ -25,7 +25,8 @@
 #' - `na_col` - Color for `NA` cells (UI: "NA Color", default: "grey")
 #' - `scale` - Z-score the matrix by row, column, or not at all (UI: "Scale", default:
 #'   "None"). Applied before plotting only — row/column annotation values and the
-#'   source-data download always use the unscaled matrix.
+#'   source-data download always use the unscaled matrix. Scaling happens *after* the Filter
+#'   tab's row/column filters, so a Z-score describes only the rows and columns on screen.
 #' - `reverse.palette` - Reverse the palette (UI: "Reverse Palette", default: FALSE)
 #' - `low_color`, `mid_color`, `high_color` - Colors for the low/mid/high end of the value
 #'   scale, i.e. what `col` in [ComplexHeatmap::Heatmap()] is built from via
@@ -43,16 +44,23 @@
 #' - `clustering_method_columns` - Column linkage method (UI: "Column Method", default: "complete")
 #' - `show_row_dend` - Show row dendrogram (UI: "Show Row Dendrogram", default: TRUE)
 #' - `show_column_dend` - Show column dendrogram (UI: "Show Column Dendrogram", default: TRUE)
-#' - `row_split_by` - Row split method: "None", "K-means", or "Hierarchical" (UI: "Row Split
-#'   Method", default: "None"). Only one split mechanism is ever active per axis, which avoids the
-#'   error `ComplexHeatmap::Heatmap()` raises when both a k-means and a hierarchical split are
-#'   requested at once.
-#' - `row_split_n` - Number of row groups, used when `row_split_by` is not "None" (UI: "Row
-#'   Groups", default: NA; clamped to the number of matrix rows)
-#' - `column_split_by` - Column split method: "None", "K-means", or "Hierarchical" (UI: "Column
-#'   Split Method", default: "None")
-#' - `column_split_n` - Number of column groups, used when `column_split_by` is not "None" (UI:
-#'   "Column Groups", default: NA; clamped to the number of matrix columns)
+#' - `row_split_by` - Row split method: "None", "K-means", "Hierarchical", or "Annotation" (UI:
+#'   "Row Split Method", default: "None"). Only one split mechanism is ever active per axis, which
+#'   avoids the error `ComplexHeatmap::Heatmap()` raises when both a k-means and a hierarchical
+#'   split are requested at once.
+#' - `row_split_n` - Number of row groups, used when `row_split_by` is "K-means" or "Hierarchical"
+#'   (UI: "Row Groups", default: NA; clamped to the number of matrix rows)
+#' - `row_split_cols` - Columns whose values group the rows, used when `row_split_by` is
+#'   "Annotation" (UI: "Row Split Columns", default: none). Several columns give nested slices,
+#'   one per observed combination. Values come from the same place row annotation tracks read, so
+#'   a split and a track on one column always agree.
+#' - `column_split_by` - Column split method: "None", "K-means", "Hierarchical", or "Annotation"
+#'   (UI: "Column Split Method", default: "None")
+#' - `column_split_n` - Number of column groups, used when `column_split_by` is "K-means" or
+#'   "Hierarchical" (UI: "Column Groups", default: NA; clamped to the number of matrix columns)
+#' - `column_split_cols` - Columns of the `column_annotations` table whose values group the
+#'   heatmap columns, used when `column_split_by` is "Annotation" (UI: "Column Split Columns";
+#'   only shown when `data` supplies a `column_annotations` table; default: none)
 #' - `row_gap` - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
 #' - `column_gap` - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 #' - `row_title` - Row title (UI: "Row Title", default: "")
@@ -79,6 +87,32 @@
 #'   row (UI: "Annotations" tab, "Column Annotations" [multiDynamicInput()] — each row picks a
 #'   column and a side, Top or Bottom, with the same per-row color controls as row annotations;
 #'   only shown when `data` supplies a `column_annotations` table; default: none)
+#'
+#' @section Plot parameters implementing new functionality:
+#' The "Filter" tab's two inputs have no [ComplexHeatmap::Heatmap()] equivalent — they
+#' narrow the matrix before it is built, so a specific set of genes or samples can be
+#' plotted without wiring up the separate `dataFilter` module:
+#'
+#' - `row_filter` - Expression keeping only the matching rows (UI: "Row Filter", default: "").
+#'   Evaluated against the `matrix` data frame, so every one of its columns is in scope —
+#'   annotation columns, the row-name column, and the matrix columns themselves.
+#' - `column_filter` - Expression keeping only the matching matrix columns (UI: "Column Filter",
+#'   default: ""). Matrix columns are sample names rather than rows of a data frame, so the
+#'   expression is evaluated against a frame built with one row per selected matrix column: a
+#'   synthetic `column` field holding the column name, plus every field of `column_annotations`
+#'   joined via `column_key`. `column %in% c("Healthy_1", "Healthy_2")` therefore works with no
+#'   metadata table at all, while `condition == "Disease"` works as soon as one is supplied. If
+#'   `column_annotations` already has a field named `column`, the real one wins and no synthetic
+#'   is added.
+#'
+#' Both are evaluated with [safe_eval_filter()], which permits comparisons, `&`/`|`/`!`,
+#' `%in%`, `is.na()`, arithmetic, and the string helpers `grepl`, `startsWith`, `endsWith`,
+#' `substr`, `nchar`, `toupper`, `tolower`, and `trimws`. Anything else — a function call
+#' outside that list, or a symbol that is not a column — is rejected and reported in the UI
+#' rather than evaluated. An expression yielding `NA` for a row drops that row.
+#'
+#' Filtering runs before everything else: `scale`, the annotation tracks, the split methods,
+#' and the source download all describe the filtered matrix.
 #'
 #' @section Plot parameters not implemented:
 #' The following [ComplexHeatmap::Heatmap()] parameters are not exposed because
@@ -159,7 +193,7 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
         "complete", "average", "single", "ward.D", "ward.D2",
         "mcquitty", "median", "centroid"
     )
-    split.method.choices <- c("None", "K-means", "Hierarchical")
+    split.method.choices <- c("None", "K-means", "Hierarchical", "Annotation")
     scale.choices <- c("None", "Rows", "Columns")
 
     inputs <- list(
@@ -200,6 +234,38 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                     function(x) x %in% scale.choices
                 )
             ), "Z-score the matrix by row or column before plotting (a constant row/column becomes 0)", placement = "top", options = tip_opts)
+        ),
+        "Filter" = tagList(
+            tipify(textInput(ns("row_filter"), "Row Filter",
+                value = get_default(defaults, "row_filter", "")
+            ), paste(
+                "Keep only the rows matching this expression, e.g.",
+                "pathway == 'Immune', or grepl('^RP', gene).",
+                "Leave blank to keep every row."
+            ), placement = "top", options = tip_opts),
+            helpText(
+                strong("Row fields: "),
+                paste(all.cols, collapse = ", ")
+            ),
+            tipify(textInput(ns("column_filter"), "Column Filter",
+                value = get_default(defaults, "column_filter", "")
+            ), paste(
+                "Keep only the matrix columns matching this expression, e.g.",
+                "condition == 'Disease', or startsWith(column, 'Healthy').",
+                "Leave blank to keep every column."
+            ), placement = "top", options = tip_opts),
+            helpText(
+                strong("Column fields: "),
+                # `column` is synthesised per matrix column name unless the
+                # metadata already claims the name -- see .heatmap_column_meta().
+                paste(union(if (!"column" %in% column.key.choices) "column", column.key.choices),
+                    collapse = ", ")
+            ),
+            helpText(
+                "Comparisons, &, |, !, %in%, is.na(), arithmetic, and the string helpers ",
+                "grepl/startsWith/endsWith/substr/nchar/toupper/tolower/trimws are available. ",
+                "Filtering happens before scaling, so a Z-score describes only what is shown."
+            )
         ),
         "Colors" = tagList(
             tipify(colourInput(ns("low_color"), "Low Color",
@@ -281,7 +347,18 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(numericInput(ns("row_split_n"), "Row Groups",
                 min = 2, step = 1,
                 value = get_default(defaults, "row_split_n", NA, is.numeric)
-            ), "Number of row groups (used when Row Split Method is not 'None')", placement = "top", options = tip_opts),
+            ), "Number of row groups (used when Row Split Method is 'K-means' or 'Hierarchical')", placement = "top", options = tip_opts),
+            tipify(viz_select_input(ns("row_split_cols"), "Row Split Columns",
+                choices = row.annotation.choices,
+                selected = get_default(
+                    defaults, "row_split_cols", character(0),
+                    function(x) all(x %in% row.annotation.choices)
+                ),
+                multiple = TRUE
+            ), paste(
+                "Columns whose values group the rows (used when Row Split Method is 'Annotation').",
+                "Several columns give nested slices, one per observed combination."
+            ), placement = "top", options = tip_opts),
             tipify(viz_select_input(ns("column_split_by"), "Column Split Method",
                 choices = split.method.choices,
                 selected = get_default(
@@ -292,7 +369,20 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(numericInput(ns("column_split_n"), "Column Groups",
                 min = 2, step = 1,
                 value = get_default(defaults, "column_split_n", NA, is.numeric)
-            ), "Number of column groups (used when Column Split Method is not 'None')", placement = "top", options = tip_opts),
+            ), "Number of column groups (used when Column Split Method is 'K-means' or 'Hierarchical')", placement = "top", options = tip_opts),
+            if (!is.null(column.data)) {
+                tipify(viz_select_input(ns("column_split_cols"), "Column Split Columns",
+                    choices = column.annotation.choices,
+                    selected = get_default(
+                        defaults, "column_split_cols", character(0),
+                        function(x) all(x %in% column.annotation.choices)
+                    ),
+                    multiple = TRUE
+                ), paste(
+                    "Columns of the sample-metadata table whose values group the heatmap columns",
+                    "(used when Column Split Method is 'Annotation'). Several give nested slices."
+                ), placement = "top", options = tip_opts)
+            },
             tipify(numericInput(ns("row_gap"), "Row Gap (mm)",
                 min = 0, step = 0.5,
                 value = get_default(defaults, "row_gap", 1, is.numeric)

@@ -90,18 +90,64 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             })
         }
 
-        # Convert the incoming data frame to a numeric matrix per the selected
-        # columns, applying the optional row-name column. Surfaces friendly
-        # validation messages on bad input.
-        heatmap_matrix <- reactive({
-            df <- matrix_data()
-            req(df)
+        # The frame a Column Filter expression is evaluated against: one row per
+        # selected matrix column, carrying the column name plus any per-sample
+        # metadata. See .heatmap_column_meta().
+        column_meta <- reactive({
+            .heatmap_column_meta(column_data(), input$column_key, input$matrix.cols)
+        })
 
+        # Matrix columns surviving the Column Filter, in matrix order.
+        filtered_cols <- reactive({
             cols <- input$matrix.cols
             validate(need(
                 !is.null(cols) && length(cols) >= 1,
                 "Select at least one numeric column for the matrix."
             ))
+
+            res <- .heatmap_apply_filter(input$column_filter, column_meta(), length(cols))
+            validate(need(
+                !identical(res$status, "invalid"),
+                paste(
+                    "Column Filter is not a valid expression over:",
+                    paste(names(column_meta()), collapse = ", ")
+                )
+            ))
+            out <- cols[res$keep]
+            validate(need(length(out) >= 1, "No matrix columns match the Column Filter."))
+            out
+        })
+
+        # matrix_data() narrowed by the Row Filter. Everything that reads
+        # annotation values off the matrix data frame must go through this
+        # rather than matrix_data(): row annotations align *positionally* with
+        # the matrix rows, so a filter that shifts the rows out from under them
+        # would silently relabel every track. See build_heatmap() below.
+        filtered_matrix_data <- reactive({
+            df <- matrix_data()
+            req(df)
+
+            res <- .heatmap_apply_filter(input$row_filter, df, nrow(df))
+            validate(need(
+                !identical(res$status, "invalid"),
+                paste(
+                    "Row Filter is not a valid expression over:",
+                    paste(names(df), collapse = ", ")
+                )
+            ))
+            out <- df[res$keep, , drop = FALSE]
+            validate(need(nrow(out) >= 1, "No rows match the Row Filter."))
+            out
+        })
+
+        # Convert the incoming data frame to a numeric matrix per the selected
+        # (and filtered) columns, applying the optional row-name column.
+        # Surfaces friendly validation messages on bad input.
+        heatmap_matrix <- reactive({
+            df <- filtered_matrix_data()
+            req(df)
+
+            cols <- filtered_cols()
             validate(need(
                 all(cols %in% names(df)),
                 "One or more selected matrix columns are not in the data."
@@ -151,7 +197,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             })
             store
         }
-        row_annotation_spec <- make_annotation_spec_store(function() input$row_annotations, matrix_data)
+        row_annotation_spec <- make_annotation_spec_store(function() input$row_annotations, filtered_matrix_data)
         column_annotation_spec <- make_annotation_spec_store(function() input$column_annotations, column_data)
 
         # A widget only rebuilds when its spec (column/type/levels) actually
@@ -230,21 +276,48 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             if (isTRUE(isolate_fn(input$reverse.palette))) cols <- rev(cols)
             col_fun <- circlize::colorRamp2(c(min_val, mid_val, max_val), cols)
 
+            # Row-annotation values come from the *filtered* matrix data frame.
+            # heatmap_matrix() builds mat from exactly these rows, in this
+            # order, so the two line up 1:1 positionally -- reading the
+            # unfiltered matrix_data() here would relabel every track the
+            # moment a Row Filter is set. Column-annotation values are matched
+            # by value from the separate column_data() table via the Column Key
+            # input, so a narrower set of columns needs no equivalent care.
+            row_source_df <- filtered_matrix_data()
+            row_key_values <- rownames(raw_mat)
+            if (is.null(row_key_values)) row_key_values <- as.character(seq_len(nrow(raw_mat)))
+
+            # Values backing an "Annotation" split, pulled through the same
+            # helper the annotation tracks use so a split and a track on one
+            # column can never disagree about what that column means.
+            split_values <- function(cols, source_df, key_values, key_col) {
+                if (is.null(cols) || length(cols) == 0) {
+                    return(NULL)
+                }
+                vals <- lapply(cols, function(cl) {
+                    .heatmap_annotation_values(source_df, cl, key_values, key_col)
+                })
+                names(vals) <- cols
+                vals <- Filter(Negate(is.null), vals)
+                if (length(vals) == 0) {
+                    return(NULL)
+                }
+                as.data.frame(vals, stringsAsFactors = FALSE, check.names = FALSE)
+            }
+
             # Exactly one of row_km/row_split is ever passed to Heatmap() below
             # (never both) — see .heatmap_resolve_split() for why.
             row_res <- .heatmap_resolve_split(
-                isolate_fn(input$row_split_by), isolate_fn(input$row_split_n), nrow(mat)
+                isolate_fn(input$row_split_by), isolate_fn(input$row_split_n), nrow(mat),
+                split_values(isolate_fn(input$row_split_cols), row_source_df, row_key_values, NULL)
             )
             column_res <- .heatmap_resolve_split(
-                isolate_fn(input$column_split_by), isolate_fn(input$column_split_n), ncol(mat)
+                isolate_fn(input$column_split_by), isolate_fn(input$column_split_n), ncol(mat),
+                split_values(
+                    isolate_fn(input$column_split_cols), column_data(),
+                    colnames(raw_mat), isolate_fn(input$column_key)
+                )
             )
-
-            # Row-annotation values come straight from raw_mat's own data frame
-            # (heatmap_matrix() never reorders/filters rows, so it lines up with
-            # mat 1:1 positionally); column-annotation values are matched from
-            # the separate column_data() table via the Column Key input.
-            row_key_values <- rownames(raw_mat)
-            if (is.null(row_key_values)) row_key_values <- as.character(seq_len(nrow(raw_mat)))
 
             # Reads a row's dynamically-rendered color widget(s) (see
             # annotation_colors_ui() above) -- built once per axis and reused
@@ -270,12 +343,12 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             row_color_lookup <- make_color_lookup("row_ann_color")
             left_ann <- .heatmap_build_annotation(
                 Filter(function(r) identical(r$side %||% "Left", "Left"), row_rows),
-                matrix_data(), row_key_values,
+                row_source_df, row_key_values,
                 key_col = NULL, which = "row", color_lookup = row_color_lookup
             )
             right_ann <- .heatmap_build_annotation(
                 Filter(function(r) identical(r$side, "Right"), row_rows),
-                matrix_data(), row_key_values,
+                row_source_df, row_key_values,
                 key_col = NULL, which = "row", color_lookup = row_color_lookup
             )
 
@@ -373,6 +446,9 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             colourpicker::updateColourInput(session, "na_col", value = get_default(defaults, "na_col", "grey"))
             update_viz_select(session, "scale", selected = get_default(defaults, "scale", "None"))
 
+            updateTextInput(session, "row_filter", value = get_default(defaults, "row_filter", ""))
+            updateTextInput(session, "column_filter", value = get_default(defaults, "column_filter", ""))
+
             updateCheckboxInput(session, "reverse.palette", value = get_default(defaults, "reverse.palette", FALSE, is.logical))
             default_cols <- .heatmap_default_colors()
             colourpicker::updateColourInput(session, "low_color", value = get_default(defaults, "low_color", default_cols[1]))
@@ -394,6 +470,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             updateCheckboxInput(session, "show_column_dend", value = get_default(defaults, "show_column_dend", TRUE, is.logical))
             update_viz_select(session, "row_split_by", selected = get_default(defaults, "row_split_by", "None"))
             updateNumericInput(session, "row_split_n", value = get_default(defaults, "row_split_n", NA, is.numeric))
+            update_viz_select(session, "row_split_cols",
+                selected = get_default(defaults, "row_split_cols", character(0)))
             update_viz_select(session, "column_split_by", selected = get_default(defaults, "column_split_by", "None"))
             updateNumericInput(session, "column_split_n", value = get_default(defaults, "column_split_n", NA, is.numeric))
             updateNumericInput(session, "row_gap", value = get_default(defaults, "row_gap", 1, is.numeric))
@@ -429,6 +507,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                         function(x) x %in% column.key.choices
                     ))
                 reset_multi_dynamic("column_annotations", "column_annotations")
+                update_viz_select(session, "column_split_cols",
+                    selected = get_default(defaults, "column_split_cols", character(0)))
             }
         })
 

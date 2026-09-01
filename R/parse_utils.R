@@ -689,6 +689,97 @@ setup_auto_update_logic <- function(input, params = NULL) {
 }
 
 
+#' The call names a user-typed expression is allowed to contain
+#'
+#' Shared by [safe_eval_filter()] and [validate_expression()], which previously
+#' each carried their own verbatim copy of this list and of the AST walker in
+#' [.expr_check_node()]. Two copies of a security allowlist is one copy too
+#' many — widening one and forgetting the other is exactly how a sandbox
+#' develops a hole.
+#'
+#' Every entry is a *pure* function: no I/O, no environment or namespace
+#' access, no evaluation, no assignment. That is the property that makes the
+#' allowlist safe, and it is the bar any addition must clear. Notably absent
+#' and deliberately so: `system`, `file`, `eval`, `parse`, `get`, `assign`,
+#' `::`, `$`, `[`, `[[`, `@`, `function`, and `<-`.
+#'
+#' @return A character vector of permitted call names.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_expr_allowed_calls
+#' @keywords internal
+.expr_allowed_calls <- function() {
+    c(
+        # Comparison and logic
+        "<", ">", "<=", ">=", "==", "!=",
+        "&", "&&", "|", "||", "!", "xor",
+        # Membership, construction, missingness
+        "%in%", "c", "is.na", "is.null",
+        # Grouping and arithmetic
+        "(", "-", "+", "*", "/", ":", "%%",
+        "abs", "round",
+        # String and pattern matching, so name-based filtering (e.g. selecting
+        # genes by prefix) is expressible without regex-free contortions.
+        "grepl", "startsWith", "endsWith", "substr", "nchar",
+        "toupper", "tolower", "trimws"
+    )
+}
+
+
+#' Walk a parsed expression and reject anything outside the allowlist
+#'
+#' The shared guard behind [safe_eval_filter()] and [validate_expression()].
+#' Recurses the AST and permits only literals, symbols naming a column of the
+#' data (or a bare logical/`NA`/`Inf` constant), and calls whose name is in
+#' [.expr_allowed_calls()]. Anything else — an unknown symbol, a call to a
+#' function not on the list, a construct that is neither — returns `FALSE`.
+#'
+#' Note that a function name reaches this as `node[[1L]]` of a call and is
+#' checked against the allowlist, never as a symbol, so allowing a call name
+#' does not also make it usable as a bare value.
+#'
+#' @param node A node of a parsed expression, as from [parse()].
+#' @param col_names Character vector of column names the expression may refer to.
+#'
+#' @return `TRUE` if every node is permitted, `FALSE` otherwise.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_expr_check_node
+#' @keywords internal
+.expr_check_node <- function(node, col_names) {
+    if (is.atomic(node) || is.null(node)) {
+        return(TRUE)
+    }
+    if (is.symbol(node)) {
+        nm <- as.character(node)
+        return(nm %in% col_names || nm %in% c("TRUE", "FALSE", "T", "F", "NA", "NULL", "Inf", "NaN"))
+    }
+    if (is.call(node)) {
+        # A namespaced or extracted call (`base::system`, `x$f`) has a *call*
+        # rather than a name in position 1; as.character() on it would flatten
+        # to something that could coincidentally match the allowlist, so
+        # require a plain length-1 name.
+        fn <- node[[1L]]
+        if (!is.symbol(fn)) {
+            return(FALSE)
+        }
+        if (!as.character(fn) %in% .expr_allowed_calls()) {
+            return(FALSE)
+        }
+        for (i in seq_along(node)[-1]) {
+            if (!.expr_check_node(node[[i]], col_names)) {
+                return(FALSE)
+            }
+        }
+        return(TRUE)
+    }
+    if (is.pairlist(node)) {
+        return(all(vapply(node, .expr_check_node, logical(1), col_names = col_names)))
+    }
+    FALSE
+}
+
+
 #' Safely evaluate a user-provided filter expression against a data frame
 #'
 #' Parses the expression text, validates that it only contains allowed
@@ -725,48 +816,11 @@ safe_eval_filter <- function(expr_text, data) {
         return(NULL)
     }
 
-    # Walk the AST and ensure only whitelisted operations are used
-    allowed_calls <- c(
-        "<", ">", "<=", ">=", "==", "!=",
-        "&", "&&", "|", "||", "!",
-        "%in%", "c", "is.na", "is.null",
-        "(", "-", "+", "*", "/", ":", "%%"
-    )
-    col_names <- names(data)
-
-    .check_node <- function(node) {
-        if (is.atomic(node) || is.null(node)) {
-            return(TRUE)
-        }
-        if (is.symbol(node)) {
-            nm <- as.character(node)
-            if (nm %in% col_names || nm %in% c("TRUE", "FALSE", "T", "F", "NA", "NULL", "Inf", "NaN")) {
-                return(TRUE)
-            }
-            # Unknown symbol — block it
-            return(FALSE)
-        }
-        if (is.call(node)) {
-            fn_name <- as.character(node[[1L]])
-            if (!fn_name %in% allowed_calls) {
-                return(FALSE)
-            }
-            # Recursively check all arguments
-            for (i in seq_along(node)[-1]) {
-                if (!.check_node(node[[i]])) {
-                    return(FALSE)
-                }
-            }
-            return(TRUE)
-        }
-        if (is.pairlist(node)) {
-            return(all(vapply(node, .check_node, logical(1))))
-        }
-        FALSE
-    }
-
+    # Walk the AST and ensure only allowlisted operations are used. The
+    # allowlist and the walker are shared with validate_expression() -- see
+    # .expr_allowed_calls() / .expr_check_node().
     expr <- parsed[[1L]]
-    if (!.check_node(expr)) {
+    if (!.expr_check_node(expr, names(data))) {
         warning(
             "Filter expression contains disallowed operations. ",
             "Only column references, comparisons, and logical operators are permitted."
@@ -857,44 +911,10 @@ validate_expression <- function(expr_text, col_names) {
         return(NULL)
     }
 
-    allowed_calls <- c(
-        "<", ">", "<=", ">=", "==", "!=",
-        "&", "&&", "|", "||", "!",
-        "%in%", "c", "is.na", "is.null",
-        "(", "-", "+", "*", "/", ":", "%%"
-    )
-
-    .check_node <- function(node) {
-        if (is.atomic(node) || is.null(node)) {
-            return(TRUE)
-        }
-        if (is.symbol(node)) {
-            nm <- as.character(node)
-            if (nm %in% col_names || nm %in% c("TRUE", "FALSE", "T", "F", "NA", "NULL", "Inf", "NaN")) {
-                return(TRUE)
-            }
-            return(FALSE)
-        }
-        if (is.call(node)) {
-            fn_name <- as.character(node[[1L]])
-            if (!fn_name %in% allowed_calls) {
-                return(FALSE)
-            }
-            for (i in seq_along(node)[-1]) {
-                if (!.check_node(node[[i]])) {
-                    return(FALSE)
-                }
-            }
-            return(TRUE)
-        }
-        if (is.pairlist(node)) {
-            return(all(vapply(node, .check_node, logical(1))))
-        }
-        FALSE
-    }
-
+    # Allowlist and walker shared with safe_eval_filter() -- see
+    # .expr_allowed_calls() / .expr_check_node().
     expr <- parsed[[1L]]
-    if (!.check_node(expr)) {
+    if (!.expr_check_node(expr, col_names)) {
         warning(
             "Expression contains disallowed operations. ",
             "Only column references, comparisons, and logical operators are permitted."

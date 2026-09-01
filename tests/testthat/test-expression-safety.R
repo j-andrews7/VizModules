@@ -306,3 +306,117 @@ test_that("validate_expression: does not evaluate the expression", {
     result <- validate_expression("x / 0 > 1", c("x"))
     expect_identical(result, "x / 0 > 1")
 })
+
+
+# ---- Shared allowlist / walker (.expr_allowed_calls, .expr_check_node) ----
+#
+# safe_eval_filter() and validate_expression() used to carry verbatim copies of
+# both; they now share one. These cover the shared piece directly, and the
+# widened string/pattern vocabulary that made sharing worth doing.
+
+str_df <- data.frame(
+    gene = c("RPL3", "TP53", "RPS6", "MYC"),
+    val = c(1, 9, 3, 7),
+    stringsAsFactors = FALSE
+)
+
+test_that("the string and pattern helpers evaluate", {
+    expect_equal(safe_eval_filter('grepl("^RP", gene)', str_df), c(TRUE, FALSE, TRUE, FALSE))
+    expect_equal(safe_eval_filter('startsWith(gene, "RP")', str_df), c(TRUE, FALSE, TRUE, FALSE))
+    expect_equal(safe_eval_filter('endsWith(gene, "3")', str_df), c(TRUE, TRUE, FALSE, FALSE))
+    expect_equal(safe_eval_filter('substr(gene, 1, 2) == "RP"', str_df), c(TRUE, FALSE, TRUE, FALSE))
+    expect_equal(safe_eval_filter("nchar(gene) > 3", str_df), c(TRUE, TRUE, TRUE, FALSE))
+    expect_equal(safe_eval_filter('toupper(gene) == "MYC"', str_df), c(FALSE, FALSE, FALSE, TRUE))
+    expect_equal(safe_eval_filter('tolower(gene) == "myc"', str_df), c(FALSE, FALSE, FALSE, TRUE))
+    expect_equal(safe_eval_filter('trimws(gene) == "MYC"', str_df), c(FALSE, FALSE, FALSE, TRUE))
+})
+
+test_that("the numeric and logical additions evaluate", {
+    expect_equal(safe_eval_filter("abs(val - 5) > 3", str_df), c(TRUE, TRUE, FALSE, FALSE))
+    expect_equal(safe_eval_filter("round(val) == 9", str_df), c(FALSE, TRUE, FALSE, FALSE))
+    expect_equal(
+        safe_eval_filter('xor(val > 5, gene == "RPL3")', str_df),
+        c(TRUE, TRUE, FALSE, TRUE)
+    )
+})
+
+test_that("validate_expression accepts the same widened vocabulary", {
+    expect_identical(
+        validate_expression('grepl("^RP", gene)', names(str_df)),
+        'grepl("^RP", gene)'
+    )
+    expect_identical(
+        validate_expression('startsWith(gene, "RP")', names(str_df)),
+        'startsWith(gene, "RP")'
+    )
+})
+
+test_that("the widened allowlist still blocks code execution", {
+    # These are the cases the allowlist exists for. Adding pure string helpers
+    # must not have opened a route to any of them.
+    hostile <- c(
+        'system("id")',
+        'eval(parse(text = "1"))',
+        'base::system("id")',
+        "utils::head(gene)",
+        'get("system")("id")',
+        'assign("x", 1)',
+        'Sys.getenv("PATH")',
+        'file.remove("a")',
+        "lapply(gene, print)",
+        'do.call("system", list("id"))',
+        "(function() 1)()",
+        'quote(system("id"))'
+    )
+
+    for (expr in hostile) {
+        expect_warning(res <- safe_eval_filter(expr, str_df), regexp = "disallowed|parse")
+        expect_null(res, info = expr)
+    }
+})
+
+test_that("a namespaced or extracted call cannot smuggle in an allowed name", {
+    # `node[[1]]` is a call rather than a name for these, so the walker must
+    # reject them outright rather than flattening to something that matches.
+    expect_warning(res <- safe_eval_filter('base::grepl("^RP", gene)', str_df))
+    expect_null(res)
+
+    expect_warning(res2 <- safe_eval_filter("str_df$gene", str_df))
+    expect_null(res2)
+})
+
+test_that("an unknown symbol is still rejected after widening", {
+    expect_warning(res <- safe_eval_filter("not_a_column > 1", str_df))
+    expect_null(res)
+
+    # A function name on the allowlist is only usable as a call, never as a value.
+    expect_warning(res2 <- safe_eval_filter("grepl > 1", str_df))
+    expect_null(res2)
+})
+
+test_that(".expr_allowed_calls contains no impure entry", {
+    # A tripwire: anything capable of I/O, evaluation, or environment access
+    # does not belong here, and this is the list both public functions trust.
+    forbidden <- c(
+        "system", "system2", "shell", "eval", "evalq", "parse", "str2lang",
+        "str2expression", "get", "get0", "mget", "assign", "do.call", "Recall",
+        "match.fun", "file", "file.remove", "unlink", "readLines", "writeLines",
+        "source", "library", "require", "requireNamespace", "loadNamespace",
+        "attach", "sys.call", "sys.function", "environment", "globalenv",
+        "new.env", "as.environment", "Sys.getenv", "Sys.setenv", "download.file",
+        "url", "connection", "readRDS", "saveRDS", "function", "<-", "<<-", "=",
+        "::", ":::", "$", "@", "[", "[[", "lapply", "sapply", "vapply", "Map",
+        "Reduce", "Filter", "apply", "outer", "quote", "bquote", "substitute"
+    )
+
+    expect_length(intersect(.expr_allowed_calls(), forbidden), 0L)
+})
+
+test_that(".expr_check_node is what both public functions actually consult", {
+    # Guards against the two drifting apart again: one allowlist, one walker.
+    expect_true(.expr_check_node(parse(text = 'grepl("a", gene)')[[1L]], "gene"))
+    expect_false(.expr_check_node(parse(text = 'system("id")')[[1L]], "gene"))
+    # A symbol is permitted only if it names a column.
+    expect_true(.expr_check_node(parse(text = "gene")[[1L]], "gene"))
+    expect_false(.expr_check_node(parse(text = "gene")[[1L]], "other"))
+})
