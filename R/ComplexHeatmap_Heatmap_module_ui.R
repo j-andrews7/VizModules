@@ -114,6 +114,9 @@
 #' Filtering runs before everything else: `scale`, the annotation tracks, the split methods,
 #' and the source download all describe the filtered matrix.
 #'
+#' Both inputs are debounced by 700ms, so the heatmap redraws once you pause rather than on
+#' every keystroke of a half-typed expression.
+#'
 #' @section Plot parameters not implemented:
 #' The following [ComplexHeatmap::Heatmap()] parameters are not exposed because
 #' they require R code, objects, or annotations that do not map cleanly to UI

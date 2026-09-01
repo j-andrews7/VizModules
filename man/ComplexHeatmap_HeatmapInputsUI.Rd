@@ -153,6 +153,9 @@ rather than evaluated. An expression yielding \code{NA} for a row drops that row
 
 Filtering runs before everything else: \code{scale}, the annotation tracks, the split methods,
 and the source download all describe the filtered matrix.
+
+Both inputs are debounced by 700ms, so the heatmap redraws once you pause rather than on
+every keystroke of a half-typed expression.
 }
 
 \section{Plot parameters not implemented}{

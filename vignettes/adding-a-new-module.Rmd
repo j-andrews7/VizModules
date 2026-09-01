@@ -47,6 +47,7 @@ change a convention it documents.
 - [ ] Add an example app that uses the module twice to prove multi-instance behavior.
 - [ ] Wire up reactive `defaults` support so parent apps can drive parameters from app state (see [Supporting Reactive Defaults]).
 - [ ] Freeze any input you update from the server so the plot does not render twice (see [Updating Your Own Inputs From the Server]).
+- [ ] Debounce any free-text input the plot reads, so a `textInput()` does not rebuild the plot once per keystroke (see [Debouncing Free-Text Inputs]).
 - [ ] Wire up manual layout-edit persistence so user-dragged titles, legends, annotations, and colorbars survive re-renders (see [Persisting Manual Layout Edits]).
 - [ ] Cover the base plotting function with `testthat`; cover the module/app with `testServer` where feasible.
 - [ ] Note any `ggplotly` conversion quirks that change or drop functionality.
@@ -339,6 +340,51 @@ Pass the resolved limits on to `apply_stat_annotations()` too, as `y.min` and
 `y.max`. It has the last word on the drawn range, and knowing what you asked for
 is what lets it leave a large maximum alone rather than shrinking the axis onto
 the brackets.
+
+## Debouncing Free-Text Inputs
+
+The re-render problems above come from the *server* pushing values at the
+client. Free text has the opposite problem: `textInput()` and `textAreaInput()`
+report to the server on **every keystroke**, so a plot that reads one directly
+is rebuilt once per character.
+
+That matters most when the input is an expression, because the intermediate
+states are not just wasted work, they are mostly *invalid* work. Typing
+`condition == "Disease"` walks through `c`, `co`, `con`, ... and every one of
+those is a complete render cycle spent on an expression that cannot parse.
+
+Wrap the read in `shiny::debounce()` so a burst of typing collapses into one
+render once the user pauses:
+
+```{r debounce}
+# Once, in the module server body -- not inside a reactive.
+filter_text <- debounce(reactive(input$row_filter), 700)
+
+filtered <- reactive({
+    keep <- safe_eval_filter(filter_text(), data())
+    if (is.null(keep)) data() else data()[keep, , drop = FALSE]
+})
+```
+
+`debounce()` emits its initial value immediately and then holds the previous
+value while typing, so startup is unaffected and there is no blank first render
+to design around.
+
+- [ ] Debounce any `textInput()`/`textAreaInput()` a plot reads, especially one
+  holding an expression. 500-800ms is a good range; the more expensive the plot,
+  the longer the delay earns its keep.
+- [ ] Leave select, numeric, checkbox, and slider inputs alone. They report
+  discrete choices rather than keystrokes, so there is nothing to collapse.
+- [ ] Create the debounced reactive **once** in the server body. Creating it
+  inside another reactive rebuilds the timer on every invalidation, which
+  defeats it.
+- [ ] Debouncing is not a substitute for the Auto Update tack. The tack lets the
+  user opt out of live updates entirely; debouncing makes live updates bearable
+  for the user who leaves it on.
+
+`ComplexHeatmap_HeatmapServer()`'s Row/Column Filter inputs are the worked
+example — a heatmap is drawn to a device and measured before it can be shown, so
+a per-keystroke rebuild is especially painful there.
 
 ## Persisting Manual Layout Edits
 

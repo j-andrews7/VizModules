@@ -484,6 +484,102 @@ test_that(".heatmap_apply_filter does not leak safe_eval_filter's warning", {
     expect_no_warning(.heatmap_apply_filter('system("id")', df, 3))
 })
 
+# ---- Filter pipeline in the module server ------------------------------------------------------
+#
+# testServer cannot drive this module's *output* (the interactive widget needs a real client), but
+# it can drive the filter reactives, which is where the behaviour worth pinning lives.
+
+test_that("the filter reactives narrow the matrix, and are debounced", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    df <- example_heatmap_matrix
+    sample_cols <- setdiff(names(df), c("gene", "pathway", "mean_expression"))
+
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(df)), {
+        session$setInputs(
+            matrix.cols = sample_cols, rowname.col = "gene",
+            row_filter = "", column_filter = "", column_key = ""
+        )
+        expect_equal(nrow(filtered_matrix_data()), nrow(df))
+        expect_equal(length(filtered_cols()), length(sample_cols))
+
+        # Typing an expression one keystroke at a time must not take effect until
+        # the user pauses -- otherwise every intermediate, unparseable state would
+        # redraw the heatmap.
+        target <- 'pathway == "Immune"'
+        for (i in seq_len(nchar(target))) {
+            session$setInputs(row_filter = substr(target, 1, i))
+        }
+        expect_equal(nrow(filtered_matrix_data()), nrow(df))
+
+        session$elapse(800)
+        expect_equal(nrow(filtered_matrix_data()), sum(df$pathway == "Immune"))
+
+        # The column filter sees the synthetic `column` field even with no metadata table.
+        session$setInputs(column_filter = 'startsWith(column, "Healthy")')
+        session$elapse(800)
+        expect_equal(length(filtered_cols()), sum(startsWith(sample_cols, "Healthy")))
+    })
+})
+
+test_that("a column filter can reach the sample metadata", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    df <- example_heatmap_matrix
+    col_df <- example_heatmap_column_data
+    sample_cols <- setdiff(names(df), c("gene", "pathway", "mean_expression"))
+    dat <- list(matrix = df, column_annotations = col_df)
+
+    shiny::testServer(
+        ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(dat)),
+        {
+            session$setInputs(
+                matrix.cols = sample_cols, rowname.col = "gene",
+                row_filter = "", column_filter = "", column_key = "sample"
+            )
+            session$setInputs(column_filter = 'condition == "Disease"')
+            session$elapse(800)
+
+            expected <- col_df$sample[col_df$condition == "Disease"]
+            expect_setequal(filtered_cols(), intersect(sample_cols, as.character(expected)))
+        }
+    )
+})
+
+test_that("an invalid filter expression does not silently plot unfiltered data", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    df <- example_heatmap_matrix
+    sample_cols <- setdiff(names(df), c("gene", "pathway", "mean_expression"))
+
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(df)), {
+        session$setInputs(
+            matrix.cols = sample_cols, rowname.col = "gene",
+            row_filter = "", column_filter = "", column_key = ""
+        )
+        # A blocked call must raise rather than fall through to the whole matrix.
+        session$setInputs(row_filter = 'system("id")')
+        session$elapse(800)
+        expect_error(filtered_matrix_data())
+
+        # So must a filter that matches nothing.
+        session$setInputs(row_filter = 'pathway == "NoSuchPathway"')
+        session$elapse(800)
+        expect_error(filtered_matrix_data())
+
+        # Clearing it recovers.
+        session$setInputs(row_filter = "")
+        session$elapse(800)
+        expect_equal(nrow(filtered_matrix_data()), nrow(df))
+    })
+})
+
 # ---- End-to-end module smoke test --------------------------------------------------------------
 
 test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes", {

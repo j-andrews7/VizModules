@@ -90,6 +90,23 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             })
         }
 
+        # The two filters are free-text, and a textInput reports on every
+        # keystroke -- so an undebounced read would redraw the heatmap once per
+        # character, on half-typed expressions that are mostly invalid anyway.
+        # Drawing a heatmap is expensive (it is rendered to a device and
+        # measured), so this is far more costly here than for a cheap plotly
+        # figure. Debouncing collapses a burst of typing into one redraw once
+        # the user pauses. Select and numeric inputs report discrete choices
+        # and need no such treatment.
+        #
+        # debounce() emits its initial value immediately and then holds the
+        # previous value while typing, so startup is unaffected; and if it ever
+        # did yield NULL, .heatmap_apply_filter() reads that as "no filter",
+        # which is the right fallback.
+        filter_debounce_ms <- 700
+        row_filter_text <- debounce(reactive(input$row_filter), filter_debounce_ms)
+        column_filter_text <- debounce(reactive(input$column_filter), filter_debounce_ms)
+
         # The frame a Column Filter expression is evaluated against: one row per
         # selected matrix column, carrying the column name plus any per-sample
         # metadata. See .heatmap_column_meta().
@@ -105,7 +122,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 "Select at least one numeric column for the matrix."
             ))
 
-            res <- .heatmap_apply_filter(input$column_filter, column_meta(), length(cols))
+            res <- .heatmap_apply_filter(column_filter_text(), column_meta(), length(cols))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(
@@ -127,7 +144,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             df <- matrix_data()
             req(df)
 
-            res <- .heatmap_apply_filter(input$row_filter, df, nrow(df))
+            res <- .heatmap_apply_filter(row_filter_text(), df, nrow(df))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(

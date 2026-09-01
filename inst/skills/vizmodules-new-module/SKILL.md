@@ -31,14 +31,15 @@ Four exports per module: `<name>InputsUI()`, `<name>OutputUI()`, `<name>Server()
 If you are adding a brand-new plotting function, define, document, and test **that**
 first. Only wrap it once it is stable.
 
-## The six things that are easy to get wrong
+## The seven things that are easy to get wrong
 
 1. **Three roxygen `@section` blocks on the UI function** are mandatory: parameters not implemented, parameters and defaults, parameters implementing new functionality. See `references/roxygen-sections.md`.
 2. **Reactive defaults**: `params <- setup_reactive_defaults(defaults, input, session)` must be the *first* statement of the `moduleServer()` body, and `isolate_fn <- setup_auto_update_logic(input, params)` the first line of the generate reactive. Every read must stay in the literal `isolate_fn(input$key)` form — `isolate_fn(as.numeric(input$size))` cannot be recognised and silently loses reactive-default support. Convert outside the call.
 3. **Manual edits**: `plot_source <- session$ns("<short>")` + `edit_store <- setup_manual_edits(...)` near the top, and `finalize_manual_edits()` as the last thing `renderPlotly()` does.
 4. **Freeze before you update your own inputs**, or the plot renders twice. For `renderUI()`-rebuilt inputs use `setup_group_colors()` / `setup_axis_range()` instead — freezing does not work there.
-5. **Never `eval(parse())` / `eval(str2expression())` on user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()`. A publicly deployed app otherwise executes arbitrary code.
-6. **Reuse the uniform input helpers** rather than writing your own Axes/Legend/Lines/Plotly controls. See `references/uniform-helpers.md`.
+5. **Debounce any free-text input the plot reads.** `textInput()` reports on every keystroke, so an undebounced read rebuilds the plot once per character — and for an expression input, most of those characters are a state that cannot parse. `debounce(reactive(input$key), 700)`, created once in the server body. It emits its initial value immediately, so startup is unaffected. Select/numeric/checkbox inputs report discrete choices and need nothing.
+6. **Never `eval(parse())` / `eval(str2expression())` on user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()`. A publicly deployed app otherwise executes arbitrary code.
+7. **Reuse the uniform input helpers** rather than writing your own Axes/Legend/Lines/Plotly controls. See `references/uniform-helpers.md`.
 
 ## Before you write anything: what shape is the plot function?
 

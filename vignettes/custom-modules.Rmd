@@ -212,6 +212,33 @@ but this is pretty much all you need to do.
 
 ## Best Practices
 
+When you add a free-text control of your own, debounce it. `textInput()` reports
+on every keystroke, so a base module reading it directly is rebuilt once per
+character — and if the text is an expression, most of those characters describe
+something that cannot parse yet:
+
+```{r debounce-wrapper}
+myModuleServer <- function(id, data) {
+    # Once, in the server body. 500-800ms is a good range.
+    query <- debounce(reactive(input$query), 700)
+
+    filtered <- moduleServer(id, function(input, output, session) {
+        reactive({
+            keep <- safe_eval_filter(query(), data())
+            if (is.null(keep)) data() else data()[keep, , drop = FALSE]
+        })
+    })
+
+    dittoViz_scatterPlotServer(id, filtered)
+}
+```
+
+Select, numeric, and checkbox inputs need no such treatment — they report
+discrete choices, not keystrokes. See the "Debouncing Free-Text Inputs" section
+of `vignette("adding-a-new-module", package = "VizModules")` for the full
+rationale.
+
+
 1. **Keep wrapper logic focused**: Each wrapper should add a cohesive set of related functionality.
 
 2. **Document the data requirements**: If your wrapper expects certain columns, a specific class or data structure, etc, document this clearly.
