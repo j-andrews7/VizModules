@@ -462,6 +462,15 @@
 #'   closure that resolves each row's dynamically-rendered color widget(s) via
 #'   [.heatmap_annotation_widget_id()].
 #'
+#' Each row may also carry `label_side` and `label_size`, controlling where that
+#' track's own name is drawn and at what font size. `annotation_name_side` and
+#' `annotation_name_gp` are both vectorised per track by ComplexHeatmap, so these
+#' are collected in lockstep with the tracks actually added — a row skipped for an
+#' unusable or duplicate column must not shift the labels of the rows after it.
+#' Valid sides differ by axis: a row annotation's name goes `"top"`/`"bottom"`, a
+#' column annotation's `"left"`/`"right"`; the wrong one is an error from
+#' ComplexHeatmap, so anything unrecognised falls back to that axis's default.
+#'
 #' @return A [ComplexHeatmap::rowAnnotation()]/[ComplexHeatmap::columnAnnotation()]
 #'   object, or `NULL` if there are no usable rows.
 #'
@@ -475,8 +484,15 @@
         return(NULL)
     }
 
+    # A row annotation's name is drawn above or below it, a column annotation's
+    # to one side; passing the other axis's value is an error from ComplexHeatmap.
+    valid_sides <- if (which == "row") c("top", "bottom") else c("left", "right")
+    default_side <- if (which == "row") "bottom" else "right"
+
     values_list <- list()
     col_list <- list()
+    name_sides <- character(0)
+    name_sizes <- numeric(0)
     for (row_name in names(rows)) {
         r <- rows[[row_name]]
         col <- r$column
@@ -496,6 +512,14 @@
 
         values_list[[col]] <- values
         col_list[[col]] <- mapping
+
+        # Appended only alongside a track that was actually added, so a skipped
+        # row cannot shift every later track's label.
+        side <- tolower(as.character(r$label_side %||% ""))
+        name_sides <- c(name_sides, if (length(side) == 1L && side %in% valid_sides) side else default_side)
+
+        size <- suppressWarnings(as.numeric(r$label_size %||% NA))
+        name_sizes <- c(name_sizes, if (length(size) == 1L && !is.na(size) && size > 0) size else 10)
     }
 
     if (length(values_list) == 0) {
@@ -505,9 +529,16 @@
     ann_df <- as.data.frame(values_list, stringsAsFactors = FALSE, check.names = FALSE)
     rownames(ann_df) <- NULL
 
+    args <- list(
+        df = ann_df,
+        col = col_list,
+        annotation_name_side = name_sides,
+        annotation_name_gp = grid::gpar(fontsize = name_sizes)
+    )
+
     if (which == "row") {
-        ComplexHeatmap::rowAnnotation(df = ann_df, col = col_list)
+        do.call(ComplexHeatmap::rowAnnotation, args)
     } else {
-        ComplexHeatmap::columnAnnotation(df = ann_df, col = col_list)
+        do.call(ComplexHeatmap::columnAnnotation, args)
     }
 }

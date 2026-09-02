@@ -484,6 +484,113 @@ test_that(".heatmap_apply_filter does not leak safe_eval_filter's warning", {
     expect_no_warning(.heatmap_apply_filter('system("id")', df, 3))
 })
 
+# ---- Per-annotation label side and size --------------------------------------------------------
+
+.label_test_df <- data.frame(
+    g = c("a", "b", "a", "b"), n = c(1, 2, 3, 4), stringsAsFactors = FALSE
+)
+.label_test_keys <- c("r1", "r2", "r3", "r4")
+.label_test_lookup <- function(row_name, col, values) {
+    if (is.numeric(values)) {
+        .heatmap_annotation_col(values, "blue", "white", "red")
+    } else {
+        .heatmap_annotation_col(values, discrete_colors = c(a = "#111111", b = "#222222"))
+    }
+}
+.build_label_ann <- function(rows, which = "row") {
+    .heatmap_build_annotation(
+        rows, .label_test_df, .label_test_keys, NULL, which, .label_test_lookup
+    )
+}
+
+test_that("each annotation track gets its own label side and size", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    ann <- .build_label_ann(list(
+        r1 = list(column = "g", label_side = "Top", label_size = 14),
+        r2 = list(column = "n", label_side = "Bottom", label_size = 8)
+    ))
+
+    expect_equal(ann@anno_list[["g"]]@name_param$side, "top")
+    expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 14)
+    expect_equal(ann@anno_list[["n"]]@name_param$side, "bottom")
+    expect_equal(ann@anno_list[["n"]]@name_param$gp$fontsize, 8)
+})
+
+test_that("column annotations take left/right label sides", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    ann <- .heatmap_build_annotation(
+        list(
+            r1 = list(column = "g", label_side = "Left", label_size = 12),
+            r2 = list(column = "n", label_side = "Right", label_size = 9)
+        ),
+        .label_test_df, .label_test_keys, NULL, "column", .label_test_lookup
+    )
+
+    expect_equal(ann@anno_list[["g"]]@name_param$side, "left")
+    expect_equal(ann@anno_list[["n"]]@name_param$side, "right")
+})
+
+test_that("a label side from the wrong axis falls back instead of erroring", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    # "left" is a column-annotation side; ComplexHeatmap errors on it for a row
+    # annotation, so it must not reach the constructor.
+    expect_no_error(ann <- .build_label_ann(list(r1 = list(column = "g", label_side = "Left"))))
+    expect_equal(ann@anno_list[["g"]]@name_param$side, "bottom")
+
+    expect_no_error(ann2 <- .heatmap_build_annotation(
+        list(r1 = list(column = "g", label_side = "Top")),
+        .label_test_df, .label_test_keys, NULL, "column", .label_test_lookup
+    ))
+    expect_equal(ann2@anno_list[["g"]]@name_param$side, "right")
+})
+
+test_that("rows saved before the label fields existed still build", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    # A `defaults` list written against the old two-field row_spec.
+    ann <- .build_label_ann(list(r1 = list(column = "g", side = "Left")))
+
+    expect_equal(ann@anno_list[["g"]]@name_param$side, "bottom")
+    expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 10)
+})
+
+test_that("an unusable label size falls back rather than propagating NA", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    for (bad in list("abc", NA, -1, 0, NULL)) {
+        ann <- .build_label_ann(list(r1 = list(column = "g", label_size = bad)))
+        expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 10)
+    }
+})
+
+test_that("a skipped row does not shift the labels of the rows after it", {
+    skip_if_not_installed("ComplexHeatmap")
+
+    # The first row names a column that is not in the data, so it is dropped --
+    # its label values must be dropped with it rather than sliding onto `g`.
+    ann <- .build_label_ann(list(
+        r1 = list(column = "not_a_column", label_side = "Top", label_size = 30),
+        r2 = list(column = "g", label_side = "Bottom", label_size = 14)
+    ))
+
+    expect_equal(names(ann@anno_list), "g")
+    expect_equal(ann@anno_list[["g"]]@name_param$side, "bottom")
+    expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 14)
+})
+
+test_that("the annotation UI exposes label side and size per row", {
+    dat <- list(matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data)
+    html <- paste(as.character(ComplexHeatmap_HeatmapInputsUI("h", dat)), collapse = "")
+
+    expect_true(grepl("label_side", html, fixed = TRUE))
+    expect_true(grepl("label_size", html, fixed = TRUE))
+    expect_true(grepl("Label Side", html, fixed = TRUE))
+    expect_true(grepl("Label Size", html, fixed = TRUE))
+})
+
 # ---- Filter pipeline in the module server ------------------------------------------------------
 #
 # testServer cannot drive this module's *output* (the interactive widget needs a real client), but
@@ -588,6 +695,77 @@ test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes", {
 
     expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", df))
     expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", list(matrix = df, column_annotations = col_df)))
+})
+
+# The app is a thin createModuleApp() wrapper, so its data_list is what to assert on.
+.app_data_list <- function(app) {
+    get("data_list", envir = environment(app$serverFuncSource()))
+}
+
+test_that("ComplexHeatmap_HeatmapApp() defaults to the matrix *and* its metadata", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    # Without a metadata table the column annotation/split/filter features are
+    # inert, so a bare app() would demo only half the module.
+    entry <- .app_data_list(ComplexHeatmap_HeatmapApp())[[1]]
+
+    expect_true(is.list(entry) && !is.data.frame(entry))
+    expect_s3_class(entry$matrix, "data.frame")
+    expect_s3_class(entry$column_annotations, "data.frame")
+    expect_equal(nrow(entry$column_annotations), nrow(example_heatmap_column_data))
+    # The join is useless without a key, so it must be seeded too.
+    app_env <- environment(ComplexHeatmap_HeatmapApp()$serverFuncSource())
+    expect_equal(get("defaults", envir = app_env)$column_key, "sample")
+})
+
+test_that("ComplexHeatmap_HeatmapApp() does not attach the bundled metadata to a caller's data", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    own <- data.frame(id = c("g1", "g2"), S1 = c(1, 2), S2 = c(3, 4), stringsAsFactors = FALSE)
+    entry <- .app_data_list(ComplexHeatmap_HeatmapApp(data_list = list(mine = own)))[[1]]
+
+    # A caller's own matrix must stay a bare data frame -- joining the bundled
+    # metadata onto it would match on sample names that do not exist there.
+    expect_s3_class(entry, "data.frame")
+    expect_equal(entry, own)
+})
+
+test_that("ComplexHeatmap_HeatmapApp() attaches supplied column_data to the caller's matrix", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    entry <- .app_data_list(ComplexHeatmap_HeatmapApp(
+        data_list = list(m = example_heatmap_matrix),
+        column_data = example_heatmap_column_data
+    ))[[1]]
+
+    expect_equal(names(entry), c("matrix", "column_annotations"))
+    expect_equal(entry$matrix, example_heatmap_matrix)
+})
+
+test_that("the Filter tab carries its guidance in tooltips, not as on-screen text", {
+    dat <- list(matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data)
+    html <- paste(as.character(ComplexHeatmap_HeatmapInputsUI("h", dat)), collapse = "")
+
+    expect_true(grepl("h-row_filter", html, fixed = TRUE))
+    expect_true(grepl("h-column_filter", html, fixed = TRUE))
+    # helpText() renders a help-block div; the guidance moved into the tooltips.
+    expect_false(grepl("help-block", html, fixed = TRUE))
+
+    # Each tooltip must still stand alone: purpose, available fields, vocabulary.
+    expect_true(grepl("Leave blank to keep every row", html, fixed = TRUE))
+    expect_true(grepl("Leave blank to keep every column", html, fixed = TRUE))
+    expect_true(grepl("mean_expression", html, fixed = TRUE))
+    # `column` is synthesised, and the metadata fields join alongside it.
+    expect_true(grepl("Fields: column, sample, condition, batch", html, fixed = TRUE))
+    expect_equal(
+        lengths(regmatches(html, gregexpr("startsWith/endsWith", html, fixed = TRUE))), 2L
+    )
 })
 
 test_that("ComplexHeatmap_HeatmapOutputUI passes compact through to the underlying widget", {

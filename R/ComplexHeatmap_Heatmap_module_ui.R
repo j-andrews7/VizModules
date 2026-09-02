@@ -75,18 +75,22 @@
 #' - `title_fontsize` - Row/column title font size (UI: "Title Size", default: 13.2)
 #' - `row_annotations` - Row annotation tracks, built as [ComplexHeatmap::rowAnnotation()] and
 #'   passed as `left_annotation`/`right_annotation` per row (UI: "Annotations" tab, "Row
-#'   Annotations" [multiDynamicInput()] — each row picks a `matrix` column and a side, Left or
-#'   Right; default: none). Each row's color control appears just below the list once a column is
-#'   picked: numeric columns get Low/Mid/High color pickers, everything else gets a
-#'   [multiColorPicker()] with one color per level.
+#'   Annotations" [multiDynamicInput()] — each row picks a `matrix` column, a side (Left or
+#'   Right), and the side and font size of that track's own name label (Bottom or Top, since
+#'   ComplexHeatmap places a row annotation's name above or below it); default: none). Each
+#'   row's color control appears just below the list once a column is picked: numeric columns
+#'   get Low/Mid/High color pickers, everything else gets a [multiColorPicker()] with one color
+#'   per level.
 #' - `column_key` - Column in `column_annotations` matched against the matrix's selected
 #'   column names (UI: "Annotations" tab, "Column Key"; only shown when `data` supplies a
 #'   `column_annotations` table)
 #' - `column_annotations` - Column annotation tracks, built as
 #'   [ComplexHeatmap::columnAnnotation()] and passed as `top_annotation`/`bottom_annotation` per
 #'   row (UI: "Annotations" tab, "Column Annotations" [multiDynamicInput()] — each row picks a
-#'   column and a side, Top or Bottom, with the same per-row color controls as row annotations;
-#'   only shown when `data` supplies a `column_annotations` table; default: none)
+#'   column, a side (Top or Bottom), and the side and font size of that track's own name label
+#'   (Right or Left, since ComplexHeatmap places a column annotation's name beside it), with the
+#'   same per-row color controls as row annotations; only shown when `data` supplies a
+#'   `column_annotations` table; default: none)
 #'
 #' @section Plot parameters implementing new functionality:
 #' The "Filter" tab's two inputs have no [ComplexHeatmap::Heatmap()] equivalent — they
@@ -197,6 +201,20 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
         "mcquitty", "median", "centroid"
     )
     split.method.choices <- c("None", "K-means", "Hierarchical", "Annotation")
+
+    # Both filter tooltips end with the same vocabulary note; each tooltip has to
+    # stand alone, so it is built once here rather than repeated inline.
+    filter_vocabulary <- paste(
+        "Available: comparisons, & | !, %in%, is.na(), arithmetic, and",
+        "grepl/startsWith/endsWith/substr/nchar/toupper/tolower/trimws.",
+        "Filtering happens before scaling, so a Z-score describes only what is shown."
+    )
+    # `column` is synthesised per matrix column name unless the metadata already
+    # claims the name -- see .heatmap_column_meta().
+    column.filter.fields <- union(
+        if (!"column" %in% column.key.choices) "column",
+        column.key.choices
+    )
     scale.choices <- c("None", "Rows", "Columns")
 
     inputs <- list(
@@ -242,33 +260,20 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(textInput(ns("row_filter"), "Row Filter",
                 value = get_default(defaults, "row_filter", "")
             ), paste(
-                "Keep only the rows matching this expression, e.g.",
-                "pathway == 'Immune', or grepl('^RP', gene).",
-                "Leave blank to keep every row."
-            ), placement = "top", options = tip_opts),
-            helpText(
-                strong("Row fields: "),
-                paste(all.cols, collapse = ", ")
-            ),
+                "Keep only the rows matching this expression, e.g. pathway == 'Immune',",
+                "or grepl('^RP', gene). Leave blank to keep every row.",
+                "Fields:", paste0(paste(all.cols, collapse = ", "), "."),
+                filter_vocabulary
+            ), placement = "bottom", options = tip_opts),
             tipify(textInput(ns("column_filter"), "Column Filter",
                 value = get_default(defaults, "column_filter", "")
             ), paste(
                 "Keep only the matrix columns matching this expression, e.g.",
                 "condition == 'Disease', or startsWith(column, 'Healthy').",
-                "Leave blank to keep every column."
-            ), placement = "top", options = tip_opts),
-            helpText(
-                strong("Column fields: "),
-                # `column` is synthesised per matrix column name unless the
-                # metadata already claims the name -- see .heatmap_column_meta().
-                paste(union(if (!"column" %in% column.key.choices) "column", column.key.choices),
-                    collapse = ", ")
-            ),
-            helpText(
-                "Comparisons, &, |, !, %in%, is.na(), arithmetic, and the string helpers ",
-                "grepl/startsWith/endsWith/substr/nchar/toupper/tolower/trimws are available. ",
-                "Filtering happens before scaling, so a Z-score describes only what is shown."
-            )
+                "Leave blank to keep every column.",
+                "Fields:", paste0(paste(column.filter.fields, collapse = ", "), "."),
+                filter_vocabulary
+            ), placement = "bottom", options = tip_opts)
         ),
         "Colors" = tagList(
             tipify(colourInput(ns("low_color"), "Low Color",
@@ -361,7 +366,7 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             ), paste(
                 "Columns whose values group the rows (used when Row Split Method is 'Annotation').",
                 "Several columns give nested slices, one per observed combination."
-            ), placement = "top", options = tip_opts),
+            ), placement = "bottom", options = tip_opts),
             tipify(viz_select_input(ns("column_split_by"), "Column Split Method",
                 choices = split.method.choices,
                 selected = get_default(
@@ -384,7 +389,7 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                 ), paste(
                     "Columns of the sample-metadata table whose values group the heatmap columns",
                     "(used when Column Split Method is 'Annotation'). Several give nested slices."
-                ), placement = "top", options = tip_opts)
+                ), placement = "bottom", options = tip_opts)
             },
             tipify(numericInput(ns("row_gap"), "Row Gap (mm)",
                 min = 0, step = 0.5,
@@ -457,7 +462,16 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                     ns("row_annotations"), "Row Annotations",
                     row_spec = list(
                         column = list(type = "select", args = list(choices = row.annotation.choices)),
-                        side = list(type = "select", args = list(choices = c("Left", "Right")))
+                        side = list(type = "select", args = list(choices = c("Left", "Right"))),
+                        # ComplexHeatmap puts a *row* annotation's name above or
+                        # below the track; left/right is a column-annotation
+                        # thing and errors here.
+                        label_side = list(type = "select", args = list(
+                            label = "Label Side", choices = c("Bottom", "Top")
+                        )),
+                        label_size = list(type = "numeric", args = list(
+                            label = "Label Size", value = 10, min = 1, step = 0.5
+                        ))
                     ),
                     elements = get_default(defaults, "row_annotations", NULL),
                     max_per_row = 2
@@ -474,7 +488,15 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
                         ns("column_annotations"), "Column Annotations",
                         row_spec = list(
                             column = list(type = "select", args = list(choices = column.annotation.choices)),
-                            side = list(type = "select", args = list(choices = c("Top", "Bottom")))
+                            side = list(type = "select", args = list(choices = c("Top", "Bottom"))),
+                            # A *column* annotation's name sits to its left or
+                            # right; top/bottom is the row-annotation form.
+                            label_side = list(type = "select", args = list(
+                                label = "Label Side", choices = c("Right", "Left")
+                            )),
+                            label_size = list(type = "numeric", args = list(
+                                label = "Label Size", value = 10, min = 1, step = 0.5
+                            ))
                         ),
                         elements = get_default(defaults, "column_annotations", NULL),
                         max_per_row = 2

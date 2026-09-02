@@ -111,18 +111,22 @@ only shown when \code{data} supplies a \code{column_annotations} table; default:
 \item \code{title_fontsize} - Row/column title font size (UI: "Title Size", default: 13.2)
 \item \code{row_annotations} - Row annotation tracks, built as \code{\link[ComplexHeatmap:rowAnnotation]{ComplexHeatmap::rowAnnotation()}} and
 passed as \code{left_annotation}/\code{right_annotation} per row (UI: "Annotations" tab, "Row
-Annotations" \code{\link[=multiDynamicInput]{multiDynamicInput()}} — each row picks a \code{matrix} column and a side, Left or
-Right; default: none). Each row's color control appears just below the list once a column is
-picked: numeric columns get Low/Mid/High color pickers, everything else gets a
-\code{\link[=multiColorPicker]{multiColorPicker()}} with one color per level.
+Annotations" \code{\link[=multiDynamicInput]{multiDynamicInput()}} — each row picks a \code{matrix} column, a side (Left or
+Right), and the side and font size of that track's own name label (Bottom or Top, since
+ComplexHeatmap places a row annotation's name above or below it); default: none). Each
+row's color control appears just below the list once a column is picked: numeric columns
+get Low/Mid/High color pickers, everything else gets a \code{\link[=multiColorPicker]{multiColorPicker()}} with one color
+per level.
 \item \code{column_key} - Column in \code{column_annotations} matched against the matrix's selected
 column names (UI: "Annotations" tab, "Column Key"; only shown when \code{data} supplies a
 \code{column_annotations} table)
 \item \code{column_annotations} - Column annotation tracks, built as
 \code{\link[ComplexHeatmap:columnAnnotation]{ComplexHeatmap::columnAnnotation()}} and passed as \code{top_annotation}/\code{bottom_annotation} per
 row (UI: "Annotations" tab, "Column Annotations" \code{\link[=multiDynamicInput]{multiDynamicInput()}} — each row picks a
-column and a side, Top or Bottom, with the same per-row color controls as row annotations;
-only shown when \code{data} supplies a \code{column_annotations} table; default: none)
+column, a side (Top or Bottom), and the side and font size of that track's own name label
+(Right or Left, since ComplexHeatmap places a column annotation's name beside it), with the
+same per-row color controls as row annotations; only shown when \code{data} supplies a
+\code{column_annotations} table; default: none)
 }
 }
 

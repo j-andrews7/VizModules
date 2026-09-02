@@ -13,7 +13,9 @@ createModuleApp(
   hide.inputs = NULL,
   hide.tabs = NULL,
   show.table = TRUE,
-  title = "VizModules App"
+  title = "VizModules App",
+  primary.table = NULL,
+  sidebar.width = 4
 )
 }
 \arguments{
@@ -28,8 +30,12 @@ returns the module's output UI (e.g. \code{\link[=plotthis_BarPlotOutputUI]{plot
 \verb{function(id, data, ...)} that drives the module server logic
 (e.g. \code{\link[=plotthis_BarPlotServer]{plotthis_BarPlotServer()}}).}
 
-\item{data_list}{A named list of data frames.
-At least one element is required.}
+\item{data_list}{A named list of datasets. Each element is either a data
+frame, or a named list of data frames for a module that needs companion
+tables alongside the one being filtered — e.g.
+\code{list(matrix = , column_annotations = )} for \code{ComplexHeatmap_Heatmap}. Only
+the primary table (see \code{primary.table}) is filtered and shown in the Data
+Table; the rest are passed through to the module untouched.}
 
 \item{defaults}{A named list of ui ids and their default values that can change the ui default
 settings on startup. An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to
@@ -50,6 +56,14 @@ the full (unfiltered) dataset is passed directly to the plot module.}
 
 \item{title}{A character string used as the page title
 (default: \code{"VizModules App"}).}
+
+\item{primary.table}{For a \code{data_list} entry that is a list of tables, the
+name of the one to filter and show in the Data Table. Defaults to the first
+data frame in the entry. Ignored for entries that are a plain data frame.}
+
+\item{sidebar.width}{Bootstrap column width (1-11) for the controls sidebar;
+the plot area takes the rest. Raise the plot's share for a module whose
+output needs room, e.g. \code{sidebar.width = 3} for the heatmap.}
 }
 \value{
 A \code{\link[shiny:shinyApp]{shiny::shinyApp()}} object.

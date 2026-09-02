@@ -6,30 +6,40 @@
 #' uploading data, a **Data Table** for filtering the active dataset, and a
 #' **Plot** area for configuring and displaying the interactive heatmap.
 #'
-#' When `data_list` is not provided (or `NULL`), the app launches with
-#' `example_heatmap_matrix` (a simulated gene x sample expression matrix) as an
-#' example dataset. Uploaded
-#' data files are added to the available datasets and can be selected for
-#' plotting. If an uploaded file shares a name with an existing dataset, the
-#' existing one is overwritten with a warning.
+#' When neither `data_list` nor `column_data` is provided, the app launches on the
+#' bundled pair — `example_heatmap_matrix` (a simulated gene x sample expression
+#' matrix) together with `example_heatmap_column_data` (its per-sample metadata),
+#' with `column_key` seeded to `"sample"`. The column-annotation, column-split, and
+#' column-filter features are all inert without a metadata table, so this way a bare
+#' `ComplexHeatmap_HeatmapApp()` demonstrates the whole module.
+#'
+#' Either way the app has the usual **Data Import** section for uploading data and a
+#' **Data Table** for filtering the active dataset. Filtering applies to the matrix;
+#' any companion metadata table rides along untouched. Uploaded data files are added
+#' to the available datasets and can be selected for plotting. If an uploaded file
+#' shares a name with an existing dataset, the existing one is overwritten with a
+#' warning.
 #'
 #' Unlike the other modules, this one depends on the Bioconductor packages
 #' \pkg{ComplexHeatmap}, \pkg{InteractiveComplexHeatmap}, and \pkg{circlize},
 #' which must be installed (e.g. via `BiocManager::install()`).
 #'
-#' This is a convenience wrapper around [createModuleApp()] — *except* when
-#' `column_data` is supplied (see below), which needs a small bespoke app
-#' instead, since [createModuleApp()] always hands the module server a single
-#' data frame and can't carry the two-table `list(matrix = ,
-#' column_annotations = )` shape the module's column-annotation feature needs
-#' (see [ComplexHeatmap_HeatmapServer()]'s `data` parameter).
+#' This is a convenience wrapper around [createModuleApp()], which accepts a
+#' dataset entry that is a list of tables and filters only the primary one, so
+#' the two-table `list(matrix = , column_annotations = )` shape this module's
+#' column features need is carried through without a bespoke app (see
+#' [ComplexHeatmap_HeatmapServer()]'s `data` parameter).
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the
-#'   default), `list("matrix" = example_heatmap_matrix)` is used as example data.
-#'   Ignored (only its first element is used, as the matrix) when `column_data`
-#'   is supplied — that path has no dataset picker/upload/filter UI.
+#'   default), `example_heatmap_matrix` is used as example data — paired with
+#'   `example_heatmap_column_data` unless `column_data` says otherwise. When
+#'   `column_data` is supplied it is attached to the first entry, which becomes
+#'   `list(matrix = , column_annotations = )`.
 #' @param column_data An optional data frame of per-sample metadata, enabling
-#'   column annotations (see [ComplexHeatmap_HeatmapServer()]'s `data`
+#'   column annotations, column splitting, and metadata-aware column filtering.
+#'   Defaults to `example_heatmap_column_data` when `data_list` is also `NULL`;
+#'   pass `data_list` explicitly to opt out. Attached to the first `data_list`
+#'   entry (see [ComplexHeatmap_HeatmapServer()]'s `data`
 #'   parameter for the expected shape — a key column matching the matrix's
 #'   column names, plus arbitrary annotation columns). When supplied, the app
 #'   is a minimal single-dataset `shinyApp()` (no Data Import/Data Table
@@ -46,7 +56,6 @@
 #' @return A Shiny app object.
 #'
 #' @import shiny
-#' @importFrom shinyjs useShinyjs
 #'
 #' @seealso [ComplexHeatmap::Heatmap()], [VizModules::ComplexHeatmap_HeatmapInputsUI()],
 #' [VizModules::ComplexHeatmap_HeatmapOutputUI()], [VizModules::ComplexHeatmap_HeatmapServer()]
@@ -55,12 +64,13 @@
 #' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' # Launch with default example data (row annotations only):
+#' # Launch on the bundled matrix + its per-sample metadata, so the column
+#' # annotation/split/filter features are all usable:
 #' app <- ComplexHeatmap_HeatmapApp()
 #' if (interactive()) shiny::runApp(app)
 #'
-#' # Launch with column annotations too:
-#' app2 <- ComplexHeatmap_HeatmapApp(column_data = example_heatmap_column_data)
+#' # Matrix only, without the per-sample metadata:
+#' app2 <- ComplexHeatmap_HeatmapApp(data_list = list(matrix = example_heatmap_matrix))
 #' if (interactive()) shiny::runApp(app2)
 ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defaults = NULL,
                                       hide.inputs = NULL, hide.tabs = NULL) {
@@ -90,46 +100,37 @@ ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defa
         }
         list(
             matrix.cols = setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression")),
-            rowname.col = "gene"
+            rowname.col = "gene",
+            # Only meaningful alongside example_heatmap_column_data, which is
+            # seeded below on the same "no caller data at all" condition.
+            column_key = "sample"
         )
     }
 
-    if (!is.null(column_data)) {
-        matrix_df <- if (is.null(data_list)) example_heatmap_matrix else data_list[[1]]
-        heatmap_data <- list(matrix = matrix_df, column_annotations = column_data)
-        defaults <- utils::modifyList(example_defaults(matrix_df), defaults %||% list())
-
-        ui <- fluidPage(
-            title = "Modular ComplexHeatmap",
-            useShinyjs(),
-            sidebarLayout(
-                sidebarPanel(
-                    ComplexHeatmap_HeatmapInputsUI(
-                        "active_plot", heatmap_data,
-                        title = h3("Heatmap Settings"), defaults = defaults
-                    )
-                ),
-                mainPanel(
-                    ComplexHeatmap_HeatmapOutputUI("active_plot", compact = TRUE)
-                )
-            )
-        )
-
-        server <- function(input, output, session) {
-            ComplexHeatmap_HeatmapServer(
-                "active_plot",
-                data = reactive(heatmap_data),
-                hide.inputs = hide.inputs, hide.tabs = hide.tabs, defaults = defaults
-            )
-        }
-
-        return(shinyApp(ui, server))
+    # With no data supplied at all, open on the bundled pair rather than the
+    # matrix alone: the column-annotation, column-split, and column-filter
+    # features are inert without a metadata table, so a bare
+    # ComplexHeatmap_HeatmapApp() would otherwise demo only half the module.
+    # Guarded on data_list being NULL too -- attaching this metadata to a
+    # caller's own matrix would join on sample names that do not exist there.
+    if (is.null(data_list) && is.null(column_data)) {
+        column_data <- example_heatmap_column_data
     }
 
     if (is.null(data_list)) {
         data_list <- list("matrix" = example_heatmap_matrix)
     }
-    defaults <- utils::modifyList(example_defaults(data_list[[1]]), defaults %||% list())
+
+    matrix_df <- .app_entry_parts(data_list[[1]])$primary
+    defaults <- utils::modifyList(example_defaults(matrix_df), defaults %||% list())
+
+    # A column-annotation table rides along beside the matrix; createModuleApp()
+    # filters only the primary table and passes the rest through, so this module
+    # needs no app of its own.
+    if (!is.null(column_data)) {
+        data_list[[1]] <- list(matrix = matrix_df, column_annotations = column_data)
+    }
+
     createModuleApp(
         inputs_ui_fn  = ComplexHeatmap_HeatmapInputsUI,
         output_ui_fn  = ComplexHeatmap_HeatmapOutputUI,
@@ -138,6 +139,10 @@ ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defa
         defaults      = defaults,
         hide.inputs   = hide.inputs,
         hide.tabs     = hide.tabs,
-        title         = "Modular ComplexHeatmap"
+        title         = "Modular ComplexHeatmap",
+        primary.table = "matrix",
+        # The widget's stock layout puts the original (450px) and the
+        # sub-heatmap (400px) side by side, which the default 8/12 cannot fit.
+        sidebar.width = 3
     )
 }

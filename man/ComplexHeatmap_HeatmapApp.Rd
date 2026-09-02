@@ -14,12 +14,16 @@ ComplexHeatmap_HeatmapApp(
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the
-default), \code{list("matrix" = example_heatmap_matrix)} is used as example data.
-Ignored (only its first element is used, as the matrix) when \code{column_data}
-is supplied — that path has no dataset picker/upload/filter UI.}
+default), \code{example_heatmap_matrix} is used as example data — paired with
+\code{example_heatmap_column_data} unless \code{column_data} says otherwise. When
+\code{column_data} is supplied it is attached to the first entry, which becomes
+\code{list(matrix = , column_annotations = )}.}
 
 \item{column_data}{An optional data frame of per-sample metadata, enabling
-column annotations (see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data}
+column annotations, column splitting, and metadata-aware column filtering.
+Defaults to \code{example_heatmap_column_data} when \code{data_list} is also \code{NULL};
+pass \code{data_list} explicitly to opt out. Attached to the first \code{data_list}
+entry (see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data}
 parameter for the expected shape — a key column matching the matrix's
 column names, plus arbitrary annotation columns). When supplied, the app
 is a minimal single-dataset \code{shinyApp()} (no Data Import/Data Table
@@ -47,31 +51,39 @@ uploading data, a \strong{Data Table} for filtering the active dataset, and a
 \strong{Plot} area for configuring and displaying the interactive heatmap.
 }
 \details{
-When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_heatmap_matrix} (a simulated gene x sample expression matrix) as an
-example dataset. Uploaded
-data files are added to the available datasets and can be selected for
-plotting. If an uploaded file shares a name with an existing dataset, the
-existing one is overwritten with a warning.
+When neither \code{data_list} nor \code{column_data} is provided, the app launches on the
+bundled pair — \code{example_heatmap_matrix} (a simulated gene x sample expression
+matrix) together with \code{example_heatmap_column_data} (its per-sample metadata),
+with \code{column_key} seeded to \code{"sample"}. The column-annotation, column-split, and
+column-filter features are all inert without a metadata table, so this way a bare
+\code{ComplexHeatmap_HeatmapApp()} demonstrates the whole module.
+
+Either way the app has the usual \strong{Data Import} section for uploading data and a
+\strong{Data Table} for filtering the active dataset. Filtering applies to the matrix;
+any companion metadata table rides along untouched. Uploaded data files are added
+to the available datasets and can be selected for plotting. If an uploaded file
+shares a name with an existing dataset, the existing one is overwritten with a
+warning.
 
 Unlike the other modules, this one depends on the Bioconductor packages
 \pkg{ComplexHeatmap}, \pkg{InteractiveComplexHeatmap}, and \pkg{circlize},
 which must be installed (e.g. via \code{BiocManager::install()}).
 
-This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}} — \emph{except} when
-\code{column_data} is supplied (see below), which needs a small bespoke app
-instead, since \code{\link[=createModuleApp]{createModuleApp()}} always hands the module server a single
-data frame and can't carry the two-table \code{list(matrix = , column_annotations = )} shape the module's column-annotation feature needs
-(see \code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data} parameter).
+This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}, which accepts a
+dataset entry that is a list of tables and filters only the primary one, so
+the two-table \code{list(matrix = , column_annotations = )} shape this module's
+column features need is carried through without a bespoke app (see
+\code{\link[=ComplexHeatmap_HeatmapServer]{ComplexHeatmap_HeatmapServer()}}'s \code{data} parameter).
 }
 \examples{
 library(VizModules)
-# Launch with default example data (row annotations only):
+# Launch on the bundled matrix + its per-sample metadata, so the column
+# annotation/split/filter features are all usable:
 app <- ComplexHeatmap_HeatmapApp()
 if (interactive()) shiny::runApp(app)
 
-# Launch with column annotations too:
-app2 <- ComplexHeatmap_HeatmapApp(column_data = example_heatmap_column_data)
+# Matrix only, without the per-sample metadata:
+app2 <- ComplexHeatmap_HeatmapApp(data_list = list(matrix = example_heatmap_matrix))
 if (interactive()) shiny::runApp(app2)
 }
 \seealso{

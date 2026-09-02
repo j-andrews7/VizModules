@@ -45,3 +45,57 @@
         };
     });
 })(window.jQuery);
+
+// shinyWidgets' virtual-select binding subscribes to `change` only when
+// data-update == "change"; otherwise it listens for `afterClose`/`reset` alone
+// (see its virtual-select.js). viz_select_input() deliberately uses "close" for
+// multi-selects so ticking several boxes in one visit costs one reactive update
+// rather than one per tick.
+//
+// But a multi-select also renders its values as tags, and the x on a tag (and
+// the clear-all x) mutates the selection *without* ever opening the dropdown.
+// Those fire `change` and nothing else, so with updateOn "close" the removal was
+// silently dropped: the control showed the value gone while the server still
+// held the old selection.
+//
+// This has to be a **capture-phase** listener. virtual-select's own handler runs
+// `e.stopPropagation()` before removing the value:
+//
+//     if (t.closest(".vscomp-value-tag-clear-button"))
+//         return e.stopPropagation(), void this.removeValue(...)
+//
+// so a bubble-phase (or jQuery-delegated) listener on document never sees the
+// click at all. Capture runs on the way down, before the target's own handler,
+// so stopPropagation cannot suppress it.
+(function ($) {
+    if (!$ || !document.addEventListener) {
+        return;
+    }
+
+    document.addEventListener(
+        "click",
+        function (e) {
+            var target = e.target;
+            if (!target || typeof target.closest !== "function") {
+                return;
+            }
+            var button = target.closest(
+                ".vscomp-value-tag-clear-button, .vscomp-clear-button"
+            );
+            if (!button) {
+                return;
+            }
+            var el = button.closest(".virtual-select");
+            // "change" selects already report every mutation themselves.
+            if (!el || el.getAttribute("data-update") === "change") {
+                return;
+            }
+            // Deferred so virtual-select has applied the removal first; the
+            // binding reads the element's current value when notified.
+            setTimeout(function () {
+                $(el).trigger("afterClose");
+            }, 0);
+        },
+        true
+    );
+})(window.jQuery);
