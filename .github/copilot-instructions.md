@@ -2,9 +2,9 @@
 
 ## Repository Overview
 
-**VizModules** is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~15 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot), a reusable `dataFilter` module, and a multi-panel figure builder app for arranging modules in a free-form layout. Built on dittoViz and plotthis, all plots use plotly for interactive features.
+**VizModules** is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~18 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable `dataFilter` module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.3.0 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.5.0.9000 (dev) | **License**: MIT
 
 ## Repository Structure
 
@@ -12,7 +12,7 @@
 - **man/** - Auto-generated roxygen2 docs (171 .Rd files)
 - **data/** - 10 example datasets (`example_bar`, `example_demographics`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`, `example_skills`)
 - **data-raw/** - `generate_example_data.R` script that builds the example datasets
-- **inst/apps/** - Standalone Shiny apps (`figure-builder`, `module-gallery`, `rnaseq-showcase`) plus per-module `test_*` apps; **inst/src/** - bundled JS/CSS assets
+- **inst/apps/** - Standalone Shiny apps (`figure-builder`, `module-gallery`); **inst/src/** - bundled JS/CSS assets
 - **vignettes/** - quick-start.Rmd, custom-modules.Rmd, adding-a-new-module.Rmd
 - **tests/testthat/** - 11 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
 - **paper.md / paper.bib** - JOSS manuscript sources
@@ -81,14 +81,14 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 - Document missing/broken plotly functionality explicitly
 - Add self-contained, clear examples for functions wherever possible
 - Update vignettes when adding new modules, features, or changing existing functionality
-- Update `NEWS.md` with new features, bug fixes, etc.
+- Update `NEWS.md` with new features, bug fixes, etc. Be succinct, most entries should only be a line or two. Minute details need not be added, only key info/rationale. New features, modules, or changes to a development version (i.e. any ending in .9000) should just be kept up to date rather than appended to given they've not yet been released and changes to them are expected.
 
 ### Code Style
 4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled.
 You do not need to specifically lint.
 
 ### Dependencies
-**Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (>= 0.12.1), R (>= 4.5) | **Imports**: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | **Suggests**: withr, knitr, rmarkdown, shinytest2, testthat (>= 3.0.0)
+**Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (>= 0.12.1), R (>= 4.5) | **Imports**: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | **Suggests**: withr, knitr, rmarkdown, shinytest2, testthat (>= 3.0.0), ComplexHeatmap, InteractiveComplexHeatmap
 
 ## Common Issues
 
