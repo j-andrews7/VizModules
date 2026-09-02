@@ -5,6 +5,7 @@
 * `createModuleApp()` now accepts a `data_list` entry that is a *list* of data frames rather than a single one, filtering and displaying only the primary table (`primary.table`, defaulting to the first) and passing companions through to the module untouched. Also gains `sidebar.width` for modules whose output needs more room. `ComplexHeatmap_HeatmapApp()` is a thin wrapper around it again, rather than a bespoke app.
 * The `ComplexHeatmap` module's row and column split methods gained an **"Annotation"** option (#349), grouping rows or columns by the values of one or more annotation columns instead of by a derived clustering. Several columns give nested slices; pairing it with clustering off is also the fast path, since no distance matrix is needed.
 * The `ComplexHeatmap` module gained a **Filter** tab with expression-based row and column filters (#346), so a specific set of features or samples can be plotted without the `dataFilter` module. Row filters see the matrix data frame; column filters see a synthetic `column` field plus any per-sample metadata joined via `column_key`. Filtering runs before everything else, so scaling, annotations, splits, and the source download all describe the filtered matrix.
+  * Both `ComplexHeatmap` filter inputs are debounced by 700ms, so typing an expression does not redraw the heatmap once per keystroke. The "Adding a New Module" and "Building Custom Modules" vignettes document the pattern for free-text inputs generally.
 * Each `ComplexHeatmap` annotation track gained its own **Label Side** and **Label Size** controls.
 * `ComplexHeatmap_HeatmapApp()` now opens on `example_heatmap_matrix` paired with `example_heatmap_column_data`, so the column annotation, split, and filter features are usable out of the box.
 * `safe_eval_filter()` and `validate_expression()` gained a wider shared vocabulary: `grepl`, `startsWith`, `endsWith`, `substr`, `nchar`, `toupper`, `tolower`, `trimws`, `abs`, `round`, and `xor`. All are pure, so the sandbox is unchanged. The two functions previously carried duplicate copies of the allowlist and AST walker and now share one.
@@ -12,12 +13,10 @@
 ## Bug Fixes
 
 * Fixed a multi-select dropping a deselection made from its value tags. `viz_select_input()` reports on dropdown close for multi-selects, but removing a value via a tag's x (or the clear-all x) never opens the dropdown, so the change was silently never sent: the control showed the value gone while the server kept the old selection. Affected every multi-select in the package; most visible on the heatmap's annotation split, where removing a column left the old slices in place.
-* Both `ComplexHeatmap` filter inputs are debounced by 700ms, so typing an expression does not redraw the heatmap once per keystroke. The "Adding a New Module" and "Building Custom Modules" vignettes document the pattern for free-text inputs generally.
 
 ## Documentation
 
 * Added the `ComplexHeatmap_Heatmap` module and `dittoViz_freqPlot` to the README (#348). 
-* The `dittoViz_freqPlot` gallery entry gained its image, and the Statistical Testing section now lists **freqPlot** alongside BoxPlot, ViolinPlot, and yPlot, noting that its tests are always run per-facet (#348).
 * Refreshed the skills for the 0.4.0 changes they had not picked up (#348).
 * The `quick-start`, `custom-modules`, and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material and at `use_vizmodules_skills()` (#347). Previously the skills were documented only in the README, so a reader of the vignettes had no idea one existed for what they were doing.
 
