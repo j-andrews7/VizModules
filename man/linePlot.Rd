@@ -159,7 +159,10 @@ Same options as x.adjustment and y.adjustment. Default: NULL.}
 
 \item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
 
-\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable}
+\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
+and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
+group's y-values, where a group is a single x category, split further by \code{colour.group.by} and \code{facet.by} when
+those are set. A group holding a single observation has no standard deviation and is drawn without a bar.}
 }
 \value{
 A plotly object representing the interactive line plot.

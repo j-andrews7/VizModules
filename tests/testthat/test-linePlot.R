@@ -174,6 +174,173 @@ test_that("linePlot handles faceting", {
     expect_s3_class(fig, "plotly")
 })
 
+# Regression data for the faceted-legend tests (#357): 2 facets x 3 colour groups.
+.line_facet_data <- function() {
+    set.seed(1)
+    d <- expand.grid(
+        x = factor(1:4), grp = c("A", "B", "C"), fct = c("p", "q"),
+        rep = 1:5, stringsAsFactors = FALSE
+    )
+    d$y <- rnorm(nrow(d))
+    d$y2 <- rnorm(nrow(d))
+    d
+}
+
+# Traces plotly will draw a legend entry for - showlegend defaults to TRUE when unset.
+.legend_traces <- function(built) {
+    Filter(function(tr) !identical(tr$showlegend, FALSE), built$x$data)
+}
+
+# plotly keeps a factor grouping column as a factor on the R side; the widget is
+# serialised from its labels, so compare labels.
+.trace_field <- function(built, field) {
+    vapply(built$x$data, function(tr) {
+        val <- tr[[field]]
+        if (is.null(val)) NA_character_ else as.character(val)
+    }, character(1))
+}
+
+test_that("linePlot shows each colour group once across facets", {
+    d <- .line_facet_data()
+
+    fig <- linePlot(
+        data = d,
+        x = "x",
+        y = "y",
+        colour.group.by = "grp",
+        facet.by = "fct",
+        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
+        show.legend = TRUE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+
+    # 2 facets x 3 groups are still drawn, but only one facet feeds the legend.
+    expect_equal(length(built$x$data), 6)
+    expect_equal(length(.legend_traces(built)), 3)
+    expect_setequal(
+        vapply(.legend_traces(built), function(tr) tr$name, character(1)),
+        c("A", "B", "C")
+    )
+})
+
+test_that("linePlot groups faceted traces so one legend click toggles every panel", {
+    d <- .line_facet_data()
+
+    fig <- linePlot(
+        data = d,
+        x = "x",
+        y = "y",
+        colour.group.by = "grp",
+        facet.by = "fct",
+        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
+        show.legend = TRUE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+    groups <- .trace_field(built, "legendgroup")
+
+    # Every trace is grouped, and grouped under its own series name.
+    expect_false(any(is.na(groups)))
+    expect_identical(groups, .trace_field(built, "name"))
+
+    # Both facets use the same set of groups - that is what ties the panels together.
+    expect_setequal(groups[1:3], groups[4:6])
+})
+
+test_that("linePlot groups faceted traces when the colour column is a factor", {
+    # example_sales$region is a factor and product_line has 3 levels - the case the
+    # module actually hits, and the one that regressed in #357.
+    fig <- linePlot(
+        data = example_sales,
+        x = "month",
+        y = "revenue",
+        colour.group.by = "region",
+        facet.by = "product_line",
+        palette.selection = plotthis::palette_list[["Set2"]][1:6],
+        show.legend = TRUE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+    groups <- .trace_field(built, "legendgroup")
+
+    # 3 facets x 6 regions, but only 6 legend entries.
+    expect_equal(length(built$x$data), 18)
+    expect_equal(length(.legend_traces(built)), 6)
+
+    # Grouped by the factor's labels, not its integer codes, and the same groups
+    # repeat in every panel so one click reaches all three.
+    expect_identical(groups, .trace_field(built, "name"))
+    expect_setequal(groups[1:6], levels(example_sales$region))
+    expect_setequal(groups[7:12], groups[1:6])
+    expect_setequal(groups[13:18], groups[1:6])
+})
+
+test_that("linePlot legend is unchanged without faceting", {
+    d <- .line_facet_data()
+
+    fig <- linePlot(
+        data = d,
+        x = "x",
+        y = "y",
+        colour.group.by = "grp",
+        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
+        show.legend = TRUE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+
+    expect_equal(length(built$x$data), 3)
+    expect_equal(length(.legend_traces(built)), 3)
+})
+
+test_that("linePlot faceted multi-axis traces are grouped and carry no placeholder", {
+    d <- .line_facet_data()
+
+    fig <- linePlot(
+        data = d,
+        x = "rep",
+        y = c("y", "y2"),
+        facet.by = "fct",
+        palette.selection = c("#1b9e77", "#d95f02"),
+        show.legend = TRUE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+
+    # 2 facets x 2 y columns, with no empty initialiser trace padding the legend.
+    expect_equal(length(built$x$data), 4)
+    expect_false(any(vapply(built$x$data, function(tr) is.null(tr$name), logical(1))))
+    expect_equal(length(.legend_traces(built)), 2)
+    expect_false(any(vapply(built$x$data, function(tr) is.null(tr$legendgroup), logical(1))))
+})
+
+test_that("linePlot honours show.legend in the layout", {
+    d <- .line_facet_data()
+
+    fig <- linePlot(
+        data = d,
+        x = "x",
+        y = "y",
+        palette.selection = "#1b9e77",
+        show.legend = FALSE
+    )
+
+    built <- suppressWarnings(plotly::plotly_build(fig))
+    expect_false(built$x$layout$showlegend)
+
+    fig_legend <- linePlot(
+        data = d,
+        x = "x",
+        y = "y",
+        colour.group.by = "grp",
+        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
+        show.legend = TRUE
+    )
+
+    expect_true(suppressWarnings(plotly::plotly_build(fig_legend))$x$layout$showlegend)
+})
+
 test_that("linePlot errors with NULL data", {
     expect_error(
         linePlot(

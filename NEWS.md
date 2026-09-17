@@ -22,6 +22,7 @@ The one where we make the heatmap module not suck and stop accidentallybutcherin
 * The `ComplexHeatmap` output UI functions gained `fit.width` (default `TRUE`), scaling the widget's panels to their container's width on load (#350) rather than sitting at `InteractiveComplexHeatmap`'s fixed pixel widths until the resize handle is dragged. Pass `fit.width = FALSE` for the old fixed-width behaviour.
 * Added `heatmap_fit_width()`, the `fit.width` behaviour above as a standalone wrapper, for apps that call `InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()` directly rather than going through the module.
 * Alter `ComplexHeatmap_HeatmapApp()` default data so the column annotation, split, and filter features are usable out of the box.
+* The `linePlot` module's **Error Bars** tooltip now says what the bars actually represent (the plotted group mean plus or minus one standard deviation).
 * `safe_eval_filter()` and `validate_expression()` gained a wider shared vocabulary: `grepl`, `startsWith`, `endsWith`, `substr`, `nchar`, `toupper`, `tolower`, `trimws`, `abs`, `round`, and `xor`. All are pure, so the sandbox is unchanged. The two functions previously carried duplicate copies of the allowlist and AST walker and now share one.
 
 ## Deprecations and Removals
@@ -30,6 +31,9 @@ The one where we make the heatmap module not suck and stop accidentallybutcherin
   * Use `dittoViz_yPlot` instead, with `defaults = list(plots = "vlnplot")` (add `"boxplot"` / `"jitter"` for the inner box and points). 
 
 ## Bug Fixes
+
+* A faceted `linePlot` no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel rather than just one (#357). 
+  * Multi-axis `linePlot`s no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and `show.legend = FALSE` now actually hides the legend box instead of leaving an empty one.
 
 * Boxes, points and significance brackets now line up when a `color.by` group is missing from some `group.by` categories (#356). The new `.align_box_positions()` puts the boxes back on ggplot's coordinates and hands plotly `boxmode = "overlay"`, which also retires the faceting workaround it replaces. Affects the `yPlot`, `freqPlot` and `BoxPlot` modules.
   * Significance brackets were placed by a third formula of their own (global group count, a hardcoded span, endpoints at the extremes rather than slot centres) and now use the same dodge as the boxes.

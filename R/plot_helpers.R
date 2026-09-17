@@ -964,6 +964,9 @@ is_pure_type <- function(inputs, d) {
                 type = "scatter",
                 mode = plot.mode,
                 name = trace_name,
+                # Group by trace name so a legend click toggles the series in
+                # every facet rather than only the one that owns the entry.
+                legendgroup = trace_name,
                 showlegend = show.legend
             )
 

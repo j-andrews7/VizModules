@@ -66,7 +66,10 @@
 #'   Same options as x.adjustment and y.adjustment. Default: NULL.
 #' @param error.width numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable
 #' @param error.colour hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable
-#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable
+#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
+#'   and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
+#'   group's y-values, where a group is a single x category, split further by `colour.group.by` and `facet.by` when
+#'   those are set. A group holding a single observation has no standard deviation and is drawn without a bar.
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
@@ -232,9 +235,10 @@ linePlot <- function(data, x, y, palette.selection,
     if (!is.null(facet.by) && facet.by != "" && !multi_axis) {
         # Split data by facet variable
         facet_levels <- unique(plot_data[[facet.by]])
-        plots <- lapply(facet_levels, function(level) {
-            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-            # Build plot parameters conditionally
+        plots <- lapply(seq_along(facet_levels), function(i) {
+            facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[i], ]
+            # Build plot parameters conditionally. Every facet draws the same set of
+            # colour groups, so only the first contributes legend entries.
             plot_params <- list(
                 data = facet_data,
                 x = reformulate(x),
@@ -243,8 +247,14 @@ linePlot <- function(data, x, y, palette.selection,
                 mode = plot.mode,
                 color = color,
                 colors = palette.selection,
-                showlegend = show.legend
+                showlegend = show.legend && i == 1L
             )
+            # Tie each colour group's traces together across facets so one legend click
+            # toggles the series in every panel. plotly splits `legendgroup` per trace
+            # the same way it splits `color`.
+            if (!is.null(color)) {
+                plot_params$legendgroup <- color
+            }
             # Only add error_y if sd_y exists and has non-NA values
             if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y)) && error.bar) {
                 plot_params$error_y <- list(array = facet_data$sd_y, color = error.colour, thickness = error.width)
@@ -300,7 +310,9 @@ linePlot <- function(data, x, y, palette.selection,
         first_facet <- TRUE
         for (n in seq_along(facet_levels)) {
             facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[n], ]
-            facet_fig <- plot_ly(data = facet_data, type = "scatter")
+            # No data/type here - passing them emits a placeholder trace that
+            # claims a nameless legend entry in every facet.
+            facet_fig <- plot_ly()
             facet_fig <- .add_multi_axis_traces(
                 facet_fig, facet_data, x, y, order.cols, plot.mode,
                 line.type, palette.selection,
@@ -342,8 +354,10 @@ linePlot <- function(data, x, y, palette.selection,
       
 
     } else if (multi_axis) {
-        # Initialize empty plot for multi-axis to avoid creating initial trace
-        fig <- plot_ly(data = plot_data, type = "scatter")
+        # Initialize empty plot for multi-axis to avoid creating initial trace.
+        # Supplying data/type here would emit a placeholder trace with no name
+        # that still takes up a legend entry.
+        fig <- plot_ly()
     } else {
         # Build plot parameters conditionally
         plot_params <- list(
@@ -372,7 +386,7 @@ linePlot <- function(data, x, y, palette.selection,
         fig <- .add_multi_axis_traces(
             fig, data, x, y, order.cols, plot.mode,
             line.type, palette.selection,
-            show.legend = TRUE
+            show.legend = show.legend
         )
     }
 
@@ -383,7 +397,7 @@ linePlot <- function(data, x, y, palette.selection,
             x = title.x.position, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
         margin = list(t = 70),
-        showlegend = TRUE,
+        showlegend = isTRUE(show.legend),
         xaxis = xaxis_style,
         yaxis = yaxis_style
     )

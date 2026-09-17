@@ -184,7 +184,7 @@
 #'   cells down to nothing.
 #' @param id_prefix Optional character scalar used to namespace the fragment's
 #'   ids, so several fragments can share one document. See
-#'   [.svg_namespace_ids()].
+#'   `.svg_namespace_ids()`.
 #' @param bg Background color.
 #'
 #' @return A character scalar holding an `<svg>` element, or `NULL` if the
