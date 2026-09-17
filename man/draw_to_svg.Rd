@@ -23,7 +23,7 @@ cells down to nothing.}
 
 \item{id_prefix}{Optional character scalar used to namespace the fragment's
 ids, so several fragments can share one document. See
-\code{\link[=.svg_namespace_ids]{.svg_namespace_ids()}}.}
+\code{.svg_namespace_ids()}.}
 
 \item{bg}{Background color.}
 }
