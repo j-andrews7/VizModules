@@ -159,6 +159,15 @@
 }
 
 
+# Whether grDevices::svg() can actually open. capabilities("cairo") only records
+# that R was built with cairo. This resulted in broken actions on Github when cairo
+# wasn't actually availabe.
+.cairo_usable <- function() {
+    isTRUE(capabilities("cairo")) &&
+        nzchar(suppressWarnings(grDevices::grSoftVersion()[["cairo"]]))
+}
+
+
 #' Render a grid or base drawing to a self-contained SVG fragment
 #'
 #' Draws onto an SVG device and returns the markup, ready to be placed inside a
@@ -189,10 +198,11 @@
 #'
 #' @return A character scalar holding an `<svg>` element, or `NULL` if the
 #'   requested size is not usable or the R build can reach neither SVG device
-#'   (no \pkg{svglite} installed and no cairo compiled in). An error raised by
-#'   `draw_fn` itself (a panel dragged too small to leave any plotting room,
-#'   say) propagates to the caller, which is better placed to decide whether to
-#'   drop that panel or fail the whole export; the device is closed either way.
+#'   (no \pkg{svglite} installed and no working cairo -- which on macOS needs
+#'   XQuartz). An error raised by `draw_fn` itself (a panel dragged too small to
+#'   leave any plotting room, say) propagates to the caller, which is better
+#'   placed to decide whether to drop that panel or fail the whole export; the
+#'   device is closed either way.
 #'
 #'   The result is a *fragment*: it carries no XML declaration and no `xmlns`,
 #'   because it is meant to be spliced into a document that already declares
@@ -244,7 +254,7 @@ draw_to_svg <- function(draw_fn, width, height, res = 72,
         # The caller gets no artwork, the same answer draw_to_png() gives when
         # the build has no PNG support -- better than erroring out of an export
         # that could otherwise have delivered everything else.
-        if (!isTRUE(capabilities("cairo"))) {
+        if (!.cairo_usable()) {
             return(NULL)
         }
         grDevices::svg(file, width = width / res, height = height / res, bg = bg)

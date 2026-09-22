@@ -241,8 +241,28 @@ test_that("draw_to_svg returns NULL when no SVG device is reachable", {
 })
 
 
+test_that("draw_to_svg returns NULL when cairo is compiled in but will not load", {
+    # The CRAN macOS build without XQuartz: capabilities("cairo") is TRUE, but
+    # the module cannot load, so svg() warns and opens nothing. The plot
+    # used to land on (and dev.off() close) whatever device was current.
+    testthat::local_mocked_bindings(
+        requireNamespace = function(...) FALSE,
+        capabilities = function(...) c(cairo = TRUE),
+        .package = "base"
+    )
+    testthat::local_mocked_bindings(
+        grSoftVersion = function() c(cairo = ""),
+        .package = "grDevices"
+    )
+
+    expect_no_warning(svg <- draw_to_svg(function() plot(1:3), 300, 200))
+    expect_null(svg)
+})
+
+
 test_that("draw_to_svg still uses cairo when svglite is unavailable", {
-    skip_if_not(isTRUE(capabilities("cairo")))
+    # Not capabilities("cairo"): a macOS runner without XQuartz says TRUE there.
+    skip_if_not(.cairo_usable())
 
     testthat::local_mocked_bindings(
         requireNamespace = function(...) FALSE,

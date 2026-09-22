@@ -30,10 +30,11 @@ ids, so several fragments can share one document. See
 \value{
 A character scalar holding an \verb{<svg>} element, or \code{NULL} if the
 requested size is not usable or the R build can reach neither SVG device
-(no \pkg{svglite} installed and no cairo compiled in). An error raised by
-\code{draw_fn} itself (a panel dragged too small to leave any plotting room,
-say) propagates to the caller, which is better placed to decide whether to
-drop that panel or fail the whole export; the device is closed either way.
+(no \pkg{svglite} installed and no working cairo -- which on macOS needs
+XQuartz). An error raised by \code{draw_fn} itself (a panel dragged too small to
+leave any plotting room, say) propagates to the caller, which is better
+placed to decide whether to drop that panel or fail the whole export; the
+device is closed either way.
 
 The result is a \emph{fragment}: it carries no XML declaration and no \code{xmlns},
 because it is meant to be spliced into a document that already declares
