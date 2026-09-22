@@ -38,8 +38,11 @@
 #'   Which x positions each box trace occupies is exactly the presence
 #'   information needed to redo the dodge, so no data frame is required. Traces
 #'   are ranked in the order `ggplotly()` emitted them, which follows factor
-#'   level order, matching how `ggplot2` assigns slots. Each facet panel draws on
-#'   its own x axis and is dodged independently, as `ggplot2` does per panel.
+#'   level order, matching how `ggplot2` assigns slots. Each facet panel is
+#'   dodged independently, as `ggplot2` does per panel, and a panel is identified
+#'   by its *pair* of axes: `ggplotly()` gives every panel its own x axis only
+#'   when the x scale is free, and otherwise shares one x axis down a whole facet
+#'   column, so the x axis alone would merge the panels stacked in that column.
 #'
 #'   plotly only accepts one `width` per trace, so boxes are drawn a constant
 #'   width everywhere (taken from the most crowded x position) rather than
@@ -62,44 +65,72 @@
         return(fig)
     }
 
-    # Each facet panel gets its own x axis and is dodged on its own, so same-named
-    # groups keep identical positions across panels only because every panel
-    # applies the same rule -- not because a slot is reserved for them.
-    axis_of <- vapply(d, function(tr) tr$xaxis %__% "x", character(1))
+    # Each facet panel is dodged on its own, so same-named groups keep identical
+    # positions across panels only because every panel applies the same rule --
+    # not because a slot is reserved for them. A panel is an axis *pair*: with a
+    # fixed x scale one x axis is shared down a whole facet column, so keying on
+    # the x axis alone would merge the panels stacked in it into one dodge group
+    # and invent slots ggplot2 never used.
+    panel_of <- vapply(
+        d,
+        function(tr) paste0(tr$xaxis %__% "x", "|", tr$yaxis %__% "y"),
+        character(1)
+    )
 
-    for (ax in unique(axis_of[is_box])) {
-        idx <- which(is_box & axis_of == ax)
-        pos <- lapply(idx, function(i) {
+    # Built with lapply() rather than in the loop below because a `for` reuses one
+    # environment across iterations, so closures over `pos` would all see the last
+    # panel's.
+    panels <- lapply(unique(panel_of[is_box]), function(pn) {
+        idx <- which(is_box & panel_of == pn)
+        list(idx = idx, pos = lapply(idx, function(i) {
             sort(unique(round(suppressWarnings(as.numeric(d[[i]]$x)))))
-        })
+        }))
+    })
 
-        # A categorical x axis has no numeric positions to dodge across; leave it be
-        # rather than writing NAs over the trace.
-        if (any(vapply(pos, function(v) length(v) == 0 || anyNA(v), logical(1)))) {
-            next
-        }
+    # A categorical x axis has no numeric positions to dodge across; leave it be
+    # rather than writing NAs over the trace.
+    usable <- vapply(panels, function(panel) {
+        !any(vapply(panel$pos, function(v) length(v) == 0 || anyNA(v), logical(1)))
+    }, logical(1))
+    if (!any(usable)) {
+        return(fig)
+    }
 
-        occupants <- function(p) which(vapply(pos, function(v) p %in% v, logical(1)))
-        n_max <- max(vapply(
-            sort(unique(unlist(pos))),
+    occupants_in <- function(pos) {
+        function(p) which(vapply(pos, function(v) p %in% v, logical(1)))
+    }
+
+    # One width for the whole figure, so boxes do not change size between panels.
+    n_max <- max(vapply(panels[usable], function(panel) {
+        occupants <- occupants_in(panel$pos)
+        max(vapply(
+            sort(unique(unlist(panel$pos))),
             function(p) length(occupants(p)), integer(1)
         ))
+    }, integer(1)))
 
-        for (j in seq_along(idx)) {
-            key <- round(suppressWarnings(as.numeric(d[[idx[j]]]$x)))
-            d[[idx[j]]]$x <- vapply(key, function(p) {
+    for (panel in panels[usable]) {
+        occupants <- occupants_in(panel$pos)
+        for (j in seq_along(panel$idx)) {
+            i <- panel$idx[j]
+            key <- round(suppressWarnings(as.numeric(d[[i]]$x)))
+            d[[i]]$x <- vapply(key, function(p) {
                 present <- occupants(p)
                 p + dodge.width * ((match(j, present) - 0.5) / length(present) - 0.5)
             }, numeric(1))
-            d[[idx[j]]]$width <- dodge.width / n_max * box.width
+            d[[i]]$width <- dodge.width / n_max * box.width
             # Both only matter to the plotly.js dodge we are replacing.
-            d[[idx[j]]]$offsetgroup <- NULL
-            d[[idx[j]]]$alignmentgroup <- NULL
+            d[[i]]$offsetgroup <- NULL
+            d[[i]]$alignmentgroup <- NULL
         }
     }
 
     fig$x$data <- d
-    fig$x$layout$boxmode <- "overlay"
+    # Only once every box carries an explicit position: leaving some on plotly.js'
+    # dodge while telling it not to dodge would stack them on the tick.
+    if (all(usable)) {
+        fig$x$layout$boxmode <- "overlay"
+    }
     fig
 }
 
