@@ -210,6 +210,29 @@ axis_titles_as_annotations <- function(fig) {
 }
 
 
+#' Build a plotly axis title spec carrying its font
+#'
+#' Plot functions that set an axis title as a bare string leave it without a font, so
+#' [axis_titles_as_annotations()] has nothing to carry over to the draggable annotation. This
+#' returns the `list(text, font)` form instead, omitting `text` when it is `NULL` so no
+#' empty title is serialised.
+#'
+#' @param text Character scalar or `NULL`. The axis title text.
+#' @param font Named list of plotly font properties (`size`, `color`, `family`).
+#'
+#' @return A named list suitable for a plotly axis `title`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_axis_title_spec
+#' @keywords internal
+.axis_title_spec <- function(text, font) {
+    if (is.null(text)) {
+        return(list(font = font))
+    }
+    list(text = text, font = font)
+}
+
+
 #' Build an adjustment-aware axis label
 #'
 #' Wraps a base column name with the names of any data adjustments that are

@@ -209,17 +209,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c(
-                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
-                    "facet.nrow", "facet.ncol"
-                ))
-            } else {
-                hide_input(session, c(
-                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
-                    "facet.nrow", "facet.ncol"
-                ))
-            }
+            .toggle_facet_title_inputs(
+                session, .nz_value(input$facet.by),
+                extra = c("facet.nrow", "facet.ncol"), hidden = hide.inputs
+            )
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -286,12 +279,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             y.adjustment <- NULL
-            if (!isolate_fn(input$y.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$y.adjustment))) {
                 y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (!isolate_fn(input$x.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -332,7 +325,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
@@ -368,6 +361,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
                 show.grid.x = isolate_fn(input$show.grid.x),
                 show.grid.y = isolate_fn(input$show.grid.y),
+                grid.color = isolate_fn(input$grid.color),
+                axis.title.font.size = isolate_fn(input$axis.title.font.size),
+                axis.title.font.color = isolate_fn(input$axis.title.font.color),
+                axis.title.font.family = isolate_fn(input$axis.title.font.family),
+                facet.title.font.size = isolate_fn(input$facet.title.font.size),
+                facet.title.font.color = isolate_fn(input$facet.title.font.color),
+                facet.title.font.family = isolate_fn(input$facet.title.font.family),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
                 title.font.color = isolate_fn(input$title.font.color),
@@ -382,10 +382,6 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 error.width = isolate_fn(input$error.bar.width),
                 error.bar = isolate_fn(input$error.bar)
             )
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
             # Add reference lines
             fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
@@ -454,7 +450,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             } else if (dual_multiAxis) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
-            } else if (multi_axis && !(input$group.by == "")) {
+            } else if (multi_axis && .nz_value(input$group.by)) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }

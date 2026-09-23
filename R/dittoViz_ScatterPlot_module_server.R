@@ -375,12 +375,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
         observeEvent(input$split.by, {
-            if (!is.null(input$split.by) && any(nzchar(input$split.by))) {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
-        })
+            split.set <- !is.null(input$split.by) && any(nzchar(input$split.by))
+            .toggle_facet_title_inputs(session, split.set, hidden = hide.inputs)
+        }, ignoreNULL = FALSE)
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({

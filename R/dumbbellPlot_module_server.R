@@ -192,11 +192,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         })
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -233,7 +229,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             y_title <- y_input
 
             x.adjustment <- NULL
-            if (!isolate_fn(input$x.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -244,7 +240,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             }
 
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -272,6 +268,15 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 axis.tickcolor = isolate_fn(input$axis.tickcolor),
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                axis.title.font.size = isolate_fn(input$axis.title.font.size),
+                axis.title.font.color = isolate_fn(input$axis.title.font.color),
+                axis.title.font.family = isolate_fn(input$axis.title.font.family),
+                show.grid.x = isolate_fn(input$show.grid.x),
+                show.grid.y = isolate_fn(input$show.grid.y),
+                grid.color = isolate_fn(input$grid.color),
+                facet.title.font.size = isolate_fn(input$facet.title.font.size),
+                facet.title.font.color = isolate_fn(input$facet.title.font.color),
+                facet.title.font.family = isolate_fn(input$facet.title.font.family),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
                 title.font.color = isolate_fn(input$title.font.color),
@@ -282,11 +287,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment
             )
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
 
             # Add reference lines
             fig <- add_reference_lines(fig,

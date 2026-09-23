@@ -47,6 +47,13 @@
 #' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
 #' @param show.grid.x Logical, whether to show gridlines on the x-axis. Default: TRUE.
 #' @param show.grid.y Logical, whether to show gridlines on the y-axis. Default: TRUE.
+#' @param grid.color Character, hex color for gridlines. Default: "#CCCCCC".
+#' @param axis.title.font.size Numeric, font size for the x/y axis titles. Default: 18.
+#' @param axis.title.font.color Character, hex color for the x/y axis titles. Default: "black".
+#' @param axis.title.font.family Character, font family for the x/y axis titles. Default: "Arial".
+#' @param facet.title.font.size Numeric, font size for the facet panel titles. Default: 18.
+#' @param facet.title.font.color Character, hex color for the facet panel titles. Default: "black".
+#' @param facet.title.font.family Character, font family for the facet panel titles. Default: "Arial".
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 14.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
@@ -66,7 +73,10 @@
 #'   Same options as x.adjustment and y.adjustment. Default: NULL.
 #' @param error.width numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable
 #' @param error.colour hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable
-#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable
+#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
+#'   and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
+#'   group's y-values, where a group is a single x category, split further by `colour.group.by` and `facet.by` when
+#'   those are set. A group holding a single observation has no standard deviation and is drawn without a bar.
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
@@ -98,15 +108,24 @@ linePlot <- function(data, x, y, palette.selection,
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
+                     grid.color = "#CCCCCC",
+                     axis.title.font.size = 18, axis.title.font.color = "black", axis.title.font.family = "Arial",
+                     facet.title.font.size = 18, facet.title.font.color = "black", facet.title.font.family = "Arial",
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
+    axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
+    facet_title_font <- list(
+        size = facet.title.font.size, color = facet.title.font.color, family = facet.title.font.family
+    )
+
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
-        title = x.title, autorange = TRUE, showgrid = show.grid.x
+        title = .axis_title_spec(x.title, axis_title_font), autorange = TRUE,
+        showgrid = show.grid.x, gridcolor = grid.color
     )
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
@@ -194,7 +213,7 @@ linePlot <- function(data, x, y, palette.selection,
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
     yaxis_style$tickangle <- axis.tickangle.y
-    yaxis_style$title <- y.title
+    yaxis_style$title <- .axis_title_spec(y.title, axis_title_font)
     yaxis_style$showgrid <- show.grid.y
 
     if (flip.x) {
@@ -232,9 +251,10 @@ linePlot <- function(data, x, y, palette.selection,
     if (!is.null(facet.by) && facet.by != "" && !multi_axis) {
         # Split data by facet variable
         facet_levels <- unique(plot_data[[facet.by]])
-        plots <- lapply(facet_levels, function(level) {
-            facet_data <- plot_data[plot_data[[facet.by]] == level, ]
-            # Build plot parameters conditionally
+        plots <- lapply(seq_along(facet_levels), function(i) {
+            facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[i], ]
+            # Build plot parameters conditionally. Every facet draws the same set of
+            # colour groups, so only the first contributes legend entries.
             plot_params <- list(
                 data = facet_data,
                 x = reformulate(x),
@@ -243,8 +263,14 @@ linePlot <- function(data, x, y, palette.selection,
                 mode = plot.mode,
                 color = color,
                 colors = palette.selection,
-                showlegend = show.legend
+                showlegend = show.legend && i == 1L
             )
+            # Tie each colour group's traces together across facets so one legend click
+            # toggles the series in every panel. plotly splits `legendgroup` per trace
+            # the same way it splits `color`.
+            if (!is.null(color)) {
+                plot_params$legendgroup <- color
+            }
             # Only add error_y if sd_y exists and has non-NA values
             if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y)) && error.bar) {
                 plot_params$error_y <- list(array = facet_data$sd_y, color = error.colour, thickness = error.width)
@@ -273,7 +299,8 @@ linePlot <- function(data, x, y, palette.selection,
       
         annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
-            nrows = nrows, fig = fig
+            nrows = nrows, fig = fig, axis.title.font = axis_title_font,
+            facet.title.font = facet_title_font
         )
 
         borders <- build_facet_panel_borders(
@@ -300,7 +327,9 @@ linePlot <- function(data, x, y, palette.selection,
         first_facet <- TRUE
         for (n in seq_along(facet_levels)) {
             facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[n], ]
-            facet_fig <- plot_ly(data = facet_data, type = "scatter")
+            # No data/type here - passing them emits a placeholder trace that
+            # claims a nameless legend entry in every facet.
+            facet_fig <- plot_ly()
             facet_fig <- .add_multi_axis_traces(
                 facet_fig, facet_data, x, y, order.cols, plot.mode,
                 line.type, palette.selection,
@@ -325,7 +354,8 @@ linePlot <- function(data, x, y, palette.selection,
       
         annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
-            nrows = nrows, fig = fig
+            nrows = nrows, fig = fig, axis.title.font = axis_title_font,
+            facet.title.font = facet_title_font
         )
       
         borders <- build_facet_panel_borders(
@@ -342,8 +372,10 @@ linePlot <- function(data, x, y, palette.selection,
       
 
     } else if (multi_axis) {
-        # Initialize empty plot for multi-axis to avoid creating initial trace
-        fig <- plot_ly(data = plot_data, type = "scatter")
+        # Initialize empty plot for multi-axis to avoid creating initial trace.
+        # Supplying data/type here would emit a placeholder trace with no name
+        # that still takes up a legend entry.
+        fig <- plot_ly()
     } else {
         # Build plot parameters conditionally
         plot_params <- list(
@@ -372,7 +404,7 @@ linePlot <- function(data, x, y, palette.selection,
         fig <- .add_multi_axis_traces(
             fig, data, x, y, order.cols, plot.mode,
             line.type, palette.selection,
-            show.legend = TRUE
+            show.legend = show.legend
         )
     }
 
@@ -383,7 +415,7 @@ linePlot <- function(data, x, y, palette.selection,
             x = title.x.position, xanchor = "center", y = 0.95, yanchor = "top", pad = list(t = 20)
         ),
         margin = list(t = 70),
-        showlegend = TRUE,
+        showlegend = isTRUE(show.legend),
         xaxis = xaxis_style,
         yaxis = yaxis_style
     )

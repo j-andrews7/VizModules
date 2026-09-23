@@ -26,7 +26,8 @@
 #' - `position_dodge_preserve` - Preserve bar width when dodging (not yet implemented)
 #' - `x_sep` - Separator for multiple x columns (not yet implemented)
 #' - `group_by_sep` - Separator for multiple group_by columns (not yet implemented)
-#' - `split_by_sep` - Separator for multiple split_by columns (not yet implemented)
+#' - `split_by` - Split variable (returns a patchwork object, not supported in plotly), use `facet_by` instead
+#' - `split_by_sep` - Only applies if `split_by` is used
 #' - `fill_name` - Name of the fill legend (not yet implemented)
 #' - `line_name` - Name of line (not yet implemented)
 #' - `label` - Bar labels on top (not yet implemented)
@@ -56,15 +57,15 @@
 #' - `legend.direction` - Legend orientation (plotly allows interactive adjustment)
 #' - `keep_empty` - Keep empty factor levels (not yet implemented)
 #' - `keep_na` - Keep NA values (not yet implemented)
-#' - `combine` - Combine multiple plots (not applicable for plotly)
-#' - `nrow` - Only applies if `split_by` is used with combine
-#' - `ncol` - Only applies if `split_by` is used with combine
-#' - `byrow` - Only applies if `split_by` is used with combine
+#' - `combine` - Only applies if `split_by` is used
+#' - `nrow` - Only applies if `split_by` is used
+#' - `ncol` - Only applies if `split_by` is used
+#' - `byrow` - Only applies if `split_by` is used
 #' - `seed` - Random seed (not applicable)
-#' - `axes` - Only applies if `split_by` is used with combine
-#' - `axis_titles` - Only applies if `split_by` is used with combine
-#' - `guides` - Only applies if `split_by` is used with combine
-#' - `design` - Only applies if `split_by` is used with combine
+#' - `axes` - Only applies if `split_by` is used
+#' - `axis_titles` - Only applies if `split_by` is used
+#' - `guides` - Only applies if `split_by` is used
+#' - `design` - Only applies if `split_by` is used
 #'
 #' @section Plot parameters and defaults:
 #' The following [plotthis::BarPlot()] parameters can be accessed via UI inputs and/or the `defaults` argument:
@@ -74,7 +75,6 @@
 #' - `group_by` - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)
 #' - `fill_by` - Variable used to fill the bars (UI: "Fill by", default: "")
 #' - `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-#' - `split_by` - Split variable for separate plots (UI: "Split by", default: "")
 #' - `facet_by` - Faceting variable (UI: "Facet by", default: "")
 #' - `facet_scales` - Facet scale behavior (UI: "Facet scale", default: "fixed")
 #' - `facet_ncol` - Number of facet columns (UI: "Facet number of columns", default: NULL)
@@ -184,7 +184,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     selected <- list(
         "x", "y", "group_by", "fill_by",
         "facet_by", "facet_scales", "facet_ncol", "facet_nrow", "facet_byrow",
-        "split_by", "alpha", "width", "expand", "y_min", "y_max", "palreverse",
+        "alpha", "width", "expand", "y_min", "y_max", "palreverse",
         c("lower_quantile", "upper_quantile"), c("lower_cutoff", "upper_cutoff")
     )
 
@@ -237,10 +237,6 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
         value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        tipify(viz_select_input(ns("split.by"), "Split By",
-        selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c(char.choices, "")
-        ), documentParameters$split_by, placement = "top", options = list(container = "body")),
         .uniform_subplot_spacing_inputs_ui(ns, defaults)
     ),
 

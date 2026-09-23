@@ -33,6 +33,13 @@ linePlot(
   axis.tickwidth = 1,
   show.grid.x = TRUE,
   show.grid.y = TRUE,
+  grid.color = "#CCCCCC",
+  axis.title.font.size = 18,
+  axis.title.font.color = "black",
+  axis.title.font.family = "Arial",
+  facet.title.font.size = 18,
+  facet.title.font.color = "black",
+  facet.title.font.family = "Arial",
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
@@ -124,6 +131,20 @@ May be a single value (applied to both directions) or a length-2 vector
 
 \item{show.grid.y}{Logical, whether to show gridlines on the y-axis. Default: TRUE.}
 
+\item{grid.color}{Character, hex color for gridlines. Default: "#CCCCCC".}
+
+\item{axis.title.font.size}{Numeric, font size for the x/y axis titles. Default: 18.}
+
+\item{axis.title.font.color}{Character, hex color for the x/y axis titles. Default: "black".}
+
+\item{axis.title.font.family}{Character, font family for the x/y axis titles. Default: "Arial".}
+
+\item{facet.title.font.size}{Numeric, font size for the facet panel titles. Default: 18.}
+
+\item{facet.title.font.color}{Character, hex color for the facet panel titles. Default: "black".}
+
+\item{facet.title.font.family}{Character, font family for the facet panel titles. Default: "Arial".}
+
 \item{title.text}{Character, main title text for the plot. Default: "".}
 
 \item{title.font.size}{Numeric, font size for plot title. Default: 14.}
@@ -159,7 +180,10 @@ Same options as x.adjustment and y.adjustment. Default: NULL.}
 
 \item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
 
-\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable}
+\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
+and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
+group's y-values, where a group is a single x category, split further by \code{colour.group.by} and \code{facet.by} when
+those are set. A group holding a single observation has no standard deviation and is drawn without a bar.}
 }
 \value{
 A plotly object representing the interactive line plot.

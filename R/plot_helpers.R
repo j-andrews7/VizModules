@@ -98,7 +98,8 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' @param download.format Character. The image format for downloads (e.g., "png", "svg", "jpeg").
 #' @param filename Character. The filename for downloaded images (default: current date).
 #' @param include.modebar.buttons Logical. Whether to include drawing tool buttons in the modebar (default: TRUE).
-#' @param facet.by Logical. Whether the figure is facetted to determine if axes labels for each plot should be editable or not.
+#' @param facet.by Whether the figure is faceted into panels carrying their own titles: the facet
+#'   column name(s), or `TRUE`. `NULL`, `FALSE`, an empty vector, or empty strings mean not faceted.
 #'
 #' @return A named list suitable for use as the `config` argument in Plotly
 #'   calls, containing edit options, image download settings, extra modebar
@@ -112,6 +113,10 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'   editable annotations (see [axis_titles_as_annotations()] and
 #'   `build_facet_annotations()`).
 #'
+#'   When the figure is faceted, plot title editing is disabled too. An empty editable title still
+#'   draws plotly's "Click to enter Plot title" placeholder, which sits on top of the facet panel
+#'   titles and swallows clicks meant for them.
+#'
 #' @author Jacob Martin
 #' @export
 #' @examples
@@ -119,50 +124,30 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #' add_plot_config(download.format = "svg", include.modebar.buttons = FALSE)
 add_plot_config <- function(download.format = "png", filename = as.character(Sys.Date()),
                              include.modebar.buttons = TRUE, facet.by = NULL) {
-    if (is.null(facet.by)) {
-        config <- list(
-            edits = list(
-                # Native axis titles are replaced with draggable annotations via
-                # axis_titles_as_annotations(), so disable native axis-title text
-                # editing to avoid misclicks competing with the annotation titles.
-                axisTitleText = FALSE,
-                titleText = TRUE,
-                annotationText = TRUE,
-                legendText = TRUE,
-                legendPosition = TRUE,
-                colorbarPosition = TRUE,
-                colorbarTitleText = TRUE,
-                annotationTail = TRUE,
-                editText = TRUE,
-                editTitle = TRUE,
-                annotationPosition = TRUE
-            ),
-            toImageButtonOptions = list(
-                format = download.format,
-                filename = filename
-            ),
-            displaylogo = FALSE
-        )
-    } else {
-        config <- list(
-            edits = list(
-                axisTitleText = FALSE,
-                titleText = TRUE,
-                annotationText = TRUE,
-                legendText = TRUE,
-                legendPosition = TRUE,
-                colorbarPosition = TRUE,
-                colorbarTitleText = TRUE,
-                annotationTail = TRUE,
-                annotationPosition = TRUE
-            ),
-            toImageButtonOptions = list(
-                format = download.format,
-                filename = filename
-            ),
-            displaylogo = FALSE
-        )
-    }
+    faceted <- length(facet.by) > 0 && !isFALSE(facet.by) && any(nzchar(as.character(facet.by)))
+
+    config <- list(
+        edits = list(
+            # Native axis titles are replaced with draggable annotations via
+            # axis_titles_as_annotations(), so disable native axis-title text
+            # editing to avoid misclicks competing with the annotation titles.
+            axisTitleText = FALSE,
+            # The empty title's placeholder overlaps facet panel titles.
+            titleText = !faceted,
+            annotationText = TRUE,
+            legendText = TRUE,
+            legendPosition = TRUE,
+            colorbarPosition = TRUE,
+            colorbarTitleText = TRUE,
+            annotationTail = TRUE,
+            annotationPosition = TRUE
+        ),
+        toImageButtonOptions = list(
+            format = download.format,
+            filename = filename
+        ),
+        displaylogo = FALSE
+    )
     if (include.modebar.buttons) {
         config$modeBarButtonsToAdd <- list(
             "drawline",
@@ -964,6 +949,9 @@ is_pure_type <- function(inputs, d) {
                 type = "scatter",
                 mode = plot.mode,
                 name = trace_name,
+                # Group by trace name so a legend click toggles the series in
+                # every facet rather than only the one that owns the entry.
+                legendgroup = trace_name,
                 showlegend = show.legend
             )
 

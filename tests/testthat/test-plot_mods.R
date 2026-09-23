@@ -118,6 +118,306 @@ test_that(".hide_jitter_from_legend with mtcars dataset", {
     }
 })
 
+# ─── .align_box_positions ───────────────────────────────────────
+
+# "blood" carries all three groups, the other two only A and B. This uneven
+# coverage is what #356 is about: ggplot dodges two slots at lung/liver while
+# plotly.js reserves three everywhere.
+.uneven_group_data <- function(seed = 42) {
+    withr::with_seed(seed, {
+        df <- rbind(
+            data.frame(tissue = "blood", grp = rep(c("A", "B", "C"), each = 8)),
+            data.frame(tissue = "lung", grp = rep(c("A", "B"), each = 8)),
+            data.frame(tissue = "liver", grp = rep(c("A", "B"), each = 8))
+        )
+        df$val <- rnorm(nrow(df))
+        df$tissue <- factor(df$tissue, levels = c("blood", "lung", "liver"))
+        df$grp <- factor(df$grp, levels = c("A", "B", "C"))
+        df
+    })
+}
+
+# The x each box trace sits at, one entry per distinct position, named by trace.
+.box_trace_positions <- function(fig) {
+    out <- list()
+    for (trace in fig$x$data) {
+        if (is.null(trace$type) || trace$type != "box") next
+        out[[trace$name]] <- sort(unique(as.numeric(trace$x)))
+    }
+    out
+}
+
+test_that(".align_box_positions dodges only the groups present at each x", {
+    fig <- plotly::ggplotly(plotthis::BoxPlot(
+        .uneven_group_data(),
+        x = "tissue", y = "val", group_by = "grp"
+    ))
+
+    # Before: every box trace still carries the raw category index.
+    expect_equal(.box_trace_positions(fig)$A, c(1, 2, 3))
+
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+    pos <- .box_trace_positions(result)
+
+    # blood splits three ways, lung and liver two.
+    expect_equal(pos$A, c(1 - 1 / 3, 2 - 0.25, 3 - 0.25), tolerance = 1e-8)
+    expect_equal(pos$B, c(1, 2 + 0.25, 3 + 0.25), tolerance = 1e-8)
+    expect_equal(pos$C, 1 + 1 / 3, tolerance = 1e-8)
+    expect_equal(result$x$layout$boxmode, "overlay")
+})
+
+test_that(".align_box_positions puts boxes over their jitter points (#356)", {
+    fig <- plotly::ggplotly(plotthis::BoxPlot(
+        .uneven_group_data(),
+        x = "tissue", y = "val", group_by = "grp", add_point = TRUE
+    ))
+    result <- VizModules:::.align_box_positions(
+        fig,
+        dodge.width = VizModules:::.PLOTTHIS_DODGE_WIDTH, box.width = 0.8
+    )
+
+    # Jitter traces were never moved, so their clusters are ggplot's own
+    # positions. Every box has to sit at the centre of the matching cluster.
+    for (trace in result$x$data) {
+        if (is.null(trace$type) || trace$type != "scatter") next
+        if (is.null(trace$mode) || trace$mode != "markers") next
+
+        boxes <- .box_trace_positions(result)[[trace$name]]
+        expect_false(is.null(boxes))
+        cluster <- vapply(as.numeric(trace$x), function(v) boxes[which.min(abs(boxes - v))], numeric(1))
+        centres <- vapply(split(as.numeric(trace$x), cluster), mean, numeric(1))
+
+        expect_equal(as.numeric(centres), as.numeric(names(centres)),
+            tolerance = 0.05,
+            info = sprintf("jitter cluster centres for group %s", trace$name)
+        )
+    }
+})
+
+test_that(".align_box_positions scales offsets with dodge.width and sets width", {
+    fig <- plotly::ggplotly(plotthis::BoxPlot(
+        .uneven_group_data(),
+        x = "tissue", y = "val", group_by = "grp"
+    ))
+
+    wide <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+    narrow <- VizModules:::.align_box_positions(fig, dodge.width = 0.5, box.width = 0.8)
+
+    # Halving the dodge halves every offset from the category centre.
+    expect_equal(
+        .box_trace_positions(narrow)$A - c(1, 2, 3),
+        (.box_trace_positions(wide)$A - c(1, 2, 3)) / 2,
+        tolerance = 1e-8
+    )
+
+    # One width for the whole figure, taken from the most crowded x position.
+    widths <- vapply(
+        Filter(function(tr) identical(tr$type, "box"), wide$x$data),
+        function(tr) tr$width, numeric(1)
+    )
+    expect_equal(unname(widths), rep(1 / 3 * 0.8, 3), tolerance = 1e-8)
+})
+
+test_that(".align_box_positions leaves boxes centred when there is no grouping", {
+    df <- .uneven_group_data()
+    fig <- plotly::ggplotly(plotthis::BoxPlot(df, x = "tissue", y = "val"))
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+
+    # Ungrouped, plotthis emits one box trace per x category, so every position
+    # has a single occupant and nothing should be dodged off the tick.
+    positions <- sort(unlist(lapply(result$x$data, function(trace) {
+        if (is.null(trace$type) || trace$type != "box") NULL else unique(as.numeric(trace$x))
+    })))
+    expect_equal(positions, c(1, 2, 3), tolerance = 1e-8)
+})
+
+test_that(".align_box_positions dodges each facet panel and x position on its own", {
+    df <- .uneven_group_data()
+    # Group C lands in one panel only, and there only at "blood", so that panel
+    # mixes a three-way position with two-way ones.
+    df$panel <- ifelse(df$grp == "C", "p1", rep(c("p1", "p2"), length.out = nrow(df)))
+    fig <- plotly::ggplotly(plotthis::BoxPlot(
+        df,
+        x = "tissue", y = "val", group_by = "grp", facet_by = "panel"
+    ))
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+
+    boxes <- Filter(function(tr) identical(tr$type, "box"), result$x$data)
+    axes <- vapply(boxes, function(tr) tr$xaxis %||% "x", character(1))
+    expect_gt(length(unique(axes)), 1)
+
+    # Whatever the occupancy, the boxes at one position must land on the centres
+    # of however many slots that position splits into.
+    for (ax in unique(axes)) {
+        xs <- unlist(lapply(boxes[axes == ax], function(tr) unique(as.numeric(tr$x))))
+        for (p in unique(round(xs))) {
+            here <- sort(xs[round(xs) == p] - p)
+            n <- length(here)
+            expect_equal(here, (seq_len(n) - 0.5) / n - 0.5,
+                tolerance = 1e-8,
+                info = sprintf("axis %s, position %s", ax, p)
+            )
+        }
+    }
+
+    # The panel holding group C has a three-way position; the other panel does not.
+    occupancy <- vapply(unique(axes), function(ax) {
+        xs <- unlist(lapply(boxes[axes == ax], function(tr) unique(as.numeric(tr$x))))
+        max(table(round(xs)))
+    }, numeric(1))
+    expect_equal(sort(unname(occupancy)), c(2, 3))
+})
+
+test_that(".align_box_positions is a no-op without box traces", {
+    fig <- make_plotly(data = list(
+        list(type = "scatter", mode = "markers", x = c(1, 2, 3))
+    ))
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1)
+    expect_equal(result$x$data[[1]]$x, c(1, 2, 3))
+    expect_null(result$x$layout$boxmode)
+})
+
+test_that(".align_box_positions rejects non-plotly objects", {
+    expect_error(VizModules:::.align_box_positions(list(), dodge.width = 1))
+})
+
+# A facet grid more than one row deep, with the x scale left fixed. ggplotly
+# shares one x axis down each facet column then, so a panel is only identified by
+# its (xaxis, yaxis) pair -- keying on the x axis alone merges the panels stacked
+# in a column and invents dodge slots ggplot2 never used.
+.faceted_uneven_fig <- function(add_point = FALSE, ncol = 2) {
+    df <- .uneven_group_data()
+    # Group C lands in panel p1 only, so that panel mixes a three-way position
+    # with two-way ones while the others are two-way throughout.
+    df <- do.call(rbind, lapply(paste0("p", 1:4), function(p) transform(df, panel = p)))
+    df <- df[!(df$grp == "C" & df$panel != "p1"), ]
+    plotly::ggplotly(plotthis::BoxPlot(
+        df,
+        x = "tissue", y = "val", group_by = "grp",
+        facet_by = "panel", facet_ncol = ncol, add_point = add_point
+    ))
+}
+
+# The (xaxis, yaxis) pair of every box trace, as .align_box_positions keys them.
+.box_panel_keys <- function(fig) {
+    vapply(
+        Filter(function(tr) identical(tr$type, "box"), fig$x$data),
+        function(tr) paste0(tr$xaxis %||% "x", "|", tr$yaxis %||% "y"),
+        character(1)
+    )
+}
+
+test_that(".align_box_positions treats a shared x axis as several panels", {
+    fig <- .faceted_uneven_fig()
+
+    # The condition the bug needed: fewer x axes than panels, because the x scale
+    # is fixed. Without this the test would pass on the old xaxis-only keying.
+    axes <- vapply(
+        Filter(function(tr) identical(tr$type, "box"), fig$x$data),
+        function(tr) tr$xaxis %||% "x", character(1)
+    )
+    expect_lt(length(unique(axes)), length(unique(.box_panel_keys(fig))))
+
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+    boxes <- Filter(function(tr) identical(tr$type, "box"), result$x$data)
+    keys <- .box_panel_keys(result)
+
+    # Each panel dodges on its own, so the three panels without group C put their
+    # boxes on two slots at every position -- including "blood", which splits
+    # three ways in p1. Keyed on the x axis the two panels sharing it would have
+    # collided into one four-way position.
+    for (k in unique(keys)) {
+        xs <- unlist(lapply(boxes[keys == k], function(tr) unique(as.numeric(tr$x))))
+        for (p in unique(round(xs))) {
+            here <- sort(xs[round(xs) == p] - p)
+            n <- length(here)
+            expect_equal(here, (seq_len(n) - 0.5) / n - 0.5,
+                tolerance = 1e-8,
+                info = sprintf("panel %s, position %s", k, p)
+            )
+        }
+    }
+
+    occupancy <- vapply(unique(keys), function(k) {
+        xs <- unlist(lapply(boxes[keys == k], function(tr) unique(as.numeric(tr$x))))
+        max(table(round(xs)))
+    }, numeric(1))
+    expect_equal(sort(unname(occupancy)), c(2, 2, 2, 3))
+})
+
+test_that(".align_box_positions puts boxes over their jitter across facet rows", {
+    result <- VizModules:::.align_box_positions(
+        .faceted_uneven_fig(add_point = TRUE),
+        dodge.width = VizModules:::.PLOTTHIS_DODGE_WIDTH, box.width = 0.8
+    )
+
+    # Jitter traces were never moved, so their clusters are ggplot's own
+    # positions. Match each box to the points of the same group in the same
+    # panel: with a shared x axis the group name alone spans several panels.
+    boxes <- Filter(function(tr) identical(tr$type, "box"), result$x$data)
+    keys <- .box_panel_keys(result)
+
+    checked <- 0
+    for (trace in result$x$data) {
+        if (is.null(trace$type) || trace$type != "scatter") next
+        if (is.null(trace$mode) || trace$mode != "markers") next
+
+        key <- paste0(trace$xaxis %||% "x", "|", trace$yaxis %||% "y")
+        mine <- boxes[keys == key & vapply(boxes, function(tr) {
+            identical(as.character(tr$name), as.character(trace$name))
+        }, logical(1))]
+        if (length(mine) == 0) next
+
+        pos <- sort(unique(unlist(lapply(mine, function(tr) as.numeric(tr$x)))))
+        x <- as.numeric(trace$x)
+        cluster <- vapply(x, function(v) pos[which.min(abs(pos - v))], numeric(1))
+        centres <- vapply(split(x, cluster), mean, numeric(1))
+
+        expect_equal(as.numeric(centres), as.numeric(names(centres)),
+            tolerance = 0.05,
+            info = sprintf("jitter centres for group %s in panel %s", trace$name, key)
+        )
+        checked <- checked + 1
+    }
+    expect_gt(checked, 0)
+})
+
+test_that(".align_box_positions keeps one box width across panels", {
+    result <- VizModules:::.align_box_positions(
+        .faceted_uneven_fig(), dodge.width = 1, box.width = 0.8
+    )
+
+    # Panels differ in occupancy (p1 splits three ways, the rest two), but plotly
+    # takes one width per trace, so every box is sized from the most crowded
+    # position anywhere in the figure rather than its own panel's.
+    widths <- vapply(
+        Filter(function(tr) identical(tr$type, "box"), result$x$data),
+        function(tr) tr$width, numeric(1)
+    )
+    expect_equal(unname(widths), rep(1 / 3 * 0.8, length(widths)), tolerance = 1e-8)
+})
+
+test_that(".align_box_positions leaves a categorical x axis alone", {
+    fig <- make_plotly(data = list(
+        list(type = "box", x = c("a", "a", "b"), y = c(1, 2, 3))
+    ))
+    result <- VizModules:::.align_box_positions(fig, dodge.width = 1, box.width = 0.8)
+
+    # Nothing was repositioned, so plotly.js must keep doing the dodge itself --
+    # switching to "overlay" here would stack the boxes on the tick.
+    expect_equal(result$x$data[[1]]$x, c("a", "a", "b"))
+    expect_null(result$x$data[[1]]$width)
+    expect_null(result$x$layout$boxmode)
+})
+
+test_that(".box_num falls back when a numeric control is blank", {
+    expect_equal(VizModules:::.box_num(0.4, 0.3), 0.4)
+    expect_equal(VizModules:::.box_num(NA_real_, 0.3), 0.3)
+    expect_equal(VizModules:::.box_num(NULL, 0.3), 0.3)
+    expect_equal(VizModules:::.box_num(c(1, 2), 0.3), 0.3)
+    expect_equal(VizModules:::.box_num("x", 0.3), 0.3)
+})
+
 # ─── parse_numeric_list ──────────────────────────────────────────────────────
 
 test_that("parse_numeric_list parses comma-separated numbers", {
@@ -220,10 +520,22 @@ test_that("add_plot_config returns default config without facet", {
     expect_true(length(config$modeBarButtonsToAdd) > 0)
 })
 
-test_that("add_plot_config with facet.by disables axisTitleText editing", {
+test_that("add_plot_config with facet.by disables axis and plot title editing", {
     config <- VizModules::add_plot_config(facet.by = "group")
     expect_false(config$edits$axisTitleText)
-    expect_true(config$edits$titleText)
+    # The empty title's "Click to enter Plot title" placeholder overlaps the facet titles.
+    expect_false(config$edits$titleText)
+    expect_true(config$edits$annotationText)
+    expect_true(config$edits$annotationPosition)
+})
+
+test_that("add_plot_config only treats a real facet selection as faceted", {
+    for (facet in list(TRUE, "group", c("", "var.which"))) {
+        expect_false(VizModules::add_plot_config(facet.by = facet)$edits$titleText)
+    }
+    for (facet in list(NULL, FALSE, "", character(0))) {
+        expect_true(VizModules::add_plot_config(facet.by = facet)$edits$titleText)
+    }
 })
 
 test_that("add_plot_config respects download format and filename", {
@@ -1435,6 +1747,28 @@ test_that("build_facet_annotations keys shared axis titles by side, not text", {
     expect_true("axis:x#1" %in% keys)
     expect_true("axis:y#1" %in% keys)
     expect_false(any(c("text:grp#1", "text:units#1") %in% keys))
+})
+
+test_that("build_facet_annotations styles axis and facet titles independently", {
+    font <- list(size = 30, color = "#0000FF", family = "Courier New")
+    anns <- build_facet_annotations(
+        c("A", "B"), x.title = "grp", y.title = "units", axis.title.font = font
+    )
+    is_axis <- vapply(anns, function(a) identical(a$annotationType, "axis"), logical(1))
+    expect_equal(sum(is_axis), 2)
+    for (a in anns[is_axis]) expect_equal(a$font, font)
+    for (a in anns[!is_axis]) expect_equal(a$font, list(size = 14)) # facet titles untouched
+
+    facet_font <- list(size = 20, color = "red", family = "Arial")
+    anns_facet <- build_facet_annotations(c("A", "B"), x.title = "grp", facet.title.font = facet_font)
+    for (a in anns_facet) {
+        is_axis <- identical(a$annotationType, "axis")
+        expect_equal(a$font, if (is_axis) list(size = 14) else facet_font)
+    }
+
+    # Without either, everything falls back to title.font.size as before.
+    anns_default <- build_facet_annotations(c("A", "B"), x.title = "grp", title.font.size = 11)
+    for (a in anns_default) expect_equal(a$font, list(size = 11))
 })
 
 test_that("faceted shared-axis-title position survives a label text change", {
